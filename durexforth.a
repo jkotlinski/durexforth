@@ -356,7 +356,48 @@ SUB
 
 	+NEXT
 
-; * - TODO
+; *
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"*"
+MUL
+product = TMP
+
+.mult16 
+	lda #$00
+	sta product+2 ; clear upper bits of product
+	sta product+3 
+	ldy #$10 ; set binary count to 16 
+.shift_r
+	lsr PSTACK - 3, x ; multiplier+1 ; divide multiplier by 2 
+	ror PSTACK - 4, x ; multiplier
+	bcc rotate_r 
+	lda product+2 ; get upper half of product and add multiplicand
+	clc
+	adc PSTACK - 2, x ; multiplicand
+	sta product+2
+	lda product+3 
+	adc PSTACK - 1, x ; multiplicand+1
+rotate_r 
+	ror ; rotate partial product 
+	sta product+3 
+	ror product+2
+	ror product+1 
+	ror product 
+	dey
+	bne .shift_r 
+
+	dex
+	dex
+
+	lda	product
+	sta	PSTACK - 2, x
+	lda	product + 1
+	sta	PSTACK - 1, x
+
+	rts
+
 ; /MOD - TODO
 
 ; =
