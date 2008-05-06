@@ -356,7 +356,7 @@ SUB
 
 	+NEXT
 
-; *
+; * - this calculates a 32 bit result, actually. useful? wasteful?
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	1
@@ -364,7 +364,6 @@ SUB
 MUL
 product = TMP
 
-.mult16 
 	lda #$00
 	sta product+2 ; clear upper bits of product
 	sta product+3 
@@ -398,7 +397,45 @@ rotate_r
 
 	rts
 
-; /MOD - TODO
+; /MOD
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"/MOD"
+DIVMOD
+remainder = TMP
+	lda #16	        ;repeat for each bit: ...
+	sta	TMP2
+	lda #0	        ;preset remainder to 0
+	sta remainder
+	sta remainder+1
+
+.divloop	
+	asl PSTACK - 4, x ; dividend	;dividend lb & hb*2, msb -> Carry
+	rol PSTACK - 3, x ; dividend+1	
+	rol remainder	;remainder lb & hb * 2 + msb from carry
+	rol remainder+1
+	lda remainder
+	sec
+	sbc PSTACK - 2, x ; divisor	;substract divisor to see if it fits in
+	tay	        ;lb result -> Y, for we may need it later
+	lda remainder+1
+	sbc PSTACK - 1, x ; divisor+1
+	bcc .skip	;if carry=0 then divisor didn't fit in yet
+
+	sta remainder+1	;else save substraction result as new remainder,
+	sty remainder	
+	inc PSTACK - 4, x ; result	;and INCrement result cause divisor fit in 1 times
+
+.skip	
+	dec	TMP2
+	bne .divloop	
+
+	lda	remainder
+	sta	PSTACK - 2, x
+	lda	remainder + 1
+	sta	PSTACK - 1, x
+	jmp	SWAP
 
 ; =
 	!word	LINK
