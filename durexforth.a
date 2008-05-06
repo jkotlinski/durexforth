@@ -1,0 +1,1112 @@
+; ACME assembler
+
+!cpu 6510
+!svl "durexforth.lbl"
+!to "durexforth.prg", cbm	; set output file and format
+
+TMP = $30
+TMP2 = $32
+
+PSTACK_X_OFFSET = 0
+PSTACK = $2100
+
+; X = PSP
+; SP = RSP
+
+; kernal defs
+
+GETCHR = $ffe4 ; get char from kbd
+PUTCHR = $ffd2 ; put char
+
+BLINK_COLOR = $286
+
+K_F1 = $85
+K_F3 = $86
+
+C_YELLOW = 7
+C_GREEN = 5
+
+; -------- program start
+
+*= $801 ; start at c64 basic start
+
+!byte $b, $08, $EF, $00, $9E, $32, $30, $36,$31, $00, $00, $00 ; basic header
+
+!ct pet
+
+	; screen color = black
+	lda	#0
+	sta	$d021
+	sta	$d020
+
+	; activate cursor
+	sta	$cc
+
+	lda	#C_YELLOW
+	sta	BLINK_COLOR
+
+	lda	#%00010110 ; lowercase
+	sta	$d018
+
+	ldx	#0
+
+	jsr	QUIT
+
+; ----------- macros
+
+!macro dbgbrk {
+	inc	$d020
+-
+	jmp	-
+}
+
+!macro NEXT {
+	rts
+}
+
+!macro dex4 {
+	txa
+	sbx #4 ; equals dex 4 times
+}
+
+!macro PUSH_TO_PRM_STACK .word {
+	lda	#<.word
+	sta	PSTACK, x
+	lda	#>.word
+	sta	PSTACK + 1, x
+	inx
+	inx
+}
+
+!macro VAR_CODE .word {
+	+PUSH_TO_PRM_STACK .word
+	+NEXT
+}
+
+; ---------- words
+
+!set LINK = 0
+
+; DROP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"drop"
+DROP
+	dex
+	dex
+	+NEXT
+
+; SWAP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"swap"
+SWAP
+	ldy	PSTACK - 1, x
+	lda	PSTACK - 3, x
+	sta PSTACK - 1, x
+	tya
+	sta	PSTACK - 3, x
+
+	ldy	PSTACK - 2, x
+	lda	PSTACK - 4, x
+	sta PSTACK - 2, x
+	tya
+	sta	PSTACK - 4, x
+	+NEXT
+
+; DUP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"dup"
+DUP
+	inx
+	inx
+
+	lda	PSTACK - 3, x
+	sta	PSTACK - 1, x
+	lda	PSTACK - 4, x
+	sta	PSTACK - 2, x
+	+NEXT
+
+; OVER
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"over"
+OVER
+	inx
+	inx
+
+	lda	PSTACK - 5, x
+	sta	PSTACK - 1, x
+	lda	PSTACK - 6, x
+	sta	PSTACK - 2, x
+
+	+NEXT
+
+; ROT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"rot"
+ROT
+	ldy	PSTACK - 5, x
+	lda	PSTACK - 3, x
+	sta PSTACK - 5, x
+	lda PSTACK - 1, x
+	sta PSTACK - 3, x
+	tya
+	sta PSTACK - 1, x
+
+	ldy	PSTACK - 6, x
+	lda	PSTACK - 4, x
+	sta PSTACK - 6, x
+	lda PSTACK - 2, x
+	sta PSTACK - 4, x
+	tya
+	sta PSTACK - 2, x
+
+	+NEXT
+
+; -ROT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"-rot"
+NROT
+	ldy	PSTACK - 1, x
+	lda	PSTACK - 3, x
+	sta PSTACK - 1, x
+	lda PSTACK - 5, x
+	sta PSTACK - 3, x
+	tya
+	sta PSTACK - 5, x
+
+	ldy	PSTACK - 2, x
+	lda	PSTACK - 4, x
+	sta PSTACK - 2, x
+	lda PSTACK - 6, x
+	sta PSTACK - 4, x
+	tya
+	sta PSTACK - 6, x
+
+	+NEXT
+
+; 2DROP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	5
+	!text	"2drop"
+TWODROP
+	+dex4
+
+	+NEXT
+
+; 2DUP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"2dup"
+TWODUP
+	inx
+	inx
+	inx
+	inx
+
+	lda	PSTACK - 5, x
+	sta	PSTACK - 1, x
+	lda	PSTACK - 6, x
+	sta	PSTACK - 2, x
+
+	lda	PSTACK - 7, x
+	sta	PSTACK - 3, x
+	lda	PSTACK - 8, x
+	sta	PSTACK - 4, x
+
+	+NEXT
+
+; 2SWAP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	5
+	!text	"2swap"
+TWOSWAP
+
+	ldy	PSTACK - 1, x
+	lda	PSTACK - 5, x
+	sta PSTACK - 1, x
+	tya
+	sta	PSTACK - 5, x
+
+	ldy	PSTACK - 2, x
+	lda	PSTACK - 6, x
+	sta PSTACK - 2, x
+	tya
+	sta	PSTACK - 6, x
+
+	ldy	PSTACK - 3, x
+	lda	PSTACK - 7, x
+	sta PSTACK - 3, x
+	tya
+	sta	PSTACK - 7, x
+
+	ldy	PSTACK - 4, x
+	lda	PSTACK - 8, x
+	sta PSTACK - 4, x
+	tya
+	sta	PSTACK - 8, x
+
+	+NEXT
+
+; ?DUP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"?dup"
+QDUP
+	lda	PSTACK - 1, x
+	ora	PSTACK - 2, x
+	beq	+
+	inx
+	inx
+	lda	PSTACK - 3, x
+	sta PSTACK - 1, x
+	lda	PSTACK - 4, x
+	sta PSTACK - 2, x
++
+	+NEXT
+
+; 1+
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"1+"
+INCR
+	inc	PSTACK - 2, x
+	beq	+
+	inc	PSTACK - 1, x
++
+	+NEXT
+
+; 1-
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"1-"
+DECR
+	lda	PSTACK - 2, x
+	beq	+
+	dec	PSTACK - 1, x
++
+	dec	PSTACK - 2, x
+	+NEXT
+
+; +
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"+"
+ADD
+	lda	PSTACK - 2, x
+	sta + + 1
+	clc
+	lda	PSTACK - 4, x
++
+	adc #0
+	sta	PSTACK - 4, x
+
+	lda	PSTACK - 1, x
+	sta + + 1
+	lda PSTACK - 3, x
++
+	adc #0
+	sta PSTACK - 3, x
+
+	dex
+	dex
+
+	+NEXT
+
+; -
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"-"
+SUB
+	lda	PSTACK - 2, x
+	sta + + 1
+	sec
+	lda	PSTACK - 4, x
++
+	sbc #0
+	sta	PSTACK - 4, x
+
+	lda	PSTACK - 1, x
+	sta + + 1
+	lda PSTACK - 3, x
++
+	sbc #0
+	sta PSTACK - 3, x
+
+	dex
+	dex
+
+	+NEXT
+
+; * - TODO
+; /MOD - TODO
+
+; =
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"="
+EQU
+	dex
+	dex
+	lda	PSTACK + 1, x
+	cmp	PSTACK - 1, x
+	bne	+
+	lda	PSTACK + 0, x
+	cmp	PSTACK - 2, x
+	bne	+
+	lda	#$ff
+	jmp	++
++
+	lda	#0
+++
+	sta	PSTACK - 1, x
+	sta	PSTACK - 2, x
+	+NEXT
+
+; <> - TODO
+
+; <
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"<"
+LT
+	dex
+	dex
+	lda	PSTACK + 1, x
+	cmp	PSTACK - 1, x
+	bmi	+
+	lda	PSTACK + 0, x
+	cmp	PSTACK - 2, x
+	bmi	+
+	lda	#0
+	jmp	++
++
+	lda	#$ff
+++
+	sta	PSTACK - 1, x
+	sta	PSTACK - 2, x
+	+NEXT
+
+; >
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	">"
+GT
+	dex
+	dex
+	lda	PSTACK - 1, x
+	cmp	PSTACK + 1, x
+	bmi	+
+	lda	PSTACK - 2, x
+	cmp	PSTACK - 0, x
+	bmi	+
+	lda	#0
+	jmp	++
++
+	lda	#$ff
+++
+	sta	PSTACK - 1, x
+	sta	PSTACK - 2, x
+	+NEXT
+
+; <= - TODO
+; >= - TODO
+
+; 0=
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"0="
+ZEQU
+	lda	PSTACK - 1, x
+	bne +
+	lda	PSTACK - 2, x
+	bne +
+	lda	#$ff
+	jmp	++
++
+	lda	#0
+++
+	lda	PSTACK - 1, x
+	lda	PSTACK - 2, x
+	+NEXT
+
+; 0<>
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"0<>"
+ZNEQU
+	lda	PSTACK - 1, x
+	bne +
+	lda	PSTACK - 2, x
+	bne +
+	lda	#0
+	jmp	++
++
+	lda	#$ff
+++
+	lda	PSTACK - 1, x
+	lda	PSTACK - 2, x
+	+NEXT
+
+; 0< - TODO
+; 0> - TODO
+; 0<= - TODO
+; 0>= - TODO
+
+; AND
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"and"
+AAND
+	lda	PSTACK - 1, x
+	and PSTACK - 3, x
+	sta PSTACK - 3, x
+
+	lda	PSTACK - 2, x
+	and PSTACK - 4, x
+	sta PSTACK - 4, x
+
+	dex
+	dex
+
+	+NEXT
+
+; OR
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"or"
+OR
+	lda	PSTACK - 1, x
+	ora PSTACK - 3, x
+	sta PSTACK - 3, x
+
+	lda	PSTACK - 2, x
+	ora PSTACK - 4, x
+	sta PSTACK - 4, x
+
+	dex
+	dex
+
+	+NEXT
+
+; XOR
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"xor"
+XOR
+	lda	PSTACK - 1, x
+	eor PSTACK - 3, x
+	sta PSTACK - 3, x
+
+	lda	PSTACK - 2, x
+	eor PSTACK - 4, x
+	sta PSTACK - 4, x
+
+	dex
+	dex
+
+	+NEXT
+
+; NOT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"not"
+NOT
+	lda	PSTACK - 1, x
+	eor #$ff
+	sta PSTACK - 1, x
+
+	lda	PSTACK - 2, x
+	eor #$ff
+	sta PSTACK - 2, x
+
+	+NEXT
+
+; !
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"!"
+STORE
+	lda	PSTACK - 1, x ; dst
+	sta TMP + 1
+	lda	PSTACK - 2, x
+	sta TMP
+	
+	ldy	#0
+	lda PSTACK - 4, x
+	sta	(TMP), y	
+	iny
+	lda PSTACK - 3, x
+	sta	(TMP), y	
+
+	+dex4
+
+	+NEXT
+
+; @
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"@"
+FETCH
+	lda	PSTACK - 1, x ; src
+	sta TMP + 1
+	lda	PSTACK - 2, x
+	sta TMP
+	
+	ldy	#0
+	lda	(TMP), y	
+	sta	PSTACK - 2, x
+	iny
+	lda	(TMP), y
+	sta	PSTACK - 1, x
+
+	dex
+	dex
+
+	+NEXT
+
+; +! - TODO
+; -! - TODO
+
+; C!
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"c!"
+STOREBYTE
+	lda	PSTACK - 1, x ; dst
+	sta TMP + 1
+	lda	PSTACK - 2, x
+	sta TMP
+	
+	ldy	#0
+	lda PSTACK - 4, x
+	sta	(TMP), y	
+
+	+dex4
+
+	+NEXT
+
+; C@
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"c@"
+FETCHBYTE
+	lda	PSTACK - 1, x ; dst
+	sta TMP + 1
+	lda	PSTACK - 2, x
+	sta TMP
+	
+	ldy	#0
+	lda PSTACK - 3, x
+	sta	(TMP), y	
+	tya
+	sta	PSTACK - 4, x
+
+	dex
+	dex
+
+	+NEXT
+
+; C$C! - TODO
+; CMOVE - TODO
+
+; ---------- variables
+
+; S0 - TODO
+
+; STATE - Is the interpreter executing code (0) or compiling a word (non-zero)?
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 5
+	!text	"state"
+	+VAR_CODE	STATE
+STATE
+	!word	0
+
+; HERE - points to the next free byte of memory. When compiling, compiled words go here.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 4
+	!text	"here"
+	+VAR_CODE	HERE
+HERE
+	!word	0
+
+; BASE - current number base.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 4
+	!text	"base"
+	+VAR_CODE	BASE
+BASE
+	!word	16
+
+
+; ------------ return stack
+
+; >R
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	">r"
+TOR
+	lda	PSTACK - 2, x
+	pha
+	lda	PSTACK - 1, x
+	pha
+	dex
+	dex
+	+NEXT
+
+; R>
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"r>"
+FROMR
+	inx
+	inx
+	pla
+	sta	PSTACK - 1, x
+	pla
+	lda	PSTACK - 2, x
+	+NEXT
+
+; RDROP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	5
+	!text	"rdrop"
+RDROP
+	pla
+	pla
+	+NEXT
+
+
+; ------------ i/o
+
+; EMIT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"emit"
+EMIT
+	lda	PSTACK - 1, x
+	jsr	PUTCHR
+	dex
+	dex
+	+NEXT
+
+print_space
+	stx	tmp_x
+	lda	#' '
+	jsr	PUTCHR
+	ldx	tmp_x
+	rts
+
+print_hex_nibble
+	cmp	#10
+
+	bcc	.dec
+	; hex
+	clc
+	adc	#$41 - 10
+	jmp	+
+
+.dec
+	eor	#$30
+
++
+
+	stx	tmp_x
+	jsr	PUTCHR
+	ldx	tmp_x
+
+	rts
+
+; . - display number on screen
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"."
+DOT
+	lda	PSTACK - 1, x
+	lsr
+	lsr
+	lsr
+	lsr
+	jsr print_hex_nibble
+
+	lda	PSTACK - 1, x
+	and	#$f
+	jsr	print_hex_nibble
+
+	lda	PSTACK - 2, x
+	lsr
+	lsr
+	lsr
+	lsr
+	jsr	print_hex_nibble
+	
+	lda	PSTACK - 2, x
+	and	#$f
+	jsr	print_hex_nibble
+
+	jsr	print_space
+
+	dex
+	dex
+
+	rts
+
+TIB
+	!fill 33
+
+INPUT_TEXT	= 0
+INPUT_NUMBER	= $80
+
+INPUT_MODE
+	!byte	INPUT_TEXT
+
+last_input_char
+	!byte	0
+tmp_x
+	!byte	0
+
+flip_input_mode
+	lda	INPUT_MODE
+	beq	+
+
+	lda	#C_YELLOW
+	sta	BLINK_COLOR
+	lda	#INPUT_TEXT
+	sta	INPUT_MODE
+	rts
+
++
+	lda	#C_GREEN
+	sta	BLINK_COLOR
+	lda	#INPUT_NUMBER
+	sta	INPUT_MODE
+	rts
+
+; input key in a
+handle_input_key
+	pha
+
+	inc	TMP
+
+	lda	INPUT_MODE
+	bne	.get_number
+
+	; put char in TIB
+	pla
+.dst
+	sta $f00d
+	inc	.dst + 1
+	bne	+
+	inc	.dst + 2
++
+	rts
+
+.get_number
+	; make space for a new hex digit...
+	asl	PSTACK - 2, x
+	rol	PSTACK - 1, x
+	asl	PSTACK - 2, x
+	rol	PSTACK - 1, x
+	asl	PSTACK - 2, x
+	rol	PSTACK - 1, x
+	asl	PSTACK - 2, x
+	rol	PSTACK - 1, x
+
+	pla
+	sec
+	sbc	#$30 ; fix for 0-9
+
+	cmp	#$10 ; fix for a-f
+	bcc	+
+	sbc	#7
++
+	eor	PSTACK - 2, x ; eor in the new hex digit
+	sta	PSTACK - 2, x
+
+	rts
+
+; WORD
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"word"
+WORD
+	; prepare text input
+	lda	#<(TIB + 1) 
+	sta	.dst + 1
+	lda	#>(TIB + 1)
+	sta	.dst + 2
+	lda	#0
+	sta	TMP
+	
+	inx
+	inx
+
+	; prepare for number input
+	; a is zero
+	sta	PSTACK - 2, x 
+	sta	PSTACK - 1, x
+
+-
+	lda	#0 ; reset cursor blink...
+	sta	$cf
+
+	stx	tmp_x
+	jsr	GETCHR
+	ldx	tmp_x
+	sta	last_input_char
+	lda	last_input_char
+	beq	-
+	cmp #' '
+	beq .space
+	stx	tmp_x
+	jsr	PUTCHR
+	ldx	tmp_x
+	jsr	handle_input_key
+	jmp	-
+.space
+	lda	TMP
+	bne	+
+	jsr	flip_input_mode
+	jmp	-
++
+	lda	#' '
+	stx	tmp_x
+	jsr	PUTCHR
+	ldx	tmp_x
+
+	lda	INPUT_MODE
+	bne	+
+
+	; return text string
+	lda	TMP
+	sta TIB 
+
+	lda	#<TIB
+	sta	PSTACK - 2, x
+	lda	#>TIB
+	sta	PSTACK - 1, x
++
+	rts
+
+; NUMBER - TODO...
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	6
+	!text	"number"
+NUMBER
+	lda #0
+	sta	PSTACK - 2, x
+	lda	#32
+	sta	PSTACK - 1, x
+	+NEXT
+
+; FIND
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"find"
+FIND
+	lda	#<LATEST
+	sta	TMP2
+	lda	#>LATEST
+	sta	TMP2 + 1
+	; TMP2 now contains pointer to pointer to the most recently defined dictionary word.
+	ldy	#0
+	lda	(TMP2), y
+	sta	TMP
+	iny
+	lda	(TMP2), y
+	sta	TMP + 1
+	; TMP now contains pointer to the most recently defined dictionary word.
+
+	lda	PSTACK - 1, x
+	sta	TMP2 + 1
+	lda	PSTACK - 2, x
+	sta	TMP2 ; TMP2 contains pointer to find string
+
+.examine_word
+	ldy	#0
+	lda	(TMP2), y ; get length of find string
+	sta	.strlen
+
+	ldy	#2
+	lda	(TMP), y ; get string length of dictionary word
+	cmp	.strlen
+	bne	.word_not_equal
+
+	; equal strlen, now compare strings...
+	ldy	#1
+-
+	iny
+	iny
+	lda	(TMP), y ; get char of dictionary string
+	dey
+	dey
+	cmp	(TMP2), y ; compare with find string
+	bne	.word_not_equal
+	dec	.strlen
+	beq	.word_is_equal
+
+	iny ; advance char ptr
+	jmp	-
+	
+.word_is_equal
+	; return address to dictionary word
+	lda	TMP
+	sta	PSTACK - 2, x
+	lda	TMP + 1
+	sta	PSTACK - 1, x
+	lda	#1
+	rts
+
+.word_not_equal
+	; ok... no match, advance the linked list.
+	ldy	#0
+	lda	(TMP), y
+	pha
+	iny
+	lda	(TMP), y
+	sta	TMP + 1
+	pla
+	sta	TMP
+
+	; TMP now contains new dictionary word.
+	lda	TMP
+	ora	TMP + 1
+	beq	.not_found ; null link, give up
+	jmp	.examine_word
+
+.not_found
+	; a is zero
+	sta	PSTACK - 2, x
+	sta	PSTACK - 1, x
+	rts
+	
+.strlen
+	!byte 0
+
+; >CFA
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	">cfa"
+TCFA
+	lda	PSTACK - 1, x
+	sta	TMP + 1
+	lda	PSTACK - 2, x
+	sta TMP
+	; TMP contains pointer to word
+	ldy	#2
+	lda	(TMP), y ; a contains string length
+	clc
+	adc	#3 ; offset for link + string length
+	sta	.addend + 1
+	lda	PSTACK - 2, x
+.addend
+	adc	#0
+	sta	PSTACK - 2, x
+	bcc	+
+	inc	PSTACK - 1, x
++
+	rts
+
+; EXEC
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"exec"
+EXEC
+	lda	PSTACK - 2, x
+	sta TMP
+	lda	PSTACK - 1, x
+	sta	TMP + 1
+	dex
+	dex
+	jmp	(TMP)
+
+; INTERPRET
+
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	9
+	!text	"interpret"
+INTERPRET
+	jsr WORD ; push string or number to stack
+	lda	INPUT_MODE
+	bne	.number
+	jsr	FIND ; is it in the dictionary?
+	beq	.unknown_lit_err
+	jsr TCFA ; fetch code address
+	jmp EXEC ; execute it!
+.number
+	; is a number...
+	rts
+
+.unknown_lit_err
+	; not found !!!
+	lda	#2
+	sta	$d020
+	dex
+	dex
+	rts
+
+; QUIT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"quit"
+QUIT
+	jsr	INTERPRET
+	jmp	QUIT
+
+; -----------
+
+; LATEST - points to the most recently defined dictionary word.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 6
+	!text	"latest"
+	+VAR_CODE	LATEST
+LATEST
+	!word	LINK
+

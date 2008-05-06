@@ -1,0 +1,2 @@
+map <F5> :wall!<CR>:!acme durexforth.a<CR>
+map <F7> :!x64 durexforth.prg<CR>
