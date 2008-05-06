@@ -401,7 +401,7 @@ rotate_r
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	4
-	!text	"/MOD"
+	!text	"/mod"
 DIVMOD
 remainder = TMP
 	lda #16	        ;repeat for each bit: ...
@@ -1156,9 +1156,6 @@ INTERPRET
 	beq	.unknown_lit_err
 	jsr TCFA ; fetch code address
 	jmp EXEC ; execute it!
-.number
-	; is a number...
-	rts
 
 .unknown_lit_err
 	; not found !!!
@@ -1166,6 +1163,8 @@ INTERPRET
 	sta	$d020
 	dex
 	dex
+
+.number
 	rts
 
 ; QUIT
