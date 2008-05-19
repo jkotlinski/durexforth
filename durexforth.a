@@ -36,6 +36,9 @@ TMP2 = $32
 
 OP_JSR = $20
 OP_RTS = $60
+OP_LDA_I = $a9
+OP_STA_AX = $9d
+OP_INX = $e8
 
 PSTACK_X_OFFSET = 0
 PSTACK = $2100
@@ -1443,14 +1446,37 @@ INTERPRET
 	rts
 
 .compile_number
-	; TODO: this should be inlined
-	lda	#OP_JSR
+	dex
+	dex
+
+	lda	#OP_INX
 	jsr	_compile_byte
-	lda	#<LIT
+	lda	#OP_INX
 	jsr	_compile_byte
-	lda	#>LIT
+
+	lda	#OP_LDA_I
 	jsr	_compile_byte
-	jmp	COMMA
+	lda	PSTACK - 0, x
+	jsr	_compile_byte
+
+	lda	#OP_STA_AX
+	jsr	_compile_byte
+	lda	#<(PSTACK - 2)
+	jsr	_compile_byte
+	lda	#>(PSTACK - 2)
+	jsr	_compile_byte
+
+	lda	#OP_LDA_I
+	jsr	_compile_byte
+	lda	PSTACK + 1, x
+	jsr	_compile_byte
+
+	lda	#OP_STA_AX
+	jsr	_compile_byte
+	lda	#<(PSTACK - 1)
+	jsr	_compile_byte
+	lda	#>(PSTACK - 1)
+	jmp	_compile_byte
 
 .unknown_lit_err
 	; not found !!!
