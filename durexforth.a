@@ -57,6 +57,7 @@ K_F1 = $85
 K_F3 = $86
 K_BACKSPACE = $14
 K_RETURN = $d
+K_CLRSCR = $93
 
 C_RED = 2
 C_YELLOW = 7
@@ -79,6 +80,10 @@ C_GRAY = 12
 	; activate cursor
 	sta	$cc
 
+	; clrscr
+	lda	#K_CLRSCR
+	jsr	PUTCHR
+
 	lda	#C_YELLOW
 	sta	BLINK_COLOR
 
@@ -87,7 +92,7 @@ C_GRAY = 12
 
 	ldx	#0
 
-	jsr	QUIT
+	jmp	QUIT
 
 ; ----------- macros
 
