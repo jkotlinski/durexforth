@@ -28,7 +28,7 @@
 !to "durexforth.prg", cbm	; set output file and format
 
 F_IMMED = $80
-F_COMPILE = $40
+F_HIDDEN = $40
 STRLEN_MASK = $3f
 
 TMP = $30
@@ -1288,7 +1288,7 @@ FIND
 
 	ldy	#2
 	lda	(TMP), y ; get string length of dictionary word
-	and	#STRLEN_MASK
+	and	#STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
 	cmp	.strlen
 	bne	.word_not_equal
 
@@ -1581,6 +1581,7 @@ CREATE
 	lda	PSTACK - 1, x
 	sta	TMP2 + 1
 	lda	(TMP2), y
+	ora	#F_HIDDEN
 	sta	(TMP), y	
 
 	; save stack ptr to use x as loop counter
@@ -1705,6 +1706,17 @@ _compile_byte
 SEMICOLON
 	lda	#OP_RTS ; this should be changed to replacing last jsr with jmp...
 	jsr	_compile_byte
+
+	; make the word findable again (clear F_HIDDEN)
+	lda	LATEST
+	sta	TMP
+	lda	LATEST + 1
+	sta	TMP + 1
+	ldy	#2
+	lda	(TMP), y
+	and	#!F_HIDDEN
+	sta	(TMP), y
+
 	lda	#K_RETURN
 	jsr	print_char
 	jmp	LBRAC ; go back to immediate mode
