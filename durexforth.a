@@ -1,11 +1,41 @@
+;The MIT License
+;
+;Copyright (c) 2008 Johan Kotlinski
+;
+;Permission is hereby granted, free of charge, to any person obtaining a copy
+;of this software and associated documentation files (the "Software"), to deal
+;in the Software without restriction, including without limitation the rights
+;to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+;copies of the Software, and to permit persons to whom the Software is
+;furnished to do so, subject to the following conditions:
+;
+;The above copyright notice and this permission notice shall be included in
+;;all copies or substantial portions of the Software.
+;
+;THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+;THE SOFTWARE.
+
+
 ; ACME assembler
 
 !cpu 6510
 !svl "durexforth.lbl"
 !to "durexforth.prg", cbm	; set output file and format
 
+F_IMMED = $80
+F_COMPILE = $40
+STRLEN_MASK = $3f
+
 TMP = $30
 TMP2 = $32
+
+OP_JSR = $20
+OP_RTS = $60
 
 PSTACK_X_OFFSET = 0
 PSTACK = $2100
@@ -22,9 +52,13 @@ BLINK_COLOR = $286
 
 K_F1 = $85
 K_F3 = $86
+K_BACKSPACE = $14
+K_RETURN = $d
 
+C_RED = 2
 C_YELLOW = 7
 C_GREEN = 5
+C_GRAY = 12
 
 ; -------- program start
 
@@ -311,18 +345,12 @@ DECR
 	!text	"+"
 ADD
 	lda	PSTACK - 2, x
-	sta + + 1
 	clc
-	lda	PSTACK - 4, x
-+
-	adc #0
+	adc PSTACK - 4, x
 	sta	PSTACK - 4, x
 
 	lda	PSTACK - 1, x
-	sta + + 1
-	lda PSTACK - 3, x
-+
-	adc #0
+	adc PSTACK - 3, x
 	sta PSTACK - 3, x
 
 	dex
@@ -336,19 +364,13 @@ ADD
 	!byte	1
 	!text	"-"
 SUB
-	lda	PSTACK - 2, x
-	sta + + 1
-	sec
 	lda	PSTACK - 4, x
-+
-	sbc #0
+	sec
+	sbc PSTACK - 2, x
 	sta	PSTACK - 4, x
 
-	lda	PSTACK - 1, x
-	sta + + 1
 	lda PSTACK - 3, x
-+
-	sbc #0
+	sbc PSTACK - 1, x
 	sta PSTACK - 3, x
 
 	dex
@@ -472,10 +494,10 @@ LT
 	dex
 	lda	PSTACK + 1, x
 	cmp	PSTACK - 1, x
-	bmi	+
+	bmi	+ ; FIXME - bcc/bcs
 	lda	PSTACK + 0, x
 	cmp	PSTACK - 2, x
-	bmi	+
+	bmi	+ ; FIXME - bcc/bcs
 	lda	#0
 	jmp	++
 +
@@ -495,10 +517,10 @@ GT
 	dex
 	lda	PSTACK - 1, x
 	cmp	PSTACK + 1, x
-	bmi	+
+	bmi	+ ; FIXME - bcc/bcs
 	lda	PSTACK - 2, x
 	cmp	PSTACK - 0, x
-	bmi	+
+	bmi	+ ; FIXME - bcc/bcs
 	lda	#0
 	jmp	++
 +
@@ -526,8 +548,8 @@ ZEQU
 +
 	lda	#0
 ++
-	lda	PSTACK - 1, x
-	lda	PSTACK - 2, x
+	sta	PSTACK - 1, x
+	sta	PSTACK - 2, x
 	+NEXT
 
 ; 0<>
@@ -545,8 +567,8 @@ ZNEQU
 +
 	lda	#$ff
 ++
-	lda	PSTACK - 1, x
-	lda	PSTACK - 2, x
+	sta	PSTACK - 1, x
+	sta	PSTACK - 2, x
 	+NEXT
 
 ; 0< - TODO
@@ -739,7 +761,7 @@ STATE
 	!text	"here"
 	+VAR_CODE	HERE
 HERE
-	!word	0
+	!word	LATEST + 2
 
 ; BASE - current number base.
 	!word	LINK
@@ -806,9 +828,8 @@ EMIT
 	dex
 	+NEXT
 
-print_space
+print_char
 	stx	tmp_x
-	lda	#' '
 	jsr	PUTCHR
 	ldx	tmp_x
 	rts
@@ -861,7 +882,8 @@ DOT
 	and	#$f
 	jsr	print_hex_nibble
 
-	jsr	print_space
+	lda	#' '
+	jsr	print_char
 
 	dex
 	dex
@@ -871,45 +893,29 @@ DOT
 TIB
 	!fill 33
 
-INPUT_TEXT	= 0
-INPUT_NUMBER	= $80
+INPUT_WORD = 0
+INPUT_DEFWORD = 1
+INPUT_HEX = 2
+INPUT_DEC = 3
 
 INPUT_MODE
-	!byte	INPUT_TEXT
+	!byte	INPUT_WORD
 
-last_input_char
-	!byte	0
 tmp_x
 	!byte	0
 
-flip_input_mode
-	lda	INPUT_MODE
-	beq	+
+color_table
+	!byte	C_YELLOW, C_RED, C_GREEN, C_GRAY
 
-	lda	#C_YELLOW
+update_color
+	tay
+	lda	color_table, y
 	sta	BLINK_COLOR
-	lda	#INPUT_TEXT
-	sta	INPUT_MODE
-	rts
-
-+
-	lda	#C_GREEN
-	sta	BLINK_COLOR
-	lda	#INPUT_NUMBER
-	sta	INPUT_MODE
 	rts
 
 ; input key in a
-handle_input_key
-	pha
-
-	inc	TMP
-
-	lda	INPUT_MODE
-	bne	.get_number
-
+handle_input_char
 	; put char in TIB
-	pla
 .dst
 	sta $f00d
 	inc	.dst + 1
@@ -918,18 +924,24 @@ handle_input_key
 +
 	rts
 
-.get_number
-	; make space for a new hex digit...
-	asl	PSTACK - 2, x
-	rol	PSTACK - 1, x
-	asl	PSTACK - 2, x
-	rol	PSTACK - 1, x
-	asl	PSTACK - 2, x
-	rol	PSTACK - 1, x
-	asl	PSTACK - 2, x
-	rol	PSTACK - 1, x
+handle_input_digit
+	pha
+	lda	INPUT_MODE
+	cmp	#INPUT_DEC
+	beq	.decimal
 
 	pla
+
+	; make space for a new hex digit...
+	asl	TMP
+	rol	TMP + 1
+	asl	TMP
+	rol	TMP + 1
+	asl	TMP
+	rol	TMP + 1
+	asl	TMP
+	rol	TMP + 1
+
 	sec
 	sbc	#$30 ; fix for 0-9
 
@@ -937,10 +949,80 @@ handle_input_key
 	bcc	+
 	sbc	#7
 +
-	eor	PSTACK - 2, x ; eor in the new hex digit
-	sta	PSTACK - 2, x
+	eor	TMP ; eor in the new hex digit
+	sta	TMP
 
 	rts
+
+.decimal
+	; multiply existing number by 10...
+	inx
+	inx
+	inx
+	inx
+
+	lda	TMP
+	sta	PSTACK - 4, x
+	lda	TMP + 1
+	sta	PSTACK - 3, x
+	
+	lda	#10
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+
+	lda	TMP2
+	pha
+	lda	TMP2 + 1
+	pha
+
+	jsr	MUL
+
+	pla
+	sta	TMP2 + 1
+	pla
+	sta	TMP2
+
+	lda	PSTACK - 2, x
+	sta	TMP
+	lda	PSTACK - 1, x
+	sta	TMP + 1
+
+	; add the entered digit...
+	pla
+
+	sec
+	sbc	#$30 ; fix for 0-9
+
+	inx
+	inx
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+
+	jsr	ADD
+
+	lda	PSTACK - 2, x
+	sta	TMP
+	lda	PSTACK - 1, x
+	sta	TMP + 1
+
+	dex
+	dex
+
+	rts
+
+_accept_char_table
+	!text	"0123456789abcdefghijklmnopqrstuvwxyz-.:;=*+-!#$@%&/\"
+	!byte	0
+
+_accept_hex_table
+	!text	"0123456789abcdef"
+	!byte	0
+
+_accept_dec_table
+	!text	"0123456789"
+	!byte	0
 
 ; WORD
 	!word	LINK
@@ -954,15 +1036,12 @@ WORD
 	lda	#>(TIB + 1)
 	sta	.dst + 2
 	lda	#0
-	sta	TMP
+	sta	.entered_chars_count
 	
-	inx
-	inx
-
-	; prepare for number input
-	; a is zero
-	sta	PSTACK - 2, x 
-	sta	PSTACK - 1, x
+	lda	#<_accept_char_table
+	sta	TMP2
+	lda	#>_accept_char_table
+	sta	TMP2 + 1
 
 -
 	lda	#0 ; reset cursor blink...
@@ -971,33 +1050,64 @@ WORD
 	stx	tmp_x
 	jsr	GETCHR
 	ldx	tmp_x
-	sta	last_input_char
-	lda	last_input_char
+	ora	#0
 	beq	-
 	cmp #' '
 	beq .space
+
+	cmp	#K_BACKSPACE
+	bne	+
+	jsr	handle_backspace
+	jmp	WORD
++
+
+	cmp	#K_RETURN
+	bne	+
+	; switch between red/yellow color...
+	lda	.entered_chars_count
+	bne	+
+	lda	STATE
+	bne	+
+
+	lda	INPUT_MODE
+	eor	#1
+	sta	INPUT_MODE
+	jsr	update_color
+	jmp	WORD
++
+	jsr	_allowed_char
+	ora	#0
+	beq	-
+
+	inc	.entered_chars_count
+
 	stx	tmp_x
 	jsr	PUTCHR
 	ldx	tmp_x
-	jsr	handle_input_key
+	jsr	handle_input_char
 	jmp	-
 .space
-	lda	TMP
+	lda	.entered_chars_count
 	bne	+
-	jsr	flip_input_mode
-	jmp	-
+	lda	#INPUT_HEX
+	sta	INPUT_MODE
+	jsr	update_color
+	pla ; discard return address
+	pla
+	jmp	INTERPRET
+
 +
 	lda	#' '
 	stx	tmp_x
 	jsr	PUTCHR
 	ldx	tmp_x
 
-	lda	INPUT_MODE
-	bne	+
-
 	; return text string
-	lda	TMP
+	lda	.entered_chars_count
 	sta TIB 
+
+	inx
+	inx
 
 	lda	#<TIB
 	sta	PSTACK - 2, x
@@ -1006,17 +1116,137 @@ WORD
 +
 	rts
 
-; NUMBER - TODO...
+; input in a... returned a = 0 means not accepted
+
+_allowed_char
+	sta	.inchar + 1
+
+	ldy	#0
+-
+	lda	(TMP2), y
+	beq	+
+
+.inchar
+	cmp	#0	; inchar... overwritten
+	beq	+
+
+	iny
+	jmp	-
++
+	rts
+
+.entered_chars_count
+	!byte	0
+
+handle_backspace
+-
+	lda	.entered_chars_count
+	beq	+
+
+	lda	#K_BACKSPACE
+	jsr	print_char
+
+	dec	.entered_chars_count
+
+	jmp	-
++
+	rts
+
+; NUMBER
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	6
 	!text	"number"
 NUMBER
-	lda #0
+	; prepare for number input
+	lda	#0
+	sta	TMP
+	sta	TMP + 1
+	sta	.entered_chars_count
+
+	lda	INPUT_MODE
+	cmp	#INPUT_HEX
+	bne	.decml
+	lda	#<_accept_hex_table
+	sta	TMP2
+	lda	#>_accept_hex_table
+	sta	TMP2 + 1
+	jmp	+
+.decml
+	lda	#<_accept_dec_table
+	sta	TMP2
+	lda	#>_accept_dec_table
+	sta	TMP2 + 1
++
+
+-
+	lda	#0 ; reset cursor blink...
+	sta	$cf
+
+	stx	tmp_x
+	jsr	GETCHR
+	ldx	tmp_x
+
+	ora	#0
+	beq	-
+	cmp #' '
+	beq .space2
+
+	cmp	#K_BACKSPACE
+	bne	+
+	jsr	handle_backspace
+	jmp	NUMBER
++
+
+	cmp	#K_RETURN
+	bne	+
+	; switch between green/light green color...
+	lda	.entered_chars_count
+	bne	+
+	lda	STATE
+	bne	+
+
+	lda	INPUT_MODE
+	eor	#1
+	sta	INPUT_MODE
+	jsr	update_color
+	jmp	NUMBER
++
+	jsr	_allowed_char
+	ora	#0
+	beq	-
+
+	inc	.entered_chars_count
+
+	stx	tmp_x
+	jsr	PUTCHR
+	ldx	tmp_x
+	jsr	handle_input_digit
+	jmp	-
+.space2
+	lda	.entered_chars_count
+	bne	+
+	lda	#INPUT_WORD
+	sta	INPUT_MODE
+	jsr	update_color
+	pla ; discard return addr
+	pla
+	jmp	INTERPRET
++
+	lda	#' '
+	stx	tmp_x
+	jsr	PUTCHR
+	ldx	tmp_x
+
+	inx
+	inx
+
+	lda	TMP
 	sta	PSTACK - 2, x
-	lda	#32
+	lda	TMP + 1
 	sta	PSTACK - 1, x
-	+NEXT
+
+	rts
 
 ; FIND
 	!word	LINK
@@ -1045,10 +1275,12 @@ FIND
 .examine_word
 	ldy	#0
 	lda	(TMP2), y ; get length of find string
+	and	#STRLEN_MASK
 	sta	.strlen
 
 	ldy	#2
 	lda	(TMP), y ; get string length of dictionary word
+	and	#STRLEN_MASK
 	cmp	.strlen
 	bne	.word_not_equal
 
@@ -1115,7 +1347,8 @@ TCFA
 	sta TMP
 	; TMP contains pointer to word
 	ldy	#2
-	lda	(TMP), y ; a contains string length
+	lda	(TMP), y ; a contains string length + mask
+	and	#STRLEN_MASK
 	clc
 	adc	#3 ; offset for link + string length
 	sta	.addend + 1
@@ -1143,28 +1376,135 @@ EXEC
 	jmp	(TMP)
 
 ; INTERPRET
-
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	9
 	!text	"interpret"
 INTERPRET
-	jsr WORD ; push string or number to stack
 	lda	INPUT_MODE
-	bne	.number
+	cmp	#INPUT_HEX
+	beq	.number
+	cmp	#INPUT_DEC
+	beq	.number
+
+	jsr WORD ; push string to stack
+
+	lda	INPUT_MODE
+	cmp	#INPUT_DEFWORD
+	bne	+
+	; ah... a new definition word!
+	lda	#INPUT_WORD ; switch back to normal input mode
+	sta	INPUT_MODE
+	jsr	update_color
+	jsr	CREATE ; create dictionary entry / header
+	jmp	RBRAC ; go into compile mode
++
 	jsr	FIND ; is it in the dictionary?
-	beq	.unknown_lit_err
+	beq	.unknown_lit_err ; not found :(
+
+	lda	STATE ; compiling?
+	beq	.execute ; no... execute it
+
+	lda	PSTACK - 2, x
+	sta	TMP
+	lda	PSTACK - 1, x
+	sta TMP + 1
+
+	; skip link
+	inc	TMP
+	bne	+
+	inc TMP + 1
++
+	inc TMP
+	bne +
+	inc	TMP + 1
++
+
+	; is it immediate?
+	ldy	#0
+	lda	(TMP), y
+	and	#F_IMMED
+	bne	.execute ; yes... execute
+
+	; no... compile
+	jsr TCFA ; fetch code address
+	jmp	_compile_call
+
+.execute
 	jsr TCFA ; fetch code address
 	jmp EXEC ; execute it!
+
+.number
+	jsr NUMBER ; push number to stack
+	lda	STATE ; compiling?
+	bne	.compile_number 
+	
+	; no... leave it on stack
+	rts
+
+.compile_number
+	; TODO: this should be inlined
+	lda	#OP_JSR
+	jsr	_compile_byte
+	lda	#<LIT
+	jsr	_compile_byte
+	lda	#>LIT
+	jsr	_compile_byte
+	jmp	COMMA
 
 .unknown_lit_err
 	; not found !!!
 	lda	#2
 	sta	$d020
-	dex
-	dex
+	jsr	handle_backspace
+	lda	#K_BACKSPACE
+	jsr	print_char
+	lda	#0
+	sta	$d020
 
-.number
+	dex
+	dex
+	rts
+
+; LIT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"lit"
+LIT
+	; pop return address
+	pla
+	sta	TMP
+	pla
+	sta	TMP + 1
+
+	; grow stack
+	inx
+	inx
+
+	; copy literal to stack
+	ldy	#1 ; offset by one to make TMP + y point to the literal
+	lda	(TMP), y
+	sta	PSTACK - 2, x
+
+	iny
+	lda	(TMP), y
+	sta	PSTACK - 1, x
+
+	tya
+	dey
+	clc
+	adc TMP	
+	bcc	+
+	inc	TMP + 1
++
+	sta	TMP
+
+	; return
+	lda	TMP + 1
+	pha
+	lda	TMP
+	pha
 	rts
 
 ; QUIT
@@ -1175,6 +1515,240 @@ INTERPRET
 QUIT
 	jsr	INTERPRET
 	jmp	QUIT
+
+; CREATE
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	6
+	!text	"create"
+CREATE
+	; store link in header. TMP = dst
+	lda	HERE
+	sta	TMP
+	lda	HERE + 1
+	sta	TMP + 1
+
+	ldy	#0
+	lda	LATEST
+	sta	(TMP), y
+
+	inc	TMP
+	bne	+
+	inc	TMP + 1
++
+	lda	LATEST + 1
+	sta	(TMP), y
+
+	inc	TMP
+	bne	+
+	inc	TMP + 1
++
+
+	; store length byte in header. TMP2 = src
+	lda	PSTACK - 2, x
+	sta	TMP2
+	lda	PSTACK - 1, x
+	sta	TMP2 + 1
+	lda	(TMP2), y
+	sta	(TMP), y	
+
+	; save stack ptr to use x as loop counter
+	txa
+	pha
+
+	; copy string
+	lda	(TMP2), y
+	tax
+-
+	iny
+	lda	(TMP2), y
+	sta	(TMP), y
+
+	dex
+	bne	-
+
+	; update LATEST
+	lda	HERE
+	sta	LATEST
+	lda	HERE + 1
+	sta	LATEST + 1
+	
+	; update HERE
+	iny
+	tya
+	clc
+	adc	TMP
+	sta	HERE
+	bcc	+
+	inc	HERE + 1
++
+
+	; restore stack ptr
+	pla
+	tax
+
+	dex
+	dex
+
+	rts
+
+; COMMA
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	","
+COMMA
+	lda	HERE
+	sta	TMP
+	lda	HERE + 1
+	sta	TMP + 1
+
+	ldy	#0
+	lda	PSTACK - 2, x
+	sta	(TMP), y
+	iny
+	lda	PSTACK - 1, x
+	sta	(TMP), y
+
+	; update HERE
+	inc	HERE
+	bne	+
+	inc HERE + 1
++
+	inc	HERE
+	bne +
+	inc HERE + 1
++
+	dex
+	dex
+	rts
+
+; LBRAC
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1 | F_IMMED
+	!text	"["
+LBRAC
+	lda	#0
+	sta	STATE
+	rts
+
+; RBRAC
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"]"
+RBRAC
+	lda	#1
+	sta	STATE
+	rts
+
+_compile_call
+	lda	#OP_JSR
+	jsr	_compile_byte
+	jmp	COMMA
+
+; input in a... wastes TMP
+_compile_byte
+	pha
+	lda	HERE
+	sta	TMP
+	lda	HERE + 1
+	sta	TMP + 1
+
+	ldy	#0
+	pla
+	sta	(TMP), y
+
+	inc	HERE
+	bne	+
+	inc	HERE + 1
++
+	rts
+
+; SEMICOLON
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1 | F_IMMED
+	!text	";"
+SEMICOLON
+	lda	#OP_RTS ; this should be changed to replacing last jsr with jmp...
+	jsr	_compile_byte
+	lda	#K_RETURN
+	jsr	print_char
+	jmp	LBRAC ; go back to immediate mode
+
+; BRANCH
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	6
+	!text	"BRANCH"
+BRANCH
+	; pop return address
+	pla
+	sta	TMP
+	pla
+	sta	TMP + 1
+
+	; copy offset to TMP2
+	ldy	#1
+	lda	(TMP), y
+	sta	TMP2
+	iny
+	lda	(TMP), y
+	sta	TMP2 + 1
+
+	; make TMP point at the next instruction
+	lda	TMP
+	clc
+	adc	#3 ; skip 6510 rts offset, offset word
+	bcc	+
+	inc	TMP + 1
++
+	; sta	TMP
+
+	; add offset (TMP2)
+	; lda	TMP
+	clc
+	adc TMP2
+	sta	TMP
+
+	lda	TMP + 1
+	adc	TMP2 + 1
+
+	; return
+	pha
+	lda	TMP
+	pha
+	rts
+
+; 0BRANCH
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	7
+	!text	"0BRANCH"
+ZBRANCH
+	dex
+	dex
+	lda	PSTACK + 1, x
+	bne .dont_branch
+	lda	PSTACK + 0, x
+	beq BRANCH
+
+.dont_branch ; skip the offset and return...
+	; pop return address
+	pla
+	clc
+	adc	#3
+	sta	.retaddr + 1
+	pla
+	sta	.retaddr + 2
+	bcc	+
+	inc	.retaddr + 2
++
+
+.retaddr
+	jmp	1234 ; overwrite
 
 ; -----------
 
