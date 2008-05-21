@@ -41,7 +41,10 @@ OP_STA_AX = $9d
 OP_INX = $e8
 
 PSTACK_X_OFFSET = 0
-PSTACK = $2108
+PSTACK = $2408
+EDIT_BUFFER = $2000 ; - $23ff
+
+EDIT_WORD = 0
 
 ; X = PSP
 ; SP = RSP
@@ -50,6 +53,7 @@ PSTACK = $2108
 
 GETCHR = $ffe4 ; get char from kbd
 PUTCHR = $ffd2 ; put char
+SETGETCURSOR = $fff0
 
 BLINK_COLOR = $286
 
@@ -58,11 +62,17 @@ K_F3 = $86
 K_BACKSPACE = $14
 K_RETURN = $d
 K_CLRSCR = $93
+K_SPACE = ' '
 
-C_RED = 2
 C_YELLOW = 7
 C_GREEN = 5
-C_GRAY = 12
+C_LT_GREEN = 13
+C_BEIGE = 10
+C_ORANGE = 8
+C_RED = 2
+C_MAGENTA = 4
+C_BLUE = 14
+C_CYAN = 3
 
 ; -------- program start
 
@@ -84,13 +94,20 @@ C_GRAY = 12
 	lda	#K_CLRSCR
 	jsr	PUTCHR
 
-	lda	#C_YELLOW
-	sta	BLINK_COLOR
-
 	lda	#%00010110 ; lowercase
 	sta	$d018
 
 	ldx	#0
+
+	lda	#0
+-
+	sta	EDIT_BUFFER, x
+	sta	EDIT_BUFFER + $100, x
+	sta	EDIT_BUFFER + $200, x
+	sta	EDIT_BUFFER + $300, x
+	
+	inx
+	bne	-
 
 	jmp	QUIT
 
@@ -111,6 +128,12 @@ C_GRAY = 12
 	sbx #4 ; equals dex 4 times
 }
 
+
+!macro reset_cursor {
+	lda	#0
+	sta	$cf
+}
+
 !macro PUSH_TO_PRM_STACK .word {
 	lda	#<.word
 	sta	PSTACK, x
@@ -124,6 +147,9 @@ C_GRAY = 12
 	+PUSH_TO_PRM_STACK .word
 	+NEXT
 }
+
+in_editor
+	!byte	0
 
 ; ---------- words
 
@@ -889,7 +915,7 @@ DOT
 	and	#$f
 	jsr	print_hex_nibble
 
-	lda	#' '
+	lda	#K_SPACE
 	jsr	print_char
 
 	dex
@@ -900,28 +926,92 @@ DOT
 TIB
 	!fill 33
 
-INPUT_WORD = 0
-INPUT_DEFWORD = 1
-INPUT_HEX = 2
-INPUT_DEC = 3
+IM_EXECUTE = 0 ; yellow
+IM_COMPILE = 1 ; green
+IM_DEFINE = 2 ; red
+IM_VARIABLE = 3 ; magenta
 
 INPUT_MODE
-	!byte	INPUT_WORD
+	!byte	IM_EXECUTE
+
+IT_WORD = 0
+IT_HEX = 1
+IT_DEC = 2
+IT_NONE = 3
+
+INPUT_TYPE
+	!byte	IT_WORD
 
 tmp_x
 	!byte	0
 
 color_table
-	!byte	C_YELLOW, C_RED, C_GREEN, C_GRAY
+		;	execute		compile		define		variable
+	!byte	C_YELLOW, 	C_GREEN, 	C_RED,		C_MAGENTA	; word
+	!byte	C_YELLOW,	C_GREEN, 	0, 			0			; hex num
+	!byte	C_YELLOW,	C_GREEN,	0, 			0			; dec num
+
+!ct scr
+
+input_type_desc
+	!text	"a-z 0-f 0-9 "
+
+!ct pet
+
+input_type_desc_col = 36
+input_type_desc_row = 24
+
+; wastes TMP, y
+update_input_type_desc
+	txa ; save x
+	pha
+
+	lda	INPUT_TYPE
+	asl
+	asl
+
+	clc
+	adc	#<input_type_desc
+	sta	TMP
+	lda	#>input_type_desc
+	sta	TMP + 1
+
+desc_pos = $400 + 40 * 24 + 37
+	ldy	#0
+	lda	(TMP), y
+	sta	desc_pos
+	iny
+	lda	(TMP), y
+	sta	desc_pos + 1
+	iny
+	lda	(TMP), y
+	sta	desc_pos + 2
+	
+	pla ; restore x
+	tax
+
+	rts
 
 update_color
+	lda	INPUT_TYPE
+	asl
+	asl
+	clc
+	adc	INPUT_MODE
 	tay
 	lda	color_table, y
 	sta	BLINK_COLOR
-	rts
+desc_color_pos = $d800 + 40 * 24 + 37
+	sta	desc_color_pos
+	sta	desc_color_pos + 1
+	sta	desc_color_pos + 2
+
+	jmp	update_input_type_desc
 
 ; input key in a
 handle_input_char
+	jsr	print_char
+
 	; put char in TIB
 .dst
 	sta $f00d
@@ -933,8 +1023,8 @@ handle_input_char
 
 handle_input_digit
 	pha
-	lda	INPUT_MODE
-	cmp	#INPUT_DEC
+	lda	INPUT_TYPE
+	cmp	#IT_DEC
 	beq	.decimal
 
 	pla
@@ -1031,6 +1121,33 @@ _accept_dec_table
 	!text	"0123456789"
 	!byte	0
 
+handle_return_flip_input_type
+	pha ; save a
+	cmp	#K_RETURN
+	bne	++
+	; switch input mode...
+	lda	.entered_chars_count
+	bne	++
+
+	inc	INPUT_TYPE
+	lda	INPUT_TYPE
+	cmp	#IT_NONE
+	bne	+
+	lda	#0
+	sta	INPUT_TYPE
++
+	jsr	update_color
+	pla ; drop a
+
+	pla ; discard return addresses, go to interpret
+	pla
+	pla
+	pla
+	jmp	INTERPRET
+++
+	pla ; restore a
+	rts
+
 ; WORD
 	!word	LINK
 	!set	LINK = * - 2
@@ -1051,15 +1168,14 @@ WORD
 	sta	TMP2 + 1
 
 -
-	lda	#0 ; reset cursor blink...
-	sta	$cf
+	+reset_cursor
 
 	stx	tmp_x
 	jsr	GETCHR
 	ldx	tmp_x
 	ora	#0
 	beq	-
-	cmp #' '
+	cmp #K_SPACE
 	beq .space
 
 	cmp	#K_BACKSPACE
@@ -1068,45 +1184,37 @@ WORD
 	jmp	WORD
 +
 
-	cmp	#K_RETURN
-	bne	+
-	; switch between red/yellow color...
-	lda	.entered_chars_count
-	bne	+
-	lda	STATE
-	bne	+
+	jsr	handle_return_flip_input_type
 
-	lda	INPUT_MODE
-	eor	#1
-	sta	INPUT_MODE
-	jsr	update_color
-	jmp	WORD
-+
 	jsr	_allowed_char
 	ora	#0
 	beq	-
 
 	pha
 	lda	INPUT_MODE
-	cmp	#INPUT_DEFWORD
+	cmp	#IM_DEFINE
 	bne	+
 	lda	.entered_chars_count
 	bne	+
+	+reset_cursor
+	lda	#K_SPACE
+	jsr	print_char ; CR on starting a new definition
 	lda	#K_RETURN
 	jsr	print_char ; CR on starting a new definition
 +
 	pla
 	inc	.entered_chars_count
 
-	stx	tmp_x
-	jsr	PUTCHR
-	ldx	tmp_x
 	jsr	handle_input_char
+
 	jmp	-
+
 .space
 	lda	.entered_chars_count
 	bne	+
-	lda	#INPUT_HEX
+	inc	INPUT_MODE
+	lda	INPUT_MODE
+	and	#3
 	sta	INPUT_MODE
 	jsr	update_color
 	pla ; discard return address
@@ -1114,7 +1222,7 @@ WORD
 	jmp	INTERPRET
 
 +
-	lda	#' '
+	lda	#K_SPACE
 	stx	tmp_x
 	jsr	PUTCHR
 	ldx	tmp_x
@@ -1181,8 +1289,8 @@ NUMBER
 	sta	TMP + 1
 	sta	.entered_chars_count
 
-	lda	INPUT_MODE
-	cmp	#INPUT_HEX
+	lda	INPUT_TYPE
+	cmp	#IT_HEX
 	bne	.decml
 	lda	#<_accept_hex_table
 	sta	TMP2
@@ -1197,8 +1305,7 @@ NUMBER
 +
 
 -
-	lda	#0 ; reset cursor blink...
-	sta	$cf
+	+reset_cursor
 
 	stx	tmp_x
 	jsr	GETCHR
@@ -1206,7 +1313,7 @@ NUMBER
 
 	ora	#0
 	beq	-
-	cmp #' '
+	cmp #K_SPACE
 	beq .space2
 
 	cmp	#K_BACKSPACE
@@ -1215,20 +1322,8 @@ NUMBER
 	jmp	NUMBER
 +
 
-	cmp	#K_RETURN
-	bne	+
-	; switch between green/light green color...
-	lda	.entered_chars_count
-	bne	+
-	lda	STATE
-	bne	+
+	jsr	handle_return_flip_input_type
 
-	lda	INPUT_MODE
-	eor	#1
-	sta	INPUT_MODE
-	jsr	update_color
-	jmp	NUMBER
-+
 	jsr	_allowed_char
 	ora	#0
 	beq	-
@@ -1243,14 +1338,18 @@ NUMBER
 .space2
 	lda	.entered_chars_count
 	bne	+
-	lda	#INPUT_WORD
+
+	inc	INPUT_MODE
+	lda	INPUT_MODE
+	and	#1 ; only yellow/green is valid for numbers...
 	sta	INPUT_MODE
+
 	jsr	update_color
 	pla ; discard return addr
 	pla
 	jmp	INTERPRET
 +
-	lda	#' '
+	lda	#K_SPACE
 	stx	tmp_x
 	jsr	PUTCHR
 	ldx	tmp_x
@@ -1398,19 +1497,21 @@ EXEC
 	!byte	9
 	!text	"interpret"
 INTERPRET
-	lda	INPUT_MODE
-	cmp	#INPUT_HEX
+	jsr	update_color
+
+	lda	INPUT_TYPE
+	cmp	#IT_HEX
 	beq	.number
-	cmp	#INPUT_DEC
+	cmp	#IT_DEC
 	beq	.number
 
 	jsr WORD ; push string to stack
 
 	lda	INPUT_MODE
-	cmp	#INPUT_DEFWORD
+	cmp	#IM_DEFINE
 	bne	+
 	; ah... a new definition word!
-	lda	#INPUT_WORD ; switch back to normal input mode
+	lda	#IM_COMPILE ; switch back to compile mode
 	sta	INPUT_MODE
 	jsr	update_color
 	jsr	CREATE ; create dictionary entry / header
