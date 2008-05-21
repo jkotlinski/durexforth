@@ -830,11 +830,10 @@ RDROP
 	!byte	4
 	!text	"emit"
 EMIT
-	lda	PSTACK - 1, x
-	jsr	PUTCHR
 	dex
 	dex
-	+NEXT
+	lda	PSTACK, x
+	jmp	print_char
 
 print_char
 	stx	tmp_x
@@ -1087,6 +1086,16 @@ WORD
 	ora	#0
 	beq	-
 
+	pha
+	lda	INPUT_MODE
+	cmp	#INPUT_DEFWORD
+	bne	+
+	lda	.entered_chars_count
+	bne	+
+	lda	#K_RETURN
+	jsr	print_char ; CR on starting a new definition
++
+	pla
 	inc	.entered_chars_count
 
 	stx	tmp_x
@@ -1716,9 +1725,6 @@ SEMICOLON
 	lda	(TMP), y
 	and	#!F_HIDDEN
 	sta	(TMP), y
-
-	lda	#K_RETURN
-	jsr	print_char
 	jmp	LBRAC ; go back to immediate mode
 
 ; BRANCH
