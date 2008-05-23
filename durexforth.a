@@ -934,71 +934,15 @@ IM_VARIABLE = 3 ; magenta
 INPUT_MODE
 	!byte	IM_EXECUTE
 
-IT_WORD = 0
-IT_HEX = 1
-IT_DEC = 2
-IT_NONE = 3
-
-INPUT_TYPE
-	!byte	IT_WORD
-
 tmp_x
 	!byte	0
 
 color_table
 		;	execute		compile		define		variable
 	!byte	C_YELLOW, 	C_GREEN, 	C_RED,		C_MAGENTA	; word
-	!byte	C_YELLOW,	C_GREEN, 	0, 			0			; hex num
-	!byte	C_YELLOW,	C_GREEN,	0, 			0			; dec num
-
-!ct scr
-
-input_type_desc
-	!text	"a-z 0-f 0-9 "
-
-!ct pet
-
-input_type_desc_col = 36
-input_type_desc_row = 24
-
-; wastes TMP, y
-update_input_type_desc
-	txa ; save x
-	pha
-
-	lda	INPUT_TYPE
-	asl
-	asl
-
-	clc
-	adc	#<input_type_desc
-	sta	TMP
-	lda	#>input_type_desc
-	sta	TMP + 1
-
-desc_pos = $400 + 40 * 24 + 37
-	ldy	#0
-	lda	(TMP), y
-	sta	desc_pos
-	iny
-	lda	(TMP), y
-	sta	desc_pos + 1
-	iny
-	lda	(TMP), y
-	sta	desc_pos + 2
-	
-	pla ; restore x
-	tax
-
-	rts
 
 update_color
-	lda	INPUT_TYPE
-	asl
-	asl
-	clc
-	adc	INPUT_MODE
-	tay
+	ldy	INPUT_MODE
 	lda	color_table, y
 	sta	BLINK_COLOR
 desc_color_pos = $d800 + 40 * 24 + 37
@@ -1006,7 +950,7 @@ desc_color_pos = $d800 + 40 * 24 + 37
 	sta	desc_color_pos + 1
 	sta	desc_color_pos + 2
 
-	jmp	update_input_type_desc
+	rts
 
 ; input key in a
 handle_input_char
@@ -1021,13 +965,8 @@ handle_input_char
 +
 	rts
 
+; always hex for the moment...
 handle_input_digit
-	pha
-	lda	INPUT_TYPE
-	cmp	#IT_DEC
-	beq	.decimal
-
-	pla
 
 	; make space for a new hex digit...
 	asl	TMP
@@ -1113,41 +1052,6 @@ _accept_char_table
 	!text	"0123456789abcdefghijklmnopqrstuvwxyz-.:;=*+-!#$@%&/\"
 	!byte	0
 
-_accept_hex_table
-	!text	"0123456789abcdef"
-	!byte	0
-
-_accept_dec_table
-	!text	"0123456789"
-	!byte	0
-
-handle_return_flip_input_type
-	pha ; save a
-	cmp	#K_RETURN
-	bne	++
-	; switch input mode...
-	lda	.entered_chars_count
-	bne	++
-
-	inc	INPUT_TYPE
-	lda	INPUT_TYPE
-	cmp	#IT_NONE
-	bne	+
-	lda	#0
-	sta	INPUT_TYPE
-+
-	jsr	update_color
-	pla ; drop a
-
-	pla ; discard return addresses, go to interpret
-	pla
-	pla
-	pla
-	jmp	INTERPRET
-++
-	pla ; restore a
-	rts
-
 ; WORD
 	!word	LINK
 	!set	LINK = * - 2
@@ -1183,8 +1087,6 @@ WORD
 	jsr	handle_backspace
 	jmp	WORD
 +
-
-	jsr	handle_return_flip_input_type
 
 	jsr	_allowed_char
 	ora	#0
@@ -1277,85 +1179,34 @@ handle_backspace
 +
 	rts
 
-; NUMBER
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	6
-	!text	"number"
-NUMBER
-	; prepare for number input
+; convert a text string on the stack to an int
+word_to_number
 	lda	#0
 	sta	TMP
 	sta	TMP + 1
-	sta	.entered_chars_count
+	tay
 
-	lda	INPUT_TYPE
-	cmp	#IT_HEX
-	bne	.decml
-	lda	#<_accept_hex_table
+	lda	PSTACK - 2, x
 	sta	TMP2
-	lda	#>_accept_hex_table
+	lda	PSTACK - 1, x
 	sta	TMP2 + 1
-	jmp	+
-.decml
-	lda	#<_accept_dec_table
-	sta	TMP2
-	lda	#>_accept_dec_table
-	sta	TMP2 + 1
-+
+
+	lda	(TMP2), y
+	sta	.entered_chars_count
+	iny
 
 -
-	+reset_cursor
-
-	stx	tmp_x
-	jsr	GETCHR
-	ldx	tmp_x
-
-	ora	#0
-	beq	-
-	cmp #K_SPACE
-	beq .space2
-
-	cmp	#K_BACKSPACE
-	bne	+
-	jsr	handle_backspace
-	jmp	NUMBER
-+
-
-	jsr	handle_return_flip_input_type
-
-	jsr	_allowed_char
-	ora	#0
-	beq	-
-
-	inc	.entered_chars_count
-
-	stx	tmp_x
-	jsr	PUTCHR
-	ldx	tmp_x
-	jsr	handle_input_digit
-	jmp	-
-.space2
 	lda	.entered_chars_count
-	bne	+
+	beq	+
 
-	inc	INPUT_MODE
-	lda	INPUT_MODE
-	and	#1 ; only yellow/green is valid for numbers...
-	sta	INPUT_MODE
+	lda	(TMP2), y
+	jsr	handle_input_digit
 
-	jsr	update_color
-	pla ; discard return addr
-	pla
-	jmp	INTERPRET
+	dec	.entered_chars_count
+	iny
+
+	jmp	-
 +
-	lda	#K_SPACE
-	stx	tmp_x
-	jsr	PUTCHR
-	ldx	tmp_x
-
-	inx
-	inx
 
 	lda	TMP
 	sta	PSTACK - 2, x
@@ -1499,12 +1350,6 @@ EXEC
 INTERPRET
 	jsr	update_color
 
-	lda	INPUT_TYPE
-	cmp	#IT_HEX
-	beq	.number
-	cmp	#IT_DEC
-	beq	.number
-
 	jsr WORD ; push string to stack
 
 	lda	INPUT_MODE
@@ -1517,8 +1362,12 @@ INTERPRET
 	jsr	CREATE ; create dictionary entry / header
 	jmp	RBRAC ; go into compile mode
 +
+	jsr	DUP
 	jsr	FIND ; is it in the dictionary?
-	beq	.unknown_lit_err ; not found :(
+	beq	.number ; not found... parse as number
+
+	jsr	SWAP
+	jsr	DROP
 
 	lda	STATE ; compiling?
 	beq	.execute ; no... execute it
@@ -1553,7 +1402,8 @@ INTERPRET
 	jmp EXEC ; execute it!
 
 .number
-	jsr NUMBER ; push number to stack
+	jsr	DROP
+	jsr word_to_number ; push number to stack
 	lda	STATE ; compiling?
 	bne	.compile_number 
 	
