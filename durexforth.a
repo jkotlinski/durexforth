@@ -1515,7 +1515,7 @@ INTERPRET
 
 	; no... compile
 	jsr TCFA ; fetch code address
-	jmp	_compile_call
+	jmp	COMMA
 
 .execute
 	jsr TCFA ; fetch code address
@@ -1704,12 +1704,15 @@ CREATE
 
 	rts
 
-; COMMA
+; COMMA - generate function call to the next word
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	1
 	!text	","
 COMMA
+	lda	#OP_JSR
+	jsr	_compile_byte
+
 	lda	HERE
 	sta	TMP
 	lda	HERE + 1
@@ -1754,11 +1757,6 @@ RBRAC
 	lda	#1
 	sta	STATE
 	rts
-
-_compile_call
-	lda	#OP_JSR
-	jsr	_compile_byte
-	jmp	COMMA
 
 ; input in a... wastes TMP
 _compile_byte
