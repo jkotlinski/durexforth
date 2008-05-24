@@ -934,12 +934,56 @@ IM_VARIABLE = 3 ; magenta
 INPUT_MODE
 	!byte	IM_EXECUTE
 
+INPUT_HEX
+	!byte	0
+
 tmp_x
 	!byte	0
 
 color_table
 		;	execute		compile		define		variable
 	!byte	C_YELLOW, 	C_GREEN, 	C_RED,		C_MAGENTA	; word
+
+!ct	scr
+
+input_type_desc
+	!text	"a-9 0-f "
+
+!ct	pet
+
+input_type_desc_col = 36
+input_type_desc_row = 24
+
+; wastes TMP, y
+update_input_type_desc
+	txa ; save x
+	pha
+
+	lda	INPUT_HEX
+	asl
+	asl
+
+	clc
+	adc	#<input_type_desc
+	sta	TMP
+	lda	#>input_type_desc
+	sta	TMP + 1
+
+desc_pos = $400 + 40 * 24 + 37
+	ldy	#0
+	lda	(TMP), y
+	sta	desc_pos
+	iny
+	lda	(TMP), y
+	sta	desc_pos + 1
+	iny
+	lda	(TMP), y
+	sta	desc_pos + 2
+	
+	pla ; restore x
+	tax
+
+	rts
 
 update_color
 	ldy	INPUT_MODE
@@ -950,7 +994,7 @@ desc_color_pos = $d800 + 40 * 24 + 37
 	sta	desc_color_pos + 1
 	sta	desc_color_pos + 2
 
-	rts
+	jmp	update_input_type_desc
 
 ; input key in a
 handle_input_char
@@ -965,9 +1009,7 @@ handle_input_char
 +
 	rts
 
-; always hex for the moment...
-handle_input_digit
-
+handle_input_digit_hex
 	; make space for a new hex digit...
 	asl	TMP
 	rol	TMP + 1
@@ -990,7 +1032,9 @@ handle_input_digit
 
 	rts
 
-.decimal
+handle_input_digit_dec
+	pha
+
 	; multiply existing number by 10...
 	inx
 	inx
@@ -1052,6 +1096,35 @@ _accept_char_table
 	!text	"0123456789abcdefghijklmnopqrstuvwxyz-.:;=*+-!#$@%&/\"
 	!byte	0
 
+_accept_hex_table
+	!text	"0123456789abcdef"
+	!byte	0
+
+handle_return_flip_input_type
+	cmp	#K_RETURN
+	bne	++
+	; switch input mode...
+	pha ; save a
+	lda	.entered_chars_count
+	bne	+
+
+	lda	INPUT_HEX
+	eor	#1
+	sta	INPUT_HEX
+
+	jsr	update_color
+	pla ; drop a
+
+	pla ; discard return addresses, go to interpret
+	pla
+	pla
+	pla
+	jmp	INTERPRET
++
+	pla ; restore a
+++
+	rts
+
 ; WORD
 	!word	LINK
 	!set	LINK = * - 2
@@ -1066,10 +1139,19 @@ WORD
 	lda	#0
 	sta	.entered_chars_count
 	
+	lda	INPUT_HEX
+	bne	+
 	lda	#<_accept_char_table
 	sta	TMP2
 	lda	#>_accept_char_table
 	sta	TMP2 + 1
+	jmp	++
++	; hex
+	lda	#<_accept_hex_table
+	sta	TMP2
+	lda	#>_accept_hex_table
+	sta	TMP2 + 1
+++
 
 -
 	+reset_cursor
@@ -1087,6 +1169,8 @@ WORD
 	jsr	handle_backspace
 	jmp	WORD
 +
+
+	jsr	handle_return_flip_input_type
 
 	jsr	_allowed_char
 	ora	#0
@@ -1113,17 +1197,25 @@ WORD
 
 .space
 	lda	.entered_chars_count
-	bne	+
+	bne	++
 	inc	INPUT_MODE
+
 	lda	INPUT_MODE
 	and	#3
 	sta	INPUT_MODE
+	lda	INPUT_HEX
+	beq	+
+	lda	INPUT_MODE
+	and	#1 ; only yellow/green allowed for hex words
+	sta	INPUT_MODE
++
+
 	jsr	update_color
 	pla ; discard return address
 	pla
 	jmp	INTERPRET
 
-+
+++
 	lda	#K_SPACE
 	stx	tmp_x
 	jsr	PUTCHR
@@ -1195,12 +1287,28 @@ word_to_number
 	sta	.entered_chars_count
 	iny
 
+	lda	INPUT_HEX
+	bne	+
+	; dec
+	lda	#<handle_input_digit_dec
+	sta	.handle_input_digit + 1
+	lda	#>handle_input_digit_dec
+	sta	.handle_input_digit + 2
+	jmp	++
++	; hex
+	lda	#<handle_input_digit_hex
+	sta	.handle_input_digit + 1
+	lda	#>handle_input_digit_hex
+	sta	.handle_input_digit + 2
+++
+
 -
 	lda	.entered_chars_count
 	beq	+
 
 	lda	(TMP2), y
-	jsr	handle_input_digit
+.handle_input_digit
+	jsr	$1234 ; overwrite
 
 	dec	.entered_chars_count
 	iny
@@ -1363,6 +1471,8 @@ INTERPRET
 	jmp	RBRAC ; go into compile mode
 +
 	jsr	DUP
+	lda	INPUT_HEX
+	bne	.number
 	jsr	FIND ; is it in the dictionary?
 	beq	.number ; not found... parse as number
 
