@@ -797,15 +797,6 @@ STATE
 HERE
 	!word	LATEST + 2
 
-; BASE - current number base.
-	!word	LINK
-	!set	LINK = * - 2
-	!byte 4
-	!text	"base"
-	+VAR_CODE	BASE
-BASE
-	!word	16
-
 
 ; ------------ return stack
 
