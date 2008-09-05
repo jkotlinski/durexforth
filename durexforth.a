@@ -63,6 +63,7 @@ K_BACKSPACE = $14
 K_RETURN = $d
 K_CLRSCR = $93
 K_SPACE = ' '
+K_REVERSE = $c7
 
 C_YELLOW = 7
 C_GREEN = 5
@@ -793,6 +794,7 @@ STATE
 	!set	LINK = * - 2
 	!byte 4
 	!text	"here"
+HERE_CODE
 	+VAR_CODE	HERE
 HERE
 	!word	LATEST + 2
@@ -825,13 +827,24 @@ R0
 	!byte	2
 	!text	">r"
 TOR
+	pla
+	sta	TMP
+	pla
+	sta	TMP + 1
+
 	lda	PSTACK - 2, x
 	pha
 	lda	PSTACK - 1, x
 	pha
 	dex
 	dex
-	+NEXT
+
+	lda	TMP + 1
+	pha
+	lda	TMP
+	pha
+
+	rts
 
 ; R>
 	!word	LINK
@@ -957,7 +970,7 @@ color_table
 !ct	scr
 
 input_type_desc
-	!text	"a-9 0-f "
+	!text	"a-9 hex "
 
 !ct	pet
 
@@ -1121,6 +1134,7 @@ handle_return_flip_input_type
 	lda	INPUT_HEX
 	eor	#1
 	sta	INPUT_HEX
+	sta	$c7
 
 	jsr	update_color
 	pla ; drop a
@@ -1226,6 +1240,8 @@ WORD
 	jmp	INTERPRET
 
 ++
+	lda	#0
+	sta	K_REVERSE
 	lda	#K_SPACE
 	stx	tmp_x
 	jsr	PUTCHR
@@ -1867,6 +1883,63 @@ ZBRANCH
 
 .retaddr
 	jmp	1234 ; overwrite
+
+; TICK
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"'"
+TICK
+	jmp	TICK
+	stx	tmp_x
+
+	tsx
+	stx	.msb + 1
+	stx	.msb2 + 1
+	inx
+	stx	.lsb + 1
+	stx	.lsb2 + 1
+
+	ldx tmp_x
+
+.lsb
+	lda	$123 ; overwrite
+	sta	TMP
+
+.msb
+	lda	$123 ; overwrite
+	sta	TMP + 1
+
+	; make TMP point to the following word...
+	inc	TMP
+	bne	+
+	inc	TMP + 1	
++
+
+	ldy	#0
+	inx
+	inx
+	lda	(TMP), y
+	sta	PSTACK - 2, x
+
+	inc	TMP
+	bne	+
+	inc	TMP + 1	
++
+
+	lda	(TMP), y
+	sta	PSTACK - 1, x
+
+	; fix up return address
+	lda	TMP
+.lsb2
+	sta	$123
+
+	lda	TMP + 1
+.msb2
+	sta	$123
+
+	rts
 
 ; -----------
 
