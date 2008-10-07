@@ -1099,6 +1099,7 @@ _WORD
 	jsr	print_char
 	; return text string
 	lda	.entered_chars_count
+	beq - ; whoops, nothing entered, try again...
 	sta TIB 
 
 	inx
@@ -1273,7 +1274,6 @@ _NUMBER ; only dec for now...
 	; TMP2 now contains a string ptr...
 	ldy	#0
 	lda	(TMP3), y
-	beq	.ret
 	sta	.chars_to_process
 
 	; clear stack...
