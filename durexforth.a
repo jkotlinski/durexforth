@@ -1552,12 +1552,11 @@ COMMA
 	sta	(TMP), y
 
 	; update HERE
-	inc	HERE
-	bne	+
-	inc HERE + 1
-+
-	inc	HERE
-	bne +
+	lda	HERE
+	clc
+	adc	#2
+	sta	HERE
+	bcc	+
 	inc HERE + 1
 +
 	dex
