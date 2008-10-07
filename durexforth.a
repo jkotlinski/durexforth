@@ -1266,6 +1266,7 @@ NUMBER
 	jsr	_NUMBER
 	+NEXT
 
+; Z set = success, clear = failed
 _NUMBER ; only dec for now...
 	lda	PSTACK - 1, x	
 	sta	TMP3 + 1
@@ -1284,10 +1285,12 @@ _NUMBER ; only dec for now...
 -
 	jsr	handle_input_digit_dec
 
+	bne	.not_dec_digit
+
 	dec	.chars_to_process
 	bne	-
 
-.ret
+.not_dec_digit
 	rts
 
 .chars_to_process
@@ -1315,6 +1318,10 @@ handle_input_digit_dec
 	clc
 	adc	#-$30 ; petscii 0-9 -> 0-9
 
+	sec ; not within 0-9?
+	cmp	#10
+	bcs	.not_a_dec_digit
+
 	inx
 	inx
 
@@ -1324,6 +1331,11 @@ handle_input_digit_dec
 
 	jsr	_ADD
 
+	lda	#0
+	rts
+
+.not_a_dec_digit
+	lda	#1
 	rts
 
 interpret_is_number
@@ -1350,7 +1362,15 @@ INTERPRET
 	jsr _DROP ; drop null dictionary ptr
 	inc	interpret_is_number
 	jsr _NUMBER
+	bne	.not_a_number
 
+	+NEXT
+
+.not_a_number
+	dex
+	dex
+	lda	#2
+	sta	$d020
 	+NEXT
 
 .found_word
