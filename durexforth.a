@@ -31,6 +31,7 @@ F_IMMED = $80
 F_HIDDEN = $40
 STRLEN_MASK = $3f
 
+IP = $2e
 TMP = $30
 TMP2 = $32
 
@@ -65,6 +66,7 @@ K_CLRSCR = $93
 K_SPACE = ' '
 K_REVERSE = $c7
 
+C_WHITE = 1
 C_YELLOW = 7
 C_GREEN = 5
 C_LT_GREEN = 13
@@ -84,11 +86,15 @@ C_CYAN = 3
 !ct pet
 
 	; screen color = black
-	lda	#0
-	sta	$d021
+	lda	#C_YELLOW
 	sta	$d020
+	sta	$d021
+
+	lda	#C_GREEN
+	sta	BLINK_COLOR
 
 	; activate cursor
+	lda	#0
 	sta	$cc
 
 	; clrscr
@@ -99,8 +105,7 @@ C_CYAN = 3
 	sta	$d018
 
 	ldx	#0
-
-	lda	#0
+	lda	#$11
 -
 	sta	EDIT_BUFFER, x
 	sta	EDIT_BUFFER + $100, x
@@ -110,7 +115,15 @@ C_CYAN = 3
 	inx
 	bne	-
 
-	jmp	QUIT
+	lda	#<cold_start
+	sta IP
+	lda #>cold_start
+	sta IP + 1
+
+	jmp	NEXT_IMPL
+
+cold_start
+	!word QUIT
 
 ; ----------- macros
 
@@ -121,7 +134,7 @@ C_CYAN = 3
 }
 
 !macro NEXT {
-	rts
+	jmp	NEXT_IMPL
 }
 
 !macro dex4 {
@@ -132,7 +145,7 @@ C_CYAN = 3
 
 !macro reset_cursor {
 	lda	#0
-	sta	$cf
+	sta	$cf ; cursor status
 }
 
 !macro PUSH_TO_PRM_STACK .word {
@@ -153,6 +166,54 @@ in_editor
 	!byte	0
 
 ; ---------- words
+
+DOCOL
+	lda	IP
+	sta	TMP
+	lda	IP + 1
+	sta	TMP + 1
+
+	pla
+	sta	IP
+	pla
+	sta	IP + 1
+
+	; adjust for weird return address after jsr...
+	inc	IP
+	bne +
+	inc	IP + 1
++
+
+	; push old IP to return stack
+	lda	TMP
+	pha
+	lda	TMP + 1
+	pha
+
+	; fall through...
+
+NEXT_IMPL
+
+	; (IP) -> W
+	ldy	#0
+	lda	(IP), y
+	sta	++ + 1
+	iny
+	lda	(IP), y
+	sta	++ + 2
+
+	; IP + 2 -> IP
+	lda	IP
+	clc
+	adc	#2
+	sta	IP
+	bcc +
+	inc	IP + 1
++
+
+++
+	jmp	0
+
 
 !set LINK = 0
 
@@ -452,7 +513,7 @@ rotate_r
 	lda	product + 1
 	sta	PSTACK - 1, x
 
-	rts
+	+NEXT
 
 ; /MOD
 	!word	LINK
@@ -817,7 +878,7 @@ R0
 	lda	#1
 	sta	PSTACK - 1, x
 
-	rts
+	+NEXT
 
 ; ------------ return stack
 
@@ -844,7 +905,7 @@ TOR
 	lda	TMP
 	pha
 
-	rts
+	+NEXT
 
 ; R>
 	!word	LINK
@@ -944,80 +1005,13 @@ DOT
 	dex
 	dex
 
-	rts
+	+NEXT
 
 TIB
 	!fill 33
 
-IM_EXECUTE = 0 ; yellow
-IM_COMPILE = 1 ; green
-IM_DEFINE = 2 ; red
-IM_VARIABLE = 3 ; magenta
-
-INPUT_MODE
-	!byte	IM_EXECUTE
-
-INPUT_HEX
-	!byte	0
-
 tmp_x
 	!byte	0
-
-color_table
-		;	execute		compile		define		variable
-	!byte	C_YELLOW, 	C_GREEN, 	C_RED,		C_MAGENTA	; word
-
-!ct	scr
-
-input_type_desc
-	!text	"a-9 hex "
-
-!ct	pet
-
-input_type_desc_col = 36
-input_type_desc_row = 24
-
-; wastes TMP, y
-update_input_type_desc
-	txa ; save x
-	pha
-
-	lda	INPUT_HEX
-	asl
-	asl
-
-	clc
-	adc	#<input_type_desc
-	sta	TMP
-	lda	#>input_type_desc
-	sta	TMP + 1
-
-desc_pos = $400 + 40 * 24 + 37
-	ldy	#0
-	lda	(TMP), y
-	sta	desc_pos
-	iny
-	lda	(TMP), y
-	sta	desc_pos + 1
-	iny
-	lda	(TMP), y
-	sta	desc_pos + 2
-	
-	pla ; restore x
-	tax
-
-	rts
-
-update_color
-	ldy	INPUT_MODE
-	lda	color_table, y
-	sta	BLINK_COLOR
-desc_color_pos = $d800 + 40 * 24 + 37
-	sta	desc_color_pos
-	sta	desc_color_pos + 1
-	sta	desc_color_pos + 2
-
-	jmp	update_input_type_desc
 
 ; input key in a
 handle_input_char
@@ -1030,123 +1024,6 @@ handle_input_char
 	bne	+
 	inc	.dst + 2
 +
-	rts
-
-handle_input_digit_hex
-	; make space for a new hex digit...
-	asl	TMP
-	rol	TMP + 1
-	asl	TMP
-	rol	TMP + 1
-	asl	TMP
-	rol	TMP + 1
-	asl	TMP
-	rol	TMP + 1
-
-	sec
-	sbc	#$30 ; fix for 0-9
-
-	cmp	#$10 ; fix for a-f
-	bcc	+
-	sbc	#7
-+
-	eor	TMP ; eor in the new hex digit
-	sta	TMP
-
-	rts
-
-handle_input_digit_dec
-	pha
-
-	; multiply existing number by 10...
-	inx
-	inx
-	inx
-	inx
-
-	lda	TMP
-	sta	PSTACK - 4, x
-	lda	TMP + 1
-	sta	PSTACK - 3, x
-	
-	lda	#10
-	sta	PSTACK - 2, x
-	lda	#0
-	sta	PSTACK - 1, x
-
-	lda	TMP2
-	pha
-	lda	TMP2 + 1
-	pha
-
-	jsr	MUL
-
-	pla
-	sta	TMP2 + 1
-	pla
-	sta	TMP2
-
-	lda	PSTACK - 2, x
-	sta	TMP
-	lda	PSTACK - 1, x
-	sta	TMP + 1
-
-	; add the entered digit...
-	pla
-
-	sec
-	sbc	#$30 ; fix for 0-9
-
-	inx
-	inx
-	sta	PSTACK - 2, x
-	lda	#0
-	sta	PSTACK - 1, x
-
-	jsr	ADD
-
-	lda	PSTACK - 2, x
-	sta	TMP
-	lda	PSTACK - 1, x
-	sta	TMP + 1
-
-	dex
-	dex
-
-	rts
-
-_accept_char_table
-	!text	"0123456789abcdefghijklmnopqrstuvwxyz-.:;=*+-!#$@%&/\"
-	!byte	0
-
-_accept_hex_table
-	!text	"0123456789abcdef"
-	!byte	0
-
-handle_return_flip_input_type
-	cmp	#K_RETURN
-	bne	++
-	; switch input mode...
-	pha ; save a
-	lda	.entered_chars_count
-	bne	+
-
-	lda	INPUT_HEX
-	eor	#1
-	sta	INPUT_HEX
-	sta	$c7
-
-	jsr	update_color
-	pla ; drop a
-
-	pla ; discard return addresses, go to interpret
-	pla
-	pla
-	pla
-	jmp	INTERPRET
-+
-	pla ; restore a
-++
 	rts
 
 ; WORD
@@ -1163,23 +1040,8 @@ WORD
 	lda	#0
 	sta	.entered_chars_count
 	
-	lda	INPUT_HEX
-	bne	+
-	lda	#<_accept_char_table
-	sta	TMP2
-	lda	#>_accept_char_table
-	sta	TMP2 + 1
-	jmp	++
-+	; hex
-	lda	#<_accept_hex_table
-	sta	TMP2
-	lda	#>_accept_hex_table
-	sta	TMP2 + 1
-++
-
 -
 	+reset_cursor
-
 	stx	tmp_x
 	jsr	GETCHR
 	ldx	tmp_x
@@ -1187,6 +1049,8 @@ WORD
 	beq	-
 	cmp #K_SPACE
 	beq .space
+	cmp #K_RETURN
+	beq .return
 
 	cmp	#K_BACKSPACE
 	bne	+
@@ -1194,59 +1058,19 @@ WORD
 	jmp	WORD
 +
 
-	jsr	handle_return_flip_input_type
-
-	jsr	_allowed_char
-	ora	#0
-	beq	-
-
-	pha
-	lda	INPUT_MODE
-	cmp	#IM_DEFINE
-	bne	+
-	lda	.entered_chars_count
-	bne	+
-	+reset_cursor
-	lda	#K_SPACE
-	jsr	print_char ; CR on starting a new definition
-	lda	#K_RETURN
-	jsr	print_char ; CR on starting a new definition
-+
-	pla
 	inc	.entered_chars_count
 
 	jsr	handle_input_char
 
 	jmp	-
 
-.space
-	lda	.entered_chars_count
-	bne	++
-	inc	INPUT_MODE
-
-	lda	INPUT_MODE
-	and	#3
-	sta	INPUT_MODE
-	lda	INPUT_HEX
-	beq	+
-	lda	INPUT_MODE
-	and	#1 ; only yellow/green allowed for hex words
-	sta	INPUT_MODE
-+
-
-	jsr	update_color
-	pla ; discard return address
-	pla
-	jmp	INTERPRET
-
-++
-	lda	#0
-	sta	K_REVERSE
+.return
+	pha
 	lda	#K_SPACE
-	stx	tmp_x
-	jsr	PUTCHR
-	ldx	tmp_x
-
+	jsr	print_char
+	pla
+.space
+	jsr	print_char
 	; return text string
 	lda	.entered_chars_count
 	sta TIB 
@@ -1258,27 +1082,8 @@ WORD
 	sta	PSTACK - 2, x
 	lda	#>TIB
 	sta	PSTACK - 1, x
-+
-	rts
 
-; input in a... returned a = 0 means not accepted
-
-_allowed_char
-	sta	.inchar + 1
-
-	ldy	#0
--
-	lda	(TMP2), y
-	beq	+
-
-.inchar
-	cmp	#0	; inchar... overwritten
-	beq	+
-
-	iny
-	jmp	-
-+
-	rts
+	+NEXT
 
 .entered_chars_count
 	!byte	0
@@ -1295,58 +1100,6 @@ handle_backspace
 
 	jmp	-
 +
-	rts
-
-; convert a text string on the stack to an int
-word_to_number
-	lda	#0
-	sta	TMP
-	sta	TMP + 1
-	tay
-
-	lda	PSTACK - 2, x
-	sta	TMP2
-	lda	PSTACK - 1, x
-	sta	TMP2 + 1
-
-	lda	(TMP2), y
-	sta	.entered_chars_count
-	iny
-
-	lda	INPUT_HEX
-	bne	+
-	; dec
-	lda	#<handle_input_digit_dec
-	sta	.handle_input_digit + 1
-	lda	#>handle_input_digit_dec
-	sta	.handle_input_digit + 2
-	jmp	++
-+	; hex
-	lda	#<handle_input_digit_hex
-	sta	.handle_input_digit + 1
-	lda	#>handle_input_digit_hex
-	sta	.handle_input_digit + 2
-++
-
--
-	lda	.entered_chars_count
-	beq	+
-
-	lda	(TMP2), y
-.handle_input_digit
-	jsr	$1234 ; overwrite
-
-	dec	.entered_chars_count
-	iny
-
-	jmp	-
-+
-
-	lda	TMP
-	sta	PSTACK - 2, x
-	lda	TMP + 1
-	sta	PSTACK - 1, x
-
 	rts
 
 ; FIND
@@ -1482,116 +1235,9 @@ EXEC
 	!byte	9
 	!text	"interpret"
 INTERPRET
-	jsr	update_color
-
-	jsr WORD ; push string to stack
-
-	lda	INPUT_MODE
-	cmp	#IM_DEFINE
-	bne	+
-	; ah... a new definition word!
-	lda	#IM_COMPILE ; switch back to compile mode
-	sta	INPUT_MODE
-	jsr	update_color
-	jsr	CREATE ; create dictionary entry / header
-	jmp	RBRAC ; go into compile mode
-+
-	jsr	DUP
-	lda	INPUT_HEX
-	bne	.number
-	jsr	FIND ; is it in the dictionary?
-	beq	.number ; not found... parse as number
-
-	jsr	SWAP
-	jsr	DROP
-
-	lda	STATE ; compiling?
-	beq	.execute ; no... execute it
-
-	lda	PSTACK - 2, x
-	sta	TMP
-	lda	PSTACK - 1, x
-	sta TMP + 1
-
-	; skip link
-	inc	TMP
-	bne	+
-	inc TMP + 1
-+
-	inc TMP
-	bne +
-	inc	TMP + 1
-+
-
-	; is it immediate?
-	ldy	#0
-	lda	(TMP), y
-	and	#F_IMMED
-	bne	.execute ; yes... execute
-
-	; no... compile
-	jsr TCFA ; fetch code address
-	jmp	COMMA
-
-.execute
-	jsr TCFA ; fetch code address
-	jmp EXEC ; execute it!
-
-.number
-	jsr	DROP
-	jsr word_to_number ; push number to stack
-	lda	STATE ; compiling?
-	bne	.compile_number 
-	
-	; no... leave it on stack
-	rts
-
-.compile_number
-	dex
-	dex
-
-	lda	#OP_INX
-	jsr	_compile_byte
-	lda	#OP_INX
-	jsr	_compile_byte
-
-	lda	#OP_LDA_I
-	jsr	_compile_byte
-	lda	PSTACK - 0, x
-	jsr	_compile_byte
-
-	lda	#OP_STA_AX
-	jsr	_compile_byte
-	lda	#<(PSTACK - 2)
-	jsr	_compile_byte
-	lda	#>(PSTACK - 2)
-	jsr	_compile_byte
-
-	lda	#OP_LDA_I
-	jsr	_compile_byte
-	lda	PSTACK + 1, x
-	jsr	_compile_byte
-
-	lda	#OP_STA_AX
-	jsr	_compile_byte
-	lda	#<(PSTACK - 1)
-	jsr	_compile_byte
-	lda	#>(PSTACK - 1)
-	jmp	_compile_byte
-
-.unknown_lit_err
-	; not found !!!
-	lda	#2
-	sta	$d020
-	jsr	handle_backspace
-	lda	#K_BACKSPACE
-	jsr	print_char
-	lda	#0
-	sta	$d020
-
-	dex
-	dex
-	rts
+	jsr	DOCOL
+	!word	WORD ; push string to stack
+	!word	EXIT
 
 ; LIT
 	!word	LINK
@@ -1640,8 +1286,22 @@ LIT
 	!byte	4
 	!text	"quit"
 QUIT
-	jsr	INTERPRET
-	jmp	QUIT
+	jsr	DOCOL
+	!word	INTERPRET
+	!word	BRANCH
+	!word	-4
+
+; EXIT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"EXIT"
+EXIT
+	pla
+	sta	IP + 1
+	pla
+	sta	IP
+	+NEXT
 
 ; CREATE
 	!word	LINK
@@ -1813,48 +1473,36 @@ SEMICOLON
 	jmp	LBRAC ; go back to immediate mode
 
 ; BRANCH
+
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	6
 	!text	"BRANCH"
 BRANCH
-	; pop return address
-	pla
+	; IP is now pointing to the offset by which IP should be modified...
+	lda	IP
 	sta	TMP
-	pla
+	lda	IP + 1
 	sta	TMP + 1
 
-	; copy offset to TMP2
-	ldy	#1
-	lda	(TMP), y
-	sta	TMP2
-	iny
-	lda	(TMP), y
-	sta	TMP2 + 1
-
-	; make TMP point at the next instruction
-	lda	TMP
+	ldy	#0
+	lda	(IP), y
 	clc
-	adc	#3 ; skip 6510 rts offset, offset word
+	adc TMP
+	sta	TMP
 	bcc	+
 	inc	TMP + 1
 +
-	; sta	TMP
-
-	; add offset (TMP2)
-	; lda	TMP
+	iny
+	lda	(IP), y
 	clc
-	adc TMP2
-	sta	TMP
+	adc	TMP + 1
+	sta	IP + 1
 
-	lda	TMP + 1
-	adc	TMP2 + 1
-
-	; return
-	pha
 	lda	TMP
-	pha
-	rts
+	sta	IP
+
+	+NEXT
 
 ; 0BRANCH
 	!word	LINK
