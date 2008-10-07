@@ -34,6 +34,7 @@ STRLEN_MASK = $3f
 IP = $2e
 TMP = $30
 TMP2 = $32
+TMP3 = $34
 
 OP_JSR = $20
 OP_RTS = $60
@@ -227,6 +228,11 @@ DROP
 	dex
 	+NEXT
 
+_DROP
+	dex
+	dex
+	rts
+
 ; SWAP
 	!word	LINK
 	!set	LINK = * - 2
@@ -252,6 +258,10 @@ SWAP
 	!byte	3
 	!text	"dup"
 DUP
+	jsr	_DUP
+	+NEXT
+
+_DUP
 	inx
 	inx
 
@@ -259,7 +269,7 @@ DUP
 	sta	PSTACK - 1, x
 	lda	PSTACK - 4, x
 	sta	PSTACK - 2, x
-	+NEXT
+	rts
 
 ; OVER
 	!word	LINK
@@ -355,8 +365,8 @@ TWODUP
 	sta	PSTACK - 3, x
 	lda	PSTACK - 8, x
 	sta	PSTACK - 4, x
-
 	+NEXT
+
 
 ; 2SWAP
 	!word	LINK
@@ -440,6 +450,10 @@ DECR
 	!byte	1
 	!text	"+"
 ADD
+	jsr	_ADD
+	+NEXT
+
+_ADD
 	lda	PSTACK - 2, x
 	clc
 	adc PSTACK - 4, x
@@ -452,7 +466,7 @@ ADD
 	dex
 	dex
 
-	+NEXT
+	rts
 
 ; -
 	!word	LINK
@@ -480,6 +494,11 @@ SUB
 	!byte	1
 	!text	"*"
 MUL
+	jsr	_MUL
+	+NEXT
+
+; wastes TMP, TMP2, y
+_MUL
 product = TMP
 
 	lda #$00
@@ -513,7 +532,7 @@ rotate_r
 	lda	product + 1
 	sta	PSTACK - 1, x
 
-	+NEXT
+	rts
 
 ; /MOD
 	!word	LINK
@@ -943,7 +962,7 @@ EMIT
 	dex
 	dex
 	lda	PSTACK, x
-	jmp	print_char
+	; fall through
 
 print_char
 	stx	tmp_x
@@ -977,6 +996,9 @@ print_hex_nibble
 	!byte	1
 	!text	"."
 DOT
+	jsr	_DOT
+	+NEXT
+_DOT
 	lda	PSTACK - 1, x
 	lsr
 	lsr
@@ -1005,7 +1027,7 @@ DOT
 	dex
 	dex
 
-	+NEXT
+	rts
 
 TIB
 	!fill 33
@@ -1233,6 +1255,77 @@ EXEC
 	dex
 	jmp	(TMP)
 
+
+; NUMBER
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	6
+	!text	"number"
+NUMBER
+	jsr	_NUMBER
+	+NEXT
+
+_NUMBER ; only dec for now...
+	lda	PSTACK - 1, x	
+	sta	TMP3 + 1
+	lda	PSTACK - 2, x	
+	sta	TMP3
+	; TMP2 now contains a string ptr...
+	ldy	#0
+	lda	(TMP3), y
+	beq	.ret
+	sta	.chars_to_process
+
+	; clear stack...
+	lda	#0
+	sta	PSTACK - 2, x
+	sta	PSTACK - 1, x
+
+-
+	jsr	handle_input_digit_dec
+
+	dec	.chars_to_process
+	bne	-
+
+.ret
+	rts
+
+.chars_to_process
+!byte 0
+
+handle_input_digit_dec
+	; multiply stack top by 10
+	inx
+	inx
+
+	lda	#10
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+
+	tya
+	pha
+	jsr	_MUL
+	pla
+	tay
+
+	; add *(++TMP3) to stack top
+	iny
+	lda	(TMP3), y
+	clc
+	adc	#-$30 ; petscii 0-9 -> 0-9
+
+	inx
+	inx
+
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+
+	jsr	_ADD
+
+	rts
+
 interpret_is_number
 !byte	0
 
@@ -1243,9 +1336,27 @@ interpret_is_number
 	!text	"interpret"
 INTERPRET
 	jsr	_WORD ; push string to stack
+
 	lda	#0
 	sta	interpret_is_number
-	jsr	FIND
+	jsr	_DUP ; dup string
+	jsr	FIND ; replace string with dictionary ptr
+	ora	#0
+	bne	.found_word
+
+	; didn't find word...
+	; assume it's a literal number.
+
+	jsr _DROP ; drop null dictionary ptr
+	inc	interpret_is_number
+	jsr _NUMBER
+
+	+NEXT
+
+.found_word
+	sta	$d020
+	jsr _DROP
+	jsr _DROP
 	+NEXT
 
 ; LIT
