@@ -1032,6 +1032,10 @@ handle_input_char
 	!byte	4
 	!text	"word"
 WORD
+	jsr _WORD
+	+NEXT
+
+_WORD
 	; prepare text input
 	lda	#<(TIB + 1) 
 	sta	.dst + 1
@@ -1083,7 +1087,7 @@ WORD
 	lda	#>TIB
 	sta	PSTACK - 1, x
 
-	+NEXT
+	rts
 
 .entered_chars_count
 	!byte	0
@@ -1229,15 +1233,20 @@ EXEC
 	dex
 	jmp	(TMP)
 
+interpret_is_number
+!byte	0
+
 ; INTERPRET
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	9
 	!text	"interpret"
 INTERPRET
-	jsr	DOCOL
-	!word	WORD ; push string to stack
-	!word	EXIT
+	jsr	_WORD ; push string to stack
+	lda	#0
+	sta	interpret_is_number
+	jsr	FIND
+	+NEXT
 
 ; LIT
 	!word	LINK
