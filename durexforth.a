@@ -1539,9 +1539,6 @@ CREATE
 	!byte	1
 	!text	","
 COMMA
-	lda	#OP_JSR
-	jsr	_compile_byte
-
 	lda	HERE
 	sta	TMP
 	lda	HERE + 1
@@ -1587,33 +1584,12 @@ RBRAC
 	sta	STATE
 	rts
 
-; input in a... wastes TMP
-_compile_byte
-	pha
-	lda	HERE
-	sta	TMP
-	lda	HERE + 1
-	sta	TMP + 1
-
-	ldy	#0
-	pla
-	sta	(TMP), y
-
-	inc	HERE
-	bne	+
-	inc	HERE + 1
-+
-	rts
-
 ; SEMICOLON
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	1 | F_IMMED
 	!text	";"
 SEMICOLON
-	lda	#OP_RTS ; this should be changed to replacing last jsr with jmp...
-	jsr	_compile_byte
-
 	; make the word findable again (clear F_HIDDEN)
 	lda	LATEST
 	sta	TMP
