@@ -1222,6 +1222,9 @@ FIND
 	!byte	4
 	!text	">cfa"
 TCFA
+	jsr _TCFA
+	+NEXT
+_TCFA
 	lda	PSTACK - 1, x
 	sta	TMP + 1
 	lda	PSTACK - 2, x
@@ -1374,9 +1377,19 @@ INTERPRET
 	+NEXT
 
 .found_word
-	sta	$d020
-	jsr _DROP
-	jsr _DROP
+	; OK, we found a word. Assume that we're executing right now, and that
+	; it's not immediate, so we get some visible sign of progress here...
+	jsr	_TCFA
+	; copy CFA to TMP
+	lda	PSTACK - 2, x
+	sta	TMP
+	lda	PSTACK - 1, x
+	sta	TMP + 1
+	dex ; drop CFA
+	dex
+	dex ; drop string
+	dex
+	jmp	(TMP)
 	+NEXT
 
 ; LIT
