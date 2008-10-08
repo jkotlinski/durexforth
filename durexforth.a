@@ -10,7 +10,7 @@
 ;furnished to do so, subject to the following conditions:
 ;
 ;The above copyright notice and this permission notice shall be included in
-;;all copies or substantial portions of the Software.
+;all copies or substantial portions of the Software.
 ;
 ;THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ;IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -128,9 +128,9 @@ cold_start
 
 ; ----------- macros
 
-!macro dbgbrk {
-	inc	$d020
+!macro debug_break {
 -
+	inc	$d020
 	jmp	-
 }
 
@@ -1400,14 +1400,36 @@ INTERPRET
 .not_a_number
 	dex
 	dex
-	lda	#2
+	lda	#C_RED
 	sta	$d020
 	+NEXT
 
 .found_word
-	; OK, we found a word. Assume that we're executing right now, and that
-	; it's not immediate, so we get some visible sign of progress here...
+	; OK, we found a word...
+
+	; is it immediate?
+	lda	PSTACK - 2, x
+	sta	TMP
+	lda	PSTACK - 1, x
+	sta	TMP + 1
+	ldy	#2 ; skip link ptr, look at flags
+	lda	(TMP), y
+	and	#F_IMMED
+	bne	.execute_word ; yes... execute it.
+
+	lda	STATE ; are we compiling?
+	beq	.execute_word ; no, execute it.
+
+	; OK, this word should be compiled...
 	jsr	_TCFA
+	jsr	_COMMA
+	dex ; drop string
+	dex
+	+NEXT
+
+.execute_word
+	jsr	_TCFA
+
 	; copy CFA to TMP
 	lda	PSTACK - 2, x
 	sta	TMP
