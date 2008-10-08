@@ -990,6 +990,20 @@ print_hex_nibble
 
 	rts
 
+print_hex_char
+	pha
+	and	#$f
+	jsr	print_hex_nibble
+	pla
+	pha
+	lsr
+	lsr
+	lsr
+	lsr
+	jsr	print_hex_nibble
+	pla
+	rts
+
 ; . - display number on screen
 	!word	LINK
 	!set	LINK = * - 2
@@ -1367,6 +1381,20 @@ INTERPRET
 	jsr _NUMBER
 	bne	.not_a_number
 
+	; yep, it's a number...
+	lda	STATE ; are we compiling?
+	beq	.leave_number_on_stack ; no, leave number on stack
+	; yes. compile literal.
+	inx
+	inx
+	lda	#<LIT
+	sta	PSTACK - 2, x
+	lda	#>LIT
+	sta	PSTACK - 1, x
+	jsr	_COMMA
+	jsr	_COMMA
+
+.leave_number_on_stack
 	+NEXT
 
 .not_a_number
@@ -1551,6 +1579,9 @@ CCOMMA
 	!byte	1
 	!text	","
 COMMA
+	jsr	_COMMA
+	+NEXT
+_COMMA
 	lda	HERE
 	sta	TMP
 	lda	HERE + 1
@@ -1573,7 +1604,7 @@ COMMA
 +
 	dex
 	dex
-	+NEXT
+	rts
 
 ; LBRAC
 	!word	LINK
