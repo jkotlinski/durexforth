@@ -1390,7 +1390,6 @@ INTERPRET
 	dex ; drop string
 	dex
 	jmp	(TMP)
-	+NEXT
 
 ; LIT
 	!word	LINK
@@ -1398,40 +1397,29 @@ INTERPRET
 	!byte	3
 	!text	"lit"
 LIT
-	; pop return address
-	pla
-	sta	TMP
-	pla
-	sta	TMP + 1
-
 	; grow stack
 	inx
 	inx
 
 	; copy literal to stack
-	ldy	#1 ; offset by one to make TMP + y point to the literal
-	lda	(TMP), y
+	ldy	#0
+	lda	(IP), y
 	sta	PSTACK - 2, x
 
 	iny
-	lda	(TMP), y
+	lda	(IP), y
 	sta	PSTACK - 1, x
 
-	tya
-	dey
+	; IP += 2
 	clc
-	adc TMP	
+	lda	IP
+	adc #2	
 	bcc	+
-	inc	TMP + 1
+	inc	IP + 1
 +
-	sta	TMP
+	sta	IP
 
-	; return
-	lda	TMP + 1
-	pha
-	lda	TMP
-	pha
-	rts
+	+NEXT
 
 ; QUIT
 	!word	LINK
@@ -1531,9 +1519,33 @@ CREATE
 	dex
 	dex
 
-	rts
+	+NEXT
 
-; COMMA - generate function call to the next word
+; CCOMMA - write char
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"c,"
+CCOMMA
+	lda	HERE
+	sta	TMP
+	lda	HERE + 1
+	sta	TMP + 1
+
+	ldy	#0
+	lda	PSTACK - 2, x
+	sta	(TMP), y
+
+	; update HERE
+	inc	HERE
+	bne	+
+	inc HERE + 1
++
+	dex
+	dex
+	+NEXT
+
+; COMMA - write word
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	1
@@ -1561,7 +1573,7 @@ COMMA
 +
 	dex
 	dex
-	rts
+	+NEXT
 
 ; LBRAC
 	!word	LINK
@@ -1571,7 +1583,7 @@ COMMA
 LBRAC
 	lda	#0
 	sta	STATE
-	rts
+	+NEXT
 
 ; RBRAC
 	!word	LINK
@@ -1581,7 +1593,7 @@ LBRAC
 RBRAC
 	lda	#1
 	sta	STATE
-	rts
+	+NEXT
 
 ; SEMICOLON
 	!word	LINK
@@ -1660,6 +1672,38 @@ ZBRANCH
 .retaddr
 	jmp	1234 ; overwrite
 
+; COLON
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	":"
+COLON
+	jsr	DOCOL
+	!word WORD ; get the name of the new word
+	!word CREATE ; CREATE the dictionary entry / header
+	!word LIT, OP_JSR, CCOMMA ; insert jmp
+	!word LIT, DOCOL, COMMA ; append DOCOL (the codeword)
+	!word RBRAC ; enter compile mode
+	!word EXIT
+
+; input in a... wastes TMP
+_compile_byte
+	pha
+	lda	HERE
+	sta	TMP
+	lda	HERE + 1
+	sta	TMP + 1
+
+	ldy	#0
+	pla
+	sta	(TMP), y
+
+	inc	HERE
+	bne	+
+	inc	HERE + 1
++
+	rts
+
 ; TICK
 	!word	LINK
 	!set	LINK = * - 2
@@ -1715,7 +1759,7 @@ TICK
 .msb2
 	sta	$123
 
-	rts
+	+NEXT
 
 ; -----------
 
