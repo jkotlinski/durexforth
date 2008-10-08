@@ -87,7 +87,7 @@ C_CYAN = 3
 !ct pet
 
 	; screen color = black
-	lda	#C_YELLOW
+	lda	#0
 	sta	$d020
 	sta	$d021
 
@@ -115,6 +115,8 @@ C_CYAN = 3
 	
 	inx
 	bne	-
+
+	;jmp	disk_test
 
 	lda	#<cold_start
 	sta IP
@@ -989,14 +991,14 @@ print_hex_nibble
 
 print_hex_char
 	pha
-	and	#$f
+	lsr
+	lsr
+	lsr
+	lsr
 	jsr	print_hex_nibble
 	pla
 	pha
-	lsr
-	lsr
-	lsr
-	lsr
+	and	#$f
 	jsr	print_hex_nibble
 	pla
 	rts
@@ -1892,24 +1894,6 @@ TICK
 
 ; -----------
 
-; HEX
-	!word	LINK
-	!set	LINK = * - 2
-	!byte 3
-	!text	"hex"
-	jsr	DOCOL
-	!word	LIT, 16, BASE, STORE
-	!word EXIT
-
-; DEC
-	!word	LINK
-	!set	LINK = * - 2
-	!byte 3
-	!text	"dec"
-	jsr	DOCOL
-	!word	LIT, 10, BASE, STORE
-	!word EXIT
-
 ; BASE. 10, 16 are supported.
 	!word	LINK
 	!set	LINK = * - 2
@@ -1918,7 +1902,7 @@ TICK
 BASE
 	+VAR_CODE	_BASE
 _BASE
-	!word	16
+	!word	10
 
 ; LATEST - points to the most recently defined dictionary word.
 	!word	LINK
@@ -1930,3 +1914,54 @@ LATEST
 _LATEST
 	!word	LINK
 
+SETNAM = $ffbd
+SETLFS = $ffba
+OPEN = $ffc0
+CHKIN = $ffc6
+
+disk_test
+	jsr	open
+
+-
+	jsr	get_char
+
+	jsr PUTCHR
+
+	jmp	-
+
+open
+	lda	#fname_end - fname
+	ldx	#<fname
+	ldy	#>fname
+	jsr	SETNAM
+	lda	#2
+	ldx	#8 ; default to device 8
+	ldy	#2 ; secondary address
+	jsr	SETLFS
+	jsr	OPEN
+	bcs	.could_not_open
+
+	ldx	#2 ; file number
+	jsr	CHKIN
+
+	rts
+
+.could_not_open
+	inc	$d020
+	jmp	.could_not_open
+
+READST = $ffb7
+CHRIN = $ffcf
+
+get_char
+	jsr	READST
+	bne .eof
+	jmp	CHRIN
+
+.eof
+	inc	$d020
+	jmp	.eof
+	
+fname
+!text	"base"
+fname_end
