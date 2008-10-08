@@ -1281,34 +1281,99 @@ NUMBER
 	+NEXT
 
 ; Z set = success, clear = failed
-_NUMBER ; only dec for now...
+_NUMBER ; only hex, dec for now...
 	lda	PSTACK - 1, x	
 	sta	TMP3 + 1
 	lda	PSTACK - 2, x	
 	sta	TMP3
-	; TMP2 now contains a string ptr...
+	; TMP3 now contains a string ptr...
 	ldy	#0
 	lda	(TMP3), y
 	sta	.chars_to_process
-
 	; clear stack...
 	lda	#0
 	sta	PSTACK - 2, x
 	sta	PSTACK - 1, x
 
--
-	jsr	handle_input_digit_dec
+	; which base? hex, dec?
+	lda	_BASE
+	cmp	#10
+	beq	.dec_number
+	cmp	#16
+	bne	.not_digit
+	
+	; hex number!!
+	lda	#<handle_input_digit_hex
+	sta	.number_handler + 1
+	lda	#>handle_input_digit_hex
+	sta	.number_handler + 2
+	jmp	.number_handler
 
-	bne	.not_dec_digit
+.dec_number
+	lda	#<handle_input_digit_dec
+	sta	.number_handler + 1
+	lda	#>handle_input_digit_dec
+	sta	.number_handler + 2
+
+.number_handler
+	jsr	0 ; overwritten
+
+	bne	.not_digit
 
 	dec	.chars_to_process
-	bne	-
+	bne	.number_handler
 
-.not_dec_digit
+.not_digit
 	rts
 
 .chars_to_process
 !byte 0
+
+handle_input_digit_hex
+	; multiply stack top by 16
+	inx
+	inx
+
+	lda	#16
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+
+	tya
+	pha
+	jsr	_MUL
+	pla
+	tay
+
+	; add *(++TMP3) to stack top
+	iny
+	lda	(TMP3), y
+	clc
+	adc	#-$30 ; petscii 0-9 -> 0-9
+
+	sec ; within 0-9?
+	cmp	#10
+	bcc	.ok
+
+	clc
+	adc	#-$7 ; a-f...
+
+	sec ; within a-f?
+	cmp	#16
+	bcs	.not_a_digit
+
+.ok
+	inx
+	inx
+
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+
+	jsr	_ADD
+
+	lda	#0
+	rts
 
 handle_input_digit_dec
 	; multiply stack top by 10
@@ -1334,7 +1399,7 @@ handle_input_digit_dec
 
 	sec ; not within 0-9?
 	cmp	#10
-	bcs	.not_a_dec_digit
+	bcs	.not_a_digit
 
 	inx
 	inx
@@ -1348,7 +1413,7 @@ handle_input_digit_dec
 	lda	#0
 	rts
 
-.not_a_dec_digit
+.not_a_digit
 	lda	#1
 	rts
 
@@ -1826,6 +1891,34 @@ TICK
 	+NEXT
 
 ; -----------
+
+; HEX
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 3
+	!text	"hex"
+	jsr	DOCOL
+	!word	LIT, 16, BASE, STORE
+	!word EXIT
+
+; DEC
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 3
+	!text	"dec"
+	jsr	DOCOL
+	!word	LIT, 10, BASE, STORE
+	!word EXIT
+
+; BASE. 10, 16 are supported.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 4
+	!text	"base"
+BASE
+	+VAR_CODE	_BASE
+_BASE
+	!word	16
 
 ; LATEST - points to the most recently defined dictionary word.
 	!word	LINK
