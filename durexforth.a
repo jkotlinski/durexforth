@@ -1092,7 +1092,7 @@ _WORD
 	cmp	#K_BACKSPACE
 	bne	+
 	jsr	handle_backspace
-	jmp	WORD
+	jmp	_WORD
 +
 
 	inc	.entered_chars_count
