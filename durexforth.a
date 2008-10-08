@@ -804,9 +804,6 @@ FETCH
 	lda	(TMP), y
 	sta	PSTACK - 1, x
 
-	dex
-	dex
-
 	+NEXT
 
 ; +! - TODO
@@ -877,7 +874,7 @@ STATE
 HERE_CODE
 	+VAR_CODE	HERE
 HERE
-	!word	LATEST + 2
+	!word	_LATEST + 2
 
 ; R0 - the address of the top of the return stack.
 	!word	LINK
@@ -1149,9 +1146,9 @@ handle_backspace
 	!byte	4
 	!text	"find"
 FIND
-	lda	#<LATEST
+	lda	#<_LATEST
 	sta	TMP2
-	lda	#>LATEST
+	lda	#>_LATEST
 	sta	TMP2 + 1
 	; TMP2 now contains pointer to pointer to the most recently defined dictionary word.
 	ldy	#0
@@ -1507,14 +1504,14 @@ CREATE
 	sta	TMP + 1
 
 	ldy	#0
-	lda	LATEST
+	lda	_LATEST
 	sta	(TMP), y
 
 	inc	TMP
 	bne	+
 	inc	TMP + 1
 +
-	lda	LATEST + 1
+	lda	_LATEST + 1
 	sta	(TMP), y
 
 	inc	TMP
@@ -1546,11 +1543,11 @@ CREATE
 	dex
 	bne	-
 
-	; update LATEST
+	; update _LATEST
 	lda	HERE
-	sta	LATEST
+	sta	_LATEST
 	lda	HERE + 1
-	sta	LATEST + 1
+	sta	_LATEST + 1
 	
 	; update HERE
 	iny
@@ -1654,16 +1651,11 @@ RBRAC
 	!byte	1 | F_IMMED
 	!text	";"
 SEMICOLON
-	; make the word findable again (clear F_HIDDEN)
-	lda	LATEST
-	sta	TMP
-	lda	LATEST + 1
-	sta	TMP + 1
-	ldy	#2
-	lda	(TMP), y
-	and	#!F_HIDDEN
-	sta	(TMP), y
-	jmp	LBRAC ; go back to immediate mode
+	jsr	DOCOL
+	!word LIT, EXIT, COMMA ; append EXIT (so that the word will return).
+	!word LATEST, FETCH, HIDDEN ; unhide the word.
+	!word LBRAC ; go back to IMMEDIATE mode.
+	!word EXIT
 
 ; BRANCH
 
@@ -1757,6 +1749,25 @@ _compile_byte
 +
 	rts
 
+; HIDDEN
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	6
+	!text	"HIDDEN"
+HIDDEN
+	lda	PSTACK - 2, x
+	sta	TMP
+	lda	PSTACK - 1, x
+	sta TMP + 1
+
+	ldy	#2 ; skip link, point to flags
+	lda	(TMP), y
+	eor	#F_HIDDEN ; toggle hidden flag
+	sta	(TMP), y
+	dex
+	dex
+	+NEXT
+
 ; TICK
 	!word	LINK
 	!set	LINK = * - 2
@@ -1821,7 +1832,8 @@ TICK
 	!set	LINK = * - 2
 	!byte 6
 	!text	"latest"
-	+VAR_CODE	LATEST
 LATEST
+	+VAR_CODE	_LATEST
+_LATEST
 	!word	LINK
 
