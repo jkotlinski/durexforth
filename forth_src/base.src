@@ -12,6 +12,8 @@ hex
 : '(' [ char ( ] literal ;
 : ')' [ char ) ] literal ;
 : '"' [ char " ] literal ;
+: ':' [ char : ] literal ;
+: ';' [ char ; ] literal ;
 : [compile] immed word find >cfa , ;
 : if immed ' 0branch , here @ 0 , ;
 : then immed dup here @ swap - swap ! ;
@@ -94,6 +96,11 @@ hex
 	then
 ;
 
+: case immed 0 ;
+: of immed ' over , ' = , [compile] if ' drop , ;
+: endof immed [compile] else ;
+: endcase immed ' drop , begin ?dup while [compile] then repeat ;
+
 : cfa>
 	latest @ ( start at latest dictionary entry... )
 	begin
@@ -101,12 +108,10 @@ hex
 	while
 		2dup swap ( cfa curr curr cfa )
 		< if ( current dictionary entry < cfa ? )
-			ffff .
 			nip ( leave it on stack )
 			exit
 		then
 		@ ( follow link ptr back )
-		dup .
 	repeat
 	drop
 	0
@@ -114,4 +119,64 @@ hex
 
 : >dfa >cfa 1+ 1+ 1+ ;
 
-1000 cfa> .
+: id.
+	1+ 1+ ( skip over link ptr )
+	dup c@
+	3f and ( fix me... should a constant with length mask )
+	begin
+		dup 0>
+	while
+		swap 1+
+		dup c@
+		emit
+		swap 1-
+	repeat
+	2drop
+;
+
+: ?hidden
+	1+ 1+ ( skip link ptr )
+	c@
+	40 and
+;
+
+: ?immed
+	1+ 1+ ( skip link ptr )
+	c@
+	80 and
+;
+
+: see
+	word find
+	here @
+	latest @
+	begin
+		2 pick
+		over
+		<>
+	while
+		nip
+		dup @
+	repeat
+	
+	drop
+	swap ( end-of-word start-of-word )
+
+	':' emit space dup id. space
+	dup ?immed if ." immed " then
+
+	>dfa ( get data addr )
+
+	begin
+		2dup >
+	while
+		dup @
+		cfa>
+		id. space
+		2 +
+	repeat
+	';' emit cr
+	2drop
+;
+
+see tell

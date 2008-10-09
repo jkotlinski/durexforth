@@ -1505,6 +1505,7 @@ INTERPRET
 .not_a_number
 	lda	#C_RED
 	sta	$d020
+	jmp	.not_a_number
 	+NEXT
 
 .found_word
