@@ -1,2 +1,9 @@
 : hex 16 base ! ;
 : dec 10 base ! ;
+: / /mod swap drop ;
+: mod /mod drop ;
+: negate 0 swap - ;
+: border 53280 c! ;
+: ' immed word find >cfa ;
+: if immed ' 0branch , here @ 0 , ;
+: then immed dup here @ swap - swap ! ;

@@ -1187,6 +1187,9 @@ handle_backspace
 	!byte	4
 	!text	"find"
 FIND
+	jsr	_FIND
+	+NEXT
+_FIND
 	lda	#<_LATEST
 	sta	TMP2
 	lda	#>_LATEST
@@ -1472,7 +1475,7 @@ INTERPRET
 	lda	#0
 	sta	interpret_is_number
 	jsr	_DUP ; dup string
-	jsr	FIND ; replace string with dictionary ptr
+	jsr	_FIND ; replace string with dictionary ptr
 	ora	#0
 	bne	.found_word
 
@@ -1763,12 +1766,28 @@ SEMICOLON
 	!word LBRAC ; go back to IMMEDIATE mode.
 	!word EXIT
 
+; IMMEDIATE. Flip the immediate flag of the LATEST word.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	5 | F_IMMED
+	!text	"immed"
+IMMED
+	lda	_LATEST
+	sta	TMP
+	lda	_LATEST + 1
+	sta	TMP + 1
+	ldy	#2
+	lda	(TMP), y
+	eor	#F_IMMED
+	sta	(TMP), y
+	+NEXT
+
 ; BRANCH
 
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	6
-	!text	"BRANCH"
+	!text	"branch"
 BRANCH
 	; IP is now pointing to the offset by which IP should be modified...
 	lda	IP
@@ -1799,7 +1818,7 @@ BRANCH
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	7
-	!text	"0BRANCH"
+	!text	"0branch"
 ZBRANCH
 	dex
 	dex
@@ -1808,20 +1827,16 @@ ZBRANCH
 	lda	PSTACK + 0, x
 	beq BRANCH
 
-.dont_branch ; skip the offset and return...
-	; pop return address
-	pla
+.dont_branch
+	; skip offset
+	lda	IP
 	clc
-	adc	#3
-	sta	.retaddr + 1
-	pla
-	sta	.retaddr + 2
+	adc	#2
+	sta	IP
 	bcc	+
-	inc	.retaddr + 2
+	sta	IP + 1
 +
-
-.retaddr
-	jmp	1234 ; overwrite
+	+NEXT
 
 ; COLON
 	!word	LINK
@@ -1872,63 +1887,6 @@ HIDDEN
 	sta	(TMP), y
 	dex
 	dex
-	+NEXT
-
-; TICK
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	1
-	!text	"'"
-TICK
-	jmp	TICK
-	stx	tmp_x
-
-	tsx
-	stx	.msb + 1
-	stx	.msb2 + 1
-	inx
-	stx	.lsb + 1
-	stx	.lsb2 + 1
-
-	ldx tmp_x
-
-.lsb
-	lda	$123 ; overwrite
-	sta	TMP
-
-.msb
-	lda	$123 ; overwrite
-	sta	TMP + 1
-
-	; make TMP point to the following word...
-	inc	TMP
-	bne	+
-	inc	TMP + 1	
-+
-
-	ldy	#0
-	inx
-	inx
-	lda	(TMP), y
-	sta	PSTACK - 2, x
-
-	inc	TMP
-	bne	+
-	inc	TMP + 1	
-+
-
-	lda	(TMP), y
-	sta	PSTACK - 1, x
-
-	; fix up return address
-	lda	TMP
-.lsb2
-	sta	$123
-
-	lda	TMP + 1
-.msb2
-	sta	$123
-
 	+NEXT
 
 ; -----------
