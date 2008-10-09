@@ -1315,6 +1315,23 @@ EXEC
 	dex
 	jmp	(TMP)
 
+; CHAR
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"char"
+CHAR
+	jsr	_WORD
+	lda	PSTACK - 1, x
+	sta	TMP + 1
+	lda	PSTACK - 2, x
+	sta	TMP
+	ldy	#1
+	lda	(TMP), y
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+	+NEXT
 
 ; NUMBER
 	!word	LINK
