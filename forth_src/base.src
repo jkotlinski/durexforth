@@ -27,3 +27,5 @@ hex
 : ( immed begin key ')' = until ;
 ( so... it looks like i finally got comments working... no? )
 : cc begin incbg 0 until ;
+: nip ( x y -- y ) swap drop ;
+: tuck ( x y -- y x y ) dup rot ;
