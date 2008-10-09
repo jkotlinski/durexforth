@@ -39,7 +39,8 @@ hex
 : tell 
 	dup c@ ( get strlen )
 	begin 
-		swap 1+ dup c@ emit ( inc strptr )
+		swap 1+ ( inc strptr )
+		dup c@ emit ( print char )
 		swap 1- ( dec strlen )
 		dup 0= 
 	until
