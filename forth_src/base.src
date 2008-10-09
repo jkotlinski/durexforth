@@ -34,7 +34,4 @@ hex
 : <> ( n -- b ) = not ;
 : > ( n -- b ) swap < ;
 : 0> ( n -- b ) 0 > ;
-: 0< ( n -- b ) 0 < ;
-: 0<= ( n -- b ) dup 0= swap 0< or ;
-: 0>= ( n -- b ) dup 0= swap 0> or ;
 : spaces ( n -- ) begin dup 0> while space 1- repeat drop ;
