@@ -6,6 +6,9 @@ hex
 : mod /mod drop ;
 : negate 0 swap - ;
 : bg d020 c! ;
+: literal immed ' lit , , ;
+: '(' [ char ( ] literal ;
+: ')' [ char ) ] literal ;
 : [compile] immed word find >cfa , ;
 : if immed ' 0branch , here @ 0 , ;
 : then immed dup here @ swap - swap ! ;
@@ -18,3 +21,9 @@ hex
 : while immed ' 0branch , here @ 0 , ;
 : repeat immed ' branch , swap here @ - , dup here @ swap - swap ! ;
 : unless immed ' not , [compile] if ;
+: recurse immed latest @ >cfa , ;
+: incbg d020 @ 1+ d020 c! ;
+: decbg d020 @ 1- d020 c! ;
+: ( immed begin key ')' = until ;
+( so... it looks like i finally got comments working... no? )
+: cc begin incbg 0 until ;
