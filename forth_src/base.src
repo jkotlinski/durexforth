@@ -35,3 +35,4 @@ hex
 : > ( n -- b ) swap < ;
 : 0> ( n -- b ) 0 > ;
 : spaces ( n -- ) begin dup 0> while space 1- repeat drop ;
+: ? ( addr -- ) @ . ;
