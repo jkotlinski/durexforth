@@ -92,5 +92,23 @@ hex
 		again
 	then
 ;
-: balle ." balle" ;
-balle
+
+: cfa>
+	latest @ ( start at latest dictionary entry... )
+	begin
+		?dup ( while link ptr != 0 )
+	while
+		2dup swap ( cfa curr curr cfa )
+		< if ( current dictionary entry < cfa ? )
+			ffff .
+			nip ( leave it on stack )
+			exit
+		then
+		@ ( follow link ptr back )
+		dup .
+	repeat
+	drop
+	0
+;
+
+1000 cfa> .

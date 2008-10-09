@@ -611,15 +611,19 @@ EQU
 	!byte	1
 	!text	"<"
 LT
-	sec
-	lda	PSTACK - 3, x
-	sbc	PSTACK - 1, x
-	lda	PSTACK - 4, x
-	sbc	PSTACK - 2, x
-	bcc	+
+	lda	PSTACK - 1, x
+	cmp	PSTACK - 3, x
+	bcc .false
+	bne	.true
+	; ok, msb are equal...
+	lda	PSTACK - 2, x
+	cmp	PSTACK - 4, x
+	bcc	.false
+	bne	.true
+.false
 	lda	#0
 	jmp	++
-+
+.true
 	lda	#$ff
 ++
 	dex
