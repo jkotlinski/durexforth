@@ -1,10 +1,20 @@
 : hex 16 base ! ;
 : dec 10 base ! ;
+hex
+: cr d emit ;
 : / /mod swap drop ;
 : mod /mod drop ;
 : negate 0 swap - ;
-hex
 : bg d020 c! ;
+: [compile] immed word find >cfa , ;
 : if immed ' 0branch , here @ 0 , ;
 : then immed dup here @ swap - swap ! ;
 : else immed ' branch , here @ 0 , swap dup here @ swap - swap ! ;
+: green 5 bg ;
+: yellow 7 bg ;
+: begin immed here @ ;
+: until immed ' 0branch , here @ - , ;
+: again immed ' branch , here @ - , ;
+: while immed ' 0branch , here @ 0 , ;
+: repeat immed ' branch , swap here @ - , dup here @ swap - swap ! ;
+: unless immed ' not , [compile] if ;

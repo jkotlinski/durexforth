@@ -967,7 +967,8 @@ EMIT
 	dex
 	dex
 	lda	PSTACK, x
-	; fall through
+	jsr	print_char
+	+NEXT
 
 print_char
 	stx	tmp_x
@@ -1553,25 +1554,7 @@ INTERPRET
 	!byte	1
 	!text	"'"
 TICK
-	inx
-	inx
-
-	ldy	#0
-	lda	(IP), y
-	sta	PSTACK - 2, x
-	iny
-	lda	(IP), y
-	sta	PSTACK - 1, x
-
-	lda	IP
-	clc
-	adc	#2
-	sta	IP
-	bcc	+
-	inc	IP + 1
-+
-
-	+NEXT
+	jmp	LIT
 
 ; LIT
 	!word	LINK
