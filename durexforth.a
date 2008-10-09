@@ -1432,6 +1432,9 @@ handle_input_digit_hex
 	sec ; within a-f?
 	cmp	#16
 	bcs	.not_a_digit
+	sec
+	cmp	#10
+	bcc	.not_a_digit
 
 .ok
 	inx
