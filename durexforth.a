@@ -588,19 +588,19 @@ remainder = TMP
 	!byte	1
 	!text	"="
 EQU
-	dex
-	dex
-	lda	PSTACK + 1, x
-	cmp	PSTACK - 1, x
+	lda	PSTACK - 1, x
+	cmp	PSTACK - 3, x
 	bne	+
-	lda	PSTACK + 0, x
-	cmp	PSTACK - 2, x
+	lda	PSTACK - 2, x
+	cmp	PSTACK - 4, x
 	bne	+
 	lda	#$ff
 	jmp	++
 +
 	lda	#0
 ++
+	dex
+	dex
 	sta	PSTACK - 1, x
 	sta	PSTACK - 2, x
 	+NEXT
@@ -1078,6 +1078,13 @@ disk_channel
 	!text	"key"
 KEY
 	jsr _KEY
+	ora	#0
+	beq	KEY
+	inx
+	inx
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
 	+NEXT
 
 _KEY
