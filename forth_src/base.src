@@ -1,7 +1,9 @@
 : hex 16 base ! ;
 : dec 10 base ! ;
 hex
+: bl 20 ;
 : cr d emit ;
+: space bl emit ;
 : / /mod swap drop ;
 : mod /mod drop ;
 : negate 0 swap - ;
@@ -29,3 +31,10 @@ hex
 : cc begin incbg 0 until ;
 : nip ( x y -- y ) swap drop ;
 : tuck ( x y -- y x y ) dup rot ;
+: <> ( n -- b ) = not ;
+: > ( n -- b ) swap < ;
+: 0> ( n -- b ) 0 > ;
+: 0< ( n -- b ) 0 < ;
+: 0<= ( n -- b ) dup 0= swap 0< or ;
+: 0>= ( n -- b ) dup 0= swap 0> or ;
+: spaces ( n -- ) begin dup 0> while space 1- repeat drop ;

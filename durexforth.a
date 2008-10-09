@@ -446,7 +446,7 @@ INCR
 	!text	"1-"
 DECR
 	lda	PSTACK - 2, x
-	beq	+
+	bne	+
 	dec	PSTACK - 1, x
 +
 	dec	PSTACK - 2, x
@@ -605,56 +605,28 @@ EQU
 	sta	PSTACK - 2, x
 	+NEXT
 
-; <> - TODO
-
 ; <
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	1
 	!text	"<"
 LT
-	dex
-	dex
-	lda	PSTACK + 1, x
-	cmp	PSTACK - 1, x
-	bmi	+ ; FIXME - bcc/bcs
-	lda	PSTACK + 0, x
-	cmp	PSTACK - 2, x
-	bmi	+ ; FIXME - bcc/bcs
+	sec
+	lda	PSTACK - 3, x
+	sbc	PSTACK - 1, x
+	lda	PSTACK - 4, x
+	sbc	PSTACK - 2, x
+	bcc	+
 	lda	#0
 	jmp	++
 +
 	lda	#$ff
 ++
+	dex
+	dex
 	sta	PSTACK - 1, x
 	sta	PSTACK - 2, x
 	+NEXT
-
-; >
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	1
-	!text	">"
-GT
-	dex
-	dex
-	lda	PSTACK - 1, x
-	cmp	PSTACK + 1, x
-	bmi	+ ; FIXME - bcc/bcs
-	lda	PSTACK - 2, x
-	cmp	PSTACK - 0, x
-	bmi	+ ; FIXME - bcc/bcs
-	lda	#0
-	jmp	++
-+
-	lda	#$ff
-++
-	sta	PSTACK - 1, x
-	sta	PSTACK - 2, x
-	+NEXT
-
-; <= - TODO
-; >= - TODO
 
 ; 0=
 	!word	LINK
@@ -693,11 +665,6 @@ ZNEQU
 	sta	PSTACK - 1, x
 	sta	PSTACK - 2, x
 	+NEXT
-
-; 0< - TODO
-; 0> - TODO
-; 0<= - TODO
-; 0>= - TODO
 
 ; AND
 	!word	LINK
