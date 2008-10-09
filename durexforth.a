@@ -1077,7 +1077,9 @@ disk_channel
 	!byte	3
 	!text	"key"
 KEY
+	stx	tmp_x
 	jsr _KEY
+	ldx	tmp_x
 	ora	#0
 	beq	KEY
 	inx
@@ -1087,7 +1089,7 @@ KEY
 	sta	PSTACK - 1, x
 	+NEXT
 
-_KEY
+_KEY ; wastes x!!!
 	lda	disk_channel
 	bne	.get_char_from_disk
 	jmp	GETCHR
@@ -1867,7 +1869,7 @@ ZBRANCH
 	adc	#2
 	sta	IP
 	bcc	+
-	sta	IP + 1
+	inc	IP + 1
 +
 	+NEXT
 
