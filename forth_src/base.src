@@ -11,6 +11,7 @@ hex
 : literal immed ' lit , , ;
 : '(' [ char ( ] literal ;
 : ')' [ char ) ] literal ;
+: '"' [ char " ] literal ;
 : [compile] immed word find >cfa , ;
 : if immed ' 0branch , here @ 0 , ;
 : then immed dup here @ swap - swap ! ;
@@ -27,7 +28,6 @@ hex
 : incbg d020 c@ 1+ d020 c! ;
 : decbg d020 c@ 1- d020 c! ;
 : ( immed begin key ')' = until ;
-( so... it looks like i finally got comments working... no? )
 : cc begin incbg 0 until ;
 : nip ( x y -- y ) swap drop ;
 : tuck ( x y -- y x y ) dup rot ;
@@ -36,3 +36,60 @@ hex
 : 0> ( n -- b ) 0 > ;
 : spaces ( n -- ) begin dup 0> while space 1- repeat drop ;
 : ? ( addr -- ) @ . ;
+: tell 
+	dup c@ ( get strlen )
+	begin 
+		swap 1+ dup c@ emit ( inc strptr )
+		swap 1- ( dec strlen )
+		dup 0= 
+	until
+;
+: s" immed ( -- addr len )
+	state @ if
+		' litstring ,
+		here @ ( save addr of length byte on stack )
+		0 c, ( dummy length - we don't know what it is yet )
+		begin
+			key
+			dup '"' <>
+		while
+			c,
+		repeat
+		drop
+		dup
+		here @ swap -
+		1- ( subtract to compensate for length byte )
+		swap c!
+	else ( immediate mode )
+		here @
+		begin
+			key
+			dup '"' <>
+		while
+			over c!
+			1+
+		repeat
+		drop
+		here @ -
+		here @
+		swap
+	then
+;
+: ." immed ( -- )
+	state @ if ( compiling? )
+		[compile] s"
+		' tell ,
+	else
+		( in immediate mode, just read and print chars )
+		begin
+			key
+			dup '"' = if
+				drop
+				exit
+			then
+			emit
+		again
+	then
+;
+: balle ." balle" ;
+balle

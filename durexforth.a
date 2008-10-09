@@ -434,7 +434,7 @@ QDUP
 	!text	"1+"
 INCR
 	inc	PSTACK - 2, x
-	beq	+
+	bne	+
 	inc	PSTACK - 1, x
 +
 	+NEXT
@@ -1046,6 +1046,7 @@ KEY
 	ldx	tmp_x
 	ora	#0
 	beq	KEY
+	jsr	print_char
 	inx
 	inx
 	sta	PSTACK - 2, x
@@ -1593,7 +1594,7 @@ QUIT
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	4
-	!text	"EXIT"
+	!text	"exit"
 EXIT
 	pla
 	sta	IP + 1
@@ -1896,7 +1897,7 @@ HIDDEN
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	9
-	!text	"LITSTRING"
+	!text	"litstring"
 LITSTRING
 	; grow stack
 	inx
@@ -1904,12 +1905,12 @@ LITSTRING
 
 	; copy string addr to stack
 	ldy	#0
-	lda	(IP), y
+	lda	IP
 	sta	TMP
 	sta	PSTACK - 2, x
 
 	iny
-	lda	(IP), y
+	lda	IP + 1
 	sta	TMP + 1
 	sta	PSTACK - 1, x
 
