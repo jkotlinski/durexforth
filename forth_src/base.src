@@ -3,7 +3,8 @@
 : / /mod swap drop ;
 : mod /mod drop ;
 : negate 0 swap - ;
-: border 53280 c! ;
-: ' immed word find >cfa ;
+hex
+: bg d020 c! ;
 : if immed ' 0branch , here @ 0 , ;
 : then immed dup here @ swap - swap ! ;
+: else immed ' branch , here @ 0 , swap dup here @ swap - swap ! ;
