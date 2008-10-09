@@ -31,6 +31,7 @@ hex
 : cc begin incbg 0 until ;
 : nip ( x y -- y ) swap drop ;
 : tuck ( x y -- y x y ) dup rot ;
+: pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u ) 1+ 2 negate * dsp@ + @ ;
 : <> ( n -- b ) = not ;
 : > ( n -- b ) swap < ;
 : 0> ( n -- b ) 0 > ;
@@ -110,5 +111,7 @@ hex
 	drop
 	0
 ;
+
+: >dfa >cfa 1+ 1+ 1+ ;
 
 1000 cfa> .

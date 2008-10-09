@@ -1505,7 +1505,6 @@ INTERPRET
 .not_a_number
 	lda	#C_RED
 	sta	$d020
-	jmp	.not_a_number
 	+NEXT
 
 .found_word
@@ -1895,6 +1894,24 @@ HIDDEN
 	sta	(TMP), y
 	dex
 	dex
+	+NEXT
+
+; DSP@
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"dsp@"
+DSPFETCH
+	stx	+ + 1
+	lda	#<(PSTACK - 2)
+	clc
++
+	adc	#0
+	inx
+	inx
+	sta	PSTACK - 2, x
+	lda	#>(PSTACK - 2) ; no need to compensate for page wrapping... the stack is well placed.
+	sta	PSTACK - 1, x
 	+NEXT
 
 ; LITSTRING
