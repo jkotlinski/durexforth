@@ -815,13 +815,10 @@ FETCHBYTE
 	sta TMP
 	
 	ldy	#0
-	lda PSTACK - 3, x
-	sta	(TMP), y	
+	lda	(TMP), y
+	sta	PSTACK - 2, x
 	tya
-	sta	PSTACK - 4, x
-
-	dex
-	dex
+	sta	PSTACK - 1, x
 
 	+NEXT
 
