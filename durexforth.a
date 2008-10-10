@@ -921,9 +921,13 @@ EMIT
 	+NEXT
 
 print_char
+	ldy	#1
+	sty	CURSOR_BLINK
 	stx	tmp_x
 	jsr	PUTCHR
 	ldx	tmp_x
+	ldy	#0
+	sty	CURSOR_BLINK
 	rts
 
 print_hex_nibble
@@ -939,12 +943,7 @@ print_hex_nibble
 	eor	#$30
 
 +
-
-	stx	tmp_x
-	jsr	PUTCHR
-	ldx	tmp_x
-
-	rts
+	jmp	print_char
 
 print_hex_char
 	pha
@@ -1078,7 +1077,6 @@ _KEY ; wastes x!!!
 	jsr	CLOSE
 
 	lda	#0
-	sta	CURSOR_BLINK
 	sta	disk_channel
 	jsr	CHKIN ; keybd now input device again...
 	jmp	_KEY
@@ -1999,9 +1997,6 @@ OPEN = $ffc0
 CHKIN = $ffc6
 
 open_base
-	lda	#1
-	sta	CURSOR_BLINK
-
 	lda	#fname_end - fname
 	ldx	#<fname
 	ldy	#>fname
