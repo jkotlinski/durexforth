@@ -93,8 +93,10 @@ C_PURPLE = 4
 
 !ct pet
 
+BG_COLOR = 0
+
 	; screen color = purple
-	lda	#0
+	lda	#BG_COLOR
 	sta	$d020
 	sta	$d021
 
@@ -920,6 +922,12 @@ EMIT
 	jsr	print_char
 	+NEXT
 
+print_char_surpress_file_io
+	ldy	_FILENO
+	beq	print_char
+	sta	$d020	
+	rts
+
 print_char
 	ldy	#1
 	sty	CURSOR_BLINK
@@ -1049,7 +1057,7 @@ KEY
 	ldx	tmp_x
 	ora	#0
 	beq	KEY
-	jsr	print_char
+	jsr	print_char_surpress_file_io
 	inx
 	inx
 	sta	PSTACK - 2, x
@@ -1073,6 +1081,10 @@ _KEY ; wastes x!!!
 
 	dec	_FILENO
 	lda	_FILENO
+	bne +
+	sta	$d020
+	sta	CURSOR_BLINK
++
 	jsr	CHKIN
 	jmp	_KEY
 	
@@ -1101,7 +1113,7 @@ _WORD
 	ora	#0
 	beq	-
 
-	jsr	print_char
+	jsr	print_char_surpress_file_io
 
 	cmp #K_SPACE
 	beq .space
