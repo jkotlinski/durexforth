@@ -1125,10 +1125,6 @@ _WORD
 	jmp	-
 
 .return
-	pha
-	lda	#K_SPACE
-	jsr	print_char
-	pla
 .space
 	jsr	print_char
 	; return text string
