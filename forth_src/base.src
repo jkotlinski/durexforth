@@ -17,7 +17,8 @@ hex
 : ';' [ char ; ] literal ;
 : [compile] immed word find >cfa , ;
 : ['] immed ' lit , ;
-: :noname 0 create here @ 20 c, docol , ] ;
+: jsr_docol 20 c, docol , ;
+: :noname 0 create here @ jsr_docol ] ;
 : if immed ' 0branch , here @ 0 , ;
 : then immed dup here @ swap - swap ! ;
 : else immed ' branch , here @ 0 , swap dup here @ swap - swap ! ;
@@ -184,8 +185,7 @@ hex
 : var
 	1 cells allot
 	word create
-	20 c,
-	docol ,
+	jsr_docol
 	' lit ,
 	,
 	' exit ,
@@ -193,7 +193,7 @@ hex
 
 : value ( n -- )
 	word create
-	20 c, docol ,
+	jsr_docol
 	' lit , , ' exit ,
 ;
 
