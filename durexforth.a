@@ -1114,10 +1114,16 @@ _WORD
 	beq .return
 
 	cmp	#K_BACKSPACE
+	bne	++
+	jsr	print_char
+	dec	.entered_chars_count
+	lda	.dst+1
 	bne	+
-	jsr	handle_backspace
-	jmp	_WORD
+	dec	.dst+2
 +
+	dec	.dst+1
+	jmp	-
+++
 
 	inc	.entered_chars_count
 
@@ -1149,20 +1155,6 @@ _WORD
 
 .entered_chars_count
 	!byte	0
-
-handle_backspace
--
-	lda	.entered_chars_count
-	beq	+
-
-	lda	#K_BACKSPACE
-	jsr	print_char
-
-	dec	.entered_chars_count
-
-	jmp	-
-+
-	rts
 
 ; FIND
 	!word	LINK
@@ -1507,9 +1499,10 @@ INTERPRET
 	+NEXT
 
 .not_a_number
+	dex
+	dex
 	lda	#C_RED
 	sta	$d020
-	jmp	.not_a_number
 	+NEXT
 
 .found_word
