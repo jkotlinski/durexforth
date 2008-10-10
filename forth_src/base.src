@@ -30,7 +30,7 @@ hex
 : incbg d020 c@ 1+ d020 c! ;
 : decbg d020 c@ 1- d020 c! ;
 : ( immed begin key ')' = until ;
-: cc begin incbg 0 until ;
+: cc begin incbg again ;
 : nip ( x y -- y ) swap drop ;
 : tuck ( x y -- y x y ) dup rot ;
 : pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u ) 1+ 2 negate * dsp@ + @ ;
@@ -47,6 +47,7 @@ hex
 		swap 1- ( dec strlen )
 		dup 0= 
 	until
+	2drop
 ;
 : s" immed ( -- addr len )
 	state @ if
@@ -171,12 +172,50 @@ hex
 		2dup >
 	while
 		dup @
-		cfa>
-		id. space
+
+		case
+		' lit of
+			2 + dup @ .
+		endof
+		' litstring of
+			[ char s ] literal emit '"' emit space
+			2 + dup c@ 
+			swap dup tell
+			'"' emit space
+			+ 1-
+		endof
+		' ' of
+			[ char ' ] literal emit space
+			2 + dup @
+			cfa>
+			id. space
+		endof
+		' branch of
+			." branch ( "
+			2 + dup @ .
+			." ) "
+		endof
+		' 0branch of
+			." 0branch ( "
+			2 + dup @ .
+			." ) "
+		endof
+		' exit of
+			2dup
+			2 +
+			<> if
+				." exit "
+			then
+		endof
+			( default )
+			dup
+			cfa>
+			id. space
+		endcase
 		2 +
 	repeat
 	';' emit cr
 	2drop
 ;
 
-see tell
+see cc
