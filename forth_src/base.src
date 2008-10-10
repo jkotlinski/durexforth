@@ -12,6 +12,7 @@ hex
 : '(' [ char ( ] literal ;
 : ')' [ char ) ] literal ;
 : '"' [ char " ] literal ;
+: '.' [ char . ] literal ;
 : ':' [ char : ] literal ;
 : ';' [ char ; ] literal ;
 : [compile] immed word find >cfa , ;
@@ -37,6 +38,13 @@ hex
 : <> ( n -- b ) = not ;
 : > ( n -- b ) swap < ;
 : 0> ( n -- b ) 0 > ;
+: <= ( a b -- c )
+	2dup ( a b a b )
+	< ( a b < )
+	rot ( < a b )
+	= ( < = )
+	or
+;
 : spaces ( n -- ) begin dup 0> while space 1- repeat drop ;
 : ? ( addr -- ) @ . ;
 : tell 
@@ -181,6 +189,31 @@ hex
 	' exit ,
 ;
 
+: value ( n -- )
+	word create
+	20 c, docol ,
+	' lit , , ' exit ,
+;
+
+: to immed ( n -- )
+	word find >dfa 1+ 1+
+	state @ if
+		' lit , , ' ! ,
+	else
+		!
+	then
+;
+
+( x +to val adds x to val )
+: +to immed
+	word find >dfa 1+ 1+
+	state @ if
+		' lit , , ' +! ,
+	else
+		+!
+	then
+;
+
 : words
 	latest @
 	begin
@@ -192,6 +225,74 @@ hex
 		@
 	repeat
 	cr
+;
+
+( c a b within returns true if a <= c and c < b )
+: within
+	rot
+	over
+	<= if
+		> if
+			1
+		else
+			0
+		then
+	else
+		2drop
+		0
+	then
+;
+
+: dump ( addr len -- )
+	swap fff8 and swap
+
+	begin
+		?dup ( while len > 0 )
+	while
+		over . space
+
+		2dup ( addr len addr len )
+		1- 7 and 1+ ( addr len addr linelen )
+		begin
+			?dup ( while linelen > 0 )
+		while
+			swap ( addr len linelen addr )
+			dup c@ ( addr len linelen addr byte )
+			c. space ( print byte )
+			1+ swap 1- ( addr len linelen addr -- addr len addr+1 linelen-1 )
+		repeat
+		drop ( addr len )
+
+		( print in petscii... )
+		2dup 1- 7 and 1+
+		begin
+			?dup
+		while
+			swap
+			dup c@
+			dup 20 5e within if
+				emit
+			else
+				drop '.' emit
+			then
+			1+ swap 1-
+		repeat
+		drop ( addr len )
+		cr
+
+		dup 1- 7 and 1+ ( addr len linelen )
+		dup
+		rot
+		-
+		rot
+		+
+		swap
+	repeat
+	drop
+;
+
+: locate
+	word find
 ;
 
 : see
@@ -265,4 +366,5 @@ hex
 	2drop
 ;
 
-var i
+locate dump 20 dump
+see dump

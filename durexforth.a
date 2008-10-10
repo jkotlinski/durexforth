@@ -970,6 +970,28 @@ print_hex_char
 	pla
 	rts
 
+; c.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"c."
+CDOT
+	lda	PSTACK - 2, x
+	lsr
+	lsr
+	lsr
+	lsr
+	jsr	print_hex_nibble
+	
+	lda	PSTACK - 2, x
+	and	#$f
+	jsr	print_hex_nibble
+
+	dex
+	dex
+
+	+NEXT
+
 ; . - display number on screen
 	!word	LINK
 	!set	LINK = * - 2
