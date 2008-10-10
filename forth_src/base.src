@@ -15,6 +15,7 @@ hex
 : '.' [ char . ] literal ;
 : ':' [ char : ] literal ;
 : ';' [ char ; ] literal ;
+: '<' [ char < ] literal ;
 : [compile] immed word find >cfa , ;
 : ['] immed ' lit , ;
 : jsr_docol 20 c, docol , ;
@@ -246,24 +247,33 @@ hex
 ;
 
 : dump ( addr len -- )
-	swap fff8 and swap
+	over ( addr len addr )
+	fff8 and swap ( oldaddr newaddr len )
 
 	begin
 		?dup ( while len > 0 )
 	while
 		over . space
 
-		2dup ( addr len addr len )
-		1- 7 and 1+ ( addr len addr linelen )
+		2dup ( oldaddr addr len addr len )
+		1- 7 and 1+ ( oldaddr addr len addr linelen )
 		begin
 			?dup ( while linelen > 0 )
 		while
-			swap ( addr len linelen addr )
-			dup c@ ( addr len linelen addr byte )
-			c. space ( print byte )
-			1+ swap 1- ( addr len linelen addr -- addr len addr+1 linelen-1 )
+			swap ( oldaddr addr len linelen addr )
+			dup c@ ( oldaddr addr len linelen addr byte )
+			c. ( print byte ) ( oldaddr addr len linelen addr )
+
+			4 pick over ( oldaddr addr len linelen addr oldaddr addr )
+			= if 
+				'<' emit
+			else
+				space
+			then
+			
+			1+ swap 1- ( oldaddr addr len linelen addr -- oldaddr addr len addr+1 linelen-1 )
 		repeat
-		drop ( addr len )
+		drop ( oldaddr addr len )
 
 		( print in petscii... )
 		2dup 1- 7 and 1+
@@ -279,10 +289,10 @@ hex
 			then
 			1+ swap 1-
 		repeat
-		drop ( addr len )
+		drop ( oldaddr addr len )
 		cr
 
-		dup 1- 7 and 1+ ( addr len linelen )
+		dup 1- 7 and 1+ ( oldaddr addr len linelen )
 		dup
 		rot
 		-
@@ -291,9 +301,10 @@ hex
 		swap
 	repeat
 	drop
+	drop ( oldaddr )
 ;
 
-: locate
+: loc
 	word find
 ;
 
@@ -368,5 +379,5 @@ hex
 	2drop
 ;
 
-locate dump 20 dump
+loc dump 20 dump
 see dump

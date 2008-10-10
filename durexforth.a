@@ -53,6 +53,8 @@ EDIT_WORD = 0
 
 ; kernal defs
 
+CURSOR_BLINK = $cc ; 0 = enable; 1 = disable
+
 GETCHR = $ffe4 ; get char from kbd
 PUTCHR = $ffd2 ; put char
 SETGETCURSOR = $fff0
@@ -81,8 +83,10 @@ C_BEIGE = 10
 C_ORANGE = 8
 C_RED = 2
 C_MAGENTA = 4
-C_BLUE = 14
+C_LT_BLUE = 14
+C_BLUE = 6
 C_CYAN = 3
+C_PURPLE = 4
 
 ; -------- program start
 
@@ -92,17 +96,13 @@ C_CYAN = 3
 
 !ct pet
 
-	; screen color = black
+	; screen color = purple
 	lda	#0
 	sta	$d020
 	sta	$d021
 
-	lda	#C_GREEN
+	lda	#C_YELLOW
 	sta	BLINK_COLOR
-
-	; activate cursor
-	lda	#0
-	sta	$cc
 
 	; clrscr
 	lda	#K_CLRSCR
@@ -151,11 +151,6 @@ cold_start
 	sbx #4 ; equals dex 4 times
 }
 
-
-!macro reset_cursor {
-	lda	#0
-	sta	$cf ; cursor status
-}
 
 !macro VAR_CODE .word {
 	lda	#<.word
@@ -1088,6 +1083,7 @@ _KEY ; wastes x!!!
 	jsr	CLOSE
 
 	lda	#0
+	sta	CURSOR_BLINK
 	sta	disk_channel
 	jsr	CHKIN ; keybd now input device again...
 	jmp	_KEY
@@ -1112,7 +1108,6 @@ _WORD
 	sta	.entered_chars_count
 	
 -
-	+reset_cursor
 	stx	tmp_x
 	jsr	_KEY
 	ldx	tmp_x
@@ -2016,6 +2011,9 @@ OPEN = $ffc0
 CHKIN = $ffc6
 
 open_base
+	lda	#1
+	sta	CURSOR_BLINK
+
 	lda	#fname_end - fname
 	ldx	#<fname
 	ldy	#>fname
