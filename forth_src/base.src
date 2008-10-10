@@ -16,6 +16,8 @@ hex
 : ':' [ char : ] literal ;
 : ';' [ char ; ] literal ;
 : [compile] immed word find >cfa , ;
+: ['] immed ' lit , ;
+: :noname 0 create here @ 20 c, docol , ] ;
 : if immed ' 0branch , here @ 0 , ;
 : then immed dup here @ swap - swap ! ;
 : else immed ' branch , here @ 0 , swap dup here @ swap - swap ! ;

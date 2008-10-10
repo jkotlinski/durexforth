@@ -1567,6 +1567,18 @@ INTERPRET
 TICK
 	jmp	LIT
 
+; EXECUTE
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	7
+	!text	"execute"
+EXECUTE
+	lda	PSTACK - 2, x
+	sta	TMP
+	lda PSTACK - 1, x
+	sta TMP + 1
+	jmp (TMP)
+
 ; LIT
 	!word	LINK
 	!set	LINK = * - 2
@@ -1620,7 +1632,7 @@ EXIT
 	sta	IP
 	+NEXT
 
-; CREATE
+; CREATE ( name -- )
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	6
