@@ -1,0 +1,151 @@
+: see
+	word find
+	here @
+	latest @
+	begin
+		2 pick
+		over
+		<>
+	while
+		nip
+		dup @
+	repeat
+	
+	drop
+	swap ( end-of-word start-of-word )
+
+	':' emit space dup id. space
+	dup ?immed if ." immed " then
+
+	>dfa ( get data addr )
+
+	begin
+		2dup >
+	while
+		dup @
+
+		case
+		' lit of
+			2 + dup @ .
+		endof
+		' litstring of
+			[ char s ] literal emit '"' emit space
+			2 + dup c@ 
+			swap dup tell
+			'"' emit space
+			+ 1-
+		endof
+		' ' of
+			[ char ' ] literal emit space
+			2 + dup @
+			cfa>
+			id. space
+		endof
+		' branch of
+			." branch ( "
+			2 + dup @ .
+			." ) "
+		endof
+		' 0branch of
+			." 0branch ( "
+			2 + dup @ .
+			." ) "
+		endof
+		' exit of
+			2dup
+			2 +
+			<> if
+				." exit "
+			then
+		endof
+			( default )
+			dup
+			cfa>
+			id. space
+		endcase
+		2 +
+	repeat
+	';' emit cr
+	2drop
+;
+
+( c a b within returns true if a <= c and c < b )
+: within
+	rot
+	over
+	<= if
+		> if
+			1
+		else
+			0
+		then
+	else
+		2drop
+		0
+	then
+;
+
+: dump ( addr -- )
+	10 ( addr lines )
+	begin
+		?dup ( while lines > 0 )
+	while
+		over . space ( print addr )
+
+		( ... print bytes in hex ... )
+
+		8 ( addr lines bytes )
+		begin
+			?dup ( while bytes > 0 )
+		while
+			-rot ( lines bytes addr )
+			dup c@ c. space ( print *addr )
+
+			1+ ( incr addr )
+			rot ( addr lines bytes )
+
+			1-
+		repeat
+		( addr lines )
+
+		swap 8 - swap ( roll back address )
+
+		( ... emit chars ... )
+
+		8 ( addr lines bytes )
+		begin
+			?dup ( while bytes > 0 )
+		while
+			-rot ( lines bytes addr )
+			dup c@
+			dup 20 5e within if
+				emit
+			else
+				drop '.' emit
+			then
+
+			1+ ( incr addr )
+			rot ( addr lines bytes )
+
+			1-
+		repeat
+
+		cr
+		1-
+	repeat
+	drop
+;
+
+: words
+	latest @
+	begin
+		?dup
+	while
+		dup ?hidden not if
+			dup id. space
+		then
+		@
+	repeat
+	cr
+;
+

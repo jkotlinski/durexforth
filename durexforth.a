@@ -1039,9 +1039,6 @@ handle_input_char
 +
 	rts
 
-disk_channel
-!byte	0
-
 ; KEY... read a key from disk (if open) or keyboard.
 	!word	LINK
 	!set	LINK = * - 2
@@ -1062,26 +1059,24 @@ KEY
 	+NEXT
 
 _KEY ; wastes x!!!
-	lda	disk_channel
+	lda	_FILENO
 	bne	.get_char_from_disk
 	jmp	GETCHR
 
 .get_char_from_disk
-
 	jsr	READST
 	bne .eof
 	jmp	CHRIN
 
 .eof
-	lda	disk_channel
+	lda	_FILENO
 	jsr	CLOSE
 
-	lda	#0
-	sta	disk_channel
-	jsr	CHKIN ; keybd now input device again...
+	dec	_FILENO
+	lda	_FILENO
+	jsr	CHKIN
 	jmp	_KEY
 	
-
 ; WORD
 	!word	LINK
 	!set	LINK = * - 2
@@ -1501,6 +1496,8 @@ INTERPRET
 	dex
 	lda	#C_RED
 	sta	$d020
+-
+	jmp -
 	+NEXT
 
 .found_word
@@ -1973,6 +1970,16 @@ BASE
 _BASE
 	!word	10
 
+; FILENO - active file number
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 6
+	!text	"fileno"
+FILENO
+	+VAR_CODE	_FILENO
+_FILENO
+	!word	0
+
 ; DOCOL
 	!word	LINK
 	!set	LINK = * - 2
@@ -1980,6 +1987,62 @@ _BASE
 	!text	"docol"
 DOCOL
 	+VAR_CODE	__DOCOL
+
+; LOAD
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 4
+	!text	"load"
+LOAD
+	txa
+	pha
+
+	lda	PSTACK - 2, x
+	ldy	PSTACK - 3, x
+	pha
+	lda	PSTACK - 4, x
+	tax
+	pla
+	jsr	open
+
+	pla
+	tax
+	+dex4
+	+NEXT
+
+SETNAM = $ffbd
+SETLFS = $ffba
+OPEN = $ffc0
+CHKIN = $ffc6
+
+open_base
+	lda	#basename_end - basename
+	ldx	#<basename
+	ldy	#>basename
+	; fall through...
+
+open
+	jsr	SETNAM
+	inc	_FILENO
+	lda	_FILENO ; file number
+	ldx	#8 ; default to device 8
+	tay
+	iny ; secondary address
+	jsr	SETLFS
+	jsr	OPEN
+	bcs	.could_not_open
+
+	ldx	_FILENO ; file number
+	jsr	CHKIN
+	rts
+
+.could_not_open
+	inc	$d020
+	jmp	.could_not_open
+
+basename
+!text	"base"
+basename_end
 
 ; LATEST - points to the most recently defined dictionary word.
 	!word	LINK
@@ -1991,31 +2054,4 @@ LATEST
 _LATEST
 	!word	LINK
 
-SETNAM = $ffbd
-SETLFS = $ffba
-OPEN = $ffc0
-CHKIN = $ffc6
-
-open_base
-	lda	#fname_end - fname
-	ldx	#<fname
-	ldy	#>fname
-	jsr	SETNAM
-	lda	#2
-	ldx	#8 ; default to device 8
-	ldy	#2 ; secondary address
-	jsr	SETLFS
-	jsr	OPEN
-	bcs	.could_not_open
-
-	ldx	#2 ; file number
-	stx	disk_channel
-	jmp	CHKIN
-
-.could_not_open
-	inc	$d020
-	jmp	.could_not_open
-
-fname
-!text	"base"
-fname_end
+; PUT NO CONTENT AFTER LATEST!!!! It will be overwritten!!!!

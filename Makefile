@@ -9,12 +9,14 @@ durexforth.prg: durexforth.a
 	@$(AS) durexforth.a
 
 forth_src/base.pet: forth_src/base.src ext/petcom
-	@echo "acme durexforth.a"
 	cat forth_src/base.src | ext/petcom - > forth_src/base.pet
 
-FORTHLIST=base
+forth_src/debug.pet: forth_src/debug.src ext/petcom
+	cat forth_src/debug.src | ext/petcom - > forth_src/debug.pet
 
-durexforth.d64: durexforth.prg forth_src/base.pet
+FORTHLIST=base debug
+
+durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet
 	$(C1541) -format durexforth,DF  d64 durexforth.d64 > /dev/null
 	$(C1541) -attach $@ -write durexforth.prg  > /dev/null
 	@for forth in $(FORTHLIST); do\
