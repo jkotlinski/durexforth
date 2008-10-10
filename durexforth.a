@@ -44,9 +44,6 @@ OP_INX = $e8
 
 PSTACK_X_OFFSET = 0
 PSTACK = $2408
-EDIT_BUFFER = $2000 ; - $23ff
-
-EDIT_WORD = 0
 
 ; X = PSP
 ; SP = RSP
@@ -111,14 +108,6 @@ C_PURPLE = 4
 	lda	#%00010110 ; lowercase
 	sta	$d018
 
-	ldx	#0
-	lda	#$11
--
-	sta	EDIT_BUFFER, x
-	sta	EDIT_BUFFER + $100, x
-	sta	EDIT_BUFFER + $200, x
-	sta	EDIT_BUFFER + $300, x
-	
 	inx
 	bne	-
 
@@ -128,6 +117,8 @@ C_PURPLE = 4
 	sta IP
 	lda #>cold_start
 	sta IP + 1
+
+	ldx	#0
 
 	jmp	NEXT_IMPL
 
