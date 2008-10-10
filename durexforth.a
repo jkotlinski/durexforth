@@ -1494,10 +1494,7 @@ INTERPRET
 .not_a_number
 	dex
 	dex
-	lda	#C_RED
-	sta	$d020
--
-	jmp -
+	jsr print_error_msg_with_tib
 	+NEXT
 
 .found_word
@@ -1536,6 +1533,47 @@ INTERPRET
 	dex ; drop string
 	dex
 	jmp	(TMP)
+
+print_error_msg_with_tib
+	lda	#$12 ; reverse on
+	jsr	print_char
+
+	ldy	TIB
+	lda	#<TIB
+	sta	TMP
+	lda	#>TIB
+	sta	TMP + 1
+
+	ldx	#0
+-
+	inc	TMP
+	bne	+
+	inc	TMP + 1
++
+
+	tya
+	pha
+
+	ldy	#0
+	lda	(TMP), y
+	jsr	print_char
+
+	pla
+	tay
+
+	dey
+	bne -
+
+	lda	#'?'
+	jsr	print_char
+
+	lda	#$92 ; reverse off
+	jsr	print_char
+
+	lda	#' '
+	jsr	print_char
+
+	rts
 
 ; TICK
 	!word	LINK
