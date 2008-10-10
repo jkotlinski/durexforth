@@ -15,7 +15,7 @@ hex
 : '.' [ char . ] literal ;
 : ':' [ char : ] literal ;
 : ';' [ char ; ] literal ;
-: '<' [ char < ] literal ;
+: '[' [ char [ ] literal ;
 : [compile] immed word find >cfa , ;
 : ['] immed ' lit , ;
 : jsr_docol 20 c, docol , ;
@@ -248,12 +248,13 @@ hex
 
 : dump ( addr len -- )
 	over ( addr len addr )
+	." [=" dup . cr
 	fff8 and swap ( oldaddr newaddr len )
 
 	begin
 		?dup ( while len > 0 )
 	while
-		over . space
+		over .
 
 		2dup ( oldaddr addr len addr len )
 		1- 7 and 1+ ( oldaddr addr len addr linelen )
@@ -261,19 +262,18 @@ hex
 			?dup ( while linelen > 0 )
 		while
 			swap ( oldaddr addr len linelen addr )
-			dup c@ ( oldaddr addr len linelen addr byte )
-			c. ( print byte ) ( oldaddr addr len linelen addr )
 
 			4 pick over ( oldaddr addr len linelen addr oldaddr addr )
-			= if 
-				'<' emit
-			else
-				space
-			then
+			= if '[' emit else space then
+
+			dup c@ ( oldaddr addr len linelen addr byte )
+			c. ( print byte ) ( oldaddr addr len linelen addr )
 			
 			1+ swap 1- ( oldaddr addr len linelen addr -- oldaddr addr len addr+1 linelen-1 )
 		repeat
 		drop ( oldaddr addr len )
+
+		space
 
 		( print in petscii... )
 		2dup 1- 7 and 1+
