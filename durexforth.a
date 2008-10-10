@@ -1028,7 +1028,6 @@ tmp_x
 
 ; input key in a
 handle_input_char
-	jsr	print_char
 
 	; put char in TIB
 .dst
@@ -1101,6 +1100,9 @@ _WORD
 	ldx	tmp_x
 	ora	#0
 	beq	-
+
+	jsr	print_char
+
 	cmp #K_SPACE
 	beq .space
 	cmp #K_RETURN
@@ -1108,7 +1110,6 @@ _WORD
 
 	cmp	#K_BACKSPACE
 	bne	++
-	jsr	print_char
 	dec	.entered_chars_count
 	lda	.dst+1
 	bne	+
@@ -1126,7 +1127,6 @@ _WORD
 
 .return
 .space
-	jsr	print_char
 	; return text string
 	lda	.entered_chars_count
 	beq - ; whoops, nothing entered, try again...
