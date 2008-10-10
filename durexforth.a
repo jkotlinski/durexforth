@@ -108,9 +108,6 @@ C_PURPLE = 4
 	lda	#%00010110 ; lowercase
 	sta	$d018
 
-	inx
-	bne	-
-
 	jsr	open_base ; open 'base' forth source file.
 
 	lda	#<cold_start
