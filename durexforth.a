@@ -157,17 +157,13 @@ cold_start
 	sta	$cf ; cursor status
 }
 
-!macro PUSH_TO_PRM_STACK .word {
+!macro VAR_CODE .word {
 	lda	#<.word
 	sta	PSTACK, x
 	lda	#>.word
 	sta	PSTACK + 1, x
 	inx
 	inx
-}
-
-!macro VAR_CODE .word {
-	+PUSH_TO_PRM_STACK .word
 	+NEXT
 }
 
@@ -176,7 +172,9 @@ in_editor
 
 ; ---------- words
 
-DOCOL
+!set LINK = 0
+
+__DOCOL
 	lda	IP
 	sta	TMP
 	lda	IP + 1
@@ -222,9 +220,6 @@ NEXT_IMPL
 
 ++
 	jmp	0
-
-
-!set LINK = 0
 
 ; DROP
 	!word	LINK
@@ -784,9 +779,6 @@ FETCH
 	sta	PSTACK - 1, x
 
 	+NEXT
-
-; +! - TODO
-; -! - TODO
 
 ; C!
 	!word	LINK
@@ -1589,7 +1581,7 @@ LIT
 	!byte	4
 	!text	"quit"
 QUIT
-	jsr	DOCOL
+	jsr	__DOCOL
 	!word	INTERPRET
 	!word	BRANCH
 	!word	-4
@@ -1640,7 +1632,6 @@ CREATE
 	lda	PSTACK - 1, x
 	sta	TMP2 + 1
 	lda	(TMP2), y
-	ora	#F_HIDDEN
 	sta	(TMP), y	
 
 	; save stack ptr to use x as loop counter
@@ -1768,7 +1759,7 @@ RBRAC
 	!byte	1 | F_IMMED
 	!text	";"
 SEMICOLON
-	jsr	DOCOL
+	jsr	__DOCOL
 	!word LIT, EXIT, COMMA ; append EXIT (so that the word will return).
 	!word LATEST, FETCH, HIDDEN ; unhide the word.
 	!word LBRAC ; go back to IMMEDIATE mode.
@@ -1852,11 +1843,12 @@ ZBRANCH
 	!byte	1
 	!text	":"
 COLON
-	jsr	DOCOL
+	jsr	__DOCOL
 	!word WORD ; get the name of the new word
 	!word CREATE ; CREATE the dictionary entry / header
 	!word LIT, OP_JSR, CCOMMA ; insert jmp
-	!word LIT, DOCOL, COMMA ; append DOCOL (the codeword)
+	!word LIT, __DOCOL, COMMA ; append __DOCOL (the codeword)
+	!word LATEST, FETCH, HIDDEN
 	!word RBRAC ; enter compile mode
 	!word EXIT
 
@@ -1882,7 +1874,7 @@ _compile_byte
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	6
-	!text	"HIDDEN"
+	!text	"hidden"
 HIDDEN
 	lda	PSTACK - 2, x
 	sta	TMP
@@ -1965,6 +1957,14 @@ BASE
 	+VAR_CODE	_BASE
 _BASE
 	!word	10
+
+; DOCOL
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 5
+	!text	"docol"
+DOCOL
+	+VAR_CODE	__DOCOL
 
 ; LATEST - points to the most recently defined dictionary word.
 	!word	LINK

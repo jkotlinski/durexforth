@@ -102,6 +102,20 @@ hex
 : endof immed [compile] else ;
 : endcase immed ' drop , begin ?dup while [compile] then repeat ;
 
+: forget word find dup @ latest ! here ! ;
+
+: ?hidden
+	1+ 1+ ( skip link ptr )
+	c@
+	40 and
+;
+
+: ?immed
+	1+ 1+ ( skip link ptr )
+	c@
+	80 and
+;
+
 : cfa>
 	latest @ ( start at latest dictionary entry... )
 	begin
@@ -116,6 +130,20 @@ hex
 	repeat
 	drop
 	0
+;
+
+: +! ( num addr -- ) 
+	dup @ ( num addr val )
+	-rot + ( addr val num )
+	swap ( newval addr )
+	!
+;
+
+: -! ( num addr -- ) 
+	dup @ ( num addr val )
+	-rot - ( addr val num )
+	swap ( newval addr )
+	!
 ;
 
 : >dfa >cfa 1+ 1+ 1+ ;
@@ -135,16 +163,35 @@ hex
 	2drop
 ;
 
-: ?hidden
-	1+ 1+ ( skip link ptr )
-	c@
-	40 and
+: allot ( n -- addr )
+	here @ ( n val )
+	swap ( val n )
+	here +!
 ;
 
-: ?immed
-	1+ 1+ ( skip link ptr )
-	c@
-	80 and
+: cells ( n -- n ) dup + ; ( 2* )
+
+: var
+	1 cells allot
+	word create
+	20 c,
+	docol ,
+	' lit ,
+	,
+	' exit ,
+;
+
+: words
+	latest @
+	begin
+		?dup
+	while
+		dup ?hidden not if
+			dup id. space
+		then
+		@
+	repeat
+	cr
 ;
 
 : see
@@ -218,4 +265,4 @@ hex
 	2drop
 ;
 
-see cc
+var i
