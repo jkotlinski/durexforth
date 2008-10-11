@@ -1113,12 +1113,13 @@ _WORD
 	ora	#0
 	beq	-
 
+	cmp #K_RETURN
+	beq .return
+
 	jsr	print_char_surpress_file_io
 
 	cmp #K_SPACE
 	beq .space
-	cmp #K_RETURN
-	beq .return
 
 	cmp	#K_BACKSPACE
 	bne	++
@@ -1138,6 +1139,11 @@ _WORD
 	jmp	-
 
 .return
+	pha
+	lda	#K_SPACE
+	jsr	print_char_surpress_file_io
+	pla
+	jsr	print_char_surpress_file_io
 .space
 	; return text string
 	lda	.entered_chars_count
