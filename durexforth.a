@@ -1597,18 +1597,6 @@ print_error_msg_with_tib
 TICK
 	jmp	LIT
 
-; EXECUTE
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	7
-	!text	"execute"
-EXECUTE
-	lda	PSTACK - 2, x
-	sta	TMP
-	lda PSTACK - 1, x
-	sta TMP + 1
-	jmp (TMP)
-
 ; LIT
 	!word	LINK
 	!set	LINK = * - 2
