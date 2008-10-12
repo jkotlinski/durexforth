@@ -86,7 +86,7 @@
 ;
 
 : dump ( addr -- )
-	10 ( addr lines )
+	8 ( addr lines )
 	begin
 		?dup ( while lines > 0 )
 	while
