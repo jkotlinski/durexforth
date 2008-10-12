@@ -17,8 +17,8 @@ hex
 : ';' [ char ; ] literal ;
 : [compile] immed word find >cfa , ;
 : ['] immed ' lit , ;
-: jsr_docol 20 c, docol , ;
-: :noname 0 create here @ jsr_docol ] ;
+: jsr-docol 20 c, docol , ;
+: :noname 0 create here @ jsr-docol ] ;
 : if immed ' 0branch , here @ 0 , ;
 : then immed dup here @ swap - swap ! ;
 : else immed ' branch , here @ 0 , swap dup here @ swap - swap ! ;
@@ -34,7 +34,6 @@ hex
 : incbg d020 c@ 1+ d020 c! ;
 : decbg d020 c@ 1- d020 c! ;
 : ( immed begin key ')' = until ;
-: cc begin incbg again ;
 : nip ( x y -- y ) swap drop ;
 : tuck ( x y -- y x y ) dup rot ;
 : pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u ) 1+ 2 negate * dsp@ + @ ;
@@ -163,6 +162,7 @@ hex
 	!
 ;
 
+( get pointer to first data field - skip jsr DOCOL )
 : >dfa >cfa 1+ 1+ 1+ ;
 
 : id.
@@ -191,7 +191,7 @@ hex
 : var
 	1 cells allot
 	word create
-	jsr_docol
+	jsr-docol
 	' lit ,
 	,
 	' exit ,
@@ -199,7 +199,7 @@ hex
 
 : value ( n -- )
 	word create
-	jsr_docol
+	jsr-docol
 	' lit , , ' exit ,
 ;
 
