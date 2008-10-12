@@ -126,12 +126,6 @@ cold_start
 
 ; ----------- macros
 
-!macro debug_break {
--
-	inc	$d020
-	jmp	-
-}
-
 !macro NEXT {
 	jmp	NEXT_IMPL
 }
@@ -1564,9 +1558,8 @@ INTERPRET
 	+NEXT
 
 .not_a_number
-	dex
-	dex
 	jsr print_error_msg_with_tib
+	ldx	#0 ; wipe stack :(
 	+NEXT
 
 .found_word
@@ -1616,7 +1609,6 @@ print_error_msg_with_tib
 	lda	#>TIB
 	sta	TMP + 1
 
-	ldx	#0
 -
 	inc	TMP
 	bne	+
