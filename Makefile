@@ -14,9 +14,12 @@ forth_src/base.pet: forth_src/base.src ext/petcom
 forth_src/debug.pet: forth_src/debug.src ext/petcom
 	cat forth_src/debug.src | ext/petcom - > forth_src/debug.pet
 
-FORTHLIST=base debug
+forth_src/edit.pet: forth_src/edit.src ext/petcom
+	cat forth_src/edit.src | ext/petcom - > forth_src/edit.pet
 
-durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet
+FORTHLIST=base debug edit
+
+durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet forth_src/edit.pet
 	$(C1541) -format durexforth,DF  d64 durexforth.d64 > /dev/null
 	$(C1541) -attach $@ -write durexforth.prg  > /dev/null
 	@for forth in $(FORTHLIST); do\

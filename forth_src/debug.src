@@ -1,7 +1,7 @@
 : id.
 	2+ ( skip over link ptr )
 	dup c@
-	3f and ( fix me... should a constant with length mask )
+	3f and ( 3f = length mask )
 	begin
 		dup 0>
 	while
@@ -185,4 +185,3 @@ var last-dump
 	drop
 ;
 
-sizes

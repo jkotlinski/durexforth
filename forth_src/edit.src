@@ -1,0 +1,62 @@
+hex
+: return d ;
+: clrscr 93 emit ;
+
+var eod
+var cursor
+
+: do-load
+	load
+	4000 eod !
+
+	begin
+		read
+
+		?dup if
+			eod @ dup ( char *eod *eod )
+			rot ( *eod char *eod )
+			c! ( *eod )
+			1+ eod !
+		else
+			drop
+			exit
+		then
+	again
+;
+
+: print-line ( addr -- n )
+	begin
+		dup c@ ( addr char )
+		dup return = ( addr char bool )
+		if
+			drop
+			1+
+			exit
+		else
+			emit
+			1+
+		then
+	again
+;	
+
+: show-page
+	clrscr
+	cursor @
+	print-line cr
+	print-line cr
+	print-line cr
+	print-line cr
+	print-line cr
+	print-line
+;
+
+: edit
+	do-load
+	
+	4000 cursor !
+
+	show-page
+;
+
+s" debug" edit
+

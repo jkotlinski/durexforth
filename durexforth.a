@@ -1149,6 +1149,42 @@ PULL_KEY ; wastes x!!!
 +
 	jsr	CHKIN
 	jmp	PULL_KEY
+
+; READ - read a byte from disk. 0 = EOF
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"read"
+READ
+	stx	tmp_x
+	jsr	READST
+	bne +
+	jsr	CHRIN
+	ldx	tmp_x
+	inx
+	inx
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+	+NEXT
+
++ ; EOF
+	lda	_FILENO
+	jsr	CLOSE
+
+	dec	_FILENO
+	lda	_FILENO
+	bne +
+	sta	CURSOR_BLINK
++
+	jsr	CHKIN
+	ldx	tmp_x
+	inx
+	inx
+	lda	#0
+	sta	PSTACK - 2, x
+	sta	PSTACK - 1, x
+	+NEXT
 	
 ; WORD
 	!word	LINK
@@ -2078,7 +2114,7 @@ _FILENO
 DOCOL
 	+VAR_CODE	__DOCOL
 
-; LOAD
+; LOAD (load and compile source file)
 	!word	LINK
 	!set	LINK = * - 2
 	!byte 4
