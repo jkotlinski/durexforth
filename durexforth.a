@@ -1052,20 +1052,30 @@ handle_input_char
 	!byte	3
 	!text	"key"
 KEY
+	jsr	_KEY
+	+NEXT
+
+_KEY
 	stx	tmp_x
-	jsr _KEY
+	jsr PULL_KEY
 	ldx	tmp_x
 	ora	#0
-	beq	KEY
+	beq	_KEY
+	cmp	#K_RETURN
+	bne	+
+	lda	#K_SPACE
+	jsr	print_char_surpress_file_io
+	lda	#K_RETURN
++
 	jsr	print_char_surpress_file_io
 	inx
 	inx
 	sta	PSTACK - 2, x
 	lda	#0
 	sta	PSTACK - 1, x
-	+NEXT
+	rts
 
-_KEY ; wastes x!!!
+PULL_KEY ; wastes x!!!
 	lda	_FILENO
 	bne	.get_char_from_disk
 	jmp	GETCHR
@@ -1086,7 +1096,7 @@ _KEY ; wastes x!!!
 	sta	CURSOR_BLINK
 +
 	jsr	CHKIN
-	jmp	_KEY
+	jmp	PULL_KEY
 	
 ; WORD
 	!word	LINK
@@ -1106,20 +1116,15 @@ _WORD
 	lda	#0
 	sta	.entered_chars_count
 	
--
-	stx	tmp_x
 	jsr	_KEY
-	ldx	tmp_x
-	ora	#0
-	beq	-
+	lda	PSTACK - 2, x
+	dex
+	dex
 
 	cmp #K_RETURN
-	beq .return
-
-	jsr	print_char_surpress_file_io
-
+	beq .whitespace
 	cmp #K_SPACE
-	beq .space
+	beq .whitespace
 
 	cmp	#K_BACKSPACE
 	bne	++
@@ -1138,13 +1143,7 @@ _WORD
 
 	jmp	-
 
-.return
-	pha
-	lda	#K_SPACE
-	jsr	print_char_surpress_file_io
-	pla
-	jsr	print_char_surpress_file_io
-.space
+.whitespace
 	; return text string
 	lda	.entered_chars_count
 	beq - ; whoops, nothing entered, try again...
