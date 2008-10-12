@@ -42,6 +42,7 @@ hex
 : 0> ( n -- b ) 0 > ;
 : <= > not ;
 : >= < not ;
+: 2+ 1+ 1+ ;
 : spaces ( n -- ) begin dup 0> while space 1- repeat drop ;
 : ? ( addr -- ) @ . ;
 : tell 
@@ -115,19 +116,19 @@ hex
 		dup dsp@ 1- 1- <
 	while
 		dup @ .
-		1+ 1+
+		2+
 	repeat
 	drop
 ;
 
 : ?hidden
-	1+ 1+ ( skip link ptr )
+	2+ ( skip link ptr )
 	c@
 	40 and
 ;
 
 : ?immed
-	1+ 1+ ( skip link ptr )
+	2+ ( skip link ptr )
 	c@
 	80 and
 ;
@@ -163,10 +164,10 @@ hex
 ;
 
 ( get pointer to first data field - skip jsr DOCOL )
-: >dfa >cfa 1+ 1+ 1+ ;
+: >dfa >cfa 1+ 2+ ;
 
 : id.
-	1+ 1+ ( skip over link ptr )
+	2+ ( skip over link ptr )
 	dup c@
 	3f and ( fix me... should a constant with length mask )
 	begin
@@ -204,7 +205,7 @@ hex
 ;
 
 : to immed ( n -- )
-	word find >dfa 1+ 1+
+	word find >dfa 2+
 	state @ if
 		' lit , , ' ! ,
 	else
@@ -214,7 +215,7 @@ hex
 
 ( x +to val adds x to val )
 : +to immed
-	word find >dfa 1+ 1+
+	word find >dfa 2+
 	state @ if
 		' lit , , ' +! ,
 	else
@@ -225,4 +226,6 @@ hex
 : loc
 	word find
 ;
+
+s" debug" load
 
