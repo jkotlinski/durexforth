@@ -22,8 +22,6 @@ hex
 : if immed ' 0branch , here @ 0 , ;
 : then immed dup here @ swap - swap ! ;
 : else immed ' branch , here @ 0 , swap dup here @ swap - swap ! ;
-: green 5 bg ;
-: yellow 7 bg ;
 : begin immed here @ ;
 : until immed ' 0branch , here @ - , ;
 : again immed ' branch , here @ - , ;
@@ -165,21 +163,6 @@ hex
 
 ( get pointer to first data field - skip jsr DOCOL )
 : >dfa >cfa 1+ 2+ ;
-
-: id.
-	2+ ( skip over link ptr )
-	dup c@
-	3f and ( fix me... should a constant with length mask )
-	begin
-		dup 0>
-	while
-		swap 1+
-		dup c@
-		emit
-		swap 1-
-	repeat
-	2drop
-;
 
 : allot ( n -- addr )
 	here @ ( n val )

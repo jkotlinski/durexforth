@@ -1,3 +1,18 @@
+: id.
+	2+ ( skip over link ptr )
+	dup c@
+	3f and ( fix me... should a constant with length mask )
+	begin
+		dup 0>
+	while
+		swap 1+
+		dup c@
+		emit
+		swap 1-
+	repeat
+	2drop
+;
+
 : see
 	word find
 	here @
