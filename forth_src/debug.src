@@ -85,6 +85,8 @@
 	then
 ;
 
+var last-dump
+
 : dump ( addr -- )
 	8 ( addr lines )
 	begin
@@ -133,8 +135,10 @@
 		cr
 		1-
 	repeat
-	drop
+	last-dump !
 ;
+
+: n last-dump @ dump ;
 
 : words
 	latest @
