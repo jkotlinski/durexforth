@@ -1046,6 +1046,14 @@ handle_input_char
 +
 	rts
 
+KEY_BUF
+	!fill 80
+
+KEY_BUF_READ_POS
+	!byte 0
+KEY_BUF_WRITE_POS
+	!byte 0
+
 ; KEY... read a key from disk (if open) or keyboard.
 	!word	LINK
 	!set	LINK = * - 2
@@ -1056,18 +1064,70 @@ KEY
 	+NEXT
 
 _KEY
+	lda	KEY_BUF_WRITE_POS
+	beq	.fill_key_buf
+	cmp	KEY_BUF_READ_POS
+	bne	.get_from_key_buf
+
+.fill_key_buf
+	; start filling key buf...
+	lda	#0
+	sta	KEY_BUF_READ_POS
+	sta	KEY_BUF_WRITE_POS
+
+-
 	stx	tmp_x
 	jsr PULL_KEY
 	ldx	tmp_x
 	ora	#0
-	beq	_KEY
+	beq	-
 	cmp	#K_RETURN
+	beq	.return
+
+	jsr	print_char_surpress_file_io
+	
+	cmp	#K_BACKSPACE
 	bne	+
+	dec	KEY_BUF_WRITE_POS
+	jmp	-
++
+	ldy	#<KEY_BUF
+	sty	TMP
+	ldy	#>KEY_BUF 
+	sty	TMP + 1
+
+	ldy	KEY_BUF_WRITE_POS
+	sta	(TMP), y
+	inc	KEY_BUF_WRITE_POS
+	jmp	-
+
+.return	;done
 	lda	#K_SPACE
 	jsr	print_char_surpress_file_io
 	lda	#K_RETURN
-+
 	jsr	print_char_surpress_file_io
+
+	ldy	#<KEY_BUF
+	sty	TMP
+	ldy	#>KEY_BUF 
+	sty	TMP + 1
+
+	ldy	KEY_BUF_WRITE_POS
+	sta	(TMP), y
+	inc	KEY_BUF_WRITE_POS
+
+	jmp	_KEY
+
+.get_from_key_buf
+	ldy	#<KEY_BUF
+	sty	TMP
+	ldy	#>KEY_BUF 
+	sty	TMP + 1
+
+	ldy	KEY_BUF_READ_POS
+	lda	(TMP), y
+	inc	KEY_BUF_READ_POS
+
 	inx
 	inx
 	sta	PSTACK - 2, x
@@ -1116,6 +1176,7 @@ _WORD
 	lda	#0
 	sta	.entered_chars_count
 	
+-
 	jsr	_KEY
 	lda	PSTACK - 2, x
 	dex
