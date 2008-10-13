@@ -4,6 +4,27 @@ hex
 
 var eod
 var cursor
+var curx
+var cury
+var curx-prev
+var cury-prev
+
+: update-cursor
+	cury-prev @ 28 *
+	curx-prev @ +
+	400 + ( addr )
+	dup @ 7f and
+	swap c!
+
+	cury @ 28 *
+	curx @ +
+	400 + ( addr )
+	dup @ 80 or
+	swap c!
+
+	curx c@ curx-prev c!
+	cury c@ cury-prev c!
+;
 
 : do-load
 	load
@@ -48,15 +69,54 @@ var cursor
 	print-line cr
 	print-line cr
 	print-line
+	0 curx !
+	0 cury !
+	0 curx-prev !
+	0 cury-prev !
+	update-cursor
 ;
+
+: @1+ dup @ 1+ swap !  ;
+: @1- dup @ 1- swap !  ;
 
 : edit
 	do-load
+	0 linebuf c!
+	0 blink
 	
 	4000 cursor !
 
 	show-page
+
+	begin
+		key
+
+		case
+
+		[ char j ] literal  of
+			cury @1+
+		endof
+
+		[ char k ] literal  of
+			cury @1-
+		endof
+
+		[ char l ] literal  of
+			curx @1+
+		endof
+
+		[ char h ] literal  of
+			curx @1-
+		endof
+
+			( default )
+		endcase
+
+		update-cursor
+	again
 ;
 
+(
 s" debug" edit
+)
 

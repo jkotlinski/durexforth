@@ -93,14 +93,16 @@ C_PURPLE = 4
 
 !ct pet
 
-BG_COLOR = 0
+BORDER_COLOR = 10
+SCREEN_COLOR = 2
 
 	; screen color = purple
-	lda	#BG_COLOR
+	lda	#BORDER_COLOR
 	sta	$d020
+	lda	#SCREEN_COLOR
 	sta	$d021
 
-	lda	#C_YELLOW
+	lda	#1
 	sta	BLINK_COLOR
 
 	; clrscr
@@ -928,7 +930,7 @@ print_char
 	stx	tmp_x
 	jsr	PUTCHR
 	ldx	tmp_x
-	ldy	#0
+	ldy	_BLINK
 	sty	CURSOR_BLINK
 	rts
 
@@ -1069,7 +1071,19 @@ KEY
 	jsr	_KEY
 	+NEXT
 
+.unbuffered_key
+	jsr	PULL_KEY
+	beq	.unbuffered_key
+	inx
+	inx
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+	rts
+
 _KEY
+	lda	_LINEBUF
+	beq	.unbuffered_key
 	lda	KEY_BUF_WRITE_POS
 	beq	.fill_key_buf
 	cmp	KEY_BUF_READ_POS
@@ -1144,8 +1158,10 @@ PULL_KEY ; wastes x!!!
 	dec	_FILENO
 	lda	_FILENO
 	bne +
-	sta	$d020
+	lda	_BLINK
 	sta	CURSOR_BLINK
+	lda	#BORDER_COLOR
+	sta	$d020
 +
 	jsr	CHKIN
 	jmp	PULL_KEY
@@ -1675,6 +1691,24 @@ print_error_msg_with_tib
 
 	rts
 
+; JSR
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"jsr"
+_JSR
+	lda	PSTACK - 2, x
+	sta	+ + 1
+	lda	PSTACK - 1, x
+	sta	+ + 2
+	stx	tmp_x
++
+	jsr 0 ; overwrite
+	ldx tmp_x
+	dex
+	dex
+	+NEXT
+
 ; TICK
 	!word	LINK
 	!set	LINK = * - 2
@@ -1735,6 +1769,22 @@ EXIT
 	pla
 	sta	IP
 	+NEXT
+
+
+; blink (0 = enable, 1 = disable)
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	5
+	!text	"blink"
+BLINK
+	lda	PSTACK - 2, x
+	eor	#1
+	sta	_BLINK
+	dex
+	dex
+	+NEXT
+_BLINK
+	!byte	0
 
 ; CREATE ( name -- )
 	!word	LINK
@@ -2095,6 +2145,16 @@ BASE
 	+VAR_CODE	_BASE
 _BASE
 	!word	10
+
+; LINEBUF line buffering. 0 = off, 1 = on
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 7
+	!text	"linebuf"
+LINEBUF
+	+VAR_CODE	_LINEBUF
+_LINEBUF
+	!word	1
 
 ; FILENO - active file number
 	!word	LINK
