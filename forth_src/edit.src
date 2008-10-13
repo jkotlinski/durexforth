@@ -1,6 +1,6 @@
 hex
 : return d ;
-: clrscr 93 emit ;
+: clrscr e544 jsr ;
 
 var eod
 var cursor
@@ -80,9 +80,10 @@ var cury-prev
 : @1- dup @ 1- swap !  ;
 
 : edit
-	do-load
 	0 linebuf c!
 	0 blink
+
+	do-load
 	
 	4000 cursor !
 
@@ -116,7 +117,4 @@ var cury-prev
 	again
 ;
 
-(
-s" debug" edit
-)
 

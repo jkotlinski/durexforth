@@ -1780,6 +1780,7 @@ BLINK
 	lda	PSTACK - 2, x
 	eor	#1
 	sta	_BLINK
+	sta	$cc
 	dex
 	dex
 	+NEXT
