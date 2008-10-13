@@ -93,8 +93,8 @@ C_PURPLE = 4
 
 !ct pet
 
-BORDER_COLOR = 10
-SCREEN_COLOR = 2
+BORDER_COLOR = 0
+SCREEN_COLOR = 0
 
 	; screen color = purple
 	lda	#BORDER_COLOR
@@ -102,7 +102,7 @@ SCREEN_COLOR = 2
 	lda	#SCREEN_COLOR
 	sta	$d021
 
-	lda	#1
+	lda	#C_YELLOW
 	sta	BLINK_COLOR
 
 	; clrscr
