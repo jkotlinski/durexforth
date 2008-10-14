@@ -316,6 +316,22 @@ var cury
 	c begin cur-down 1- dup 0= until drop
 ;
 
+: goto-eof ( can be much optimized... )
+	begin
+		editpos
+		half-page-fwd
+		editpos =
+	until
+;
+
+: goto-start ( can be much optimized... )
+	begin
+		editpos
+		half-page-back
+		editpos =
+	until
+;
+
 : main-loop
 	begin
 		0 to need-refresh
@@ -334,13 +350,17 @@ var cury
 		[ char 0 ] literal of sol endof
 		[ char b ] literal of word-back endof
 		[ char w ] literal of word-fwd endof
-		[ char h ] literal of cur-left endof
+		[ char g ] literal of goto-eof endof
+		[ char : ] literal of 
+			key [ char 0 ] literal = if goto-start then
+		endof
 
 		( cursor )
 		9d of cur-left endof
 		11 of cur-down endof
 		91 of cur-up endof
 		1d of cur-right endof
+		[ char h ] literal of cur-left endof
 		[ char j ] literal of cur-down endof
 		[ char k ] literal of cur-up endof
 		[ char l ] literal of cur-right endof
