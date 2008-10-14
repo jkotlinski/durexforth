@@ -7,14 +7,43 @@ hex
 var eof ( ram eof )
 
 var homepos ( position at screen home )
-var editpos
 var currlinestart
+var currxpos
 
 ( cursor screen pos )
 var curx 
 var cury
 var curx-prev
 var cury-prev
+
+: max ( a b - c )
+	2dup ( a b a b )
+	< if swap then
+	drop
+;
+
+: min ( a b - c )
+	2dup ( a b a b )
+	> if swap then
+	drop
+;
+
+: editpos
+	currlinestart @ currxpos @ +
+;
+
+: linewidth
+	0
+	currlinestart @ ( count addr )
+	begin
+		dup c@ return = if
+			drop exit
+		then
+
+		1+
+		swap 1+ swap
+	again
+;
 
 : update-cursor
 	cury-prev @ 28 *
@@ -24,13 +53,13 @@ var cury-prev
 	swap c!
 
 	cury @ 28 *
-	curx @ +
+	curx @ linewidth 1- min +
 	400 + ( addr )
 	dup @ 80 or
 	swap c!
 
-	curx c@ curx-prev c!
-	cury c@ cury-prev c!
+	curx @ linewidth 1- min curx-prev c!
+	cury @ cury-prev c!
 ;
 
 : do-load
@@ -40,15 +69,14 @@ var cury-prev
 	begin
 		read ( char )
 
-		?dup if
-			eof @ dup ( char *eof *eof )
-			rot ( *eof char *eof )
-			c! ( *eof )
-			1+ eof !
-		else
-			drop
-			exit
-		then
+		dup ( char char )
+
+		eof @ ( char char *eof )
+		c!
+
+		0= if exit then
+
+		1 eof +!
 	again
 ;
 
@@ -56,7 +84,7 @@ var cury-prev
 	0 curx !
 	0 cury !
 	bufstart homepos !
-	bufstart editpos !
+	0 currxpos !
 	bufstart currlinestart !
 ;
 
@@ -89,9 +117,6 @@ var cury-prev
 	update-cursor
 ;
 
-: @1+! dup @ 1+ swap !  ;
-: @1-! dup @ 1- swap !  ;
-
 : init
 	( disable input buffering )
 	0 linebuf c! 
@@ -107,16 +132,6 @@ var cury-prev
 	go-to-file-start
 ;
 
-: max ( a b - c )
-	2dup . .
-	2dup ( a b a b )
-	< if
-		swap
-	then
-	drop
-	dup . cr
-;
-
 : cur-down
 	currlinestart @ ( addr )
 	begin
@@ -129,8 +144,14 @@ var cury-prev
 		return =
 	until
 	1+ ( newlinestart )
+
+	dup c@ 0= if ( eof )
+		drop
+		exit
+	then
+
 	currlinestart !
-	cury @1+!
+	1 cury +!
 ;
 
 : cur-up
@@ -154,15 +175,26 @@ var cury-prev
 
 	1+
 	currlinestart !
-	cury @1-!
+	ffff cury +!
 ;
 
 : cur-left
-	curx @1-!
+	currxpos @
+	?dup 0= if
+		exit
+	then
+
+	ffff currxpos +!
+	ffff curx +!
 ;
 
 : cur-right
-	curx @1+!
+	editpos 1+ c@
+	dup 0= swap return = or if
+		exit
+	then
+	1 currxpos +!
+	1 curx +!
 ;
 
 : main-loop
