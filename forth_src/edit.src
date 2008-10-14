@@ -37,7 +37,11 @@ var cury-prev
 	currlinestart @ ( count addr )
 	begin
 		dup c@ return = if
-			drop exit
+			drop 
+			dup 0= if
+				1+ ( never return 0, min is 1 )
+			then
+			exit
 		then
 
 		1+
@@ -105,14 +109,17 @@ var cury-prev
 
 : show-page
 	clrscr
+	0 >r
 	homepos @
 	begin
 		print-line
 		dup eof @ <
+		r> 1+ dup >r 18 < and
 	while
 		cr
 	repeat
-	drop
+	r>
+	2drop
 	
 	update-cursor
 ;
@@ -134,15 +141,17 @@ var cury-prev
 
 : cur-down
 	currlinestart @ ( addr )
-	begin
-		dup eof @ = if
-			drop
-			exit
-		then
-		1+ ( addr )
-		dup c@ ( addr char )
-		return =
-	until
+	dup c@ return <> if
+		begin
+			dup eof @ = if
+				drop
+				exit
+			then
+			1+ ( addr )
+			dup c@ ( addr char )
+			return =
+		until
+	then
 	1+ ( newlinestart )
 
 	dup c@ 0= if ( eof )
@@ -174,6 +183,7 @@ var cury-prev
 	( addr )
 
 	1+
+	bufstart max
 	currlinestart !
 	ffff cury +!
 ;
@@ -188,9 +198,14 @@ var cury-prev
 	ffff curx +!
 ;
 
+: is-eof-or-return
+	dup 0= swap return = or
+;
+
 : cur-right
-	editpos 1+ c@
-	dup 0= swap return = or if
+	editpos c@ is-eof-or-return
+	editpos 1+ c@ is-eof-or-return
+	or if
 		exit
 	then
 	1 currxpos +!
@@ -227,5 +242,5 @@ var cury-prev
 	main-loop
 ;
 
-s" test" edit
+s" debug" edit
 
