@@ -1156,8 +1156,11 @@ KEY
 	+NEXT
 
 .unbuffered_key
+	stx	tmp_x
+-
 	jsr	PULL_KEY
-	beq	.unbuffered_key
+	beq	-
+	ldx	tmp_x
 	inx
 	inx
 	sta	PSTACK - 2, x

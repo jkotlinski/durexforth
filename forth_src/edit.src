@@ -395,6 +395,49 @@ var cury
 	endcase
 ;
 
+: delete-handler
+	[ char d ] literal set-status
+
+	( we need to restore these afterwards... )
+	curx @
+	cury @
+	currlinestart @
+
+	key
+
+	case
+	[ char w ] literal of 
+		( delete word )
+		editpos ( dst )
+		word-fwd
+		editpos ( dst src )
+		eof @ editpos - 1+ ( dst src len )
+		rot ( len dst src )
+		swap ( len src dst )
+		-rot ( src dst len )
+		cmove
+		1 to need-refresh
+	endof
+	[ char d ] literal of 
+		( delete line )
+		sol editpos ( dst )
+		eol editpos 2+ ( dst src )
+		eof @ editpos - 1+ ( dst src len )
+		rot ( len dst src )
+		swap ( len src dst )
+		-rot ( src dst len )
+		cmove
+		1 to need-refresh
+	endof
+	endcase
+
+	currlinestart !
+	cury !
+	curx !
+
+	bl set-status
+;
+
 : main-handler
 	case
 
@@ -411,6 +454,8 @@ var cury
 	[ char : ] literal of 
 		key [ char 0 ] literal = if goto-start then
 	endof
+
+	[ char d ] literal of delete-handler endof
 
 	( cursor )
 	9d of cur-left endof
