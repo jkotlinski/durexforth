@@ -799,8 +799,53 @@ FETCHBYTE
 
 	+NEXT
 
-; C$C! - TODO
-; CMOVE - TODO
+; C@C! - TODO
+; CMOVE - src, dst, len
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	5
+	!text	"cmove"
+CMOVE
+	lda	PSTACK - 6, x
+	sta	.csrc + 1
+	lda	PSTACK - 5, x
+	sta	.csrc + 2
+	lda	PSTACK - 4, x
+	sta	.cdst + 1
+	lda	PSTACK - 3, x
+	sta	.cdst + 2
+	lda	PSTACK - 2, x
+	eor	#$ff
+	sta	TMP
+	lda	PSTACK - 1, x
+	eor	#$ff
+	sta	TMP + 1
+
+	+dex4
+	dex
+	dex
+-
+	inc	TMP
+	bne	+
+	inc	TMP + 1
+	bne	+
+	+NEXT
++
+.csrc
+	lda	$ffff ; overwrite
+.cdst
+	sta	$ffff ; overwrite
+
+	; advance
+	inc	.csrc + 1
+	bne	+
+	inc	.csrc + 2
++
+	inc	.cdst + 1
+	bne	+
+	inc	.cdst + 2
++
+	bne	-
 
 ; ---------- variables
 
