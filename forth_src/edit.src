@@ -94,7 +94,7 @@ var cury
 ;
 
 : print-line ( addr -- newaddr )
-	27 >r
+	27 >r ( max line length )
 	begin
 		dup c@ ( addr char )
 		dup return = ( addr char bool )
@@ -374,6 +374,26 @@ var cury
 	1 to need-refresh
 ;
 
+: join-lines
+	cury @
+	curx @
+	currlinestart @
+
+	cur-down
+	sol
+	editpos ( src )
+	editpos 1- ( dst )
+	eof @ editpos - 1+
+
+	cmove
+
+	currlinestart !
+	curx !
+	cury !
+
+	1 to need-refresh
+;
+
 : insert-char
 	editpos
 	editpos 1+
@@ -386,10 +406,11 @@ var cury
 ;
 
 : insert-handler
-	dup 14 = if insert-stop else
-	dup 94 = if del-char else
+	dup 14 = if insert-stop drop else
+	dup 94 = if del-char drop else
+	dup return = if insert-char cur-down sol else
 	insert-char
-	then then
+	then then then
 ;
 
 : delete-handler
@@ -442,6 +463,7 @@ var cury
 
 	d5 of half-page-back endof
 	c4 of half-page-fwd endof
+	ca of join-lines endof
 	[ char $ ] literal of eol endof
 	[ char 0 ] literal of sol endof
 	[ char x ] literal of 1 curx +! del-char endof
@@ -449,7 +471,9 @@ var cury
 	[ char w ] literal of word-fwd endof
 	[ char g ] literal of goto-eof endof
 	[ char : ] literal of 
+		[ char : ] literal set-status
 		key [ char 0 ] literal = if goto-start then
+		bl set-status
 	endof
 
 	[ char d ] literal of delete-handler endof

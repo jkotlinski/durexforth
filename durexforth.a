@@ -54,7 +54,6 @@ CURSOR_BLINK = $cc ; 0 = enable; 1 = disable
 
 GETCHR = $ffe4 ; get char from kbd
 PUTCHR = $ffd2 ; put char
-SETGETCURSOR = $fff0
 
 ; disk i/o
 READST = $ffb7
@@ -2163,6 +2162,22 @@ HIDDEN
 	sta	(TMP), y
 	dex
 	dex
+	+NEXT
+
+; SETCUR ( x y -- )
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	6
+	!text	"setcur"
+SETCUR
+	lda	PSTACK - 4, x
+	tay
+	lda	PSTACK - 2, x
+	stx tmp_x
+	tax
+	jsr	$e50a
+	ldx	tmp_x
+	+dex4
 	+NEXT
 
 ; DSP@
