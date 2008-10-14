@@ -12,8 +12,6 @@ var currlinestart
 ( cursor screen pos )
 var curx 
 var cury
-var curx-prev
-var cury-prev
 0 value need-refresh
 
 : max ( a b - c )
@@ -140,9 +138,6 @@ var cury-prev
 	a d021 c!
 	2 d020 c!
 	1 286 c!
-
-	0 curx-prev !
-	0 cury-prev !
 
 	go-to-file-start
 ;
