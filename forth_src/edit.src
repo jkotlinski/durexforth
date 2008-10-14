@@ -92,15 +92,23 @@ var cury-prev
 ;
 
 : print-line ( addr -- newaddr )
+	27 >r
 	begin
 		dup c@ ( addr char )
 		dup return = ( addr char bool )
 		if
-			drop
+			r>
+			2drop
 			1+
 			exit
 		else
-			emit
+			r> dup 0> if
+				1- >r
+				emit
+			else
+				>r
+				drop
+			then
 			1+
 		then
 	again
