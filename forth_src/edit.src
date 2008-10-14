@@ -386,13 +386,10 @@ var cury
 ;
 
 : insert-handler
-	case
-
-	14 ( backspace ) of insert-stop endof
-	94 ( inst ) of del-char endof
-
+	dup 14 = if insert-stop else
+	dup 94 = if del-char else
 	insert-char
-	endcase
+	then then
 ;
 
 : delete-handler
