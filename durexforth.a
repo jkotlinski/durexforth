@@ -43,7 +43,7 @@ OP_STA_AX = $9d
 OP_INX = $e8
 
 PSTACK_X_OFFSET = 0
-PSTACK = $2408
+PSTACK = $3f08
 
 ; X = PSP
 ; SP = RSP

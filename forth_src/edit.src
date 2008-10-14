@@ -8,7 +8,6 @@ var eof ( ram eof )
 
 var homepos ( position at screen home )
 var currlinestart
-var currxpos
 
 ( cursor screen pos )
 var curx 
@@ -29,7 +28,7 @@ var cury-prev
 ;
 
 : editpos
-	currlinestart @ currxpos @ +
+	currlinestart @ curx @ +
 ;
 
 : linewidth
@@ -88,7 +87,6 @@ var cury-prev
 	0 curx !
 	0 cury !
 	bufstart homepos !
-	0 currxpos !
 	bufstart currlinestart !
 ;
 
@@ -226,21 +224,26 @@ var cury-prev
 	currlinestart !
 	ffff cury +!
 
+	linewidth 1- curx @ min curx !
+
 	adjust-home
 ;
 
 : cur-left
-	currxpos @
+	curx @
 	?dup 0= if
 		exit
 	then
 
-	ffff currxpos +!
 	ffff curx +!
 ;
 
 : is-eof-or-return
 	dup 0= swap return = or
+;
+
+: is-whitespace
+	dup return = swap bl = or
 ;
 
 : cur-right
@@ -249,8 +252,35 @@ var cury-prev
 	or if
 		exit
 	then
-	1 currxpos +!
 	1 curx +!
+;
+
+: eol
+	linewidth 1- curx !
+;
+
+( left, or up + eol if we're at xpos 0 )
+: rewind-cur
+		curx @ 0= if
+			bufstart editpos <> if
+				cur-up
+				eol
+			then
+		else
+			cur-left
+		then
+;
+
+: word-back
+	rewind-cur
+	begin
+		editpos bufstart =
+		editpos 1- c@ is-whitespace
+		editpos c@ is-whitespace not and
+		or not
+	while
+		rewind-cur
+	repeat
 ;
 
 : main-loop
@@ -259,6 +289,8 @@ var cury-prev
 
 		case
 
+		[ char $ ] literal of eol endof
+		[ char b ] literal of word-back endof
 		[ char h ] literal of cur-left endof
 		[ char j ] literal of cur-down endof
 		[ char k ] literal of cur-up endof
