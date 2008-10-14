@@ -798,6 +798,48 @@ FETCHBYTE
 
 	+NEXT
 
+; FILL ( val start len -- )
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"fill"
+FILL
+	lda	PSTACK - 6, x
+	sta	.fsrc + 1
+	lda	PSTACK - 4, x
+	sta	.fdst + 1
+	lda	PSTACK - 3, x
+	sta	.fdst + 2
+	lda	PSTACK - 2, x
+	eor	#$ff
+	sta	TMP
+	lda	PSTACK - 1, x
+	eor	#$ff
+	sta	TMP + 1
+
+	+dex4
+	dex
+	dex
+-
+	inc	TMP
+	bne	+
+	inc	TMP + 1
+	bne	+
+	+NEXT
++
+.fsrc
+	lda	#0 ; overwrite
+.fdst
+	sta	$ffff ; overwrite
+
+	; advance
+	inc	.fdst + 1
+	bne	+
+	inc	.fdst + 2
++
+	bne	-
+
+
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	9
@@ -848,8 +890,7 @@ CMOVE_BKW
 +
 	bne	-
 
-; C@C! - TODO
-; CMOVE - src, dst, len
+; CMOVE FWD
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	9

@@ -1,6 +1,6 @@
 hex
 : return d ;
-: clrscr e544 jsr ;
+: clrscr 20 400 3c0 fill ;
 
 : bufstart 4000 ;
 
@@ -95,6 +95,7 @@ var cury
 
 : show-page
 	clrscr
+	0 0 setcur
 	homepos @
 	begin
 		dup c@ emit
@@ -102,11 +103,9 @@ var cury
 		d6 c@ 18 =
 	until
 	drop
-	7e8 c@ 7c0 c! ( status )
 ;
 
 : set-status
-	dup 7e8 c!
 	7c0 c!
 ;
 
@@ -310,16 +309,6 @@ var cury
 		editpos
 		half-page-back
 		editpos =
-	until
-;
-
-: status-clear
-	7c0
-	begin
-		dup
-		bl over c!
-		1+
-		dup 7d0 =
 	until
 ;
 
