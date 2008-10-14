@@ -107,17 +107,21 @@ var cury-prev
 	go-to-file-start
 ;
 
+: max ( a b - c )
+	2dup . .
+	2dup ( a b a b )
+	< if
+		swap
+	then
+	drop
+	dup . cr
+;
+
 : cur-down
 	currlinestart @ ( addr )
 	begin
 		dup eof @ = if
 			drop
-			exit
-		then
-		dup currlinestart @ - 28 = if
-			( move down within the same row... )
-			cury @1+!
-			currlinestart !
 			exit
 		then
 		1+ ( addr )
@@ -130,9 +134,27 @@ var cury-prev
 ;
 
 : cur-up
-	bufstart currlinestart @ <> if
-		cury @1-!
+	currlinestart @ bufstart = if
+		( already at top )
+		exit
 	then
+
+	currlinestart @ ( addr )
+	1- ( skip first return plz )
+	begin
+		1- ( addr )
+		dup c@ ( addr char )
+		return = ( addr bool )
+
+		over ( addr bool addr )
+		bufstart < ( addr bool bool )
+		or ( addr bool )
+	until
+	( addr )
+
+	1+
+	currlinestart !
+	cury @1-!
 ;
 
 : cur-left
