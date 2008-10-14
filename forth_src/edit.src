@@ -31,7 +31,7 @@ var cury-prev
 	currlinestart @ curx @ +
 ;
 
-: linewidth
+: linelen
 	0
 	currlinestart @ ( count addr )
 	begin
@@ -56,12 +56,12 @@ var cury-prev
 	swap c!
 
 	cury @ 28 *
-	curx @ linewidth 1- min +
+	curx @ linelen 1- min +
 	400 + ( addr )
 	dup @ 80 or
 	swap c!
 
-	curx @ linewidth 1- min curx-prev c!
+	curx @ linelen 1- min curx-prev c!
 	cury @ cury-prev c!
 ;
 
@@ -224,7 +224,7 @@ var cury-prev
 	currlinestart !
 	ffff cury +!
 
-	linewidth 1- curx @ min curx !
+	linelen 1- curx @ min curx !
 
 	adjust-home
 ;
@@ -256,7 +256,7 @@ var cury-prev
 ;
 
 : eol
-	linewidth 1- curx !
+	linelen 1- curx !
 ;
 
 ( left, or up + eol if we're at xpos 0 )
@@ -271,6 +271,10 @@ var cury-prev
 		then
 ;
 
+: sol
+	0 curx !
+;
+
 : word-back
 	rewind-cur
 	begin
@@ -283,6 +287,27 @@ var cury-prev
 	repeat
 ;
 
+( right, or down + sol if we're at xpos = linelen + 1 )
+: advance-cur
+	curx @ linelen 1- = if
+		0 curx !
+		cur-down
+	else
+		cur-right
+	then
+;
+
+: word-fwd
+	advance-cur
+	begin
+		editpos 1- c@ is-whitespace
+		editpos c@ is-whitespace not and
+		not
+	while
+		advance-cur
+	repeat
+;
+
 : main-loop
 	begin
 		key
@@ -290,8 +315,16 @@ var cury-prev
 		case
 
 		[ char $ ] literal of eol endof
+		[ char 0 ] literal of sol endof
 		[ char b ] literal of word-back endof
+		[ char w ] literal of word-fwd endof
 		[ char h ] literal of cur-left endof
+
+		( cursor )
+		9d of cur-left endof
+		11 of cur-down endof
+		91 of cur-up endof
+		1d of cur-right endof
 		[ char j ] literal of cur-down endof
 		[ char k ] literal of cur-up endof
 		[ char l ] literal of cur-right endof
