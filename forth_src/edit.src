@@ -93,42 +93,15 @@ var cury
 	bufstart currlinestart !
 ;
 
-: print-line ( addr -- newaddr )
-	27 >r ( max line length )
-	begin
-		dup c@ ( addr char )
-		dup return = ( addr char bool )
-		if
-			r>
-			2drop
-			1+
-			exit
-		else
-			r> dup 0> if
-				1- >r
-				emit
-			else
-				>r
-				drop
-			then
-			1+
-		then
-	again
-;	
-
 : show-page
 	clrscr
-	0 >r
 	homepos @
 	begin
-		print-line
-		dup eof @ <
-		r> 1+ dup >r 18 < and
-	while
-		cr
-	repeat
-	r>
-	2drop
+		dup c@ emit
+		1+
+		d6 c@ 18 =
+	until
+	drop
 	7e8 c@ 7c0 c! ( status )
 ;
 
