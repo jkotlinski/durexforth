@@ -404,6 +404,7 @@ var cury
 	c4 of half-page-fwd endof
 	[ char $ ] literal of eol endof
 	[ char 0 ] literal of sol endof
+	[ char x ] literal of 1 curx +! del-char endof
 	[ char b ] literal of word-back endof
 	[ char w ] literal of word-fwd endof
 	[ char g ] literal of goto-eof endof
