@@ -16,10 +16,6 @@ var cury
 var curx-prev
 var cury-prev
 
-( logical x pos... where the cursor "wants" to be 
-when scrolling vertically )
-var rowx
-
 : update-cursor
 	cury-prev @ 28 *
 	curx-prev @ +
@@ -59,7 +55,6 @@ var rowx
 : go-to-file-start
 	0 curx !
 	0 cury !
-	0 rowx !
 	bufstart homepos !
 	bufstart editpos !
 	bufstart currlinestart !
@@ -113,9 +108,16 @@ var rowx
 ;
 
 : cur-down
-	currlinestart @
+	currlinestart @ ( addr )
 	begin
 		dup eof @ = if
+			drop
+			exit
+		then
+		dup currlinestart @ - 28 = if
+			( move down within the same row... )
+			cury @1+!
+			currlinestart !
 			exit
 		then
 		1+ ( addr )
@@ -123,10 +125,8 @@ var rowx
 		return =
 	until
 	1+ ( newlinestart )
-	dup currlinestart @ - ( newlinestart diff )
-	28 + 28 / ( newlinestart diff/40 )
-	cury @ + cury !
 	currlinestart !
+	cury @1+!
 ;
 
 : cur-up
