@@ -860,23 +860,12 @@ R0
 	!byte	2
 	!text	">r"
 TOR
-	pla
-	sta	TMP
-	pla
-	sta	TMP + 1
-
 	lda	PSTACK - 2, x
 	pha
 	lda	PSTACK - 1, x
 	pha
 	dex
 	dex
-
-	lda	TMP + 1
-	pha
-	lda	TMP
-	pha
-
 	+NEXT
 
 ; R>
@@ -890,7 +879,7 @@ FROMR
 	pla
 	sta	PSTACK - 1, x
 	pla
-	lda	PSTACK - 2, x
+	sta	PSTACK - 2, x
 	+NEXT
 
 ; RDROP
