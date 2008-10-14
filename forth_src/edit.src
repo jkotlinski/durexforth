@@ -2,12 +2,23 @@ hex
 : return d ;
 : clrscr e544 jsr ;
 
-var eod
-var cursor
-var curx
+: bufstart 4000 ;
+
+var eof ( ram eof )
+
+var homepos ( position at screen home )
+var editpos
+var currlinestart
+
+( cursor screen pos )
+var curx 
 var cury
 var curx-prev
 var cury-prev
+
+( logical x pos... where the cursor "wants" to be 
+when scrolling vertically )
+var rowx
 
 : update-cursor
 	cury-prev @ 28 *
@@ -28,16 +39,16 @@ var cury-prev
 
 : do-load
 	load
-	4000 eod !
+	bufstart eof !
 
 	begin
-		read
+		read ( char )
 
 		?dup if
-			eod @ dup ( char *eod *eod )
-			rot ( *eod char *eod )
-			c! ( *eod )
-			1+ eod !
+			eof @ dup ( char *eof *eof )
+			rot ( *eof char *eof )
+			c! ( *eof )
+			1+ eof !
 		else
 			drop
 			exit
@@ -45,7 +56,16 @@ var cury-prev
 	again
 ;
 
-: print-line ( addr -- n )
+: go-to-file-start
+	0 curx !
+	0 cury !
+	0 rowx !
+	bufstart homepos !
+	bufstart editpos !
+	bufstart currlinestart !
+;
+
+: print-line ( addr -- newaddr )
 	begin
 		dup c@ ( addr char )
 		dup return = ( addr char bool )
@@ -62,61 +82,77 @@ var cury-prev
 
 : show-page
 	clrscr
-	cursor @
-	print-line cr
-	print-line cr
-	print-line cr
-	print-line cr
-	print-line cr
-	print-line
-	0 curx !
-	0 cury !
-	0 curx-prev !
-	0 cury-prev !
+	homepos @
+	begin
+		print-line
+		dup eof @ <
+	while
+		cr
+	repeat
+	drop
+	
 	update-cursor
 ;
 
-: @1+ dup @ 1+ swap !  ;
-: @1- dup @ 1- swap !  ;
+: @1+! dup @ 1+ swap !  ;
+: @1-! dup @ 1- swap !  ;
 
-: init-colors
+: init
+	( disable input buffering )
+	0 linebuf c! 
+
+	( colors )
 	a d021 c!
 	2 d020 c!
 	1 286 c!
+
+	0 curx-prev !
+	0 cury-prev !
+
+	go-to-file-start
 ;
 
-: edit
-	0 blink
+: cur-down
+	currlinestart @
+	begin
+		dup eof @ = if
+			exit
+		then
+		1+ ( addr )
+		dup c@ ( addr char )
+		return =
+	until
+	1+ ( newlinestart )
+	dup currlinestart @ - ( newlinestart diff )
+	28 + 28 / ( newlinestart diff/40 )
+	cury @ + cury !
+	currlinestart !
+;
 
-	do-load
-	
-	4000 cursor !
+: cur-up
+	bufstart currlinestart @ <> if
+		cury @1-!
+	then
+;
 
-	0 linebuf c! ( disable input buffering )
-	init-colors
+: cur-left
+	curx @1-!
+;
 
-	show-page
+: cur-right
+	curx @1+!
+;
 
+: main-loop
 	begin
 		key
 
 		case
 
-		[ char j ] literal  of
-			cury @1+
-		endof
-
-		[ char k ] literal  of
-			cury @1-
-		endof
-
-		[ char l ] literal  of
-			curx @1+
-		endof
-
-		[ char h ] literal  of
-			curx @1-
-		endof
+		[ char h ] literal of cur-left endof
+		[ char j ] literal of cur-down endof
+		[ char k ] literal of cur-up endof
+		[ char l ] literal of cur-right endof
 
 			( default )
 		endcase
@@ -125,4 +161,17 @@ var cury-prev
 	again
 ;
 
+: edit
+	0 blink
+
+	do-load
+	
+	init
+
+	show-page
+
+	main-loop
+;
+
+s" test" edit
 
