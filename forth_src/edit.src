@@ -13,6 +13,7 @@ var currlinestart
 var curx 
 var cury
 0 value need-refresh
+0 value insert-active
 
 : max ( a b - c )
 	2dup ( a b a b )
@@ -128,6 +129,12 @@ var cury
 	repeat
 	r>
 	2drop
+	7e8 c@ 7c0 c! ( status )
+;
+
+: set-status
+	dup 7e8 c!
+	7c0 c!
 ;
 
 : init
@@ -140,6 +147,7 @@ var cury
 	1 286 c!
 
 	go-to-file-start
+	20 set-status
 ;
 
 : adjust-home
@@ -332,41 +340,103 @@ var cury
 	until
 ;
 
+: status-clear
+	7c0
+	begin
+		dup
+		bl over c!
+		1+
+		dup 7d0 =
+	until
+;
+
+: insert-start
+	1 to insert-active
+	[ char i ] literal set-status
+;
+
+: insert-stop
+	curx @ if
+		ffff curx +!
+	then
+	0 to insert-active
+	20 set-status
+;
+
+: del-char
+	curx @ 0= if exit then
+	ffff curx +!
+	editpos 1+
+	editpos
+	eof @ editpos - 1+
+	ffff eof +!
+	cmove
+	1 to need-refresh
+;
+
+: insert-char
+	editpos
+	editpos 1+
+	eof @ editpos - 1+
+	cmove
+	editpos c!
+	1 curx +!
+	1 eof +!
+	1 to need-refresh
+;
+
+: insert-handler
+	case
+
+	14 ( backspace ) of insert-stop endof
+	94 ( inst ) of del-char endof
+
+	insert-char
+	endcase
+;
+
+: main-handler
+	case
+
+	[ char i ] literal of insert-start endof
+
+	d5 of half-page-back endof
+	c4 of half-page-fwd endof
+	[ char $ ] literal of eol endof
+	[ char 0 ] literal of sol endof
+	[ char b ] literal of word-back endof
+	[ char w ] literal of word-fwd endof
+	[ char g ] literal of goto-eof endof
+	[ char : ] literal of 
+		key [ char 0 ] literal = if goto-start then
+	endof
+
+	( cursor )
+	9d of cur-left endof
+	11 of cur-down endof
+	91 of cur-up endof
+	1d of cur-right endof
+	[ char h ] literal of cur-left endof
+	[ char j ] literal of cur-down endof
+	[ char k ] literal of cur-up endof
+	[ char l ] literal of cur-right endof
+
+	endcase
+;
+
 : main-loop
 	begin
 		0 to need-refresh
 
 		show-cursor
-
 		key
-
 		hide-cursor
 
-		case
-
-		d5 of half-page-back endof
-		c4 of half-page-fwd endof
-		[ char $ ] literal of eol endof
-		[ char 0 ] literal of sol endof
-		[ char b ] literal of word-back endof
-		[ char w ] literal of word-fwd endof
-		[ char g ] literal of goto-eof endof
-		[ char : ] literal of 
-			key [ char 0 ] literal = if goto-start then
-		endof
-
-		( cursor )
-		9d of cur-left endof
-		11 of cur-down endof
-		91 of cur-up endof
-		1d of cur-right endof
-		[ char h ] literal of cur-left endof
-		[ char j ] literal of cur-down endof
-		[ char k ] literal of cur-up endof
-		[ char l ] literal of cur-right endof
-
-			( default )
-		endcase
+		insert-active if
+			insert-handler
+		else
+			main-handler
+		then
 
 		need-refresh if
 			show-page
