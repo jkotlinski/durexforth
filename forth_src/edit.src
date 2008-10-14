@@ -100,7 +100,8 @@ var cury
 	begin
 		dup c@ emit
 		1+
-		d6 c@ 18 =
+		dup eof @ =
+		d6 c@ 18 = or
 	until
 	drop
 ;
@@ -297,11 +298,30 @@ var cury
 ;
 
 : goto-eof ( can be much optimized... )
+	0 curx !
+	0 >r
+	eof @ ( addr )
 	begin
-		editpos
-		half-page-fwd
-		editpos =
+		1-
+		dup c@ return = if
+			r> 1+ >r
+		then
+		dup bufstart =
+		r> dup >r 18 = or
 	until
+
+	r> 1- cury !
+	homepos !
+
+	eof @ 1-
+	begin
+		1-
+		dup c@ return =
+	until
+	1+
+	currlinestart !
+
+	1 to need-refresh
 ;
 
 : goto-start ( can be much optimized... )
@@ -425,7 +445,7 @@ var cury
 	[ char U ] literal of half-page-back endof
 	[ char D ] literal of half-page-fwd endof
 	[ char J ] literal of join-lines endof
-	[ char g ] literal of goto-eof endof
+	[ char G ] literal of goto-eof endof
 	[ char $ ] literal of eol endof
 	[ char 0 ] literal of sol endof
 	[ char x ] literal of 1 curx +! del-char endof
@@ -485,3 +505,4 @@ var cury
 ;
 
 s" debug" edit
+
