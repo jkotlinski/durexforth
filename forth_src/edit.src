@@ -139,6 +139,43 @@ var cury-prev
 	go-to-file-start
 ;
 
+: adjust-home
+	0 ( did-modify? )
+	begin
+		cury @ 8000 and
+	while
+		1+ ( set did-modify )
+
+		ffff homepos +! ( skip first cr )
+		begin
+			ffff homepos +!
+			homepos @ c@ return =
+			homepos @ bufstart 1- = or
+		until
+		1 homepos +!
+		1 cury +! ( cur down )
+	repeat
+
+	begin
+		cury @ 17 >
+	while
+		1+ ( set did-modify )
+
+		homepos @ c@ return <> if
+			begin
+				1 homepos +!
+				homepos @ c@ return =
+			until
+		then
+		1 homepos +!
+		ffff cury +! ( cur up )
+	repeat
+
+	if ( did-modify )
+		show-page
+	then
+;
+
 : cur-down
 	currlinestart @ ( addr )
 	dup c@ return <> if
@@ -161,6 +198,8 @@ var cury-prev
 
 	currlinestart !
 	1 cury +!
+
+	adjust-home
 ;
 
 : cur-up
@@ -186,6 +225,8 @@ var cury-prev
 	bufstart max
 	currlinestart !
 	ffff cury +!
+
+	adjust-home
 ;
 
 : cur-left
