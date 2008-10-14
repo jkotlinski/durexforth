@@ -49,21 +49,24 @@ var cury-prev
 	again
 ;
 
-: update-cursor
-	cury-prev @ 28 *
-	curx-prev @ +
-	400 + ( addr )
-	dup @ 7f and
-	swap c!
-
+: cursor-scr-pos
 	cury @ 28 *
 	curx @ linelen 1- min +
 	400 + ( addr )
+;
+
+: hide-cursor
+	cursor-scr-pos
+	dup @ 7f and
+	swap c!
+;
+
+: show-cursor
+	curx @ linelen 1- min curx c!
+
+	cursor-scr-pos
 	dup @ 80 or
 	swap c!
-
-	curx @ linelen 1- min curx-prev c!
-	cury @ cury-prev c!
 ;
 
 : do-load
@@ -127,8 +130,6 @@ var cury-prev
 	repeat
 	r>
 	2drop
-	
-	update-cursor
 ;
 
 : init
@@ -324,7 +325,11 @@ var cury-prev
 	begin
 		0 to need-refresh
 
+		show-cursor
+
 		key
+
+		hide-cursor
 
 		case
 
@@ -351,7 +356,6 @@ var cury-prev
 		need-refresh if
 			show-page
 		then
-		update-cursor
 	again
 ;
 
