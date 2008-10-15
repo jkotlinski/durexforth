@@ -58,8 +58,10 @@ PUTCHR = $ffd2 ; put char
 ; disk i/o
 READST = $ffb7
 CHRIN = $ffcf
+CHROUT = $ffd2
 CLOSE = $ffc3
 CHKIN = $ffc6
+CHKOUT = $ffc9
 
 BLINK_COLOR = $286
 
@@ -1311,6 +1313,21 @@ PULL_KEY ; wastes x!!!
 	jsr	CHKIN
 	jmp	PULL_KEY
 
+; WRITE - write a byte to disk.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	5
+	!text	"write"
+WRITE
+	lda	PSTACK - 2, x
+
+	stx	tmp_x
+	jsr	CHROUT
+	ldx	tmp_x
+	dex
+	dex
+	+NEXT
+
 ; READ - read a byte from disk. 0 = EOF
 	!word	LINK
 	!set	LINK = * - 2
@@ -2335,6 +2352,52 @@ _FILENO
 	!text	"docol"
 DOCOL
 	+VAR_CODE	__DOCOL
+
+WRITEFILENO = 2
+
+; CLOSEW (open file for writing)
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 6
+	!text	"closew"
+CLOSEW
+	stx	tmp_x
+	lda	#WRITEFILENO
+	jsr	CLOSE 
+	ldx	#0 ; reset output device
+	jsr	CHKOUT
+	ldx tmp_x
+	+NEXT
+
+; OPENW (open file for writing)
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 5
+	!text	"openw"
+OPENW
+	stx	tmp_x
+
+	lda	PSTACK - 2, x
+	ldy	PSTACK - 3, x
+	pha
+	lda	PSTACK - 4, x
+	tax
+	pla
+	
+	jsr	SETNAM
+	lda	#WRITEFILENO ; file number
+	ldx	#8 ; default to device 8
+	tay ; secondary address
+	jsr	SETLFS
+	jsr	OPEN
+	bcs	.could_not_open
+
+	ldx	#WRITEFILENO ; file number
+	jsr	CHKOUT
+
+	ldx	tmp_x
+	+dex4
+	+NEXT
 
 ; LOAD (load and compile source file)
 	!word	LINK

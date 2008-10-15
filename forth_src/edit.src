@@ -15,6 +15,10 @@ var cury
 0 value need-refresh
 0 value insert-active
 
+10 allot dup 
+value filename-len
+1+ value filename
+
 : max ( a b - c )
 	2dup ( a b a b )
 	< if swap then
@@ -527,6 +531,63 @@ var cury
 	again
 ;
 
+18 allot value drivebuf
+
+: write-drivebuf
+	drivebuf
+	1-
+	begin
+		1+
+		dup c@ write
+		dup c@ return =
+	until
+	drop
+;
+
+: do-backup
+	0 0 openw
+
+	# scratch old .bak
+	drivebuf
+	dup [ char s ] literal swap c! 1+
+	dup [ char : ] literal swap c! 1+
+	dup  # drivebuf drivebuf
+	filename swap filename-len c@ cmove
+	filename-len c@ +
+	return swap c!
+	write-drivebuf
+
+	closew
+	begin incbg again
+
+	drivebuf dump
+;
+
+: write-file
+	d020 c@
+
+	# do-backup
+
+	# add ",P,W" to make it an output filename
+	filename filename-len c@ +
+	dup [ char d ] literal swap c! 1+
+	dup [ char , ] literal swap c! 1+
+	dup [ char p ] literal swap c! 1+
+	dup [ char , ] literal swap c! 1+
+	[ char w ] literal swap c!
+
+	filename filename-len c@ 5 + openw
+	bufstart
+	begin
+		dup c@ dup d020 c! write
+		1+
+		dup eof @ 1+ =
+	until
+	closew
+	drop
+	d020 c!
+;
+
 : find-handler
 	0 18 setcur
 	clear-status
@@ -571,7 +632,11 @@ var cury
 	[ char w ] literal of word-fwd endof
 	[ char : ] literal of 
 		[ char : ] literal set-status
-		key [ char 0 ] literal = if goto-start then
+		key 
+		case
+		[ char 0 ] literal of goto-start endof
+		[ char w ] literal of write-file endof
+		endcase
 		clear-status
 	endof
 
@@ -613,8 +678,13 @@ var cury
 : edit
 	0 blink
 
+	# store away filename
+	2dup ( str len str len )	
+	filename-len c!
+	filename 10 cmove
+
 	do-load
-	
+
 	init
 
 	show-page
