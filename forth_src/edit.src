@@ -110,6 +110,10 @@ var cury
 	7c0 c!
 ;
 
+: clear-status
+	bl 7c0 18 fill
+;
+
 : init
 	( disable input buffering )
 	0 linebuf c! 
@@ -118,6 +122,7 @@ var cury
 	a d021 c!
 	2 d020 c!
 	1 286 c!
+	1 dba0 28 fill ( status white )
 
 	go-to-file-start
 	20 set-status
@@ -183,8 +188,7 @@ var cury
 
 : cur-up
 	currlinestart @ bufstart = if
-		( already at top )
-		exit
+		exit ( already at top )
 	then
 
 	currlinestart @ ( addr )
@@ -437,11 +441,118 @@ var cury
 	bl set-status
 ;
 
+10 allot value search-buf
+
+: are-equal ( len a1 a2 -- equal? )
+	-rot ( a1 a2 len )
+	>r ( a1 a2 )
+	begin
+		r@ ( a1 a2 len )
+		0= if ( is len 0? )
+			( matches! )
+			2drop
+			rdrop
+			1
+			exit
+		then
+		( a1 a2 )
+		dup c@ ( a1 a2 c2 )
+		-rot ( a2 c2 a1 )
+		dup c@ ( a2 c2 a1 c1 )
+		-rot ( a2 a1 c1 c2 )
+		<> ( a2 a1 diff? )
+		if
+			( not equal!! )
+			2drop ( )
+			rdrop
+			0
+			exit
+		then
+		1+ ( a2 a1 )
+		swap 1+ ( a1 a2 )
+		r> 1- >r
+	again
+;
+
+: do-find ( count -- addr )
+	editpos ( count a1 )
+	1+ ( count a1 )
+	begin
+		dup eof @ = if
+			drop bufstart ( count a1 )
+		then
+		dup editpos = if
+			( not found )
+			drop
+			0
+			exit
+		then
+
+		dup @ search-buf @ = if
+			( first char matches... examine )
+			2dup ( count a1 count a1 )
+			search-buf ( count a1 count a1 search-buf )
+			are-equal ( count a1 equal? )
+			if
+				( count a1 )
+				swap drop ( a1 )
+				exit
+			then
+		then
+		1+
+	again
+;
+
+: show-location
+	dup ( loc sol )
+	begin
+		dup c@ return = if
+			1+
+			dup ( loc sol sol )
+			rot ( sol loc sol )
+			- curx !
+			0 cury !
+			dup homepos !
+			currlinestart !
+			1 to need-refresh
+			exit
+		then
+		1-
+	again
+;
+
+: find-handler
+	0 18 setcur
+	clear-status
+	[ char / ] literal emit
+	0 ( count )
+	begin
+		key dup
+		return <> if
+			( count key )
+			dup emit
+			over search-buf + ( count key dst )
+			c! ( count )
+			1+
+			0
+		else
+			drop
+			1
+		then
+	until
+	do-find ( count )
+	?dup if
+		( found! )
+		show-location
+	then
+;
+
 : main-handler
 	case
 
 	[ char i ] literal of insert-start endof
 
+	[ char / ] literal of find-handler endof
 	[ char U ] literal of half-page-back endof
 	[ char D ] literal of half-page-fwd endof
 	[ char J ] literal of join-lines endof
@@ -449,6 +560,7 @@ var cury
 	[ char $ ] literal of eol endof
 	[ char 0 ] literal of sol endof
 	[ char x ] literal of 1 curx +! del-char endof
+	[ char X ] literal of del-char endof
 	[ char b ] literal of word-back endof
 	[ char w ] literal of word-fwd endof
 	[ char : ] literal of 

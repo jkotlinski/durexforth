@@ -1017,6 +1017,23 @@ FROMR
 	sta	PSTACK - 2, x
 	+NEXT
 
+; RFETCH
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"r@"
+RFETCH
+	inx
+	inx
+	pla
+	sta	PSTACK - 1, x
+	pla
+	sta	PSTACK - 2, x
+	pha
+	lda	PSTACK - 1, x
+	pha
+	+NEXT
+
 ; RDROP
 	!word	LINK
 	!set	LINK = * - 2
