@@ -32,6 +32,7 @@ hex
 : incbg d020 c@ 1+ d020 c! ;
 : decbg d020 c@ 1- d020 c! ;
 : ( immed begin key ')' = until ;
+: # immed begin key d = until ; # comment
 : nip ( x y -- y ) swap drop ;
 : tuck ( x y -- y x y ) dup rot ;
 : pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u ) 1+ 2 negate * dsp@ + @ ;
