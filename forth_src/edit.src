@@ -106,12 +106,13 @@ var cury
 	drop
 ;
 
-: set-status
-	7c0 c!
+: clear-status ( -- )
+	bl 7c0 18 fill
 ;
 
-: clear-status
-	bl 7c0 18 fill
+: set-status ( c -- )
+	clear-status
+	7c0 c!
 ;
 
 : init
@@ -122,10 +123,10 @@ var cury
 	a d021 c!
 	2 d020 c!
 	1 286 c!
-	1 dba0 28 fill ( status white )
+	1 d800 400 fill ( status white )
 
 	go-to-file-start
-	20 set-status
+	clear-status
 ;
 
 : adjust-home
@@ -345,7 +346,7 @@ var cury
 		ffff curx +!
 	then
 	0 to insert-active
-	20 set-status
+	clear-status
 ;
 
 : del-char
@@ -443,7 +444,7 @@ var cury
 	cury !
 	curx !
 
-	bl set-status
+	clear-status
 ;
 
 10 allot value search-buf
@@ -571,7 +572,7 @@ var cury
 	[ char : ] literal of 
 		[ char : ] literal set-status
 		key [ char 0 ] literal = if goto-start then
-		bl set-status
+		clear-status
 	endof
 
 	[ char d ] literal of delete-handler endof
