@@ -840,11 +840,12 @@ FILL
 	bne	-
 
 
+; CMOVE>
 	!word	LINK
 	!set	LINK = * - 2
-	!byte	9
-	!text	"cmove-bkw"
-CMOVE_BKW
+	!byte	6
+	!text	"cmove>"
+CMOVE_BACK
 	lda	PSTACK - 6, x
 	sta	.bsrc + 1
 	lda	PSTACK - 5, x
@@ -890,12 +891,12 @@ CMOVE_BKW
 +
 	bne	-
 
-; CMOVE FWD
+; CMOVE (forward move)
 	!word	LINK
 	!set	LINK = * - 2
-	!byte	9
-	!text	"cmove-fwd"
-CMOVE_FWD
+	!byte	5
+	!text	"cmove"
+CMOVE
 	lda	PSTACK - 6, x
 	sta	.csrc + 1
 	lda	PSTACK - 5, x

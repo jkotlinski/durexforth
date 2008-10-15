@@ -43,24 +43,6 @@ hex
 : 2+ 1+ 1+ ;
 : spaces ( n -- ) begin dup 0> while space 1- repeat drop ;
 : ? ( addr -- ) @ . ;
-: cmove ( src dst l -- )
-	rot ( l src dst )
-		( l src dst )
-	2dup ( l src dst src dst )
-	> if
-		-rot
-		cmove-fwd
-	else
-		2 pick ( l src dst l )
-		+ 1- ( l src newdst )
-		swap ( l newdst src )
-		2 pick ( l newdst src l )
-		+ 1- ( l newdst newsrc )
-		swap
-		-rot
-		cmove-bkw
-	then
-;
 : tell 
 	dup c@ ( get strlen )
 	begin 

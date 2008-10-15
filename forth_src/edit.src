@@ -380,10 +380,11 @@ var cury
 ;
 
 : insert-char
-	editpos
-	editpos 1+
-	eof @ editpos - 1+
-	cmove
+	eof @ editpos - ( u )
+	dup 1- editpos + ( u src )
+	over 1- editpos + 1+ ( u src dst )
+	-rot ( src dst u )
+	cmove>
 	editpos c!
 	1 curx +!
 	1 eof +!
