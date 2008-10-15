@@ -533,50 +533,49 @@ value filename-len
 
 18 allot value drivebuf
 
-: write-drivebuf
-	drivebuf
-	1-
-	begin
-		1+
-		dup c@ write
-		dup c@ return =
-	until
-	drop
-;
-
 : do-backup
-	0 0 openw
-
-	# scratch old .bak
+	# scratch old backup
 	drivebuf
 	dup [ char s ] literal swap c! 1+
 	dup [ char : ] literal swap c! 1+
-	dup  # drivebuf drivebuf
+	dup [ char . ] literal swap c! 1+
+	dup
 	filename swap filename-len c@ cmove
 	filename-len c@ +
 	return swap c!
-	write-drivebuf
 
+	f drivebuf filename-len c@ 4 + openw
 	closew
-	begin incbg again
 
-	drivebuf dump
+	# rename to new backup
+	drivebuf
+	dup [ char r ] literal swap c! 1+
+	1+ # colon already in place...
+	dup [ char . ] literal swap c! 1+
+	filename-len c@ + # filename ok
+	dup [ char = ] literal swap c! 1+
+	dup
+	filename swap filename-len c@ cmove
+	filename-len c@ + # filename ok
+	return swap c!
+
+	f drivebuf filename-len c@ 2 * 5 + openw
+	closew
 ;
 
 : write-file
 	d020 c@
 
-	# do-backup
+	do-backup
 
 	# add ",P,W" to make it an output filename
 	filename filename-len c@ +
-	dup [ char d ] literal swap c! 1+
 	dup [ char , ] literal swap c! 1+
 	dup [ char p ] literal swap c! 1+
 	dup [ char , ] literal swap c! 1+
 	[ char w ] literal swap c!
 
-	filename filename-len c@ 5 + openw
+	2 filename filename-len c@ 4 + openw
 	bufstart
 	begin
 		dup c@ dup d020 c! write
@@ -692,5 +691,8 @@ value filename-len
 	main-loop
 ;
 
+(
+do-backup
+)
 s" debug" edit
 

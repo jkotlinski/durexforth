@@ -1322,11 +1322,16 @@ WRITE
 	lda	PSTACK - 2, x
 
 	stx	tmp_x
+	jsr	READST
+	bne	werror
 	jsr	CHROUT
 	ldx	tmp_x
 	dex
 	dex
 	+NEXT
+werror
+	inc	$d021
+	jmp	werror
 
 ; READ - read a byte from disk. 0 = EOF
 	!word	LINK
@@ -2353,7 +2358,8 @@ _FILENO
 DOCOL
 	+VAR_CODE	__DOCOL
 
-WRITEFILENO = 2
+WRITEFILENO
+	!byte 0
 
 ; CLOSEW (open file for writing)
 	!word	LINK
@@ -2362,12 +2368,56 @@ WRITEFILENO = 2
 	!text	"closew"
 CLOSEW
 	stx	tmp_x
-	lda	#WRITEFILENO
+	lda	WRITEFILENO
 	jsr	CLOSE 
 	ldx	#0 ; reset output device
 	jsr	CHKOUT
 	ldx tmp_x
+	jsr	_errorchread
 	+NEXT
+
+_errorchread
+        LDA #$00      ; no filename
+        LDX #$00
+        LDY #$00
+        JSR $FFBD     ; call SETNAM
+        LDA #$0F      ; file number 15
+        LDX $BA       ; last used device number
+        BNE +
+        LDX #$08      ; default to device 8
++	   LDY #$0F      ; secondary address 15 (error channel)
+        JSR $FFBA     ; call SETLFS
+
+        JSR $FFC0     ; call OPEN
+        BCS .error    ; if carry set, the file could not be opened
+
+        LDX #$0F      ; filenumber 15
+        JSR $FFC6     ; call CHKIN (file 15 now used as input)
+
+        LDY #$00
+.loop   JSR $FFB7     ; call READST (read status byte)
+        BNE geof      ; either EOF or read error
+        JSR $FFCF     ; call CHRIN (get a byte from file)
+        JSR $FFD2     ; call CHROUT (print byte to screen)
+        JMP .loop     ; next byte
+
+geof
+.glose
+        LDA #$0F      ; filenumber 15
+        JSR $FFC3     ; call CLOSE
+
+        LDX #$00      ; filenumber 0 = keyboard
+        JSR $FFC6     ; call CHKIN (keyboard now input device again)
+        RTS
+.error
+        ; Akkumulator contains BASIC error code
+
+        ; most likely error:
+        ; A = $05 (DEVICE NOT PRESENT)
+
+        ; ... error handling for open errors ...
+        JMP .glose    ; even if OPEN failed, the file has to be closed
+
 
 ; OPENW (open file for writing)
 	!word	LINK
@@ -2377,6 +2427,8 @@ CLOSEW
 OPENW
 	stx	tmp_x
 
+	lda	PSTACK - 6, x
+	sta	WRITEFILENO
 	lda	PSTACK - 2, x
 	ldy	PSTACK - 3, x
 	pha
@@ -2385,18 +2437,20 @@ OPENW
 	pla
 	
 	jsr	SETNAM
-	lda	#WRITEFILENO ; file number
+	lda	WRITEFILENO ; file number
 	ldx	#8 ; default to device 8
 	tay ; secondary address
 	jsr	SETLFS
 	jsr	OPEN
 	bcs	.could_not_open
 
-	ldx	#WRITEFILENO ; file number
+	ldx	WRITEFILENO ; file number
 	jsr	CHKOUT
 
 	ldx	tmp_x
 	+dex4
+	dex
+	dex
 	+NEXT
 
 ; LOAD (load and compile source file)
