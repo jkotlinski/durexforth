@@ -84,10 +84,18 @@ value filename-len
 		eof @ ( char char *eof )
 		c!
 
-		0= if exit then
+		0>
+	while
 
 		1 eof +!
-	again
+	repeat
+
+	bufstart 1+ eof @ = if
+		# empty file?
+		1 eof +!
+		return 4000 c!
+		return 4001 c!
+	then
 ;
 
 : go-to-file-start
@@ -693,6 +701,6 @@ value filename-len
 
 (
 do-backup
-)
 s" debug" edit
+)
 
