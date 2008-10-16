@@ -627,6 +627,11 @@ value filename-len
 	then
 ;
 
+: open-line
+	sol return insert-char sol
+	1 to insert-active
+;
+
 : main-handler
 	case
 
@@ -639,6 +644,8 @@ value filename-len
 	[ char G ] literal of goto-eof endof
 	[ char $ ] literal of eol endof
 	[ char 0 ] literal of sol endof
+	[ char o ] literal of cur-down open-line endof
+	[ char O ] literal of open-line endof
 	[ char x ] literal of 1 curx +! del-char endof
 	[ char X ] literal of del-char endof
 	[ char b ] literal of word-back endof
@@ -708,5 +715,5 @@ value filename-len
 (
 do-backup
 )
-s" balle" edit
+s" debug" edit
 
