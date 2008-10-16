@@ -667,6 +667,12 @@ value filename-len
 	[ char X ] literal of del-char endof
 	[ char b ] literal of word-back endof
 	[ char w ] literal of word-fwd endof
+	[ char Z ] literal of
+		key
+		case
+		[ char Z ] literal of write-file ffff exit endof
+		endcase
+	endof
 	[ char : ] literal of 
 		[ char : ] literal set-status
 		key 
@@ -737,7 +743,7 @@ value filename-len
 
 (
 do-backup
-s" debug" edit
 )
+s" debug" edit
 
 

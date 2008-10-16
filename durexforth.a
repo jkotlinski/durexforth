@@ -2375,8 +2375,8 @@ CLOSEW
 	jsr	CLOSE 
 	ldx	_FILENO ; reset output device
 	jsr	CHKOUT
-	ldx tmp_x
 	jsr	_errorchread
+	ldx tmp_x
 	+NEXT
 
 _errorchread
