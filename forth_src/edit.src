@@ -580,7 +580,7 @@ value filename-len
 	begin
 		dup c@ dup d020 c! write
 		1+
-		dup eof @ 1+ =
+		dup eof @ =
 	until
 	closew
 	drop
