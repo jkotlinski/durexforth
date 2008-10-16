@@ -130,17 +130,34 @@ value filename-len
 ;
 
 : init
+	0 blink
+
 	( disable input buffering )
 	0 linebuf c! 
 
-	( colors )
+	go-to-file-start
+	clear-status
+;
+
+: push-colors
+	d020 c@
+	d021 c@
+	286 c@
+
 	a d021 c!
 	2 d020 c!
 	1 286 c!
-	1 d800 400 fill ( status white )
+	1 d800 400 fill
+;
 
-	go-to-file-start
-	clear-status
+: cleanup
+	1 linebuf c! # enable buffering
+
+	1 blink
+	286 c! # cursor col
+	d021 c!
+	d020 c!
+	93 emit # clrscr
 ;
 
 : adjust-home
@@ -632,7 +649,7 @@ value filename-len
 	1 to insert-active
 ;
 
-: main-handler
+: main-handler ( 0 -- quit? )
 	case
 
 	[ char i ] literal of insert-start endof
@@ -656,6 +673,7 @@ value filename-len
 		case
 		[ char 0 ] literal of goto-start endof
 		[ char w ] literal of write-file endof
+		[ char q ] literal of ffff exit endof
 		endcase
 		clear-status
 	endof
@@ -673,6 +691,7 @@ value filename-len
 	[ char l ] literal of cur-right endof
 
 	endcase
+	0
 ;
 
 : main-loop
@@ -686,7 +705,9 @@ value filename-len
 		insert-active if
 			insert-handler
 		else
-			main-handler
+			main-handler if 
+				exit
+			then
 		then
 
 		need-refresh if
@@ -696,24 +717,27 @@ value filename-len
 ;
 
 : edit
-	0 blink
+	init
 
 	# store away filename
 	2dup ( str len str len )	
 	filename-len c!
-	filename 10 cmove
+	filename f cmove
 
 	do-load
 
-	init
+	push-colors
 
 	show-page
 
 	main-loop
+
+	cleanup
 ;
 
 (
 do-backup
-)
 s" debug" edit
+)
+
 
