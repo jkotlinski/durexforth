@@ -65,7 +65,9 @@ value filename-len
 ;
 
 : show-cursor
-	curx @ linelen 1- min curx c!
+	insert-active 0= if
+		curx @ linelen 1- min curx c!
+	then
 
 	cursor-scr-pos
 	dup @ 80 or
@@ -701,6 +703,6 @@ value filename-len
 
 (
 do-backup
-s" debug" edit
 )
+s" balle" edit
 
