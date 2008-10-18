@@ -41,9 +41,6 @@ value filename-len
 	begin
 		dup c@ return = if
 			drop 
-			dup 0= if
-				1+ ( never return 0, min is 1 )
-			then
 			exit
 		then
 
@@ -55,6 +52,7 @@ value filename-len
 : cursor-scr-pos
 	cury @ 28 *
 	curx @ linelen 1- min +
+	insert-active linelen 0> and if 1+ then
 	400 + ( addr )
 ;
 
