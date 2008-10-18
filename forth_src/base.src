@@ -21,7 +21,8 @@ hex
 : :noname 0 create here @ jsr-docol ] ;
 : if immed ' 0branch , here @ 0 , ;
 : then immed dup here @ swap - swap ! ;
-: else immed ' branch , here @ 0 , swap dup here @ swap - swap ! ;
+: else immed ' branch , here @ 0 , 
+	swap dup here @ swap - swap ! ;
 : begin immed here @ ;
 : until immed ' 0branch , here @ - , ;
 : again immed ' branch , here @ - , ;

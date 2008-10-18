@@ -112,9 +112,9 @@ value filename-len
 	0 0 setcur
 	homepos @
 	begin
-		dup c@ emit
-		1+
-		dup eof @ =
+		dup c@ dup emit
+		swap 1+ swap
+		0=
 		d6 c@ 18 = or
 	until
 	drop
@@ -207,7 +207,7 @@ value filename-len
 	then
 	1+ ( newlinestart )
 
-	dup c@ 0= if ( eof )
+	dup eof @ >= if ( eof )
 		drop
 		exit
 	then
@@ -228,10 +228,10 @@ value filename-len
 	begin
 		1- ( addr )
 		dup c@ ( addr char )
-		return = ( addr bool )
+		return = ( addr return? )
 
-		over ( addr bool addr )
-		bufstart < ( addr bool bool )
+		over ( addr return? addr )
+		bufstart < ( addr return? sof? )
 		or ( addr bool )
 	until
 	( addr )
@@ -333,20 +333,32 @@ value filename-len
 	c begin cur-down 1- dup 0= until drop
 ;
 
+: find-prev-return ( addr -- new-addr )
+	begin
+		1-
+		dup bufstart <=
+		over c@ return =
+		or
+	until
+	bufstart max
+;
+
 : goto-eof ( can be much optimized... )
 	0 curx !
 	0 >r
 	eof @ ( addr )
-	begin
-		1-
-		dup c@ return = if
-			r> 1+ >r
-		then
-		dup bufstart =
-		r> dup >r 18 = or
+	begin # rewind from eof...
+		find-prev-return
+		r> 1+ dup >r 19 =
+		over bufstart =
+		or
 	until
 
-	r> 1- cury !
+	dup bufstart > if
+		1+
+	then
+
+	r> 1- 1- cury !
 	homepos !
 
 	eof @ 1-
@@ -743,7 +755,7 @@ value filename-len
 
 (
 do-backup
-)
 s" debug" edit
-
+s" test" edit
+)
 
