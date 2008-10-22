@@ -43,7 +43,7 @@ OP_STA_AX = $9d
 OP_INX = $e8
 
 PSTACK_X_OFFSET = 0
-PSTACK = $3f08
+PSTACK = $208 ; $0200-$0258/512-600     BASIC Input Buffer (Input Line from Screen)
 
 ; X = PSP
 ; SP = RSP
