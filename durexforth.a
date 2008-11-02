@@ -100,6 +100,14 @@ C_PURPLE = 4
 
 BORDER_COLOR = 0
 SCREEN_COLOR = 0
+	
+	; set up restore key
+	sei
+	lda	#<restore_handler
+	sta $318
+	lda	#>restore_handler
+	sta $319
+	cli
 
 	; screen color = purple
 	lda	#BORDER_COLOR
@@ -119,6 +127,7 @@ SCREEN_COLOR = 0
 
 	jsr	open_base ; open 'base' forth source file.
 
+reset
 	lda	#<cold_start
 	sta IP
 	lda #>cold_start
@@ -130,6 +139,10 @@ SCREEN_COLOR = 0
 
 cold_start
 	!word QUIT
+
+restore_handler
+	cli
+	jmp reset
 
 ; ----------- macros
 
