@@ -52,6 +52,14 @@ Print top of stack.
 
 \section{Mathematics}
 
+\subsection{hex}
+
+Use hexadecimal base for input.
+
+\subsection{dec}
+
+Use decimal base for input.
+
 \subsection{1+ ( a -- b )}
 
 Increase top of stack value by 1.
@@ -115,14 +123,6 @@ Is a less than or equal to b?
 \subsection{$0>$ ( a b -- c)}
 
 Is a greater than zero?
-
-\subsection{hex}
-
-Use hexadecimal base for input.
-
-\subsection{dec}
-
-Use decimal base for input.
 
 
 \section{Logic}
@@ -196,3 +196,33 @@ Start multi-line comment.
 \subsection{)}
 
 End multi-line comment.
+
+
+\section{Control Flow}
+
+\subsection{begin ... again}
+
+Infinite loop.
+
+\subsection{begin ... f until}
+
+Loop until f is true.
+
+\subsection{begin ... f while ... repeat}
+
+Repeat while f is true.
+
+\subsection{exit}
+
+Exit function.
+
+
+\section{"Missing" Words}
+
+The following words might be expected in a "normal" Forth, but are not included in durexForth for the sake of keeping it lean:
+
+\begin{itemize}
+\item do ... loop, i, j
+\item */, */mod
+\item abs
+\end{itemize}
