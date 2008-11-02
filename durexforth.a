@@ -987,26 +987,6 @@ HERE_CODE
 HERE
 	!word	_LATEST + 2
 
-; R0 - the address of the top of the return stack.
-	!word	LINK
-	!set	LINK = * - 2
-	!byte 2
-	!text	"r0"
-R0
-	inx
-	inx
-
-	stx	tmp_x
-	tsx
-	txa
-	ldx	tmp_x
-
-	sta	PSTACK - 2, x
-	lda	#1
-	sta	PSTACK - 1, x
-
-	+NEXT
-
 ; ------------ return stack
 
 ; >R
