@@ -27,7 +27,6 @@ hex
 : again immed ' branch , here @ - , ;
 : while immed ' 0branch , here @ 0 , ;
 : repeat immed ' branch , swap here @ - , dup here @ swap - swap ! ;
-: unless immed ' not , [compile] if ;
 : recurse immed latest @ >cfa , ;
 : ( immed begin key ')' = until ;
 : # immed begin key d = until ; # comment
