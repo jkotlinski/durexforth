@@ -1,0 +1,111 @@
+\chapter{Forth Words}
+
+\section{Basic Stack Manipulation}
+
+\subsection{drop ( a -- )}
+
+Drop top of stack.
+
+\subsection{dup ( a -- a a )}
+
+Duplicate top of stack.
+
+\subsection{swap ( a b -- b a )}
+
+Swap top stack elements.
+
+\subsection{over ( a b -- a b a )}
+
+Swap top stack elements.
+
+\subsection{rot ( a b c -- c a b )}
+
+Rotate top three stack elements from bottom to top.
+
+\subsection{-rot ( a b c -- b c a )}
+
+Rotate top three stack elements from top to bottom.
+
+\subsection{2drop ( a b -- )}
+
+Drop two topmost stack elements.
+
+\subsection{2dup ( a b -- a b a b )}
+
+Duplicate two topmost stack elements.
+
+\subsection{2swap ( a b c d -- c d a b )}
+
+Swap topmost double stack elements.
+
+\subsection{?dup ( a -- a a? )}
+
+Dup a if a differs from 0.
+
+
+\section{Mathematics}
+
+durexForth supports unsigned 16-bit mathematics only.
+
+\subsection{1+ ( a -- b )}
+
+Increase top of stack value.
+
+\subsection{1- ( a -- b )}
+
+Decrease top of stack value.
+
+\subsection{+ ( a b -- c )}
+
+Add a and b.
+
+\subsection{- ( a b -- c )}
+
+Subtract b from a.
+
+\subsection{* ( a b -- c )}
+
+Multiply a with b.
+
+\subsection{/mod ( a b -- r q )}
+
+Divide a with b. r = rest, q = quotient.
+
+\subsection{= ( a b -- c )}
+
+Is a equal to b?
+
+\subsection{$<$ ( a b -- c )}
+
+Is a less than b?
+
+\subsection{$>$ ( a b -- c )}
+
+Is a greater than b?
+
+\subsection{$>=$ ( a b -- c)}
+
+Is a greater than or equal to b?
+
+\subsection{$0>$ ( a b -- c)}
+
+Is a greater than zero?
+
+
+\section{Logic}
+
+\subsection{and ( a b -- c )}
+
+Binary and.
+
+\subsection{or ( a b -- c )}
+
+Binary or.
+
+\subsection{xor ( a b -- c )}
+
+Binary exclusive or.
+
+\subsection{not ( a -- b )}
+
+Flip all bits of a.

@@ -1,12 +1,16 @@
-\documentclass[a4paper, 12, titlepage, oneside]{book}
+\documentclass[a4paper, 12, titlepage]{report}
 \usepackage{microtype}
+\usepackage{hyperref}
 
 \author{Ravelli/Durex}
 \title{durexForth: Operators Manual}
 
+\hypersetup{pdfauthor="Ravelli/Durex", pdftitle="durexForth: Operators Manual", colorlinks=true}
 \begin{document}
 \maketitle
 \tableofcontents
+
+\input{intro.tex}
 \input{forth.tex}
 \input{editor.tex}
 \end{document}
