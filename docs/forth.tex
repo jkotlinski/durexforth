@@ -1,6 +1,6 @@
 \chapter{Forth Words}
 
-\section{Basic Stack Manipulation}
+\section{Stack Manipulation}
 
 \subsection{drop ( a -- )}
 
@@ -42,12 +42,44 @@ Swap topmost double stack elements.
 
 Dup a if a differs from 0.
 
+\subsection{nip ( a b -- b )}
+
+swap drop
+
+\subsection{tuck ( a b -- b a b )}
+
+dup rot
+
+\subsection{pick ( x\_u ... x\_1 x\_0 u -- x\_u ... x\_1 x\_0 x\_u )}
+
+Pick from stack element with depth u to top of stack.
+
+\subsection{>r ( a -- )}
+
+Move value from top of parameter stack to top of return stack. 
+
+\subsection{r> ( a -- )}
+
+Move value from top of return stack to top of parameter stack. 
+
+\subsection{r@ ( -- a )}
+
+Fetch value of top of return stack (without lifting it).
+
+\subsection{rdrop ( -- )}
+
+Drop value on top of return stack.
+
 
 \section{Utility}
 
 \subsection{. ( a -- )}
 
-Print top of stack.
+Print top of stack as a hexadecimal value.
+
+\subsection{emit ( a -- )}
+
+Print top of stack as a PETSCII character.
 
 
 \section{Mathematics}
@@ -174,6 +206,10 @@ Forward copy len bytes from src to dst.
 
 Backward copy len bytes from src to dst.
 
+\subsection{forget}
+
+"forget word" makes "word," and everything defined after it, to be forgotten.
+
 
 \section{Compiling}
 
@@ -200,21 +236,51 @@ End multi-line comment.
 
 \section{Control Flow}
 
+\subsection{if ... then}
+
+condition IF true-part THEN rest
+
+\subsection{if ... else ... then}
+
+condition IF true-part ELSE false-part THEN rest
+
 \subsection{begin ... again}
 
 Infinite loop.
 
-\subsection{begin ... f until}
+\subsection{begin ... until}
 
-Loop until f is true.
+BEGIN loop-part condition UNTIL.
 
-\subsection{begin ... f while ... repeat}
+Loop until condition is true.
 
-Repeat while f is true.
+\subsection{begin ... while ... repeat}
+
+BEGIN condition WHILE loop-part REPEAT.
+
+Repeat loop-part while condition is true.
 
 \subsection{exit}
 
 Exit function.
+
+
+\section{Debugging}
+
+\subsection{.s}
+
+See stack contents.
+
+\subsection{words}
+
+List all defined words.
+
+
+\section{C64 Specific}
+
+\subsection{blink ( b -- )}
+
+Disable/enable cursor blink. (0 = off, 1 = on)
 
 
 \section{"Missing" Words}
