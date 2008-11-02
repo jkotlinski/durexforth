@@ -7,7 +7,6 @@ hex
 : / /mod swap drop ;
 : mod /mod drop ;
 : negate 0 swap - ;
-: bg d020 c! ;
 : literal immed ' lit , , ;
 : '(' [ char ( ] literal ;
 : ')' [ char ) ] literal ;
@@ -30,8 +29,6 @@ hex
 : repeat immed ' branch , swap here @ - , dup here @ swap - swap ! ;
 : unless immed ' not , [compile] if ;
 : recurse immed latest @ >cfa , ;
-: incbg d020 c@ 1+ d020 c! ;
-: decbg d020 c@ 1- d020 c! ;
 : ( immed begin key ')' = until ;
 : # immed begin key d = until ; # comment
 : nip ( x y -- y ) swap drop ;
@@ -43,8 +40,6 @@ hex
 : <= > not ;
 : >= < not ;
 : 2+ 1+ 1+ ;
-: spaces ( n -- ) begin dup 0> while space 1- repeat drop ;
-: ? ( addr -- ) @ . ;
 : tell 
 	dup c@ ( get strlen )
 	begin 
