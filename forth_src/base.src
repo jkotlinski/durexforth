@@ -208,3 +208,4 @@ hex
 s" debug" load
 s" edit" load
 
+." ok" cr
