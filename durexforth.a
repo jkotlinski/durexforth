@@ -1251,13 +1251,18 @@ _KEY
 	cmp	#K_RETURN
 	beq	.return
 
-	jsr	print_char_surpress_file_io
-	
 	cmp	#K_BACKSPACE
 	bne	+
+	tay
+	lda	KEY_BUF_WRITE_POS
+	beq	-
 	dec	KEY_BUF_WRITE_POS
+	tya
+	jsr	print_char_surpress_file_io
 	jmp	-
 +
+	jsr	print_char_surpress_file_io
+	
 	jsr	write_key
 	jmp	-
 
