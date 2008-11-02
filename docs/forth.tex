@@ -43,17 +43,26 @@ Swap topmost double stack elements.
 Dup a if a differs from 0.
 
 
-\section{Mathematics}
+\section{Utility}
 
-durexForth supports unsigned 16-bit mathematics only.
+\subsection{. ( a -- )}
+
+Print top of stack.
+
+
+\section{Mathematics}
 
 \subsection{1+ ( a -- b )}
 
-Increase top of stack value.
+Increase top of stack value by 1.
 
 \subsection{1- ( a -- b )}
 
-Decrease top of stack value.
+Decrease top of stack value by 1.
+
+\subsection{2+ ( a -- b )}
+
+Increase top of stack value by 2.
 
 \subsection{+ ( a b -- c )}
 
@@ -71,9 +80,21 @@ Multiply a with b.
 
 Divide a with b. r = rest, q = quotient.
 
+\subsection{/ ( a b -- q )}
+
+Divide a with b.
+
+\subsection{mod ( a b -- r )}
+
+Rest of a divided by b.
+
 \subsection{= ( a b -- c )}
 
 Is a equal to b?
+
+\subsection{$<>$ ( a b -- c )}
+
+Does a differ from b?
 
 \subsection{$<$ ( a b -- c )}
 
@@ -87,9 +108,21 @@ Is a greater than b?
 
 Is a greater than or equal to b?
 
+\subsection{$<=$ ( a b -- c)}
+
+Is a less than or equal to b?
+
 \subsection{$0>$ ( a b -- c)}
 
 Is a greater than zero?
+
+\subsection{hex}
+
+Use hexadecimal base for input.
+
+\subsection{dec}
+
+Use decimal base for input.
 
 
 \section{Logic}
@@ -109,3 +142,57 @@ Binary exclusive or.
 \subsection{not ( a -- b )}
 
 Flip all bits of a.
+
+
+\section{Memory}
+
+\subsection{! ( value address -- )}
+
+Store 16-bit value at address.
+
+\subsection{@ ( address -- value )}
+
+Fetch 16-bit value from address.
+
+\subsection{c! ( value address -- )}
+
+Store 8-bit value at address.
+
+\subsection{c@ ( address -- value )}
+
+Fetch 8-bit value from address.
+
+\subsection{fill ( byte addr len -- )}
+
+Fill range [addr, len + addr) with byte value.
+
+\subsection{cmove ( len dst src -- )}
+
+Forward copy len bytes from src to dst.
+
+\subsection{cmove$>$ ( len dst src -- )}
+
+Backward copy len bytes from src to dst.
+
+
+\section{Compiling}
+
+\subsection{:}
+
+Start compiling Forth word.
+
+\subsection{;}
+
+End compiling.
+
+\subsection{\#}
+
+Comment to end of line.
+
+\subsection{(}
+
+Start multi-line comment.
+
+\subsection{)}
+
+End multi-line comment.
