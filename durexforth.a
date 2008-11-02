@@ -72,6 +72,10 @@ K_RETURN = $d
 K_CLRSCR = $93
 K_SPACE = ' '
 K_REVERSE = $c7
+K_DOWN = $11
+K_RIGHT = $1d
+K_UP = $91
+K_LEFT = $9d
 
 C_WHITE = 1
 C_YELLOW = 7
@@ -1250,6 +1254,16 @@ _KEY
 	beq	-
 	cmp	#K_RETURN
 	beq	.return
+
+	; should key be ignored?
+	cmp	#K_LEFT
+	beq	-
+	cmp	#K_RIGHT
+	beq	-
+	cmp	#K_UP
+	beq	-
+	cmp	#K_DOWN
+	beq	-
 
 	cmp	#K_BACKSPACE
 	bne	+
