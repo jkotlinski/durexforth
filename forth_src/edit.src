@@ -701,6 +701,7 @@ value filename-len
 	11 of cur-down endof
 	91 of cur-up endof
 	1d of cur-right endof
+	88 of bufstart compile ! ffff exit endof # f7
 	[ char h ] literal of cur-left endof
 	[ char j ] literal of cur-down endof
 	[ char k ] literal of cur-up endof
@@ -748,6 +749,14 @@ value filename-len
 
 	main-loop
 
+	cleanup
+;
+
+: fg # bring back editor
+	init
+	push-colors
+	show-page
+	main-loop
 	cleanup
 ;
 

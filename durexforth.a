@@ -977,6 +977,15 @@ SZERO
 STATE
 	!word	0
 
+; COMPILE - compile from editor?
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 7
+	!text	"compile"
+	+VAR_CODE	COMPILE
+COMPILE
+	!word	0
+
 ; HERE - points to the next free byte of memory. When compiling, compiled words go here.
 	!word	LINK
 	!set	LINK = * - 2
@@ -1300,7 +1309,33 @@ _KEY
 	sta	PSTACK - 1, x
 	rts
 
+get_editor_char
+	lda	COMPILE
+	sta	TMP
+	lda	COMPILE + 1
+	sta	TMP + 1
+	ldy #0
+	lda	(TMP), y
+	rts
+
 PULL_KEY ; wastes x!!!
+	lda	COMPILE
+	ora	COMPILE + 1
+	beq	+++
+	jsr	get_editor_char
+	ora #0
+	beq	++
+	inc	COMPILE
+	bne	+
+	inc	COMPILE + 1
++
+	rts
+++
+	lda	#0
+	sta	COMPILE
+	sta	COMPILE + 1
++++
+
 	lda	_FILENO
 	bne	.get_char_from_disk
 	jmp	GETCHR
