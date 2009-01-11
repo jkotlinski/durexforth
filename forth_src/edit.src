@@ -441,12 +441,23 @@ value filename-len
 	1 to need-refresh
 ;
 
+: LEFT 9d ;
+: DOWN 11 ;
+: UP 91 ;
+: RIGHT 1d ;
+
 : insert-handler
-	dup 14 = if insert-stop drop else
-	dup 94 = if del-char drop else
-	dup return = if insert-char cur-down sol else
+	dup
+	case
+	LEFT of drop endof
+	DOWN of drop endof
+	UP of drop endof
+	RIGHT of drop endof
+	14 of insert-stop drop endof
+	94 of del-char drop endof
+	return of insert-char cur-down sol endof
 	insert-char
-	then then then
+	endcase
 ;
 
 : delete-handler
@@ -706,10 +717,10 @@ value filename-len
 	[ char d ] literal of delete-handler endof
 
 	( cursor )
-	9d of cur-left endof
-	11 of cur-down endof
-	91 of cur-up endof
-	1d of cur-right endof
+	LEFT of cur-left endof
+	DOWN of cur-down endof
+	UP of cur-up endof
+	RIGHT of cur-right endof
 	88 of bufstart compile ! ffff exit endof # f7
 	[ char h ] literal of cur-left endof
 	[ char j ] literal of cur-down endof
