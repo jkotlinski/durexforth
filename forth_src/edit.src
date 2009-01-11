@@ -460,33 +460,46 @@ value filename-len
 	endcase
 ;
 
-: delete-handler
-	[ char d ] literal set-status
-
-	( we need to restore these afterwards... )
+: push-cursor
 	curx @
 	cury @
 	currlinestart @
+;
+
+: pop-cursor
+	currlinestart !
+	cury !
+	curx !
+;
+
+: del-word
+	push-cursor
+	editpos ( dst )
+	word-fwd
+	editpos ( dst src )
+	2dup - >r ( store diff )
+	eof @ editpos - 1+ ( dst src len )
+	r> eof +! ( adjust eof with diff )
+	rot ( len dst src )
+	swap ( len src dst )
+	-rot ( src dst len )
+	cmove
+	1 to need-refresh
+	pop-cursor
+;
+
+: delete-handler
+	[ char d ] literal set-status
 
 	key
 
 	case
 	[ char w ] literal of 
-		( delete word )
-		editpos ( dst )
-		word-fwd
-		editpos ( dst src )
-		2dup - >r ( store diff )
-		eof @ editpos - 1+ ( dst src len )
-		r> eof +! ( adjust eof with diff )
-		rot ( len dst src )
-		swap ( len src dst )
-		-rot ( src dst len )
-		cmove
-		1 to need-refresh
+		del-word
 	endof
 	[ char d ] literal of 
 		( delete line )
+		push-cursor
 		sol editpos ( dst )
 		eol editpos 2+ ( dst src )
 		dup eof @ <> if
@@ -501,12 +514,9 @@ value filename-len
 		else
 			2drop
 		then
+		pop-cursor
 	endof
 	endcase
-
-	currlinestart !
-	cury !
-	curx !
 
 	clear-status
 ;
@@ -715,6 +725,10 @@ value filename-len
 	endof
 
 	[ char d ] literal of delete-handler endof
+	[ char c ] literal of
+		key
+		[ char w ] literal = if del-word insert-start then
+	endof
 
 	( cursor )
 	LEFT of cur-left endof
