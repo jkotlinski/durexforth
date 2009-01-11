@@ -14,6 +14,7 @@ var curx
 var cury
 0 value need-refresh
 0 value insert-active
+0 value append-active
 
 10 allot dup 
 value filename-len
@@ -52,7 +53,7 @@ value filename-len
 : cursor-scr-pos
 	cury @ 28 *
 	curx @ linelen 1- min +
-	insert-active linelen 0> and if 1+ then
+	append-active if 1+ then
 	400 + ( addr )
 ;
 
@@ -382,11 +383,18 @@ value filename-len
 	[ char i ] literal set-status
 ;
 
+: append-start
+	1 curx +!
+	1 to append-active
+	insert-start
+;
+
 : insert-stop
 	curx @ if
 		ffff curx +!
 	then
 	0 to insert-active
+	0 to append-active
 	clear-status
 ;
 
@@ -663,6 +671,7 @@ value filename-len
 	case
 
 	[ char i ] literal of insert-start endof
+	[ char a ] literal of append-start endof
 
 	[ char / ] literal of find-handler endof
 	[ char U ] literal of half-page-back endof
