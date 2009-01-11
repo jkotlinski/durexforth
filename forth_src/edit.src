@@ -1,5 +1,5 @@
 hex
-: return d ;
+: RETURN d ;
 : clrscr bl 400 3c0 fill ;
 
 : bufstart 4000 ;
@@ -40,7 +40,7 @@ value filename-len
 	0
 	currlinestart @ ( count addr )
 	begin
-		dup c@ return = if
+		dup c@ RETURN = if
 			drop 
 			exit
 		then
@@ -94,8 +94,8 @@ value filename-len
 	bufstart 1+ eof @ = if
 		# empty file?
 		1 eof +!
-		return 4000 c!
-		return 4001 c!
+		RETURN 4000 c!
+		RETURN 4001 c!
 	then
 ;
 
@@ -168,7 +168,7 @@ value filename-len
 		ffff homepos +! ( skip first cr )
 		begin
 			ffff homepos +!
-			homepos @ c@ return =
+			homepos @ c@ RETURN =
 			homepos @ bufstart 1- = or
 		until
 		1 homepos +!
@@ -180,10 +180,10 @@ value filename-len
 	while
 		1 to need-refresh
 
-		homepos @ c@ return <> if
+		homepos @ c@ RETURN <> if
 			begin
 				1 homepos +!
-				homepos @ c@ return =
+				homepos @ c@ RETURN =
 			until
 		then
 		1 homepos +!
@@ -193,7 +193,7 @@ value filename-len
 
 : cur-down
 	currlinestart @ ( addr )
-	dup c@ return <> if
+	dup c@ RETURN <> if
 		begin
 			dup eof @ = if
 				drop
@@ -201,7 +201,7 @@ value filename-len
 			then
 			1+ ( addr )
 			dup c@ ( addr char )
-			return =
+			RETURN =
 		until
 	then
 	1+ ( newlinestart )
@@ -223,14 +223,14 @@ value filename-len
 	then
 
 	currlinestart @ ( addr )
-	1- ( skip first return plz )
+	1- ( skip first RETURN plz )
 	begin
 		1- ( addr )
 		dup c@ ( addr char )
-		return = ( addr return? )
+		RETURN = ( addr RETURN? )
 
-		over ( addr return? addr )
-		bufstart < ( addr return? sof? )
+		over ( addr RETURN? addr )
+		bufstart < ( addr RETURN? sof? )
 		or ( addr bool )
 	until
 	( addr )
@@ -254,17 +254,17 @@ value filename-len
 	ffff curx +!
 ;
 
-: is-eof-or-return
-	dup 0= swap return = or
+: is-eof-or-RETURN
+	dup 0= swap RETURN = or
 ;
 
 : is-whitespace
-	dup return = swap bl = or
+	dup RETURN = swap bl = or
 ;
 
 : cur-right
-	editpos c@ is-eof-or-return
-	editpos 1+ c@ is-eof-or-return
+	editpos c@ is-eof-or-RETURN
+	editpos 1+ c@ is-eof-or-RETURN
 	or if
 		exit
 	then
@@ -332,11 +332,11 @@ value filename-len
 	c begin cur-down 1- dup 0= until drop
 ;
 
-: find-prev-return ( addr -- new-addr )
+: find-prev-RETURN ( addr -- new-addr )
 	begin
 		1-
 		dup bufstart <=
-		over c@ return =
+		over c@ RETURN =
 		or
 	until
 	bufstart max
@@ -347,7 +347,7 @@ value filename-len
 	0 >r
 	eof @ ( addr )
 	begin # rewind from eof...
-		find-prev-return
+		find-prev-RETURN
 		r> 1+ dup >r 19 =
 		over bufstart =
 		or
@@ -363,7 +363,7 @@ value filename-len
 	eof @ 1-
 	begin
 		1-
-		dup c@ return =
+		dup c@ RETURN =
 	until
 	1+
 	currlinestart !
@@ -455,7 +455,7 @@ value filename-len
 	RIGHT of drop endof
 	14 of insert-stop drop endof
 	94 of del-char drop endof
-	return of insert-char cur-down sol endof
+	RETURN of insert-char cur-down sol endof
 	insert-char
 	endcase
 ;
@@ -576,7 +576,7 @@ value filename-len
 : show-location
 	dup ( loc sol )
 	begin
-		dup c@ return = if
+		dup c@ RETURN = if
 			1+
 			dup ( loc sol sol )
 			rot ( sol loc sol )
@@ -602,7 +602,7 @@ value filename-len
 	dup
 	filename swap filename-len c@ cmove
 	filename-len c@ +
-	return swap c!
+	RETURN swap c!
 
 	f drivebuf filename-len c@ 4 + openw
 	closew
@@ -617,7 +617,7 @@ value filename-len
 	dup
 	filename swap filename-len c@ cmove
 	filename-len c@ + # filename ok
-	return swap c!
+	RETURN swap c!
 
 	f drivebuf filename-len c@ 2 * 5 + openw
 	closew
@@ -654,7 +654,7 @@ value filename-len
 	0 ( count )
 	begin
 		key dup
-		return <> if
+		RETURN <> if
 			( count key )
 			dup emit
 			over search-buf + ( count key dst )
@@ -674,7 +674,7 @@ value filename-len
 ;
 
 : open-line
-	sol return insert-char sol
+	sol RETURN insert-char sol
 	1 to insert-active
 ;
 
