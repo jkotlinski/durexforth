@@ -7,7 +7,7 @@ hex
 var eof ( ram eof )
 
 var homepos ( position at screen home )
-var currlinestart
+var curlinestart
 
 ( cursor screen pos )
 var curx 
@@ -33,12 +33,12 @@ value filename-len
 ;
 
 : editpos
-	currlinestart @ curx @ +
+	curlinestart @ curx @ +
 ;
 
 : linelen
 	0
-	currlinestart @ ( count addr )
+	curlinestart @ ( count addr )
 	begin
 		dup c@ RETURN = if
 			drop 
@@ -103,7 +103,7 @@ value filename-len
 	0 curx !
 	0 cury !
 	bufstart homepos !
-	bufstart currlinestart !
+	bufstart curlinestart !
 ;
 
 : show-page
@@ -196,7 +196,7 @@ value filename-len
 ;
 
 : cur-down
-	currlinestart @ ( addr )
+	curlinestart @ ( addr )
 	dup c@ RETURN <> if
 		begin
 			dup eof @ = if
@@ -215,7 +215,7 @@ value filename-len
 		exit
 	then
 
-	currlinestart !
+	curlinestart !
 	1 cury +!
 
 	fit-curx-in-linelen
@@ -224,11 +224,11 @@ value filename-len
 ;
 
 : cur-up
-	currlinestart @ bufstart = if
+	curlinestart @ bufstart = if
 		exit ( already at top )
 	then
 
-	currlinestart @ ( addr )
+	curlinestart @ ( addr )
 	1- ( skip first RETURN plz )
 	begin
 		1- ( addr )
@@ -243,7 +243,7 @@ value filename-len
 
 	1+
 	bufstart max
-	currlinestart !
+	curlinestart !
 	ffff cury +!
 
 	fit-curx-in-linelen
@@ -372,7 +372,7 @@ value filename-len
 		dup c@ RETURN =
 	until
 	1+
-	currlinestart !
+	curlinestart !
 
 	1 to need-refresh
 ;
@@ -380,7 +380,7 @@ value filename-len
 : goto-start ( can be much optimized... )
 	0 curx !
 	0 cury !
-	bufstart dup homepos ! currlinestart !
+	bufstart dup homepos ! curlinestart !
 	1 to need-refresh
 ;
 
@@ -425,7 +425,7 @@ value filename-len
 : join-lines
 	cury @
 	curx @
-	currlinestart @
+	curlinestart @
 
 	cur-down
 	sol
@@ -435,7 +435,7 @@ value filename-len
 
 	cmove
 
-	currlinestart !
+	curlinestart !
 	curx !
 	cury !
 
@@ -476,11 +476,11 @@ value filename-len
 : push-cursor
 	curx @
 	cury @
-	currlinestart @
+	curlinestart @
 ;
 
 : pop-cursor
-	currlinestart !
+	curlinestart !
 	cury !
 	curx !
 ;
@@ -606,7 +606,7 @@ value filename-len
 			- curx !
 			0 cury !
 			dup homepos !
-			currlinestart !
+			curlinestart !
 			1 to need-refresh
 			exit
 		then
