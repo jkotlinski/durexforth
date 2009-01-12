@@ -22,10 +22,10 @@ forth_src/test.pet: forth_src/test.src ext/petcom
 
 FORTHLIST=base debug edit
 
-durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet forth_src/edit.pet forth_src/test.pet
+durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet forth_src/edit.pet
 	$(C1541) -format durexforth,DF  d64 durexforth.d64 > /dev/null
 	$(C1541) -attach $@ -write durexforth.prg  > /dev/null
-	$(C1541) -attach $@ -write forth_src/test.pet debug.bak
+	$(C1541) -attach $@ -write debug.bak
 	@for forth in $(FORTHLIST); do\
         $(C1541) -attach $@ -write forth_src/$$forth.pet $$forth; \
     done;
