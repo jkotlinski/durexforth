@@ -1,0 +1,384 @@
+\chapter{Forth Words}
+
+\section{Stack Manipulation}
+
+\subsection{drop ( a -- )}
+
+Drop top of stack.
+
+\subsection{dup ( a -- a a )}
+
+Duplicate top of stack.
+
+\subsection{swap ( a b -- b a )}
+
+Swap top stack elements.
+
+\subsection{over ( a b -- a b a )}
+
+Swap top stack elements.
+
+\subsection{rot ( a b c -- c a b )}
+
+Rotate top three stack elements from bottom to top.
+
+\subsection{-rot ( a b c -- b c a )}
+
+Rotate top three stack elements from top to bottom.
+
+\subsection{2drop ( a b -- )}
+
+Drop two topmost stack elements.
+
+\subsection{2dup ( a b -- a b a b )}
+
+Duplicate two topmost stack elements.
+
+\subsection{2swap ( a b c d -- c d a b )}
+
+Swap topmost double stack elements.
+
+\subsection{?dup ( a -- a a? )}
+
+Dup a if a differs from 0.
+
+\subsection{nip ( a b -- b )}
+
+swap drop
+
+\subsection{tuck ( a b -- b a b )}
+
+dup rot
+
+\subsection{pick ( x\_u ... x\_1 x\_0 u -- x\_u ... x\_1 x\_0 x\_u )}
+
+Pick from stack element with depth u to top of stack.
+
+\subsection{$>$r ( a -- )}
+
+Move value from top of parameter stack to top of return stack. 
+
+\subsection{r$>$ ( a -- )}
+
+Move value from top of return stack to top of parameter stack. 
+
+\subsection{r@ ( -- a )}
+
+Fetch value of top of return stack (without lifting it).
+
+\subsection{rdrop ( -- )}
+
+Drop value on top of return stack.
+
+
+\section{Utility}
+
+\subsection{. ( a -- )}
+
+Print top of stack as a hexadecimal value.
+
+\subsection{emit ( a -- )}
+
+Print top of stack as a PETSCII character.
+
+
+\section{Mathematics}
+
+\subsection{hex}
+
+Use hexadecimal base for input.
+
+\subsection{dec}
+
+Use decimal base for input.
+
+\subsection{1+ ( a -- b )}
+
+Increase top of stack value by 1.
+
+\subsection{1- ( a -- b )}
+
+Decrease top of stack value by 1.
+
+\subsection{2+ ( a -- b )}
+
+Increase top of stack value by 2.
+
+\subsection{+! ( n a -- )}
+
+Add n to memory address a.
+
+\subsection{+ ( a b -- c )}
+
+Add a and b.
+
+\subsection{- ( a b -- c )}
+
+Subtract b from a.
+
+\subsection{* ( a b -- c )}
+
+Multiply a with b.
+
+\subsection{/mod ( a b -- r q )}
+
+Divide a with b. r = rest, q = quotient.
+
+\subsection{/ ( a b -- q )}
+
+Divide a with b.
+
+\subsection{mod ( a b -- r )}
+
+Rest of a divided by b.
+
+\subsection{= ( a b -- c )}
+
+Is a equal to b?
+
+\subsection{$<>$ ( a b -- c )}
+
+Does a differ from b?
+
+\subsection{$<$ ( a b -- c )}
+
+Is a less than b?
+
+\subsection{$>$ ( a b -- c )}
+
+Is a greater than b?
+
+\subsection{$>=$ ( a b -- c)}
+
+Is a greater than or equal to b?
+
+\subsection{$<=$ ( a b -- c)}
+
+Is a less than or equal to b?
+
+\subsection{$0>$ ( a b -- c)}
+
+Is a greater than zero?
+
+
+\section{Logic}
+
+\subsection{and ( a b -- c )}
+
+Binary and.
+
+\subsection{or ( a b -- c )}
+
+Binary or.
+
+\subsection{xor ( a b -- c )}
+
+Binary exclusive or.
+
+\subsection{not ( a -- b )}
+
+Flip all bits of a.
+
+
+\section{Memory}
+
+\subsection{! ( value address -- )}
+
+Store 16-bit value at address.
+
+\subsection{@ ( address -- value )}
+
+Fetch 16-bit value from address.
+
+\subsection{c! ( value address -- )}
+
+Store 8-bit value at address.
+
+\subsection{c@ ( address -- value )}
+
+Fetch 8-bit value from address.
+
+\subsection{fill ( byte addr len -- )}
+
+Fill range [addr, len + addr) with byte value.
+
+\subsection{cmove ( len dst src -- )}
+
+Forward copy len bytes from src to dst.
+
+\subsection{cmove$>$ ( len dst src -- )}
+
+Backward copy len bytes from src to dst.
+
+\subsection{forget word}
+
+\texttt{forget foo} forgets Forth word \texttt{foo} and everything defined after it.
+
+\section{Compiling}
+
+\subsection{:}
+
+Start compiling Forth word.
+
+\subsection{;}
+
+End compiling.
+
+\subsection{\#}
+
+Comment to end of line.
+
+\subsection{(}
+
+Start multi-line comment.
+
+\subsection{)}
+
+End multi-line comment.
+
+
+\section{Variables}
+
+\subsection{Values}
+
+Values are fast to read, slow to write.
+
+\begin{description}
+\item[: foo 1 ;] Define value foo.
+\item[1 value foo] Equivalent to the above.
+\item[foo] Fetch value of foo.
+\item[0 to foo] Set foo to 0.
+\end{description}
+
+\subsection{Variables}
+
+Variables are faster to write to than values.
+
+\begin{description}
+\item[var foo] Define variable foo.
+\item[foo @] Fetch value of foo.
+\item[1 foo !] Set value of foo to 1.
+\end{description}
+
+\subsection{Arrays}
+
+\begin{description}
+\item[10 allot value foo] Allocate 10 bytes to array foo.
+\item[1 foo 2 + !] Store 1 in position 2 of foo.
+\item[foo dump] See contents of foo.
+\end{description}
+
+
+\section{Control Flow}
+
+Control functions only work in compile mode, not in interpreter.
+
+\subsection{if ... then}
+
+condition IF true-part THEN rest
+
+\subsection{if ... else ... then}
+
+condition IF true-part ELSE false-part THEN rest
+
+\subsection{begin ... again}
+
+Infinite loop.
+
+\subsection{begin ... until}
+
+BEGIN loop-part condition UNTIL.
+
+Loop until condition is true.
+
+\subsection{begin ... while ... repeat}
+
+BEGIN condition WHILE loop-part REPEAT.
+
+Repeat loop-part while condition is true.
+
+\subsection{exit}
+
+Exit function.
+
+
+\section{Keyboard Input}
+
+\subsection{key ( -- n )}
+
+Read a character from input. Buffered/unbuffered reading is controlled by the \texttt{linebuf} variable.
+
+\subsection{linebuf}
+
+This variable switches between buffered/unbuffered input. Disable input buffering with \texttt{0 linebuf c!}, enable with \texttt{1 linebuf c!}.
+
+
+\section{Editing}
+
+\subsection{edit ( s -- )}
+
+Open editor. Try \texttt{s" foo" edit}.
+
+\subsection{fg}
+
+Re-open editor to pick up where it left.
+
+
+\section{Strings}
+
+\subsection{."}
+
+Print a string. E.g. \texttt{." foo"}
+
+\subsection{s"}
+
+Define a string and put it on the stack. E.g. \texttt{s" foo"}
+
+
+\section{Debugging}
+
+\subsection{.s}
+
+See stack contents.
+
+\subsection{words}
+
+List all defined words.
+
+\subsection{sizes}
+
+List sizes of all defined words.
+
+\subsection{dump ( n -- )}
+
+Hex dump starting at address n.
+
+\subsection{n}
+
+Continue hex dump where last one stopped.
+
+\subsection{see word}
+
+Decompile Forth word and print to screen. Try \texttt{see dump}.
+
+\section{C64 Specific}
+
+\subsection{blink ( b -- )}
+
+Disable/enable cursor blink. (0 = off, 1 = on)
+
+
+\section{"Missing" Words}
+
+The following words might be expected in a "normal" Forth, but are not included in durexForth for the sake of keeping it lean:
+
+\begin{itemize}
+\item do ... loop, i, j
+\item */, */mod
+\item abs
+\end{itemize}
+
+
+\section{Other Words}
+
+Unfortunately I do not have time to describe every word defined. This manual is not complete. Please refer to a Forth reference manual and/or the source.
