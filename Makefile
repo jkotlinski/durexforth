@@ -20,7 +20,7 @@ forth_src/edit.pet: forth_src/edit.src ext/petcom
 forth_src/test.pet: forth_src/test.src ext/petcom
 	cat forth_src/test.src | ext/petcom - > forth_src/test.pet
 
-FORTHLIST=base debug edit test
+FORTHLIST=base debug edit
 
 durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet forth_src/edit.pet forth_src/test.pet
 	$(C1541) -format durexforth,DF  d64 durexforth.d64 > /dev/null
