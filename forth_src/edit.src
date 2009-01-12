@@ -13,6 +13,7 @@ var curlinestart
 var curx 
 var cury
 0 value need-refresh
+0 value need-refresh-line
 0 value insert-active
 
 10 allot dup 
@@ -389,9 +390,49 @@ value filename-len
 	clear-status
 ;
 
+: show-location
+	dup ( loc sol )
+	begin
+		dup c@ RETURN = if
+			1+
+			dup ( loc sol sol )
+			rot ( sol loc sol )
+			- curx !
+			0 cury !
+			dup homepos !
+			curlinestart !
+			exit
+		then
+		1-
+	again
+;
+
+: refresh-line
+	curx @
+	sol
+	0 cury @ setcur
+	27 linelen - ( spaces )
+	linelen ( spaces chars )
+	begin
+		?dup 0>
+	while
+		editpos @ emit
+		1 curx +!
+		1-
+	repeat
+	begin
+		?dup 0>
+	while
+		bl emit
+		1-
+	repeat
+	curx !
+	curx @ cury @ setcur
+;
+
 : replace-char
 	key editpos c!
-	1 to need-refresh
+	1 to need-refresh-line
 ;
 
 : del-char
@@ -402,7 +443,7 @@ value filename-len
 	eof @ editpos - 1+
 	ffff eof +!
 	cmove
-	1 to need-refresh
+	1 to need-refresh-line
 ;
 
 : join-lines
@@ -437,7 +478,7 @@ value filename-len
 	1 curx +!
 	1 eof +!
 	0 eof @ c!
-	1 to need-refresh
+	1 to need-refresh-line
 ;
 
 : LEFT 9d ;
@@ -497,6 +538,7 @@ value filename-len
 		del-char
 	repeat
 	join-lines
+	1 to need-refresh
 ;
 
 : delete-handler
@@ -571,24 +613,6 @@ value filename-len
 			then
 		then
 		1+
-	again
-;
-
-: show-location
-	dup ( loc sol )
-	begin
-		dup c@ RETURN = if
-			1+
-			dup ( loc sol sol )
-			rot ( sol loc sol )
-			- curx !
-			0 cury !
-			dup homepos !
-			curlinestart !
-			1 to need-refresh
-			exit
-		then
-		1-
 	again
 ;
 
@@ -758,6 +782,7 @@ value filename-len
 : main-loop
 	begin
 		0 to need-refresh
+		0 to need-refresh-line
 
 		dsp@ # stack check...
 
@@ -776,6 +801,10 @@ value filename-len
 
 		need-refresh if
 			show-page
+		else
+			need-refresh-line if
+				refresh-line
+			then
 		then
 
 		2+ dsp@ <> if begin 1 d020 +! again then # warn if stack changed
