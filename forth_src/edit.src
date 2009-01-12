@@ -250,9 +250,7 @@ value filename-len
 
 : cur-left
 	curx @
-	?dup 0= if
-		exit
-	then
+	0= if exit then
 
 	ffff curx +!
 ;
@@ -766,6 +764,8 @@ value filename-len
 	begin
 		0 to need-refresh
 
+		dsp@ # stack check...
+
 		show-cursor
 		key
 		hide-cursor
@@ -781,6 +781,8 @@ value filename-len
 		need-refresh if
 			show-page
 		then
+
+		2+ dsp@ <> if begin 1 d020 +! again then # warn if stack changed
 	again
 ;
 
