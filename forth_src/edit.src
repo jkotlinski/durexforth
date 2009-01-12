@@ -457,10 +457,10 @@ value filename-len
 	dup
 	case
 	5f of insert-stop drop endof # leftarrow
-	LEFT of drop endof
-	DOWN of drop endof
-	UP of drop endof
-	RIGHT of drop endof
+	LEFT of cur-left drop endof
+	DOWN of cur-down drop endof
+	UP of cur-up drop endof
+	RIGHT of cur-right drop endof
 	14 of del-char drop endof # inst
 	94 of 1 curx +! del-char drop endof # del
 	RETURN of insert-char cur-down sol endof
