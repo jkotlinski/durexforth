@@ -404,6 +404,11 @@ value filename-len
 	clear-status
 ;
 
+: replace-char
+	key editpos c!
+	1 to need-refresh
+;
+
 : del-char
 	curx @ 0= if exit then
 	ffff curx +!
@@ -707,6 +712,7 @@ value filename-len
 	[ char G ] literal of goto-eof endof
 	[ char $ ] literal of eol endof
 	[ char 0 ] literal of sol endof
+	[ char r ] literal of replace-char endof
 	[ char o ] literal of cur-down open-line endof
 	[ char O ] literal of open-line endof
 	[ char x ] literal of 1 curx +! del-char endof
