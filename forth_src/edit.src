@@ -774,6 +774,7 @@ value filename-len
 			insert-handler
 		else
 			main-handler if 
+				drop
 				exit
 			then
 		then
