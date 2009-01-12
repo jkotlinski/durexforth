@@ -456,12 +456,13 @@ value filename-len
 : insert-handler
 	dup
 	case
+	5f of insert-stop drop endof # leftarrow
 	LEFT of drop endof
 	DOWN of drop endof
 	UP of drop endof
 	RIGHT of drop endof
-	14 of insert-stop drop endof
-	94 of del-char drop endof
+	14 of del-char drop endof # inst
+	94 of 1 curx +! del-char drop endof # del
 	RETURN of insert-char cur-down sol endof
 	insert-char
 	endcase
