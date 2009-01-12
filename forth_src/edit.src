@@ -348,30 +348,11 @@ value filename-len
 ;
 
 : goto-eof ( can be much optimized... )
-	0 curx !
-	0 >r
-	eof @ ( addr )
-	begin # rewind from eof...
-		find-prev-RETURN
-		r> 1+ dup >r 19 =
-		over bufstart =
-		or
-	until
-
-	dup bufstart > if
-		1+
-	then
-
-	r> 1- 1- cury !
-	homepos !
-
-	eof @ 1-
 	begin
-		1-
-		dup c@ RETURN =
+		editpos
+		half-page-fwd
+		editpos =
 	until
-	1+
-	curlinestart !
 
 	1 to need-refresh
 ;
