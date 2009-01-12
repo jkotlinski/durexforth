@@ -692,7 +692,7 @@ value filename-len
 
 : open-line
 	sol RETURN insert-char sol
-	1 to insert-active
+	insert-start
 ;
 
 : change-word
