@@ -447,6 +447,7 @@ value filename-len
 	editpos c!
 	1 curx +!
 	1 eof +!
+	0 eof @ c!
 	1 to need-refresh
 ;
 
