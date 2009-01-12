@@ -1,0 +1,1 @@
+:map <F5> :w<CR>:!./make.sh<CR>

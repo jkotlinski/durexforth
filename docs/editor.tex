@@ -1,0 +1,47 @@
+\chapter{Editor}
+
+The editor is a vi clone. Launch it by entering \texttt{s" foo" editor} in the interpreter (foo being the file you want to edit).
+
+\section{Key Presses}
+
+\subsection{Inserting Text}
+Following commands enter insert mode. Insert mode allows you to insert text. It can be exited by pressing $\leftarrow$.
+\begin{description}
+\item[i] Insert text.
+\item[a] Append text.
+\item[o] Open new line after cursor line.
+\item[O] Open new line on cursor line.
+\item[cw] Change word.
+\end{description}
+
+\subsection{Navigation}
+\begin{description}
+\item[hjkl] Cursor left, down, up, right.
+\item[Cursor Keys] ...also work fine.
+\item[U] Half page up.
+\item[D] Half page down.
+\item[b] Go to previous word.
+\item[w] Go to next word.
+\item[0] Go to line start.
+\item[\$] Go to line end.
+\item[:0] Go to start of file.
+\item[G] Go to end of file.
+\end{description}
+
+\subsection{Saving \& Quitting}
+\begin{description}
+\item[ZZ] Save and exit.
+\item[:q] Exit.
+\item[:w] Save.
+\item[F7] Compile and run editor contents.
+\end{description}
+
+\subsection{Editing}
+\begin{description}
+\item[J] Join lines.
+\item[r] Replace character under cursor.
+\item[x] Delete character.
+\item[X] Backspace-delete character.
+\item[dd] Delete line.
+\item[dw] Delete word.
+\end{description}
