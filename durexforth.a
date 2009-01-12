@@ -1,0 +1,2597 @@
+;The MIT License
+;
+;Copyright (c) 2008 Johan Kotlinski
+;
+;Permission is hereby granted, free of charge, to any person obtaining a copy
+;of this software and associated documentation files (the "Software"), to deal
+;in the Software without restriction, including without limitation the rights
+;to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+;copies of the Software, and to permit persons to whom the Software is
+;furnished to do so, subject to the following conditions:
+;
+;The above copyright notice and this permission notice shall be included in
+;all copies or substantial portions of the Software.
+;
+;THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+;THE SOFTWARE.
+
+
+; ACME assembler
+
+!cpu 6510
+!svl "durexforth.lbl"
+!to "durexforth.prg", cbm	; set output file and format
+
+F_IMMED = $80
+F_HIDDEN = $40
+STRLEN_MASK = $3f
+
+IP = $2e
+TMP = $30
+TMP2 = $32
+TMP3 = $34
+
+OP_JSR = $20
+OP_RTS = $60
+OP_LDA_I = $a9
+OP_STA_AX = $9d
+OP_INX = $e8
+
+PSTACK_X_OFFSET = 0
+PSTACK = $208 ; $0200-$0258/512-600     BASIC Input Buffer (Input Line from Screen)
+
+; X = PSP
+; SP = RSP
+
+; kernal defs
+
+CURSOR_BLINK = $cc ; 0 = enable; 1 = disable
+
+GETCHR = $ffe4 ; get char from kbd
+PUTCHR = $ffd2 ; put char
+
+; disk i/o
+READST = $ffb7
+CHRIN = $ffcf
+CHROUT = $ffd2
+CLOSE = $ffc3
+CHKIN = $ffc6
+CHKOUT = $ffc9
+
+BLINK_COLOR = $286
+
+K_F1 = $85
+K_F3 = $86
+K_BACKSPACE = $14
+K_RETURN = $d
+K_CLRSCR = $93
+K_SPACE = ' '
+K_REVERSE = $c7
+K_DOWN = $11
+K_RIGHT = $1d
+K_UP = $91
+K_LEFT = $9d
+
+C_WHITE = 1
+C_YELLOW = 7
+C_GREEN = 5
+C_LT_GREEN = 13
+C_BEIGE = 10
+C_ORANGE = 8
+C_RED = 2
+C_MAGENTA = 4
+C_LT_BLUE = 14
+C_BLUE = 6
+C_CYAN = 3
+C_PURPLE = 4
+
+; -------- program start
+
+*= $801 ; start at c64 basic start
+
+!byte $b, $08, $EF, $00, $9E, $32, $30, $36,$31, $00, $00, $00 ; basic header
+
+!ct pet
+
+BORDER_COLOR = 0
+SCREEN_COLOR = 0
+	
+	; set up restore key
+	sei
+	lda	#<restore_handler
+	sta $318
+	lda	#>restore_handler
+	sta $319
+	cli
+
+	; clrscr
+	lda     #K_CLRSCR
+	jsr     PUTCHR
+
+	lda	#%00010110 ; lowercase
+	sta	$d018
+
+	jsr	open_base ; open 'base' forth source file.
+
+reset
+	; screen color = purple
+	lda	#BORDER_COLOR
+	sta	$d020
+	lda	#SCREEN_COLOR
+	sta	$d021
+
+	lda	#C_YELLOW
+	sta	BLINK_COLOR
+
+	jsr	clrcol
+
+	lda #0
+	sta	_BLINK
+	sta CURSOR_BLINK
+	lda	#1
+	sta	_LINEBUF
+
+	lda	#<cold_start
+	sta IP
+	lda #>cold_start
+	sta IP + 1
+
+	ldx	#0
+
+	jmp	NEXT_IMPL
+
+cold_start
+	!word QUIT
+
+restore_handler
+	cli
+	jmp reset
+
+clrcol
+	lda	#C_YELLOW
+	ldx	#0
+-	sta $d800, x
+	sta $d900, x
+	sta $da00, x
+	sta $db00, x
+	dex
+	bne	-
+	rts
+
+; ----------- macros
+
+!macro NEXT {
+	jmp	NEXT_IMPL
+}
+
+!macro dex4 {
+	txa
+	sbx #4 ; equals dex 4 times
+}
+
+
+!macro VAR_CODE .word {
+	lda	#<.word
+	sta	PSTACK, x
+	lda	#>.word
+	sta	PSTACK + 1, x
+	inx
+	inx
+	+NEXT
+}
+
+in_editor
+	!byte	0
+
+; ---------- words
+
+!set LINK = 0
+
+__DOCOL
+	lda	IP
+	sta	TMP
+	lda	IP + 1
+	sta	TMP + 1
+
+	pla
+	sta	IP
+	pla
+	sta	IP + 1
+
+	; adjust for weird return address after jsr...
+	inc	IP
+	bne +
+	inc	IP + 1
++
+
+	; push old IP to return stack
+	lda	TMP
+	pha
+	lda	TMP + 1
+	pha
+
+	; fall through...
+
+NEXT_IMPL
+
+	; (IP) -> W
+	ldy	#0
+	lda	(IP), y
+	sta	++ + 1
+	iny
+	lda	(IP), y
+	sta	++ + 2
+
+	; IP + 2 -> IP
+	lda	IP
+	clc
+	adc	#2
+	sta	IP
+	bcc +
+	inc	IP + 1
++
+
+++
+	jmp	0
+
+; DROP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"drop"
+DROP
+	dex
+	dex
+	+NEXT
+
+_DROP
+	dex
+	dex
+	rts
+
+; SWAP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"swap"
+SWAP
+	ldy	PSTACK - 1, x
+	lda	PSTACK - 3, x
+	sta PSTACK - 1, x
+	tya
+	sta	PSTACK - 3, x
+
+	ldy	PSTACK - 2, x
+	lda	PSTACK - 4, x
+	sta PSTACK - 2, x
+	tya
+	sta	PSTACK - 4, x
+	+NEXT
+
+; DUP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"dup"
+DUP
+	jsr	_DUP
+	+NEXT
+
+_DUP
+	inx
+	inx
+
+	lda	PSTACK - 3, x
+	sta	PSTACK - 1, x
+	lda	PSTACK - 4, x
+	sta	PSTACK - 2, x
+	rts
+
+; OVER
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"over"
+OVER
+	inx
+	inx
+
+	lda	PSTACK - 5, x
+	sta	PSTACK - 1, x
+	lda	PSTACK - 6, x
+	sta	PSTACK - 2, x
+
+	+NEXT
+
+; -ROT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"-rot"
+NROT
+	ldy	PSTACK - 5, x
+	lda	PSTACK - 3, x
+	sta PSTACK - 5, x
+	lda PSTACK - 1, x
+	sta PSTACK - 3, x
+	tya
+	sta PSTACK - 1, x
+
+	ldy	PSTACK - 6, x
+	lda	PSTACK - 4, x
+	sta PSTACK - 6, x
+	lda PSTACK - 2, x
+	sta PSTACK - 4, x
+	tya
+	sta PSTACK - 2, x
+
+	+NEXT
+
+; ROT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"rot"
+ROT
+	ldy	PSTACK - 1, x
+	lda	PSTACK - 3, x
+	sta PSTACK - 1, x
+	lda PSTACK - 5, x
+	sta PSTACK - 3, x
+	tya
+	sta PSTACK - 5, x
+
+	ldy	PSTACK - 2, x
+	lda	PSTACK - 4, x
+	sta PSTACK - 2, x
+	lda PSTACK - 6, x
+	sta PSTACK - 4, x
+	tya
+	sta PSTACK - 6, x
+
+	+NEXT
+
+; 2DROP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	5
+	!text	"2drop"
+TWODROP
+	+dex4
+
+	+NEXT
+
+; 2DUP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"2dup"
+TWODUP
+	inx
+	inx
+	inx
+	inx
+
+	lda	PSTACK - 5, x
+	sta	PSTACK - 1, x
+	lda	PSTACK - 6, x
+	sta	PSTACK - 2, x
+
+	lda	PSTACK - 7, x
+	sta	PSTACK - 3, x
+	lda	PSTACK - 8, x
+	sta	PSTACK - 4, x
+	+NEXT
+
+
+; 2SWAP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	5
+	!text	"2swap"
+TWOSWAP
+
+	ldy	PSTACK - 1, x
+	lda	PSTACK - 5, x
+	sta PSTACK - 1, x
+	tya
+	sta	PSTACK - 5, x
+
+	ldy	PSTACK - 2, x
+	lda	PSTACK - 6, x
+	sta PSTACK - 2, x
+	tya
+	sta	PSTACK - 6, x
+
+	ldy	PSTACK - 3, x
+	lda	PSTACK - 7, x
+	sta PSTACK - 3, x
+	tya
+	sta	PSTACK - 7, x
+
+	ldy	PSTACK - 4, x
+	lda	PSTACK - 8, x
+	sta PSTACK - 4, x
+	tya
+	sta	PSTACK - 8, x
+
+	+NEXT
+
+; ?DUP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"?dup"
+QDUP
+	lda	PSTACK - 1, x
+	ora	PSTACK - 2, x
+	beq	+
+	inx
+	inx
+	lda	PSTACK - 3, x
+	sta PSTACK - 1, x
+	lda	PSTACK - 4, x
+	sta PSTACK - 2, x
++
+	+NEXT
+
+; 1+
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"1+"
+INCR
+	inc	PSTACK - 2, x
+	bne	+
+	inc	PSTACK - 1, x
++
+	+NEXT
+
+; 1-
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"1-"
+DECR
+	lda	PSTACK - 2, x
+	bne	+
+	dec	PSTACK - 1, x
++
+	dec	PSTACK - 2, x
+	+NEXT
+
+; +
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"+"
+ADD
+	jsr	_ADD
+	+NEXT
+
+_ADD
+	lda	PSTACK - 2, x
+	clc
+	adc PSTACK - 4, x
+	sta	PSTACK - 4, x
+
+	lda	PSTACK - 1, x
+	adc PSTACK - 3, x
+	sta PSTACK - 3, x
+
+	dex
+	dex
+
+	rts
+
+; -
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"-"
+SUB
+	lda	PSTACK - 4, x
+	sec
+	sbc PSTACK - 2, x
+	sta	PSTACK - 4, x
+
+	lda PSTACK - 3, x
+	sbc PSTACK - 1, x
+	sta PSTACK - 3, x
+
+	dex
+	dex
+
+	+NEXT
+
+; * - this calculates a 32 bit result, actually. useful? wasteful?
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"*"
+MUL
+	jsr	_MUL
+	+NEXT
+
+; wastes TMP, TMP2, y
+_MUL
+product = TMP
+
+	lda #$00
+	sta product+2 ; clear upper bits of product
+	sta product+3 
+	ldy #$10 ; set binary count to 16 
+.shift_r
+	lsr PSTACK - 3, x ; multiplier+1 ; divide multiplier by 2 
+	ror PSTACK - 4, x ; multiplier
+	bcc rotate_r 
+	lda product+2 ; get upper half of product and add multiplicand
+	clc
+	adc PSTACK - 2, x ; multiplicand
+	sta product+2
+	lda product+3 
+	adc PSTACK - 1, x ; multiplicand+1
+rotate_r 
+	ror ; rotate partial product 
+	sta product+3 
+	ror product+2
+	ror product+1 
+	ror product 
+	dey
+	bne .shift_r 
+
+	dex
+	dex
+
+	lda	product
+	sta	PSTACK - 2, x
+	lda	product + 1
+	sta	PSTACK - 1, x
+
+	rts
+
+; /MOD
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"/mod"
+DIVMOD
+remainder = TMP
+	lda #16	        ;repeat for each bit: ...
+	sta	TMP2
+	lda #0	        ;preset remainder to 0
+	sta remainder
+	sta remainder+1
+
+.divloop	
+	asl PSTACK - 4, x ; dividend	;dividend lb & hb*2, msb -> Carry
+	rol PSTACK - 3, x ; dividend+1	
+	rol remainder	;remainder lb & hb * 2 + msb from carry
+	rol remainder+1
+	lda remainder
+	sec
+	sbc PSTACK - 2, x ; divisor	;substract divisor to see if it fits in
+	tay	        ;lb result -> Y, for we may need it later
+	lda remainder+1
+	sbc PSTACK - 1, x ; divisor+1
+	bcc .skip	;if carry=0 then divisor didn't fit in yet
+
+	sta remainder+1	;else save substraction result as new remainder,
+	sty remainder	
+	inc PSTACK - 4, x ; result	;and INCrement result cause divisor fit in 1 times
+
+.skip	
+	dec	TMP2
+	bne .divloop	
+
+	lda	remainder
+	sta	PSTACK - 2, x
+	lda	remainder + 1
+	sta	PSTACK - 1, x
+	jmp	SWAP
+
+; =
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"="
+EQU
+	lda	PSTACK - 1, x
+	cmp	PSTACK - 3, x
+	bne	+
+	lda	PSTACK - 2, x
+	cmp	PSTACK - 4, x
+	bne	+
+	lda	#$ff
+	jmp	++
++
+	lda	#0
+++
+	dex
+	dex
+	sta	PSTACK - 1, x
+	sta	PSTACK - 2, x
+	+NEXT
+
+; <
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"<"
+LT
+	lda	PSTACK - 1, x
+	cmp	PSTACK - 3, x
+	bcc .false
+	bne	.true
+	; ok, msb are equal...
+	lda	PSTACK - 2, x
+	cmp	PSTACK - 4, x
+	bcc	.false
+	bne	.true
+.false
+	lda	#0
+	jmp	++
+.true
+	lda	#$ff
+++
+	dex
+	dex
+	sta	PSTACK - 1, x
+	sta	PSTACK - 2, x
+	+NEXT
+
+; 0=
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"0="
+ZEQU
+	lda	PSTACK - 1, x
+	bne +
+	lda	PSTACK - 2, x
+	bne +
+	lda	#$ff
+	jmp	++
++
+	lda	#0
+++
+	sta	PSTACK - 1, x
+	sta	PSTACK - 2, x
+	+NEXT
+
+; 0<>
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"0<>"
+ZNEQU
+	lda	PSTACK - 1, x
+	bne +
+	lda	PSTACK - 2, x
+	bne +
+	lda	#0
+	jmp	++
++
+	lda	#$ff
+++
+	sta	PSTACK - 1, x
+	sta	PSTACK - 2, x
+	+NEXT
+
+; AND
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"and"
+AAND
+	lda	PSTACK - 1, x
+	and PSTACK - 3, x
+	sta PSTACK - 3, x
+
+	lda	PSTACK - 2, x
+	and PSTACK - 4, x
+	sta PSTACK - 4, x
+
+	dex
+	dex
+
+	+NEXT
+
+; OR
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"or"
+OR
+	lda	PSTACK - 1, x
+	ora PSTACK - 3, x
+	sta PSTACK - 3, x
+
+	lda	PSTACK - 2, x
+	ora PSTACK - 4, x
+	sta PSTACK - 4, x
+
+	dex
+	dex
+
+	+NEXT
+
+; XOR
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"xor"
+XOR
+	lda	PSTACK - 1, x
+	eor PSTACK - 3, x
+	sta PSTACK - 3, x
+
+	lda	PSTACK - 2, x
+	eor PSTACK - 4, x
+	sta PSTACK - 4, x
+
+	dex
+	dex
+
+	+NEXT
+
+; NOT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"not"
+NOT
+	lda	PSTACK - 1, x
+	eor #$ff
+	sta PSTACK - 1, x
+
+	lda	PSTACK - 2, x
+	eor #$ff
+	sta PSTACK - 2, x
+
+	+NEXT
+
+; !
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"!"
+STORE
+	lda	PSTACK - 1, x ; dst
+	sta TMP + 1
+	lda	PSTACK - 2, x
+	sta TMP
+	
+	ldy	#0
+	lda PSTACK - 4, x
+	sta	(TMP), y	
+	iny
+	lda PSTACK - 3, x
+	sta	(TMP), y	
+
+	+dex4
+
+	+NEXT
+
+; @
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"@"
+FETCH
+	lda	PSTACK - 1, x ; src
+	sta TMP + 1
+	lda	PSTACK - 2, x
+	sta TMP
+	
+	ldy	#0
+	lda	(TMP), y	
+	sta	PSTACK - 2, x
+	iny
+	lda	(TMP), y
+	sta	PSTACK - 1, x
+
+	+NEXT
+
+; C!
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"c!"
+STOREBYTE
+	lda	PSTACK - 1, x ; dst
+	sta TMP + 1
+	lda	PSTACK - 2, x
+	sta TMP
+	
+	ldy	#0
+	lda PSTACK - 4, x
+	sta	(TMP), y	
+
+	+dex4
+
+	+NEXT
+
+; C@
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"c@"
+FETCHBYTE
+	lda	PSTACK - 1, x ; dst
+	sta TMP + 1
+	lda	PSTACK - 2, x
+	sta TMP
+	
+	ldy	#0
+	lda	(TMP), y
+	sta	PSTACK - 2, x
+	tya
+	sta	PSTACK - 1, x
+
+	+NEXT
+
+; FILL ( val start len -- )
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"fill"
+FILL
+	lda	PSTACK - 6, x
+	sta	.fsrc + 1
+	lda	PSTACK - 4, x
+	sta	.fdst + 1
+	lda	PSTACK - 3, x
+	sta	.fdst + 2
+	lda	PSTACK - 2, x
+	eor	#$ff
+	sta	TMP
+	lda	PSTACK - 1, x
+	eor	#$ff
+	sta	TMP + 1
+
+	+dex4
+	dex
+	dex
+-
+	inc	TMP
+	bne	+
+	inc	TMP + 1
+	bne	+
+	+NEXT
++
+.fsrc
+	lda	#0 ; overwrite
+.fdst
+	sta	$ffff ; overwrite
+
+	; advance
+	inc	.fdst + 1
+	bne	+
+	inc	.fdst + 2
++
+	bne	-
+
+
+; CMOVE>
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	6
+	!text	"cmove>"
+CMOVE_BACK
+	lda	PSTACK - 6, x
+	sta	.bsrc + 1
+	lda	PSTACK - 5, x
+	sta	.bsrc + 2
+	lda	PSTACK - 4, x
+	sta	.bdst + 1
+	lda	PSTACK - 3, x
+	sta	.bdst + 2
+	lda	PSTACK - 2, x
+	eor	#$ff
+	sta	TMP
+	lda	PSTACK - 1, x
+	eor	#$ff
+	sta	TMP + 1
+
+	+dex4
+	dex
+	dex
+-
+	inc	TMP
+	bne	+
+	inc	TMP + 1
+	bne	+
+	+NEXT
++
+.bsrc
+	lda	$ffff ; overwrite
+.bdst
+	sta	$ffff ; overwrite
+
+	; back
+	dec	.bsrc + 1
+	lda	.bsrc + 1
+	cmp	#$ff
+	bne	+
+	dec	.bsrc + 2
++
+	dec	.bdst + 1
+	lda	.bdst + 1
+	cmp	#$ff
+	bne	+
+	dec	.bdst + 2
++
+	bne	-
+
+; CMOVE (forward move)
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	5
+	!text	"cmove"
+CMOVE
+	lda	PSTACK - 6, x
+	sta	.csrc + 1
+	lda	PSTACK - 5, x
+	sta	.csrc + 2
+	lda	PSTACK - 4, x
+	sta	.cdst + 1
+	lda	PSTACK - 3, x
+	sta	.cdst + 2
+	lda	PSTACK - 2, x
+	eor	#$ff
+	sta	TMP
+	lda	PSTACK - 1, x
+	eor	#$ff
+	sta	TMP + 1
+
+	+dex4
+	dex
+	dex
+-
+	inc	TMP
+	bne	+
+	inc	TMP + 1
+	bne	+
+	+NEXT
++
+.csrc
+	lda	$ffff ; overwrite
+.cdst
+	sta	$ffff ; overwrite
+
+	; advance
+	inc	.csrc + 1
+	bne	+
+	inc	.csrc + 2
++
+	inc	.cdst + 1
+	bne	+
+	inc	.cdst + 2
++
+	bne	-
+
+; ---------- variables
+
+; S0
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 2
+	!text	"s0"
+	+VAR_CODE	SZERO
+SZERO
+	!word	PSTACK
+
+; STATE - Is the interpreter executing code (0) or compiling a word (non-zero)?
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 5
+	!text	"state"
+	+VAR_CODE	STATE
+STATE
+	!word	0
+
+; COMPILE - compile from editor?
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 7
+	!text	"compile"
+	+VAR_CODE	COMPILE
+COMPILE
+	!word	0
+
+; HERE - points to the next free byte of memory. When compiling, compiled words go here.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 4
+	!text	"here"
+HERE_CODE
+	+VAR_CODE	HERE
+HERE
+	!word	_LATEST + 2
+
+; ------------ return stack
+
+; >R
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	">r"
+TOR
+	lda	PSTACK - 2, x
+	pha
+	lda	PSTACK - 1, x
+	pha
+	dex
+	dex
+	+NEXT
+
+; R>
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"r>"
+FROMR
+	inx
+	inx
+	pla
+	sta	PSTACK - 1, x
+	pla
+	sta	PSTACK - 2, x
+	+NEXT
+
+; RFETCH
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"r@"
+RFETCH
+	inx
+	inx
+	pla
+	sta	PSTACK - 1, x
+	pla
+	sta	PSTACK - 2, x
+	pha
+	lda	PSTACK - 1, x
+	pha
+	+NEXT
+
+; RDROP
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	5
+	!text	"rdrop"
+RDROP
+	pla
+	pla
+	+NEXT
+
+
+; ------------ i/o
+
+; EMIT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"emit"
+EMIT
+	dex
+	dex
+	lda	PSTACK, x
+	jsr	print_char
+	+NEXT
+
+print_char_surpress_file_io
+	ldy	_FILENO
+	beq	print_char
+	sta	$d020	
+	rts
+
+print_char
+	ldy	#1
+	sty	CURSOR_BLINK
+	stx	tmp_x
+	jsr	PUTCHR
+	ldx	tmp_x
+	ldy	_BLINK
+	sty	CURSOR_BLINK
+	rts
+
+print_hex_nibble
+	cmp	#10
+
+	bcc	.dec
+	; hex
+	clc
+	adc	#$41 - 10
+	jmp	+
+
+.dec
+	eor	#$30
+
++
+	jmp	print_char
+
+print_hex_char
+	pha
+	lsr
+	lsr
+	lsr
+	lsr
+	jsr	print_hex_nibble
+	pla
+	pha
+	and	#$f
+	jsr	print_hex_nibble
+	pla
+	rts
+
+; c.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"c."
+CDOT
+	lda	PSTACK - 2, x
+	lsr
+	lsr
+	lsr
+	lsr
+	jsr	print_hex_nibble
+	
+	lda	PSTACK - 2, x
+	and	#$f
+	jsr	print_hex_nibble
+
+	dex
+	dex
+
+	+NEXT
+
+; . - display number on screen
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"."
+DOT
+	jsr	_DOT
+	+NEXT
+_DOT
+	lda	PSTACK - 1, x
+	lsr
+	lsr
+	lsr
+	lsr
+	jsr print_hex_nibble
+
+	lda	PSTACK - 1, x
+	and	#$f
+	jsr	print_hex_nibble
+
+	lda	PSTACK - 2, x
+	lsr
+	lsr
+	lsr
+	lsr
+	jsr	print_hex_nibble
+	
+	lda	PSTACK - 2, x
+	and	#$f
+	jsr	print_hex_nibble
+
+	lda	#K_SPACE
+	jsr	print_char
+
+	dex
+	dex
+
+	rts
+
+TIB
+	!fill 33
+
+tmp_x
+	!byte	0
+
+; input key in a
+handle_input_char
+
+	; put char in TIB
+.dst
+	sta $f00d
+	inc	.dst + 1
+	bne	+
+	inc	.dst + 2
++
+	rts
+
+KEY_BUF_SIZE = 80
+KEY_BUF
+	!fill KEY_BUF_SIZE
+
+KEY_BUF_READ_POS
+	!byte 0
+KEY_BUF_WRITE_POS
+	!byte 0
+
+write_key
+	ldy	#<KEY_BUF
+	sty	TMP
+	ldy	#>KEY_BUF 
+	sty	TMP + 1
+
+	ldy	KEY_BUF_WRITE_POS
+	sta	(TMP), y
+	inc	KEY_BUF_WRITE_POS
+	rts
+
+; KEY... read a key from disk (if open) or keyboard.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"key"
+KEY
+	jsr	_KEY
+	+NEXT
+
+.unbuffered_key
+	stx	tmp_x
+-
+	jsr	PULL_KEY
+	beq	-
+	ldx	tmp_x
+	inx
+	inx
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+	rts
+
+_KEY
+	lda	_LINEBUF
+	beq	.unbuffered_key
+	lda	KEY_BUF_WRITE_POS
+	beq	.fill_key_buf
+	cmp	KEY_BUF_READ_POS
+	bne	.get_from_key_buf
+
+.fill_key_buf
+	; start filling key buf... TODO: add bounds check for buffer overwrite.
+	lda	#0
+	sta	KEY_BUF_READ_POS
+	sta	KEY_BUF_WRITE_POS
+
+-
+	stx	tmp_x
+	jsr PULL_KEY
+	ldx	tmp_x
+	ora	#0
+	beq	-
+	cmp	#K_RETURN
+	beq	.return
+
+	; should key be ignored?
+	cmp	#K_LEFT
+	beq	-
+	cmp	#K_RIGHT
+	beq	-
+	cmp	#K_UP
+	beq	-
+	cmp	#K_DOWN
+	beq	-
+
+	; shift + space => space
+	cmp	#$a0
+	bne +
+	lda	#K_SPACE	
++
+
+	cmp	#K_BACKSPACE
+	bne	+
+	tay
+	lda	KEY_BUF_WRITE_POS
+	beq	-
+	dec	KEY_BUF_WRITE_POS
+	tya
+	jsr	print_char_surpress_file_io
+	jmp	-
++
+	jsr	print_char_surpress_file_io
+	
+	jsr	write_key
+	jmp	-
+
+.return	;done
+	lda	#K_SPACE
+	jsr	print_char_surpress_file_io
+	lda	#K_RETURN
+	jsr	print_char_surpress_file_io
+
+	jsr	write_key
+
+	jmp	_KEY
+
+.get_from_key_buf
+	ldy	#<KEY_BUF
+	sty	TMP
+	ldy	#>KEY_BUF 
+	sty	TMP + 1
+
+	ldy	KEY_BUF_READ_POS
+	lda	(TMP), y
+	inc	KEY_BUF_READ_POS
+
+	inx
+	inx
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+	rts
+
+get_editor_char
+	lda	COMPILE
+	sta	TMP
+	lda	COMPILE + 1
+	sta	TMP + 1
+	ldy #0
+	lda	(TMP), y
+	rts
+
+PULL_KEY ; wastes x!!!
+	lda	COMPILE
+	ora	COMPILE + 1
+	beq	+++
+	jsr	get_editor_char
+	ora #0
+	beq	++
+	inc	COMPILE
+	bne	+
+	inc	COMPILE + 1
++
+	rts
+++
+	lda	#0
+	sta	COMPILE
+	sta	COMPILE + 1
++++
+
+	lda	_FILENO
+	bne	.get_char_from_disk
+	jmp	GETCHR
+
+.get_char_from_disk
+	jsr	READST
+	bne .eof
+	jmp	CHRIN
+
+.eof
+	lda	_FILENO
+	jsr	CLOSE
+
+	dec	_FILENO
+	lda	_FILENO
+	bne +
+	lda	_BLINK
+	sta	CURSOR_BLINK
+	lda	#BORDER_COLOR
+	sta	$d020
++
+	jsr	CHKIN
+	jmp	PULL_KEY
+
+; WRITE - write a byte to disk.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	5
+	!text	"write"
+WRITE
+	lda	PSTACK - 2, x
+	pha
+
+	stx	tmp_x
+	jsr	READST
+	bne	werror
+	pla
+	jsr	CHROUT
+	ldx	tmp_x
+	dex
+	dex
+	+NEXT
+werror
+	pla
+	inc	$d021
+	jmp	werror
+
+; READ - read a byte from disk. 0 = EOF
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"read"
+READ
+	stx	tmp_x
+	jsr	READST
+	bne +
+	jsr	CHRIN
+	ldx	tmp_x
+	inx
+	inx
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+	+NEXT
+
++ ; EOF
+	lda	_FILENO
+	jsr	CLOSE
+
+	dec	_FILENO
+	lda	_FILENO
+	bne +
+	sta	CURSOR_BLINK
++
+	jsr	CHKIN
+	ldx	tmp_x
+	inx
+	inx
+	lda	#0
+	sta	PSTACK - 2, x
+	sta	PSTACK - 1, x
+	+NEXT
+	
+; WORD
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"word"
+WORD
+	jsr _WORD
+	+NEXT
+
+_WORD
+	; prepare text input
+	lda	#<(TIB + 1) 
+	sta	.dst + 1
+	lda	#>(TIB + 1)
+	sta	.dst + 2
+	lda	#0
+	sta	.entered_chars_count
+	
+-
+	jsr	_KEY
+	lda	PSTACK - 2, x
+	dex
+	dex
+
+	cmp #K_RETURN
+	beq .whitespace
+	cmp #K_SPACE
+	beq .whitespace
+
+	cmp	#K_BACKSPACE
+	bne	++
+	dec	.entered_chars_count
+	lda	.dst+1
+	bne	+
+	dec	.dst+2
++
+	dec	.dst+1
+	jmp	-
+++
+
+	inc	.entered_chars_count
+
+	jsr	handle_input_char
+
+	jmp	-
+
+.whitespace
+	; return text string
+	lda	.entered_chars_count
+	beq - ; whoops, nothing entered, try again...
+	sta TIB 
+
+	inx
+	inx
+
+	lda	#<TIB
+	sta	PSTACK - 2, x
+	lda	#>TIB
+	sta	PSTACK - 1, x
+
+	rts
+
+.entered_chars_count
+	!byte	0
+
+; FIND
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"find"
+FIND
+	jsr	_FIND
+	+NEXT
+_FIND
+	lda	#<_LATEST
+	sta	TMP2
+	lda	#>_LATEST
+	sta	TMP2 + 1
+	; TMP2 now contains pointer to pointer to the most recently defined dictionary word.
+	ldy	#0
+	lda	(TMP2), y
+	sta	TMP
+	iny
+	lda	(TMP2), y
+	sta	TMP + 1
+	; TMP now contains pointer to the most recently defined dictionary word.
+
+	lda	PSTACK - 1, x
+	sta	TMP2 + 1
+	lda	PSTACK - 2, x
+	sta	TMP2 ; TMP2 contains pointer to find string
+
+.examine_word
+	ldy	#0
+	lda	(TMP2), y ; get length of find string
+	and	#STRLEN_MASK
+	sta	.strlen
+
+	ldy	#2
+	lda	(TMP), y ; get string length of dictionary word
+	and	#STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
+	cmp	.strlen
+	bne	.word_not_equal
+
+	; equal strlen, now compare strings...
+	ldy	#1
+-
+	iny
+	iny
+	lda	(TMP), y ; get char of dictionary string
+	dey
+	dey
+	cmp	(TMP2), y ; compare with find string
+	bne	.word_not_equal
+	dec	.strlen
+	beq	.word_is_equal
+
+	iny ; advance char ptr
+	jmp	-
+	
+.word_is_equal
+	; return address to dictionary word
+	lda	TMP
+	sta	PSTACK - 2, x
+	lda	TMP + 1
+	sta	PSTACK - 1, x
+	lda	#1
+	rts
+
+.word_not_equal
+	; ok... no match, advance the linked list.
+	ldy	#0
+	lda	(TMP), y
+	pha
+	iny
+	lda	(TMP), y
+	sta	TMP + 1
+	pla
+	sta	TMP
+
+	; TMP now contains new dictionary word.
+	lda	TMP
+	ora	TMP + 1
+	beq	.not_found ; null link, give up
+	jmp	.examine_word
+
+.not_found
+	; a is zero
+	sta	PSTACK - 2, x
+	sta	PSTACK - 1, x
+	rts
+	
+.strlen
+	!byte 0
+
+; >CFA
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	">cfa"
+TCFA
+	jsr _TCFA
+	+NEXT
+_TCFA
+	lda	PSTACK - 1, x
+	sta	TMP + 1
+	lda	PSTACK - 2, x
+	sta TMP
+	; TMP contains pointer to word
+	ldy	#2
+	lda	(TMP), y ; a contains string length + mask
+	and	#STRLEN_MASK
+	clc
+	adc	#3 ; offset for link + string length
+	sta	.addend + 1
+	lda	PSTACK - 2, x
+.addend
+	adc	#0
+	sta	PSTACK - 2, x
+	bcc	+
+	inc	PSTACK - 1, x
++
+	rts
+
+; EXEC
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"exec"
+EXEC
+	lda	PSTACK - 2, x
+	sta TMP
+	lda	PSTACK - 1, x
+	sta	TMP + 1
+	dex
+	dex
+	jmp	(TMP)
+
+; CHAR
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"char"
+CHAR
+	jsr	_WORD
+	lda	PSTACK - 1, x
+	sta	TMP + 1
+	lda	PSTACK - 2, x
+	sta	TMP
+	ldy	#1
+	lda	(TMP), y
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+	+NEXT
+
+; NUMBER
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	6
+	!text	"number"
+NUMBER
+	jsr	_NUMBER
+	+NEXT
+
+; Z set = success, clear = failed
+_NUMBER ; only hex, dec for now...
+	lda	PSTACK - 1, x	
+	sta	TMP3 + 1
+	lda	PSTACK - 2, x	
+	sta	TMP3
+	; TMP3 now contains a string ptr...
+	ldy	#0
+	lda	(TMP3), y
+	sta	.chars_to_process
+	; clear stack...
+	lda	#0
+	sta	PSTACK - 2, x
+	sta	PSTACK - 1, x
+
+	; which base? hex, dec?
+	lda	_BASE
+	cmp	#10
+	beq	.dec_number
+	cmp	#16
+	bne	.not_digit
+	
+	; hex number!!
+	lda	#<handle_input_digit_hex
+	sta	.number_handler + 1
+	lda	#>handle_input_digit_hex
+	sta	.number_handler + 2
+	jmp	.number_handler
+
+.dec_number
+	lda	#<handle_input_digit_dec
+	sta	.number_handler + 1
+	lda	#>handle_input_digit_dec
+	sta	.number_handler + 2
+
+.number_handler
+	jsr	0 ; overwritten
+
+	bne	.not_digit
+
+	dec	.chars_to_process
+	bne	.number_handler
+
+.not_digit
+	rts
+
+.chars_to_process
+!byte 0
+
+handle_input_digit_hex
+	; multiply stack top by 16
+	inx
+	inx
+
+	lda	#16
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+
+	tya
+	pha
+	jsr	_MUL
+	pla
+	tay
+
+	; add *(++TMP3) to stack top
+	iny
+	lda	(TMP3), y
+	clc
+	adc	#-$30 ; petscii 0-9 -> 0-9
+
+	sec ; within 0-9?
+	cmp	#10
+	bcc	.ok
+
+	clc
+	adc	#-$7 ; a-f...
+
+	sec ; within a-f?
+	cmp	#16
+	bcs	.not_a_digit
+	sec
+	cmp	#10
+	bcc	.not_a_digit
+
+.ok
+	inx
+	inx
+
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+
+	jsr	_ADD
+
+	lda	#0
+	rts
+
+handle_input_digit_dec
+	; multiply stack top by 10
+	inx
+	inx
+
+	lda	#10
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+
+	tya
+	pha
+	jsr	_MUL
+	pla
+	tay
+
+	; add *(++TMP3) to stack top
+	iny
+	lda	(TMP3), y
+	clc
+	adc	#-$30 ; petscii 0-9 -> 0-9
+
+	sec ; not within 0-9?
+	cmp	#10
+	bcs	.not_a_digit
+
+	inx
+	inx
+
+	sta	PSTACK - 2, x
+	lda	#0
+	sta	PSTACK - 1, x
+
+	jsr	_ADD
+
+	lda	#0
+	rts
+
+.not_a_digit
+	lda	#1
+	rts
+
+interpret_is_number
+!byte	0
+
+; INTERPRET
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	9
+	!text	"interpret"
+INTERPRET
+	jsr	_WORD ; push string to stack
+
+	lda	#0
+	sta	interpret_is_number
+	jsr	_DUP ; dup string
+	jsr	_FIND ; replace string with dictionary ptr
+	ora	#0
+	bne	.found_word
+
+	; didn't find word...
+	; assume it's a literal number.
+
+	jsr _DROP ; drop null dictionary ptr
+	inc	interpret_is_number
+	jsr _NUMBER
+	bne	.not_a_number
+
+	; yep, it's a number...
+	lda	STATE ; are we compiling?
+	beq	.leave_number_on_stack ; no, leave number on stack
+	; yes. compile literal.
+	inx
+	inx
+	lda	#<LIT
+	sta	PSTACK - 2, x
+	lda	#>LIT
+	sta	PSTACK - 1, x
+	jsr	_COMMA
+	jsr	_COMMA
+
+.leave_number_on_stack
+	+NEXT
+
+.not_a_number
+	jsr print_error_msg_with_tib
+	ldx	#0 ; wipe stack :(
+	+NEXT
+
+.found_word
+	; OK, we found a word...
+
+	; is it immediate?
+	lda	PSTACK - 2, x
+	sta	TMP
+	lda	PSTACK - 1, x
+	sta	TMP + 1
+	ldy	#2 ; skip link ptr, look at flags
+	lda	(TMP), y
+	and	#F_IMMED
+	bne	.execute_word ; yes... execute it.
+
+	lda	STATE ; are we compiling?
+	beq	.execute_word ; no, execute it.
+
+	; OK, this word should be compiled...
+	jsr	_TCFA
+	jsr	_COMMA
+	dex ; drop string
+	dex
+	+NEXT
+
+.execute_word
+	jsr	_TCFA
+
+	; copy CFA to TMP
+	lda	PSTACK - 2, x
+	sta	TMP
+	lda	PSTACK - 1, x
+	sta	TMP + 1
+	dex ; drop CFA
+	dex
+	dex ; drop string
+	dex
+	jmp	(TMP)
+
+print_error_msg_with_tib
+	lda	#$12 ; reverse on
+	jsr	print_char
+
+	ldy	TIB
+	lda	#<TIB
+	sta	TMP
+	lda	#>TIB
+	sta	TMP + 1
+
+-
+	inc	TMP
+	bne	+
+	inc	TMP + 1
++
+
+	tya
+	pha
+
+	ldy	#0
+	lda	(TMP), y
+	jsr	print_char
+
+	pla
+	tay
+
+	dey
+	bne -
+
+	lda	#'?'
+	jsr	print_char
+
+	lda	#$92 ; reverse off
+	jsr	print_char
+
+	lda	#' '
+	jsr	print_char
+
+	rts
+
+; JSR
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"jsr"
+_JSR
+	lda	PSTACK - 2, x
+	sta	+ + 1
+	lda	PSTACK - 1, x
+	sta	+ + 2
+	stx	tmp_x
++
+	jsr 0 ; overwrite
+	ldx tmp_x
+	dex
+	dex
+	+NEXT
+
+; TICK
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"'"
+TICK
+	jmp	LIT
+
+; LIT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	3
+	!text	"lit"
+LIT
+	; grow stack
+	inx
+	inx
+
+	; copy literal to stack
+	ldy	#0
+	lda	(IP), y
+	sta	PSTACK - 2, x
+
+	iny
+	lda	(IP), y
+	sta	PSTACK - 1, x
+
+	; IP += 2
+	clc
+	lda	IP
+	adc #2	
+	bcc	+
+	inc	IP + 1
++
+	sta	IP
+
+	+NEXT
+
+; QUIT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"quit"
+QUIT
+	jsr	__DOCOL
+	!word	INTERPRET
+	!word	BRANCH
+	!word	-4
+
+; EXIT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"exit"
+EXIT
+	pla
+	sta	IP + 1
+	pla
+	sta	IP
+	+NEXT
+
+
+; blink (0 = enable, 1 = disable)
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	5
+	!text	"blink"
+BLINK
+	lda	PSTACK - 2, x
+	eor	#1
+	sta	_BLINK
+	sta	$cc
+	dex
+	dex
+	+NEXT
+_BLINK
+	!byte	0
+
+; CREATE ( name -- )
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	6
+	!text	"create"
+CREATE
+	; store link in header. TMP = dst
+	lda	HERE
+	sta	TMP
+	lda	HERE + 1
+	sta	TMP + 1
+
+	ldy	#0
+	lda	_LATEST
+	sta	(TMP), y
+
+	inc	TMP
+	bne	+
+	inc	TMP + 1
++
+	lda	_LATEST + 1
+	sta	(TMP), y
+
+	inc	TMP
+	bne	+
+	inc	TMP + 1
++
+
+	; store length byte in header. TMP2 = src
+	lda	PSTACK - 2, x
+	sta	TMP2
+	lda	PSTACK - 1, x
+	sta	TMP2 + 1
+	lda	(TMP2), y
+	sta	(TMP), y	
+
+	; save stack ptr to use x as loop counter
+	txa
+	pha
+
+	; copy string
+	lda	(TMP2), y
+	tax
+-
+	iny
+	lda	(TMP2), y
+	sta	(TMP), y
+
+	dex
+	bne	-
+
+	; update _LATEST
+	lda	HERE
+	sta	_LATEST
+	lda	HERE + 1
+	sta	_LATEST + 1
+	
+	; update HERE
+	iny
+	tya
+	clc
+	adc	TMP
+	sta	HERE
+	bcc	+
+	inc	TMP + 1
++
+	lda	TMP + 1
+	sta	HERE + 1
+
+	; restore stack ptr
+	pla
+	tax
+
+	dex
+	dex
+
+	+NEXT
+
+; CCOMMA - write char
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	2
+	!text	"c,"
+CCOMMA
+	lda	HERE
+	sta	TMP
+	lda	HERE + 1
+	sta	TMP + 1
+
+	ldy	#0
+	lda	PSTACK - 2, x
+	sta	(TMP), y
+
+	; update HERE
+	inc	HERE
+	bne	+
+	inc HERE + 1
++
+	dex
+	dex
+	+NEXT
+
+; COMMA - write word
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	","
+COMMA
+	jsr	_COMMA
+	+NEXT
+_COMMA
+	lda	HERE
+	sta	TMP
+	lda	HERE + 1
+	sta	TMP + 1
+
+	ldy	#0
+	lda	PSTACK - 2, x
+	sta	(TMP), y
+	iny
+	lda	PSTACK - 1, x
+	sta	(TMP), y
+
+	; update HERE
+	lda	HERE
+	clc
+	adc	#2
+	sta	HERE
+	bcc	+
+	inc HERE + 1
++
+	dex
+	dex
+	rts
+
+; LBRAC
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1 | F_IMMED
+	!text	"["
+LBRAC
+	lda	#0
+	sta	STATE
+	+NEXT
+
+; RBRAC
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	"]"
+RBRAC
+	lda	#1
+	sta	STATE
+	+NEXT
+
+; SEMICOLON
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1 | F_IMMED
+	!text	";"
+SEMICOLON
+	jsr	__DOCOL
+	!word LIT, EXIT, COMMA ; append EXIT (so that the word will return).
+	!word LATEST, FETCH, HIDDEN ; unhide the word.
+	!word LBRAC ; go back to IMMEDIATE mode.
+	!word EXIT
+
+; IMMEDIATE. Flip the immediate flag of the LATEST word.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	5 | F_IMMED
+	!text	"immed"
+IMMED
+	lda	_LATEST
+	sta	TMP
+	lda	_LATEST + 1
+	sta	TMP + 1
+	ldy	#2
+	lda	(TMP), y
+	eor	#F_IMMED
+	sta	(TMP), y
+	+NEXT
+
+; BRANCH
+
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	6
+	!text	"branch"
+BRANCH
+	; IP is now pointing to the offset by which IP should be modified...
+	lda	IP
+	sta	TMP
+	lda	IP + 1
+	sta	TMP + 1
+
+	ldy	#0
+	lda	(IP), y
+	clc
+	adc TMP
+	sta	TMP
+	bcc	+
+	inc	TMP + 1
++
+	iny
+	lda	(IP), y
+	clc
+	adc	TMP + 1
+	sta	IP + 1
+
+	lda	TMP
+	sta	IP
+
+	+NEXT
+
+; 0BRANCH
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	7
+	!text	"0branch"
+ZBRANCH
+	dex
+	dex
+	lda	PSTACK + 1, x
+	bne .dont_branch
+	lda	PSTACK + 0, x
+	beq BRANCH
+
+.dont_branch
+	; skip offset
+	lda	IP
+	clc
+	adc	#2
+	sta	IP
+	bcc	+
+	inc	IP + 1
++
+	+NEXT
+
+; COLON
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	1
+	!text	":"
+COLON
+	jsr	__DOCOL
+	!word WORD ; get the name of the new word
+	!word CREATE ; CREATE the dictionary entry / header
+	!word LIT, OP_JSR, CCOMMA ; insert jmp
+	!word LIT, __DOCOL, COMMA ; append __DOCOL (the codeword)
+	!word LATEST, FETCH, HIDDEN
+	!word RBRAC ; enter compile mode
+	!word EXIT
+
+; input in a... wastes TMP
+_compile_byte
+	pha
+	lda	HERE
+	sta	TMP
+	lda	HERE + 1
+	sta	TMP + 1
+
+	ldy	#0
+	pla
+	sta	(TMP), y
+
+	inc	HERE
+	bne	+
+	inc	HERE + 1
++
+	rts
+
+; HIDDEN
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	6
+	!text	"hidden"
+HIDDEN
+	lda	PSTACK - 2, x
+	sta	TMP
+	lda	PSTACK - 1, x
+	sta TMP + 1
+
+	ldy	#2 ; skip link, point to flags
+	lda	(TMP), y
+	eor	#F_HIDDEN ; toggle hidden flag
+	sta	(TMP), y
+	dex
+	dex
+	+NEXT
+
+; SETCUR ( x y -- )
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	6
+	!text	"setcur"
+SETCUR
+	lda	PSTACK - 4, x
+	tay
+	lda	PSTACK - 2, x
+	stx tmp_x
+	tax
+	jsr	$e50a
+	ldx	tmp_x
+	+dex4
+	+NEXT
+
+; DSP@
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	4
+	!text	"dsp@"
+DSPFETCH
+	stx	+ + 1
+	lda	#<(PSTACK - 2)
+	clc
++
+	adc	#0
+	inx
+	inx
+	sta	PSTACK - 2, x
+	lda	#>(PSTACK - 2) ; no need to compensate for page wrapping... the stack is well placed.
+	sta	PSTACK - 1, x
+	+NEXT
+
+; LITSTRING
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	9
+	!text	"litstring"
+LITSTRING
+	; grow stack
+	inx
+	inx
+
+	; copy string addr to stack
+	ldy	#0
+	lda	IP
+	sta	TMP
+	sta	PSTACK - 2, x
+
+	iny
+	lda	IP + 1
+	sta	TMP + 1
+	sta	PSTACK - 1, x
+
+	; TMP now points to string length
+	dey ; y = 0
+	lda	(TMP), y
+	tay ; y = *TMP
+	iny ; add one for length byte
+	sty	.lstrlen + 1
+
+	; skip string
+	lda	IP
+	clc
+.lstrlen
+	adc #0 ; overwritten
+	sta	IP
+	bcc	+
+	inc	IP + 1
++
+	+NEXT
+
+; -----------
+
+; BASE. 10, 16 are supported.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 4
+	!text	"base"
+BASE
+	+VAR_CODE	_BASE
+_BASE
+	!word	10
+
+; LINEBUF line buffering. 0 = off, 1 = on
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 7
+	!text	"linebuf"
+LINEBUF
+	+VAR_CODE	_LINEBUF
+_LINEBUF
+	!word	1
+
+; FILENO - active file number
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 6
+	!text	"fileno"
+FILENO
+	+VAR_CODE	_FILENO
+_FILENO
+	!word	0
+
+; DOCOL
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 5
+	!text	"docol"
+DOCOL
+	+VAR_CODE	__DOCOL
+
+WRITEFILENO
+	!byte 0
+
+; CLOSEW (open file for writing)
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 6
+	!text	"closew"
+CLOSEW
+	stx	tmp_x
+	lda	WRITEFILENO
+	jsr	CLOSE 
+	ldx	_FILENO ; reset output device
+	jsr	CHKOUT
+	jsr	_errorchread
+	ldx tmp_x
+	+NEXT
+
+_errorchread
+        LDA #$00      ; no filename
+        LDX #$00
+        LDY #$00
+        JSR $FFBD     ; call SETNAM
+        LDA #$0F      ; file number 15
+        LDX $BA       ; last used device number
+        BNE +
+        LDX #$08      ; default to device 8
++	   LDY #$0F      ; secondary address 15 (error channel)
+        JSR $FFBA     ; call SETLFS
+
+        JSR $FFC0     ; call OPEN
+        BCS .error    ; if carry set, the file could not be opened
+
+        LDX #$0F      ; filenumber 15
+        JSR $FFC6     ; call CHKIN (file 15 now used as input)
+
+        LDY #$00
+.loop   JSR $FFB7     ; call READST (read status byte)
+        BNE geof      ; either EOF or read error
+        JSR $FFCF     ; call CHRIN (get a byte from file)
+        JSR $FFD2     ; call CHROUT (print byte to screen)
+        JMP .loop     ; next byte
+
+geof
+.glose
+        LDA #$0F      ; filenumber 15
+        JSR $FFC3     ; call CLOSE
+
+        LDX #$00      ; filenumber 0 = keyboard
+        JSR $FFC6     ; call CHKIN (keyboard now input device again)
+        RTS
+.error
+        ; Akkumulator contains BASIC error code
+
+        ; most likely error:
+        ; A = $05 (DEVICE NOT PRESENT)
+
+        ; ... error handling for open errors ...
+        JMP .glose    ; even if OPEN failed, the file has to be closed
+
+
+; OPENW (open file for writing)
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 5
+	!text	"openw"
+OPENW
+	stx	tmp_x
+
+	lda	PSTACK - 6, x
+	sta	WRITEFILENO
+	lda	PSTACK - 2, x
+	ldy	PSTACK - 3, x
+	pha
+	lda	PSTACK - 4, x
+	tax
+	pla
+	
+	jsr	SETNAM
+	lda	WRITEFILENO ; file number
+	ldx	#8 ; default to device 8
+	tay ; secondary address
+	jsr	SETLFS
+	jsr	OPEN
+	bcs	.could_not_open
+
+	ldx	WRITEFILENO ; file number
+	jsr	CHKOUT
+
+	ldx	tmp_x
+	+dex4
+	dex
+	dex
+	+NEXT
+
+; LOAD (load and compile source file)
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 4
+	!text	"load"
+LOAD
+	txa
+	pha
+
+	lda	PSTACK - 2, x
+	ldy	PSTACK - 3, x
+	pha
+	lda	PSTACK - 4, x
+	tax
+	pla
+	jsr	open
+
+	pla
+	tax
+	+dex4
+	+NEXT
+
+SETNAM = $ffbd
+SETLFS = $ffba
+OPEN = $ffc0
+CHKIN = $ffc6
+
+open_base
+	lda	#basename_end - basename
+	ldx	#<basename
+	ldy	#>basename
+	; fall through...
+
+open
+	jsr	SETNAM
+	inc	_FILENO
+	lda	_FILENO ; file number
+	ldx	#8 ; default to device 8
+	tay
+	iny ; secondary address
+	jsr	SETLFS
+	jsr	OPEN
+	bcs	.could_not_open
+
+	ldx	_FILENO ; file number
+	jsr	CHKIN
+	rts
+
+.could_not_open
+	inc	$d020
+	jmp	.could_not_open
+
+basename
+!text	"base"
+basename_end
+
+; LATEST - points to the most recently defined dictionary word.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 6
+	!text	"latest"
+LATEST
+	+VAR_CODE	_LATEST
+_LATEST
+	!word	LINK
+
+; PUT NO CONTENT AFTER LATEST!!!! It will be overwritten!!!!
