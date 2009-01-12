@@ -1,0 +1,17 @@
+\chapter{Tutorial}
+
+\section{Interpreter}
+
+Start up durexForth. If loaded successfully, it will greet you with a friendly \texttt{ok}. You have landed in the interpreter!
+
+Let's warm it up a little. Enter \texttt{1} (followed by return). You have now put a digit on the stack. This can be verified by the command \texttt{.s}, which will print out the stack. Now enter \texttt{.} to pop the digit and print it to screen, followed by \texttt{.s} to verify that the stack is empty.
+
+Now some arithmetics. \texttt{1000 a * .} will calculate $\$a \times \$1000$ and print the result on the screen. \texttt{6502 100 / 1- .} will calculate and print $(\$6502 / \$100) - 1$.
+
+Let's define a function "bg" for setting the background color... 
+
+\begin{verbatim}
+: bg d020 c! ;
+\end{verbatim}
+
+\texttt{0 bg}, \texttt{1 bg} and so on will let you set border color. Cool! Now let's head on to making our first "real" program...
