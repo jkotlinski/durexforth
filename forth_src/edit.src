@@ -369,10 +369,14 @@ value filename-len
 	[ char i ] literal set-status
 ;
 
-: append-start
+: force-cur-right
 	linelen 0> if
 		1 curx +!
 	then
+;
+
+: append-start
+	force-cur-right
 	insert-start
 ;
 
@@ -688,6 +692,17 @@ value filename-len
 	insert-start 
 ;
 
+: force-cur-down
+	editpos
+	cur-down
+	editpos = if
+		eol 
+		force-cur-right
+		RETURN insert-char
+		cur-down
+	then
+;
+
 : main-handler ( 0 -- quit? )
 	case
 
@@ -702,7 +717,7 @@ value filename-len
 	[ char $ ] literal of eol endof
 	[ char 0 ] literal of sol endof
 	[ char r ] literal of replace-char endof
-	[ char o ] literal of cur-down open-line endof
+	[ char o ] literal of force-cur-down open-line endof
 	[ char O ] literal of open-line endof
 	[ char x ] literal of 1 curx +! del-char endof
 	[ char X ] literal of del-char endof
