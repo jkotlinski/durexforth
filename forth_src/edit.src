@@ -191,6 +191,10 @@ value filename-len
 	repeat
 ;
 
+: fit-curx-in-linelen
+	linelen curx @ min curx !
+;
+
 : cur-down
 	currlinestart @ ( addr )
 	dup c@ RETURN <> if
@@ -213,6 +217,8 @@ value filename-len
 
 	currlinestart !
 	1 cury +!
+
+	fit-curx-in-linelen
 
 	adjust-home
 ;
@@ -240,7 +246,7 @@ value filename-len
 	currlinestart !
 	ffff cury +!
 
-	linelen 1- curx @ min curx !
+	fit-curx-in-linelen
 
 	adjust-home
 ;
