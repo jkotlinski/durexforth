@@ -699,6 +699,13 @@ value filename-len
 	1 to insert-active
 ;
 
+: change-word
+	del-word 
+	bl insert-char
+	cur-left
+	insert-start 
+;
+
 : main-handler ( 0 -- quit? )
 	case
 
@@ -739,7 +746,7 @@ value filename-len
 	[ char d ] literal of delete-handler endof
 	[ char c ] literal of
 		key
-		[ char w ] literal = if del-word insert-start then
+		[ char w ] literal = if change-word then
 	endof
 
 	( cursor )
