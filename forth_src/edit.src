@@ -1,6 +1,6 @@
 hex
 : RETURN d ;
-: clrscr bl 400 3c0 fill ;
+: clrscr bl 400 3e8 fill ;
 
 : bufstart 4000 ;
 
@@ -94,6 +94,7 @@ value filename-len
 		1 eof +!
 		RETURN 4000 c!
 		RETURN 4001 c!
+		0 4002 c!
 	then
 ;
 
