@@ -418,6 +418,8 @@ value filename-len
 
 	cmove
 
+	ffff eof +!
+
 	curlinestart !
 	curx !
 	cury !
@@ -487,23 +489,14 @@ value filename-len
 ;
 
 : del-line
-	push-cursor
-	sol editpos ( dst )
-	eol editpos 2+ ( dst src )
-	dup eof @ <> if
-		2dup - >r ( store diff )
-		eof @ editpos - 1+ ( dst src len )
-		r> eof +! ( adjust eof with diff )
-		rot ( len dst src )
-		swap ( len src dst )
-		-rot ( src dst len )
-		cmove
-		1 to need-refresh
-	else
-		2drop
-	then
-	pop-cursor
-	fit-curx-in-linelen
+	sol
+	begin
+		linelen 0>
+	while
+		force-cur-right
+		del-char
+	repeat
+	join-lines
 ;
 
 : delete-handler
