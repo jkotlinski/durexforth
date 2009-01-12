@@ -499,34 +499,34 @@ value filename-len
 	pop-cursor
 ;
 
+: del-line
+	push-cursor
+	sol editpos ( dst )
+	eol editpos 2+ ( dst src )
+	dup eof @ <> if
+		2dup - >r ( store diff )
+		eof @ editpos - 1+ ( dst src len )
+		r> eof +! ( adjust eof with diff )
+		rot ( len dst src )
+		swap ( len src dst )
+		-rot ( src dst len )
+		cmove
+		1 to need-refresh
+	else
+		2drop
+	then
+	pop-cursor
+	fit-curx-in-linelen
+;
+
 : delete-handler
 	[ char d ] literal set-status
 
 	key
 
 	case
-	[ char w ] literal of 
-		del-word
-	endof
-	[ char d ] literal of 
-		( delete line )
-		push-cursor
-		sol editpos ( dst )
-		eol editpos 2+ ( dst src )
-		dup eof @ <> if
-			2dup - >r ( store diff )
-			eof @ editpos - 1+ ( dst src len )
-			r> eof +! ( adjust eof with diff )
-			rot ( len dst src )
-			swap ( len src dst )
-			-rot ( src dst len )
-			cmove
-			1 to need-refresh
-		else
-			2drop
-		then
-		pop-cursor
-	endof
+	[ char w ] literal of del-word endof
+	[ char d ] literal of del-line endof
 	endcase
 
 	clear-status
