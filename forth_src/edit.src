@@ -132,7 +132,6 @@ value filename-len
 	( disable input buffering )
 	0 linebuf c! 
 
-	go-to-file-start
 	clear-status
 ;
 
@@ -787,6 +786,7 @@ value filename-len
 
 : edit
 	init
+	go-to-file-start
 
 	# store away filename
 	2dup ( str len str len )	
