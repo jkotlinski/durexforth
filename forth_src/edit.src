@@ -304,24 +304,26 @@ value filename-len
 	repeat
 ;
 
-( right, or down + sol if we're at xpos = linelen + 1 )
+# right, or down + sol if we're at xpos = linelen + 1. ret 1 if we cant advance
 : advance-cur
+	editpos
 	curx @ linelen 1- = if
 		0 curx !
 		cur-down
 	else
 		cur-right
 	then
+	editpos =
 ;
 
 : word-fwd
-	advance-cur
+	advance-cur if exit then
 	begin
 		editpos 1- c@ is-whitespace
 		editpos c@ is-whitespace not and
 		not
 	while
-		advance-cur
+		advance-cur if exit then
 	repeat
 ;
 
