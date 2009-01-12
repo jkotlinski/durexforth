@@ -273,7 +273,9 @@ value filename-len
 ;
 
 : eol
-	linelen 1- curx !
+	linelen 
+	dup 0> if 1- then
+	curx !
 ;
 
 ( left, or up + eol if we're at xpos 0 )
