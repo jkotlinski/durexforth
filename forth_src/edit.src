@@ -390,8 +390,10 @@ value filename-len
 ;
 
 : append-start
-	1 curx +!
-	1 to append-active
+	linelen 0> if
+		1 curx +!
+		1 to append-active
+	then
 	insert-start
 ;
 
