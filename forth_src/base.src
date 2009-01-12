@@ -102,7 +102,7 @@ hex
 : endof immed [compile] else ;
 : endcase immed ' drop , begin ?dup while [compile] then repeat ;
 
-: forget word find dup @ latest ! here ! ;
+: forget word find ?dup if dup @ latest ! here ! then ;
 
 : .s ( -- )
 	s0 @
