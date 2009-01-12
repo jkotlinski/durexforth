@@ -24,7 +24,6 @@
 ; ACME assembler
 
 !cpu 6510
-!svl "durexforth.lbl"
 !to "durexforth.prg", cbm	; set output file and format
 
 F_IMMED = $80
