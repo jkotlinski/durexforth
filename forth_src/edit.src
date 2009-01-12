@@ -556,7 +556,7 @@ value filename-len
 		then
 		dup editpos = if
 			( not found )
-			drop
+			2drop
 			0
 			exit
 		then
