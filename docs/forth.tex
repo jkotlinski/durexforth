@@ -2,240 +2,254 @@
 
 \section{Stack Manipulation}
 
-\subsection{drop ( a -- )}
+\begin{description}
+
+
+\item[drop ( a -- )]
 
 Drop top of stack.
 
-\subsection{dup ( a -- a a )}
+\item[dup ( a -- a a )]
 
 Duplicate top of stack.
 
-\subsection{swap ( a b -- b a )}
+\item[swap ( a b -- b a )]
 
 Swap top stack elements.
 
-\subsection{over ( a b -- a b a )}
+\item[over ( a b -- a b a )]
 
 Swap top stack elements.
 
-\subsection{rot ( a b c -- c a b )}
+\item[rot ( a b c -- c a b )]
 
 Rotate top three stack elements from bottom to top.
 
-\subsection{-rot ( a b c -- b c a )}
+\item[-rot ( a b c -- b c a )]
 
 Rotate top three stack elements from top to bottom.
 
-\subsection{2drop ( a b -- )}
+\item[2drop ( a b -- )]
 
 Drop two topmost stack elements.
 
-\subsection{2dup ( a b -- a b a b )}
+\item[2dup ( a b -- a b a b )]
 
 Duplicate two topmost stack elements.
 
-\subsection{2swap ( a b c d -- c d a b )}
+\item[2swap ( a b c d -- c d a b )]
 
 Swap topmost double stack elements.
 
-\subsection{?dup ( a -- a a? )}
+\item[?dup ( a -- a a? )]
 
 Dup a if a differs from 0.
 
-\subsection{nip ( a b -- b )}
+\item[nip ( a b -- b )]
 
 swap drop
 
-\subsection{tuck ( a b -- b a b )}
+\item[tuck ( a b -- b a b )]
 
 dup rot
 
-\subsection{pick ( x\_u ... x\_1 x\_0 u -- x\_u ... x\_1 x\_0 x\_u )}
+\item[pick ( x\_u ... x\_1 x\_0 u -- x\_u ... x\_1 x\_0 x\_u )]
 
 Pick from stack element with depth u to top of stack.
 
-\subsection{$>$r ( a -- )}
+\item[$>$r ( a -- )]
 
 Move value from top of parameter stack to top of return stack. 
 
-\subsection{r$>$ ( a -- )}
+\item[r$>$ ( a -- )]
 
 Move value from top of return stack to top of parameter stack. 
 
-\subsection{r@ ( -- a )}
+\item[r@ ( -- a )]
 
 Fetch value of top of return stack (without lifting it).
 
-\subsection{rdrop ( -- )}
+\item[rdrop ( -- )]
 
 Drop value on top of return stack.
 
+\end{description}
 
 \section{Utility}
 
-\subsection{. ( a -- )}
+\begin{description}
+\item[. ( a -- )]
 
 Print top of stack as a hexadecimal value.
 
-\subsection{emit ( a -- )}
+\item[emit ( a -- )]
 
 Print top of stack as a PETSCII character.
 
+\end{description}
 
 \section{Mathematics}
 
-\subsection{hex}
+\begin{description}
+\item[hex]
 
 Use hexadecimal base for input.
 
-\subsection{dec}
+\item[dec]
 
 Use decimal base for input.
 
-\subsection{1+ ( a -- b )}
+\item[1+ ( a -- b )]
 
 Increase top of stack value by 1.
 
-\subsection{1- ( a -- b )}
+\item[1- ( a -- b )]
 
 Decrease top of stack value by 1.
 
-\subsection{2+ ( a -- b )}
+\item[2+ ( a -- b )]
 
 Increase top of stack value by 2.
 
-\subsection{+! ( n a -- )}
+\item[+! ( n a -- )]
 
 Add n to memory address a.
 
-\subsection{+ ( a b -- c )}
+\item[+ ( a b -- c )]
 
 Add a and b.
 
-\subsection{- ( a b -- c )}
+\item[- ( a b -- c )]
 
 Subtract b from a.
 
-\subsection{* ( a b -- c )}
+\item[* ( a b -- c )]
 
 Multiply a with b.
 
-\subsection{/mod ( a b -- r q )}
+\item[/mod ( a b -- r q )]
 
 Divide a with b. r = rest, q = quotient.
 
-\subsection{/ ( a b -- q )}
+\item[/ ( a b -- q )]
 
 Divide a with b.
 
-\subsection{mod ( a b -- r )}
+\item[mod ( a b -- r )]
 
 Rest of a divided by b.
 
-\subsection{= ( a b -- c )}
+\item[= ( a b -- c )]
 
 Is a equal to b?
 
-\subsection{$<>$ ( a b -- c )}
+\item[$<>$ ( a b -- c )]
 
 Does a differ from b?
 
-\subsection{$<$ ( a b -- c )}
+\item[$<$ ( a b -- c )]
 
 Is a less than b?
 
-\subsection{$>$ ( a b -- c )}
+\item[$>$ ( a b -- c )]
 
 Is a greater than b?
 
-\subsection{$>=$ ( a b -- c)}
+\item[$>=$ ( a b -- c)]
 
 Is a greater than or equal to b?
 
-\subsection{$<=$ ( a b -- c)}
+\item[$<=$ ( a b -- c)]
 
 Is a less than or equal to b?
 
-\subsection{$0>$ ( a b -- c)}
+\item[$0>$ ( a b -- c)]
 
 Is a greater than zero?
 
+\end{description}
 
 \section{Logic}
 
-\subsection{and ( a b -- c )}
+\begin{description}
+\item[and ( a b -- c )]
 
 Binary and.
 
-\subsection{or ( a b -- c )}
+\item[or ( a b -- c )]
 
 Binary or.
 
-\subsection{xor ( a b -- c )}
+\item[xor ( a b -- c )]
 
 Binary exclusive or.
 
-\subsection{not ( a -- b )}
+\item[not ( a -- b )]
 
 Flip all bits of a.
 
+\end{description}
 
 \section{Memory}
 
-\subsection{! ( value address -- )}
+\begin{description}
+\item[! ( value address -- )]
 
 Store 16-bit value at address.
 
-\subsection{@ ( address -- value )}
+\item[@ ( address -- value )]
 
 Fetch 16-bit value from address.
 
-\subsection{c! ( value address -- )}
+\item[c! ( value address -- )]
 
 Store 8-bit value at address.
 
-\subsection{c@ ( address -- value )}
+\item[c@ ( address -- value )]
 
 Fetch 8-bit value from address.
 
-\subsection{fill ( byte addr len -- )}
+\item[fill ( byte addr len -- )]
 
 Fill range [addr, len + addr) with byte value.
 
-\subsection{cmove ( len dst src -- )}
+\item[cmove ( len dst src -- )]
 
 Forward copy len bytes from src to dst.
 
-\subsection{cmove$>$ ( len dst src -- )}
+\item[cmove$>$ ( len dst src -- )]
 
 Backward copy len bytes from src to dst.
 
-\subsection{forget word}
+\item[forget word]
 
 \texttt{forget foo} forgets Forth word \texttt{foo} and everything defined after it.
 
+\end{description}
 \section{Compiling}
 
-\subsection{:}
+\begin{description}
+\item[:]
 
 Start compiling Forth word.
 
-\subsection{;}
+\item[;]
 
 End compiling.
 
-\subsection{\#}
+\item[\#]
 
 Comment to end of line.
 
-\subsection{(}
+\item[(]
 
 Start multi-line comment.
 
-\subsection{)}
+\item[)]
 
 End multi-line comment.
 
+\end{description}
 
 \section{Variables}
 
@@ -273,100 +287,112 @@ Variables are faster to write to than values.
 
 Control functions only work in compile mode, not in interpreter.
 
-\subsection{if ... then}
+\begin{description}
+\item[if ... then]
 
 condition IF true-part THEN rest
 
-\subsection{if ... else ... then}
+\item[if ... else ... then]
 
 condition IF true-part ELSE false-part THEN rest
 
-\subsection{begin ... again}
+\item[begin ... again]
 
 Infinite loop.
 
-\subsection{begin ... until}
+\item[begin ... until]
 
 BEGIN loop-part condition UNTIL.
 
 Loop until condition is true.
 
-\subsection{begin ... while ... repeat}
+\item[begin ... while ... repeat]
 
 BEGIN condition WHILE loop-part REPEAT.
 
 Repeat loop-part while condition is true.
 
-\subsection{exit}
+\item[exit]
 
 Exit function.
 
+\end{description}
 
 \section{Keyboard Input}
 
-\subsection{key ( -- n )}
+\begin{description}
+\item[key ( -- n )]
 
 Read a character from input. Buffered/unbuffered reading is controlled by the \texttt{linebuf} variable.
 
-\subsection{linebuf}
+\item[linebuf]
 
 This variable switches between buffered/unbuffered input. Disable input buffering with \texttt{0 linebuf c!}, enable with \texttt{1 linebuf c!}.
 
+\end{description}
 
 \section{Editing}
 
-\subsection{edit ( s -- )}
+\begin{description}
+\item[edit ( s -- )]
 
 Open editor. Try \texttt{s" foo" edit}.
 
-\subsection{fg}
+\item[fg]
 
 Re-open editor to pick up where it left.
 
+\end{description}
 
 \section{Strings}
 
-\subsection{."}
+\begin{description}
+\item[."]
 
 Print a string. E.g. \texttt{." foo"}
 
-\subsection{s"}
+\item[s"]
 
 Define a string and put it on the stack. E.g. \texttt{s" foo"}
 
+\end{description}
 
 \section{Debugging}
 
-\subsection{.s}
+\begin{description}
+\item[.s]
 
 See stack contents.
 
-\subsection{words}
+\item[words]
 
 List all defined words.
 
-\subsection{sizes}
+\item[sizes]
 
 List sizes of all defined words.
 
-\subsection{dump ( n -- )}
+\item[dump ( n -- )]
 
 Hex dump starting at address n.
 
-\subsection{n}
+\item[n]
 
 Continue hex dump where last one stopped.
 
-\subsection{see word}
+\item[see word]
 
 Decompile Forth word and print to screen. Try \texttt{see dump}.
+\end{description}
 
 \section{C64 Specific}
 
-\subsection{blink ( b -- )}
+\begin{description}
+\item[blink ( b -- )]
 
 Disable/enable cursor blink. (0 = off, 1 = on)
 
+\end{description}
 
 \section{``Missing'' Words}
 
@@ -378,7 +404,4 @@ The following words might be expected in a "normal" Forth, but are not included 
 \item abs
 \end{itemize}
 
-
-\section{Other Words}
-
-Unfortunately I do not have time to describe every word defined. Please refer to a Forth reference manual and/or the source.
+Also, I do not have time to describe every word defined. Please refer to a Forth reference manual and/or the source.
