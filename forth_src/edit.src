@@ -703,6 +703,7 @@ value filename-len
 : open-line
 	sol RETURN insert-char sol
 	insert-start
+	1 to need-refresh
 ;
 
 : change-word
