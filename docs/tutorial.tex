@@ -20,7 +20,7 @@ Let's define a word \texttt{bg} for setting the border color...
 
 The editor (fully described in chapter \ref{editor}) is convenient for editing larger pieces of code. With it, you keep an entire source file loaded in RAM, and you can recompile and test it easily.
 
-Start the editor by typing \texttt{s" foo" edit}. It will try to open the (non-existant) file ``foo.'' After a little while you will be presented to a nice pink screen.
+Start the editor by typing \texttt{s" foo" edit}. It will try to open the (non-existant) file ``foo.'' After a little while you will be presented to the nice pink screen of the editor.
 
 To enter text, first press \texttt{i} to enter insert mode. This mode allows you to insert text into the buffer. You can see that it's active on the \texttt{I} that appears in the lower left corner.
 
@@ -30,9 +30,11 @@ This is a good start for making a program. Let's continue where we ended last se
 forget bg
 \end{verbatim}
 
-...and press $\leftarrow$ to leave insert mode. This line forgets the \texttt{bg} word that you defined in the last section, and everything defined after it. Let's try out if it works. First, quit the editor by pressing \texttt{:q}. You should now be back in the interpreter screen. Verify that the word \texttt{bg} still exists by  entering \texttt{0 bg}, \texttt{1 bg} like you did before. Then, jump back to the editor using the command \texttt{fg} (foreground). You should return to your edit buffer with the lonely \texttt{forget bg} line.
+...and press $\leftarrow$ to leave insert mode. This line forgets the \texttt{bg} word that you defined in the last section, and everything defined after it. Let's try out if it works.
 
-Now, compile and run the buffer by pressing \texttt{F7}. You will be thrown out to the interpreter again. Entering \texttt{bg} should now give you the error \colorbox{yellow}{\texttt{bg?}}. Success - we have forgotten the \texttt{bg} word. Now, get back into the editor with \texttt{fg} again.
+First, quit the editor by pressing \texttt{:q}. You should now be back in the interpreter screen. Verify that the word \texttt{bg} still exists by  entering \texttt{0 bg}, \texttt{1 bg} like you did before. Then, jump back to the editor using the command \texttt{fg} (foreground). You should return to your edit buffer with the lonely \texttt{forget bg} line.
+
+Now, compile and run the buffer by pressing \texttt{F7}. You will be thrown out to the interpreter again. Entering \texttt{bg} should now give you the error \colorbox{yellow}{\texttt{bg?}}. Success --- we have forgotten the \texttt{bg} word. Now, get back into the editor with \texttt{fg} again.
 
 Under \texttt{forget bg}, add the following lines:
 
@@ -90,6 +92,7 @@ foo
 \subsection{Other}
 
 \begin{itemize}
-\item \href{http://code.google.com/p/durexforth/}{Examine the source code.}
-\item Contact a Durex representative for assistance.
+\item \href{http://code.google.com/p/durexforth/}{durexForth source code}
 \end{itemize}
+
+Quality coders may contact a Durex representative for assistance.
