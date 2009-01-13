@@ -54,3 +54,42 @@ bg flash
 \end{verbatim}
 
 Of course, it is a matter of taste which version you prefer. Press \texttt{F7} to see if the new version runs faster or slower.
+
+\section{Another Example}
+
+This piece of code reads from keyboard and sends back the chars to screen:
+
+\begin{verbatim}
+: init 0 linebuf c! ; # turn off key buffering
+: foo init begin key emit again ;
+foo
+\end{verbatim}
+
+\section{How to Learn More}
+
+\subsection{Internet Resources}
+
+\subsubsection{Books and Papers}
+
+\begin{itemize}
+\item \href{http://www.forth.com/starting-forth/}{Starting Forth}
+\item \href{http://thinking-forth.sourceforge.net/}{Thinking Forth}
+\item \href{http://www.bradrodriguez.com/papers/}{Moving Forth: a series on writing Forth kernels}
+\item \href{http://www.csbruce.com/~csbruce/cbm/transactor/v7/i5/p058.html}{Blazin' Forth --- An inside look at the Blazin' Forth compiler}
+\item \href{http://dobbscodetalk.com/index.php?option=com_myblog&show=In-this-1980-article-from-Byte-Charles-Moore-recounts-the-creation-of-Forth..html&Itemid=29}{The Evolution of FORTH, an unusual language}
+\end{itemize}
+
+\subsubsection{Other Forths}
+
+\begin{itemize}
+\item \href{http://www.colorforth.com/cf.html}{colorForth}
+\item \href{http://www.annexia.org/forth}{JONESFORTH}
+\item \href{http://colorforthray.info/}{colorForth tutorial}
+\end{itemize}
+
+\subsection{Other}
+
+\begin{itemize}
+\item \href{http://code.google.com/p/durexforth/}{Examine the source code.}
+\item Contact a Durex representative for assistance.
+\end{itemize}
