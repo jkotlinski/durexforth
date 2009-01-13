@@ -87,12 +87,12 @@ value filename-len
 		0>
 	while
 
-		eof 1+!
+		1 eof +!
 	repeat
 
 	bufstart 1+ eof @ = if
 		# empty file?
-		eof 1+!
+		1 eof +!
 		RETURN 4000 c!
 		RETURN 4001 c!
 		0 4002 c!
@@ -168,14 +168,14 @@ value filename-len
 	while
 		1 to need-refresh
 
-		homepos 1-! ( skip first cr )
+		ffff homepos +! ( skip first cr )
 		begin
-			homepos 1-!
+			ffff homepos +!
 			homepos @ c@ RETURN =
 			homepos @ bufstart 1- = or
 		until
-		homepos 1+!
-		cury 1+! ( cur down )
+		1 homepos +!
+		1 cury +! ( cur down )
 	repeat
 
 	begin
@@ -185,12 +185,12 @@ value filename-len
 
 		homepos @ c@ RETURN <> if
 			begin
-				homepos 1+!
+				1 homepos +!
 				homepos @ c@ RETURN =
 			until
 		then
-		homepos 1+!
-		cury 1-! ( cur up )
+		1 homepos +!
+		ffff cury +! ( cur up )
 	repeat
 ;
 
@@ -219,7 +219,7 @@ value filename-len
 	then
 
 	curlinestart !
-	cury 1+!
+	1 cury +!
 
 	fit-curx-in-linelen
 
@@ -247,7 +247,7 @@ value filename-len
 	1+
 	bufstart max
 	curlinestart !
-	cury 1-!
+	ffff cury +!
 
 	fit-curx-in-linelen
 
@@ -258,7 +258,7 @@ value filename-len
 	curx @
 	0= if exit then
 
-	curx 1-!
+	ffff curx +!
 ;
 
 : is-eof-or-RETURN
@@ -275,7 +275,7 @@ value filename-len
 	or if
 		exit
 	then
-	curx 1+!
+	1 curx +!
 ;
 
 : eol
@@ -377,7 +377,7 @@ value filename-len
 
 : force-cur-right
 	linelen 0> if
-		curx 1+!
+		1 curx +!
 	then
 ;
 
@@ -388,7 +388,7 @@ value filename-len
 
 : insert-stop
 	curx @ if
-		curx 1-!
+		ffff curx +!
 	then
 	0 to insert-active
 	clear-status
@@ -421,7 +421,7 @@ value filename-len
 		?dup 0>
 	while
 		editpos @ emit
-		curx 1+!
+		1 curx +!
 		1-
 	repeat
 	begin
@@ -441,11 +441,11 @@ value filename-len
 
 : del-char
 	curx @ 0= if exit then
-	curx 1-!
+	ffff curx +!
 	editpos 1+
 	editpos
 	eof @ editpos - 1+
-	eof 1-!
+	ffff eof +!
 	cmove
 	1 to need-refresh-line
 ;
@@ -465,7 +465,7 @@ value filename-len
 
 	cmove
 
-	eof 1-!
+	ffff eof +!
 
 	curlinestart !
 	curx !
@@ -481,8 +481,8 @@ value filename-len
 	-rot ( src dst u )
 	cmove>
 	editpos c!
-	curx 1+!
-	eof 1+!
+	1 curx +!
+	1 eof +!
 	0 eof @ c!
 	1 to need-refresh-line
 ;
@@ -501,7 +501,7 @@ value filename-len
 	UP of cur-up drop endof
 	RIGHT of cur-right drop endof
 	14 of del-char drop endof # inst
-	94 of curx 1+! del-char drop endof # del
+	94 of 1 curx +! del-char drop endof # del
 	RETURN of insert-char cur-down sol endof
 	insert-char
 	endcase
@@ -550,7 +550,7 @@ var clipboard-count
 		editpos c@
 		clipboard clipboard-count @ +
 		c!
-		clipboard-count 1+!
+		1 clipboard-count +!
 
         # delete
 		force-cur-right
@@ -775,7 +775,7 @@ var clipboard-count
 	[ char O ] literal of open-line endof
 	[ char p ] literal of force-cur-down paste-line endof
 	[ char P ] literal of paste-line endof
-	[ char x ] literal of curx 1+! del-char endof
+	[ char x ] literal of 1 curx +! del-char endof
 	[ char X ] literal of del-char endof
 	[ char b ] literal of word-back endof
 	[ char w ] literal of word-fwd endof
@@ -845,7 +845,7 @@ var clipboard-count
 			then
 		then
 
-		2+ dsp@ <> if begin d020 1+! again then # warn if stack changed
+		2+ dsp@ <> if begin 1 d020 +! again then # warn if stack changed
 	again
 ;
 
