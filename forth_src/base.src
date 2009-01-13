@@ -150,6 +150,14 @@ hex
 	!
 ;
 
+: 1+! ( addr - )
+	1 swap +!
+;
+
+: 1-! ( addr - )
+	ffff swap +!
+;
+
 ( get pointer to first data field - skip jsr DOCOL )
 : >dfa >cfa 1+ 2+ ;
 
