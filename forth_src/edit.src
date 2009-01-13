@@ -531,11 +531,24 @@ value filename-len
 	pop-cursor
 ;
 
+28 allot value clipboard
+var clipboard-count
+0 clipboard-count !
+
+# this can be much optimized by using cmove
 : del-line
+	0 clipboard-count !
 	sol
 	begin
 		linelen 0>
 	while
+        # copy to clipboard
+		editpos c@
+		clipboard clipboard-count @ +
+		c!
+		clipboard-count 1+!
+
+        # delete
 		force-cur-right
 		del-char
 	repeat
@@ -706,6 +719,22 @@ value filename-len
 	1 to need-refresh
 ;
 
+: paste-line
+	open-line
+	clipboard-count @
+	0
+	begin
+		2dup <> 
+	while
+		clipboard over + @
+		insert-char
+		1+
+	repeat
+	2drop
+	insert-stop
+	sol
+;
+
 : change-word
 	del-word 
 	bl insert-char
@@ -740,6 +769,8 @@ value filename-len
 	[ char r ] literal of replace-char endof
 	[ char o ] literal of force-cur-down open-line endof
 	[ char O ] literal of open-line endof
+	[ char p ] literal of force-cur-down paste-line endof
+	[ char P ] literal of paste-line endof
 	[ char x ] literal of curx 1+! del-char endof
 	[ char X ] literal of del-char endof
 	[ char b ] literal of word-back endof
