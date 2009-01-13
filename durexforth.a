@@ -1092,9 +1092,12 @@ print_char_surpress_file_io
 	sta	$d020	
 	rts
 
+CURSOR_PAUSE = $8
 print_char
 	ldy	#1
 	sty	CURSOR_BLINK
+	ldy	#CURSOR_PAUSE
+	sty	$cd
 	stx	tmp_x
 	jsr	PUTCHR
 	ldx	tmp_x
