@@ -49,7 +49,7 @@ To stop the program, press \texttt{RESTORE} to get to the interpreter. Then ente
 
 \begin{verbatim}
 forget bg
-: bg d020 ; ( -- addr ) # border color addr
+: bg d020 ; # border color addr
 : inc dup c@ 1+ swap c! ; ( addr -- ) # inc addr by 1
 : flash dup inc recurse ; ( addr -- ) # inc addr forever
 bg flash
