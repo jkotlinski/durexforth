@@ -693,6 +693,43 @@ var clipboard-count
 	d020 c!
 ;
 
+: save-as
+	[ char ! ] literal emit
+	0 ( len )
+	filename ( len filename )
+	begin
+		key
+
+		dup RETURN = if
+			drop ( len filename )
+			drop ( len )
+			filename-len c!
+			write-file
+			exit
+		then
+
+		dup emit
+
+		( len filename key )
+		over c!
+
+		( len filename )
+		1+
+		swap 1+
+		swap
+	again
+;
+
+: colon-w
+	1 18 setcur
+	[ char w ] literal emit
+	key
+	case
+	RETURN of write-file endof
+	[ char ! ] literal of save-as endof
+	endcase
+;
+
 : find-handler
 	0 18 setcur
 	clear-status
@@ -792,7 +829,7 @@ var clipboard-count
 		key 
 		case
 		[ char 0 ] literal of goto-start endof
-		[ char w ] literal of write-file endof
+		[ char w ] literal of colon-w endof
 		[ char q ] literal of ffff exit endof
 		endcase
 		clear-status
