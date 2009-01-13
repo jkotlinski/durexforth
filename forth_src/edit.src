@@ -451,7 +451,9 @@ value filename-len
 	curx @
 	curlinestart @
 
+	editpos
 	cur-down
+	editpos = if 2drop drop exit then
 	sol
 	editpos ( src )
 	editpos 1- ( dst )
