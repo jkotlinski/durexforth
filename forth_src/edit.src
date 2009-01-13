@@ -308,10 +308,10 @@ value filename-len
 	repeat
 ;
 
-# right, or down + sol if we're at xpos = linelen + 1. ret 1 if we cant advance
+# right, or down + sol if we're at EOL. ret 1 if we cant advance
 : advance-cur
 	editpos
-	curx @ linelen 1- = if
+	curx @ linelen 1- = linelen 0= or if
 		0 curx !
 		cur-down
 	else
