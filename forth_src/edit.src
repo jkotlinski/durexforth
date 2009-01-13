@@ -106,8 +106,12 @@ value filename-len
 	bufstart curlinestart !
 ;
 
+: status-pos 7c0 ;
+
 : show-page
+	status-pos c@
 	clrscr
+	status-pos c!
 	0 0 setcur
 	homepos @
 	begin
@@ -120,12 +124,12 @@ value filename-len
 ;
 
 : clear-status ( -- )
-	bl 7c0 18 fill
+	bl status-pos 18 fill
 ;
 
 : set-status ( c -- )
 	clear-status
-	7c0 c!
+	status-pos c!
 ;
 
 : init
