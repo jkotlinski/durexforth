@@ -475,6 +475,8 @@ value filename-len
 ;
 
 : insert-char
+	linelen 26 > if drop exit then
+
 	eof @ editpos - ( u )
 	dup 1- editpos + ( u src )
 	over 1- editpos + 1+ ( u src dst )
