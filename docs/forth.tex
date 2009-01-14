@@ -80,7 +80,7 @@ Drop value on top of return stack.
 \begin{description}
 \item[. ( a -- )]
 
-Print top of stack as a hexadecimal value.
+Print top of stack.
 
 \item[emit ( a -- )]
 
@@ -91,13 +91,6 @@ Print top of stack as a PETSCII character.
 \section{Mathematics}
 
 \begin{description}
-\item[hex]
-
-Use hexadecimal base for input.
-
-\item[dec]
-
-Use decimal base for input.
 
 \item[1+ ( a -- b )]
 
@@ -374,11 +367,11 @@ List sizes of all defined words.
 
 \item[dump ( n -- )]
 
-Hex dump starting at address n.
+Memory dump starting at address n.
 
 \item[n]
 
-Continue hex dump where last one stopped.
+Continue memory dump where last one stopped.
 
 \item[see word]
 
