@@ -2342,8 +2342,8 @@ LITSTRING
 
 	!word	LINK
 	!set	LINK = * - 2
-	!byte 4
-	!text	"xreg"
+	!byte 2
+	!text	"xr"
 XREG
 	+VAR_CODE	_XREG
 _XREG
@@ -2351,8 +2351,8 @@ _XREG
 
 	!word	LINK
 	!set	LINK = * - 2
-	!byte 4
-	!text	"yreg"
+	!byte 2
+	!text	"yr"
 YREG
 	+VAR_CODE	_YREG
 _YREG
@@ -2360,8 +2360,8 @@ _YREG
 
 	!word	LINK
 	!set	LINK = * - 2
-	!byte 4
-	!text	"areg"
+	!byte 2
+	!text	"ar"
 AREG
 	+VAR_CODE	_AREG
 _AREG
