@@ -1,4 +1,4 @@
-dF: bl 20 ;
+  : bl 20 ;
 : cr d emit ;
 : space bl emit ;
 : / /mod swap drop ;

@@ -1,4 +1,4 @@
-dF: RETURN d ;
+  : RETURN d ;
 : clrscr bl 400 3e8 fill ;
 
 : bufstart 4000 ;
