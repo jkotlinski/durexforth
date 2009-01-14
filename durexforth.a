@@ -2495,6 +2495,73 @@ geof
         JMP .glose    ; even if OPEN failed, the file has to be closed
 
 
+; LOADB (load binary file)
+;  - 7000 s" base" loadb #load file to 7000
+;  - end of loaded file is available in $ae/$af afterwards
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 5
+	!text	"loadb"
+LOADB
+	txa
+	pha
+
+	lda PSTACK - 1, x		; >destination
+	sta load_binary_laddr_hi
+	lda PSTACK - 2, x		; <destination
+	sta load_binary_laddr_lo
+
+	lda PSTACK - 4, x		; a filename length
+	pha
+	ldy PSTACK - 5, x 		; y >basename 
+	lda PSTACK - 6, x		; x <basename 
+	tax
+	pla
+	jsr	load_binary
+
+	pla
+	tax
+	+dex4
+	+NEXT
+
+;load_binary_base
+;	lda	#basename_end - basename
+;	ldx	#<basename
+;	ldy	#>basename
+;	; fall through...
+
+load_binary
+	jsr SETNAM
+	ldx $ba		;last used device number
+	and #3		;Make 0-3 possible numbers
+	ora #8		;Transform to 8-B
+	tax
+	lda #1
+	ldy #0		;0 = load to new address
+	jsr SETLFS
+
+load_binary_laddr_lo = *+1
+	ldx #$ff	;<load_address
+load_binary_laddr_hi = *+1
+	ldy #$ff	;>load_address
+	lda #0		;0 = load to memory (no verify)
+	jsr $ffd5	;LOAD
+;	bcs .loadb_error
+ 	rts
+
+;.loadb_error
+;	; Accumulator contains BASIC error code
+;
+;	; most likely errors:
+;	; A = $05 (DEVICE NOT PRESENT)
+;	; A = $04 (FILE NOT FOUND)
+;	; A = $1D (LOAD ERROR)
+;	; A = $00 (BREAK, RUN/STOP has been pressed during loading)
+;	
+;	;... error handling ...
+;	rts
+
+
 ; OPENW (open file for writing)
 	!word	LINK
 	!set	LINK = * - 2
