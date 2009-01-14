@@ -1004,6 +1004,15 @@ HERE_CODE
 HERE
 	!word	_LATEST + 2
 
+; NEXT
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 4
+	!text	"next"
+	+VAR_CODE	NEXT
+NEXT
+	!word	NEXT_IMPL
+
 ; ------------ return stack
 
 ; >R

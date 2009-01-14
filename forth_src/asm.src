@@ -2,9 +2,26 @@
 
 : code 
   	create # create word
-	fffd here +! # del jsr DOCOL
+	latest @ >cfa here !
 ;
 
-: 1mi create ;
+: endcode
+	4c c, # jmp
+	next @ , # next
+;
 
-: endcode ;
+: 1mi 
+	create
+	jsr
+	docol ,
+	' lit ,
+	,
+	' c, ,
+	' exit ,
+
+;
+
+ea 1mi nop
+
+code balle nop nop nop endcode
+

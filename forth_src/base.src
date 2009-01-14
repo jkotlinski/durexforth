@@ -13,7 +13,7 @@
 : ';' [ char ; ] literal ;
 : [compile] immed word find >cfa , ;
 : ['] immed ' lit , ;
-: jsr-docol 20 c, docol , ;
+: jsr 20 c, ;
 : if immed ' 0branch , here @ 0 , ;
 : then immed dup here @ swap - swap ! ;
 : else immed ' branch , here @ 0 , 
@@ -144,7 +144,8 @@
 : var
 	1 cells allot
 	create
-	jsr-docol
+	jsr
+	docol ,
 	' lit ,
 	,
 	' exit ,
@@ -152,7 +153,8 @@
 
 : value ( n -- )
 	create
-	jsr-docol
+	jsr
+	docol ,
 	' lit , , ' exit ,
 ;
 
@@ -181,6 +183,6 @@
 
 s" debug" load
 s" edit" load
-# s" asm" load
+s" asm" load
 
 ." ok" cr
