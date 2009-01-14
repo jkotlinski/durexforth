@@ -81,8 +81,7 @@ value filename-len
 		# empty file?
 		1 eof +!
 		RETURN bufstart c!
-		RETURN bufstart 1+ c!
-		0 bufstart 2+ c!
+		0 eof @ c!
 	then
 ;
 
