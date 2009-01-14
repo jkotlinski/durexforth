@@ -1,7 +1,7 @@
 
 
 : code create latest @ >cfa here ! ;
-: endcode 4c c, next @ , ;
+: endcode 4c c, next @ , ; # jmp next
 
 : 1mi create jsr docol ,
 ' lit , , ' c, , ' exit ,
@@ -23,17 +23,13 @@ create jsr docol ,
 
 : 23mi
 create jsr docol ,
-' dup , ' lit , ff00 , ' and ,
-
+' dup , ' lit , ff00 , ' and , # 2 or 3?
 ' 0branch , 000e , # if
 ' lit , , ' c, , # op
-' , , # arg
-
+' , , # arg 
 ' branch , 000a , # else
-
 ' lit , , ' c, ,  # op
 ' c, ,  # arg
-
 ' exit , # then
 ;
 
