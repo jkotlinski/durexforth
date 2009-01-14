@@ -24,7 +24,7 @@ Start the editor by typing \texttt{s" foo" edit}. It will try to open the (non-e
 
 To enter text, first press \texttt{i} to enter insert mode. This mode allows you to insert text into the buffer. You can see that it's active on the \texttt{I} that appears in the lower left corner.
 
-This is a good start for making a program. Let's continue where we ended last section, and make a border flasher. Enter:
+This is a good start for making a program. But first, let's get rid of the junk we created in the last section. Enter:
 
 \begin{verbatim}
 forget bg
@@ -45,7 +45,7 @@ flash
 
 \texttt{flash} will cycle the border color infinitely. Before trying it out, go up and change \texttt{forget bg} to \texttt{forget flash}. This makes sure you won't run out of RAM, no matter how many times you recompile the program. Now press \texttt{F7} to compile and run. If everything is entered right, you will be facing a wonderful color cycle.
 
-To stop the program, press \texttt{RESTORE} to get to the interpreter. Then enter \texttt{fg} to get back into the editor. Let's see how we can factor the program to get something more Forth'y:
+To stop the program, press RESTORE to get to the interpreter. Then enter \texttt{fg} to get back into the editor. Let's see how we can factor the program to get something more Forth'y:
 
 \begin{verbatim}
 forget bg
