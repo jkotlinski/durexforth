@@ -1404,7 +1404,7 @@ WRITE
 	dex
 	+NEXT
 werror
-	pla
+	pla ;Mats wonders: What the fuck is this PLA for???
 	inc	$d021
 	jmp	werror
 
@@ -2522,14 +2522,7 @@ LOADB
 ;	; fall through...
 
 load_binary
-	jsr SETNAM
-	lda $ba		;last used device number
-	and #3		;Make 0-3 possible numbers
-	ora #8		;Transform to 8-B
-	tax
-	lda #1
-	ldy #0		;0 = load to new address
-	jsr SETLFS
+	jsr .disk_io_setnamsetlfs
 
 load_binary_laddr_lo = *+1
 	ldx #$ff	;<load_address
@@ -2537,20 +2530,68 @@ load_binary_laddr_hi = *+1
 	ldy #$ff	;>load_address
 	lda #0		;0 = load to memory (no verify)
 	jsr $ffd5	;LOAD
-;	bcs .loadb_error
+;	bcs .disk_io_error
  	rts
 
-;.loadb_error
-;	; Accumulator contains BASIC error code
-;
-;	; most likely errors:
-;	; A = $05 (DEVICE NOT PRESENT)
-;	; A = $04 (FILE NOT FOUND)
-;	; A = $1D (LOAD ERROR)
-;	; A = $00 (BREAK, RUN/STOP has been pressed during loading)
-;	
-;	;... error handling ...
-;	rts
+.disk_io_setnamsetlfs ;reused by both loadb and saveb
+	jsr SETNAM
+	lda $ba		;last used device number
+	and #3		;Make 0-3 possible numbers
+	ora #8		;Transform to 8-B
+	tax
+	lda #1
+	ldy #0		;if load: 0 = load to new address, if save: 0 = dunno, but okay... 
+	jmp SETLFS	;End with JMP instead of jsr/rts to save a jsr/rts pair...
+
+
+.disk_io_error
+	; Accumulator contains BASIC error code
+	
+	;... error handling ...
+	inc $d020
+	jmp *-3
+	;rts
+
+; SAVEB (save binary file)
+;  - 7000 71ae s" base" saveb #save file from 7000 to 71ae (= the byte AFTER the last byte in the file)
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 5
+	!text	"saveb"
+SAVEB
+	stx tmp_x
+
+	lda PSTACK - 8, x		; range begin lo
+	sta $c1
+	lda PSTACK - 7, x		; range begin hi
+	sta $c2
+	
+	lda PSTACK - 6, x		; range end lo
+	sta save_binary_srange_end_lo
+	lda PSTACK - 5, x		; range end hi
+	sta save_binary_srange_end_hi
+
+	lda PSTACK - 2, x		; a filename length
+	pha
+	ldy PSTACK - 3, x 		; y basename hi
+	lda PSTACK - 4, x		; x basename lo
+	tax
+	pla
+
+	jsr .disk_io_setnamsetlfs
+	
+	;This should point to the byte AFTER the last byte in the file.
+save_binary_srange_end_lo = *+1
+	ldx #$ff	;load_address lo
+save_binary_srange_end_hi = *+1
+	ldy #$ff	;load_address hi
+	lda #$c1	;tell routine that start address is located in $c1/$c2
+	jsr $ffd8	;SAVE
+	bcs .disk_io_error
+
+	ldx tmp_x
+	+subx 8
+	+NEXT
 
 
 ; OPENW (open file for writing)
