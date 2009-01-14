@@ -1,4 +1,4 @@
-: RETURN d ;
+  : RETURN d ;
 : clrscr bl 400 3e8 fill ;
 
 : bufstart 4000 ;
@@ -72,22 +72,11 @@ value filename-len
 ;
 
 : do-load
-	load
-	bufstart eof !
+	4000 loadb
 
-	begin
-		read ( char )
-
-		dup ( char char )
-
-		eof @ ( char char *eof )
-		c!
-
-		0>
-	while
-
-		1 eof +!
-	repeat
+	af c@ 100 *
+	ae c@ +
+	eof !
 
 	bufstart 1+ eof @ = if
 		# empty file?
