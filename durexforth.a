@@ -2513,7 +2513,7 @@ LOADB
 
 load_binary
 	jsr SETNAM
-	ldx $ba		;last used device number
+	lda $ba		;last used device number
 	and #3		;Make 0-3 possible numbers
 	ora #8		;Transform to 8-B
 	tax
