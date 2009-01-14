@@ -387,15 +387,13 @@ Decompile Forth word and print to screen. Try \texttt{see see}.
 
 \section{System State}
 
-These variables contain system state data.
-
 \begin{description}
 
-\item[latest] Position of latest defined word.
+\item[latest (variable)] Position of latest defined word.
 
-\item[here] Position of first unused byte in memory.
+\item[here (variable)] Position of first unused byte in memory.
 
-\item[blink] Disable/enable cursor blink. (0 = off, 1 = on)
+\item[blink ( status -- )] Disable/enable cursor blink. (0 = off, 1 = on)
 
 \end{description}
 
