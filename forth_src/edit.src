@@ -74,9 +74,7 @@ value filename-len
 : do-load
 	4000 loadb
 
-	af c@ 100 *
-	ae c@ +
-	eof !
+	ae @ eof !
 
 	bufstart 1+ eof @ = if
 		# empty file?
