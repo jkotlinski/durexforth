@@ -2516,6 +2516,8 @@ LOADB
 	pla
 	tax
 	+dex4
+	dex
+	dex
 	+NEXT
 
 ;load_binary_base
