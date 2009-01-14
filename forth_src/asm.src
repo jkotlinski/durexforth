@@ -1,0 +1,10 @@
+
+
+: code 
+  	create # create word
+	fffd here +! # del jsr DOCOL
+;
+
+: 1mi create ;
+
+: endcode ;

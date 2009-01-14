@@ -17,12 +17,12 @@ forth_src/debug.pet: forth_src/debug.src ext/petcom
 forth_src/edit.pet: forth_src/edit.src ext/petcom
 	cat forth_src/edit.src | ext/petcom - > forth_src/edit.pet
 
-forth_src/test.pet: forth_src/test.src ext/petcom
-	cat forth_src/test.src | ext/petcom - > forth_src/test.pet
+forth_src/asm.pet: forth_src/asm.src ext/petcom
+	cat forth_src/asm.src | ext/petcom - > forth_src/asm.pet
 
-FORTHLIST=base debug edit
+FORTHLIST=base debug edit asm
 
-durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet forth_src/edit.pet
+durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet forth_src/edit.pet forth_src/asm.pet
 	$(C1541) -format durexforth,DF  d64 durexforth.d64 > /dev/null
 	$(C1541) -attach $@ -write durexforth.prg  > /dev/null
 	# $(C1541) -attach $@ -write debug.bak

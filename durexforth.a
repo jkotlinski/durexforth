@@ -1965,6 +1965,8 @@ _BLINK
 	!byte	6
 	!text	"create"
 CREATE
+	jsr	_WORD
+
 	; store link in header. TMP = dst
 	lda	HERE
 	sta	TMP
@@ -2205,11 +2207,10 @@ ZBRANCH
 	!text	":"
 COLON
 	jsr	__DOCOL
-	!word WORD ; get the name of the new word
 	!word CREATE ; CREATE the dictionary entry / header
 	!word LIT, OP_JSR, CCOMMA ; insert jmp
 	!word LIT, __DOCOL, COMMA ; append __DOCOL (the codeword)
-	!word LATEST, FETCH, HIDDEN
+	!word LATEST, FETCH, HIDDEN ; hide word
 	!word RBRAC ; enter compile mode
 	!word EXIT
 
