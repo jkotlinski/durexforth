@@ -168,11 +168,10 @@ clrcol
 	jmp	NEXT_IMPL
 }
 
-!macro dex4 {
+!macro subx .arg {
 	txa
-	sbx #4 ; equals dex 4 times
+	sbx #.arg ;Subtract .arg from x register
 }
-
 
 !macro VAR_CODE .word {
 	lda	#<.word
@@ -361,7 +360,7 @@ ROT
 	!byte	5
 	!text	"2drop"
 TWODROP
-	+dex4
+	+subx 4
 
 	+NEXT
 
@@ -773,7 +772,7 @@ STORE
 	lda PSTACK - 3, x
 	sta	(TMP), y	
 
-	+dex4
+	+subx 4
 
 	+NEXT
 
@@ -812,7 +811,7 @@ STOREBYTE
 	lda PSTACK - 4, x
 	sta	(TMP), y	
 
-	+dex4
+	+subx 4
 
 	+NEXT
 
@@ -854,9 +853,7 @@ FILL
 	eor	#$ff
 	sta	TMP + 1
 
-	+dex4
-	dex
-	dex
+	+subx 6
 -
 	inc	TMP
 	bne	+
@@ -898,9 +895,7 @@ CMOVE_BACK
 	eor	#$ff
 	sta	TMP + 1
 
-	+dex4
-	dex
-	dex
+	+subx 6
 -
 	inc	TMP
 	bne	+
@@ -949,9 +944,7 @@ CMOVE
 	eor	#$ff
 	sta	TMP + 1
 
-	+dex4
-	dex
-	dex
+	+subx 6
 -
 	inc	TMP
 	bne	+
@@ -2276,7 +2269,7 @@ SETCUR
 	tax
 	jsr	$e50a
 	ldx	tmp_x
-	+dex4
+	+subx 4
 	+NEXT
 
 ; DSP@
@@ -2515,9 +2508,7 @@ LOADB
 
 	pla
 	tax
-	+dex4
-	dex
-	dex
+	+subx 6
 	+NEXT
 
 ;load_binary_base
@@ -2587,9 +2578,7 @@ OPENW
 	jsr	CHKOUT
 
 	ldx	tmp_x
-	+dex4
-	dex
-	dex
+	+subx 6
 	+NEXT
 
 ; LOAD (load and compile source file)
@@ -2611,7 +2600,7 @@ LOAD
 
 	pla
 	tax
-	+dex4
+	+subx 4
 	+NEXT
 
 SETNAM = $ffbd
