@@ -23,12 +23,12 @@ create jsr docol ,
 
 : 23mi
 create jsr docol ,
-' dup , ' lit , ff00 , ' and , # 2 or 3?
+' dup , ' lit , ff00 , ' and , # > ff ?
 ' 0branch , 000e , # if
-' lit , , ' c, , # op
+' lit , , ' c, , # general op
 ' , , # arg 
 ' branch , 000a , # else
-' lit , , ' c, ,  # op
+' lit , , ' c, ,  # zp op
 ' c, ,  # arg
 ' exit , # then
 ;
