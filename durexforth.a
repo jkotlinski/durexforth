@@ -1823,10 +1823,7 @@ INTERPRET
 	sta	TMP
 	lda	PSTACK - 1, x
 	sta	TMP + 1
-	dex ; drop CFA
-	dex
-	dex ; drop string
-	dex
+	+subx 4 ; drop CFA + string
 	jmp	(TMP)
 
 print_error_msg_with_tib
