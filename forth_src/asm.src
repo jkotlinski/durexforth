@@ -7,21 +7,42 @@
 ' lit , , ' c, , ' exit ,
 ;
 
-: 2mi create jsr docol ,
-' lit , , ' c, , ' c, , ' exit ,
+: 2mi immed
+create jsr docol ,
+' lit , , ' c, ,  # opcode
+' c, , # arg
+' exit ,
 ;
 
-: 3mi create jsr docol ,
-' lit , , ' c, , ' , , ' exit , ;
+: 3mi immed
+create jsr docol ,
+' lit , , ' c, ,  # opcode
+' , ,  # arg
+' exit , 
+;
 
-69 2mi adc # immed
-65 2mi adcz # zp
-75 2mi adczx # zp, x
-6d 3mi adca # absolute
-7d 3mi adcax # abs, x
-79 3mi adcay # abs, y
-61 2mi adcix # indirect, x
-71 2mi adciy # indirect, y
+: 23mi
+create jsr docol ,
+' dup , ' lit , ff00 , ' and ,
+
+' 0branch , 000e , # if
+' lit , , ' c, , # op
+' , , # arg
+
+' branch , 000a , # else
+
+' lit , , ' c, ,  # op
+' c, ,  # arg
+
+' exit , # then
+;
+
+69 2mi adc#
+65 6d 23mi adc
+75 7d 23mi adcx
+79 3mi adcy
+61 2mi adcix
+71 2mi adciy
 
 29 2mi and
 25 2mi andz
@@ -90,9 +111,8 @@ ca 1mi dex
 41 2mi eorix
 51 2mi eoriy
 
-e6 2mi incz
-f6 2mi inczx
-ee 3mi inca
-fe 3mi incax
+e6 ee 23mi inc
 
-
+code f 
+d020 inc 
+endcode
