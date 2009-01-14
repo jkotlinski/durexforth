@@ -1685,28 +1685,8 @@ _NUMBER ; only hex, dec for now...
 	sta	PSTACK - 2, x
 	sta	PSTACK - 1, x
 
-	; which base? hex, dec?
-	lda	_BASE
-	cmp	#10
-	beq	.dec_number
-	cmp	#16
-	bne	.not_digit
-	
-	; hex number!!
-	lda	#<handle_input_digit_hex
-	sta	.number_handler + 1
-	lda	#>handle_input_digit_hex
-	sta	.number_handler + 2
-	jmp	.number_handler
-
-.dec_number
-	lda	#<handle_input_digit_dec
-	sta	.number_handler + 1
-	lda	#>handle_input_digit_dec
-	sta	.number_handler + 2
-
 .number_handler
-	jsr	0 ; overwritten
+	jsr	handle_input_digit_hex
 
 	bne	.not_digit
 
@@ -1756,44 +1736,6 @@ handle_input_digit_hex
 	bcc	.not_a_digit
 
 .ok
-	inx
-	inx
-
-	sta	PSTACK - 2, x
-	lda	#0
-	sta	PSTACK - 1, x
-
-	jsr	_ADD
-
-	lda	#0
-	rts
-
-handle_input_digit_dec
-	; multiply stack top by 10
-	inx
-	inx
-
-	lda	#10
-	sta	PSTACK - 2, x
-	lda	#0
-	sta	PSTACK - 1, x
-
-	tya
-	pha
-	jsr	_MUL
-	pla
-	tay
-
-	; add *(++TMP3) to stack top
-	iny
-	lda	(TMP3), y
-	clc
-	adc	#-$30 ; petscii 0-9 -> 0-9
-
-	sec ; not within 0-9?
-	cmp	#10
-	bcs	.not_a_digit
-
 	inx
 	inx
 
@@ -2395,16 +2337,6 @@ LITSTRING
 	+NEXT
 
 ; -----------
-
-; BASE. 10, 16 are supported.
-	!word	LINK
-	!set	LINK = * - 2
-	!byte 4
-	!text	"base"
-BASE
-	+VAR_CODE	_BASE
-_BASE
-	!word	10
 
 ; LINEBUF line buffering. 0 = off, 1 = on
 	!word	LINK

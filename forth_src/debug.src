@@ -109,8 +109,6 @@ var last-dump
 	while
 		over . space ( print addr )
 
-		( ... print bytes in hex ... )
-
 		8 ( addr lines bytes )
 		begin
 			?dup ( while bytes > 0 )

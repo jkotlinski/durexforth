@@ -1,6 +1,3 @@
-: hex 16 base ! ;
-: dec 10 base ! ;
-hex
 : bl 20 ;
 : cr d emit ;
 : space bl emit ;

@@ -1,4 +1,3 @@
-hex
 : RETURN d ;
 : clrscr bl 400 3e8 fill ;
 
