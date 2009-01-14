@@ -72,16 +72,17 @@ value filename-len
 ;
 
 : do-load
-	4000 loadb
+	bufstart ae !
+	bufstart loadb
 
 	ae @ eof !
 
-	bufstart 1+ eof @ = if
+	bufstart eof @ = if
 		# empty file?
 		1 eof +!
-		RETURN 4000 c!
-		RETURN 4001 c!
-		0 4002 c!
+		RETURN bufstart c!
+		RETURN bufstart 1+ c!
+		0 bufstart 2+ c!
 	then
 ;
 
