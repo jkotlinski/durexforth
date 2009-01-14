@@ -383,16 +383,26 @@ Continue hex dump where last one stopped.
 \item[see word]
 
 Decompile Forth word and print to screen. Try \texttt{see see}.
+
 \end{description}
 
-\section{C64 Specific}
+
+
+\section{System State}
+
+These variables contain system state data.
 
 \begin{description}
-\item[blink ( b -- )]
 
-Disable/enable cursor blink. (0 = off, 1 = on)
+\item[latest] Position of latest defined word.
+
+\item[here] Position of first unused byte in memory.
+
+\item[blink] Disable/enable cursor blink. (0 = off, 1 = on)
 
 \end{description}
+
+
 
 \section{``Missing'' Words}
 
