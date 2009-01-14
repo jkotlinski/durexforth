@@ -183,9 +183,6 @@ clrcol
 	+NEXT
 }
 
-in_editor
-	!byte	0
-
 ; ---------- words
 
 !set LINK = 0
