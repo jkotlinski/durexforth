@@ -124,22 +124,6 @@
 	80 and
 ;
 
-: cfa>
-	latest @ ( start at latest dictionary entry... )
-	begin
-		?dup ( while link ptr != 0 )
-	while
-		2dup swap ( cfa curr curr cfa )
-		< if ( current dictionary entry < cfa ? )
-			nip ( leave it on stack )
-			exit
-		then
-		@ ( follow link ptr back )
-	repeat
-	drop
-	0
-;
-
 : +! ( num addr -- ) 
 	dup @ ( num addr val )
 	-rot + ( addr val num )
