@@ -1,27 +1,98 @@
 
 
-: code 
-  	create # create word
-	latest @ >cfa here !
+: code create latest @ >cfa here ! ;
+: endcode 4c c, next @ , ;
+
+: 1mi create jsr docol ,
+' lit , , ' c, , ' exit ,
 ;
 
-: endcode
-	4c c, # jmp
-	next @ , # next
+: 2mi create jsr docol ,
+' lit , , ' c, , ' c, , ' exit ,
 ;
 
-: 1mi 
-	create
-	jsr
-	docol ,
-	' lit ,
-	,
-	' c, ,
-	' exit ,
+: 3mi create jsr docol ,
+' lit , , ' c, , ' , , ' exit , ;
 
-;
+69 2mi adc # immed
+65 2mi adcz # zp
+75 2mi adczx # zp, x
+6d 3mi adca # absolute
+7d 3mi adcax # abs, x
+79 3mi adcay # abs, y
+61 2mi adcix # indirect, x
+71 2mi adciy # indirect, y
 
-ea 1mi nop
+29 2mi and
+25 2mi andz
+35 2mi andxz
+2d 2mi anda
+3d 3mi andax
+39 3mi anday
+21 2mi andix
+31 2mi andiy
 
-code balle nop nop nop endcode
+a 1mi asl
+6 2mi aslz
+16 2mi aslzx
+e 3mi asla
+1e 3mi aslax
+
+90 2mi bcc 
+b0 2mi bcs
+f0 2mi beq
+
+24 2mi bitz
+2c 3mi bita
+
+30 2mi bmi
+d0 2mi bne
+10 2mi bpl
+0 1mi brk
+50 2mi bvc
+70 2mi bvs
+18 1mi clc
+d8 1mi cld
+58 1mi cli
+b8 1mi clv
+
+c9 2mi cmp
+c5 2mi cmpz
+d5 2mi cmpzx
+cd 3mi cmpa
+dd 3mi cmpax
+d9 3mi cmpay
+c1 2mi cmpix
+d1 2mi cmpiy
+
+e0 2mi cpx
+e4 2mi cpxz
+ec 3mi cpxa
+
+c0 2mi cpy
+c4 2mi cpyz
+cc 3mi cpya
+
+c6 2mi decz
+d6 2mi deczx
+ce 3mi deca
+de 3mi decax
+
+ca 1mi dex
+88 1mi dey
+
+49 2mi eor
+45 2mi eorz
+55 2mi eorzx
+4d 3mi eora
+5d 3mi eorax
+59 3mi eoray
+41 2mi eorix
+51 2mi eoriy
+
+e6 2mi incz
+f6 2mi inczx
+ee 3mi inca
+fe 3mi incax
+
 
