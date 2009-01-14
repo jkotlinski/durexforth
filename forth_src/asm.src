@@ -1,7 +1,7 @@
 
 
 : code create latest @ >cfa here ! ;
-: endcode 4c c, next @ , ; # jmp next
+: end-code 4c c, next @ , ; # jmp next
 
 : 1mi create jsr docol ,
 ' lit , , ' c, , ' exit ,
@@ -111,4 +111,4 @@ e6 ee 23mi inc
 
 code f 
 d020 inc 
-endcode
+end-code
