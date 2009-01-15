@@ -24,9 +24,7 @@ op,
 ' exit , 
 ;
 
-: 3mi-p
-dup ff00 and # > ff ?
-;
+: 3mi-p dup ff00 and ; # not zp?
 
 : 23mi
 create jsr docol ,
