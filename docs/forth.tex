@@ -19,15 +19,15 @@ Swap top stack elements.
 
 \item[over ( a b -- a b a )]
 
-Swap top stack elements.
+Make a copy of the second item and push it on top.
 
-\item[rot ( a b c -- c a b )]
+\item[rot ( a b c -- b c a )]
 
-Rotate top three stack elements from bottom to top.
+Rotate the third item to the top.
 
-\item[-rot ( a b c -- b c a )]
+\item[-rot ( a b c -- c a b )]
 
-Rotate top three stack elements from top to bottom.
+rot rot
 
 \item[2drop ( a b -- )]
 
@@ -51,7 +51,7 @@ swap drop
 
 \item[tuck ( a b -- b a b )]
 
-dup rot
+dup -rot
 
 \item[pick ( $x_u$ ... $x_1$ $x_0$ $u$ -- $x_u$ ... $x_1$ $x_0$ $x_u$ )]
 

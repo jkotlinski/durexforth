@@ -303,12 +303,12 @@ OVER
 
 	+NEXT
 
-; -ROT
+; ROT
 	!word	LINK
 	!set	LINK = * - 2
-	!byte	4
-	!text	"-rot"
-NROT
+	!byte	3
+	!text	"rot"
+ROT
 	ldy	PSTACK - 5, x
 	lda	PSTACK - 3, x
 	sta PSTACK - 5, x
@@ -324,30 +324,6 @@ NROT
 	sta PSTACK - 4, x
 	tya
 	sta PSTACK - 2, x
-
-	+NEXT
-
-; ROT
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	3
-	!text	"rot"
-ROT
-	ldy	PSTACK - 1, x
-	lda	PSTACK - 3, x
-	sta PSTACK - 1, x
-	lda PSTACK - 5, x
-	sta PSTACK - 3, x
-	tya
-	sta PSTACK - 5, x
-
-	ldy	PSTACK - 2, x
-	lda	PSTACK - 4, x
-	sta PSTACK - 2, x
-	lda PSTACK - 6, x
-	sta PSTACK - 4, x
-	tya
-	sta PSTACK - 6, x
 
 	+NEXT
 

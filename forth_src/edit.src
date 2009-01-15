@@ -465,7 +465,7 @@ value filename-len
 	eof @ editpos - ( u )
 	dup 1- editpos + ( u src )
 	over 1- editpos + 1+ ( u src dst )
-	-rot ( src dst u )
+	rot ( src dst u )
 	cmove>
 	editpos c!
 	1 curx +!
@@ -514,9 +514,9 @@ value filename-len
 	2dup - >r ( store diff )
 	eof @ editpos - 1+ ( dst src len )
 	r> eof +! ( adjust eof with diff )
-	rot ( len dst src )
+	-rot ( len dst src )
 	swap ( len src dst )
-	-rot ( src dst len )
+	rot ( src dst len )
 	cmove
 	1 to need-refresh
 	pop-cursor
@@ -563,7 +563,7 @@ var clipboard-count
 10 allot value search-buf
 
 : are-equal ( len a1 a2 -- equal? )
-	-rot ( a1 a2 len )
+	rot ( a1 a2 len )
 	>r ( a1 a2 )
 	begin
 		r@ ( a1 a2 len )
@@ -576,9 +576,9 @@ var clipboard-count
 		then
 		( a1 a2 )
 		dup c@ ( a1 a2 c2 )
-		-rot ( a2 c2 a1 )
+		rot ( a2 c2 a1 )
 		dup c@ ( a2 c2 a1 c1 )
-		-rot ( a2 a1 c1 c2 )
+		rot ( a2 a1 c1 c2 )
 		<> ( a2 a1 diff? )
 		if
 			( not equal!! )

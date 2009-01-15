@@ -102,7 +102,7 @@
 
 ( c a b within returns true if a <= c and c < b )
 : within
-	rot
+	-rot
 	over
 	<= if
 		> if
@@ -129,11 +129,11 @@ var last-dump
 		begin
 			?dup ( while bytes > 0 )
 		while
-			-rot ( lines bytes addr )
+			rot ( lines bytes addr )
 			dup c@ c. space ( print *addr )
 
 			1+ ( incr addr )
-			rot ( addr lines bytes )
+			-rot ( addr lines bytes )
 
 			1-
 		repeat
@@ -147,7 +147,7 @@ var last-dump
 		begin
 			?dup ( while bytes > 0 )
 		while
-			-rot ( lines bytes addr )
+			rot ( lines bytes addr )
 			dup c@
 			dup 20 5e within if
 				emit
@@ -156,7 +156,7 @@ var last-dump
 			then
 
 			1+ ( incr addr )
-			rot ( addr lines bytes )
+			-rot ( addr lines bytes )
 
 			1-
 		repeat
