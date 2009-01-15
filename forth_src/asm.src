@@ -39,32 +39,27 @@ create jsr docol ,
 
 69 2mi adc#
 65 6d 23mi adc
-75 7d 23mi adcx
-79 3mi adcy
-61 2mi adcix
-71 2mi adciy
+75 7d 23mi adc,x
+79 3mi adc,y
+61 2mi adc,(x)
+71 2mi adc,(y)
 
-29 2mi and
-25 2mi andz
-35 2mi andxz
-2d 2mi anda
-3d 3mi andax
-39 3mi anday
-21 2mi andix
-31 2mi andiy
+29 2mi and#
+25 2d 23mi and
+35 3d 23mi and,x
+39 3mi and,y
+21 2mi and,(x)
+31 2mi and,(y)
 
-a 1mi asl
-6 2mi aslz
-16 2mi aslzx
-e 3mi asla
-1e 3mi aslax
+a 1mi asl#
+6 e 23mi asl
+16 1e 23mi aslx
 
 90 2mi bcc 
 b0 2mi bcs
 f0 2mi beq
 
-24 2mi bitz
-2c 3mi bita
+24 2c 23mi bit
 
 30 2mi bmi
 d0 2mi bne
@@ -77,39 +72,33 @@ d8 1mi cld
 58 1mi cli
 b8 1mi clv
 
-c9 2mi cmp
-c5 2mi cmpz
-d5 2mi cmpzx
-cd 3mi cmpa
-dd 3mi cmpax
-d9 3mi cmpay
-c1 2mi cmpix
-d1 2mi cmpiy
+c9 2mi cmp#
+c5 cd 23mi cmp
+d5 dd 23mi cmp,x
+d9 3mi cmp,y
+c1 2mi cmp,(x)
+d1 2mi cmp,(y)
 
-e0 2mi cpx
-e4 2mi cpxz
-ec 3mi cpxa
+e0 2mi cpx#
+e4 ec 23mi cpx
 
-c0 2mi cpy
-c4 2mi cpyz
-cc 3mi cpya
+c0 2mi cpy#
+c4 cc 23mi cpy
 
-c6 2mi decz
-d6 2mi deczx
-ce 3mi deca
-de 3mi decax
+c6 ce 23mi dec
+d6 de 23mi dec,x
 
 ca 1mi dex
 88 1mi dey
 
-49 2mi eor
-45 2mi eorz
-55 2mi eorzx
-4d 3mi eora
-5d 3mi eorax
-59 3mi eoray
-41 2mi eorix
-51 2mi eoriy
+49 2mi eor#
+45 4d 23mi eor
+55 5d 23mi eor,x
+59 3mi eor,y
+41 2mi eor,(x)
+51 2mi eor,(y)
+
+# test
 
 e6 ee 23mi inc
 
