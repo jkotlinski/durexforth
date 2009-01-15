@@ -73,8 +73,9 @@ flash
 \end{verbatim}
 
 \texttt{code} and \texttt{end-code} define a code word, just like \texttt{:} and \texttt{;} define Forth words. Within a code word, you can use assembler mnemonics. 
+Note: As the x register contains the durexForth stack depth, it is important that it remains unchanged at the end of the code word.
 
-\section{Another Example}
+\section{Console I/O Example}
 
 This piece of code reads from keyboard and sends back the chars to screen:
 
@@ -96,7 +97,6 @@ foo
 \item \href{http://www.bradrodriguez.com/papers/}{Moving Forth: a series on writing Forth kernels}
 \item \href{http://www.csbruce.com/~csbruce/cbm/transactor/v7/i5/p058.html}{Blazin' Forth --- An inside look at the Blazin' Forth compiler}
 \item \href{http://dobbscodetalk.com/index.php?option=com_myblog&show=In-this-1980-article-from-Byte-Charles-Moore-recounts-the-creation-of-Forth..html&Itemid=29}{The Evolution of FORTH, an unusual language}
-\item \href{http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm}{A Beginner's Guide to Forth}
 \end{itemize}
 
 \subsubsection{Other Forths}
