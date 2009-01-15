@@ -657,27 +657,13 @@ var clipboard-count
 ;
 
 : write-file
-	d020 c@
-
 	do-backup
 
-	# add ",P,W" to make it an output filename
-	filename filename-len c@ +
-	dup [ char , ] literal swap c! 1+
-	dup [ char p ] literal swap c! 1+
-	dup [ char , ] literal swap c! 1+
-	[ char w ] literal swap c!
-
-	2 filename filename-len c@ 4 + openw
 	bufstart
-	begin
-		dup c@ dup d020 c! write
-		1+
-		dup eof @ =
-	until
-	closew
-	drop
-	d020 c!
+	eof @
+	filename filename-len c@
+	saveb
+	1 to need-refresh
 ;
 
 : save-as
