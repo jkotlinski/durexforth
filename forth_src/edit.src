@@ -384,9 +384,8 @@ value filename-len
 	dup ( loc sol )
 	begin
 		dup c@ RETURN = if
-			1+
-			dup ( loc sol sol )
-			rot ( sol loc sol )
+			1+ ( loc sol )
+			tuck ( sol loc sol )
 			- curx !
 			0 cury !
 			dup homepos !
