@@ -8,13 +8,13 @@ Let's warm it up a little. Enter \texttt{1} (followed by return). You have now p
 
 Now some arithmetics. \texttt{1000 a * .} will calculate $\$a \times \$1000$ and print the result on the screen. \texttt{6502 100 / 1- .} will calculate and print $(\$6502 / \$100) - 1$.
 
-Let's define a word \texttt{bg} for setting the border color... 
+Let's define a word \texttt{bg} for setting the border color\ldots 
 
 \begin{verbatim}
 : bg d020 c! ;
 \end{verbatim}
 
-\texttt{0 bg}, \texttt{1 bg} and so on will let you set border color. Cool! Now let's head on to making our first "real" program...
+\texttt{0 bg}, \texttt{1 bg} and so on will let you set border color. Cool! Now let's head on to making our first "real" program\ldots
 
 \section{Editor}
 
@@ -30,7 +30,7 @@ This is a good start for making a program. But first, let's get rid of the junk 
 forget bg
 \end{verbatim}
 
-...and press $\leftarrow$ to leave insert mode. This line forgets the \texttt{bg} word that you defined in the last section, and everything defined after it. Let's try out if it works.
+\ldots and press $\leftarrow$ to leave insert mode. This line forgets the \texttt{bg} word that you defined in the last section, and everything defined after it. Let's try out if it works.
 
 First, quit the editor by pressing \texttt{:q}. You should now be back in the interpreter screen. Verify that the word \texttt{bg} still exists by  entering \texttt{0 bg}, \texttt{1 bg} like you did before. Then, jump back to the editor using the command \texttt{fg} (foreground). You should return to your edit buffer with the lonely \texttt{forget bg} line.
 
@@ -58,6 +58,21 @@ bg flash
 (Note: Parentheses are used for multi-line comments or describing arguments and return values. \texttt{\#} is used for single-line comments.)
 
 Of course, it is a matter of taste which version you prefer. Press \texttt{F7} to see if the new version runs faster or slower.
+
+\section{Assembler}
+
+If you need to flash fast as possible, use the assembler:
+
+\begin{verbatim}
+code flash
+here @ # push curr addr
+d020 inc 
+jmp # jmp to pushed addr
+end-code
+flash
+\end{verbatim}
+
+\texttt{code} and \texttt{end-code} define a code word, just like \texttt{:} and \texttt{;} define Forth words. Within a code word, you can use assembler mnemonics. 
 
 \section{Another Example}
 
