@@ -1,6 +1,6 @@
 ;The MIT License
 ;
-;Copyright (c) 2008-2009 Johan Kotlinski
+;Copyright (c) 2008-2009 Johan Kotlinski, Mats Andren
 ;
 ;Permission is hereby granted, free of charge, to any person obtaining a copy
 ;of this software and associated documentation files (the "Software"), to deal
@@ -2463,7 +2463,7 @@ geof
 
 
 ; LOADB (load binary file)
-;  - 7000 s" base" loadb #load file to 7000
+;  - s" base" 7000 loadb #load file to 7000
 ;  - end of loaded file is available in $ae/$af afterwards
 	!word	LINK
 	!set	LINK = * - 2

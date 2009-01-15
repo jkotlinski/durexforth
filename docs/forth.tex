@@ -400,12 +400,19 @@ Decompile Forth word and print to screen. Try \texttt{see see}.
 \end{description}
 
 
+\section{Disk I/O}
+
+\begin{description}
+\item[loadb ( filenameptr filenamelength dst -- )] Load binary block to dst.
+\item[saveb ( start end filenameptr filenamelength -- )] Save binary block.
+\end{description}
+
+
 \section{Kernel Calls}
 
 Safe kernel calls may be done from Forth words using \texttt{jsr-wrap} ( addr -- ). The helper variables \texttt{ar}, \texttt{xr} and \texttt{yr} can be used to set arguments and get results through the a, x and y registers.
 
 Example: \texttt{30 ar ! ffd2 jsr-wrap} prints \texttt{0} on screen.
-
 
 \section{``Missing'' Words}
 
