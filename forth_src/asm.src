@@ -7,23 +7,27 @@
 ' lit , , ' c, , ' exit ,
 ;
 
-: 2mi immed
+: 2mi
 create jsr docol ,
 ' lit , , ' c, ,  # opcode
 ' c, , # arg
 ' exit ,
 ;
 
-: 3mi immed
+: 3mi
 create jsr docol ,
 ' lit , , ' c, ,  # opcode
 ' , ,  # arg
 ' exit , 
 ;
 
+: 3mi-p
+dup ff00 and # > ff ?
+;
+
 : 23mi
 create jsr docol ,
-' dup , ' lit , ff00 , ' and , # > ff ?
+' 3mi-p ,
 ' 0branch , 000e , # if
 ' lit , , ' c, , # general op
 ' , , # arg 
@@ -112,3 +116,4 @@ e6 ee 23mi inc
 code f 
 d020 inc 
 end-code
+
