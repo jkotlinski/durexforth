@@ -38,62 +38,62 @@ op,
 ' exit , # then
 ;
 
-69 2mi adc#
-65 6d 23mi adc
+69 2mi adc,#
+65 6d 23mi adc,
 75 7d 23mi adc,x
 79 3mi adc,y
 61 2mi adc,(x)
 71 2mi adc,(y)
 
-29 2mi and#
-25 2d 23mi and
+29 2mi and,#
+25 2d 23mi and,
 35 3d 23mi and,x
 39 3mi and,y
 21 2mi and,(x)
 31 2mi and,(y)
 
-a 1mi asl#
-6 e 23mi asl
-16 1e 23mi aslx
+a 1mi asl,#
+6 e 23mi asl,
+16 1e 23mi asl,x
 
-90 2mi bcc 
-b0 2mi bcs
-f0 2mi beq
+90 2mi bcc,
+b0 2mi bcs,
+f0 2mi beq,
 
-24 2c 23mi bit
+24 2c 23mi bit,
 
-30 2mi bmi
-d0 2mi bne
-10 2mi bpl
-0 1mi brk
-50 2mi bvc
-70 2mi bvs
-18 1mi clc
-d8 1mi cld
-58 1mi cli
-b8 1mi clv
+30 2mi bmi,
+d0 2mi bne,
+10 2mi bpl,
+0 1mi brk,
+50 2mi bvc,
+70 2mi bvs,
+18 1mi clc,
+d8 1mi cld,
+58 1mi cli,
+b8 1mi clv,
 
-c9 2mi cmp#
-c5 cd 23mi cmp
+c9 2mi cmp,#
+c5 cd 23mi cmp,
 d5 dd 23mi cmp,x
 d9 3mi cmp,y
 c1 2mi cmp,(x)
 d1 2mi cmp,(y)
 
-e0 2mi cpx#
-e4 ec 23mi cpx
+e0 2mi cpx,#
+e4 ec 23mi cpx,
 
-c0 2mi cpy#
-c4 cc 23mi cpy
+c0 2mi cpy,#
+c4 cc 23mi cpy,
 
-c6 ce 23mi dec
+c6 ce 23mi dec,
 d6 de 23mi dec,x
 
-ca 1mi dex
-88 1mi dey
+ca 1mi dex,
+88 1mi dey,
 
-49 2mi eor#
-45 4d 23mi eor
+49 2mi eor,#
+45 4d 23mi eor,
 55 5d 23mi eor,x
 59 3mi eor,y
 41 2mi eor,(x)
@@ -101,12 +101,12 @@ ca 1mi dex
 
 # test
 
-e6 ee 23mi inc
-4c 3mi jmp
+e6 ee 23mi inc,
+4c 3mi jmp,
 
 code f 
 here @
-d020 inc 
-jmp
+d020 inc,
+jmp,
 ;code
 
