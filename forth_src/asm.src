@@ -5,20 +5,20 @@
 
 : op, ' lit , , ' c, , ;
 
-: 1mi create jsr docol ,
+: 1mi create jsr-docol,
 op, 
 ' exit ,
 ;
 
 : 2mi
-create jsr docol ,
+create jsr-docol,
 op,
 ' c, , # arg
 ' exit ,
 ;
 
 : 3mi
-create jsr docol ,
+create jsr-docol,
 op,
 ' , ,  # arg
 ' exit , 
@@ -27,7 +27,7 @@ op,
 : 3mi-p dup ff00 and ; # not zp?
 
 : 23mi
-create jsr docol ,
+create jsr-docol,
 ' 3mi-p ,
 ' 0branch , 000e , # if
 op,
