@@ -3,20 +3,23 @@
 : code create latest @ >cfa here ! ;
 : end-code 4c c, next @ , ; # jmp next
 
+: op, ' lit , , ' c, , ;
+
 : 1mi create jsr docol ,
-' lit , , ' c, , ' exit ,
+op, 
+' exit ,
 ;
 
 : 2mi
 create jsr docol ,
-' lit , , ' c, ,  # opcode
+op,
 ' c, , # arg
 ' exit ,
 ;
 
 : 3mi
 create jsr docol ,
-' lit , , ' c, ,  # opcode
+op,
 ' , ,  # arg
 ' exit , 
 ;
@@ -29,10 +32,10 @@ dup ff00 and # > ff ?
 create jsr docol ,
 ' 3mi-p ,
 ' 0branch , 000e , # if
-' lit , , ' c, , # general op
+op,
 ' , , # arg 
 ' branch , 000a , # else
-' lit , , ' c, ,  # zp op
+op,
 ' c, ,  # arg
 ' exit , # then
 ;
@@ -101,8 +104,11 @@ ca 1mi dex
 # test
 
 e6 ee 23mi inc
+4c 3mi jmp
 
 code f 
+here @
 d020 inc 
+jmp
 end-code
 
