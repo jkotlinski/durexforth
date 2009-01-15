@@ -390,6 +390,8 @@ value filename-len
 			0 cury !
 			dup homepos !
 			curlinestart !
+			1 to need-refresh
+			clear-status
 			exit
 		then
 		1-
