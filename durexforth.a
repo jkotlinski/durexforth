@@ -2343,8 +2343,8 @@ _AREG
 ; JSR ( addr -- )
 	!word	LINK
 	!set	LINK = * - 2
-	!byte 3
-	!text	"jsr"
+	!byte 8
+	!text	"jsr-wrap"
 
 	lda PSTACK - 2, x
 	sta	.jsraddr + 1
