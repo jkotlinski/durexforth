@@ -1343,6 +1343,7 @@ get_from_ram
 	sta	TMP + 1
 	ldy #0
 	lda	(TMP), y
+	sta	$d020
 	rts
 
 PULL_KEY
