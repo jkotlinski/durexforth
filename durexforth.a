@@ -2515,8 +2515,7 @@ load_binary_laddr_hi = *+1
 	; Accumulator contains BASIC error code
 	
 	;... error handling ...
-	lda	#2
-	sta $d020
+	lda	#1
 	sta	load_binary_status
 	rts
 
