@@ -24,18 +24,23 @@ op,
 ' exit , 
 ;
 
-: 3mi-p dup ff00 and ; # not zp?
+: do-23mi ( arg op3 op2 )
+	2 pick ( arg op3 op2 arg )
+	ff00 and if
+		drop ( arg op3 )
+		c, ,
+	else
+		nip ( arg op2 )
+		c, c,
+	then
+;
 
 : 23mi
 create jsr-docol,
-' 3mi-p ,
-' 0branch , 000e , # if
-op,
-' , , # arg 
-' branch , 000a , # else
-op,
-' c, ,  # arg
-' exit , # then
+' lit , , # op2
+' lit , , # op3
+' do-23mi ,
+' exit ,
 ;
 
 69 2mi adc,#
