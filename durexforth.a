@@ -1373,6 +1373,8 @@ handle_compile_done
 	; compiled all files :)
 	lda	#BORDER_COLOR
 	sta	$d020
+	lda	_BLINK
+	sta	CURSOR_BLINK
 +
 	lda	#0
 	sta	COMPILE
