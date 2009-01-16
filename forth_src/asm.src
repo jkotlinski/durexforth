@@ -39,8 +39,8 @@ create jsr-docol,
 
 : 23mi
 create jsr-docol,
-' lit , , # op2
 ' lit , , # op3
+' lit , , # op2
 ' do-23mi ,
 ' exit ,
 ;
