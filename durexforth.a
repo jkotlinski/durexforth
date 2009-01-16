@@ -1239,6 +1239,7 @@ KEY
 .unbuffered_key
 -
 	jsr	PULL_KEY
+	ora	#0
 	beq	-
 	inx
 	inx
