@@ -892,9 +892,3 @@ var clipboard-count
 	cleanup
 ;
 
-(
-do-backup
-s" debug" edit
-s" test" edit
-)
-
