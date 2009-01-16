@@ -672,9 +672,13 @@ var clipboard-count
 	begin
 		key
 
+		dup 5f = if # leftarrow
+			2drop
+			drop
+			exit
+		then
 		dup RETURN = if
-			drop ( len filename )
-			drop ( len )
+			2drop ( len )
 			filename-len c!
 			write-file
 			exit
