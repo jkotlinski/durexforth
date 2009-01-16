@@ -191,5 +191,6 @@
 	1 load-depth +!
 ;
 
+s" modules" load
 ." ok" cr
 
