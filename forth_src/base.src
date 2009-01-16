@@ -184,6 +184,7 @@
 	ae @ -rot ( compile ae strptr strlen )
 	2 pick 1+ ( compile ae strptr strlen dst )
 	loadb ( old-compile old-ae )
+	drop # ignore status
 	dup 1+ compile !
 	1 load-depth +!
 ;

@@ -1345,7 +1345,7 @@ get_from_ram
 	lda	(TMP), y
 	rts
 
-PULL_KEY ; wastes x!!!
+PULL_KEY
 	lda	LOAD_DEPTH
 	beq	.call_getchar
 	jsr	get_from_ram
@@ -2443,7 +2443,7 @@ geof
         JMP .glose    ; even if OPEN failed, the file has to be closed
 
 
-; LOADB ( filenameptr filenamelen dst -- ) load binary file
+; LOADB ( filenameptr filenamelen dst -- status ) load binary file
 ;  - s" base" 7000 loadb #load file to 7000
 ;  - end of loaded file is available in $ae/$af afterwards
 	!word	LINK
@@ -2466,11 +2466,19 @@ LOADB
 	tax
 	pla
 	jsr	load_binary
-
+	
 	pla
 	tax
-	+subx 6
+
+	+subx 4
+	lda	load_binary_status
+	sta	PSTACK - 1, x
+	sta	PSTACK - 2, x
+
 	+NEXT
+
+load_binary_status
+	!byte	0
 
 ;load_binary_base
 ;	lda	#basename_end - basename
@@ -2486,8 +2494,9 @@ load_binary_laddr_lo = *+1
 load_binary_laddr_hi = *+1
 	ldy #$ff	;>load_address
 	lda #0		;0 = load to memory (no verify)
+	sta	load_binary_status
 	jsr $ffd5	;LOAD
-;	bcs .disk_io_error
+	bcs .disk_io_error
  	rts
 
 .disk_io_setnamsetlfs ;reused by both loadb and saveb
@@ -2505,9 +2514,10 @@ load_binary_laddr_hi = *+1
 	; Accumulator contains BASIC error code
 	
 	;... error handling ...
-	inc $d020
-	jmp *-3
-	;rts
+	lda	#2
+	sta $d020
+	sta	load_binary_status
+	rts
 
 ; SAVEB (save binary file)
 ;  - 7000 71ae s" base" saveb #save file from 7000 to 71ae (= the byte AFTER the last byte in the file)

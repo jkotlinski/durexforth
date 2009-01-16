@@ -72,17 +72,16 @@ value filename-len
 ;
 
 : do-load
-	bufstart ae !
 	bufstart loadb
 
-	ae @ eof !
-
-	bufstart eof @ = if
-		# empty file?
-		1 eof +!
+	if # file error?
+		bufstart 1+ eof !
 		RETURN bufstart c!
 		0 eof @ c!
+		exit
 	then
+
+	ae @ eof !
 ;
 
 : go-to-file-start
