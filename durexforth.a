@@ -1346,10 +1346,11 @@ get_from_ram
 	rts
 
 PULL_KEY
-	lda	LOAD_DEPTH
+	lda	COMPILE
+	ora	COMPILE + 1
 	beq	.call_getchar
 	jsr	get_from_ram
-	beq	handle_file_compiled
+	beq	handle_compile_done
 	inc	COMPILE
 	bne	+
 	inc	COMPILE + 1
@@ -1362,19 +1363,22 @@ PULL_KEY
 	ldx	tmp_x
 	rts
 
-handle_file_compiled
+handle_compile_done
+	lda	LOAD_DEPTH
+	beq +
 	dec	LOAD_DEPTH
-	bne	+
+	bne	++
 
 	; compiled all files :)
+	lda	#BORDER_COLOR
+	sta	$d020
++
 	lda	#0
 	sta	COMPILE
 	sta	COMPILE + 1
-	lda	#BORDER_COLOR
-	sta	$d020
 	jmp	PULL_KEY
 
-+	; compiled file but more to go...
+++	; compiled file but more to go...
 
 	; pop old eof
 	lda	PSTACK - 1, x
