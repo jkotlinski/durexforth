@@ -490,7 +490,7 @@ value filename-len
 	RIGHT of cur-right drop endof
 	14 of del-char drop endof # inst
 	94 of 1 curx +! del-char drop endof # del
-	cr of insert-char cur-down sol endof
+	cr of insert-char cur-down sol show-page endof
 	insert-char
 	endcase
 ;
