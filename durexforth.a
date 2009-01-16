@@ -61,6 +61,9 @@ CHROUT = $ffd2
 CLOSE = $ffc3
 CHKIN = $ffc6
 CHKOUT = $ffc9
+SETNAM = $ffbd
+SETLFS = $ffba
+OPEN = $ffc0
 
 BLINK_COLOR = $286
 
@@ -89,6 +92,8 @@ C_BLUE = 6
 C_CYAN = 3
 C_PURPLE = 4
 
+COMPILE_ADDR = $4000
+
 ; -------- program start
 
 *= $801 ; start at c64 basic start
@@ -115,10 +120,16 @@ SCREEN_COLOR = 0
 	lda	#%00010110 ; lowercase
 	sta	$d018
 
-	jsr	open_base ; open 'base' forth source file.
+	lda	#BORDER_COLOR
+	sta	$d020
+	lda	#SCREEN_COLOR
+	sta	$d021
+	lda	#1
+	sta	CURSOR_BLINK
+
+	jsr	load_base ; open 'base' forth source file.
 
 reset
-	; screen color = purple
 	lda	#BORDER_COLOR
 	sta	$d020
 	lda	#SCREEN_COLOR
@@ -970,6 +981,15 @@ STATE
 COMPILE
 	!word	0
 
+; COMPILE-LOAD-DEPTH
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 10
+	!text	"load-depth"
+	+VAR_CODE	LOAD_DEPTH
+LOAD_DEPTH
+	!word	0
+
 ; HERE - points to the next free byte of memory. When compiling, compiled words go here.
 	!word	LINK
 	!set	LINK = * - 2
@@ -1062,7 +1082,7 @@ EMIT
 	+NEXT
 
 print_char_surpress_file_io
-	ldy	_FILENO
+	ldy	LOAD_DEPTH
 	beq	print_char
 	sta	$d020	
 	rts
@@ -1217,11 +1237,9 @@ KEY
 	+NEXT
 
 .unbuffered_key
-	stx	tmp_x
 -
 	jsr	PULL_KEY
 	beq	-
-	ldx	tmp_x
 	inx
 	inx
 	sta	PSTACK - 2, x
@@ -1244,9 +1262,7 @@ _KEY
 	sta	KEY_BUF_WRITE_POS
 
 -
-	stx	tmp_x
 	jsr PULL_KEY
-	ldx	tmp_x
 	ora	#0
 	beq	-
 	cmp	#K_RETURN
@@ -1310,7 +1326,17 @@ _KEY
 	sta	PSTACK - 1, x
 	rts
 
-get_editor_char
+; get from RAM
+get_from_ram
+	; is done?
+	lda	COMPILE
+	cmp	$ae
+	bne	+
+	lda	COMPILE + 1
+	cmp	$af
+	bne	+
+	rts ; yes... return eq
++
 	lda	COMPILE
 	sta	TMP
 	lda	COMPILE + 1
@@ -1320,45 +1346,47 @@ get_editor_char
 	rts
 
 PULL_KEY ; wastes x!!!
-	lda	COMPILE
-	ora	COMPILE + 1
-	beq	+++
-	jsr	get_editor_char
-	ora #0
-	beq	++
+	lda	LOAD_DEPTH
+	beq	.call_getchar
+	jsr	get_from_ram
+	beq	handle_file_compiled
 	inc	COMPILE
 	bne	+
 	inc	COMPILE + 1
 +
 	rts
-++
+
+.call_getchar
+	stx	tmp_x
+	jsr	GETCHR
+	ldx	tmp_x
+	rts
+
+handle_file_compiled
+	dec	LOAD_DEPTH
+	bne	+
+
+	; compiled all files :)
 	lda	#0
 	sta	COMPILE
 	sta	COMPILE + 1
-+++
-
-	lda	_FILENO
-	bne	.get_char_from_disk
-	jmp	GETCHR
-
-.get_char_from_disk
-	jsr	READST
-	bne .eof
-	jmp	CHRIN
-
-.eof
-	lda	_FILENO
-	jsr	CLOSE
-
-	dec	_FILENO
-	lda	_FILENO
-	bne +
-	lda	_BLINK
-	sta	CURSOR_BLINK
 	lda	#BORDER_COLOR
 	sta	$d020
-+
-	jsr	CHKIN
+	jmp	PULL_KEY
+
++	; compiled file but more to go...
+
+	; pop old eof
+	lda	PSTACK - 1, x
+	sta	$af
+	lda	PSTACK - 2, x
+	sta	$ae
+	; pop old COMPILE
+	lda	PSTACK - 3, x
+	sta	COMPILE + 1
+	lda	PSTACK - 4, x
+	sta	COMPILE
+	+subx	4
 	jmp	PULL_KEY
 
 ; WRITE - write a byte to disk.
@@ -1384,42 +1412,6 @@ werror
 	inc	$d021
 	jmp	werror
 
-; READ - read a byte from disk. 0 = EOF
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	4
-	!text	"read"
-READ
-	stx	tmp_x
-	jsr	READST
-	bne +
-	jsr	CHRIN
-	ldx	tmp_x
-	inx
-	inx
-	sta	PSTACK - 2, x
-	lda	#0
-	sta	PSTACK - 1, x
-	+NEXT
-
-+ ; EOF
-	lda	_FILENO
-	jsr	CLOSE
-
-	dec	_FILENO
-	lda	_FILENO
-	bne +
-	sta	CURSOR_BLINK
-+
-	jsr	CHKIN
-	ldx	tmp_x
-	inx
-	inx
-	lda	#0
-	sta	PSTACK - 2, x
-	sta	PSTACK - 1, x
-	+NEXT
-	
 ; WORD
 	!word	LINK
 	!set	LINK = * - 2
@@ -2383,16 +2375,6 @@ LINEBUF
 _LINEBUF
 	!word	1
 
-; FILENO - active file number
-	!word	LINK
-	!set	LINK = * - 2
-	!byte 6
-	!text	"fileno"
-FILENO
-	+VAR_CODE	_FILENO
-_FILENO
-	!word	0
-
 ; DOCOL
 	!word	LINK
 	!set	LINK = * - 2
@@ -2413,7 +2395,6 @@ CLOSEW
 	stx	tmp_x
 	lda	WRITEFILENO
 	jsr	CLOSE 
-	ldx	_FILENO ; reset output device
 	jsr	CHKOUT
 	jsr	_errorchread
 	ldx tmp_x
@@ -2462,7 +2443,7 @@ geof
         JMP .glose    ; even if OPEN failed, the file has to be closed
 
 
-; LOADB (load binary file)
+; LOADB ( filenameptr filenamelen dst -- ) load binary file
 ;  - s" base" 7000 loadb #load file to 7000
 ;  - end of loaded file is available in $ae/$af afterwards
 	!word	LINK
@@ -2602,53 +2583,22 @@ OPENW
 	+subx 6
 	+NEXT
 
-; LOAD (load and compile source file)
-	!word	LINK
-	!set	LINK = * - 2
-	!byte 4
-	!text	"load"
-LOAD
-	txa
-	pha
+load_base
+	lda	#<COMPILE_ADDR
+	sta	load_binary_laddr_lo
+	sta	COMPILE
+	lda	#>COMPILE_ADDR
+	sta	load_binary_laddr_hi
+	sta	COMPILE + 1
 
-	lda	PSTACK - 2, x
-	ldy	PSTACK - 3, x
-	pha
-	lda	PSTACK - 4, x
+	inc	LOAD_DEPTH
+
+	lda	#<basename
 	tax
-	pla
-	jsr	open
-
-	pla
-	tax
-	+subx 4
-	+NEXT
-
-SETNAM = $ffbd
-SETLFS = $ffba
-OPEN = $ffc0
-CHKIN = $ffc6
-
-open_base
-	lda	#basename_end - basename
-	ldx	#<basename
 	ldy	#>basename
-	; fall through...
+	lda	#basename_end - basename
 
-open
-	jsr	SETNAM
-	inc	_FILENO
-	lda	_FILENO ; file number
-	ldx	#8 ; default to device 8
-	tay
-	iny ; secondary address
-	jsr	SETLFS
-	jsr	OPEN
-	bcs	.could_not_open
-
-	ldx	_FILENO ; file number
-	jsr	CHKIN
-	rts
+	jmp	load_binary
 
 .could_not_open
 	inc	$d020
