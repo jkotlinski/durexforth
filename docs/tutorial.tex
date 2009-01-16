@@ -66,8 +66,8 @@ If you need to flash as fast as possible, use the assembler:
 \begin{verbatim}
 code flash
 here @ # push curr addr
-d020 inc 
-jmp # jmp to pushed addr
+d020 inc,
+jmp, # jmp to pushed addr
 ;code
 flash
 \end{verbatim}

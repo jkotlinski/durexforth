@@ -104,9 +104,3 @@ ca 1mi dex,
 e6 ee 23mi inc,
 4c 3mi jmp,
 
-code f 
-here @
-d020 inc,
-jmp,
-;code
-
