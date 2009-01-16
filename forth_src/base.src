@@ -186,6 +186,9 @@
 	loadb ( old-compile old-ae )
 	drop # ignore status
 	dup 1+ compile !
+	load-depth @ not if
+		2drop # no need to keep this
+	then
 	1 load-depth +!
 ;
 
