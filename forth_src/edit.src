@@ -1,7 +1,7 @@
   : RETURN d ;
 : clrscr bl 400 3e8 fill ;
 
-: bufstart 4000 ;
+: bufstart 5000 ;
 
 var eof ( ram eof )
 

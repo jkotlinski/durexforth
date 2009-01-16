@@ -92,7 +92,7 @@ C_BLUE = 6
 C_CYAN = 3
 C_PURPLE = 4
 
-COMPILE_ADDR = $4000
+COMPILE_ADDR = $5000
 
 ; -------- program start
 
