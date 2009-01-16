@@ -1084,7 +1084,6 @@ EMIT
 print_char_surpress_file_io
 	ldy	LOAD_DEPTH
 	beq	print_char
-	sta	$d020	
 	rts
 
 print_char
