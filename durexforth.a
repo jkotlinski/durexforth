@@ -1372,6 +1372,8 @@ handle_compile_done
 	; compiled all files :)
 	lda	#BORDER_COLOR
 	sta	$d020
+	ldx #$00      ; filenumber 0 = keyboard
+	jsr CHKIN     ; call CHKIN (keyboard now input device again)
 +
 	lda	#0
 	sta	COMPILE
