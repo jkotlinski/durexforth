@@ -10,17 +10,21 @@ op,
 ' exit ,
 ;
 
+: do-2mi c, c, ;
+
 : 2mi
 create jsr-docol,
-op,
-' c, , # arg
+' lit , , # op
+' do-2mi ,
 ' exit ,
 ;
 
+: do-3mi c, , ;
+
 : 3mi
 create jsr-docol,
-op,
-' , ,  # arg
+' lit , , # op
+' do-3mi ,
 ' exit , 
 ;
 
