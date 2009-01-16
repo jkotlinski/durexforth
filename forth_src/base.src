@@ -179,14 +179,13 @@
 : loc word find ;
 
 : load ( strptr strlen -- old-compile old-ae )
-	1 cc c! # hide cursor
 	compile @ -rot ( compile strptr strlen )
 	ae @ -rot ( compile ae strptr strlen )
 	2 pick 1+ ( compile ae strptr strlen dst )
 	loadb ( old-compile old-ae )
 	drop # ignore status
 	dup 1+ compile !
-	load-depth @ not if
+	load-depth @ 0= if
 		2drop # no need to keep this
 	then
 	1 load-depth +!
