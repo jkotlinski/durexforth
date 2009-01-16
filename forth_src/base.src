@@ -189,9 +189,5 @@
 	1 load-depth +!
 ;
 
-s" debug" load
-s" edit" load
-s" asm" load
-
 ." ok" cr
 
