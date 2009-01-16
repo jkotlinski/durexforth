@@ -64,15 +64,15 @@ Of course, it is a matter of taste which version you prefer. Press \texttt{F7} t
 If you need to flash as fast as possible, use the assembler:
 
 \begin{verbatim}
-code flash
+asm flash
 here @ # push curr addr
 d020 inc,
 jmp, # jmp to pushed addr
-;code
+easm
 flash
 \end{verbatim}
 
-\texttt{code} and \texttt{;code} define a code word, just like \texttt{:} and \texttt{;} define Forth words. Within a code word, you can use assembler mnemonics. 
+\texttt{asm} and \texttt{easm} define a code word, just like \texttt{:} and \texttt{;} define Forth words. Within a code word, you can use assembler mnemonics. 
 
 Note: As the x register contains the durexForth stack depth, it is important that it remains unchanged at the end of the code word.
 

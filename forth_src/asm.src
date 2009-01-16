@@ -1,7 +1,7 @@
 
 
-: code create latest @ >cfa here ! ;
-: ;code 4c c, next @ , ; # jmp next
+: asm create latest @ >cfa here ! ;
+: easm 4c c, next @ , ; # jmp next
 
 : op, ' lit , , ' c, , ;
 
