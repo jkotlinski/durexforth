@@ -1082,8 +1082,11 @@ EMIT
 	+NEXT
 
 print_char_surpress_file_io
-	ldy	LOAD_DEPTH
+	ldy	COMPILE
+	bne	+
+	ldy	COMPILE + 1
 	beq	print_char
++
 	rts
 
 print_char
