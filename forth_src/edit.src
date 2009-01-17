@@ -118,6 +118,7 @@ value filename-len
 ;
 
 : init
+	0 compile ! # to enable editor start from base.src
 	0 blink
 
 	( disable input buffering )
