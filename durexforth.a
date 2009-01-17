@@ -1253,6 +1253,9 @@ KEY
 _KEY
 	lda	_LINEBUF
 	beq	.unbuffered_key
+	lda	COMPILE
+	ora	COMPILE + 1
+	bne	.unbuffered_key
 	lda	KEY_BUF_WRITE_POS
 	beq	.fill_key_buf
 	cmp	KEY_BUF_READ_POS
@@ -1382,7 +1385,8 @@ handle_compile_done
 	lda	#0
 	sta	COMPILE
 	sta	COMPILE + 1
-	jmp	PULL_KEY
+	lda	#K_SPACE ; hack to get out of unbuffered reading
+	rts
 
 ++	; compiled file but more to go...
 
