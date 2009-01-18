@@ -426,7 +426,7 @@ value filename-len
 	1 to need-refresh-line
 ;
 
-: del-char
+: backspace
 	curx @ 0= if exit then
 	ffff curx +!
 	editpos 1+
@@ -436,6 +436,8 @@ value filename-len
 	cmove
 	1 to need-refresh-line
 ;
+
+: del-char force-cur-right backspace ;
 
 : join-lines
 	cury @
@@ -489,8 +491,8 @@ value filename-len
 	DOWN of cur-down drop endof
 	UP of cur-up drop endof
 	RIGHT of cur-right drop endof
-	14 of del-char drop endof # inst
-	94 of 1 curx +! del-char drop endof # del
+	14 of backspace drop endof # inst
+	94 of del-char drop endof # del
 	CR of insert-char cur-down sol show-page endof
 	insert-char
 	endcase
@@ -509,19 +511,15 @@ value filename-len
 ;
 
 : del-word
-	push-cursor
-	editpos ( dst )
-	word-fwd
-	editpos ( dst src )
-	2dup - >r ( store diff )
-	eof @ editpos - 1+ ( dst src len )
-	r> eof +! ( adjust eof with diff )
-	-rot ( len dst src )
-	swap ( len src dst )
-	rot ( src dst len )
-	cmove
-	1 to need-refresh
-	pop-cursor
+	1 to need-refresh-line
+	begin
+		editpos c@ 20 = if
+			del-char
+			exit
+		then
+		editpos c@ d = if exit then
+		del-char
+	again
 ;
 
 28 allot value clipboard
@@ -541,8 +539,6 @@ var clipboard-count
 		c!
 		1 clipboard-count +!
 
-        # delete
-		force-cur-right
 		del-char
 	repeat
 	join-lines
@@ -791,8 +787,8 @@ var clipboard-count
 	[ char O ] literal of open-line endof
 	[ char p ] literal of force-cur-down paste-line endof
 	[ char P ] literal of paste-line endof
-	[ char x ] literal of 1 curx +! del-char endof
-	[ char X ] literal of del-char endof
+	[ char x ] literal of del-char endof
+	[ char X ] literal of backspace endof
 	[ char b ] literal of word-back endof
 	[ char w ] literal of word-fwd endof
 	[ char Z ] literal of
