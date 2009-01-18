@@ -5,8 +5,6 @@
 : mod /mod drop ;
 : negate 0 swap - ;
 : literal immed ' lit , , ;
-: '(' [ char ( ] literal ;
-: ')' [ char ) ] literal ;
 : '"' [ char " ] literal ;
 : '.' [ char . ] literal ;
 : ':' [ char : ] literal ;
@@ -24,7 +22,7 @@
 : while immed ' 0branch , here @ 0 , ;
 : repeat immed ' branch , swap here @ - , dup here @ swap - swap ! ;
 : recurse immed latest @ >cfa , ;
-: ( immed begin key ')' = until ;
+: ( immed begin key [ char ) ] literal = until ;
 : # immed begin key d = until ; # comment
 : -rot rot rot ;
 : nip ( x y -- y ) swap drop ;
