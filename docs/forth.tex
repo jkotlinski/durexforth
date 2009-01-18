@@ -232,12 +232,7 @@ Backward copy len bytes from src to dst.
 \item[immed] Mark the word being compiled as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
 \item[[compile{]} xxx] Compile the immediate word \texttt{xxx} instead of executing it.
 \item[{[']} xxx] Compile the execution token of word \texttt{xxx} as a literal value.
-\item[create xxx] Create a dictionary header with name \texttt{xxx}. This can be used to create an array:
-\begin{verbatim}
-create 2powtable 0 c, 1 c, 2 c, 4 c, 8 c,
-	10 c, 20 c, 40 c, 80 c,
-: 2pow ( n -- 2pown ) ['] 2powtable + c@ ;
-\end{verbatim}
+\item[create xxx] Create a dictionary header with name \texttt{xxx}. 
 \end{description}
 
 \section{Variables}
@@ -270,6 +265,14 @@ Variables are faster to write to than values.
 \item[1 foo 2 + !] Store 1 in position 2 of foo.
 \item[foo dump] See contents of foo.
 \end{description}
+
+It is also possible to build arrays using \texttt{create}. The initialization is easier, but access is slightly different:
+
+\begin{verbatim}
+create 2powtable 0 c, 1 c, 2 c, 4 c, 8 c,
+	10 c, 20 c, 40 c, 80 c,
+: 2pow ( n -- 2pown ) ['] 2powtable + c@ ;
+\end{verbatim}
 
 
 \section{Control Flow}
