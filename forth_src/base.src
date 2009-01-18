@@ -1,6 +1,5 @@
   
 
-: cr d emit ;
 : / /mod swap drop ;
 : mod /mod drop ;
 : negate 0 swap - ;
