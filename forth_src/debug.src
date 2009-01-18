@@ -45,7 +45,7 @@
 	drop
 	swap ( end-of-word start-of-word )
 
-	':' emit space dup id. space
+	[ char : ] literal emit space dup id. space
 	dup ?immed if ." immed " then
 
 	>dfa ( get data addr )
