@@ -1,4 +1,6 @@
-  : id.
+
+
+: id.
 	2+ ( skip over link ptr )
 	dup c@
 	3f and ( 3f = length mask )
@@ -28,6 +30,9 @@
 	drop
 	0
 ;
+
+: bl 20 ;
+: space bl emit ;
 
 : see
 	word find
