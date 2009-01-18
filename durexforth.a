@@ -952,8 +952,8 @@ CMOVE
 ; S0
 	!word	LINK
 	!set	LINK = * - 2
-	!byte 2
-	!text	"s0"
+	!byte 3
+	!text	"sp0"
 	+VAR_CODE	SZERO
 SZERO
 	!word	PSTACK
@@ -2257,9 +2257,9 @@ SETCUR
 ; DSP@
 	!word	LINK
 	!set	LINK = * - 2
-	!byte	4
-	!text	"dsp@"
-DSPFETCH
+	!byte	3
+	!text	"sp@"
+SPFETCH
 	stx	+ + 1
 	lda	#<(PSTACK - 2)
 	clc

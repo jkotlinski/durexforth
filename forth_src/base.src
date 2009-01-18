@@ -26,7 +26,7 @@
 : -rot rot rot ;
 : nip ( x y -- y ) swap drop ;
 : tuck ( x y -- y x y ) dup -rot ;
-: pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u ) 1+ 2 negate * dsp@ + @ ;
+: pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u ) 1+ 2 negate * sp@ + @ ;
 : <> ( n -- b ) = not ;
 : > ( n -- b ) swap < ;
 : 0> ( n -- b ) 0 > ;
@@ -99,9 +99,9 @@
 : forget word find ?dup if dup @ latest ! here ! then ;
 
 : .s ( -- )
-	s0 @
+	sp0 @
 	begin
-		dup dsp@ 1- 1- <
+		dup sp@ 1- 1- <
 	while
 		dup @ .
 		2+

@@ -834,7 +834,7 @@ var clipboard-count
 		0 to need-refresh
 		0 to need-refresh-line
 
-		dsp@ # stack check...
+		sp@ # stack check...
 
 		show-cursor
 		key
@@ -857,7 +857,7 @@ var clipboard-count
 			then
 		then
 
-		2+ dsp@ <> if begin 1 d020 +! again then # warn if stack changed
+		2+ sp@ <> if begin 1 d020 +! again then # warn if stack changed
 	again
 ;
 

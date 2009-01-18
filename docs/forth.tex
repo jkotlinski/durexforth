@@ -397,6 +397,10 @@ Decompile Forth word and print to screen. Try \texttt{see see}.
 
 \item[here (variable)] Write position of the Forth compiler (usually first unused byte of memory). Many C64 assemblers refer to this as program counter or \texttt{*}.
 
+\item[sp@ ( -- addr )] Address of stack top before \texttt{sp@} is executed.
+
+\item[sp0 (variable)] Address of stack bottom.
+
 \item[blink ( status -- )] Disable/enable cursor blink. (0 = off, 1 = on)
 
 \end{description}
