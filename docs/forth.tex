@@ -350,9 +350,11 @@ Re-open editor to pick up where it left.
 
 Print a string. E.g. \texttt{." foo"}
 
-\item[s"] ( -- strptr strlen )
+\item[s"] Run time: ( -- strptr strlen ) Compile time: ( -- str )
 
-Define a string and put a pointer to this string, and string length on the stack. E.g. \texttt{s" foo"}. 
+Define a string and put it on the stack. E.g. \texttt{s" foo"}. 
+
+In run time, it puts the string length and a text pointer on the stack. In compile time (inside a colon definition), it puts a pointer to a Pascal-string on the stack.
 
 \end{description}
 
