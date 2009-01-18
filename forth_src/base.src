@@ -6,7 +6,6 @@
 : negate 0 swap - ;
 : literal immed ' lit , , ;
 : '"' [ char " ] literal ;
-: '.' [ char . ] literal ;
 : ':' [ char : ] literal ;
 : ';' [ char ; ] literal ;
 : [compile] immed word find >cfa , ;

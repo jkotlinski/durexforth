@@ -152,7 +152,7 @@ var last-dump
 			dup 20 5e within if
 				emit
 			else
-				drop '.' emit
+				drop [ char . ] literal emit
 			then
 
 			1+ ( incr addr )
