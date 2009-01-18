@@ -7,7 +7,6 @@
 : literal immed ' lit , , ;
 : '"' [ char " ] literal ;
 : ':' [ char : ] literal ;
-: ';' [ char ; ] literal ;
 : [compile] immed word find >cfa , ;
 : ['] immed ' lit , ;
 : jsr-docol, 20 c, docol , ;

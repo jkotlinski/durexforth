@@ -96,7 +96,7 @@
 		endcase
 		2 +
 	repeat
-	';' emit cr
+	[ char ; ] literal emit cr
 	2drop
 ;
 
