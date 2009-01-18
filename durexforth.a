@@ -255,11 +255,6 @@ DROP
 	dex
 	+NEXT
 
-_DROP
-	dex
-	dex
-	rts
-
 ; SWAP
 	!word	LINK
 	!set	LINK = * - 2
@@ -1754,7 +1749,8 @@ INTERPRET
 	; didn't find word...
 	; assume it's a literal number.
 
-	jsr _DROP ; drop null dictionary ptr
+	dex ; drop null dictionary ptr
+	dex
 	inc	interpret_is_number
 	jsr _NUMBER
 	bne	.not_a_number
