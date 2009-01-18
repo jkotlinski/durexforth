@@ -188,6 +188,14 @@
 	1 load-depth +!
 ;
 
-s" modules" load
-." ok" 
+: save-forth ( strptr strlen -- )
+	801
+	here @
+	2swap
+	saveb	
+;
 
+: modules ;
+s" debug" load
+s" edit" load
+s" asm" load

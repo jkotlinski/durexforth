@@ -127,8 +127,16 @@ SCREEN_COLOR = 0
 	lda	#1
 	sta	CURSOR_BLINK
 
-	jsr	load_base ; open 'base' forth source file.
-
+	lda	_START
+	ora	_START + 1
+	bne	+
+	; first time ever app is started...
+	jsr	loadbase
+	lda	#<QUIT
+	sta	_START
+	lda	#>QUIT
+	sta	_START + 1
++
 reset
 	lda	#BORDER_COLOR
 	sta	$d020
@@ -146,17 +154,14 @@ reset
 	lda	#1
 	sta	_LINEBUF
 
-	lda	#<cold_start
+	lda	#<_START
 	sta IP
-	lda #>cold_start
+	lda #>_START
 	sta IP + 1
 
 	ldx	#0
 
 	jmp	NEXT_IMPL
-
-cold_start
-	!word QUIT
 
 restore_handler
 	cli
@@ -244,6 +249,15 @@ NEXT_IMPL
 
 ++
 	jmp	0
+
+; START - points to the startup word.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 5
+	!text	"start"
+	+VAR_CODE	_START
+_START
+	!word	0
 
 ; DROP
 	!word	LINK
@@ -2606,7 +2620,7 @@ OPENW
 	+subx 6
 	+NEXT
 
-load_base
+loadbase
 	lda	#<COMPILE_ADDR
 	sta	load_binary_laddr_lo
 	sta	COMPILE
