@@ -223,16 +223,21 @@ Backward copy len bytes from src to dst.
 
 \begin{description}
 \item[:] Start compiling Forth word at \texttt{here} position.
-
 \item[;] End compiling.
-
 \item[, ( n -- )] Write word on stack to \texttt{here} position and increase \texttt{here} by 2.
 \item[c, ( n -- )] Write byte on stack to \texttt{here} position and increase \texttt{here} by 1.
-\item[literal ( n -- )] Compile a value from the stack as a literal.
+\item[literal ( n -- )] Compile a value from the stack as a literal value.
 \item[[ ( -- )] Leave compile mode. Execute the following words immediately instead of compiling them.
 \item[{]} ( -- )] Return to compile mode.
 \item[immed] Mark the word being compiled as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
 \item[[compile{]} xxx] Compile the immediate word \texttt{xxx} instead of executing it.
+\item[{[']} xxx] Compile the execution token of word \texttt{xxx} as a literal value.
+\item[create xxx] Create a dictionary header with name \texttt{xxx}. This can be used to create an array:
+\begin{verbatim}
+create 2powtable 0 c, 1 c, 2 c, 4 c, 8 c,
+	10 c, 20 c, 40 c, 80 c,
+: 2pow ( n -- 2pown ) ['] 2powtable + c@ ;
+\end{verbatim}
 \end{description}
 
 \section{Variables}
