@@ -1,5 +1,8 @@
   
 
+: bl 20 ;
+: space bl emit ;
+: cr d emit ;
 : / /mod swap drop ;
 : mod /mod drop ;
 : negate 0 swap - ;

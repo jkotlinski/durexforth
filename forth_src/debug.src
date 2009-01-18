@@ -31,10 +31,6 @@
 	0
 ;
 
-: bl 20 ;
-: space bl emit ;
-: cr d emit ;
-
 : see
 	word find
 	here @
