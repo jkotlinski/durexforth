@@ -360,8 +360,11 @@ In run time, it puts the string length and a text pointer on the stack. In compi
 
 \begin{description}
 \item[' xxx ( -- addr )] Find execution token of word xxx.
-\item[['{]}] Used only in colon definitions. Compile the execution token of next word as a literal.
 \item[exec ( xt -- )] Execute the execution token on stack.
+\item[$>$cfa ( addr -- xt )] Get execution token of word at adress \texttt{addr}.
+\item[loc xxx ( -- addr )] Get adress of word xxx.
+
+Example: \texttt{f = loc f >cfa exec}
 \end{description}
 
 
