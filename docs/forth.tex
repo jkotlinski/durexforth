@@ -78,19 +78,15 @@ Drop value on top of return stack.
 \section{Utility}
 
 \begin{description}
-\item[. ( a -- )]
-
-Print top word of stack in hex.
-
-\item[c. ( a -- )]
-
-Print top byte of stack in hex.
-
-\item[emit ( a -- )]
-
-Print top byte of stack as a PETSCII character.
-
+\item[. ( a -- )] Print top value of stack.
+\item[c. ( a -- )] Print top byte of stack.
+\item[.s] See stack contents.
+\item[emit ( a -- )] Print top byte of stack as a PETSCII character.
+\item[\#] Comment to end of line.
+\item[(] Start multi-line comment.
+\item[)] End multi-line comment.
 \end{description}
+
 
 \section{Mathematics}
 
@@ -226,26 +222,17 @@ Backward copy len bytes from src to dst.
 \section{Compiling}
 
 \begin{description}
-\item[:]
+\item[:] Start compiling Forth word at \texttt{here} position.
 
-Start compiling Forth word.
+\item[;] End compiling.
 
-\item[;]
-
-End compiling.
-
-\item[\#]
-
-Comment to end of line.
-
-\item[(]
-
-Start multi-line comment.
-
-\item[)]
-
-End multi-line comment.
-
+\item[, ( n -- )] Write word on stack to \texttt{here} position and increase \texttt{here} by 2.
+\item[c, ( n -- )] Write byte on stack to \texttt{here} position and increase \texttt{here} by 1.
+\item[literal ( n -- )] Compile a value from the stack as a literal.
+\item[[ ( -- )] Leave compile mode. Execute the following words immediately instead of compiling them.
+\item[{]} ( -- )] Return to compile mode.
+\item[immed] Mark the word being compiled as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
+\item[[compile{]} xxx] Compile the immediate word \texttt{xxx} instead of executing it.
 \end{description}
 
 \section{Variables}
@@ -324,6 +311,8 @@ Exit function.
 
 Read a character from input. Buffered/unbuffered reading is controlled by the \texttt{linebuf} variable.
 
+\item[word ( -- addr )] Read a word from input and put it on the stack.
+
 \item[linebuf]
 
 This variable switches between buffered/unbuffered input. Disable input buffering with \texttt{0 linebuf c!}, enable with \texttt{1 linebuf c!}.
@@ -358,35 +347,25 @@ In run time, it puts the string length and a text pointer on the stack. In compi
 
 \end{description}
 
+
+\section{Vectored Execution}
+
+\begin{description}
+\item[' xxx ( -- addr )] Find execution token of word xxx.
+\item[['{]}] Used only in colon definitions. Compile the execution token of next word as a literal.
+\item[exec ( xt -- )] Execute the execution token on stack.
+\end{description}
+
+
 \section{Debugging}
 
 \begin{description}
-\item[.s]
-
-See stack contents.
-
-\item[words]
-
-List all defined words.
-
-\item[sizes]
-
-List sizes of all defined words.
-
-\item[dump ( n -- )]
-
-Memory dump starting at address n.
-
-\item[n]
-
-Continue memory dump where last one stopped.
-
-\item[see word]
-
-Decompile Forth word and print to screen. Try \texttt{see see}.
-
+\item[words] List all defined words.
+\item[sizes] List sizes of all defined words.
+\item[dump ( n -- )] Memory dump starting at address n.
+\item[n] Continue memory dump where last one stopped.
+\item[see word] Decompile Forth word and print to screen. Try \texttt{see see}.
 \end{description}
-
 
 
 \section{System State}
@@ -398,9 +377,7 @@ Decompile Forth word and print to screen. Try \texttt{see see}.
 \item[here (variable)] Write position of the Forth compiler (usually first unused byte of memory). Many C64 assemblers refer to this as program counter or \texttt{*}.
 
 \item[sp@ ( -- addr )] Address of stack top before \texttt{sp@} is executed.
-
 \item[sp0 (variable)] Address of stack bottom.
-
 \item[blink ( status -- )] Disable/enable cursor blink. (0 = off, 1 = on)
 
 \end{description}
