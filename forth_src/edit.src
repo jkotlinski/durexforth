@@ -82,6 +82,7 @@ value filename-len
 	then
 
 	ae @ eof !
+	0 eof @ c!
 ;
 
 : go-to-file-start
