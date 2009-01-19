@@ -90,6 +90,7 @@
 		again
 	then
 ;
+." compile base.."
 
 : case immed 0 ;
 : of immed ' over , ' = , [compile] if ' drop , ;
@@ -196,6 +197,11 @@
 ;
 
 : modules ;
+." debug.."
 s" debug" load
+." edit.."
 s" edit" load
+." asm.."
 s" asm" load
+." done!"
+
