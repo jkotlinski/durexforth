@@ -359,10 +359,11 @@ In run time, it puts the string length and a text pointer on the stack. In compi
 \section{Vectored Execution}
 
 \begin{description}
-\item[' xxx ( -- addr )] Find execution token of word \texttt{xxx}.
-\item[exec ( xt -- )] Execute the execution token on stack.
+\item[' xxx ( -- addr )] Compile-time only: Find execution token of word \texttt{xxx}.
+\item[lit xxx ( -- addr )] Equal to \texttt{'} but used for clarity. Use \texttt{' lit , ,} to compile the (run-time) value on top of stack.
+\item[exec ( xt -- )] Execute the execution token on top of stack.
+\item[loc xxx ( -- addr )] Run-time only: Get adress of word xxx.
 \item[$>$cfa ( addr -- xt )] Get execution token (a.k.a. code field adress) of word at adress \texttt{addr}.
-\item[loc xxx ( -- addr )] Get adress of word xxx.
 
 Example: \texttt{f = loc f >cfa exec}
 \end{description}
