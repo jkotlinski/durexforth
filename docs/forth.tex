@@ -361,7 +361,7 @@ In run time, it puts the string length and a text pointer on the stack. In compi
 \begin{description}
 \item[' xxx ( -- addr )] Find execution token of word \texttt{xxx}.
 \item[exec ( xt -- )] Execute the execution token on stack.
-\item[$>$cfa ( addr -- xt )] Get execution token of word at adress \texttt{addr}.
+\item[$>$cfa ( addr -- xt )] Get execution token (a.k.a. code field adress) of word at adress \texttt{addr}.
 \item[loc xxx ( -- addr )] Get adress of word xxx.
 
 Example: \texttt{f = loc f >cfa exec}
