@@ -64,6 +64,7 @@ CHKOUT = $ffc9
 SETNAM = $ffbd
 SETLFS = $ffba
 OPEN = $ffc0
+WRITEFILENO = $f
 
 BLINK_COLOR = $286
 
@@ -882,7 +883,7 @@ FILL
 	bne	-
 
 
-; CMOVE>
+; CMOVE> ( src dst len -- )
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	6
@@ -931,7 +932,7 @@ CMOVE_BACK
 +
 	bne	-
 
-; CMOVE (forward move)
+; CMOVE ( src dst len -- ) forward move
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	5
@@ -2422,18 +2423,16 @@ _LINEBUF
 DOCOL
 	+VAR_CODE	__DOCOL
 
-WRITEFILENO
-	!byte 0
-
-; CLOSEW (open file for writing)
+; CLOSEW
 	!word	LINK
 	!set	LINK = * - 2
 	!byte 6
 	!text	"closew"
 CLOSEW
 	stx	tmp_x
-	lda	WRITEFILENO
+	lda	#WRITEFILENO
 	jsr	CLOSE 
+	ldx	#WRITEFILENO
 	jsr	CHKOUT
 	jsr	_errorchread
 	ldx tmp_x
@@ -2570,6 +2569,11 @@ load_binary_laddr_hi = *+1
 SAVEB
 	stx tmp_x
 
+	lda	$ae
+	pha
+	lda	$af
+	pha
+
 	lda PSTACK - 8, x		; range begin lo
 	sta $c1
 	lda PSTACK - 7, x		; range begin hi
@@ -2598,12 +2602,17 @@ save_binary_srange_end_hi = *+1
 	jsr $ffd8	;SAVE
 	bcs .disk_io_error
 
+	pla
+	sta	$af
+	pla
+	sta	$ae
+
 	ldx tmp_x
 	+subx 8
 	+NEXT
 
 
-; OPENW (open file for writing)
+; OPENW ( strptr strlen ) open file for writing
 	!word	LINK
 	!set	LINK = * - 2
 	!byte 5
@@ -2611,8 +2620,6 @@ save_binary_srange_end_hi = *+1
 OPENW
 	stx	tmp_x
 
-	lda	PSTACK - 6, x
-	sta	WRITEFILENO
 	lda	PSTACK - 2, x
 	ldy	PSTACK - 3, x
 	pha
@@ -2621,18 +2628,18 @@ OPENW
 	pla
 	
 	jsr	SETNAM
-	lda	WRITEFILENO ; file number
+	lda	#WRITEFILENO ; file number
 	ldx	#8 ; default to device 8
 	tay ; secondary address
 	jsr	SETLFS
 	jsr	OPEN
 	bcs	.could_not_open
 
-	ldx	WRITEFILENO ; file number
+	ldx	#WRITEFILENO ; file number
 	jsr	CHKOUT
 
 	ldx	tmp_x
-	+subx 6
+	+subx 4
 	+NEXT
 
 loadbase

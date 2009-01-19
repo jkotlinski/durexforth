@@ -633,7 +633,7 @@ var clipboard-count
 	filename-len c@ +
 	CR swap c!
 
-	f drivebuf filename-len c@ 4 + openw
+	drivebuf filename-len c@ 4 + openw
 	closew
 
 	# rename to new backup
@@ -648,7 +648,7 @@ var clipboard-count
 	filename-len c@ + # filename ok
 	CR swap c!
 
-	f drivebuf filename-len c@ 2 * 5 + openw
+	drivebuf filename-len c@ 2 * 5 + openw
 	closew
 ;
 

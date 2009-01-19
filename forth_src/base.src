@@ -190,10 +190,29 @@
 ;
 
 : save-forth ( strptr strlen -- )
+	compile @ -rot
+	0 compile !
 	801
 	here @
 	2swap
 	saveb	
+	compile !
+;
+
+: scratch ( strptr strlen -- )
+tuck ( strlen strptr strlen )
+dup here @ + ( strlen strptr strlen tmpbuf )
+dup >r
+dup [ char s ] literal swap c! 1+
+dup [ char : ] literal swap c! 1+
+( strlen strptr strlen tmpbuf+2 )
+rot ( strlen strlen tmpbuf+2 strptr )
+swap ( strlen strlen strptr tmpbuf+2 )
+rot ( strlen strptr tmpbuf+2 strlen )
+cmove ( strlen )
+r> swap 2+ ( tmp strlen )
+openw
+closew
 ;
 
 : modules ;
@@ -203,5 +222,12 @@ s" debug" load
 s" edit" load
 ." asm.."
 s" asm" load
+
+." scratch old durexforth.."
+s" durexforth" scratch
+
+." save new durexforth.."
+s" durexforth" save-forth
+
 ." done!"
 
