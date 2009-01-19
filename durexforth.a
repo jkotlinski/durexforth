@@ -129,13 +129,10 @@ SCREEN_COLOR = 0
 
 	lda	_START
 	ora	_START + 1
-	bne	+
+	bne	reset
 	; first time ever app is started...
 	jsr	loadbase
-	lda	#<QUIT
-	sta	_START
-	lda	#>QUIT
-	sta	_START + 1
+	jsr	reset_start
 +
 reset
 	lda	#BORDER_COLOR
@@ -163,13 +160,26 @@ reset
 
 	jmp	NEXT_IMPL
 
+print_ok
+	lda	#'o'
+	jsr	PUTCHR
+	lda	#'k'
+	jsr	PUTCHR
+	lda	#$d
+	jsr	PUTCHR
+	jmp	NEXT_IMPL
+
 restore_handler
 	cli
-	lda	#<QUIT
-	sta	_START
-	lda	#>QUIT
-	sta	_START + 1
+	jsr	reset_start
 	jmp reset
+
+reset_start
+	lda	#<print_ok
+	sta	_START
+	lda	#>print_ok
+	sta	_START + 1
+	rts
 
 clrcol
 	lda	#C_YELLOW
