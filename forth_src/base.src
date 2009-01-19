@@ -199,6 +199,14 @@
 	compile !
 ;
 
+: modules ;
+." debug.."
+s" debug" load
+." edit.."
+s" edit" load
+." asm.."
+s" asm" load
+
 : scratch ( strptr strlen -- )
 tuck ( strlen strptr strlen )
 dup here @ + ( strlen strptr strlen tmpbuf )
@@ -214,14 +222,6 @@ r> swap 2+ ( tmp strlen )
 openw
 closew
 ;
-
-: modules ;
-." debug.."
-s" debug" load
-." edit.."
-s" edit" load
-." asm.."
-s" asm" load
 
 ." scratch old durexforth.."
 s" durexforth" scratch
