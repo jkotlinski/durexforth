@@ -86,17 +86,24 @@ This piece of code reads from keyboard and sends back the chars to screen:
 foo
 \end{verbatim}
 
-\section{Start-Up Control}
+\section{Configuring your Forth}
 
-At start-up, the file \texttt{modules} will be executed. By default, it loads the following optional modules:
+By default, durexForth boots up with all modules pre-compiled in RAM:
 
-\begin{verbatim}
-s" debug" load # debugger
-s" asm" load # assembler
-s" edit" load # editor
-\end{verbatim}
+\begin{description}
+\item[debug] Words for debugging.
+\item[asm] The assembler.
+\item[edit] The text editor.
+\end{description}
 
-To decrease boot time and RAM usage, you may selectively choose which modules you want to load at start-up. Simply open \texttt{modules} in the editor (using \texttt{s" modules" edit}) and comment out the modules you are not interested in. You may also customize this file to add your own modules to be loaded at start-up.
+To reduce RAM usage, you may make a stripped-down version of durexForth. Do this by following these steps:
+
+\begin{enumerate}
+\item Issue \texttt{forget modules} to forget all modules.
+\item Optionally re-add the \texttt{modules} marker with \texttt{: modules ;}
+\item One by one, load the modules you want included with your new Forth. (E.g. \texttt{s" debug" load})
+\item Save the system with e.g. \texttt{s" acmeforth" save-forth}.
+\end{enumerate}
 
 \section{How to Learn More}
 
