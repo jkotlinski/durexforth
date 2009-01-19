@@ -165,6 +165,10 @@ reset
 
 restore_handler
 	cli
+	lda	#<QUIT
+	sta	_START
+	lda	#>QUIT
+	sta	_START + 1
 	jmp reset
 
 clrcol
@@ -250,7 +254,7 @@ NEXT_IMPL
 ++
 	jmp	0
 
-; START - points to the startup word.
+; START - points to the code of the startup word.
 	!word	LINK
 	!set	LINK = * - 2
 	!byte 5
@@ -258,6 +262,7 @@ NEXT_IMPL
 	+VAR_CODE	_START
 _START
 	!word	0
+	!word	QUIT
 
 ; DROP
 	!word	LINK
