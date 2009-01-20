@@ -91,132 +91,47 @@ Drop value on top of return stack.
 \section{Mathematics}
 
 \begin{description}
-
-\item[1+ ( a -- b )]
-
-Increase top of stack value by 1.
-
-\item[1- ( a -- b )]
-
-Decrease top of stack value by 1.
-
-\item[2+ ( a -- b )]
-
-Increase top of stack value by 2.
-
-\item[+! ( n a -- )]
-
-Add n to memory address a.
-
-\item[+ ( a b -- c )]
-
-Add a and b.
-
-\item[- ( a b -- c )]
-
-Subtract b from a.
-
-\item[* ( a b -- c )]
-
-Multiply a with b.
-
-\item[/mod ( a b -- r q )]
-
-Divide a with b. r = rest, q = quotient.
-
-\item[/ ( a b -- q )]
-
-Divide a with b.
-
-\item[mod ( a b -- r )]
-
-Rest of a divided by b.
-
-\item[= ( a b -- c )]
-
-Is a equal to b?
-
-\item[$<>$ ( a b -- c )]
-
-Does a differ from b?
-
-\item[$<$ ( a b -- c )]
-
-Is a less than b?
-
-\item[$>$ ( a b -- c )]
-
-Is a greater than b?
-
-\item[$>=$ ( a b -- c)]
-
-Is a greater than or equal to b?
-
-\item[$<=$ ( a b -- c)]
-
-Is a less than or equal to b?
-
-\item[$0>$ ( a b -- c)]
-
-Is a greater than zero?
-
+\item[1+ ( a -- b )] Increase top of stack value by 1.
+\item[1- ( a -- b )] Decrease top of stack value by 1.
+\item[2+ ( a -- b )] Increase top of stack value by 2.
+\item[+! ( n a -- )] Add n to memory address a.
+\item[+ ( a b -- c )] Add a and b.
+\item[- ( a b -- c )] Subtract b from a.
+\item[* ( a b -- c )] Multiply a with b.
+\item[/mod ( a b -- r q )] Divide a with b. r = rest, q = quotient.
+\item[/ ( a b -- q )] Divide a with b.
+\item[mod ( a b -- r )] Rest of a divided by b.
 \end{description}
 
 \section{Logic}
 
 \begin{description}
-\item[and ( a b -- c )]
-
-Binary and.
-
-\item[or ( a b -- c )]
-
-Binary or.
-
-\item[xor ( a b -- c )]
-
-Binary exclusive or.
-
-\item[not ( a -- b )]
-
-Flip all bits of a.
-
+\item[= ( a b -- c )] Is a equal to b?
+\item[$<>$ ( a b -- c )] Does a differ from b?
+\item[$<$ ( a b -- c )] Is a less than b?  
+\item[$>$ ( a b -- c )] Is a greater than b?  
+\item[$>=$ ( a b -- c)] Is a greater than or equal to b?  
+\item[$<=$ ( a b -- c)] Is a less than or equal to b?  
+\item[$0>$ ( a b -- c)] Is a greater than zero?  
+\item[and ( a b -- c )] Binary and.  
+\item[or ( a b -- c )] Binary or.  
+\item[xor ( a b -- c )] Binary exclusive or.  
+\item[not ( a -- b )] Flip all bits of a.  
 \end{description}
 
 \section{Memory}
 
 \begin{description}
-\item[! ( value address -- )]
-
-Store 16-bit value at address.
-
-\item[@ ( address -- value )]
-
-Fetch 16-bit value from address.
-
-\item[c! ( value address -- )]
-
-Store 8-bit value at address.
-
-\item[c@ ( address -- value )]
-
-Fetch 8-bit value from address.
-
-\item[fill ( byte addr len -- )]
-
-Fill range [addr, len + addr) with byte value.
-
+\item[! ( value address -- )] Store 16-bit value at address.  
+\item[@ ( address -- value )] Fetch 16-bit value from address.  
+\item[c! ( value address -- )] Store 8-bit value at address.  
+\item[c@ ( address -- value )] Fetch 8-bit value from address.
+\item[fill ( byte addr len -- )] Fill range [addr, len + addr) with byte value.
 \item[cmove ( src dst len -- )]
-
-Forward copy len bytes from src to dst.
-
+Copy len bytes from src to dst. The move begins with the contents of src and proceeds towards high memory.
 \item[cmove$>$ ( src dst len -- )]
-
-Backward copy len bytes from src to dst.
-
-\item[forget word]
-
-\texttt{forget foo} forgets Forth word \texttt{foo} and everything defined after it.
+Byte-to-byte copy like \texttt{cmove}, but starts with address src + len - 1 and proceeds towards src.
+\item[forget xxx] Forget Forth word \texttt{xxx} and everything defined after it.
 
 \end{description}
 \section{Compiling}
