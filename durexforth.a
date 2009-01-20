@@ -2512,7 +2512,13 @@ LOADB
 	lda	load_binary_status
 	sta	PSTACK - 1, x
 	sta	PSTACK - 2, x
-
+	beq	+
+	txa
+	pha
+	jsr	_errorchread
+	pla
+	tax
++
 	+NEXT
 
 load_binary_status
