@@ -1804,6 +1804,10 @@ INTERPRET
 .not_a_number
 	jsr print_error_msg_with_tib
 	ldx	#0 ; wipe stack :(
+	stx	KEY_BUF_READ_POS
+	stx	KEY_BUF_WRITE_POS
+	stx	COMPILE
+	stx	COMPILE + 1
 	+NEXT
 
 .found_word
