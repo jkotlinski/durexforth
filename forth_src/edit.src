@@ -121,6 +121,7 @@ value filename-len
 : init
 	0 compile ! # to enable editor start from base.src
 	0 blink
+	80 28a c! # key repeat on
 
 	( disable input buffering )
 	0 linebuf c! 
@@ -143,6 +144,7 @@ value filename-len
 	1 linebuf c! # enable buffering
 
 	1 blink
+	40 28a c! # key repeat off
 	286 c! # cursor col
 	d021 c!
 	d020 c!

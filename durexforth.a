@@ -151,6 +151,8 @@ reset
 	sta CURSOR_BLINK
 	lda	#1
 	sta	_LINEBUF
+	lda	#$40 ; no key repeat
+	sta	$28a
 
 	lda	#<_START
 	sta IP
