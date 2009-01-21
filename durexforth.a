@@ -92,8 +92,6 @@ C_BLUE = 6
 C_CYAN = 3
 C_PURPLE = 4
 
-COMPILE_ADDR = $5000
-
 ; -------- program start
 
 *= $801 ; start at c64 basic start
@@ -988,6 +986,14 @@ CMOVE
 	+VAR_CODE	SZERO
 SZERO
 	!word	PSTACK
+
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 12
+	!text	"compile-addr"
+	+VAR_CODE	COMPILE_ADDR
+COMPILE_ADDR 
+	!word	$5000
 
 ; STATE - Is the interpreter executing code (0) or compiling a word (non-zero)?
 	!word	LINK
@@ -2654,10 +2660,10 @@ OPENW
 	+NEXT
 
 loadbase
-	lda	#<COMPILE_ADDR
+	lda	COMPILE_ADDR
 	sta	load_binary_laddr_lo
 	sta	COMPILE
-	lda	#>COMPILE_ADDR
+	lda	COMPILE_ADDR + 1
 	sta	load_binary_laddr_hi
 	sta	COMPILE + 1
 

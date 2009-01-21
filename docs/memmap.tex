@@ -1,0 +1,13 @@
+\chapter{Memory Map}
+
+\begin{description}
+\item[\$2e - \$2f] Instruction pointer.
+\item[\$30 - \$35] Temporary registers.
+\item[\$801 - \texttt{here}] Forth Kernel followed by dictionary.
+\item[\ldots]
+\item[\texttt{bufstart} - \texttt{eof}] Editor space.
+\item[\texttt{compile-addr} - \ldots] Temporary buffer for \texttt{load} (grows upwards).
+\item[\ldots]
+\item[\$c006 - \$c105] Parameter stack (grows upwards).
+\end{description}
+
