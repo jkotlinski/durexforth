@@ -2,6 +2,8 @@
 \usepackage{microtype}
 \usepackage{hyperref}
 \usepackage{color}
+\usepackage{graphicx}
+\usepackage{eso-pic}
 \usepackage{multicol}
 
 \author{Ravelli/Durex}
@@ -9,7 +11,11 @@
 
 \hypersetup{pdfauthor="Ravelli/Durex", pdftitle="durexForth: Operators Manual", colorlinks=true}
 \begin{document}
-\maketitle
+\AddToShipoutPicture*{
+	\includegraphics[width=21cm]{cover/durexForth-Vintage1.jpg}
+}
+\phantom{Invisible, but important}
+\newpage 
 \tableofcontents
 
 \input{intro.tex}
