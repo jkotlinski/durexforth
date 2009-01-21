@@ -41,8 +41,7 @@ OP_LDA_I = $a9
 OP_STA_AX = $9d
 OP_INX = $e8
 
-PSTACK_X_OFFSET = 0
-PSTACK = $208 ; $0200-$0258/512-600     BASIC Input Buffer (Input Line from Screen)
+PSTACK = $c008
 
 ; X = PSP
 ; SP = RSP
