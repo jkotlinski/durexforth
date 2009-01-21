@@ -20,7 +20,8 @@ Let's define a word \texttt{bg} for setting the border color\ldots
 
 The editor (fully described in chapter \ref{editor}) is convenient for editing larger pieces of code. With it, you keep an entire source file loaded in RAM, and you can recompile and test it easily.
 
-Start the editor by typing \texttt{s" foo" edit}. It will try to open the (non-existant) file ``foo.'' After a little while you will be presented to the nice pink screen of the editor.
+Start the editor by typing \texttt{s" foo" edit}.\footnote{Yes, the space should be between \texttt{s"} and \texttt{foo"}. The \texttt{s"} word creates a string by reading characters until it hits a \texttt{"}.}
+It will try to open the (non-existant) file ``foo.'' After a little while you will be presented to the nice pink screen of the editor. 
 
 To enter text, first press \texttt{i} to enter insert mode. This mode allows you to insert text into the buffer. You can see that it's active on the \texttt{I} that appears in the lower left corner.
 
