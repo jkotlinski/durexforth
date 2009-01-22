@@ -486,6 +486,14 @@ value filename-len
 : UP 91 ;
 : RIGHT 1d ;
 
+: insert-right
+curx @ linelen 1- = if
+	force-cur-right
+else
+	cur-right
+then
+;
+
 : insert-handler
 	dup
 	case
@@ -493,7 +501,7 @@ value filename-len
 	LEFT of cur-left drop endof
 	DOWN of cur-down drop endof
 	UP of cur-up drop endof
-	RIGHT of cur-right drop endof
+	RIGHT of insert-right drop endof
 	14 of backspace drop endof # inst
 	94 of del-char drop endof # del
 	CR of insert-char cur-down sol show-page endof
