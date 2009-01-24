@@ -780,28 +780,57 @@ var clipboard-count
 	then
 ;
 
-: main-handler ( 0 -- quit? )
-	case
+create maintable
+char i c, loc insert-start >cfa ,
+char a c, loc append-start >cfa ,
+char / c, loc find-handler >cfa ,
+char U c, loc half-page-back >cfa ,
+char D c, loc half-page-fwd >cfa ,
+char J c, loc join-lines >cfa ,
+char G c, loc goto-eof >cfa ,
+char $ c, loc eol >cfa ,
+char 0 c, loc sol >cfa ,
+char r c, loc replace-char >cfa ,
+char O c, loc open-line >cfa ,
+char P c, loc paste-line >cfa ,
+char x c, loc del-char >cfa ,
+char X c, loc backspace >cfa ,
+char b c, loc word-back >cfa ,
+char w c, loc word-fwd >cfa ,
+char d c, loc delete-handler >cfa ,
+char LEFT c, loc cur-left >cfa ,
+char RIGHT c, loc cur-right >cfa ,
+char UP c, loc cur-up >cfa ,
+char DOWN c, loc cur-down >cfa ,
+char h c, loc cur-left >cfa ,
+char l c, loc cur-right >cfa ,
+char k c, loc cur-up >cfa ,
+char j c, loc cur-down >cfa ,
+0 c,
 
-	[ char i ] literal of insert-start endof
-	[ char a ] literal of append-start endof
+: main-handler ( key -- quit? )
+	['] maintable ( key tableptr )
 
-	[ char / ] literal of find-handler endof
-	[ char U ] literal of half-page-back endof
-	[ char D ] literal of half-page-fwd endof
-	[ char J ] literal of join-lines endof
-	[ char G ] literal of goto-eof endof
-	[ char $ ] literal of eol endof
-	[ char 0 ] literal of sol endof
-	[ char r ] literal of replace-char endof
+	begin
+		( key tableptr )
+		2dup ( key tableptr key tableptr )
+		c@ = if
+			( key tableptr )
+			1+ @ 
+			exec
+			drop 0 exit
+		then
+		3 +
+
+		dup c@ 0=
+	until
+	
+	drop
+
+	case ( key )
+
 	[ char o ] literal of force-cur-down open-line endof
-	[ char O ] literal of open-line endof
 	[ char p ] literal of force-cur-down paste-line endof
-	[ char P ] literal of paste-line endof
-	[ char x ] literal of del-char endof
-	[ char X ] literal of backspace endof
-	[ char b ] literal of word-back endof
-	[ char w ] literal of word-fwd endof
 	[ char Z ] literal of
 		key
 		case
@@ -819,22 +848,13 @@ var clipboard-count
 		clear-status
 	endof
 
-	[ char d ] literal of delete-handler endof
 	[ char c ] literal of
 		key
 		[ char w ] literal = if change-word then
 	endof
 
 	( cursor )
-	LEFT of cur-left endof
-	DOWN of cur-down endof
-	UP of cur-up endof
-	RIGHT of cur-right endof
 	88 of bufstart compile ! eof @ ae ! ffff exit endof # f7
-	[ char h ] literal of cur-left endof
-	[ char j ] literal of cur-down endof
-	[ char k ] literal of cur-up endof
-	[ char l ] literal of cur-right endof
 
 	endcase
 	0
@@ -868,7 +888,7 @@ var clipboard-count
 			then
 		then
 
-		2+ sp@ <> if begin 1 d020 +! again then # warn if stack changed
+		sp@ 2+ <> if begin 1 d020 +! again then # warn if stack changed
 	again
 ;
 
