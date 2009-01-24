@@ -2332,15 +2332,11 @@ SETCUR
 	!byte	3
 	!text	"sp@"
 SPFETCH
-	stx	+ + 1
-	lda	#<STACK_START ; suspicious
-	clc
-+
-	adc	#0
+	txa
 	dex
 	dex
 	sta	0, x
-	lda	#>STACK_START ; no need to compensate for page wrapping... the stack is well placed.
+	lda	#0
 	sta	1, x
 	+NEXT
 
