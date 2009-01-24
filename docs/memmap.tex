@@ -1,8 +1,10 @@
 \chapter{Memory Map}
 
 \begin{description}
-\item[\$2e - \$2f] Instruction pointer.
-\item[\$30 - \$35] Temporary registers.
+\item[... - \$83] Parameter stack (grows downwards).
+\item[\$84 - \$85] Instruction pointer.
+\item[\$86 - \$8b] Temporary registers.
+\item[\ldots]
 \item[\$801 - \texttt{here}] Forth Kernel followed by dictionary.
 \item[\ldots]
 \item[\texttt{bufstart} - \texttt{eof}] Editor space.
