@@ -100,7 +100,7 @@
 : forget word find ?dup if dup @ latest ! here ! then ;
 
 : .s ( -- )
-	sp0 @ 1- 1-
+	sp0 1- 1-
 	begin
 		dup sp@ 2+ >
 	while

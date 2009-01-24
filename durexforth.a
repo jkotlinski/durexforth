@@ -39,9 +39,8 @@ OP_JSR = $20
 OP_RTS = $60
 OP_LDA_I = $a9
 OP_STA_AX = $9d
-OP_dex = $e8
 
-STACK_START = $74
+STACK_START = $84
 
 ; X = PSP
 ; SP = RSP
@@ -982,9 +981,7 @@ CMOVE
 	!set	LINK = * - 2
 	!byte 3
 	!text	"sp0"
-	+VAR_CODE	SZERO
-SZERO
-	!word	STACK_START
+	+VAR_CODE	STACK_START
 
 	!word	LINK
 	!set	LINK = * - 2
