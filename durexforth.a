@@ -39,9 +39,9 @@ OP_JSR = $20
 OP_RTS = $60
 OP_LDA_I = $a9
 OP_STA_AX = $9d
-OP_INX = $e8
+OP_dex = $e8
 
-PSTACK = $c008
+STACK_START = $74
 
 ; X = PSP
 ; SP = RSP
@@ -156,7 +156,7 @@ reset
 	lda #>_START
 	sta IP + 1
 
-	ldx	#0
+	ldx	#STACK_START
 
 	jmp	NEXT_IMPL
 
@@ -198,18 +198,13 @@ clrcol
 	jmp	NEXT_IMPL
 }
 
-!macro subx .arg {
-	txa
-	sbx #.arg ;Subtract .arg from x register
-}
-
 !macro VAR_CODE .word {
+	dex
+	dex
 	lda	#<.word
-	sta	PSTACK, x
+	sta	0, x
 	lda	#>.word
-	sta	PSTACK + 1, x
-	inx
-	inx
+	sta	1, x
 	+NEXT
 }
 
@@ -280,8 +275,8 @@ _START
 	!byte	4
 	!text	"drop"
 DROP
-	dex
-	dex
+	inx
+	inx
 	+NEXT
 
 ; SWAP
@@ -290,17 +285,17 @@ DROP
 	!byte	4
 	!text	"swap"
 SWAP
-	ldy	PSTACK - 1, x
-	lda	PSTACK - 3, x
-	sta PSTACK - 1, x
+	ldy	1, x
+	lda	3, x
+	sta 1, x
 	tya
-	sta	PSTACK - 3, x
+	sta	3, x
 
-	ldy	PSTACK - 2, x
-	lda	PSTACK - 4, x
-	sta PSTACK - 2, x
+	ldy	0, x
+	lda	2, x
+	sta 0, x
 	tya
-	sta	PSTACK - 4, x
+	sta	2, x
 	+NEXT
 
 ; DUP
@@ -313,13 +308,13 @@ DUP
 	+NEXT
 
 _DUP
-	inx
-	inx
+	dex
+	dex
 
-	lda	PSTACK - 3, x
-	sta	PSTACK - 1, x
-	lda	PSTACK - 4, x
-	sta	PSTACK - 2, x
+	lda	3, x
+	sta	1, x
+	lda	2, x
+	sta	0, x
 	rts
 
 ; OVER
@@ -328,13 +323,13 @@ _DUP
 	!byte	4
 	!text	"over"
 OVER
-	inx
-	inx
+	dex
+	dex
 
-	lda	PSTACK - 5, x
-	sta	PSTACK - 1, x
-	lda	PSTACK - 6, x
-	sta	PSTACK - 2, x
+	lda	5, x
+	sta	1, x
+	lda	4, x
+	sta	0, x
 
 	+NEXT
 
@@ -344,21 +339,21 @@ OVER
 	!byte	3
 	!text	"rot"
 ROT
-	ldy	PSTACK - 5, x
-	lda	PSTACK - 3, x
-	sta PSTACK - 5, x
-	lda PSTACK - 1, x
-	sta PSTACK - 3, x
+	ldy	5, x
+	lda	3, x
+	sta 5, x
+	lda 1, x
+	sta 3, x
 	tya
-	sta PSTACK - 1, x
+	sta 1, x
 
-	ldy	PSTACK - 6, x
-	lda	PSTACK - 4, x
-	sta PSTACK - 6, x
-	lda PSTACK - 2, x
-	sta PSTACK - 4, x
+	ldy	4, x
+	lda	2, x
+	sta 4, x
+	lda 0, x
+	sta 2, x
 	tya
-	sta PSTACK - 2, x
+	sta 0, x
 
 	+NEXT
 
@@ -368,7 +363,10 @@ ROT
 	!byte	5
 	!text	"2drop"
 TWODROP
-	+subx 4
+	inx
+	inx
+	inx
+	inx
 
 	+NEXT
 
@@ -378,20 +376,20 @@ TWODROP
 	!byte	4
 	!text	"2dup"
 TWODUP
-	inx
-	inx
-	inx
-	inx
+	dex
+	dex
+	dex
+	dex
 
-	lda	PSTACK - 5, x
-	sta	PSTACK - 1, x
-	lda	PSTACK - 6, x
-	sta	PSTACK - 2, x
+	lda	5, x
+	sta	1, x
+	lda	4, x
+	sta	0, x
 
-	lda	PSTACK - 7, x
-	sta	PSTACK - 3, x
-	lda	PSTACK - 8, x
-	sta	PSTACK - 4, x
+	lda	7, x
+	sta	3, x
+	lda	6, x
+	sta	2, x
 	+NEXT
 
 
@@ -402,29 +400,29 @@ TWODUP
 	!text	"2swap"
 TWOSWAP
 
-	ldy	PSTACK - 1, x
-	lda	PSTACK - 5, x
-	sta PSTACK - 1, x
+	ldy	1, x
+	lda	5, x
+	sta 1, x
 	tya
-	sta	PSTACK - 5, x
+	sta	5, x
 
-	ldy	PSTACK - 2, x
-	lda	PSTACK - 6, x
-	sta PSTACK - 2, x
+	ldy	0, x
+	lda	4, x
+	sta 0, x
 	tya
-	sta	PSTACK - 6, x
+	sta	4, x
 
-	ldy	PSTACK - 3, x
-	lda	PSTACK - 7, x
-	sta PSTACK - 3, x
+	ldy	3, x
+	lda	7, x
+	sta 3, x
 	tya
-	sta	PSTACK - 7, x
+	sta	7, x
 
-	ldy	PSTACK - 4, x
-	lda	PSTACK - 8, x
-	sta PSTACK - 4, x
+	ldy	2, x
+	lda	6, x
+	sta 2, x
 	tya
-	sta	PSTACK - 8, x
+	sta	6, x
 
 	+NEXT
 
@@ -434,15 +432,15 @@ TWOSWAP
 	!byte	4
 	!text	"?dup"
 QDUP
-	lda	PSTACK - 1, x
-	ora	PSTACK - 2, x
+	lda	1, x
+	ora	0, x
 	beq	+
-	inx
-	inx
-	lda	PSTACK - 3, x
-	sta PSTACK - 1, x
-	lda	PSTACK - 4, x
-	sta PSTACK - 2, x
+	dex
+	dex
+	lda	3, x
+	sta 1, x
+	lda	2, x
+	sta 0, x
 +
 	+NEXT
 
@@ -452,9 +450,9 @@ QDUP
 	!byte	2
 	!text	"1+"
 INCR
-	inc	PSTACK - 2, x
+	inc	0, x
 	bne	+
-	inc	PSTACK - 1, x
+	inc	1, x
 +
 	+NEXT
 
@@ -464,11 +462,11 @@ INCR
 	!byte	2
 	!text	"1-"
 DECR
-	lda	PSTACK - 2, x
+	lda	0, x
 	bne	+
-	dec	PSTACK - 1, x
+	dec	1, x
 +
-	dec	PSTACK - 2, x
+	dec	0, x
 	+NEXT
 
 ; +
@@ -481,17 +479,17 @@ ADD
 	+NEXT
 
 _ADD
-	lda	PSTACK - 2, x
+	lda	0, x
 	clc
-	adc PSTACK - 4, x
-	sta	PSTACK - 4, x
+	adc 2, x
+	sta	2, x
 
-	lda	PSTACK - 1, x
-	adc PSTACK - 3, x
-	sta PSTACK - 3, x
+	lda	1, x
+	adc 3, x
+	sta 3, x
 
-	dex
-	dex
+	inx
+	inx
 
 	rts
 
@@ -501,17 +499,17 @@ _ADD
 	!byte	1
 	!text	"-"
 SUB
-	lda	PSTACK - 4, x
+	lda	2, x
 	sec
-	sbc PSTACK - 2, x
-	sta	PSTACK - 4, x
+	sbc 0, x
+	sta	2, x
 
-	lda PSTACK - 3, x
-	sbc PSTACK - 1, x
-	sta PSTACK - 3, x
+	lda 3, x
+	sbc 1, x
+	sta 3, x
 
-	dex
-	dex
+	inx
+	inx
 
 	+NEXT
 
@@ -533,15 +531,15 @@ product = TMP
 	sta product+3 
 	ldy #$10 ; set binary count to 16 
 .shift_r
-	lsr PSTACK - 3, x ; multiplier+1 ; divide multiplier by 2 
-	ror PSTACK - 4, x ; multiplier
+	lsr 3, x ; multiplier+1 ; divide multiplier by 2 
+	ror 2, x ; multiplier
 	bcc rotate_r 
 	lda product+2 ; get upper half of product and add multiplicand
 	clc
-	adc PSTACK - 2, x ; multiplicand
+	adc 0, x ; multiplicand
 	sta product+2
 	lda product+3 
-	adc PSTACK - 1, x ; multiplicand+1
+	adc 1, x ; multiplicand+1
 rotate_r 
 	ror ; rotate partial product 
 	sta product+3 
@@ -551,13 +549,13 @@ rotate_r
 	dey
 	bne .shift_r 
 
-	dex
-	dex
+	inx
+	inx
 
 	lda	product
-	sta	PSTACK - 2, x
+	sta	0, x
 	lda	product + 1
-	sta	PSTACK - 1, x
+	sta	1, x
 
 	rts
 
@@ -575,30 +573,30 @@ remainder = TMP
 	sta remainder+1
 
 .divloop	
-	asl PSTACK - 4, x ; dividend	;dividend lb & hb*2, msb -> Carry
-	rol PSTACK - 3, x ; dividend+1	
+	asl 2, x ; dividend	;dividend lb & hb*2, msb -> Carry
+	rol 3, x ; dividend+1	
 	rol remainder	;remainder lb & hb * 2 + msb from carry
 	rol remainder+1
 	lda remainder
 	sec
-	sbc PSTACK - 2, x ; divisor	;substract divisor to see if it fits in
+	sbc 0, x ; divisor	;substract divisor to see if it fits in
 	tay	        ;lb result -> Y, for we may need it later
 	lda remainder+1
-	sbc PSTACK - 1, x ; divisor+1
+	sbc 1, x ; divisor+1
 	bcc .skip	;if carry=0 then divisor didn't fit in yet
 
 	sta remainder+1	;else save substraction result as new remainder,
 	sty remainder	
-	inc PSTACK - 4, x ; result	;and INCrement result cause divisor fit in 1 times
+	inc 2, x ; result	;and INCrement result cause divisor fit in 1 times
 
 .skip	
 	dec	TMP2
 	bne .divloop	
 
 	lda	remainder
-	sta	PSTACK - 2, x
+	sta	0, x
 	lda	remainder + 1
-	sta	PSTACK - 1, x
+	sta	1, x
 	jmp	SWAP
 
 ; =
@@ -607,21 +605,21 @@ remainder = TMP
 	!byte	1
 	!text	"="
 EQU
-	lda	PSTACK - 1, x
-	cmp	PSTACK - 3, x
+	lda	1, x
+	cmp	3, x
 	bne	+
-	lda	PSTACK - 2, x
-	cmp	PSTACK - 4, x
+	lda	0, x
+	cmp	2, x
 	bne	+
 	lda	#$ff
 	jmp	++
 +
 	lda	#0
 ++
-	dex
-	dex
-	sta	PSTACK - 1, x
-	sta	PSTACK - 2, x
+	inx
+	inx
+	sta	1, x
+	sta	0, x
 	+NEXT
 
 ; <
@@ -630,13 +628,13 @@ EQU
 	!byte	1
 	!text	"<"
 LT
-	lda	PSTACK - 1, x
-	cmp	PSTACK - 3, x
+	lda	1, x
+	cmp	3, x
 	bcc .false
 	bne	.true
 	; ok, msb are equal...
-	lda	PSTACK - 2, x
-	cmp	PSTACK - 4, x
+	lda	0, x
+	cmp	2, x
 	bcc	.false
 	bne	.true
 .false
@@ -645,10 +643,10 @@ LT
 .true
 	lda	#$ff
 ++
-	dex
-	dex
-	sta	PSTACK - 1, x
-	sta	PSTACK - 2, x
+	inx
+	inx
+	sta	1, x
+	sta	0, x
 	+NEXT
 
 ; 0=
@@ -657,17 +655,17 @@ LT
 	!byte	2
 	!text	"0="
 ZEQU
-	lda	PSTACK - 1, x
+	lda	1, x
 	bne +
-	lda	PSTACK - 2, x
+	lda	0, x
 	bne +
 	lda	#$ff
 	jmp	++
 +
 	lda	#0
 ++
-	sta	PSTACK - 1, x
-	sta	PSTACK - 2, x
+	sta	1, x
+	sta	0, x
 	+NEXT
 
 ; 0<>
@@ -676,17 +674,17 @@ ZEQU
 	!byte	3
 	!text	"0<>"
 ZNEQU
-	lda	PSTACK - 1, x
+	lda	1, x
 	bne +
-	lda	PSTACK - 2, x
+	lda	0, x
 	bne +
 	lda	#0
 	jmp	++
 +
 	lda	#$ff
 ++
-	sta	PSTACK - 1, x
-	sta	PSTACK - 2, x
+	sta	1, x
+	sta	0, x
 	+NEXT
 
 ; AND
@@ -695,16 +693,16 @@ ZNEQU
 	!byte	3
 	!text	"and"
 AAND
-	lda	PSTACK - 1, x
-	and PSTACK - 3, x
-	sta PSTACK - 3, x
+	lda	1, x
+	and 3, x
+	sta 3, x
 
-	lda	PSTACK - 2, x
-	and PSTACK - 4, x
-	sta PSTACK - 4, x
+	lda	0, x
+	and 2, x
+	sta 2, x
 
-	dex
-	dex
+	inx
+	inx
 
 	+NEXT
 
@@ -714,16 +712,16 @@ AAND
 	!byte	2
 	!text	"or"
 OR
-	lda	PSTACK - 1, x
-	ora PSTACK - 3, x
-	sta PSTACK - 3, x
+	lda	1, x
+	ora 3, x
+	sta 3, x
 
-	lda	PSTACK - 2, x
-	ora PSTACK - 4, x
-	sta PSTACK - 4, x
+	lda	0, x
+	ora 2, x
+	sta 2, x
 
-	dex
-	dex
+	inx
+	inx
 
 	+NEXT
 
@@ -733,16 +731,16 @@ OR
 	!byte	3
 	!text	"xor"
 XOR
-	lda	PSTACK - 1, x
-	eor PSTACK - 3, x
-	sta PSTACK - 3, x
+	lda	1, x
+	eor 3, x
+	sta 3, x
 
-	lda	PSTACK - 2, x
-	eor PSTACK - 4, x
-	sta PSTACK - 4, x
+	lda	0, x
+	eor 2, x
+	sta 2, x
 
-	dex
-	dex
+	inx
+	inx
 
 	+NEXT
 
@@ -752,13 +750,13 @@ XOR
 	!byte	3
 	!text	"not"
 NOT
-	lda	PSTACK - 1, x
+	lda	1, x
 	eor #$ff
-	sta PSTACK - 1, x
+	sta 1, x
 
-	lda	PSTACK - 2, x
+	lda	0, x
 	eor #$ff
-	sta PSTACK - 2, x
+	sta 0, x
 
 	+NEXT
 
@@ -768,20 +766,22 @@ NOT
 	!byte	1
 	!text	"!"
 STORE
-	lda	PSTACK - 1, x ; dst
+	lda	1, x ; dst
 	sta TMP + 1
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta TMP
 	
 	ldy	#0
-	lda PSTACK - 4, x
+	lda 2, x
 	sta	(TMP), y	
 	iny
-	lda PSTACK - 3, x
+	lda 3, x
 	sta	(TMP), y	
 
-	+subx 4
-
+	inx
+	inx
+	inx
+	inx
 	+NEXT
 
 ; @
@@ -790,17 +790,17 @@ STORE
 	!byte	1
 	!text	"@"
 FETCH
-	lda	PSTACK - 1, x ; src
+	lda	1, x ; src
 	sta TMP + 1
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta TMP
 	
 	ldy	#0
 	lda	(TMP), y	
-	sta	PSTACK - 2, x
+	sta	0, x
 	iny
 	lda	(TMP), y
-	sta	PSTACK - 1, x
+	sta	1, x
 
 	+NEXT
 
@@ -810,16 +810,19 @@ FETCH
 	!byte	2
 	!text	"c!"
 STOREBYTE
-	lda	PSTACK - 1, x ; dst
+	lda	1, x ; dst
 	sta TMP + 1
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta TMP
 	
 	ldy	#0
-	lda PSTACK - 4, x
+	lda 2, x
 	sta	(TMP), y	
 
-	+subx 4
+	inx
+	inx
+	inx
+	inx
 
 	+NEXT
 
@@ -829,16 +832,16 @@ STOREBYTE
 	!byte	2
 	!text	"c@"
 FETCHBYTE
-	lda	PSTACK - 1, x ; dst
+	lda	1, x ; dst
 	sta TMP + 1
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta TMP
 	
 	ldy	#0
 	lda	(TMP), y
-	sta	PSTACK - 2, x
+	sta	0, x
 	tya
-	sta	PSTACK - 1, x
+	sta	1, x
 
 	+NEXT
 
@@ -848,20 +851,25 @@ FETCHBYTE
 	!byte	4
 	!text	"fill"
 FILL
-	lda	PSTACK - 6, x
+	lda	4, x
 	sta	.fsrc + 1
-	lda	PSTACK - 4, x
+	lda	2, x
 	sta	.fdst + 1
-	lda	PSTACK - 3, x
+	lda	3, x
 	sta	.fdst + 2
-	lda	PSTACK - 2, x
+	lda	0, x
 	eor	#$ff
 	sta	TMP
-	lda	PSTACK - 1, x
+	lda	1, x
 	eor	#$ff
 	sta	TMP + 1
 
-	+subx 6
+	inx
+	inx
+	inx
+	inx
+	inx
+	inx
 -
 	inc	TMP
 	bne	+
@@ -888,22 +896,27 @@ FILL
 	!byte	6
 	!text	"cmove>"
 CMOVE_BACK
-	lda	PSTACK - 6, x
+	lda	4, x
 	sta	.bsrc + 1
-	lda	PSTACK - 5, x
+	lda	5, x
 	sta	.bsrc + 2
-	lda	PSTACK - 4, x
+	lda	2, x
 	sta	.bdst + 1
-	lda	PSTACK - 3, x
+	lda	3, x
 	sta	.bdst + 2
-	lda	PSTACK - 2, x
+	lda	0, x
 	eor	#$ff
 	sta	TMP
-	lda	PSTACK - 1, x
+	lda	1, x
 	eor	#$ff
 	sta	TMP + 1
 
-	+subx 6
+	inx
+	inx
+	inx
+	inx
+	inx
+	inx
 -
 	inc	TMP
 	bne	+
@@ -937,22 +950,27 @@ CMOVE_BACK
 	!byte	5
 	!text	"cmove"
 CMOVE
-	lda	PSTACK - 6, x
+	lda	4, x
 	sta	.csrc + 1
-	lda	PSTACK - 5, x
+	lda	5, x
 	sta	.csrc + 2
-	lda	PSTACK - 4, x
+	lda	2, x
 	sta	.cdst + 1
-	lda	PSTACK - 3, x
+	lda	3, x
 	sta	.cdst + 2
-	lda	PSTACK - 2, x
+	lda	0, x
 	eor	#$ff
 	sta	TMP
-	lda	PSTACK - 1, x
+	lda	1, x
 	eor	#$ff
 	sta	TMP + 1
 
-	+subx 6
+	inx
+	inx
+	inx
+	inx
+	inx
+	inx
 -
 	inc	TMP
 	bne	+
@@ -985,7 +1003,7 @@ CMOVE
 	!text	"sp0"
 	+VAR_CODE	SZERO
 SZERO
-	!word	PSTACK
+	!word	STACK_START
 
 	!word	LINK
 	!set	LINK = * - 2
@@ -1049,12 +1067,12 @@ NEXT
 	!byte	2
 	!text	">r"
 TOR
-	lda	PSTACK - 2, x
+	lda	0, x
 	pha
-	lda	PSTACK - 1, x
+	lda	1, x
 	pha
-	dex
-	dex
+	inx
+	inx
 	+NEXT
 
 ; R>
@@ -1063,12 +1081,12 @@ TOR
 	!byte	2
 	!text	"r>"
 FROMR
-	inx
-	inx
+	dex
+	dex
 	pla
-	sta	PSTACK - 1, x
+	sta	1, x
 	pla
-	sta	PSTACK - 2, x
+	sta	0, x
 	+NEXT
 
 ; RFETCH
@@ -1077,14 +1095,14 @@ FROMR
 	!byte	2
 	!text	"r@"
 RFETCH
-	inx
-	inx
+	dex
+	dex
 	pla
-	sta	PSTACK - 1, x
+	sta	1, x
 	pla
-	sta	PSTACK - 2, x
+	sta	0, x
 	pha
-	lda	PSTACK - 1, x
+	lda	1, x
 	pha
 	+NEXT
 
@@ -1107,9 +1125,9 @@ RDROP
 	!byte	4
 	!text	"emit"
 EMIT
-	dex
-	dex
-	lda	PSTACK, x
+	lda	0, x
+	inx
+	inx
 	jsr	print_char
 	+NEXT
 
@@ -1168,19 +1186,19 @@ print_hex_char
 	!byte	2
 	!text	"c."
 CDOT
-	lda	PSTACK - 2, x
+	lda	0, x
 	lsr
 	lsr
 	lsr
 	lsr
 	jsr	print_hex_nibble
 	
-	lda	PSTACK - 2, x
+	lda	0, x
 	and	#$f
 	jsr	print_hex_nibble
 
-	dex
-	dex
+	inx
+	inx
 
 	+NEXT
 
@@ -1193,33 +1211,33 @@ DOT
 	jsr	_DOT
 	+NEXT
 _DOT
-	lda	PSTACK - 1, x
+	lda	1, x
 	lsr
 	lsr
 	lsr
 	lsr
 	jsr print_hex_nibble
 
-	lda	PSTACK - 1, x
+	lda	1, x
 	and	#$f
 	jsr	print_hex_nibble
 
-	lda	PSTACK - 2, x
+	lda	0, x
 	lsr
 	lsr
 	lsr
 	lsr
 	jsr	print_hex_nibble
 	
-	lda	PSTACK - 2, x
+	lda	0, x
 	and	#$f
 	jsr	print_hex_nibble
 
 	lda	#K_SPACE
 	jsr	print_char
 
-	dex
-	dex
+	inx
+	inx
 
 	rts
 
@@ -1275,11 +1293,11 @@ KEY
 	jsr	PULL_KEY
 	ora	#0
 	beq	-
-	inx
-	inx
-	sta	PSTACK - 2, x
+	dex
+	dex
+	sta	0, x
 	lda	#0
-	sta	PSTACK - 1, x
+	sta	1, x
 	rts
 
 _KEY
@@ -1357,11 +1375,11 @@ _KEY
 	lda	(TMP), y
 	inc	KEY_BUF_READ_POS
 
-	inx
-	inx
-	sta	PSTACK - 2, x
+	dex
+	dex
+	sta	0, x
 	lda	#0
-	sta	PSTACK - 1, x
+	sta	1, x
 	rts
 
 ; get from RAM
@@ -1423,16 +1441,19 @@ handle_compile_done
 ++	; compiled file but more to go...
 
 	; pop old eof
-	lda	PSTACK - 1, x
+	lda	1, x
 	sta	$af
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta	$ae
 	; pop old COMPILE
-	lda	PSTACK - 3, x
+	lda	3, x
 	sta	COMPILE + 1
-	lda	PSTACK - 4, x
+	lda	2, x
 	sta	COMPILE
-	+subx	4
+	inx
+	inx
+	inx
+	inx
 	jmp	PULL_KEY
 
 ; WRITE - write a byte to disk.
@@ -1441,7 +1462,7 @@ handle_compile_done
 	!byte	5
 	!text	"write"
 WRITE
-	lda	PSTACK - 2, x
+	lda	0, x
 	pha
 
 	stx	tmp_x
@@ -1450,8 +1471,8 @@ WRITE
 	pla
 	jsr	CHROUT
 	ldx	tmp_x
-	dex
-	dex
+	inx
+	inx
 	+NEXT
 werror
 	pla ;Mats wonders: What the fuck is this PLA for???
@@ -1478,9 +1499,9 @@ _WORD
 	
 -
 	jsr	_KEY
-	lda	PSTACK - 2, x
-	dex
-	dex
+	lda	0, x
+	inx
+	inx
 
 	cmp #K_RETURN
 	beq .whitespace
@@ -1510,13 +1531,13 @@ _WORD
 	beq - ; whoops, nothing entered, try again...
 	sta TIB 
 
-	inx
-	inx
+	dex
+	dex
 
 	lda	#<TIB
-	sta	PSTACK - 2, x
+	sta	0, x
 	lda	#>TIB
-	sta	PSTACK - 1, x
+	sta	1, x
 
 	rts
 
@@ -1545,9 +1566,9 @@ _FIND
 	sta	TMP + 1
 	; TMP now contains pointer to the most recently defined dictionary word.
 
-	lda	PSTACK - 1, x
+	lda	1, x
 	sta	TMP2 + 1
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta	TMP2 ; TMP2 contains pointer to find string
 
 .examine_word
@@ -1581,9 +1602,9 @@ _FIND
 .word_is_equal
 	; return address to dictionary word
 	lda	TMP
-	sta	PSTACK - 2, x
+	sta	0, x
 	lda	TMP + 1
-	sta	PSTACK - 1, x
+	sta	1, x
 	lda	#1
 	rts
 
@@ -1606,8 +1627,8 @@ _FIND
 
 .not_found
 	; a is zero
-	sta	PSTACK - 2, x
-	sta	PSTACK - 1, x
+	sta	0, x
+	sta	1, x
 	rts
 	
 .strlen
@@ -1622,9 +1643,9 @@ TCFA
 	jsr _TCFA
 	+NEXT
 _TCFA
-	lda	PSTACK - 1, x
+	lda	1, x
 	sta	TMP + 1
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta TMP
 	; TMP contains pointer to word
 	ldy	#2
@@ -1633,12 +1654,12 @@ _TCFA
 	clc
 	adc	#3 ; offset for link + string length
 	sta	.addend + 1
-	lda	PSTACK - 2, x
+	lda	0, x
 .addend
 	adc	#0
-	sta	PSTACK - 2, x
+	sta	0, x
 	bcc	+
-	inc	PSTACK - 1, x
+	inc	1, x
 +
 	rts
 
@@ -1648,12 +1669,12 @@ _TCFA
 	!byte	4
 	!text	"exec"
 EXEC
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta TMP
-	lda	PSTACK - 1, x
+	lda	1, x
 	sta	TMP + 1
-	dex
-	dex
+	inx
+	inx
 	jmp	(TMP)
 
 ; CHAR
@@ -1663,15 +1684,15 @@ EXEC
 	!text	"char"
 CHAR
 	jsr	_WORD
-	lda	PSTACK - 1, x
+	lda	1, x
 	sta	TMP + 1
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta	TMP
 	ldy	#1
 	lda	(TMP), y
-	sta	PSTACK - 2, x
+	sta	0, x
 	lda	#0
-	sta	PSTACK - 1, x
+	sta	1, x
 	+NEXT
 
 ; NUMBER
@@ -1685,9 +1706,9 @@ NUMBER
 
 ; Z set = success, clear = failed
 _NUMBER ; only hex, dec for now...
-	lda	PSTACK - 1, x	
+	lda	1, x	
 	sta	TMP3 + 1
-	lda	PSTACK - 2, x	
+	lda	0, x	
 	sta	TMP3
 	; TMP3 now contains a string ptr...
 	ldy	#0
@@ -1695,8 +1716,8 @@ _NUMBER ; only hex, dec for now...
 	sta	.chars_to_process
 	; clear stack...
 	lda	#0
-	sta	PSTACK - 2, x
-	sta	PSTACK - 1, x
+	sta	0, x
+	sta	1, x
 
 .number_handler
 	jsr	handle_input_digit_hex
@@ -1714,13 +1735,13 @@ _NUMBER ; only hex, dec for now...
 
 handle_input_digit_hex
 	; multiply stack top by 16
-	inx
-	inx
+	dex
+	dex
 
 	lda	#16
-	sta	PSTACK - 2, x
+	sta	0, x
 	lda	#0
-	sta	PSTACK - 1, x
+	sta	1, x
 
 	tya
 	pha
@@ -1749,12 +1770,12 @@ handle_input_digit_hex
 	bcc	.not_a_digit
 
 .ok
-	inx
-	inx
+	dex
+	dex
 
-	sta	PSTACK - 2, x
+	sta	0, x
 	lda	#0
-	sta	PSTACK - 1, x
+	sta	1, x
 
 	jsr	_ADD
 
@@ -1786,8 +1807,8 @@ INTERPRET
 	; didn't find word...
 	; assume it's a literal number.
 
-	dex ; drop null dictionary ptr
-	dex
+	inx ; drop null dictionary ptr
+	inx
 	inc	interpret_is_number
 	jsr _NUMBER
 	bne	.not_a_number
@@ -1796,12 +1817,12 @@ INTERPRET
 	lda	STATE ; are we compiling?
 	beq	.leave_number_on_stack ; no, leave number on stack
 	; yes. compile literal.
-	inx
-	inx
+	dex
+	dex
 	lda	#<LIT
-	sta	PSTACK - 2, x
+	sta	0, x
 	lda	#>LIT
-	sta	PSTACK - 1, x
+	sta	1, x
 	jsr	_COMMA
 	jsr	_COMMA
 
@@ -1810,20 +1831,21 @@ INTERPRET
 
 .not_a_number
 	jsr print_error_msg_with_tib
-	ldx	#0 ; wipe stack :(
+	ldx	#0
 	stx	KEY_BUF_READ_POS
 	stx	KEY_BUF_WRITE_POS
 	stx	COMPILE
 	stx	COMPILE + 1
+	ldx	#STACK_START ; wipe stack :(
 	+NEXT
 
 .found_word
 	; OK, we found a word...
 
 	; is it immediate?
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta	TMP
-	lda	PSTACK - 1, x
+	lda	1, x
 	sta	TMP + 1
 	ldy	#2 ; skip link ptr, look at flags
 	lda	(TMP), y
@@ -1836,19 +1858,23 @@ INTERPRET
 	; OK, this word should be compiled...
 	jsr	_TCFA
 	jsr	_COMMA
-	dex ; drop string
-	dex
+	inx ; drop string
+	inx
 	+NEXT
 
 .execute_word
 	jsr	_TCFA
 
 	; copy CFA to TMP
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta	TMP
-	lda	PSTACK - 1, x
+	lda	1, x
 	sta	TMP + 1
-	+subx 4 ; drop CFA + string
+	; drop CFA + string
+	inx
+	inx
+	inx
+	inx
 	jmp	(TMP)
 
 print_error_msg_with_tib
@@ -1897,16 +1923,16 @@ print_error_msg_with_tib
 	!byte	3
 	!text	"jsr"
 _JSR
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta	+ + 1
-	lda	PSTACK - 1, x
+	lda	1, x
 	sta	+ + 2
 	stx	tmp_x
 +
 	jsr 0 ; overwrite
 	ldx tmp_x
-	dex
-	dex
+	inx
+	inx
 	+NEXT
 
 ; TICK
@@ -1924,17 +1950,17 @@ TICK
 	!text	"lit"
 LIT
 	; grow stack
-	inx
-	inx
+	dex
+	dex
 
 	; copy literal to stack
 	ldy	#0
 	lda	(IP), y
-	sta	PSTACK - 2, x
+	sta	0, x
 
 	iny
 	lda	(IP), y
-	sta	PSTACK - 1, x
+	sta	1, x
 
 	; IP += 2
 	clc
@@ -1977,12 +2003,12 @@ EXIT
 	!byte	5
 	!text	"blink"
 BLINK
-	lda	PSTACK - 2, x
+	lda	0, x
 	eor	#1
 	sta	_BLINK
 	sta	$cc
-	dex
-	dex
+	inx
+	inx
 	+NEXT
 _BLINK
 	!byte	0
@@ -2018,9 +2044,9 @@ CREATE
 +
 
 	; store length byte in header. TMP2 = src
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta	TMP2
-	lda	PSTACK - 1, x
+	lda	1, x
 	sta	TMP2 + 1
 	lda	(TMP2), y
 	sta	(TMP), y	
@@ -2062,8 +2088,8 @@ CREATE
 	pla
 	tax
 
-	dex
-	dex
+	inx
+	inx
 
 	+NEXT
 
@@ -2079,7 +2105,7 @@ CCOMMA
 	sta	TMP + 1
 
 	ldy	#0
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta	(TMP), y
 
 	; update HERE
@@ -2087,8 +2113,8 @@ CCOMMA
 	bne	+
 	inc HERE + 1
 +
-	dex
-	dex
+	inx
+	inx
 	+NEXT
 
 ; COMMA - write word
@@ -2106,10 +2132,10 @@ _COMMA
 	sta	TMP + 1
 
 	ldy	#0
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta	(TMP), y
 	iny
-	lda	PSTACK - 1, x
+	lda	1, x
 	sta	(TMP), y
 
 	; update HERE
@@ -2120,8 +2146,8 @@ _COMMA
 	bcc	+
 	inc HERE + 1
 +
-	dex
-	dex
+	inx
+	inx
 	rts
 
 ; LBRAC
@@ -2210,14 +2236,16 @@ BRANCH
 	!byte	7
 	!text	"0branch"
 ZBRANCH
-	dex
-	dex
-	lda	PSTACK + 1, x
+	lda	1, x
+	ora	0, x
 	bne .dont_branch
-	lda	PSTACK + 0, x
-	beq BRANCH
+	inx
+	inx
+	jmp BRANCH
 
 .dont_branch
+	inx
+	inx
 	; skip offset
 	lda	IP
 	clc
@@ -2266,17 +2294,17 @@ _compile_byte
 	!byte	6
 	!text	"hidden"
 HIDDEN
-	lda	PSTACK - 2, x
+	lda	0, x
 	sta	TMP
-	lda	PSTACK - 1, x
+	lda	1, x
 	sta TMP + 1
 
 	ldy	#2 ; skip link, point to flags
 	lda	(TMP), y
 	eor	#F_HIDDEN ; toggle hidden flag
 	sta	(TMP), y
-	dex
-	dex
+	inx
+	inx
 	+NEXT
 
 ; SETCUR ( x y -- )
@@ -2285,14 +2313,17 @@ HIDDEN
 	!byte	6
 	!text	"setcur"
 SETCUR
-	lda	PSTACK - 4, x
+	lda	2, x
 	tay
-	lda	PSTACK - 2, x
+	lda	0, x
 	stx tmp_x
 	tax
 	jsr	$e50a
 	ldx	tmp_x
-	+subx 4
+	inx
+	inx
+	inx
+	inx
 	+NEXT
 
 ; DSP@
@@ -2302,15 +2333,15 @@ SETCUR
 	!text	"sp@"
 SPFETCH
 	stx	+ + 1
-	lda	#<(PSTACK - 2)
+	lda	#<STACK_START ; suspicious
 	clc
 +
 	adc	#0
-	inx
-	inx
-	sta	PSTACK - 2, x
-	lda	#>(PSTACK - 2) ; no need to compensate for page wrapping... the stack is well placed.
-	sta	PSTACK - 1, x
+	dex
+	dex
+	sta	0, x
+	lda	#>STACK_START ; no need to compensate for page wrapping... the stack is well placed.
+	sta	1, x
 	+NEXT
 
 ; LITSTRING
@@ -2320,19 +2351,19 @@ SPFETCH
 	!text	"litstring"
 LITSTRING
 	; grow stack
-	inx
-	inx
+	dex
+	dex
 
 	; copy string addr to stack
 	ldy	#0
 	lda	IP
 	sta	TMP
-	sta	PSTACK - 2, x
+	sta	0, x
 
 	iny
 	lda	IP + 1
 	sta	TMP + 1
-	sta	PSTACK - 1, x
+	sta	1, x
 
 	; TMP now points to string length
 	dey ; y = 0
@@ -2389,13 +2420,13 @@ _AREG
 	!byte 8
 	!text	"jsr-wrap"
 
-	lda PSTACK - 2, x
+	lda 0, x
 	sta	.jsraddr + 1
-	lda PSTACK - 1, x
+	lda 1, x
 	sta	.jsraddr + 2
 
-	dex
-	dex
+	inx
+	inx
 
 	txa
 	pha
@@ -2503,15 +2534,15 @@ LOADB
 	txa
 	pha
 
-	lda PSTACK - 1, x		; >destination
+	lda 1, x		; >destination
 	sta load_binary_laddr_hi
-	lda PSTACK - 2, x		; <destination
+	lda 0, x		; <destination
 	sta load_binary_laddr_lo
 
-	lda PSTACK - 4, x		; a filename length
+	lda 2, x		; a filename length
 	pha
-	ldy PSTACK - 5, x 		; y >basename 
-	lda PSTACK - 6, x		; x <basename 
+	ldy 5, x 		; y >basename 
+	lda 4, x		; x <basename 
 	tax
 	pla
 	jsr	load_binary
@@ -2519,10 +2550,13 @@ LOADB
 	pla
 	tax
 
-	+subx 4
+	inx
+	inx
+	inx
+	inx
 	lda	load_binary_status
-	sta	PSTACK - 1, x
-	sta	PSTACK - 2, x
+	sta	1, x
+	sta	0, x
 	beq	+
 	txa
 	pha
@@ -2591,20 +2625,20 @@ SAVEB
 	lda	$af
 	pha
 
-	lda PSTACK - 8, x		; range begin lo
+	lda 6, x		; range begin lo
 	sta $c1
-	lda PSTACK - 7, x		; range begin hi
+	lda 7, x		; range begin hi
 	sta $c2
 	
-	lda PSTACK - 6, x		; range end lo
+	lda 4, x		; range end lo
 	sta save_binary_srange_end_lo
-	lda PSTACK - 5, x		; range end hi
+	lda 5, x		; range end hi
 	sta save_binary_srange_end_hi
 
-	lda PSTACK - 2, x		; a filename length
+	lda 0, x		; a filename length
 	pha
-	ldy PSTACK - 3, x 		; y basename hi
-	lda PSTACK - 4, x		; x basename lo
+	ldy 3, x 		; y basename hi
+	lda 2, x		; x basename lo
 	tax
 	pla
 
@@ -2625,7 +2659,14 @@ save_binary_srange_end_hi = *+1
 	sta	$ae
 
 	ldx tmp_x
-	+subx 8
+	inx
+	inx
+	inx
+	inx
+	inx
+	inx
+	inx
+	inx
 	+NEXT
 
 
@@ -2637,10 +2678,10 @@ save_binary_srange_end_hi = *+1
 OPENW
 	stx	tmp_x
 
-	lda	PSTACK - 2, x
-	ldy	PSTACK - 3, x
+	lda	0, x
+	ldy	3, x
 	pha
-	lda	PSTACK - 4, x
+	lda	2, x
 	tax
 	pla
 	
@@ -2656,7 +2697,10 @@ OPENW
 	jsr	CHKOUT
 
 	ldx	tmp_x
-	+subx 4
+	inx
+	inx
+	inx
+	inx
 	+NEXT
 
 loadbase
