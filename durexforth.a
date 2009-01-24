@@ -1705,7 +1705,7 @@ NUMBER
 	+NEXT
 
 ; Z set = success, clear = failed
-_NUMBER ; only hex, dec for now...
+_NUMBER ; only hex
 	lda	1, x	
 	sta	TMP3 + 1
 	lda	0, x	
@@ -1786,9 +1786,6 @@ handle_input_digit_hex
 	lda	#1
 	rts
 
-interpret_is_number
-!byte	0
-
 ; INTERPRET
 	!word	LINK
 	!set	LINK = * - 2
@@ -1797,8 +1794,6 @@ interpret_is_number
 INTERPRET
 	jsr	_WORD ; push string to stack
 
-	lda	#0
-	sta	interpret_is_number
 	jsr	_DUP ; dup string
 	jsr	_FIND ; replace string with dictionary ptr
 	ora	#0
@@ -1809,7 +1804,6 @@ INTERPRET
 
 	inx ; drop null dictionary ptr
 	inx
-	inc	interpret_is_number
 	jsr _NUMBER
 	bne	.not_a_number
 
