@@ -240,12 +240,12 @@ __DOCOL
 NEXT_IMPL
 
 	; (IP) -> W
-	ldy	#0
-	lda	(IP), y
-	sta	++ + 1
-	iny
+	ldy	#1
 	lda	(IP), y
 	sta	++ + 2
+	dey
+	lda	(IP), y
+	sta	++ + 1
 
 	; IP + 2 -> IP
 	lda	IP
@@ -810,14 +810,8 @@ FETCH
 	!byte	2
 	!text	"c!"
 STOREBYTE
-	lda	1, x ; dst
-	sta TMP + 1
-	lda	0, x
-	sta TMP
-	
-	ldy	#0
-	lda 2, x
-	sta	(TMP), y	
+	lda	2, x
+	sta (0, x)
 
 	inx
 	inx
@@ -832,17 +826,9 @@ STOREBYTE
 	!byte	2
 	!text	"c@"
 FETCHBYTE
-	lda	1, x ; dst
-	sta TMP + 1
-	lda	0, x
-	sta TMP
-	
-	ldy	#0
-	lda	(TMP), y
-	sta	0, x
-	tya
-	sta	1, x
-
+	lda	(0, x)
+	sta 0, x
+	sty	1, x
 	+NEXT
 
 ; FILL ( val start len -- )
