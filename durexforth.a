@@ -333,7 +333,7 @@ OVER
 
 	+NEXT
 
-; ROT
+; ROT ( a b c -- b c a )
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	3
