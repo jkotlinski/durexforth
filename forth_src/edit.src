@@ -140,7 +140,7 @@ value filename-len
 	1 d800 400 fill
 ;
 
-: cleanup
+: cleanup ( bordercolor bgcolor cursorcolor -- )
 	1 linebuf c! # enable buffering
 
 	1 blink
