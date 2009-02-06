@@ -1,4 +1,5 @@
 #!/bin/bash
 
 pdflatex manual.tex 
-open manual.pdf
+mv manual.pdf durexForth.pdf
+open durexForth.pdf
