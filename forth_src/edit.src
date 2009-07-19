@@ -895,7 +895,7 @@ char j c, loc cur-down >cfa ,
 	again
 ;
 
-: ed
+: vi
 	init
 	go-to-file-start
 
