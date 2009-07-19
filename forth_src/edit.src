@@ -1,9 +1,10 @@
   : CR d ;
-: clrscr bl 400 3e8 fill ;
+: clrscr e544 jsr-wrap ;
 
 : bufstart 5000 ;
 
 var eof ( ram eof )
+0 eof !
 
 var homepos ( position at screen home )
 var curlinestart
@@ -495,6 +496,8 @@ then
 ;
 
 : insert-handler
+	dup a0 = if drop 20 then # shift space => space
+
 	dup
 	case
 	5f of insert-stop drop endof # leftarrow
@@ -892,7 +895,7 @@ char j c, loc cur-down >cfa ,
 	again
 ;
 
-: edit
+: ed
 	init
 	go-to-file-start
 
@@ -913,6 +916,11 @@ char j c, loc cur-down >cfa ,
 ;
 
 : fg # bring back editor
+	eof @ 0= if
+		." no buffer"
+		cr
+		exit
+	then
 	init
 	push-colors
 	show-page
