@@ -1122,9 +1122,7 @@ print_char
 	sty $cd ;Force new value into Cursor Blink Count down Toggle
 	ldy #1
 	sty $cf ;Force cursor off
-	stx	tmp_x
 	jsr	PUTCHR
-	ldx	tmp_x
 	ldy	_BLINK
 	sty	CURSOR_BLINK
 	rts
