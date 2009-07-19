@@ -790,6 +790,7 @@ char / c, loc find-handler >cfa ,
 char U c, loc half-page-back >cfa ,
 char D c, loc half-page-fwd >cfa ,
 char J c, loc join-lines >cfa ,
+char g c, loc goto-start >cfa ,
 char G c, loc goto-eof >cfa ,
 char $ c, loc eol >cfa ,
 char 0 c, loc sol >cfa ,
@@ -844,7 +845,6 @@ char j c, loc cur-down >cfa ,
 		[ char : ] literal set-status
 		key 
 		case
-		[ char 0 ] literal of goto-start endof
 		[ char w ] literal of colon-w endof
 		[ char q ] literal of ffff exit endof
 		endcase
