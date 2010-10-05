@@ -5,7 +5,6 @@
 : cr d emit ;
 : / /mod swap drop ;
 : mod /mod drop ;
-: negate invert 1+ ;
 : literal immed ' lit , , ;
 : '"' [ char " ] literal ;
 : [compile] immed word find >cfa , ;
@@ -28,6 +27,7 @@
 : tuck ( x y -- y x y ) dup -rot ;
 : pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u ) 1+ 2 * sp@ + @ ;
 : invert ffff xor ;
+: negate invert 1+ ;
 : not 0= ;
 : <> ( n -- b ) = not ;
 : > ( n -- b ) swap < ;
