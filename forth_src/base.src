@@ -164,17 +164,17 @@
 	then
 ;
 
+: loc word find ;
+
 ( x +to val adds x to val )
 : +to immed
-	word find >dfa 2+
+	loc >dfa 2+
 	state @ if
 		' lit , , ' +! ,
 	else
 		+!
 	then
 ;
-
-: loc word find ;
 
 : load ( strptr strlen -- old-compile old-ae )
 	compile @ -rot ( compile strptr strlen )
