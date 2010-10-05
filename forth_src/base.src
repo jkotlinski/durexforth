@@ -166,6 +166,8 @@
 
 : loc word find ;
 
+: hide loc hidden ;
+
 ( x +to val adds x to val )
 : +to immed
 	loc >dfa 2+
