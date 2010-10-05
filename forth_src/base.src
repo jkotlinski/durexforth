@@ -5,7 +5,7 @@
 : cr d emit ;
 : / /mod swap drop ;
 : mod /mod drop ;
-: negate 0 swap - ;
+: negate invert 1+ ;
 : literal immed ' lit , , ;
 : '"' [ char " ] literal ;
 : [compile] immed word find >cfa , ;
