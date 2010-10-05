@@ -743,22 +743,6 @@ XOR
 
 	+NEXT
 
-; NOT
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	3
-	!text	"not"
-NOT
-	lda	1, x
-	eor #$ff
-	sta 1, x
-
-	lda	0, x
-	eor #$ff
-	sta 0, x
-
-	+NEXT
-
 ; !
 	!word	LINK
 	!set	LINK = * - 2
