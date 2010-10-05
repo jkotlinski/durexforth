@@ -101,11 +101,13 @@ value filename-len
 	status-pos c!
 	0 0 setcur
 	homepos @
+
+    # todo: use asm
 	begin
-		dup c@ dup emit
-		swap 1+ swap
-		0=
-		d6 c@ 18 = or
+		dup c@ dup emit  # print char
+		swap 1+ swap  # advance addr
+        # until 0 char or screen bottom
+		0= d6 c@ 18 = or
 	until
 	drop
 ;
