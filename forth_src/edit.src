@@ -16,6 +16,9 @@ var cury
 0 value need-refresh-line
 0 value insert-active
 
+400 dup value maxrows 
+cells allot value rowptrs
+
 10 allot dup 
 value filename-len
 1+ value filename
@@ -81,9 +84,39 @@ value filename-len
 		exit
 	then
 
-	ae @ eof !
-	0 eof @ c!
-;
+# init rowptrs
+# todo: clear rowptrs
+
+bufstart 0 # src row
+begin
+2dup # src row src row
+maxrows < # src row src notmax
+swap # src row notmax src
+c@ # src row notmax char
+land # src row break?
+while
+
+# add src to rowptrs
+dup cells rowptrs + # src row rowptr
+rot # row rowptr src
+dup # row rowptr src src
+-rot # row src rowptr src
+swap ! # row src
+
+# advance src past lf
+begin
+dup c@ CR <>
+while
+1+
+repeat
+1+
+
+swap 1+ # advance row
+
+repeat
+
+ae @ eof !
+0 eof @ c! ;
 
 : go-to-file-start
 	0 curx ! 0 cury !
@@ -917,7 +950,9 @@ char j c, loc cur-down >cfa ,
 	cleanup
 ;
 
-loc fg loc vi
-hide-to CR
-hidden hidden
+: edit vi ;
+
+# loc fg loc vi
+# hide-to CR
+# hidden hidden
 
