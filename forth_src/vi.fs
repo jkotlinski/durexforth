@@ -6,12 +6,12 @@
 var eof ( ram eof )
 0 eof !
 
-var homepos ( position at screen home )
+var homerow
 var curlinestart
 
 ( cursor screen pos )
 var currow
-var curx 
+var curx
 var cury
 0 value need-refresh
 0 value need-refresh-line
@@ -19,6 +19,10 @@ var cury
 
 400 dup value maxrows 
 cells allot value rowptrs
+var rowcount
+
+: homepos
+homerow @ cells rowptrs + @ ;
 
 10 allot dup 
 value filename-len
@@ -89,6 +93,7 @@ ae @ eof !
 # init rowptrs
 
 0 rowptrs maxrows cells fill
+0 rowcount !
 
 bufstart 0 # src row
 begin
@@ -116,13 +121,14 @@ repeat
 
 swap 1+ # advance row
 
-repeat ;
+repeat
+
+rowcount ! drop ;
 
 : go-to-file-start
-	0 curx ! 0 cury ! 0 currow !
-	bufstart homepos !
-	bufstart curlinestart !
-;
+0 curx ! 0 cury ! 0 currow !
+0 homerow !
+bufstart curlinestart ! ;
 
 : status-pos 7c0 ;
 
@@ -131,7 +137,7 @@ repeat ;
 	clrscr
 	status-pos c!
 	0 0 setcur
-	homepos @
+	homepos
 
     # todo: use asm
 	begin
@@ -185,36 +191,21 @@ repeat ;
 ;
 
 : adjust-home
-	begin
-		cury @ 8000 and
-	while
-		1 to need-refresh
+begin
+    cury @ 8000 and
+while
+    1 to need-refresh
+    ffff homerow +!
+    1 cury +!
+repeat
 
-		ffff homepos +! ( skip first CR )
-		begin
-			ffff homepos +!
-			homepos @ c@ CR =
-			homepos @ bufstart 1- = or
-		until
-		1 homepos +!
-		1 cury +! ( cur down )
-	repeat
-
-	begin
-		cury @ 17 >
-	while
-		1 to need-refresh
-
-		homepos @ c@ CR <> if
-			begin
-				1 homepos +!
-				homepos @ c@ CR =
-			until
-		then
-		1 homepos +!
-		ffff cury +! ( cur up )
-	repeat
-;
+begin
+    cury @ 17 >
+while
+    1 to need-refresh
+    1 homerow +!
+    ffff cury +!
+repeat ;
 
 : fit-curx-in-linelen
 linelen curx @ min curx ! ;
@@ -233,10 +224,13 @@ or if exit then
 : move-down curaddr 2+ @
 if 1 currow +! 1 cury +! then ;
 
-: cur-down-n ( rows -- )
-begin ?dup while move-down 1- repeat
+: tidy-up-row
 curaddr @ curlinestart !
 fit-curx-in-linelen adjust-home ;
+
+: cur-down-n ( rows -- )
+begin ?dup while move-down 1- repeat
+tidy-up-row ;
 
 : cur-down 1 cur-down-n ;
 
@@ -351,20 +345,15 @@ fit-curx-in-linelen adjust-home ;
 ;
 
 : goto-eof ( can be much optimized... )
-	begin
-		editpos
-		half-page-fwd
-		editpos =
-	until
+rowcount @ 1- currow @ - # diff
+rowcount @ 1- currow !
+cury +!
+tidy-up-row ;
 
-	1 to need-refresh
-;
-
-: goto-start ( can be much optimized... )
-	0 curx ! 0 cury ! 0 currow !
-	bufstart dup homepos ! curlinestart !
-	1 to need-refresh
-;
+: goto-start
+0 curx ! 0 cury ! 0 currow ! 0 homerow !
+bufstart curlinestart !
+1 to need-refresh ;
 
 : insert-start
 	1 to insert-active
@@ -391,6 +380,7 @@ fit-curx-in-linelen adjust-home ;
 ;
 
 : show-location
+exit
 	dup ( loc sol )
 	begin
 		dup c@ CR = if
@@ -398,7 +388,7 @@ fit-curx-in-linelen adjust-home ;
 			tuck ( sol loc sol )
 			- curx !
 			0 cury !
-			dup homepos !
+			# dup homepos ! broken
 			curlinestart !
 			1 to need-refresh
 			clear-status
