@@ -46,7 +46,7 @@ value filename-len
 	0
 	curlinestart @ ( count addr )
 	begin
-		dup c@ CR = if
+		dup c@ d = if
 			drop exit
 		then
 
@@ -82,7 +82,7 @@ value filename-len
 
 	if # file error?
 		bufstart 1+ eof !
-		CR bufstart c!
+		d bufstart c!
 		0 eof @ c!
 		exit
 	then
@@ -90,7 +90,7 @@ value filename-len
 ae @ eof !
 0 eof @ c!
 
-# init rowptrs
+# init rowptrs - should be faster
 
 0 rowptrs maxrows cells fill
 0 rowcount !
@@ -113,7 +113,7 @@ swap ! # row src
 
 # advance src past lf
 begin
-dup c@ CR <>
+dup c@ d <>
 while
 1+
 repeat
@@ -205,7 +205,7 @@ cury @ 17 - homerow +!
 linelen curx @ min curx ! ;
 
 : is-eof-or-CR
-dup 0= swap CR = or ;
+dup 0= swap d = or ;
 
 : cur-right
 editpos c@ is-eof-or-CR
@@ -238,7 +238,7 @@ tidy-up-row ;
 	begin
 		1- ( addr )
 		dup c@ ( addr char )
-		CR = ( addr CR? )
+		d = ( addr CR? )
 
 		over ( addr CR? addr )
 		bufstart < ( addr CR? sof? )
@@ -264,7 +264,7 @@ tidy-up-row ;
 ;
 
 : is-whitespace
-	dup CR = swap bl = or
+	dup d = swap bl = or
 ;
 
 : eol
@@ -332,7 +332,7 @@ tidy-up-row ;
 	begin
 		1-
 		dup bufstart <=
-		over c@ CR =
+		over c@ d =
 		or
 	until
 	bufstart max
@@ -377,7 +377,7 @@ bufstart curlinestart !
 exit
 	dup ( loc sol )
 	begin
-		dup c@ CR = if
+		dup c@ d = if
 			1+ ( loc sol )
 			tuck ( sol loc sol )
 			- curx !
