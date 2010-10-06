@@ -77,6 +77,15 @@ value filename-len
 	swap c!
 ;
 
+: push-colors
+d020 c@ d021 c@ 286 c@
+
+a d021 c! 2 d020 c! 1 286 c!
+1 d800 400 fill ;
+
+( bordercolor bgcolor cursorcolor -- )
+: pop-colors 286 c! d021 c! d020 c! ;
+
 : do-load
 	bufstart loadb
 
@@ -94,6 +103,8 @@ ae @ eof !
 
 0 rowptrs maxrows cells fill
 0 rowcount !
+
+push-colors
 
 bufstart 0 # src row
 begin
@@ -121,7 +132,10 @@ repeat
 
 swap 1+ # advance row
 
+d020 c@ 1+ d020 c!
 repeat
+
+pop-colors
 
 rowcount ! drop ;
 
@@ -169,25 +183,11 @@ bufstart curlinestart ! ;
 	clear-status
 ;
 
-: push-colors
-	d020 c@
-	d021 c@
-	286 c@
-
-	a d021 c!
-	2 d020 c!
-	1 286 c!
-	1 d800 400 fill
-;
-
-: cleanup ( bordercolor bgcolor cursorcolor -- )
-	1 linebuf c! # enable buffering
-
-	1 blink
-	40 28a c! # key repeat off
-	286 c! # cursor col
-	d021 c! d020 c!
-	93 emit # clrscr
+: cleanup
+1 linebuf c! # enable buffering
+1 blink
+40 28a c! # key repeat off
+93 emit # clrscr
 ;
 
 : adjust-home
@@ -888,30 +888,21 @@ char j c, loc cur-down >cfa ,
 	2dup ( str len str len )	
 	filename-len c!
 	filename f cmove
-
-	do-load
-
-	push-colors
-
-	show-page
-
-	main-loop
-
-	cleanup
-;
+do-load
+push-colors
+show-page
+main-loop
+pop-colors
+cleanup ;
 
 : fg # bring back editor
-	eof @ 0= if
-		." no buffer"
-		cr
-		exit
-	then
-	init
-	push-colors
-	show-page
-	main-loop
-	cleanup
-;
+eof @ 0= if ." no buffer" cr exit then
+init
+push-colors
+show-page
+main-loop
+pop-colors
+cleanup ;
 
 : edit vi ;
 
