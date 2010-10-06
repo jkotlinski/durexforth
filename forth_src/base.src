@@ -30,6 +30,7 @@
 : pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u ) 1+ 2 * sp@ + @ ;
 : invert ffff xor ;
 : negate invert 1+ ;
+: ?dup dup if dup then ;
 : not 0= ;
 : <> ( n -- b ) = not ;
 : > ( n -- b ) swap < ;
