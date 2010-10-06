@@ -86,8 +86,7 @@ value filename-len
 ;
 
 : go-to-file-start
-	0 curx !
-	0 cury !
+	0 curx ! 0 cury !
 	bufstart homepos !
 	bufstart curlinestart !
 ;
