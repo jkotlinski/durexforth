@@ -8,17 +8,17 @@ all:	durexforth.d64
 durexforth.prg: durexforth.a
 	@$(AS) durexforth.a
 
-forth_src/base.pet: forth_src/base.src ext/petcom
-	cat forth_src/base.src | ext/petcom - > forth_src/base.pet
+forth_src/base.pet: forth_src/base.fs ext/petcom
+	cat forth_src/base.fs | ext/petcom - > forth_src/base.pet
 
-forth_src/debug.pet: forth_src/debug.src ext/petcom
-	cat forth_src/debug.src | ext/petcom - > forth_src/debug.pet
+forth_src/debug.pet: forth_src/debug.fs ext/petcom
+	cat forth_src/debug.fs | ext/petcom - > forth_src/debug.pet
 
-forth_src/edit.pet: forth_src/edit.src ext/petcom
-	cat forth_src/edit.src | ext/petcom - > forth_src/edit.pet
+forth_src/edit.pet: forth_src/edit.fs ext/petcom
+	cat forth_src/edit.fs | ext/petcom - > forth_src/edit.pet
 
-forth_src/asm.pet: forth_src/asm.src ext/petcom
-	cat forth_src/asm.src | ext/petcom - > forth_src/asm.pet
+forth_src/asm.pet: forth_src/asm.fs ext/petcom
+	cat forth_src/asm.fs | ext/petcom - > forth_src/asm.pet
 
 FORTHLIST=base debug edit asm
 

@@ -10,6 +10,7 @@ var homepos ( position at screen home )
 var curlinestart
 
 ( cursor screen pos )
+var currow
 var curx 
 var cury
 0 value need-refresh
@@ -120,7 +121,7 @@ ae @ eof !
 0 eof @ c! ;
 
 : go-to-file-start
-	0 curx ! 0 cury !
+	0 curx ! 0 cury ! 0 currow !
 	bufstart homepos !
 	bufstart curlinestart !
 ;
@@ -221,33 +222,30 @@ ae @ eof !
 	linelen curx @ min curx !
 ;
 
-: cur-down
-	curlinestart @ ( addr )
-	dup c@ CR <> if
-		begin
-			dup eof @ = if
-				drop
-				exit
-			then
-			1+ ( addr )
-			dup c@ ( addr char )
-			CR =
-		until
-	then
-	1+ ( newlinestart )
+: is-eof-or-CR
+	dup 0= swap CR = or
+;
 
-	dup eof @ >= if ( eof )
-		drop
-		exit
-	then
+: cur-right
+	editpos c@ is-eof-or-CR
+	editpos 1+ c@ is-eof-or-CR
+	or if exit then
+	1 curx +!
+;
 
-	curlinestart !
+: move-down
+    currow @ 1+ cells rowptrs + @
+    if 1 currow +! then ;
+
+: cur-down-n ( rows -- )
+    begin ?dup while move-down 1- repeat
+    currow @ cells rowptrs + @ curlinestart !
 	1 cury +!
 
 	fit-curx-in-linelen
+	adjust-home ;
 
-	adjust-home
-;
+: cur-down cur-down-n 1 ;
 
 : cur-up
 	curlinestart @ bufstart = if
@@ -284,19 +282,8 @@ ae @ eof !
 	ffff curx +!
 ;
 
-: is-eof-or-CR
-	dup 0= swap CR = or
-;
-
 : is-whitespace
 	dup CR = swap bl = or
-;
-
-: cur-right
-	editpos c@ is-eof-or-CR
-	editpos 1+ c@ is-eof-or-CR
-	or if exit then
-	1 curx +!
 ;
 
 : eol
@@ -383,7 +370,7 @@ ae @ eof !
 ;
 
 : goto-start ( can be much optimized... )
-	0 curx ! 0 cury !
+	0 curx ! 0 cury ! 0 currow !
 	bufstart dup homepos ! curlinestart !
 	1 to need-refresh
 ;
