@@ -36,9 +36,7 @@ value filename-len
 	drop
 ;
 
-: editpos
-	curlinestart @ curx @ +
-;
+: editpos curlinestart @ curx @ + ;
 
 : linelen
 	0
@@ -85,6 +83,9 @@ value filename-len
 		exit
 	then
 
+ae @ eof !
+0 eof @ c!
+
 # init rowptrs
 
 0 rowptrs maxrows cells fill
@@ -115,10 +116,7 @@ repeat
 
 swap 1+ # advance row
 
-repeat
-
-ae @ eof !
-0 eof @ c! ;
+repeat ;
 
 : go-to-file-start
 	0 curx ! 0 cury ! 0 currow !
@@ -219,33 +217,28 @@ ae @ eof !
 ;
 
 : fit-curx-in-linelen
-	linelen curx @ min curx !
-;
+linelen curx @ min curx ! ;
 
 : is-eof-or-CR
-	dup 0= swap CR = or
-;
+dup 0= swap CR = or ;
 
 : cur-right
-	editpos c@ is-eof-or-CR
-	editpos 1+ c@ is-eof-or-CR
-	or if exit then
-	1 curx +!
-;
+editpos c@ is-eof-or-CR
+editpos 1+ c@ is-eof-or-CR
+or if exit then
+1 curx +! ;
 
-: move-down
-    currow @ 1+ cells rowptrs + @
-    if 1 currow +! then ;
+: curaddr currow @ cells rowptrs + ;
+
+: move-down curaddr 2+ @
+if 1 currow +! 1 cury +! then ;
 
 : cur-down-n ( rows -- )
-    begin ?dup while move-down 1- repeat
-    currow @ cells rowptrs + @ curlinestart !
-	1 cury +!
+begin ?dup while move-down 1- repeat
+curaddr @ curlinestart !
+fit-curx-in-linelen adjust-home ;
 
-	fit-curx-in-linelen
-	adjust-home ;
-
-: cur-down cur-down-n 1 ;
+: cur-down 1 cur-down-n ;
 
 : cur-up
 	curlinestart @ bufstart = if
@@ -312,7 +305,7 @@ ae @ eof !
 	begin
 		editpos bufstart =
 		editpos 1- c@ is-whitespace
-		editpos c@ is-whitespace not and
+		editpos c@ is-whitespace not land
 		or not
 	while
 		rewind-cur
@@ -334,7 +327,7 @@ ae @ eof !
 	advance-cur if exit then
 	begin
 		editpos 1- c@ is-whitespace
-		editpos c@ is-whitespace not and
+		editpos c@ is-whitespace not land
 		not
 	while
 		advance-cur if exit then
@@ -345,9 +338,7 @@ ae @ eof !
 	c begin cur-up 1- dup 0= until drop
 ;
 
-: half-page-fwd
-	c begin cur-down 1- dup 0= until drop
-;
+: half-page-fwd c cur-down-n ;
 
 : find-prev-CR ( addr -- new-addr )
 	begin
