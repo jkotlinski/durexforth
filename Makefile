@@ -14,8 +14,8 @@ forth_src/base.pet: forth_src/base.fs ext/petcom
 forth_src/debug.pet: forth_src/debug.fs ext/petcom
 	cat forth_src/debug.fs | ext/petcom - > forth_src/debug.pet
 
-forth_src/edit.pet: forth_src/edit.fs ext/petcom
-	cat forth_src/edit.fs | ext/petcom - > forth_src/edit.pet
+forth_src/vi.pet: forth_src/vi.fs ext/petcom
+	cat forth_src/vi.fs | ext/petcom - > forth_src/vi.pet
 
 forth_src/asm.pet: forth_src/asm.fs ext/petcom
 	cat forth_src/asm.fs | ext/petcom - > forth_src/asm.pet
