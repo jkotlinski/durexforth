@@ -172,9 +172,8 @@
 : hide loc hidden ;
 : hide-to  ( -- )
 loc latest
-begin @ # end curr dup hidden 2dup = until
-2drop
-;
+begin @ dup hidden 2dup = until
+2drop ;
 
 ( x +to val adds x to val )
 : +to immed
@@ -214,6 +213,7 @@ begin @ # end curr dup hidden 2dup = until
 s" debug" load
 ." asm.."
 s" asm" load
+
 ." edit.."
 s" edit" load
 

@@ -303,13 +303,17 @@ SWAP
 	!byte	3
 	!text	"dup"
 DUP
-	jsr	_DUP
+	dex
+	dex
+	lda	3, x
+	sta	1, x
+	lda	2, x
+	sta	0, x
 	+NEXT
 
 _DUP
 	dex
 	dex
-
 	lda	3, x
 	sta	1, x
 	lda	2, x

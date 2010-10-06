@@ -930,7 +930,7 @@ char j c, loc cur-down >cfa ,
 	cleanup
 ;
 
+loc fg loc vi
 hide-to CR
-hide fg
-hide vi
+hidden hidden
 
