@@ -1,5 +1,6 @@
   
 
+: 2dup over over ;
 : bl 20 ;
 : space bl emit ;
 : cr d emit ;
@@ -206,10 +207,10 @@
 : modules ;
 ." debug.."
 s" debug" load
-." edit.."
-s" edit" load
 ." asm.."
 s" asm" load
+." edit.."
+s" edit" load
 
 : scratch ( strptr strlen -- )
 tuck ( strlen strptr strlen )
