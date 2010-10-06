@@ -8,7 +8,8 @@
 : mod /mod drop ;
 : literal immed ' lit , , ;
 : '"' [ char " ] literal ;
-: [compile] immed word find >cfa , ;
+: loc word find ;
+: [compile] immed loc >cfa , ;
 : ['] immed ' lit , ;
 : jsr-docol, 20 c, docol , ;
 : if immed ' 0branch , here @ 0 , ;
@@ -36,6 +37,7 @@
 : <= > not ;
 : >= < not ;
 : 2+ 1+ 1+ ;
+
 : tell 
 	dup c@ ( get strlen )
 	begin 
@@ -100,7 +102,7 @@
 : endof immed [compile] else ;
 : endcase immed ' drop , begin ?dup while [compile] then repeat ;
 
-: forget word find ?dup if dup @ latest ! here ! then ;
+: forget loc ?dup if dup @ latest ! here ! then ;
 
 : .s ( -- )
 	sp0 1- 1-
@@ -159,7 +161,7 @@
 ;
 
 : to immed ( n -- )
-	word find >dfa 2+
+	loc >dfa 2+
 	state @ if
 		' lit , , ' ! ,
 	else
@@ -167,9 +169,12 @@
 	then
 ;
 
-: loc word find ;
-
 : hide loc hidden ;
+: hide-to  ( -- )
+loc latest
+begin @ # end curr dup hidden 2dup = until
+2drop
+;
 
 ( x +to val adds x to val )
 : +to immed
