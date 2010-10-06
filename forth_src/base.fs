@@ -178,16 +178,6 @@ loc latest
 begin @ dup hidden 2dup = until
 2drop ;
 
-( x +to val adds x to val )
-: +to immed
-	loc >dfa 2+
-	state @ if
-		' lit , , ' +! ,
-	else
-		+!
-	then
-;
-
 : load ( strptr strlen -- old-compile old-ae )
 	compile @ -rot ( compile strptr strlen )
 	ae @ -rot ( compile ae strptr strlen )
@@ -243,4 +233,3 @@ s" durexforth" scratch
 s" durexforth" save-forth
 
 ." done!" cr
-
