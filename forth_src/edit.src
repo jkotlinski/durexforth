@@ -41,8 +41,7 @@ value filename-len
 	curlinestart @ ( count addr )
 	begin
 		dup c@ CR = if
-			drop 
-			exit
+			drop exit
 		then
 
 		1+
@@ -149,8 +148,7 @@ value filename-len
 	1 blink
 	40 28a c! # key repeat off
 	286 c! # cursor col
-	d021 c!
-	d020 c!
+	d021 c! d020 c!
 	93 emit # clrscr
 ;
 
@@ -264,9 +262,7 @@ value filename-len
 : cur-right
 	editpos c@ is-eof-or-CR
 	editpos 1+ c@ is-eof-or-CR
-	or if
-		exit
-	then
+	or if exit then
 	1 curx +!
 ;
 
@@ -280,8 +276,7 @@ value filename-len
 : rewind-cur
 		curx @ 0= if
 			bufstart editpos <> if
-				cur-up
-				eol
+				cur-up eol
 			then
 		else
 			cur-left
@@ -308,8 +303,7 @@ value filename-len
 : advance-cur
 	editpos
 	curx @ linelen 1- = linelen 0= or if
-		0 curx !
-		cur-down
+		0 curx ! cur-down
 	else
 		cur-right
 	then
@@ -356,8 +350,7 @@ value filename-len
 ;
 
 : goto-start ( can be much optimized... )
-	0 curx !
-	0 cury !
+	0 curx ! 0 cury !
 	bufstart dup homepos ! curlinestart !
 	1 to need-refresh
 ;
@@ -515,23 +508,18 @@ then
 ;
 
 : push-cursor
-	curx @
-	cury @
-	curlinestart @
+	curx @ cury @ curlinestart @
 ;
 
 : pop-cursor
-	curlinestart !
-	cury !
-	curx !
+	curlinestart ! cury ! curx !
 ;
 
 : del-word
 	1 to need-refresh-line
 	begin
 		editpos c@ 20 = if
-			del-char
-			exit
+			del-char exit
 		then
 		editpos c@ d = if exit then
 		del-char
