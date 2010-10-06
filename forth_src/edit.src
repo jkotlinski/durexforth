@@ -85,7 +85,8 @@ value filename-len
 	then
 
 # init rowptrs
-# todo: clear rowptrs
+
+0 rowptrs maxrows cells fill
 
 bufstart 0 # src row
 begin
