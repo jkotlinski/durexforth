@@ -239,5 +239,5 @@ s" durexforth" scratch
 ." save new durexforth.."
 s" durexforth" save-forth
 
-." done!"
+." done!" cr
 
