@@ -191,21 +191,15 @@ bufstart curlinestart ! ;
 ;
 
 : adjust-home
-begin
-    cury @ 8000 and
-while
-    1 to need-refresh
-    ffff homerow +!
-    1 cury +!
-repeat
+cury @ 8000 and if
+1 to need-refresh
+cury @ homerow +!
+0 cury ! then
 
-begin
-    cury @ 17 >
-while
-    1 to need-refresh
-    1 homerow +!
-    ffff cury +!
-repeat ;
+cury @ 17 > if
+1 to need-refresh
+cury @ 17 - homerow +!
+17 cury ! then ;
 
 : fit-curx-in-linelen
 linelen curx @ min curx ! ;
