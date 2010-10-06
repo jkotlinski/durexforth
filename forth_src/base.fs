@@ -217,8 +217,8 @@ s" debug" load
 ." asm.."
 s" asm" load
 
-." edit.."
-s" edit" load
+." vi.."
+s" vi" load
 
 : scratch ( strptr strlen -- )
 tuck ( strlen strptr strlen )
