@@ -192,6 +192,7 @@ ba 1mi tsx,
 98 1mi tya,
 
 : -branch ( a - a ) here @ 2+ - ;
+: :asmsub here @ var here @ swap ! ;
 
 84 value zptmp
 86 value zptmp2

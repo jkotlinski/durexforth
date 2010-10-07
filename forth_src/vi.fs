@@ -132,8 +132,7 @@ bufstart curlinestart ! ;
 
 : status-pos 7c0 ;
 
-var foundeol
-here @ foundeol !
+:asmsub foundeol
 zptmp ldy, 0 sty,x
 zptmp 1+ ldy, 1 sty,x
 ;asm
