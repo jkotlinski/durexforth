@@ -143,12 +143,11 @@ zptmp 1+ ldy, 1 sty,x
 0 ldy,#
 here @
 zptmp lda,(y)
-php,
 ffd2 jsr, # putchar
 zptmp inc,
 2 bne,
 zptmp 1+ inc,
-plp,
+0 cmp,#
 foundeol -branch beq,
 d cmp,#
 foundeol -branch beq,
