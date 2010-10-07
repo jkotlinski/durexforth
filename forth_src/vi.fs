@@ -149,9 +149,9 @@ zptmp inc,
 2 bne,
 zptmp 1+ inc,
 plp,
-foundeol @ -branch beq,
+foundeol -branch beq,
 d cmp,#
-foundeol @ -branch beq,
+foundeol -branch beq,
 jmp,
 
 : show-page
@@ -159,11 +159,9 @@ status-pos c@
 clrscr
 status-pos c!
 0 0 setcur
-homepos
-18 begin
+homepos 18 begin
 swap print-line swap
-1- ?dup 0= until
-drop ;
+1- ?dup 0= until drop ;
 
 : clear-status ( -- )
 	bl status-pos 18 fill
