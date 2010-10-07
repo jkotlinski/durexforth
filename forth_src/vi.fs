@@ -157,7 +157,7 @@ jmp,
 status-pos c@
 clrscr
 status-pos c!
-0 0 setcur
+# 0 0 setcur
 homepos 18 begin
 swap print-line swap
 1- ?dup 0= until drop ;
