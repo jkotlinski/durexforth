@@ -191,3 +191,5 @@ ba 1mi tsx,
 9a 1mi txs,
 98 1mi tya,
 
+: lbl, ( - a ) here @ ;
+: -branch, ( a - a ) lbl, 2+ - ;
