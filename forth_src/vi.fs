@@ -143,7 +143,7 @@ zptmp 1+ ldy, 1 sty,x
 0 ldy,#
 here @
 zptmp lda,(y)
-ffd2 jsr, # putchar
+e716 jsr, # putchar - slow
 zptmp inc,
 2 bne,
 zptmp 1+ inc,
