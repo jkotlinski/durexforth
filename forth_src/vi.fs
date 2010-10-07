@@ -132,22 +132,39 @@ bufstart curlinestart ! ;
 
 : status-pos 7c0 ;
 
-: show-page
-	status-pos c@
-	clrscr
-	status-pos c!
-	0 0 setcur
-	homepos
+var foundeol
+here @ foundeol !
+zptmp ldy, 0 sty,x
+zptmp 1+ ldy, 1 sty,x
+;asm
 
-    # todo: use asm
-	begin
-		dup c@ dup emit  # print char
-		swap 1+ swap  # advance addr
-        # until 0 char or screen bottom
-		0= d6 c@ 18 = or
-	until
-	drop
-;
+:asm print-line
+0 ldy,x zptmp sty,
+1 ldy,x zptmp 1+ sty,
+0 ldy,#
+here @
+zptmp lda,(y)
+php,
+ffd2 jsr, # putchar
+zptmp inc,
+2 bne,
+zptmp 1+ inc,
+plp,
+foundeol @ -branch beq,
+d cmp,#
+foundeol @ -branch beq,
+jmp,
+
+: show-page
+status-pos c@
+clrscr
+status-pos c!
+0 0 setcur
+homepos
+18 begin
+swap print-line swap
+1- ?dup 0= until
+drop ;
 
 : clear-status ( -- )
 	bl status-pos 18 fill

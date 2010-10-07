@@ -191,5 +191,9 @@ ba 1mi tsx,
 9a 1mi txs,
 98 1mi tya,
 
-: lbl, ( - a ) here @ ;
-: -branch, ( a - a ) lbl, 2+ - ;
+: -branch ( a - a ) here @ 2+ - ;
+
+84 value zptmp
+86 value zptmp2
+88 value zptmp3
+

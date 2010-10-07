@@ -152,9 +152,7 @@
 	1 cells allot
 	create
 	jsr-docol,
-	' lit ,
-	,
-	' exit ,
+	' lit , , ' exit ,
 ;
 
 : value ( n -- )
