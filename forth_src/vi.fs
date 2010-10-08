@@ -21,8 +21,28 @@ var cury
 cells allot value rowptrs
 var rowcount
 
-: homepos
-homerow @ cells rowptrs + @ ;
+:asmsub found-eol
+zptmp ldy, 0 sty,x
+zptmp 1+ ldy, 1 sty,x
+;asm
+
+:asm find-eol
+0 ldy,x zptmp sty,
+1 ldy,x zptmp 1+ sty,
+0 ldy,#
+here @
+zptmp lda,(y)
+zptmp inc, 2 bne, zptmp 1+ inc,
+0 cmp,#
+found-eol -branch beq,
+d cmp,#
+found-eol -branch beq,
+jmp,
+
+: homepos # rewrite in asm
+bufstart homerow @ # ptr row
+begin ?dup 0= if exit then
+swap find-eol swap 1- again ;
 
 10 allot dup 
 value filename-len
@@ -112,12 +132,7 @@ dup # row rowptr src src
 swap ! # row src
 
 # advance src past lf
-begin
-dup c@ d <>
-while
-1+
-repeat
-1+
+find-eol
 
 swap 1+ # advance row
 
@@ -388,6 +403,7 @@ bufstart curlinestart !
 
 : show-location
 exit
+    begin 1 d020 +! again
 	dup ( loc sol )
 	begin
 		dup c@ d = if
