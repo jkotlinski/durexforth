@@ -200,33 +200,33 @@ swap print-line swap
 	linelen curx @ min curx !
 ;
 
+:asmsub found-eol
+zptmp ldy, 0 sty,x
+zptmp 1+ ldy, 1 sty,x
+;asm
+
+:asm find-eol
+0 ldy,x zptmp sty,
+1 ldy,x zptmp 1+ sty,
+0 ldy,#
+here @
+zptmp lda,(y)
+zptmp inc, 2 bne, zptmp 1+ inc,
+0 cmp,#
+found-eol -branch beq,
+d cmp,#
+found-eol -branch beq,
+jmp,
+
 : cur-down
-	curlinestart @ ( addr )
-	dup c@ CR <> if
-		begin
-			dup eof @ = if
-				drop
-				exit
-			then
-			1+ ( addr )
-			dup c@ ( addr char )
-			CR =
-		until
-	then
-	1+ ( newlinestart )
-
-	dup eof @ >= if ( eof )
-		drop
-		exit
-	then
-
-	curlinestart !
-	1 cury +!
-
-	fit-curx-in-linelen
-
-	adjust-home
-;
+curlinestart @ ( addr )
+find-eol
+dup eof @ >= if ( eof )
+drop exit then
+curlinestart !
+1 cury +!
+fit-curx-in-linelen
+adjust-home ;
 
 : cur-up
 	curlinestart @ bufstart = if
