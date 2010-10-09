@@ -36,18 +36,27 @@ value filename-len
 	curlinestart @ curx @ +
 ;
 
-: linelen
-	0
-	curlinestart @ ( count addr )
-	begin
-		dup c@ CR = if
-			drop exit
-		then
+:asmsub found-eol
+zptmp ldy, 0 sty,x
+zptmp 1+ ldy, 1 sty,x
+;asm
 
-		1+
-		swap 1+ swap
-	again
-;
+:asm next-line
+0 ldy,x zptmp sty,
+1 ldy,x zptmp 1+ sty,
+0 ldy,#
+here @
+zptmp lda,(y)
+zptmp inc, 2 bne, zptmp 1+ inc,
+0 cmp,#
+found-eol -branch beq,
+d cmp,#
+found-eol -branch beq,
+jmp,
+
+: linelen
+curlinestart @ dup ( addr )
+next-line 1- swap - ;
 
 : cursor-scr-pos
 	cury @ 28 *
@@ -200,27 +209,9 @@ swap print-line swap
 	linelen curx @ min curx !
 ;
 
-:asmsub found-eol
-zptmp ldy, 0 sty,x
-zptmp 1+ ldy, 1 sty,x
-;asm
-
-:asm find-eol
-0 ldy,x zptmp sty,
-1 ldy,x zptmp 1+ sty,
-0 ldy,#
-here @
-zptmp lda,(y)
-zptmp inc, 2 bne, zptmp 1+ inc,
-0 cmp,#
-found-eol -branch beq,
-d cmp,#
-found-eol -branch beq,
-jmp,
-
 : cur-down
 curlinestart @ ( addr )
-find-eol
+next-line
 dup eof @ >= if ( eof )
 drop exit then
 curlinestart !
