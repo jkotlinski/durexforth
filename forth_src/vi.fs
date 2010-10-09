@@ -189,14 +189,12 @@ swap print-line swap
 		1 cury +! ( cur down )
 	repeat
 
-	begin
-		cury @ 17 >
-	while
-    1 to need-refresh
-    homepos @ next-line homepos !
-    ffff cury +! ( cur up )
-	repeat
-;
+homepos @
+begin cury @ 17 > while
+1 to need-refresh
+next-line
+ffff cury +! ( cur up )
+repeat homepos ! ;
 
 : fit-curx-in-linelen
 	linelen curx @ min curx !
