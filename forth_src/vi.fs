@@ -192,16 +192,9 @@ swap print-line swap
 	begin
 		cury @ 17 >
 	while
-		1 to need-refresh
-
-		homepos @ c@ CR <> if
-			begin
-				1 homepos +!
-				homepos @ c@ CR =
-			until
-		then
-		1 homepos +!
-		ffff cury +! ( cur up )
+    1 to need-refresh
+    homepos @ next-line homepos !
+    ffff cury +! ( cur up )
 	repeat
 ;
 
