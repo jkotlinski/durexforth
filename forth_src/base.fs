@@ -35,7 +35,6 @@
 : <> ( n -- b ) = not ;
 : > ( n -- b ) swap < ;
 : 0> ( n -- b ) 0 > ;
-: land 0> swap 0> and ;
 : <= > not ;
 : >= < not ;
 : 2+ 1+ 1+ ;
