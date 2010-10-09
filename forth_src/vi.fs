@@ -6,43 +6,15 @@
 var eof ( ram eof )
 0 eof !
 
-var homerow
+var homepos ( position at screen home )
 var curlinestart
 
 ( cursor screen pos )
-var currow
-var curx
+var curx 
 var cury
 0 value need-refresh
 0 value need-refresh-line
 0 value insert-active
-
-400 dup value maxrows 
-cells allot value rowptrs
-var rowcount
-
-:asmsub found-eol
-zptmp ldy, 0 sty,x
-zptmp 1+ ldy, 1 sty,x
-;asm
-
-:asm find-eol
-0 ldy,x zptmp sty,
-1 ldy,x zptmp 1+ sty,
-0 ldy,#
-here @
-zptmp lda,(y)
-zptmp inc, 2 bne, zptmp 1+ inc,
-0 cmp,#
-found-eol -branch beq,
-d cmp,#
-found-eol -branch beq,
-jmp,
-
-: homepos # rewrite in asm
-bufstart homerow @ # ptr row
-begin ?dup 0= if exit then
-swap find-eol swap 1- again ;
 
 10 allot dup 
 value filename-len
@@ -60,13 +32,15 @@ value filename-len
 	drop
 ;
 
-: editpos curlinestart @ curx @ + ;
+: editpos
+	curlinestart @ curx @ +
+;
 
 : linelen
 	0
 	curlinestart @ ( count addr )
 	begin
-		dup c@ d = if
+		dup c@ CR = if
 			drop exit
 		then
 
@@ -102,48 +76,20 @@ value filename-len
 
 	if # file error?
 		bufstart 1+ eof !
-		d bufstart c!
+		CR bufstart c!
 		0 eof @ c!
 		exit
 	then
 
-ae @ eof !
-0 eof @ c!
-
-# init rowptrs - should be faster
-
-0 rowptrs maxrows cells fill
-0 rowcount !
-
-bufstart 0 # src row
-begin
-2dup # src row src row
-maxrows < # src row src notmax
-swap # src row notmax src
-c@ # src row notmax char
-land # src row break?
-while
-
-# add src to rowptrs
-dup cells rowptrs + # src row rowptr
-rot # row rowptr src
-dup # row rowptr src src
--rot # row src rowptr src
-swap ! # row src
-
-# advance src past lf
-find-eol
-
-swap 1+ # advance row
-
-repeat
-
-rowcount ! drop ;
+	ae @ eof !
+	0 eof @ c!
+;
 
 : go-to-file-start
-0 curx ! 0 cury ! 0 currow !
-0 homerow !
-bufstart curlinestart ! ;
+	0 curx ! 0 cury !
+	bufstart homepos !
+	bufstart curlinestart !
+;
 
 : status-pos 7c0 ;
 
@@ -158,7 +104,7 @@ zptmp 1+ ldy, 1 sty,x
 0 ldy,#
 here @
 zptmp lda,(y)
-e716 jsr, # putchar - slow
+e716 jsr, # putchar
 zptmp inc,
 2 bne,
 zptmp 1+ inc,
@@ -173,7 +119,7 @@ status-pos c@
 clrscr
 status-pos c!
 # 0 0 setcur
-homepos 18 begin
+homepos @ 18 begin
 swap print-line swap
 1- ?dup 0= until drop ;
 
@@ -219,42 +165,68 @@ swap print-line swap
 ;
 
 : adjust-home
-cury @ 8000 and if
-1 to need-refresh
-cury @ homerow +!
-0 cury ! then
+	begin
+		cury @ 8000 and
+	while
+		1 to need-refresh
 
-cury @ 17 > if
-1 to need-refresh
-cury @ 17 - homerow +!
-17 cury ! then ;
+		ffff homepos +! ( skip first CR )
+		begin
+			ffff homepos +!
+			homepos @ c@ CR =
+			homepos @ bufstart 1- = or
+		until
+		1 homepos +!
+		1 cury +! ( cur down )
+	repeat
+
+	begin
+		cury @ 17 >
+	while
+		1 to need-refresh
+
+		homepos @ c@ CR <> if
+			begin
+				1 homepos +!
+				homepos @ c@ CR =
+			until
+		then
+		1 homepos +!
+		ffff cury +! ( cur up )
+	repeat
+;
 
 : fit-curx-in-linelen
-linelen curx @ min curx ! ;
+	linelen curx @ min curx !
+;
 
-: is-eof-or-CR
-dup 0= swap d = or ;
+: cur-down
+	curlinestart @ ( addr )
+	dup c@ CR <> if
+		begin
+			dup eof @ = if
+				drop
+				exit
+			then
+			1+ ( addr )
+			dup c@ ( addr char )
+			CR =
+		until
+	then
+	1+ ( newlinestart )
 
-: cur-right
-editpos c@ is-eof-or-CR
-editpos 1+ c@ is-eof-or-CR
-or if exit then
-1 curx +! ;
+	dup eof @ >= if ( eof )
+		drop
+		exit
+	then
 
-: curaddr currow @ cells rowptrs + ;
+	curlinestart !
+	1 cury +!
 
-: move-down curaddr 2+ @
-if 1 currow +! 1 cury +! then ;
+	fit-curx-in-linelen
 
-: tidy-up-row
-curaddr @ curlinestart !
-fit-curx-in-linelen adjust-home ;
-
-: cur-down-n ( rows -- )
-begin ?dup while move-down 1- repeat
-tidy-up-row ;
-
-: cur-down 1 cur-down-n ;
+	adjust-home
+;
 
 : cur-up
 	curlinestart @ bufstart = if
@@ -266,7 +238,7 @@ tidy-up-row ;
 	begin
 		1- ( addr )
 		dup c@ ( addr char )
-		d = ( addr CR? )
+		CR = ( addr CR? )
 
 		over ( addr CR? addr )
 		bufstart < ( addr CR? sof? )
@@ -291,8 +263,19 @@ tidy-up-row ;
 	ffff curx +!
 ;
 
+: is-eof-or-CR
+	dup 0= swap CR = or
+;
+
 : is-whitespace
-	dup d = swap bl = or
+	dup CR = swap bl = or
+;
+
+: cur-right
+	editpos c@ is-eof-or-CR
+	editpos 1+ c@ is-eof-or-CR
+	or if exit then
+	1 curx +!
 ;
 
 : eol
@@ -321,7 +304,7 @@ tidy-up-row ;
 	begin
 		editpos bufstart =
 		editpos 1- c@ is-whitespace
-		editpos c@ is-whitespace not land
+		editpos c@ is-whitespace not and
 		or not
 	while
 		rewind-cur
@@ -343,7 +326,7 @@ tidy-up-row ;
 	advance-cur if exit then
 	begin
 		editpos 1- c@ is-whitespace
-		editpos c@ is-whitespace not land
+		editpos c@ is-whitespace not and
 		not
 	while
 		advance-cur if exit then
@@ -354,28 +337,35 @@ tidy-up-row ;
 	c begin cur-up 1- dup 0= until drop
 ;
 
-: half-page-fwd c cur-down-n ;
+: half-page-fwd
+	c begin cur-down 1- dup 0= until drop
+;
 
 : find-prev-CR ( addr -- new-addr )
 	begin
 		1-
 		dup bufstart <=
-		over c@ d =
+		over c@ CR =
 		or
 	until
 	bufstart max
 ;
 
 : goto-eof ( can be much optimized... )
-rowcount @ 1- currow @ - # diff
-rowcount @ 1- currow !
-cury +!
-tidy-up-row ;
+	begin
+		editpos
+		half-page-fwd
+		editpos =
+	until
 
-: goto-start
-0 curx ! 0 cury ! 0 currow ! 0 homerow !
-bufstart curlinestart !
-1 to need-refresh ;
+	1 to need-refresh
+;
+
+: goto-start ( can be much optimized... )
+	0 curx ! 0 cury !
+	bufstart dup homepos ! curlinestart !
+	1 to need-refresh
+;
 
 : insert-start
 	1 to insert-active
@@ -402,16 +392,14 @@ bufstart curlinestart !
 ;
 
 : show-location
-exit
-    begin 1 d020 +! again
 	dup ( loc sol )
 	begin
-		dup c@ d = if
+		dup c@ CR = if
 			1+ ( loc sol )
 			tuck ( sol loc sol )
 			- curx !
 			0 cury !
-			# dup homepos ! broken
+			dup homepos !
 			curlinestart !
 			1 to need-refresh
 			clear-status
@@ -942,9 +930,7 @@ char j c, loc cur-down >cfa ,
 	cleanup
 ;
 
-: edit vi ;
-
-# loc fg loc vi
-# hide-to CR
-# hidden hidden
+loc fg loc vi
+hide-to CR
+hidden hidden
 
