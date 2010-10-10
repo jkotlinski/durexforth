@@ -177,9 +177,7 @@ fit-curx-in-linelen
 adjust-home ;
 
 : cur-up
-	curlinestart @ bufstart = if
-		exit ( already at top )
-	then
+curlinestart @ bufstart = if exit then
 
 	curlinestart @ ( addr )
 	1- ( skip first CR plz )
