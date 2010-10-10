@@ -167,7 +167,7 @@ d = ( addr char cr? )
 swap 0= ( addr cr? sof? )
 or ( addr isprevline )
 until
-1+ bufstart max ;
+1+ ;
 
 : cur-up
 curlinestart @
