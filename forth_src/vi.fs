@@ -1,7 +1,8 @@
   : CR d ;
 : clrscr e544 jsr-wrap ;
 
-: bufstart 5000 ;
+: bufstart 5001 ;
+0 5000 c! # reverse sentinel
 
 var eof ( ram eof )
 0 eof !
@@ -161,17 +162,16 @@ fit-curx-in-linelen ;
 : find-start-of-line
 begin
 1- ( addr )
-dup c@ ( addr char )
-d = ( addr cr )
-over ( addr cr? addr )
-bufstart < ( addr CR? sof? )
-or ( addr bool )
+dup c@ dup ( addr char char )
+d = ( addr char cr? )
+swap 0= ( addr cr? sof? )
+or ( addr isprevline )
 until
 1+ bufstart max ;
 
 : cur-up
-curlinestart @ bufstart = if exit then
-curlinestart @ ( addr )
+curlinestart @
+dup bufstart = if drop exit then
 1-
 find-start-of-line
 curlinestart !
