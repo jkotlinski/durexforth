@@ -174,20 +174,17 @@ swap print-line swap
 ;
 
 : adjust-home
-	begin
-		cury @ 8000 and
-	while
-		1 to need-refresh
-
-		ffff homepos +! ( skip first CR )
-		begin
-			ffff homepos +!
-			homepos @ c@ CR =
-			homepos @ bufstart 1- = or
-		until
-		1 homepos +!
-		1 cury +! ( cur down )
-	repeat
+cury @ ffff = if
+1 to need-refresh
+homepos @ 1- # skip first cr
+begin
+1-
+dup c@ d =
+over bufstart 1- = or
+until
+1+ homepos !
+1 cury +! ( cur down )
+exit then
 
 cury @ 18 = if
 1 to need-refresh
