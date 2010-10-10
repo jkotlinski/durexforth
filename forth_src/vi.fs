@@ -180,31 +180,30 @@ homepos @ next-line homepos !
 then
 fit-curx-in-linelen ;
 
+: find-start-of-line
+begin
+1- ( addr )
+dup c@ ( addr char )
+d = ( addr cr )
+over ( addr cr? addr )
+bufstart < ( addr CR? sof? )
+or ( addr bool )
+until
+1+ bufstart max ;
+
 : cur-up
 curlinestart @ bufstart = if exit then
 
-	curlinestart @ ( addr )
-	1- ( skip first CR plz )
-	begin
-		1- ( addr )
-		dup c@ ( addr char )
-		CR = ( addr CR? )
+curlinestart @ ( addr )
+1-
+find-start-of-line
 
-		over ( addr CR? addr )
-		bufstart < ( addr CR? sof? )
-		or ( addr bool )
-	until
-	( addr )
+curlinestart !
+ffff cury +!
 
-	1+
-	bufstart max
-	curlinestart !
-	ffff cury +!
+fit-curx-in-linelen
 
-	fit-curx-in-linelen
-
-	adjust-home
-;
+adjust-home ;
 
 : cur-left
 curx @ 0= if exit then
