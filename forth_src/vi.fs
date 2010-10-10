@@ -143,28 +143,6 @@ a d021 c!
 d021 c! d020 c!
 clrscr ;
 
-( modifies cury, homepos )
-: adjust-home
-cury @ ffff = if
-1 to need-refresh
-homepos @ 1- # skip first cr
-begin
-1-
-dup c@ d =
-over bufstart 1- = or
-until
-1+ homepos !
-1 cury +! ( cur down )
-exit then
-
-cury @ 18 = if
-1 to need-refresh
-ffff cury +!
-homepos @
-next-line
-homepos !
-then ;
-
 : fit-curx-in-linelen
 linelen curx @ min curx ! ;
 
@@ -193,17 +171,17 @@ until
 
 : cur-up
 curlinestart @ bufstart = if exit then
-
 curlinestart @ ( addr )
 1-
 find-start-of-line
-
 curlinestart !
-ffff cury +!
-
 fit-curx-in-linelen
-
-adjust-home ;
+cury @ 0= if
+curlinestart @ homepos !
+1 to need-refresh
+else
+ffff cury +!
+then ;
 
 : cur-left
 curx @ 0= if exit then
