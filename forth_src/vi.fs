@@ -150,12 +150,10 @@ linelen curx @ min curx ! ;
 curlinestart @ ( curline )
 next-line dup ( 2xnextline )
 eof @ >= if drop exit then
-cury @ 17 < if
-curlinestart ! 1 cury +!
-else
-dup curlinestart ! print-line drop
+curlinestart !
+cury @ 17 < if 1 cury +! else
 homepos dup @ next-line swap !
-then
+1 to need-refresh then
 fit-curx-in-linelen ;
 
 : find-start-of-line
