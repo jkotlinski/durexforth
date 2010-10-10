@@ -199,10 +199,9 @@ then ;
 ;
 
 : cur-down
-curlinestart @ ( addr )
+curlinestart @
 next-line
-dup eof @ >= if ( eof )
-drop exit then
+dup eof @ >= if drop exit then
 curlinestart !
 1 cury +!
 fit-curx-in-linelen
@@ -319,16 +318,6 @@ adjust-home ;
 
 : half-page-fwd
 	c begin cur-down 1- dup 0= until drop
-;
-
-: find-prev-CR ( addr -- new-addr )
-	begin
-		1-
-		dup bufstart <=
-		over c@ CR =
-		or
-	until
-	bufstart max
 ;
 
 : goto-eof ( can be much optimized... )
