@@ -20,21 +20,8 @@ var cury
 value filename-len
 1+ value filename
 
-: max ( a b - c )
-	2dup ( a b a b )
-	< if swap then
-	drop
-;
-
-: min ( a b - c )
-	2dup ( a b a b )
-	> if swap then
-	drop
-;
-
 : editpos
-	curlinestart @ curx @ +
-;
+curlinestart @ curx @ + ;
 
 :asmsub foundeol
 zptmp ldy, 0 sty,x
@@ -75,26 +62,22 @@ curlinestart @ dup ( addr )
 next-line 1- swap - ;
 
 : cursor-scr-pos
-	cury @ 28 *
-	curx @ linelen min +
-	400 + ( addr )
-;
+cury @ 28 *
+curx @ linelen min +
+400 + ( addr ) ;
 
 : hide-cursor
-	cursor-scr-pos
-	dup @ 7f and
-	swap c!
-;
+cursor-scr-pos
+dup @ 7f and
+swap c! ;
 
 : show-cursor
-	insert-active 0= if
-		curx @ linelen 1- min curx c!
-	then
-
-	cursor-scr-pos
-	dup @ 80 or
-	swap c!
-;
+insert-active 0= if
+curx @ linelen 1- min curx c!
+then
+cursor-scr-pos
+dup @ 80 or
+swap c! ;
 
 : do-load
 	bufstart loadb
@@ -111,13 +94,11 @@ next-line 1- swap - ;
 ;
 
 : go-to-file-start
-	0 curx ! 0 cury !
-	bufstart homepos !
-	bufstart curlinestart !
-;
+0 dup curx ! cury !
+bufstart homepos !
+bufstart curlinestart ! ;
 
 : status-pos 7c0 ;
-
 
 : show-page
 status-pos c@
@@ -128,13 +109,10 @@ swap print-line swap
 1- ?dup 0= until drop ;
 
 : clear-status ( -- )
-	bl status-pos 18 fill
-;
+bl status-pos 18 fill ;
 
 : set-status ( c -- )
-	clear-status
-	status-pos c!
-;
+clear-status status-pos c! ;
 
 : init
 	0 compile ! # to enable editor start from base.src
@@ -148,25 +126,22 @@ swap print-line swap
 ;
 
 : push-colors
-	d020 c@
-	d021 c@
-	286 c@
+d020 c@
+d021 c@
+286 c@
 
-	a d021 c!
-	2 d020 c!
-	1 286 c!
-	1 d800 400 fill
-;
+a d021 c!
+2 d020 c!
+1 286 c!
+1 d800 400 fill ;
 
 : cleanup ( bordercolor bgcolor cursorcolor -- )
-	1 linebuf c! # enable buffering
-
-	1 blink
-	40 28a c! # key repeat off
-	286 c! # cursor col
-	d021 c! d020 c!
-	clrscr
-;
+1 linebuf c! # enable buffering
+1 blink
+40 28a c! # key repeat off
+286 c! # cursor col
+d021 c! d020 c!
+clrscr ;
 
 : adjust-home
 cury @ ffff = if
@@ -190,8 +165,7 @@ homepos !
 then ;
 
 : fit-curx-in-linelen
-	linelen curx @ min curx !
-;
+linelen curx @ min curx ! ;
 
 : cur-down
 curlinestart @
@@ -231,32 +205,22 @@ adjust-home ;
 ;
 
 : cur-left
-	curx @
-	0= if exit then
+curx @ 0= if exit then
+ffff curx +! ;
 
-	ffff curx +!
-;
-
-: is-eof-or-CR
-	dup 0= swap CR = or
-;
-
-: is-whitespace
-	dup CR = swap bl = or
-;
+: is-eof-or-CR dup 0= swap CR = or ;
+: is-whitespace dup CR = swap bl = or ;
 
 : cur-right
-	editpos c@ is-eof-or-CR
-	editpos 1+ c@ is-eof-or-CR
-	or if exit then
-	1 curx +!
-;
+editpos c@ is-eof-or-CR
+editpos 1+ c@ is-eof-or-CR
+or if exit then
+1 curx +! ;
 
 : eol
-	linelen 
-	dup 0> if 1- then
-	curx !
-;
+linelen
+dup 0> if 1- then
+curx ! ;
 
 ( left, or up + eol if we're at xpos 0 )
 : rewind-cur
@@ -269,9 +233,7 @@ adjust-home ;
 		then
 ;
 
-: sol
-	0 curx !
-;
+: sol 0 curx ! ;
 
 : word-back
 	rewind-cur
@@ -325,27 +287,21 @@ adjust-home ;
 	1 to need-refresh
 ;
 
-: goto-start ( can be much optimized... )
-	0 curx ! 0 cury !
-	bufstart dup homepos ! curlinestart !
-	1 to need-refresh
-;
+: goto-start
+0 dup curx ! cury !
+bufstart dup homepos ! curlinestart !
+1 to need-refresh ;
 
 : insert-start
-	1 to insert-active
-	[ char i ] literal set-status
-;
+1 to insert-active
+[ char i ] literal set-status ;
 
 : force-cur-right
-	linelen 0> if
-		1 curx +!
-	then
-;
+linelen 0> if 1 curx +! then ;
 
 : append-start
-	force-cur-right
-	insert-start
-;
+force-cur-right
+insert-start ;
 
 : insert-stop
 	curx @ if
@@ -397,9 +353,8 @@ adjust-home ;
 ;
 
 : replace-char
-	key editpos c!
-	1 to need-refresh-line
-;
+key editpos c!
+1 to need-refresh-line ;
 
 : backspace
 	curx @ 0= if exit then
@@ -460,11 +415,7 @@ adjust-home ;
 
 : insert-right
 curx @ linelen 1- = if
-	force-cur-right
-else
-	cur-right
-then
-;
+force-cur-right else cur-right then ;
 
 : insert-handler
 	dup a0 = if drop 20 then # shift space => space
@@ -484,12 +435,10 @@ then
 ;
 
 : push-cursor
-	curx @ cury @ curlinestart @
-;
+curx @ cury @ curlinestart @ ;
 
 : pop-cursor
-	curlinestart ! cury ! curx !
-;
+curlinestart ! cury ! curx ! ;
 
 : del-word
 	1 to need-refresh-line
@@ -633,14 +582,13 @@ var clipboard-count
 ;
 
 : write-file
-	do-backup
+do-backup
 
-	bufstart
-	eof @
-	filename filename-len c@
-	saveb
-	1 to need-refresh
-;
+bufstart
+eof @
+filename filename-len c@
+saveb
+1 to need-refresh ;
 
 : save-as
 	[ char ! ] literal emit
@@ -710,10 +658,9 @@ var clipboard-count
 ;
 
 : open-line
-	sol CR insert-char sol
-	insert-start
-	1 to need-refresh
-;
+sol CR insert-char sol
+insert-start
+1 to need-refresh ;
 
 : paste-line
 	open-line
@@ -732,22 +679,20 @@ var clipboard-count
 ;
 
 : change-word
-	del-word 
-	bl insert-char
-	cur-left
-	insert-start 
-;
+del-word
+bl insert-char
+cur-left
+insert-start ;
 
 : force-cur-down
-	editpos
-	cur-down
-	editpos = if
-		eol 
-		force-cur-right
-		CR insert-char
-		cur-down
-	then
-;
+editpos
+cur-down
+editpos = if
+eol 
+force-cur-right
+CR insert-char
+cur-down
+then ;
 
 create maintable
 char i c, loc insert-start >cfa ,
@@ -882,17 +827,12 @@ char j c, loc cur-down >cfa ,
 ;
 
 : fg # bring back editor
-	eof @ 0= if
-		." no buffer"
-		cr
-		exit
-	then
-	init
-	push-colors
-	show-page
-	main-loop
-	cleanup
-;
+eof @ 0= if ." no buffer" cr exit then
+init
+push-colors
+show-page
+main-loop
+cleanup ;
 
 loc fg loc vi
 hide-to CR

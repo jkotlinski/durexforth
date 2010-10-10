@@ -7,15 +7,14 @@
 : / /mod swap drop ;
 : mod /mod drop ;
 : literal immed ' lit , , ;
-: '"' [ char " ] literal ;
 : loc word find ;
 : [compile] immed loc >cfa , ;
 : ['] immed ' lit , ;
 : jsr-docol, 20 c, docol , ;
 : if immed ' 0branch , here @ 0 , ;
 : then immed dup here @ swap - swap ! ;
-: else immed ' branch , here @ 0 , 
-	swap dup here @ swap - swap ! ;
+: else immed ' branch , here @ 0 ,
+swap dup here @ swap - swap ! ;
 : begin immed here @ ;
 : until immed ' 0branch , here @ - , ;
 : again immed ' branch , here @ - , ;
@@ -34,10 +33,15 @@
 : not 0= ;
 : <> ( n -- b ) = not ;
 : > ( n -- b ) swap < ;
+
 : 0> ( n -- b ) 0 > ;
 : <= > not ;
 : >= < not ;
 : 2+ 1+ 1+ ;
+: max ( a b - c )
+2dup < if swap then drop ;
+: min ( a b - c )
+2dup > if swap then drop ;
 : cells dup + ;
 
 : tell 
@@ -50,6 +54,7 @@
 	until
 	2drop
 ;
+: '"' [ char " ] literal ;
 : s" immed ( -- addr len )
 	state @ if
 		' litstring ,
