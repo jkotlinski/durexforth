@@ -81,18 +81,17 @@ dup @ 80 or
 swap c! ;
 
 : do-load
-	bufstart loadb
+bufstart loadb
 
-	if # file error?
-		bufstart 1+ eof !
-		CR bufstart c!
-		0 eof @ c!
-		exit
-	then
+if # file error?
+bufstart 1+ eof !
+CR bufstart c!
+0 dup dup dup eof @ c! curx ! cury !
+bufstart 400 fill
+exit then
 
-	ae @ eof !
-	0 eof @ c!
-;
+ae @ eof !
+0 eof @ c! ;
 
 : go-to-file-start
 0 dup curx ! cury !
@@ -255,14 +254,17 @@ c begin cur-up 1- ?dup 0= until ;
 c begin cur-down 1- ?dup 0= until ;
 
 : goto-eof ( can be much optimized... )
-	begin
-		editpos
-		half-page-fwd
-		editpos =
-	until
-
-	1 to need-refresh
-;
+bufstart eof @ = if exit then
+eof @ 1- find-start-of-line
+dup curlinestart ! homepos !
+0 curx !
+17 begin
+homepos @ 1- find-start-of-line homepos !
+1- dup 0=
+homepos @ bufstart = or
+until
+17 swap - dup cury ! 0 swap setcur
+1 to need-refresh ;
 
 : goto-start
 0 dup curx ! cury !
