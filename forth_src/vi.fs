@@ -154,7 +154,7 @@ cury @ 17 < if
 curlinestart ! 1 cury +!
 else
 dup curlinestart ! print-line drop
-homepos @ next-line homepos !
+homepos dup @ next-line swap !
 then
 fit-curx-in-linelen ;
 
