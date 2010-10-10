@@ -10,13 +10,13 @@ var homepos ( position at screen home )
 var curlinestart
 
 ( cursor screen pos )
-var curx 
+var curx
 var cury
 0 value need-refresh
 0 value need-refresh-line
 0 value insert-active
 
-10 allot dup 
+10 allot dup
 value filename-len
 1+ value filename
 
@@ -36,10 +36,26 @@ value filename-len
 	curlinestart @ curx @ +
 ;
 
-:asmsub found-eol
+:asmsub foundeol
 zptmp ldy, 0 sty,x
 zptmp 1+ ldy, 1 sty,x
 ;asm
+
+:asm print-line
+0 ldy,x zptmp sty,
+1 ldy,x zptmp 1+ sty,
+0 ldy,#
+here @
+zptmp lda,(y)
+e716 jsr, # putchar
+zptmp inc,
+2 bne,
+zptmp 1+ inc,
+0 cmp,#
+foundeol -branch beq,
+d cmp,#
+foundeol -branch beq,
+jmp,
 
 :asm next-line
 0 ldy,x zptmp sty,
@@ -49,9 +65,9 @@ here @
 zptmp lda,(y)
 zptmp inc, 2 bne, zptmp 1+ inc,
 0 cmp,#
-found-eol -branch beq,
+foundeol -branch beq,
 d cmp,#
-found-eol -branch beq,
+foundeol -branch beq,
 jmp,
 
 : linelen
@@ -102,32 +118,11 @@ next-line 1- swap - ;
 
 : status-pos 7c0 ;
 
-:asmsub foundeol
-zptmp ldy, 0 sty,x
-zptmp 1+ ldy, 1 sty,x
-;asm
-
-:asm print-line
-0 ldy,x zptmp sty,
-1 ldy,x zptmp 1+ sty,
-0 ldy,#
-here @
-zptmp lda,(y)
-e716 jsr, # putchar
-zptmp inc,
-2 bne,
-zptmp 1+ inc,
-0 cmp,#
-foundeol -branch beq,
-d cmp,#
-foundeol -branch beq,
-jmp,
 
 : show-page
 status-pos c@
 clrscr
 status-pos c!
-# 0 0 setcur
 homepos @ 18 begin
 swap print-line swap
 1- ?dup 0= until drop ;
@@ -170,7 +165,7 @@ swap print-line swap
 	40 28a c! # key repeat off
 	286 c! # cursor col
 	d021 c! d020 c!
-	93 emit # clrscr
+	clrscr
 ;
 
 : adjust-home
