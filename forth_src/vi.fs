@@ -170,8 +170,8 @@ until
 
 : cur-up
 curlinestart @
-dup bufstart = if drop exit then
 1-
+dup c@ 0= if drop exit then
 find-start-of-line
 curlinestart !
 fit-curx-in-linelen
