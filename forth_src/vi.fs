@@ -249,12 +249,10 @@ curx ! ;
 ;
 
 : half-page-back
-	c begin cur-up 1- dup 0= until drop
-;
+c begin cur-up 1- ?dup 0= until ;
 
 : half-page-fwd
-	c begin cur-down 1- dup 0= until drop
-;
+c begin cur-down 1- ?dup 0= until ;
 
 : goto-eof ( can be much optimized... )
 	begin
