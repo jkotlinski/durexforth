@@ -143,6 +143,7 @@ a d021 c!
 d021 c! d020 c!
 clrscr ;
 
+( modifies cury, homepos )
 : adjust-home
 cury @ ffff = if
 1 to need-refresh
@@ -168,13 +169,16 @@ then ;
 linelen curx @ min curx ! ;
 
 : cur-down
-curlinestart @
-next-line
-dup eof @ >= if drop exit then
-curlinestart !
-1 cury +!
-fit-curx-in-linelen
-adjust-home ;
+curlinestart @ ( curline )
+next-line dup ( 2xnextline )
+eof @ >= if drop exit then
+cury @ 17 < if
+curlinestart ! 1 cury +!
+else
+dup curlinestart ! print-line drop
+homepos @ next-line homepos !
+then
+fit-curx-in-linelen ;
 
 : cur-up
 curlinestart @ bufstart = if exit then
@@ -686,7 +690,7 @@ insert-start ;
 editpos
 cur-down
 editpos = if
-eol 
+eol
 force-cur-right
 CR insert-char
 cur-down
