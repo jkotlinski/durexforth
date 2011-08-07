@@ -769,6 +769,7 @@ STOREBYTE
 FETCHBYTE
 	lda	(0, x)
 	sta 0, x
+	ldy #0
 	sty	1, x
 	+NEXT
 
