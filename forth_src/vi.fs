@@ -130,8 +130,8 @@ d020 c@
 d021 c@
 286 c@
 
-a d021 c!
-2 d020 c!
+2 d021 c!
+a d020 c!
 1 286 c!
 1 d800 400 fill ;
 
@@ -424,6 +424,7 @@ curlinestart ! cury ! curx ! ;
 			del-char exit
 		then
 		editpos c@ d = if exit then
+		editpos c@ 0 = if exit then
 		del-char
 	again
 ;
