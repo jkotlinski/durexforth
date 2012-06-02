@@ -1,2 +1,2 @@
-map <F5> :wall!<CR>:make<CR>
-map <F7> :!x64 durexforth.d64 &<CR>
+map <F4> :wall!<CR>:make<CR>
+map <F5> :!x64 durexforth.d64 &<CR>

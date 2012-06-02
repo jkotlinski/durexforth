@@ -204,11 +204,12 @@ begin @ dup hidden 2dup = until
 ;
 
 : modules ;
-." debug.."
-s" debug" load
+# ." debug.."
+# s" debug" load
 ." asm.."
 s" asm" load
-
+." gfx.."
+s" gfx" load
 ." vi.."
 s" vi" load
 
