@@ -19,4 +19,8 @@ bb lda,# d011 sta, # enable
 
 : clrcol ( fgbgcol -- )
 colbase 3e8 fill
-0 gfxbase 1f40 fill ;
+0 bmpbase 1f40 fill ;
+
+: blkcol ( x y c -- )
+rot 8 / rot 8 / 28 *
++ colbase + c! ;
