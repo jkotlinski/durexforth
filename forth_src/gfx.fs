@@ -29,14 +29,10 @@ create mask
 8 c, 4 c, 2 c, 1 c,
 
 : plot ( x y -- )
-swap # y x
+dup 2/ 2/ 2/ 140 *
+swap 7 and + swap # y x
 dup 7 and ['] mask + c@ # y x bit
 -rot # bit y x
-2/ 2/ 2/ 2* 2* 2* # bit y char
-swap dup # bit char y y
-2/ 2/ 2/ 140 * # bit char y row
-swap # bit char row y
-7 and # bit char row line
-+ + bmpbase + # bit by
-dup c@ rot or swap c!
-;
+2/ 2/ 2/ 2* 2* 2*
++ bmpbase +
+dup c@ rot or swap c! ;
