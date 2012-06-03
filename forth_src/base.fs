@@ -224,6 +224,16 @@ inx, inx, ;asm
 : invert ffff xor ;
 : negate invert 1+ ;
 
+# return stack
+:asm rdrop pla, pla, ;asm
+:asm >r 0 lda,x pha, 1 lda,x pha,
+inx, inx, ;asm
+:asm r> dex, dex,
+pla, 1 sta,x pla, 0 sta,x ;asm
+:asm r@ dex, dex,
+pla, 1 sta,x pla, 0 sta,x
+pha, 1 lda,x pha, ;asm
+
 ." gfx.."
 s" gfx" load
 ." vi.."
