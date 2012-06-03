@@ -33,6 +33,5 @@ dup 2/ 2/ 2/ 140 *
 swap 7 and + swap # y x
 dup 7 and ['] mask + c@ # y x bit
 -rot # bit y x
-2/ 2/ 2/ 2* 2* 2*
-+ bmpbase +
+fff8 and + bmpbase +
 dup c@ rot or swap c! ;
