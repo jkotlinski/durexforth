@@ -40,7 +40,6 @@ swap dup here @ swap - swap ! ;
 2dup < if swap then drop ;
 : min ( a b - c )
 2dup > if swap then drop ;
-: cells dup + ;
 
 : tell 
 	dup c@ ( get strlen )
@@ -148,10 +147,8 @@ swap dup here @ swap - swap ! ;
 	here +!
 ;
 
-: cells ( n -- n ) dup + ; ( 2* )
-
 : var
-	1 cells allot
+	2 allot
 	create
 	jsr-docol,
 	' lit , , ' exit ,
