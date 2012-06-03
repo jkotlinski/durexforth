@@ -31,6 +31,8 @@ create mask
 var penx var peny
 
 : plot ( x y -- )
+2dup c8 >= swap 140 >= or
+if 2drop exit then
 2dup peny ! penx !
 dup fff8 and 28 *
 swap 7 and + swap # y x
