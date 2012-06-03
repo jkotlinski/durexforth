@@ -119,17 +119,8 @@ swap dup here @ swap - swap ! ;
 	drop
 ;
 
-: ?hidden
-	2+ ( skip link ptr )
-	c@
-	40 and
-;
-
-: ?immed
-	2+ ( skip link ptr )
-	c@
-	80 and
-;
+: ?hidden 2+ c@ 40 and ;
+: ?immed 2+ c@ 80 and ;
 
 : +! ( num addr -- ) 
 dup @ rot + swap ! ;
