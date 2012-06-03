@@ -56,9 +56,28 @@ penx @ peny @ plot
 repeat
 then ;
 
+: linev
+dy @ 8000 and if
+# up
+begin dy @ while
+penx @ peny @ plot
+ffff peny +! 1 dy +!
+repeat
+else
+# down
+begin dy @ while
+penx @ peny @ plot
+1 peny +! ffff dy +!
+repeat
+then ;
+
 : line ( x y -- )
 peny @ - dy ! penx @ - dx !
 dy @ if
+ dx @ if
+ else
+  linev
+ then
 else
  lineh
 then ;
