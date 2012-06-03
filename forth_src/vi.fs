@@ -195,7 +195,7 @@ or if exit then
 
 : eol
 linelen
-dup 0> if 1- then
+dup if 1- then
 curx ! ;
 
 ( left, or up + eol if we're at xpos 0 )
@@ -274,7 +274,7 @@ bufstart dup homepos ! curlinestart !
 [ char i ] literal set-status ;
 
 : force-cur-right
-linelen 0> if 1 curx +! then ;
+linelen if 1 curx +! then ;
 
 : append-start
 force-cur-right
@@ -313,14 +313,14 @@ insert-start ;
 	27 linelen - ( spaces )
 	linelen ( spaces chars )
 	begin
-		?dup 0>
+		?dup
 	while
 		editpos @ emit
 		1 curx +!
 		1-
 	repeat
 	begin
-		?dup 0>
+		?dup
 	while
 		bl emit
 		1-
@@ -438,7 +438,7 @@ var clipboard-count
 	0 clipboard-count !
 	sol
 	begin
-		linelen 0>
+		linelen
 	while
         # copy to clipboard
 		editpos c@

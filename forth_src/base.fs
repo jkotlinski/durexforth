@@ -32,7 +32,6 @@ swap dup here @ swap - swap ! ;
 : <> ( n -- b ) = not ;
 : > ( n -- b ) swap < ;
 
-: 0> ( n -- b ) 0 > ;
 : <= > not ;
 : >= < not ;
 : 2+ 1+ 1+ ;
