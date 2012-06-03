@@ -59,7 +59,7 @@ create jsr-docol,
 21 2mi and,(x)
 31 2mi and,(y)
 
-a 1mi asl,#
+a 1mi asla,
 6 e 23mi asl,
 16 1e 23mi asl,x
 

@@ -208,6 +208,16 @@ begin @ dup hidden 2dup = until
 # s" debug" load
 ." asm.."
 s" asm" load
+
+:asm 2*
+0 lda,x asla, 0 sta,x
+1 lda,x rola, 1 sta,x
+;asm
+:asm 2/
+1 lda,x lsra, 1 sta,x
+0 lda,x rora, 0 sta,x
+;asm
+
 ." gfx.."
 s" gfx" load
 ." vi.."
