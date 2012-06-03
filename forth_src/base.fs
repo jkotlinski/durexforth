@@ -89,7 +89,7 @@ swap dup here @ swap - swap ! ;
 		[compile] s"
 		' tell ,
 	else
-		( in immediate mode, just read and print chars )
+		( read and print chars )
 		begin
 			key
 			dup '"' = if
