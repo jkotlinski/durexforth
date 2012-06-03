@@ -40,44 +40,29 @@ fff8 and + bmpbase +
 dup c@ rot or swap c! ;
 
 var dx var dy
-
-: lineh
-dx @ 8000 and if
-# left
-begin dx @ while
-penx @ peny @ plot
-ffff penx +! 1 dx +!
-repeat
-else
-# right
-begin dx @ while
-penx @ peny @ plot
-1 penx +! ffff dx +!
-repeat
-then ;
-
-: linev
-dy @ 8000 and if
-# up
-begin dy @ while
-penx @ peny @ plot
-ffff peny +! 1 dy +!
-repeat
-else
-# down
-begin dy @ while
-penx @ peny @ plot
-1 peny +! ffff dy +!
-repeat
-then ;
+var sx var sy
+var err
 
 : line ( x y -- )
-peny @ - dy ! penx @ - dx !
-dy @ if
- dx @ if
- else
-  linev
+2dup peny @ - abs dy !
+penx @ - abs dx !
+2dup
+peny @ swap < if 1 else ffff then sy !
+penx @ swap < if 1 else ffff then sx !
+dx @ dy @ - err !
+
+begin
+ penx @ peny @ plot
+ 2dup peny @ = swap penx @ = and if
+  2drop exit
  then
-else
- lineh
-then ;
+ err @ 2* dup
+ dy @ negate s> if
+  err @ dy @ - err !
+  sx @ penx +! 
+ then
+ dx @ s< if
+  err @ dx @ + err !
+  sy @ peny +!
+ then
+again ;
