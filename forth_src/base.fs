@@ -132,11 +132,7 @@ swap dup here @ swap - swap ! ;
 ;
 
 : +! ( num addr -- ) 
-	dup @ ( num addr val )
-	rot + ( addr val num )
-	swap ( newval addr )
-	!
-;
+dup @ rot + swap ! ;
 
 ( get pointer to first data field - skip jsr DOCOL )
 : >dfa >cfa 1+ 2+ ;
