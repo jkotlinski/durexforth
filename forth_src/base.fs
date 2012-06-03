@@ -29,7 +29,7 @@ swap dup here @ swap - swap ! ;
 : pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u ) 1+ 2 * sp@ + @ ;
 : ?dup dup if dup then ;
 : not 0= ;
-: <> ( n -- b ) = not ;
+: <> ( a b -- c ) = not ;
 : > ( n -- b ) swap < ;
 
 : <= > not ;
@@ -206,6 +206,12 @@ inx, inx, ;asm
 inx, inx, ;asm
 : invert ffff xor ;
 : negate invert 1+ ;
+
+# signedness
+: 0< 8000 and not not ;
+: abs dup 0< if negate then ;
+: s< - 0< ;
+: s> swap s< ;
 
 # return stack
 :asm rdrop pla, pla, ;asm

@@ -87,8 +87,9 @@ Drop value on top of return stack.
 \item[)] End multi-line comment.
 \end{description}
 
-
 \section{Mathematics}
+
+These words assume that the lowest number is 0 and highest is FFFF.
 
 \begin{description}
 \item[1+ ( a -- b )] Increase top of stack value by 1.
@@ -103,6 +104,23 @@ Drop value on top of return stack.
 \item[/mod ( a b -- r q )] Divide a with b. r = rest, q = quotient.
 \item[/ ( a b -- q )] Divide a with b.
 \item[mod ( a b -- r )] Rest of a divided by b.
+\item[$<$ ( a b -- c )] Is a less than b?  
+\item[$>$ ( a b -- c )] Is a greater than b?  
+\item[$>=$ ( a b -- c)] Is a greater than or equal to b?  
+\item[$<=$ ( a b -- c)] Is a less than or equal to b?  
+\end{description}
+
+\section{Signed Mathematics}
+
+These words treat numbers like they are signed, meaning that numbers 8000 - FFFF are negative
+and 0 - 7FFF are positive. (E.g., FFFF means -1.)
+
+\begin{description}
+\item[0$<$ ( a -- b )] Is a negative?
+\item[negate ( a -- b )] Negates a.
+\item[abs ( a -- b )] Gives absolute value of a.
+\item[s$<$ ( a b -- c )] Is a less than b? (Signed comparison.)
+\item[s$>$ ( a b -- c )] Is a greater than b? (Signed comparison.)
 \end{description}
 
 \section{Logic}
@@ -111,10 +129,6 @@ Drop value on top of return stack.
 \item[0= ( a -- b)] Is a equal to zero?  
 \item[= ( a b -- c )] Is a equal to b?
 \item[$<>$ ( a b -- c )] Does a differ from b?
-\item[$<$ ( a b -- c )] Is a less than b?  
-\item[$>$ ( a b -- c )] Is a greater than b?  
-\item[$>=$ ( a b -- c)] Is a greater than or equal to b?  
-\item[$<=$ ( a b -- c)] Is a less than or equal to b?  
 \item[and ( a b -- c )] Binary and.  
 \item[or ( a b -- c )] Binary or.  
 \item[xor ( a b -- c )] Binary exclusive or.  
