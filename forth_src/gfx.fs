@@ -7,6 +7,7 @@
 bb lda,# d011 sta, # enable
 15 lda,# dd00 sta, # vic bank 2
 38 lda,# d018 sta,
+56 lda,# 1 sta, # no basic
 ;asm
 
 :asm lores
@@ -22,3 +23,20 @@ colbase 3e8 fill
 : blkcol ( x y c -- )
 rot 8 / rot 8 / 28 *
 + colbase + c! ;
+
+create mask
+80 c, 40 c, 20 c, 10 c,
+8 c, 4 c, 2 c, 1 c,
+
+: plot ( x y -- )
+swap # y x
+dup 7 and ['] mask + c@ # y x bit
+-rot # bit y x
+2/ 2/ 2/ 2* 2* 2* # bit y char
+swap dup # bit char y y
+2/ 2/ 2/ 140 * # bit char y row
+swap # bit char row y
+7 and # bit char row line
++ + bmpbase + # bit by
+dup c@ rot or swap c!
+;
