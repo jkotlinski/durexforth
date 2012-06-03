@@ -668,44 +668,6 @@ AAND
 
 	+NEXT
 
-; OR
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	2
-	!text	"or"
-OR
-	lda	1, x
-	ora 3, x
-	sta 3, x
-
-	lda	0, x
-	ora 2, x
-	sta 2, x
-
-	inx
-	inx
-
-	+NEXT
-
-; XOR
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	3
-	!text	"xor"
-XOR
-	lda	1, x
-	eor 3, x
-	sta 3, x
-
-	lda	0, x
-	eor 2, x
-	sta 2, x
-
-	inx
-	inx
-
-	+NEXT
-
 ; !
 	!word	LINK
 	!set	LINK = * - 2

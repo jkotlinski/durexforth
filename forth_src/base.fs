@@ -27,8 +27,6 @@ swap dup here @ swap - swap ! ;
 : nip ( x y -- y ) swap drop ;
 : tuck ( x y -- y x y ) dup -rot ;
 : pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u ) 1+ 2 * sp@ + @ ;
-: invert ffff xor ;
-: negate invert 1+ ;
 : ?dup dup if dup then ;
 : not 0= ;
 : <> ( n -- b ) = not ;
@@ -211,12 +209,20 @@ s" asm" load
 
 :asm 2*
 0 lda,x asla, 0 sta,x
-1 lda,x rola, 1 sta,x
-;asm
+1 lda,x rola, 1 sta,x ;asm
 :asm 2/
 1 lda,x lsra, 1 sta,x
-0 lda,x rora, 0 sta,x
-;asm
+0 lda,x rora, 0 sta,x ;asm
+:asm or
+1 lda,x 3 ora,x 3 sta,x
+0 lda,x 2 ora,x 2 sta,x
+inx, inx, ;asm
+:asm xor
+1 lda,x 3 eor,x 3 sta,x
+0 lda,x 2 eor,x 2 sta,x
+inx, inx, ;asm
+: invert ffff xor ;
+: negate invert 1+ ;
 
 ." gfx.."
 s" gfx" load
