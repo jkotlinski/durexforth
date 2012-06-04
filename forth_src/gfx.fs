@@ -60,11 +60,11 @@ begin
  then
  err @ 2* dup
  dy @ negate s> if
-  err @ dy @ - err !
+  dy @ negate err +!
   sx @ penx +! 
  then
  dx @ s< if
-  err @ dx @ + err !
+  dx @ err +!
   sy @ peny +!
  then
 again ;
