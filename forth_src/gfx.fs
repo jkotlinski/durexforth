@@ -29,6 +29,7 @@ create mask
 8 c, 4 c, 2 c, 1 c,
 
 var penx var peny
+0 penx ! 0 peny !
 
 : plot ( x y -- )
 2dup c8 >= swap 140 >= or
@@ -49,8 +50,8 @@ var err
 2dup peny @ - abs dy !
 penx @ - abs dx !
 2dup
-peny @ swap < if 1 else ffff then sy !
-penx @ swap < if 1 else ffff then sx !
+peny @ swap s< if 1 else ffff then sy !
+penx @ swap s< if 1 else ffff then sx !
 dx @ dy @ - err !
 dy @ negate dy !
 
