@@ -13,6 +13,6 @@ a + repeat drop ;
 : rndline
 hires 10 clrcol
 80 begin ?dup while
-rnd 180 mod 20 -
-rnd d6 mod 20 - line
+rnd ab / 20 -
+rnd f8 / 20 - line
 1- repeat ;
