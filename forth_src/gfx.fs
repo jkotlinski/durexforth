@@ -70,3 +70,41 @@ begin
   sy @ peny +!
  then
 again ;
+
+: cx 0 ;
+: cy 0 ;
+
+: plot4 ( x y -- x y )
+over cx + over cy + plot
+over if # x?
+over cx swap - over cy + plot
+then
+dup if # y?
+over cx + over cy swap - plot
+then
+over not not over not not and if
+over cx swap - over cy swap - plot
+then ;
+
+: plot8 ( x y -- x y )
+plot4
+2dup <> if
+swap plot4 swap
+then ;
+
+: circle ( cx cy r -- )
+dup negate err !
+swap to cy
+swap to cx
+0 # x y
+begin 2dup s< not while
+plot8
+dup err +!
+1+
+dup err +!
+err @ 0< not if
+over negate err +!
+swap 1- swap
+over negate err +!
+then
+repeat 2drop ;
