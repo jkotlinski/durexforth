@@ -42,3 +42,24 @@ a0 over line
 a0 over c7 swap - line
 0 64 line
 5 + repeat ;
+
+10 allot value rcx
+8 allot value rcr
+
+: reccircgo
+dup 7 = if 1- exit then
+dup 2* rcx + @ over 64 swap rcr + c@
+circle
+dup rcr + c@ 2/ over 1+ rcr + c!
+dup 2* rcx + @ over rcr + c@ + over
+2* rcx + 2+ !
+1+ recurse
+dup 2* rcx + @ over rcr + c@ - over
+2* rcx + 2+ !
+1+ recurse
+1- ;
+
+: reccirc
+hires 7 clrcol
+a0 rcx ! 50 rcr !
+0 reccircgo ;
