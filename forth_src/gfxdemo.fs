@@ -20,3 +20,13 @@ hires 10 clrcol
 rnd ab / 20 -
 rnd f8 / 20 - line
 1- repeat ;
+
+: radiant
+hires d0 clrcol
+100 begin
+?dup while
+32 64 plot
+dup cos 12c 2* d* drop 32 12c - +
+over sin 12c 2* d* drop 64 12c - +
+line
+1- repeat ;
