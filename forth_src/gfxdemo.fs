@@ -1,5 +1,8 @@
 
 
+# examples from c64 step by step
+# programming, gfx book 3, phil cornes
+
 s" rnd" load
 
 : lineweb
