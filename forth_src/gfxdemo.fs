@@ -4,6 +4,7 @@
 # programming, gfx book 3, phil cornes
 
 s" rnd" load
+s" sin" load
 
 : lineweb
 hires 7 clrcol
