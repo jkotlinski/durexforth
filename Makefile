@@ -23,9 +23,12 @@ forth_src/asm.pet: forth_src/asm.fs ext/petcom
 forth_src/gfx.pet: forth_src/gfx.fs ext/petcom
 	cat forth_src/gfx.fs | ext/petcom - > forth_src/gfx.pet
 
-FORTHLIST=base debug vi asm gfx
+forth_src/gfxdemo.pet: forth_src/gfxdemo.fs ext/petcom
+	cat forth_src/gfxdemo.fs | ext/petcom - > forth_src/gfxdemo.pet
 
-durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet forth_src/vi.pet forth_src/asm.pet forth_src/gfx.pet Makefile
+FORTHLIST=base debug vi asm gfx gfxdemo
+
+durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet forth_src/vi.pet forth_src/asm.pet forth_src/gfx.pet forth_src/gfxdemo.pet Makefile
 	$(C1541) -format durexforth,DF  d64 durexforth.d64 > /dev/null
 	$(C1541) -attach $@ -write durexforth.prg durexforth  > /dev/null
 	# $(C1541) -attach $@ -write debug.bak

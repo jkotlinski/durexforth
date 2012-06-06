@@ -225,6 +225,8 @@ pha, 1 lda,x pha, ;asm
 
 ." gfx.."
 s" gfx" load
+." gfxdemo.."
+s" gfxdemo" load
 ." vi.."
 s" vi" load
 
