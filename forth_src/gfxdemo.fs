@@ -30,3 +30,15 @@ dup cos 12c 2* d* drop 32 12c - +
 over sin 12c 2* d* drop 64 12c - +
 line
 1- repeat ;
+
+: diamond
+hires 12 clrcol
+2 d020 c!
+0 64 plot
+0 begin
+dup c8 < while
+a0 over line
+13f 64 line
+a0 over c7 swap - line
+0 64 line
+5 + repeat ;
