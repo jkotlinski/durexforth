@@ -5,7 +5,7 @@
 	dup c@
 	3f and ( 3f = length mask )
 	begin
-		dup 0>
+		dup
 	while
 		swap 1+
 		dup c@
@@ -103,20 +103,8 @@
 ;
 
 ( c a b within returns true if a <= c and c < b )
-: within
-	-rot
-	over
-	<= if
-		> if
-			1
-		else
-			0
-		then
-	else
-		2drop
-		0
-	then
-;
+: within -rot over
+<= if > else 2drop 0 then ;
 
 var last-dump
 
