@@ -20,7 +20,6 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE.
 
-
 ; ACME assembler
 
 !cpu 6510
@@ -48,6 +47,8 @@ STACK_START = $84
 ; kernal defs
 
 CURSOR_BLINK = $cc ; 0 = enable; 1 = disable
+CURSOR_TIMER = $cd
+CURSOR_STATUS = $cf ; 0 = off; 1 = on
 
 GETCHR = $ffe4 ; get char from kbd
 PUTCHR = $ffd2 ; put char
@@ -969,9 +970,9 @@ print_char_surpress_file_io
 
 print_char
 	ldy	#20
-	sty $cd ;Force new value into Cursor Blink Count down Toggle
+	sty CURSOR_TIMER
 	ldy #1
-	sty $cf ;Force cursor off
+	sty CURSOR_STATUS ;Force cursor off
 	jsr	PUTCHR
 	ldy	_BLINK
 	sty	CURSOR_BLINK
@@ -1809,7 +1810,7 @@ BLINK
 	lda	0, x
 	eor	#1
 	sta	_BLINK
-	sta	$cc
+	sta	CURSOR_BLINK
 	inx
 	inx
 	+NEXT
