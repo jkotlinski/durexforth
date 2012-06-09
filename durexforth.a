@@ -80,18 +80,7 @@ K_RIGHT = $1d
 K_UP = $91
 K_LEFT = $9d
 
-C_WHITE = 1
 C_YELLOW = 7
-C_GREEN = 5
-C_LT_GREEN = 13
-C_BEIGE = 10
-C_ORANGE = 8
-C_RED = 2
-C_MAGENTA = 4
-C_LT_BLUE = 14
-C_BLUE = 6
-C_CYAN = 3
-C_PURPLE = 4
 
 ; -------- program start
 
