@@ -475,6 +475,8 @@ SUB
 
 	+NEXT
 
+product = TMP
+
 ; * - this calculates a 32 bit result, actually. useful? wasteful?
 	!word	LINK
 	!set	LINK = * - 2
@@ -509,8 +511,6 @@ DMUL
 
 ; wastes TMP, TMP2, y
 _MUL
-product = TMP
-
 	lda #$00
 	sta product+2 ; clear upper bits of product
 	sta product+3 
