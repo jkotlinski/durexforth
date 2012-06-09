@@ -220,16 +220,6 @@ pla, 1 sta,x pla, 0 sta,x ;asm
 pla, 1 sta,x pla, 0 sta,x
 pha, 1 lda,x pha, ;asm
 
-: modules ;
-." debug.."
-s" debug" load
-." gfx.."
-s" gfx" load
-." gfxdemo.."
-s" gfxdemo" load
-." vi.."
-s" vi" load
-
 : scratch ( strptr strlen -- )
 tuck ( strlen strptr strlen )
 dup here @ + ( strlen strptr strlen tmpbuf )
@@ -242,9 +232,17 @@ swap ( strlen strlen strptr tmpbuf+2 )
 rot ( strlen strptr tmpbuf+2 strlen )
 cmove ( strlen )
 r> swap 2+ ( tmp strlen )
-openw
-closew
-;
+openw closew ;
+
+: modules ;
+." debug.."
+s" debug" load
+." gfx.."
+s" gfx" load
+." gfxdemo.."
+s" gfxdemo" load
+." vi.."
+s" vi" load
 
 ." scratch old durexforth.."
 s" durexforth" scratch
