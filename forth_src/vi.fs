@@ -252,7 +252,7 @@ c begin cur-up 1- ?dup 0= until ;
 c begin cur-down 1- ?dup 0= until ;
 
 : setcur ( x y -- )
-xr ! yr ! e50a jsr-wrap ;
+xr ! yr ! e50c jsr-wrap ;
 
 : goto-eof ( can be much optimized... )
 bufstart eof @ = if exit then
