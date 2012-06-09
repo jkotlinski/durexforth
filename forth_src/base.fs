@@ -184,9 +184,6 @@ begin @ dup hidden 2dup = until
 	compile !
 ;
 
-: modules ;
-# ." debug.."
-# s" debug" load
 ." asm.."
 s" asm" load
 
@@ -223,6 +220,9 @@ pla, 1 sta,x pla, 0 sta,x ;asm
 pla, 1 sta,x pla, 0 sta,x
 pha, 1 lda,x pha, ;asm
 
+: modules ;
+." debug.."
+s" debug" load
 ." gfx.."
 s" gfx" load
 ." gfxdemo.."
