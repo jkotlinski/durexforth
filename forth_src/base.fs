@@ -4,7 +4,7 @@
 : bl 20 ;
 : space bl emit ;
 : cr d emit ;
-: nip ( x y -- y ) swap drop ;
+: nip swap drop ;
 : / /mod nip ;
 : mod /mod drop ;
 : literal immed ' lit , , ;
