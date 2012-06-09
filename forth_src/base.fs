@@ -4,7 +4,8 @@
 : bl 20 ;
 : space bl emit ;
 : cr d emit ;
-: / /mod swap drop ;
+: nip ( x y -- y ) swap drop ;
+: / /mod nip ;
 : mod /mod drop ;
 : literal immed ' lit , , ;
 : loc word find ;
@@ -24,7 +25,6 @@ swap dup here @ swap - swap ! ;
 : ( immed begin key [ char ) ] literal = until ;
 : # immed begin key d = until ; # comment
 : -rot rot rot ;
-: nip ( x y -- y ) swap drop ;
 : tuck ( x y -- y x y ) dup -rot ;
 : pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u ) 1+ 2 * sp@ + @ ;
 : ?dup dup if dup then ;
