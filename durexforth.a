@@ -2408,8 +2408,7 @@ load_binary_laddr_hi = *+1
 	jsr $ffd5	;LOAD
 	bcs .disk_io_error
 	ldx #$00      ; filenumber 0 = keyboard
-	jsr CHKIN     ; call CHKIN (keyboard now input device again)
- 	rts
+	jmp CHKIN     ; call CHKIN (keyboard now input device again)
 
 .disk_io_setnamsetlfs ;reused by both loadb and saveb
 	jsr SETNAM
