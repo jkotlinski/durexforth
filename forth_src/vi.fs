@@ -251,6 +251,8 @@ c begin cur-up 1- ?dup 0= until ;
 : half-page-fwd
 c begin cur-down 1- ?dup 0= until ;
 
+: setcur xr ! yr ! e50a jsr-wrap ;
+
 : goto-eof ( can be much optimized... )
 bufstart eof @ = if exit then
 eof @ 1- find-start-of-line

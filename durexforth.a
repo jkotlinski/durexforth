@@ -2100,25 +2100,6 @@ HIDDEN
 	inx
 	+NEXT
 
-; SETCUR ( x y -- )
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	6
-	!text	"setcur"
-SETCUR
-	lda	2, x
-	tay
-	lda	0, x
-	stx tmp_x
-	tax
-	jsr	$e50a
-	ldx	tmp_x
-	inx
-	inx
-	inx
-	inx
-	+NEXT
-
 ; DSP@
 	!word	LINK
 	!set	LINK = * - 2
