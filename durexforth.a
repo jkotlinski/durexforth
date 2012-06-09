@@ -1301,29 +1301,6 @@ handle_compile_done
 	inx
 	jmp	PULL_KEY
 
-; WRITE - write a byte to disk.
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	5
-	!text	"write"
-WRITE
-	lda	0, x
-	pha
-
-	stx	tmp_x
-	jsr	READST
-	bne	werror
-	pla
-	jsr	CHROUT
-	ldx	tmp_x
-	inx
-	inx
-	+NEXT
-werror
-	pla ;Mats wonders: What the fuck is this PLA for???
-	inc	$d021
-	jmp	werror
-
 ; WORD
 	!word	LINK
 	!set	LINK = * - 2
