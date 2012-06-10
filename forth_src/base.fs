@@ -161,27 +161,14 @@ loc latest
 begin @ dup hidden 2dup = until
 2drop ;
 
-: load ( strptr strlen -- old-compile old-ae )
-	compile @ -rot ( compile strptr strlen )
-	ae @ -rot ( compile ae strptr strlen )
-	2 pick 1+ ( compile ae strptr strlen dst )
-	loadb ( old-compile old-ae )
-	drop # ignore status
-	dup 1+ compile !
-	load-depth @ 0= if
-		2drop # no need to keep this
-	then
-	1 load-depth +!
-;
-
 : save-forth ( strptr strlen -- )
-	compile @ -rot
-	0 compile !
+	compile-ram @ -rot
+	0 compile-ram !
 	801
 	here @
 	2swap
 	saveb	
-	compile !
+	compile-ram !
 ;
 
 ." asm.."
@@ -221,14 +208,14 @@ pla, 1 sta,x pla, 0 sta,x
 pha, 1 lda,x pha, ;asm
 
 : modules ;
-." debug.."
-s" debug" load
-." gfx.."
-s" gfx" load
-." gfxdemo.."
-s" gfxdemo" load
-." vi.."
-s" vi" load
+# ." debug.."
+# s" debug" load
+# ." gfx.."
+# s" gfx" load
+# ." gfxdemo.."
+# s" gfxdemo" load
+# ." vi.."
+# s" vi" load
 
 : scratch ( strptr strlen -- )
 tuck ( strlen strptr strlen )

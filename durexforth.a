@@ -120,9 +120,9 @@ SCREEN_COLOR = 0
 	ora	_START + 1
 	bne	reset
 	; first time ever app is started...
-	jsr	loadbase
+	jsr	load_base
+
 	jsr	reset_start
-+
 reset
 	lda	#BORDER_COLOR
 	sta	$d020
@@ -909,13 +909,13 @@ CMOVE
 STATE
 	!word	0
 
-; COMPILE - compile from editor?
+; COMPILE_RAM - points to RAM source code to be compiled.
 	!word	LINK
 	!set	LINK = * - 2
-	!byte 7
-	!text	"compile"
-	+VAR_CODE	COMPILE
-COMPILE
+	!byte 11
+	!text	"compile-ram"
+	+VAR_CODE	COMPILE_RAM
+COMPILE_RAM
 	!word	0
 
 ; COMPILE-LOAD-DEPTH
@@ -961,9 +961,11 @@ EMIT
 	+NEXT
 
 print_char_surpress_file_io
-	ldy	COMPILE
-	bne	+
-	ldy	COMPILE + 1
+    ldy COMPILE_RAM
+    bne +
+    ldy COMPILE_RAM + 1
+    bne +
+	ldy	COMPILE_FILENO
 	beq	print_char
 +
 	rts
@@ -1116,10 +1118,13 @@ KEY
 	+NEXT
 
 .unbuffered_key
--
+; -
+	stx	tmp_x
 	jsr	PULL_KEY
-	ora	#0
-	beq	-
+    ldx tmp_x
+    ; jsr print_char ; debug
+	; ora	#0
+	; beq	-
 	dex
 	dex
 	sta	0, x
@@ -1130,8 +1135,9 @@ KEY
 _KEY
 	lda	_LINEBUF
 	beq	.unbuffered_key
-	lda	COMPILE
-	ora	COMPILE + 1
+    lda COMPILE_FILENO
+    ora COMPILE_RAM
+    ora COMPILE_RAM + 1
 	bne	.unbuffered_key
 	lda	KEY_BUF_WRITE_POS
 	beq	.fill_key_buf
@@ -1145,7 +1151,9 @@ _KEY
 	sta	KEY_BUF_WRITE_POS
 
 -
+	stx	tmp_x
 	jsr PULL_KEY
+	ldx	tmp_x
 	ora	#0
 	beq	-
 	cmp	#K_RETURN
@@ -1209,80 +1217,64 @@ _KEY
 	sta	1, x
 	rts
 
-; get from RAM
-get_from_ram
-	; is done?
-	lda	COMPILE
-	cmp	$ae
-	bne	+
-	lda	COMPILE + 1
-	cmp	$af
-	bne	+
-	rts ; yes... return eq
-+
-	lda	COMPILE
+get_char_from_ram_compile_area
+	lda	COMPILE_RAM
 	sta	TMP
-	lda	COMPILE + 1
+	lda	COMPILE_RAM + 1
 	sta	TMP + 1
 	ldy #0
 	lda	(TMP), y
 	sta	$d020
 	rts
 
-PULL_KEY
-	lda	COMPILE
-	ora	COMPILE + 1
-	beq	.call_getchar
-	jsr	get_from_ram
-	beq	handle_compile_done
-	inc	COMPILE
+; Reads a key, sources are prioritized as follows:
+;  1. Streaming file from disk (COMPILE_FILENO)
+;  2. Compile RAM area (COMPILE_RAM)
+;  3. Console input
+PULL_KEY ; wastes x!!!
+	lda	COMPILE_FILENO
+	bne	.get_char_from_disk
+
+	lda	COMPILE_RAM
+	ora	COMPILE_RAM + 1
+	beq	+++
+	jsr	get_char_from_ram_compile_area
+	ora #0
+	beq	++
+	inc	COMPILE_RAM
 	bne	+
-	inc	COMPILE + 1
+	inc	COMPILE_RAM + 1
 +
 	rts
+++
+	lda	#0
+	sta	COMPILE_RAM
+	sta	COMPILE_RAM + 1
++++
+	jmp	GETCHR
 
-.call_getchar
-	stx	tmp_x
-	jsr	GETCHR
-	ldx	tmp_x
-	rts
+.get_char_from_disk
+	inc	$d020
+	jsr	READST
+	bne .eof
+	jmp	CHRIN
 
-handle_compile_done
-	lda	LOAD_DEPTH
-	beq +
-	dec	LOAD_DEPTH
-	bne	++
+.eof
+	lda	COMPILE_FILENO
+	jsr	CLOSE
 
-	; compiled all files :)
+	dec	COMPILE_FILENO
+	lda	COMPILE_FILENO
+	bne +
 	lda	_BLINK
 	sta	CURSOR_BLINK
-+
 	lda	#BORDER_COLOR
 	sta	$d020
-	lda	#0
-	sta	COMPILE
-	sta	COMPILE + 1
-	lda	#K_SPACE ; hack to get out of unbuffered reading
-	rts
-
-++	; compiled file but more to go...
-
-	; pop old eof
-	lda	1, x
-	sta	$af
-	lda	0, x
-	sta	$ae
-	; pop old COMPILE
-	lda	3, x
-	sta	COMPILE + 1
-	lda	2, x
-	sta	COMPILE
-	inx
-	inx
-	inx
-	inx
-	jmp	PULL_KEY
-
+    lda #0
++
+	jsr	CHKIN
+    jmp PULL_KEY  ; Try again.
+	
 ; WORD
 	!word	LINK
 	!set	LINK = * - 2
@@ -1307,6 +1299,8 @@ _WORD
 	inx
 	inx
 
+    ora #0
+    beq -
 	cmp #K_RETURN
 	beq .whitespace
 	cmp #K_SPACE
@@ -1635,12 +1629,12 @@ INTERPRET
 
 .not_a_number
 	jsr print_error_msg_with_tib
-	ldx	#0
-	stx	KEY_BUF_READ_POS
-	stx	KEY_BUF_WRITE_POS
-	stx	COMPILE
-	stx	COMPILE + 1
-	ldx	#STACK_START ; wipe stack :(
+    ldx     #0
+    stx     KEY_BUF_READ_POS
+    stx     KEY_BUF_WRITE_POS
+    stx     COMPILE_RAM
+    stx     COMPILE_RAM + 1
+    ldx     #STACK_START ; wipe stack :(
 	+NEXT
 
 .found_word
@@ -2220,6 +2214,15 @@ LINEBUF
 _LINEBUF
 	!word	1
 
+; COMPILE_FILENO - active file stream to compile from.
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 6
+	!text	"compile-fileno"
+	+VAR_CODE	COMPILE_FILENO
+COMPILE_FILENO
+	!word	0
+
 ; DOCOL
 	!word	LINK
 	!set	LINK = * - 2
@@ -2465,27 +2468,75 @@ OPENW
 	inx
 	+NEXT
 
-loadbase
-    ; loads base.fs to $5000
-	lda	#0
-	sta	load_binary_laddr_lo
-	sta	COMPILE
-	lda	#$50
-	sta	load_binary_laddr_hi
-	sta	COMPILE + 1
+; LOAD_AND_COMPILE (load and compile source file)
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 4
+	!text	"load"
+LOAD_AND_COMPILE
+    lda #1
+    sta CURSOR_BLINK
 
-	inc	LOAD_DEPTH
+	txa
+	pha
 
-	lda	#<basename
+	lda	0, x
+	ldy	3, x
+	pha
+	lda	2, x
 	tax
-	ldy	#>basename
-	lda	#basename_end - basename
+	pla
 
-	jmp	load_binary
+    ; open file
+	; a = filename length
+	; y = basename hi
+	; x = basename lo
+	jsr	SETNAM
+	inc	COMPILE_FILENO
+	lda	COMPILE_FILENO ; file number
+	ldx	#8 ; default to device 8
+	tay
+	iny ; secondary address
+	jsr	SETLFS
+	jsr	OPEN
+	bcs	.could_not_open
+
+	ldx	COMPILE_FILENO ; file number
+	jsr	CHKIN
+
+	pla
+	tax
+    inx
+    inx
+    inx
+    inx
+	+NEXT
 
 .could_not_open
 	inc	$d020
 	jmp	.could_not_open
+
+load_base
+    ; loads base.fs to $5000
+    lda #0
+    sta load_binary_laddr_lo
+    sta COMPILE_RAM
+    lda #$50
+    sta load_binary_laddr_hi
+    sta COMPILE_RAM + 1
+    inc LOAD_DEPTH
+	ldx	#<basename
+	ldy	#>basename
+	lda	#basename_end - basename
+    jsr load_binary
+    ; Null terminates source code.
+    lda $ae    
+    sta + + 1
+    lda $af
+    sta + + 2
+    lda #0
++   sta $1234
+    rts
 
 basename
 !text	"base"

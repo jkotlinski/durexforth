@@ -115,7 +115,7 @@ bl status-pos 18 fill ;
 clear-status status-pos c! ;
 
 : init
-	0 compile ! # to enable editor start from base.src
+	0 compile-ram ! # to enable editor start from base.src
 	0 blink
 	80 28a c! # key repeat on
 
@@ -749,7 +749,9 @@ char j c, loc cur-down >cfa ,
 	endof
 
 	( cursor )
-	88 of bufstart compile ! eof @ ae ! ffff exit endof # f7
+    # todo: null terminate eof?
+    # eof @ ae ! 
+	88 of bufstart compile-ram ! ffff exit endof # f7
 
 	endcase
 	0
