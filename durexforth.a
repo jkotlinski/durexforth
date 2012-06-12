@@ -1118,13 +1118,11 @@ KEY
 	+NEXT
 
 .unbuffered_key
-; -
 	stx	tmp_x
 	jsr	PULL_KEY
     ldx tmp_x
-    ; jsr print_char ; debug
-	; ora	#0
-	; beq	-
+	ora	#0
+	beq	_KEY
 	dex
 	dex
 	sta	0, x
@@ -1254,7 +1252,7 @@ PULL_KEY ; wastes x!!!
 	jmp	GETCHR
 
 .get_char_from_disk
-	inc	$d020
+    inc $d020
 	jsr	READST
 	bne .eof
 	jmp	CHRIN
@@ -1299,8 +1297,6 @@ _WORD
 	inx
 	inx
 
-    ora #0
-    beq -
 	cmp #K_RETURN
 	beq .whitespace
 	cmp #K_SPACE
