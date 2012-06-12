@@ -67,7 +67,7 @@ LOAD = $ffd5
 SAVE = $ffd8
 WRITEFILENO = $f
 
-BLINK_COLOR = $286
+CURSOR_COLOR = $286
 
 K_F1 = $85
 K_F3 = $86
@@ -113,8 +113,6 @@ SCREEN_COLOR = 0
 	sta	$d020
 	lda	#SCREEN_COLOR
 	sta	$d021
-	lda	#1
-	sta	CURSOR_BLINK
 
 	lda	_START
 	ora	_START + 1
@@ -130,7 +128,7 @@ reset
 	sta	$d021
 
 	lda	#C_YELLOW
-	sta	BLINK_COLOR
+	sta	CURSOR_COLOR
 
 	jsr	clrcol
 
@@ -1798,7 +1796,7 @@ EXIT
 	!text	"blink"
 BLINK
 	lda	0, x
-	eor	#1
+    eor #1
 	sta	_BLINK
 	sta	CURSOR_BLINK
 	inx
