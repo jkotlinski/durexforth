@@ -31,6 +31,8 @@ create mask
 var penx var peny
 0 penx ! 0 peny !
 
+: blitop 0 ;
+
 : plot ( x y -- )
 2dup c8 >= swap 140 >= or
 if 2drop exit then
@@ -40,7 +42,8 @@ swap 7 and + swap # y x
 dup 7 and ['] mask + c@ # y x bit
 -rot # bit y x
 fff8 and + bmpbase +
-dup c@ rot or swap c! ;
+dup c@ rot
+[ here @ to blitop ] or swap c! ;
 
 var dx var dy
 var sx var sy
@@ -108,3 +111,7 @@ swap 1- swap
 over negate err +!
 then
 repeat 2drop ;
+
+: erase if
+['] xor else
+['] or then blitop ! ;
