@@ -70,3 +70,13 @@ then 2drop ;
 hires 7 clrcol
 64 yd !
 a0 50 2reccircgo ;
+
+: erasecirc
+hires 7 clrcol
+0 begin dup 140 < while
+dup 0 plot dup c7 line
+14 + repeat drop
+0 begin dup c7 < while
+dup 0 swap plot dup 13f swap line
+14 + repeat drop
+;
