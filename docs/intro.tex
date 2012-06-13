@@ -33,4 +33,6 @@ There are other Forths for c64, most notably Blazin' Forth. Blazin' Forth is exc
 
 \subsection{Stack Checking}
 
-durexForth should be one of the fastest and leanest Forths for the C64. To achieve this, there are not too many niceties for beginners. For example, there are no checks for stack overflow and underflow. Since the parameter stack is placed in zeropage for best performance, this means that the system will blow up if you do too many pops or pushes. This is not much of a problem for an experienced Forth programmer, but until you reach that status, handle the stack with care.
+durexForth should be one of the fastest and leanest Forths for the C64. To achieve this, there are
+not too many niceties for beginners. For example, compiled code has no checks for stack overflow
+and underflow. This means that the system will crash if you do too many pops or pushes. This is not much of a problem for an experienced Forth programmer, but until you reach that status, handle the stack with care.
