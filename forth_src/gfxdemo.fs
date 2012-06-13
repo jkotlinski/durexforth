@@ -79,10 +79,8 @@ dup 0 plot dup c7 line
 0 begin dup c7 < while
 dup 0 swap plot dup 13f swap line
 14 + repeat drop
-begin
-100 begin ?dup while
+begin 100 begin ?dup while
 a0 64 plot
 dup cos 64 2* d* drop a0 64 - +
 over sin 64 2* d* drop line
-1- repeat
-1 erase again ;
+1- repeat 1 erase again ;
