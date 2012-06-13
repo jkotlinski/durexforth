@@ -54,20 +54,19 @@ then 2drop ;
 hires 7 clrcol
 a0 50 reccircgo ;
 
-: 2reccircgo ( x y r -- )
+var yd
+
+: 2reccircgo ( x r -- )
 dup if
-2dup 4 pick -rot circle
-over c7 swap -
-3 pick swap
-2 pick circle
-2 pick over +
-2 pick d +
-2 pick 2/ recurse
-2 pick over -
-2 pick d +
-2 pick 2/ recurse
-then 2drop drop ;
+2dup yd @ swap circle
+2dup c7 yd @ - swap circle
+d yd +!
+2dup + over 2/ recurse
+2dup - over 2/ recurse
+d negate yd +!
+then 2drop ;
 
 : 2reccirc
 hires 7 clrcol
-a0 64 50 2reccircgo ;
+64 yd !
+a0 50 2reccircgo ;
