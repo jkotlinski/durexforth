@@ -53,3 +53,21 @@ then 2drop ;
 : reccirc
 hires 7 clrcol
 a0 50 reccircgo ;
+
+: 2reccircgo ( x y r -- )
+dup if
+2dup 4 pick -rot circle
+over c7 swap -
+3 pick swap
+2 pick circle
+2 pick over +
+2 pick d +
+2 pick 2/ recurse
+2 pick over -
+2 pick d +
+2 pick 2/ recurse
+then 2drop drop ;
+
+: 2reccirc
+hires 7 clrcol
+a0 64 50 2reccircgo ;

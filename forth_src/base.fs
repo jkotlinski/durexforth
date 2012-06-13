@@ -211,12 +211,12 @@ pha, 1 lda,x pha, ;asm
 : modules ;
 # ." debug.."
 # s" debug" load
-# ." gfx.."
-# s" gfx" load
-# ." gfxdemo.."
-# s" gfxdemo" load
-." vi.."
-s" vi" load
+." gfx.."
+s" gfx" load
+." gfxdemo.."
+s" gfxdemo" load
+# ." vi.."
+# s" vi" load
 
 : scratch ( strptr strlen -- )
 tuck ( strlen strptr strlen )
