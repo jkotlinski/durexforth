@@ -59,10 +59,6 @@ dx @ dy @ - err !
 dy @ negate dy !
 
 begin
- penx @ peny @ plot
- 2dup peny @ = swap penx @ = and if
-  2drop exit
- then
  err @ 2* dup
  dy @ s> if
   dy @ err +!
@@ -71,6 +67,10 @@ begin
  dx @ s< if
   dx @ err +!
   sy @ peny +!
+ then
+ penx @ peny @ plot
+ 2dup peny @ = swap penx @ = and if
+  2drop exit
  then
 again ;
 
