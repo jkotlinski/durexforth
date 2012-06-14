@@ -34,9 +34,9 @@ var penx var peny
 : blitop 0 ;
 
 : plot ( x y -- )
+2dup peny ! penx !
 2dup c8 >= swap 140 >= or
 if 2drop exit then
-2dup peny ! penx !
 dup fff8 and 28 *
 swap 7 and + swap # y x
 dup 7 and ['] mask + c@ # y x bit
