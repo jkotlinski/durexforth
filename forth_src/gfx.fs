@@ -33,16 +33,18 @@ var penx var peny
 
 : blitop 0 ;
 
-: plot ( x y -- )
-2dup peny ! penx !
-2dup c8 >= swap 140 >= or
-if 2drop exit then
+: blitloc ( x y -- mask addr )
 dup fff8 and 28 *
 swap 7 and + swap # y x
 dup 7 and ['] mask + c@ # y x bit
 -rot # bit y x
-fff8 and + bmpbase +
-dup c@ rot
+fff8 and + bmpbase + ;
+
+: plot ( x y -- )
+2dup peny ! penx !
+2dup c8 >= swap 140 >= or
+if 2drop exit then
+blitloc swap over c@
 [ here @ to blitop ] or swap c! ;
 
 var dx var dy
