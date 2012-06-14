@@ -68,3 +68,11 @@ f1d , 10a0 , 1235 , 13db ,
 
 : sin ff and 2* ['] sintab + @ ;
 : cos 40 + sin ;
+
+# a = amplitude
+# r = degree [0..ff]
+: *cos ( a r -- b )
+cos over 2* d* drop swap - ;
+: *sin ( a r -- b )
+sin over 2* d* drop swap - ;
+

@@ -26,8 +26,8 @@ hires d0 clrcol
 100 begin
 ?dup while
 32 64 plot
-dup cos 12c 2* d* drop 32 12c - +
-over sin 12c 2* d* drop 64 12c - +
+dup 12c *cos 32 +
+over 12c *sin 64 +
 line
 1- repeat ;
 
@@ -81,6 +81,22 @@ dup 0 swap plot dup 13f swap line
 14 + repeat drop
 begin 100 begin ?dup while
 a0 64 plot
-dup cos 64 2* d* drop a0 64 - +
-over sin 64 2* d* drop line
+dup 64 swap *cos a0 +
+over 64 swap *sin 64 + line
 1- repeat 1 erase again ;
+
+: rotsqr
+hires 16 clrcol
+8 d020 c! 1 erase
+begin fa begin ?dup while
+dup dup *cos a0 +
+over dup *sin 64 + 2dup plot plot
+dup dup *sin a0 swap -
+over dup *cos 64 + line
+dup dup *cos a0 swap -
+over dup *sin 64 swap - line
+dup dup *sin a0 +
+over dup *cos 64 swap - line
+dup dup *cos a0 +
+over dup *sin 64 + line
+5 - repeat again ;
