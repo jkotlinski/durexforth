@@ -47,6 +47,9 @@ if 2drop exit then
 blitloc swap over c@
 [ here @ to blitop ] or swap c! ;
 
+: peek ( x y -- b )
+blitloc c@ and ;
+
 : dx 0 ; : dy 0 ;
 : sx 0 ; : sy 0 ;
 var err
