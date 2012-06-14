@@ -47,28 +47,28 @@ if 2drop exit then
 blitloc swap over c@
 [ here @ to blitop ] or swap c! ;
 
-var dx var dy
-var sx var sy
+: dx 0 ; : dy 0 ;
+: sx 0 ; : sy 0 ;
 var err
 
 : line ( x y -- )
-2dup peny @ - abs dy !
-penx @ - abs dx !
+2dup peny @ - abs to dy
+penx @ - abs to dx
 2dup
-peny @ swap s< if 1 else ffff then sy !
-penx @ swap s< if 1 else ffff then sx !
-dx @ dy @ - err !
-dy @ negate dy !
+peny @ swap s< if 1 else ffff then to sy
+penx @ swap s< if 1 else ffff then to sx
+dx dy - err !
+dy negate to dy
 
 begin
  err @ 2* dup
- dy @ s> if
-  dy @ err +!
-  sx @ penx +! 
+ dy s> if
+  dy err +!
+  sx penx +! 
  then
- dx @ s< if
-  dx @ err +!
-  sy @ peny +!
+ dx s< if
+  dx err +!
+  sy peny +!
  then
  penx @ peny @ plot
  2dup peny @ = swap penx @ = and if
