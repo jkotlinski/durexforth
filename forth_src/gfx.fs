@@ -120,3 +120,40 @@ repeat 2drop ;
 : erase if
 ['] xor else
 ['] or then blitop ! ;
+
+: flood ( x y -- )
+2dup peek if 2drop exit then
+
+# line to right, find maxX
+over # x y x1
+begin 2dup swap peek not # x y x1 set
+over 140 < and while
+2dup swap plot 1+ repeat
+1- -rot # maxX x y
+
+# line left, find minX
+swap 1- # maxX y x2
+begin 2dup swap peek not
+over ffff s> and while
+2dup swap plot 1- repeat
+1+ # maxX y minX
+
+# maxX y minX
+begin rot 2dup < while
+-rot swap # maxX minX y
+# recurse up
+dup if 2dup 1- peek not if
+2dup 1- recurse then then
+# recurse down
+dup c7 < if 2dup 1+ peek not if
+2dup 1+ recurse then then
+# maxX minX y
+swap 1+ repeat 2drop drop ;
+
+hires 5 clrcol
+10 10 plot
+20 10 line
+20 40 line
+10 40 line
+10 10 line
+18 18 flood
