@@ -141,21 +141,21 @@ over ffff s> and while
 1+ # y minX
 
 # y minX
-begin dup r@ < while
+begin dup r@ <= while
 swap # minX y
 # recurse up
-dup if 2dup 1- peek not if
-2dup 1- recurse then then
+dup if 2dup 1- recurse then
 # recurse down
-dup c7 < if 2dup 1+ peek not if
-2dup 1+ recurse then then
+dup c7 < if 2dup 1+ recurse then
 # minX y
 swap 1+ repeat r> drop 2drop ;
 
-hires 5 clrcol
+hires 
+5 clrcol
 10 10 plot
 20 10 line
-20 40 line
-10 40 line
+20 38 line
+10 38 line
 10 10 line
 18 18 flood
+lores
