@@ -121,41 +121,56 @@ repeat 2drop ;
 ['] xor else
 ['] or then blitop ! ;
 
-: flood ( x y -- )
-2dup peek if 2drop exit then
+var qh var qt
+: qinit here @ dup qh ! qt ! ;
+: qpush ( x y -- )
+2dup peek if 2drop else
+2dup swap . .
 
+swap qt @ ! 2 qt +! qt @ c! 1 qt +! 
+then ;
+: qpop ( -- x y )
+qh @ @ 2 qh +! qh @ c@ 1 qh +! ;
+: qempty qh @ qt @ = ; 
+
+: find-hline ( x y -- minX maxX y )
 # line to right, find maxX
 over # x y x1
 begin 2dup swap peek not # x y x1 set
-over 140 < and while
-2dup swap plot 1+ repeat
-1- >r # push maxX
-
-# x y
+over 140 < and while 1+ repeat
+1- -rot # maxX x y
 
 # line left, find minX
-swap 1- # y x2
+swap 1- # maxX y x2
 begin 2dup swap peek not
-over ffff s> and while
-2dup swap plot 1- repeat
-1+ # y minX
+over ffff s> and while 1- repeat
+1+ -rot ;
 
-# y minX
-begin dup r@ <= while
-swap # minX y
-# recurse up
-dup if 2dup 1- recurse then
-# recurse down
-dup c7 < if 2dup 1+ recurse then
-# minX y
-swap 1+ repeat r> drop 2drop ;
+: flood ( x y -- )
+
+qinit qpush
+
+begin qempty not while
+
+qpop
+
+# x y
+2dup find-hline rot over plot line
+
+# look up, down
+2dup 1- 2dup peek if 2drop else
+find-hline nip qpush then
+1+ 2dup peek if 2drop else
+find-hline nip qpush then
+
+repeat ;
 
 hires 
 5 clrcol
-10 10 plot
-20 10 line
+10 1 plot
+20 1 line
 20 38 line
 10 38 line
-10 10 line
-18 18 flood
+10 3 line
+18 28 flood
 lores
