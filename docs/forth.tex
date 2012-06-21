@@ -242,6 +242,18 @@ Exit function.
 
 \item[recurse] Jump to the start of the word being compiled.
 
+\item[case ... endcase, of ... endof] Switch statements.
+
+\begin{verbatim}
+: tellno ( n -- )
+case
+1 of ." one" endof
+2 of ." two" endof
+3 of ." three" endof
+." other"
+endcase
+\end{verbatim}
+
 \end{description}
 
 \section{Keyboard Input}
@@ -350,7 +362,4 @@ The following words might be expected in a "normal" Forth, but are not included 
 \begin{itemize}
 \item do ... loop, i, j
 \item */, */mod
-\item abs
 \end{itemize}
-
-Also, I do not have time to describe every word defined. Please refer to a Forth reference manual and/or the source.
