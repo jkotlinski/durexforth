@@ -121,49 +121,62 @@ repeat 2drop ;
 ['] xor else
 ['] or then blitop ! ;
 
-var qh var qt
-: qinit here @ dup qh ! qt ! ;
-: qpush ( x y -- )
-2dup peek if 2drop else
-2dup swap . .
+# dir 0=n 1=e 2=s 3=w
+var curx var cury var curdir
+var markx var marky var markdir
+var mark2x var mark2y var mark2dir
+var backtrack var findloop
 
-swap qt @ ! 2 qt +! qt @ c! 1 qt +! 
-then ;
-: qpop ( -- x y )
-qh @ @ 2 qh +! qh @ c@ 1 qh +! ;
-: qempty qh @ qt @ = ; 
+: cur@ curx @ cury c@ ;
+: cur! cury c! curx ! ;
+: mov ( x y dir -- x y )
+3 and case
+0 of 1- endof
+1 of swap 1+ swap endof
+2 of 1+ endof
+3 of swap 1- swap endof
+endcase ;
 
-: find-hline ( x y -- minX maxX y )
-# line to right, find maxX
-over # x y x1
-begin 2dup swap peek not # x y x1 set
-over 140 < and while 1+ repeat
-1- -rot # maxX x y
+: fwdpeek ( -- pixel )
+cur@ curdir @ mov peek ;
+: fwdmov ( -- )
+cur@ curdir @ mov cur! ;
 
-# line left, find minX
-swap 1- # maxX y x2
-begin 2dup swap peek not
-over ffff s> and while 1- repeat
-1+ -rot ;
+# safe peek
+: chkpeek ( x y -- v )
+dup 0< if 2drop 0 exit then
+dup c7 > if 2drop 0 exit then
+over 0< if 2drop 0 exit then
+over 13f > if 2drop 0 exit then
+peek ;
+
+: adjcnt ( x y -- cnt )
+0
+cur@ 0 mov chkpeek if 1+ then
+cur@ 1 mov chkpeek if 1+ then
+cur@ 2 mov chkpeek if 1+ then
+cur@ 3 mov chkpeek if 1+ then ;
+
+: start
+adjcnt
+dup 4 < if
+begin 1 curdir +! fwdpeek until
+begin ffff curdir +! fwdpeek not until
+then
+
+# todo
+;
 
 : flood ( x y -- )
+2dup peek if 2drop exit then
 
-qinit qpush
+cury ! curx ! 0 curdir !
+ffff markx ! ffff mark2x !
+0 backtrack ! 0 findloop !
 
-begin qempty not while
+begin fwdpeek not while fwdmov repeat
 
-qpop
-
-# x y
-2dup find-hline rot over plot line
-
-# look up, down
-2dup 1- 2dup peek if 2drop else
-find-hline nip qpush then
-1+ 2dup peek if 2drop else
-find-hline nip qpush then
-
-repeat ;
+start ;
 
 hires 
 5 clrcol
@@ -171,6 +184,6 @@ hires
 20 1 line
 20 38 line
 10 38 line
-10 3 line
+10 1 line
 18 28 flood
 lores
