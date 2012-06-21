@@ -1469,24 +1469,6 @@ EXEC
 	inx
 	jmp	(TMP)
 
-; CHAR
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	4
-	!text	"char"
-CHAR
-	jsr	_WORD
-	lda	1, x
-	sta	TMP + 1
-	lda	0, x
-	sta	TMP
-	ldy	#1
-	lda	(TMP), y
-	sta	0, x
-	lda	#0
-	sta	1, x
-	+NEXT
-
 ; NUMBER
 	!word	LINK
 	!set	LINK = * - 2

@@ -47,7 +47,7 @@
 	drop
 	swap ( end-of-word start-of-word )
 
-	[ char : ] literal emit space dup id. space
+	[ key : ] literal emit space dup id. space
 	dup ?immed if ." immed " then
 
 	>dfa ( get data addr )
@@ -62,14 +62,14 @@
 			2 + dup @ .
 		endof
 		' litstring of
-			[ char s ] literal emit '"' emit space
+			[ key s ] literal emit '"' emit space
 			2 + dup c@ 
 			swap dup tell
 			'"' emit space
 			+ 1-
 		endof
 		' ' of
-			[ char ' ] literal emit space
+			[ key ' ] literal emit space
 			2 + dup @
 			cfa>
 			id. space
@@ -98,7 +98,7 @@
 		endcase
 		2 +
 	repeat
-	[ char ; ] literal emit cr
+	[ key ; ] literal emit cr
 	2drop
 ;
 
@@ -142,7 +142,7 @@ var last-dump
 			dup 20 5e within if
 				emit
 			else
-				drop [ char . ] literal emit
+				drop [ key . ] literal emit
 			then
 
 			1+ ( incr addr )

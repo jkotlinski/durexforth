@@ -23,7 +23,7 @@ swap dup here @ swap - swap ! ;
 : while immed ' 0branch , here @ 0 , ;
 : repeat immed ' branch , swap here @ - , dup here @ swap - swap ! ;
 : recurse immed latest @ >cfa , ;
-: ( immed begin key [ char ) ] literal = until ;
+: ( immed begin key [ key ) ] literal = until ;
 : # immed begin key d = until ; # comment
 : -rot rot rot ;
 : tuck ( x y -- y x y ) dup -rot ;
@@ -51,7 +51,7 @@ swap dup here @ swap - swap ! ;
 	until
 	2drop
 ;
-: '"' [ char " ] literal ;
+: '"' [ key " ] literal ;
 : s" immed ( -- addr len )
 	state @ if
 		' litstring ,
@@ -222,8 +222,8 @@ s" gfxdemo" load
 tuck ( strlen strptr strlen )
 dup here @ + ( strlen strptr strlen tmpbuf )
 dup >r
-dup [ char s ] literal swap c! 1+
-dup [ char : ] literal swap c! 1+
+dup [ key s ] literal swap c! 1+
+dup [ key : ] literal swap c! 1+
 ( strlen strptr strlen tmpbuf+2 )
 rot ( strlen strlen tmpbuf+2 strptr )
 swap ( strlen strlen strptr tmpbuf+2 )

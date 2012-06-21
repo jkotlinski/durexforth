@@ -274,7 +274,7 @@ bufstart dup homepos ! curlinestart !
 
 : insert-start
 1 to insert-active
-[ char i ] literal set-status ;
+[ key i ] literal set-status ;
 
 : force-cur-right
 linelen if 1 curx +! then ;
@@ -456,13 +456,13 @@ var clipboard-count
 ;
 
 : delete-handler
-	[ char d ] literal set-status
+	[ key d ] literal set-status
 
 	key
 
 	case
-	[ char w ] literal of del-word endof
-	[ char d ] literal of del-line endof
+	[ key w ] literal of del-word endof
+	[ key d ] literal of del-line endof
 	endcase
 
 	clear-status
@@ -535,9 +535,9 @@ var clipboard-count
 : do-backup
 	# scratch old backup
 	drivebuf
-	dup [ char s ] literal swap c! 1+
-	dup [ char : ] literal swap c! 1+
-	dup [ char . ] literal swap c! 1+
+	dup [ key s ] literal swap c! 1+
+	dup [ key : ] literal swap c! 1+
+	dup [ key . ] literal swap c! 1+
 	dup
 	filename swap filename-len c@ cmove
 	filename-len c@ +
@@ -548,11 +548,11 @@ var clipboard-count
 
 	# rename to new backup
 	drivebuf
-	dup [ char r ] literal swap c! 1+
+	dup [ key r ] literal swap c! 1+
 	1+ # colon already in place...
-	dup [ char . ] literal swap c! 1+
+	dup [ key . ] literal swap c! 1+
 	filename-len c@ + # filename ok
-	dup [ char = ] literal swap c! 1+
+	dup [ key = ] literal swap c! 1+
 	dup
 	filename swap filename-len c@ cmove
 	filename-len c@ + # filename ok
@@ -572,7 +572,7 @@ saveb
 1 to need-refresh ;
 
 : save-as
-	[ char ! ] literal emit
+	[ key ! ] literal emit
 	0 ( len )
 	filename ( len filename )
 	begin
@@ -604,18 +604,18 @@ saveb
 
 : colon-w
 	1 18 setcur
-	[ char w ] literal emit
+	[ key w ] literal emit
 	key
 	case
 	CR of write-file endof
-	[ char ! ] literal of save-as endof
+	[ key ! ] literal of save-as endof
 	endcase
 ;
 
 : find-handler
 	0 18 setcur
 	clear-status
-	[ char / ] literal emit
+	[ key / ] literal emit
 	0 ( count )
 	begin
 		key dup
@@ -676,32 +676,32 @@ cur-down
 then ;
 
 create maintable
-char i c, loc insert-start >cfa ,
-char a c, loc append-start >cfa ,
-char / c, loc find-handler >cfa ,
-char U c, loc half-page-back >cfa ,
-char D c, loc half-page-fwd >cfa ,
-char J c, loc join-lines >cfa ,
-char g c, loc goto-start >cfa ,
-char G c, loc goto-eof >cfa ,
-char $ c, loc eol >cfa ,
-char 0 c, loc sol >cfa ,
-char r c, loc replace-char >cfa ,
-char O c, loc open-line >cfa ,
-char P c, loc paste-line >cfa ,
-char x c, loc del-char >cfa ,
-char X c, loc backspace >cfa ,
-char b c, loc word-back >cfa ,
-char w c, loc word-fwd >cfa ,
-char d c, loc delete-handler >cfa ,
+key i c, loc insert-start >cfa ,
+key a c, loc append-start >cfa ,
+key / c, loc find-handler >cfa ,
+key U c, loc half-page-back >cfa ,
+key D c, loc half-page-fwd >cfa ,
+key J c, loc join-lines >cfa ,
+key g c, loc goto-start >cfa ,
+key G c, loc goto-eof >cfa ,
+key $ c, loc eol >cfa ,
+key 0 c, loc sol >cfa ,
+key r c, loc replace-char >cfa ,
+key O c, loc open-line >cfa ,
+key P c, loc paste-line >cfa ,
+key x c, loc del-char >cfa ,
+key X c, loc backspace >cfa ,
+key b c, loc word-back >cfa ,
+key w c, loc word-fwd >cfa ,
+key d c, loc delete-handler >cfa ,
 LEFT c, loc cur-left >cfa ,
 RIGHT c, loc cur-right >cfa ,
 UP c, loc cur-up >cfa ,
 DOWN c, loc cur-down >cfa ,
-char h c, loc cur-left >cfa ,
-char l c, loc cur-right >cfa ,
-char k c, loc cur-up >cfa ,
-char j c, loc cur-down >cfa ,
+key h c, loc cur-left >cfa ,
+key l c, loc cur-right >cfa ,
+key k c, loc cur-up >cfa ,
+key j c, loc cur-down >cfa ,
 0 c,
 
 : main-handler ( key -- quit? )
@@ -725,27 +725,27 @@ char j c, loc cur-down >cfa ,
 
 	case ( key )
 
-	[ char o ] literal of force-cur-down open-line endof
-	[ char p ] literal of force-cur-down paste-line endof
-	[ char Z ] literal of
+	[ key o ] literal of force-cur-down open-line endof
+	[ key p ] literal of force-cur-down paste-line endof
+	[ key Z ] literal of
 		key
 		case
-		[ char Z ] literal of write-file ffff exit endof
+		[ key Z ] literal of write-file ffff exit endof
 		endcase
 	endof
-	[ char : ] literal of 
-		[ char : ] literal set-status
+	[ key : ] literal of 
+		[ key : ] literal set-status
 		key 
 		case
-		[ char w ] literal of colon-w endof
-		[ char q ] literal of ffff exit endof
+		[ key w ] literal of colon-w endof
+		[ key q ] literal of ffff exit endof
 		endcase
 		clear-status
 	endof
 
-	[ char c ] literal of
+	[ key c ] literal of
 		key
-		[ char w ] literal = if change-word then
+		[ key w ] literal = if change-word then
 	endof
 
 	( cursor )
