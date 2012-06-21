@@ -144,10 +144,10 @@ cur@ curdir @ mov cur! ;
 
 # safe peek
 : chkpeek ( x y -- v )
-dup 0< if 2drop 0 exit then
-dup c7 > if 2drop 0 exit then
-over 0< if 2drop 0 exit then
-over 13f > if 2drop 0 exit then
+dup 0< if 2drop 1 exit then
+dup c7 > if 2drop 1 exit then
+over 0< if 2drop 1 exit then
+over 13f > if 2drop 1 exit then
 peek ;
 
 : adjcnt ( x y -- cnt )
