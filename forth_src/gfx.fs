@@ -137,12 +137,6 @@ var backtrack var findloop
 3 of swap 1- swap endof
 endcase ;
 
-: fwdpeek ( -- pixel )
-cur@ curdir @ mov peek ;
-: fwdmov ( -- )
-cur@ curdir @ mov cur! ;
-
-# safe peek
 : chkpeek ( x y -- v )
 dup 0< if 2drop 1 exit then
 dup c7 > if 2drop 1 exit then
@@ -150,22 +144,37 @@ over 0< if 2drop 1 exit then
 over 13f > if 2drop 1 exit then
 peek ;
 
-: adjcnt ( x y -- cnt )
-0
-cur@ 0 mov chkpeek if 1+ then
-cur@ 1 mov chkpeek if 1+ then
-cur@ 2 mov chkpeek if 1+ then
-cur@ 3 mov chkpeek if 1+ then ;
+: dirpeek ( reldir -- pixel )
+curdir @ + cur@ rot mov chkpeek ;
+: fpeek 0 dirpeek ;
+: rpeek 1 dirpeek ;
+: lpeek ffff dirpeek ;
+: fwdmov cur@ curdir @ mov cur! ;
 
-: start
-adjcnt
+: adj-cnt ( x y -- cnt )
+0
+0 dirpeek if 1+ then
+1 dirpeek if 1+ then
+2 dirpeek if 1+ then
+3 dirpeek if 1+ then ;
+
+# mode 1=paint 2=done
+: update ( -- mode )
+0
+adj-cnt
 dup 4 < if
-begin 1 curdir +! fwdpeek until
-begin ffff curdir +! fwdpeek not until
+begin 1 curdir +! fpeek until
+begin ffff curdir +! fpeek not until
 then
 
-# todo
-;
+case
+4 of cur@ plot drop 2 endof
+3 of
+ffff markx ! # clr mark
+ffff curdir +! # turn left
+cur@ plot drop 1
+endof
+endcase ;
 
 : flood ( x y -- )
 2dup peek if 2drop exit then
@@ -174,9 +183,26 @@ cury ! curx ! 0 curdir !
 ffff markx ! ffff mark2x !
 0 backtrack ! 0 findloop !
 
-begin fwdpeek not while fwdmov repeat
+begin fpeek not while fwdmov repeat
 
-start ;
+begin # main
+update case
+0 of fwdmov
+# right-pixel empty?
+rpeek 0= if
+ backtrack @ findloop @ not and
+ fpeek 0= lpeek 0= or and if
+  ffff findloop !
+ then
+ 1 curdir +! fwdmov
+then
+endof
+1 of fwdmov endof
+2 of exit endof
+endcase
+
+again # main
+; 
 
 hires 
 5 clrcol
