@@ -144,13 +144,13 @@ if 2drop exit then
 2dup peek if 2drop exit then
 
 # push y x x 1
-over over swap dup 1 spush
+2dup swap dup 1 spush
 # push y+1 x x -1
-over over 1+ swap dup ffff spush
+1+ swap dup ffff spush
 
 here @ stk !
 begin here @ stk @ < while
-TODO
+spop # y x1 x2 dy
 repeat ; 
 
 hires 
