@@ -174,6 +174,11 @@ ffff markx ! # clr mark
 ffff curdir +! # turn left
 cur@ plot drop 1
 endof
+1 of backtrack @ if
+1 findloop !
+else findloop @ if
+TODO
+then
 endcase ;
 
 : flood ( x y -- )
