@@ -121,93 +121,37 @@ repeat 2drop ;
 ['] xor else
 ['] or then blitop ! ;
 
-# dir 0=n 1=e 2=s 3=w
-var curx var cury var curdir
-var markx var marky var markdir
-var mark2x var mark2y var mark2dir
-var backtrack var findloop
+var stk
+: spush ( y xl xr dy -- )
+stk @ tuck c! 1+ # dy
+tuck ! 2+ # xr
+tuck ! 2+ # xl
+tuck c! 1+ # y
+stk ! ;
+: spop ( -- y xl xr dy )
+stk @ 1- dup c@ swap # y
+1- 1- dup @ swap # xl
+1- 1- dup @ swap # xr
+1- dup c@ # dy
+ff = if ffff else 1 then
+swap stk ! ;
 
-: cur@ curx @ cury c@ ;
-: cur! cury c! curx ! ;
-: mov ( x y dir -- x y )
-3 and case
-0 of 1- endof
-1 of swap 1+ swap endof
-2 of 1+ endof
-3 of swap 1- swap endof
-endcase ;
-
-: chkpeek ( x y -- v )
-dup 0< if 2drop 1 exit then
-dup c7 > if 2drop 1 exit then
-over 0< if 2drop 1 exit then
-over 13f > if 2drop 1 exit then
-peek ;
-
-: dirpeek ( reldir -- pixel )
-curdir @ + cur@ rot mov chkpeek ;
-: fpeek 0 dirpeek ;
-: rpeek 1 dirpeek ;
-: lpeek ffff dirpeek ;
-: fwdmov cur@ curdir @ mov cur! ;
-
-: adj-cnt ( x y -- cnt )
-0
-0 dirpeek if 1+ then
-1 dirpeek if 1+ then
-2 dirpeek if 1+ then
-3 dirpeek if 1+ then ;
-
-# mode 1=paint 2=done
-: update ( -- mode )
-0
-adj-cnt
-dup 4 < if
-begin 1 curdir +! fpeek until
-begin ffff curdir +! fpeek not until
-then
-
-case
-4 of cur@ plot drop 2 endof
-3 of
-ffff markx ! # clr mark
-ffff curdir +! # turn left
-cur@ plot drop 1
-endof
-1 of backtrack @ if
-1 findloop !
-else findloop @ if
-TODO
-then
-endcase ;
-
+# paul heckbert seed fill
+var l var x1 var x2 var dy
 : flood ( x y -- )
+2dup c8 >= swap 140 >= or
+if 2drop exit then
 2dup peek if 2drop exit then
 
-cury ! curx ! 0 curdir !
-ffff markx ! ffff mark2x !
-0 backtrack ! 0 findloop !
+# push y x x 1
+over over swap dup 1 spush
+# push y+1 x x -1
+over over 1+ swap dup ffff spush
 
-begin fpeek not while fwdmov repeat
-
-begin # main
-update case
-0 of fwdmov
-# right-pixel empty?
-rpeek 0= if
- backtrack @ findloop @ not and
- fpeek 0= lpeek 0= or and if
-  ffff findloop !
- then
- 1 curdir +! fwdmov
-then
-endof
-1 of fwdmov endof
-2 of exit endof
-endcase
-
-again # main
-; 
+here @ stk !
+begin here @ stk @ < while
+TODO
+repeat ; 
 
 hires 
 5 clrcol
