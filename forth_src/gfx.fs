@@ -222,11 +222,11 @@ repeat ;
 
 hires 
 5 clrcol
-10 1 plot
-20 1 line
-20 38 line
-10 38 line
-10 1 line
+10 21 plot
+20 21 line
+20 30 line
+10 30 line
+10 23 line
 18 28 flood
 lores
 
