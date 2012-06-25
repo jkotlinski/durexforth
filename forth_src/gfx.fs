@@ -125,6 +125,9 @@ repeat 2drop ;
 # from graphics gems
 var stk
 : spush ( y xl xr dy -- )
+3 pick over + dup 0< swap c7 > or if
+2drop 2drop exit then
+
 stk @ tuck c! 1+ # dy
 tuck ! 2+ # xr
 tuck ! 2+ # xl
@@ -220,9 +223,13 @@ over 4 pick > until
 2drop 2drop 2drop
 repeat ; 
 
-( #test flood
+# test flood
 hires 
 5 clrcol
+
+2 0 plot 2 c7 line
+5 0 plot 5 c7 line
+3 30 flood
 
 60 60 20 circle
 60 60 10 circle
@@ -237,6 +244,6 @@ hires
 25 8 line
 25 40 line
 8 40 line
-8 8 line
+8 18 line
 18 24 flood
-lores )
+lores
