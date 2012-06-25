@@ -164,7 +164,7 @@ begin
 2dup plot
 swap 1- swap repeat
 over 5 pick # y x1 x2 dy x y x x1
->= if
+s< not if
 branch [ here @ >r 0 , ] # goto skip
 then
 # y x1 x2 dy x y ...
@@ -220,16 +220,23 @@ over 4 pick > until
 2drop 2drop 2drop
 repeat ; 
 
+( #test flood
 hires 
 5 clrcol
-10 21 plot
-20 21 line
-20 30 line
-10 30 line
-10 23 line
-18 28 flood
-lores
 
-: testskip
-1 d020 c!
-2 d021 c! ;
+60 60 20 circle
+60 60 10 circle
+7f 60 flood
+
+10 10 plot
+20 10 line
+20 35 line
+10 35 line
+10 12 line
+8 8 plot
+25 8 line
+25 40 line
+8 40 line
+8 8 line
+18 24 flood
+lores )
