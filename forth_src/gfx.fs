@@ -121,6 +121,8 @@ repeat 2drop ;
 ['] xor else
 ['] or then blitop ! ;
 
+# paul heckbert seed fill
+# from graphics gems
 var stk
 : spush ( y xl xr dy -- )
 stk @ tuck c! 1+ # dy
@@ -136,21 +138,86 @@ stk @ 1- dup c@ swap # y
 ff = if ffff else 1 then
 swap stk ! ;
 
-# paul heckbert seed fill
-var l var x1 var x2 var dy
+var l
+
 : flood ( x y -- )
 2dup c8 >= swap 140 >= or
 if 2drop exit then
 2dup peek if 2drop exit then
 
+here @ stk !
 # push y x x 1
 2dup swap dup 1 spush
 # push y+1 x x -1
 1+ swap dup ffff spush
 
-here @ stk !
 begin here @ stk @ < while
 spop # y x1 x2 dy
+ffff = if rot 1- -rot ffff
+else rot 1+ -rot 1 then
+
+# left line
+2 pick 4 pick # y x1 x2 dy x y
+begin
+2dup peek not # y x1 x2 dy x y !peek
+2 pick 0< not and while
+2dup plot
+swap 1- swap repeat
+over 5 pick # y x1 x2 dy x y x x1
+>= if
+branch [ here @ >r 0 , ] # goto skip
+then
+# y x1 x2 dy x y ...
+over 1+ dup l ! 
+# y x1 x2 dy x y l
+5 pick < if # l < x1?
+# y x1 x2 dy x y
+dup l @ # y x1 x2 dy x y y l
+6 pick 1- # y x1 x2 dy x y y l x1-1
+5 pick negate spush
+then
+# y x1 x2 dy x y
+nip 3 pick 1+ swap # x=x1+1
+
+begin
+# y x1 x2 dy x y
+begin 2dup peek not
+2 pick 140 < and while
+2dup plot swap 1+ swap
+repeat
+# y x1 x2 dy x y
+dup l @
+# y x1 x2 dy x y y l
+3 pick 1-
+# y x1 x2 dy x y y l x-1
+5 pick spush
+# y x1 x2 dy x y
+
+# leak on right?
+over 4 pick 1+ > if
+dup # y x1 x2 dy x y y
+4 pick 1+ # y x1 x2 dy x y y x2+1
+3 pick 1- # y x1 x2 dy x y y x2+1 x-1
+4 pick negate spush
+then
+
+# skip:
+# y x1 x2 dy x y
+[ r> here @ over - swap ! ]
+
+swap 1+ swap
+begin
+2dup peek not not
+# y x1 x2 dy x y peek
+2 pick 5 pick <= and while
+swap 1+ swap repeat
+
+over l ! # l=x
+
+# y x1 x2 dy x y
+over 4 pick > until
+
+2drop 2drop 2drop
 repeat ; 
 
 hires 
@@ -162,3 +229,7 @@ hires
 10 1 line
 18 28 flood
 lores
+
+: testskip
+1 d020 c!
+2 d021 c! ;
