@@ -125,14 +125,15 @@ repeat 2drop ;
 # from graphics gems
 var stk
 : spush ( y xl xr dy -- )
+# y out of bounds?
 3 pick over + dup 0< swap c7 > or if
 2drop 2drop exit then
-
 stk @ tuck c! 1+ # dy
 tuck ! 2+ # xr
 tuck ! 2+ # xl
 tuck c! 1+ # y
 stk ! ;
+
 : spop ( -- y xl xr dy )
 stk @ 1- dup c@ swap # y
 1- 1- dup @ swap # xl
@@ -201,7 +202,7 @@ over 4 pick 1+ > if
 dup # y x1 x2 dy x y y
 4 pick 1+ # y x1 x2 dy x y y x2+1
 3 pick 1- # y x1 x2 dy x y y x2+1 x-1
-4 pick negate spush
+5 pick negate spush
 then
 
 # skip:
@@ -224,17 +225,16 @@ over 4 pick > until
 repeat ; 
 
 # test flood
-hires 
-5 clrcol
+( hires 5 clrcol
 
-0 90 plot 140 90 line
+0 90 plot 13e 90 line
 2 0 plot 2 c7 line
 5 0 plot 5 c7 line
 3 30 flood
 
 60 60 20 circle
-# 60 60 10 circle
-# 7f 60 flood
+60 60 10 circle
+7f 60 flood
 
 10 10 plot
 20 10 line
@@ -246,5 +246,4 @@ hires
 25 40 line
 8 40 line
 8 18 line
-18 24 flood
-lores
+18 24 flood lores )
