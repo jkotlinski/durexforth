@@ -227,13 +227,14 @@ repeat ;
 hires 
 5 clrcol
 
+0 90 plot 140 90 line
 2 0 plot 2 c7 line
 5 0 plot 5 c7 line
 3 30 flood
 
 60 60 20 circle
-60 60 10 circle
-7f 60 flood
+# 60 60 10 circle
+# 7f 60 flood
 
 10 10 plot
 20 10 line
