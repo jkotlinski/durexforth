@@ -136,7 +136,7 @@ stk ! ;
 
 : x1 0 ; : x2 0 ;
 
-: spop ( -- y xl )
+: spop ( -- y )
 stk @ 1- dup c@ swap # y
 1- 1- dup @ to x1
 1- 1- dup @ to x2
