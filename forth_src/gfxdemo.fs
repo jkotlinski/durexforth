@@ -119,8 +119,7 @@ e8 88 line
 68 begin dup 138 <= while
 20 begin dup 88 < while
 2dup be blkcol
-8 + repeat drop
-88 begin dup c4 < while
+8 + repeat begin dup c4 < while
 2dup 6 blkcol
 8 + repeat drop 8 + repeat drop
 e8 begin dup 118 <= while
