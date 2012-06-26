@@ -158,8 +158,7 @@ here @ stk !
 1+ swap dup ffff spush
 
 begin here @ stk @ < while
-spop # y
-dy +
+spop dy + # y
 
 # left line
 x1 over # y x y
@@ -206,8 +205,7 @@ x2 1+ # y x y y x2+1
 dy negate spush
 then
 
-# skip:
-# y x y
+# skip: y x y
 [ r> here @ over - swap ! ]
 
 swap 1+ swap
@@ -222,8 +220,7 @@ over l ! # l=x
 # y x y
 over x2 > until
 
-2drop drop
-repeat ; 
+2drop drop repeat ; 
 
 # test flood
 ( hires 5 clrcol
