@@ -40,14 +40,16 @@ dup 7 and ['] mask + c@ # y x bit
 -rot # bit y x
 fff8 and + bmpbase + ;
 
-: .plot ( x y -- )
+: doplot ( x y -- )
 blitloc swap over c@
 [ here @ to blitop ] or swap c! ;
 
-: plot ( x y -- )
-2dup peny ! penx !
+: chkplot ( x y -- )
 2dup c8 >= swap 140 >= or
-if 2drop exit then .plot ;
+if 2drop else doplot then ;
+
+: plot ( x y -- )
+2dup peny ! penx ! chkplot ;
 
 : peek ( x y -- b )
 blitloc c@ and ;
@@ -75,7 +77,7 @@ begin
   dx err +!
   sy peny +!
  then
- penx @ peny @ plot
+ penx @ peny @ chkplot
  2dup peny @ = swap penx @ = and if
   2drop exit
  then
@@ -85,15 +87,15 @@ again ;
 : cy 0 ;
 
 : plot4 ( x y -- x y )
-over cx + over cy + plot
+over cx + over cy + chkplot
 over if # x?
-over cx swap - over cy + plot
+over cx swap - over cy + chkplot
 then
 dup if # y?
-over cx + over cy swap - plot
+over cx + over cy swap - chkplot
 then
 over not not over not not and if
-over cx swap - over cy swap - plot
+over cx swap - over cy swap - chkplot
 then ;
 
 : plot8 ( x y -- x y )
@@ -167,7 +169,7 @@ x1 over # y x y
 begin
 2dup peek not # y x y !peek
 2 pick 0< not and while
-2dup .plot
+2dup doplot
 swap 1- swap repeat
 over x1 # y x y x x1
 s< not if
@@ -189,7 +191,7 @@ begin
 # y x y
 begin 2dup peek not
 2 pick 140 < and while
-2dup .plot swap 1+ swap
+2dup doplot swap 1+ swap
 repeat
 # y x y
 dup l @
