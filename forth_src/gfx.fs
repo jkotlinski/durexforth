@@ -134,13 +134,13 @@ tuck ! 2+ # xl
 tuck c! 1+ # y
 stk ! ;
 
-: spop ( -- y xl xr dy )
+: spop ( -- y xl xr )
 stk @ 1- dup c@ swap # y
 1- 1- dup @ swap # xl
 1- 1- dup @ swap # xr
 1- dup c@ # dy
-ff = if ffff else 1 then
-swap stk ! ;
+ff = if ffff else 1 then to dy
+stk ! ;
 
 var l
 
@@ -156,72 +156,71 @@ here @ stk !
 1+ swap dup ffff spush
 
 begin here @ stk @ < while
-spop # y x1 x2 dy
-ffff = if rot 1- -rot ffff
-else rot 1+ -rot 1 then
+spop # y x1 x2
+rot dy + -rot
 
 # left line
-2 pick 4 pick # y x1 x2 dy x y
+over 3 pick # y x1 x2 x y
 begin
-2dup peek not # y x1 x2 dy x y !peek
+2dup peek not # y x1 x2 x y !peek
 2 pick 0< not and while
 2dup plot
 swap 1- swap repeat
-over 5 pick # y x1 x2 dy x y x x1
+over 4 pick # y x1 x2 x y x x1
 s< not if
 branch [ here @ >r 0 , ] # goto skip
 then
-# y x1 x2 dy x y ...
+# y x1 x2 x y ...
 over 1+ dup l ! 
-# y x1 x2 dy x y l
-5 pick < if # l < x1?
-# y x1 x2 dy x y
-dup l @ # y x1 x2 dy x y y l
-6 pick 1- # y x1 x2 dy x y y l x1-1
-5 pick negate spush
+# y x1 x2 x y l
+4 pick < if # l < x1?
+# y x1 x2 x y
+dup l @ # y x1 x2 x y y l
+5 pick 1- # y x1 x2 x y y l x1-1
+dy negate spush
 then
-# y x1 x2 dy x y
-nip 3 pick 1+ swap # x=x1+1
+# y x1 x2 x y
+nip 2 pick 1+ swap # x=x1+1
 
 begin
-# y x1 x2 dy x y
+# y x1 x2 x y
 begin 2dup peek not
 2 pick 140 < and while
 2dup plot swap 1+ swap
 repeat
-# y x1 x2 dy x y
+# y x1 x2 x y
 dup l @
-# y x1 x2 dy x y y l
+# y x1 x2 x y y l
 3 pick 1-
-# y x1 x2 dy x y y l x-1
-5 pick spush
-# y x1 x2 dy x y
+# y x1 x2 x y y l x-1
+dy spush
+# y x1 x2 x y
 
 # leak on right?
-over 4 pick 1+ > if
-dup # y x1 x2 dy x y y
-4 pick 1+ # y x1 x2 dy x y y x2+1
-3 pick 1- # y x1 x2 dy x y y x2+1 x-1
-5 pick negate spush
+over 3 pick 1+ > if
+dup # y x1 x2 x y y
+3 pick 1+ # y x1 x2 x y y x2+1
+3 pick 1- # y x1 x2 x y y x2+1 x-1
+dy negate spush
 then
 
 # skip:
-# y x1 x2 dy x y
+# y x1 x2 x y
 [ r> here @ over - swap ! ]
 
 swap 1+ swap
 begin
 2dup peek not not
-# y x1 x2 dy x y peek
-2 pick 5 pick <= and while
+# y x1 x2 x y peek
+2 pick 4 pick <= and while
 swap 1+ swap repeat
 
 over l ! # l=x
 
-# y x1 x2 dy x y
-over 4 pick > until
+# y x1 x2 x y
+over 3 pick > until
 
-2drop 2drop 2drop
+2drop 2drop drop
 repeat ; 
 
 # test flood
