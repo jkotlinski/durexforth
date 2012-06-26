@@ -146,7 +146,7 @@ stk ! ;
 
 var l
 
-: flood ( x y -- )
+: paint ( x y -- )
 2dup c8 >= swap 140 >= or
 if 2drop exit then
 2dup peek if 2drop exit then
@@ -222,17 +222,17 @@ over x2 > until
 
 2drop drop repeat ; 
 
-# test flood
+# test paint
 ( hires 5 clrcol
 
 0 90 plot 13e 90 line
 2 0 plot 2 c7 line
 5 0 plot 5 c7 line
-3 30 flood
+3 30 paint
 
 60 60 20 circle
 60 60 10 circle
-7f 60 flood
+7f 60 paint
 
 10 10 plot
 20 10 line
@@ -244,4 +244,4 @@ over x2 > until
 25 40 line
 8 40 line
 8 18 line
-18 24 flood lores )
+18 24 paint lores )
