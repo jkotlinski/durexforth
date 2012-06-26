@@ -134,11 +134,11 @@ tuck ! 2+ # xl
 tuck c! 1+ # y
 stk ! ;
 
-: x2 0 ;
+: x1 0 ; : x2 0 ;
 
 : spop ( -- y xl )
 stk @ 1- dup c@ swap # y
-1- 1- dup @ swap # xl
+1- 1- dup @ to x1
 1- 1- dup @ to x2
 1- dup c@
 ff = if ffff else 1 then to dy
@@ -158,71 +158,71 @@ here @ stk !
 1+ swap dup ffff spush
 
 begin here @ stk @ < while
-spop # y x1
-swap dy + swap
+spop # y
+dy +
 
 # left line
-dup 2 pick # y x1 x y
+x1 over # y x y
 begin
-2dup peek not # y x1 x y !peek
+2dup peek not # y x y !peek
 2 pick 0< not and while
 2dup plot
 swap 1- swap repeat
-over 3 pick # y x1 x y x x1
+over x1 # y x y x x1
 s< not if
 branch [ here @ >r 0 , ] # goto skip
 then
-# y x1 x y ...
+# y x y ...
 over 1+ dup l ! 
-# y x1 x y l
-3 pick < if # l < x1?
-# y x1 x y
-dup l @ # y x1 x y y l
-4 pick 1- # y x1 x y y l x1-1
+# y x y l
+x1 < if # l < x1?
+# y x y
+dup l @ # y x y y l
+x1 1- # y x y y l x1-1
 dy negate spush
 then
-# y x1 x y
-nip over 1+ swap # x=x1+1
+# y x y
+nip x1 1+ swap # x=x1+1
 
 begin
-# y x1 x y
+# y x y
 begin 2dup peek not
 2 pick 140 < and while
 2dup plot swap 1+ swap
 repeat
-# y x1 x y
+# y x y
 dup l @
-# y x1 x y y l
+# y x y y l
 3 pick 1-
-# y x1 x y y l x-1
+# y x y y l x-1
 dy spush
-# y x1 x y
+# y x y
 
 # leak on right?
 over x2 1+ > if
-dup # y x1 x y y
-x2 1+ # y x1 x y y x2+1
-3 pick 1- # y x1 x y y x2+1 x-1
+dup # y x y y
+x2 1+ # y x y y x2+1
+3 pick 1- # y x y y x2+1 x-1
 dy negate spush
 then
 
 # skip:
-# y x1 x y
+# y x y
 [ r> here @ over - swap ! ]
 
 swap 1+ swap
 begin
 2dup peek not not
-# y x1 x2 x y peek
+# y x2 x y peek
 2 pick x2 <= and while
 swap 1+ swap repeat
 
 over l ! # l=x
 
-# y x1 x y
+# y x y
 over x2 > until
 
-2drop 2drop
+2drop drop
 repeat ; 
 
 # test flood
