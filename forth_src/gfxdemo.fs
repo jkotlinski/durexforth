@@ -102,6 +102,7 @@ over dup *sin 64 + line
 5 - repeat again ;
 
 : seascape
+0 d020 c!
 hires e clrcol
 0 38 plot 10 28 line 30 48 line
 40 40 line 70 98 line 78 8c line
@@ -115,6 +116,17 @@ e8 88 line
 69 88 plot 13f 88 line
 88 70 paint 138 70 paint
 104 6c f circle 104 6c paint
-;
+68 begin dup 138 <= while
+20 begin dup 5c <= while
+2dup be blkcol
+8 + repeat drop
+88 begin dup c4 < while
+2dup 6 blkcol
+8 + repeat drop 8 + repeat drop
+e8 begin dup 118 <= while
+50 begin dup 80 <= while
+2dup 7e blkcol
+8 + repeat drop 8 + repeat drop
+begin again ;
 
 seascape
