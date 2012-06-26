@@ -100,3 +100,21 @@ over dup *cos 64 swap - line
 dup dup *cos a0 +
 over dup *sin 64 + line
 5 - repeat again ;
+
+: seascape
+hires e clrcol
+0 38 plot 10 28 line 30 48 line
+40 40 line 70 98 line 78 8c line
+88 a0 line a0 90 line d0 a8 line
+f8 90 line 13f b0 line
+68 88 plot 88 60 line a0 70 line
+a8 68 line c8 80 line d8 78 line
+e8 88 line
+121 87 plot 138 60 line 13f 68 line
+30 a0 paint
+69 88 plot 13f 88 line
+88 70 paint 138 70 paint
+104 6c f circle 104 6c paint
+;
+
+seascape
