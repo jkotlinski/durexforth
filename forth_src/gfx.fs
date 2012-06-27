@@ -66,13 +66,21 @@ zptmp 1+ lda, 1 sta,x
 ;asm
 
 :asm .loc2
-0 lda,x 7 and,#
-0 sta,x
+loc mask >cfa 2/ 2/ 2/ 2/ 2/ 2/ 2/ 2/
+lda,# zptmp 1+ sta,
+
+clc,
+0 lda,x 7 and,# loc mask >cfa adc,#
+zptmp sta,
+2 bcc, zptmp 1+ inc,
+
+0 ldy,# 1 sty,x
+zptmp lda,(y) 0 sta,x
 ;asm
 
 : blitloc ( x y -- mask addr )
 .loc swap # y x
-dup .loc2 ['] mask + c@ # y x bit
+dup .loc2 # y x bit
 -rot # bit y x
 fff8 and + bmpbase + ;
 
