@@ -74,22 +74,21 @@ clc,
 zptmp sta,
 2 bcc, zptmp 1+ inc,
 
-0 ldy,# 1 sty,x
-zptmp lda,(y) 0 sta,x # the mask!
-;asm
-
-:asm .loc3
-clc,
-0 lda,x f8 and,# 2 adc,x 2 sta,x
-1 lda,x 3 adc,x a0 eor,# 3 sta,x
+# zptmp = mask
+0 ldy,#
+zptmp lda,(y) zptmp3 sta,
 inx, inx,
+
+clc,
+0 lda,x f8 and,# 2 adc,x 0 sta,x
+1 lda,x 3 adc,x a0 eor,# 1 sta,x
+zptmp3 lda, 2 sta,x
+0 lda,# 3 sta,x
 ;asm
 
 : blitloc ( x y -- mask addr )
 .loc swap # y x
-dup .loc2 # y x bit
--rot # bit y x
-.loc3 ;
+dup .loc2 ;
 
 hide .loc hide .loc2
 
