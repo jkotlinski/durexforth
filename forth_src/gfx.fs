@@ -75,14 +75,21 @@ zptmp sta,
 2 bcc, zptmp 1+ inc,
 
 0 ldy,# 1 sty,x
-zptmp lda,(y) 0 sta,x
+zptmp lda,(y) 0 sta,x # the mask!
+;asm
+
+:asm .loc3
+clc,
+0 lda,x f8 and,# 2 adc,x 2 sta,x
+1 lda,x 3 adc,x a0 eor,# 3 sta,x
+inx, inx,
 ;asm
 
 : blitloc ( x y -- mask addr )
 .loc swap # y x
 dup .loc2 # y x bit
 -rot # bit y x
-fff8 and + bmpbase + ;
+.loc3 ;
 
 hide .loc hide .loc2
 
