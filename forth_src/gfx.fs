@@ -77,7 +77,6 @@ zptmp sta,
 # zptmp = mask
 0 ldy,#
 zptmp lda,(y) zptmp3 sta,
-inx, inx,
 
 clc,
 0 lda,x f8 and,# 2 adc,x 0 sta,x
@@ -88,7 +87,7 @@ zptmp3 lda, 2 sta,x
 
 : blitloc ( x y -- mask addr )
 .loc swap # y x
-dup .loc2 ;
+.loc2 ;
 
 hide .loc hide .loc2
 
