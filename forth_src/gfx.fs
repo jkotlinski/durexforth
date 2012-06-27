@@ -33,12 +33,47 @@ var penx var peny
 
 : blitop 0 ;
 
+:asm .loc
+0 lda,x zptmp sta,
+7 and,# zptmp3 sta,
+1 lda,x zptmp 1+ sta,
+
+zptmp lda, f8 and,# zptmp sta,
+
+# * 8
+zptmp asl, zptmp 1+ rol,
+zptmp asl, zptmp 1+ rol,
+zptmp asl, zptmp 1+ rol,
+
+zptmp lda, zptmp2 sta,
+zptmp 1+ lda, zptmp2 1+ sta,
+
+# * 20
+zptmp asl, zptmp 1+ rol,
+zptmp asl, zptmp 1+ rol,
+
+clc,
+zptmp lda, zptmp2 adc, zptmp sta,
+zptmp 1+ lda, zptmp2 1+ adc,
+zptmp 1+ sta,
+clc,
+zptmp lda, zptmp3 adc, zptmp sta,
+2 bcc, zptmp 1+ inc,
+
+zptmp lda, 0 sta,x
+zptmp 1+ lda, 1 sta,x
+
+;asm
+
 : blitloc ( x y -- mask addr )
-dup fff8 and 28 *
-swap 7 and + swap # y x
+.loc swap # y x
 dup 7 and ['] mask + c@ # y x bit
 -rot # bit y x
 fff8 and + bmpbase + ;
+
+hide .loc
+
+# --- blitloc end
 
 : doplot ( x y -- )
 blitloc swap over c@
@@ -83,8 +118,7 @@ begin
  then
 again ;
 
-: cx 0 ;
-: cy 0 ;
+: cx 0 ; : cy 0 ;
 
 : plot4 ( x y -- x y )
 over cx + over cy + chkplot
@@ -120,6 +154,8 @@ swap 1- swap
 over negate err +!
 then
 repeat 2drop ;
+
+hide cx hide cy
 
 : erase if
 ['] xor else
@@ -225,6 +261,15 @@ over l ! # l=x
 over x2 > until
 
 2drop drop repeat ; 
+
+hide dx hide dy
+hide sx hide sy
+hide err
+hide x1 hide x2 hide l
+hide plot4 hide plot8
+hide blitop
+hide bmpbase hide colbase
+hide mask
 
 # test paint
 ( hires 5 clrcol
