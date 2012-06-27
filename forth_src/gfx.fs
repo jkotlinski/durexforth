@@ -122,9 +122,9 @@ begin
   sy peny +!
  then
  penx @ peny @ chkplot
- 2dup peny @ = swap penx @ = and if
+ dup peny @ = if over penx @ = if
   2drop exit
- then
+ then then
 again ;
 
 : cx 0 ; : cy 0 ;
