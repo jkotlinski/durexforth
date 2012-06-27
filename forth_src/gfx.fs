@@ -33,7 +33,7 @@ var penx var peny
 
 : blitop 0 ;
 
-:asm .loc
+:asm blitloc ( x y -- mask addr )
 0 lda,x zptmp sta,
 7 and,# zptmp3 sta,
 1 lda,x zptmp 1+ sta,
@@ -63,14 +63,13 @@ zptmp lda, zptmp3 adc, zptmp sta,
 zptmp lda, 0 sta,x
 zptmp 1+ lda, 1 sta,x
 
-;asm
+# ...
 
-:asm .loc2
 loc mask >cfa 2/ 2/ 2/ 2/ 2/ 2/ 2/ 2/
 lda,# zptmp 1+ sta,
 
 clc,
-0 lda,x 7 and,# loc mask >cfa adc,#
+2 lda,x 7 and,# loc mask >cfa adc,#
 zptmp sta,
 2 bcc, zptmp 1+ inc,
 
@@ -79,19 +78,11 @@ zptmp sta,
 zptmp lda,(y) zptmp3 sta,
 
 clc,
-0 lda,x f8 and,# 2 adc,x 0 sta,x
-1 lda,x 3 adc,x a0 eor,# 1 sta,x
+2 lda,x f8 and,# 0 adc,x 0 sta,x
+3 lda,x 1 adc,x a0 eor,# 1 sta,x
 zptmp3 lda, 2 sta,x
 0 lda,# 3 sta,x
-;asm
-
-: blitloc ( x y -- mask addr )
-.loc swap # y x
-.loc2 ;
-
-hide .loc hide .loc2
-
-# --- blitloc end
+;asm # blitloc
 
 : doplot ( x y -- )
 blitloc swap over c@
