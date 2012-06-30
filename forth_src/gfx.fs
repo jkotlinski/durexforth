@@ -195,6 +195,13 @@ stk ! ;
 
 var l
 
+# this one must be fast
+: fillr ( x y -- newx y )
+begin 2dup peek not
+2 pick 140 < and while
+2dup doplot swap 1+ swap
+repeat ;
+
 : paint ( x y -- )
 2dup c8 >= swap 140 >= or
 if 2drop exit then
@@ -233,11 +240,7 @@ then
 nip x1 1+ swap # x=x1+1
 
 begin
-# y x y
-begin 2dup peek not
-2 pick 140 < and while
-2dup doplot swap 1+ swap
-repeat
+fillr
 # y x y
 dup l @
 # y x y y l
@@ -278,7 +281,7 @@ hide x1 hide x2 hide l
 hide plot4 hide plot8
 hide blitop
 hide bmpbase hide colbase
-hide mask
+hide mask hide fillr
 
 # test paint
 ( hires 5 clrcol
