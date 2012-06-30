@@ -4,46 +4,30 @@
 : ;asm 4c c, next @ , ; # jmp next
 
 : 1mi create jsr-docol,
-' lit , , ' c, ,
-' exit ,
-;
+' lit , , ' c, , ' exit , ;
 
 : do-2mi c, c, ;
 
-: 2mi
-create jsr-docol,
+: 2mi create jsr-docol,
 ' lit , , # op
-' do-2mi ,
-' exit ,
-;
+' do-2mi , ' exit , ;
 
 : do-3mi c, , ;
 
-: 3mi
-create jsr-docol,
+: 3mi create jsr-docol,
 ' lit , , # op
-' do-3mi ,
-' exit , 
-;
+' do-3mi , ' exit , ;
 
 : do-23mi ( arg op3 op2 )
-	2 pick ( arg op3 op2 arg )
-	ff00 and if
-		drop ( arg op3 )
-		c, ,
-	else
-		nip ( arg op2 )
-		c, c,
-	then
-;
+2 pick ff00 and if drop c, ,
+else nip c, c, then ;
 
 : 23mi
 create jsr-docol,
 ' lit , , # op3
 ' lit , , # op2
 ' do-23mi ,
-' exit ,
-;
+' exit , ;
 
 69 2mi adc,#
 65 6d 23mi adc,
