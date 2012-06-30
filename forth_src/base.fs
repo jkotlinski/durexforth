@@ -175,8 +175,14 @@ inx, inx, ;asm
 inx, inx, ;asm
 : invert ffff xor ;
 : negate invert 1+ ;
-: +! ( num addr -- ) 
-dup @ rot + swap ! ;
+:asm +! ( num addr -- ) 
+0 lda,x zptmp sta,
+1 lda,x zptmp 1+ sta,
+0 ldy,# clc,
+zptmp lda,(y) 2 adc,x zptmp sta,(y)
+iny,
+zptmp lda,(y) 3 adc,x zptmp sta,(y)
+inx, inx, inx, inx, ;asm
 
 : allot ( n -- addr )
 here @ ( n val )
