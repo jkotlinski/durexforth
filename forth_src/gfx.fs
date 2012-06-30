@@ -197,10 +197,47 @@ var l
 
 # this one must be fast
 : fillr ( x y -- newx y )
-begin 2dup peek not
-2 pick 140 < and while
-2dup doplot swap 1+ swap
-repeat ;
+over 140 >= if exit then
+
+over penx !
+2dup blitloc # x y mask addr
+
+# bitwise scan
+begin over while
+# x y mask addr
+2dup c@ and if # end?
+2drop nip penx @ swap exit
+else # advance
+2dup c@ or over c!
+1 penx +! swap 2/ swap 
+then repeat
+
+# reached end?
+penx @ 140 >= if
+2drop nip penx @ swap exit
+then
+
+# bytewise
+nip 8 + # x y addr
+begin
+penx @ 140 <
+over c@ 0= and while
+ff over c!
+8 dup penx +! + repeat
+
+# bitwise
+80 swap
+penx @ 140 < if
+begin over while
+# x y mask addr
+2dup c@ and if # end?
+2drop nip penx @ swap exit
+else # advance
+2dup c@ or over c!
+1 penx +! swap 2/ swap 
+then repeat then
+
+2drop nip penx @ swap ;
 
 : paint ( x y -- )
 2dup c8 >= swap 140 >= or
