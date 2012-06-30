@@ -122,24 +122,8 @@ swap dup here @ swap - swap ! ;
 : ?hidden 2+ c@ 40 and ;
 : ?immed 2+ c@ 80 and ;
 
-: +! ( num addr -- ) 
-dup @ rot + swap ! ;
-
 ( get pointer to first data field - skip jsr DOCOL )
 : >dfa >cfa 1+ 2+ ;
-
-: allot ( n -- addr )
-	here @ ( n val )
-	swap ( val n )
-	here +!
-;
-
-: var
-	2 allot
-	create
-	jsr-docol,
-	' lit , , ' exit ,
-;
 
 : value ( n -- )
 	create
@@ -191,6 +175,17 @@ inx, inx, ;asm
 inx, inx, ;asm
 : invert ffff xor ;
 : negate invert 1+ ;
+: +! ( num addr -- ) 
+dup @ rot + swap ! ;
+
+: allot ( n -- addr )
+here @ ( n val )
+swap ( val n )
+here +! ;
+
+: var
+2 allot create jsr-docol,
+' lit , , ' exit , ;
 
 # signedness
 : 0< 8000 and not not ;
