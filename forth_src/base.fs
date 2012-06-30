@@ -30,7 +30,7 @@ swap dup here @ swap - swap ! ;
 : pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u ) 1+ 2 * sp@ + @ ;
 : ?dup dup if dup then ;
 : not 0= ;
-: <> ( a b -- c ) = not ;
+: <> ( a b -- c ) = 0= ;
 : > ( n -- b ) swap < ;
 
 : <= > not ;
