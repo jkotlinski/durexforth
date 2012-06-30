@@ -33,8 +33,8 @@ swap dup here @ swap - swap ! ;
 : <> ( a b -- c ) = 0= ;
 : > ( n -- b ) swap < ;
 
-: <= > not ;
-: >= < not ;
+: <= > 0= ;
+: >= < 0= ;
 : 2+ 1+ 1+ ;
 : max ( a b - c )
 2dup < if swap then drop ;
