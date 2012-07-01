@@ -102,30 +102,39 @@ blitloc c@ and ;
 : sx 0 ; : sy 0 ;
 var err
 
-: line ( x y -- )
-2dup peny @ - abs to dy
-penx @ - abs to dx
-2dup
-peny @ swap s< if 1 else ffff then to sy
-penx @ swap s< if 1 else ffff then to sx
-dx dy - err !
-dy negate to dy
+: line ( x1 y1 -- )
+2dup peny @ - abs
+swap penx @ - abs > # x1 y1 steep
 
-begin
- err @ 2* dup
- dy s> if
-  dy err +!
-  sx penx +! 
- then
- dx s< if
-  dx err +!
-  sy peny +!
- then
- penx @ peny @ chkplot
- dup peny @ = if over penx @ = if
-  2drop exit
- then then
-again ;
+dup if # steep?
+# swap x,y
+penx @ peny @ penx ! peny !
+-rot swap rot
+then
+# x1 y1 steep
+
+-rot # steep x1 y1
+
+dup peny @ - abs negate to dy
+over penx @ - abs dup to dx
+2/ err !
+
+over penx @ > if 1 else ffff then to sx
+peny @ > if 1 else ffff then to sy
+
+begin # steep x1
+
+dup penx @ = if 2drop exit then
+
+sx penx +! dy err +!
+err @ 0< if
+sy peny +! dx err +!
+then
+
+over penx @ peny @ rot if swap then
+chkplot again ;
+
+# --- circle
 
 : cx 0 ; : cy 0 ;
 
