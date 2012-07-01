@@ -26,8 +26,8 @@ hires d0 clrcol
 100 begin
 ?dup while
 32 64 plot
-dup 12c *cos 32 +
-over 12c *sin 64 +
+12c over *cos 32 +
+over 12c swap *sin 64 +
 line
 1- repeat ;
 
