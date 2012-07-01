@@ -21,7 +21,7 @@ colbase 3e8 fill
 0 bmpbase 1f40 fill ;
 
 : blkcol ( x y c -- )
-rot 8 / rot 8 / 28 *
+rot 2/ 2/ 2/ rot 2/ 2/ 2/ 28 *
 + colbase + c! ;
 
 create mask
