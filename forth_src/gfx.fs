@@ -89,7 +89,7 @@ blitloc swap over c@
 [ here @ to blitop ] or swap c! ;
 
 : chkplot ( x y -- )
-2dup c8 >= swap 140 >= or
+over 140 >= over c8 >= or
 if 2drop else doplot then ;
 
 : plot ( x y -- )
