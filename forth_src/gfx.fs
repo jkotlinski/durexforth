@@ -117,8 +117,8 @@ dup peny @ - abs negate to dy
 over penx @ - abs dup to dx
 2/ err !
 
-peny @ > if 1 else ffff then to sy
-dup penx @ > if 1 else ffff then to sx
+peny @ s> if 1 else ffff then to sy
+dup penx @ s> if 1 else ffff then to sx
 
 begin # steep x1
 
