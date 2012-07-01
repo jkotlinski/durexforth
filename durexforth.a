@@ -277,14 +277,12 @@ SWAP
 	ldy	1, x
 	lda	3, x
 	sta 1, x
-	tya
-	sta	3, x
+	sty	3, x
 
 	ldy	0, x
 	lda	2, x
 	sta 0, x
-	tya
-	sta	2, x
+	sty	2, x
 	+NEXT
 
 ; DUP
