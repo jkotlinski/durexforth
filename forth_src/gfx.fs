@@ -109,22 +109,22 @@ swap penx @ - abs > # x1 y1 steep
 dup if # steep?
 # swap x,y
 penx @ peny @ penx ! peny !
--rot swap rot
-then
-# x1 y1 steep
-
--rot # steep x1 y1
+-rot swap
+else -rot then
+# steep x1 y1
 
 dup peny @ - abs negate to dy
 over penx @ - abs dup to dx
 2/ err !
 
-over penx @ > if 1 else ffff then to sx
 peny @ > if 1 else ffff then to sy
+dup penx @ > if 1 else ffff then to sx
 
 begin # steep x1
 
-dup penx @ = if 2drop exit then
+dup penx @ = if 
+drop if penx @ peny @ penx ! peny ! then
+exit then
 
 sx penx +! dy err +!
 err @ 0< if
