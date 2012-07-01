@@ -85,7 +85,7 @@ zptmp3 lda, 2 sta,x
 ;asm # blitloc
 
 : doplot ( x y -- )
-blitloc swap over c@
+blitloc tuck c@
 [ here @ to blitop ] or swap c! ;
 
 : chkplot ( x y -- )
