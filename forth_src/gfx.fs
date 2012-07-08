@@ -102,10 +102,14 @@ blitloc c@ and ;
 : sx 0 ; : sy 0 ;
 var err
 
+var mask var addr
+
 : lineplot
 penx @ peny @
-over 13f > over c7 > or
-if 2drop else doplot then ;
+over 13f > over c7 > or if 2drop else
+blitloc nip dup c@
+# todo: erase support
+mask c@ or swap c! then ;
 
 : line ( x y -- )
 2dup peny @ - abs to dy
@@ -116,11 +120,15 @@ penx @ swap s< if 1 else ffff then to sx
 dx dy - err !
 dy negate to dy
 
+penx @ peny @ blitloc addr ! mask !
+
 begin
  err @ 2* dup
  dy s> if
   dy err +!
   sx penx +! 
+  mask c@ sx 1 = if 2/ dup 0= if drop 80 then
+  else 2* dup 100 = if drop 1 then then mask c!
  then
  dx s< if
   dx err +!
