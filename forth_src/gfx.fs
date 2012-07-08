@@ -102,6 +102,11 @@ blitloc c@ and ;
 : sx 0 ; : sy 0 ;
 var err
 
+: lineplot
+penx @ peny @
+over 13f > over c7 > or
+if 2drop else doplot then ;
+
 : line ( x y -- )
 2dup peny @ - abs to dy
 penx @ - abs to dx
@@ -121,7 +126,7 @@ begin
   dx err +!
   sy peny +!
  then
- penx @ peny @ chkplot
+ lineplot 
  dup peny @ = if over penx @ = if
   2drop exit
  then then
