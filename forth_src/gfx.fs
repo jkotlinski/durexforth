@@ -111,6 +111,11 @@ blitloc nip dup c@
 # todo: erase support
 mask c@ or swap c! then ;
 
+: cror ( a -- b )
+2/ dup 0= if drop 80 then ;
+: crol ( a -- b )
+2* dup 100 = if drop 1 then ;
+
 : line ( x y -- )
 2dup peny @ - abs to dy
 penx @ - abs to dx
@@ -127,8 +132,8 @@ begin
  dy s> if
   dy err +!
   sx penx +! 
-  mask c@ sx 1 = if 2/ dup 0= if drop 80 then
-  else 2* dup 100 = if drop 1 then then mask c!
+  mask c@ sx 1 = if cror else crol then
+  mask c!
  then
  dx s< if
   dx err +!
