@@ -105,16 +105,12 @@ var err
 var mask var addr
 
 : lineplot
-penx @ peny @
-over 13f > over c7 > or if 2drop else
-blitloc nip dup c@
+penx @ 140 < if
+peny @ c8 < if
+addr @ c@
 # todo: erase support
-mask c@ or swap c! then ;
-
-: cror ( a -- b )
-2/ dup 0= if drop 80 then ;
-: crol ( a -- b )
-2* dup 100 = if drop 1 then ;
+mask c@ or addr @ c!
+then then ;
 
 : line ( x y -- )
 2dup peny @ - abs to dy
@@ -132,12 +128,22 @@ begin
  dy s> if
   dy err +!
   sx penx +! 
-  mask c@ sx 1 = if cror else crol then
-  mask c!
+  mask c@ sx 1 = if
+  2/ dup 0= if drop 80 8 addr +! then
+  else 2* dup 100 = if drop 1 fff8 addr +! then
+  then mask c!
  then
  dx s< if
   dx err +!
   sy peny +!
+  addr @ sy 1 = if ( down )
+   1+ dup 7 and 0= if
+   138 + then
+  else ( up )
+   dup 7 and 0= if
+   138 - then 1-
+  then
+  addr !
  then
  lineplot 
  dup peny @ = if over penx @ = if
