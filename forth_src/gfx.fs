@@ -31,7 +31,9 @@ create mask
 var penx var peny
 0 penx ! 0 peny !
 
-: blitop 0 ;
+# blit operations for plot, line
+create blitop
+0 , 0 ,
 
 :asm blitloc ( x y -- mask addr )
 0 lda,x zptmp sta,
@@ -86,7 +88,8 @@ zptmp3 lda, 2 sta,x
 
 : doplot ( x y -- )
 blitloc tuck c@
-[ here @ to blitop ] or swap c! ;
+[ here @ loc blitop >cfa ! ] or
+swap c! ;
 
 : chkplot ( x y -- )
 over 13f > over c7 > or
@@ -109,7 +112,9 @@ penx @ 140 < if
 peny @ c8 < if
 addr @ c@
 # todo: erase support
-mask c@ or addr @ c!
+mask c@ 
+[ here @ loc blitop >cfa 2+ ! ] or
+addr @ c!
 then then ;
 
 : line ( x y -- )
@@ -194,7 +199,8 @@ hide cx hide cy
 
 : erase if
 ['] xor else
-['] or then blitop ! ;
+['] or then ['] blitop 2dup
+@ ! 2+ @ ! ;
 
 # paul heckbert seed fill
 # from graphics gems
