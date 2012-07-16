@@ -33,7 +33,8 @@ var penx var peny
 
 # blit operations for plot, line
 create blitop
-0 , 0 ,
+0 , # doplot
+0 , # lineplot
 
 :asm blitloc ( x y -- mask addr )
 0 lda,x zptmp sta,
@@ -111,7 +112,6 @@ var mask var addr
 penx @ 140 < if
 peny @ c8 < if
 addr @ c@
-# todo: erase support
 mask c@ 
 [ here @ loc blitop >cfa 2+ ! ] or
 addr @ c!
