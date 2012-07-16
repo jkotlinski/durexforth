@@ -142,11 +142,9 @@ begin
   dx err +!
   sy peny +!
   addr @ sy 1 = if ( down )
-   1+ dup 7 and 0= if
-   138 + then
+   1+ dup 7 and 0= if 138 + then
   else ( up )
-   dup 7 and 0= if
-   138 - then 1-
+   dup 7 and 0= if 138 - then 1-
   then
   addr !
  then
