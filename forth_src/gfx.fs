@@ -110,16 +110,24 @@ var err
 
 var mask var addr
 
-:asm l
+:asm lineplot ( -- )
+
+# penx @ 140 <
+penx lda,# zptmp sta,
+penx 100/ lda,# zptmp 1+ sta,
+1 ldy,# zptmp lda,(y)
+12 beq,
+1 cmp,# 3 beq, ;asm
+dey, zptmp lda,(y)
+sec, 40 sbc,#
+3 bcc, ;asm
 
 # peny @ c8 <
 peny lda,# zptmp sta,
 peny 100/ lda,# zptmp 1+ sta,
-1 ldy,#
-zptmp lda,(y)
+1 ldy,# zptmp lda,(y)
 3 beq, ;asm
-dey,
-zptmp lda,(y)
+dey, zptmp lda,(y)
 sec, c8 sbc,#
 3 bcc, ;asm
 
@@ -141,10 +149,6 @@ mask ora, 0
 # addr @ c!
 zptmp2 sta,(y)
 ;asm
-
-: lineplot
-penx @ 140 < if
-l then ;
 
 : line ( x y -- )
 2dup peny @ - abs to dy
