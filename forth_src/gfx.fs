@@ -120,17 +120,18 @@ zptmp lda,(y) zptmp2 sta, iny,
 zptmp lda,(y) zptmp2 1+ sta, dey,
 
 # c@ mask c@ or
-dex, dex,
 zptmp2 lda,(y)
 here @ loc blitop >cfa 2+ !
-mask ora, 0 sta,x
+mask ora, 0
+
+# addr @ c!
+zptmp2 sta,(y)
 ;asm
 
 : lineplot
 penx @ 140 < if
 peny @ c8 < if
 l
-addr @ c!
 then then ;
 
 : line ( x y -- )
