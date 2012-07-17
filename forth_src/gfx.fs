@@ -108,11 +108,30 @@ var err
 
 var mask var addr
 
+:asm l
+# addr
+addr 2/ 2/ 2/ 2/ 2/ 2/ 2/ 2/
+lda,# zptmp 1+ sta,
+addr lda,# zptmp sta,
+
+# @
+0 ldy,#
+zptmp lda,(y) zptmp2 sta, iny,
+zptmp lda,(y) zptmp2 1+ sta, dey,
+
+# c@
+dex, dex,
+zptmp2 lda,(y) 0 sta,x
+
+# mask c@ 
+mask lda,
+dex, dex, 0 sta,x
+;asm
+
 : lineplot
 penx @ 140 < if
 peny @ c8 < if
-addr @ c@
-mask c@ 
+l
 [ here @ loc blitop >cfa 2+ ! ] or
 addr @ c!
 then then ;
