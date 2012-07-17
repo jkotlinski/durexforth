@@ -111,6 +111,18 @@ var err
 var mask var addr
 
 :asm l
+
+# peny @ c8 <
+peny lda,# zptmp sta,
+peny 100/ lda,# zptmp 1+ sta,
+1 ldy,#
+zptmp lda,(y)
+3 beq, ;asm
+dey,
+zptmp lda,(y)
+sec, c8 sbc,#
+3 bcc, ;asm
+
 # addr
 addr 100/
 lda,# zptmp 1+ sta,
@@ -132,9 +144,7 @@ zptmp2 sta,(y)
 
 : lineplot
 penx @ 140 < if
-peny @ c8 < if
-l
-then then ;
+l then ;
 
 : line ( x y -- )
 2dup peny @ - abs to dy
