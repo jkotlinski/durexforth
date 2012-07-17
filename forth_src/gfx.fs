@@ -36,6 +36,8 @@ create blitop
 0 , # doplot
 0 , # lineplot
 
+: 100/ 2/ 2/ 2/ 2/ 2/ 2/ 2/ 2/ ;
+
 :asm blitloc ( x y -- mask addr )
 0 lda,x zptmp sta,
 7 and,# zptmp3 sta,
@@ -68,7 +70,7 @@ zptmp 1+ lda, 1 sta,x
 
 # ...
 
-loc mask >cfa 2/ 2/ 2/ 2/ 2/ 2/ 2/ 2/
+loc mask >cfa 100/
 lda,# zptmp 1+ sta,
 
 clc,
@@ -110,7 +112,7 @@ var mask var addr
 
 :asm l
 # addr
-addr 2/ 2/ 2/ 2/ 2/ 2/ 2/ 2/
+addr 100/
 lda,# zptmp 1+ sta,
 addr lda,# zptmp sta,
 
