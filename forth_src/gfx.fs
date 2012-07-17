@@ -119,20 +119,17 @@ addr lda,# zptmp sta,
 zptmp lda,(y) zptmp2 sta, iny,
 zptmp lda,(y) zptmp2 1+ sta, dey,
 
-# c@
+# c@ mask c@ or
 dex, dex,
-zptmp2 lda,(y) 0 sta,x
-
-# mask c@ 
-mask lda,
-dex, dex, 0 sta,x
+zptmp2 lda,(y)
+here @ loc blitop >cfa 2+ !
+mask ora, 0 sta,x
 ;asm
 
 : lineplot
 penx @ 140 < if
 peny @ c8 < if
 l
-[ here @ loc blitop >cfa 2+ ! ] or
 addr @ c!
 then then ;
 
@@ -214,10 +211,10 @@ repeat 2drop ;
 
 hide cx hide cy
 
-: erase if
-['] xor else
-['] or then ['] blitop 2dup
-@ ! 2+ @ ! ;
+: erase dup if
+4d ['] xor else
+d ['] or then ['] blitop @ ! 
+['] blitop 2+ @ c! ;
 
 # paul heckbert seed fill
 # from graphics gems
