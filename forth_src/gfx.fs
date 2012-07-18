@@ -178,10 +178,11 @@ begin
  err @ 2* dup
  dy2 @ s> if
   stepy
-  mask c@ sx @ 1 = if
-  2/ dup 0= if drop 80 8 addr +! then
-  else 2* dup 100 = if drop 1 fff8 addr +! then
-  then mask c!
+  sx @ 1 = if
+  mask c@ 2/ dup 0= if drop 80 8 addr +! then mask c!
+  else
+  mask c@ 2* dup 100 = if drop 1 fff8 addr +! then mask c!
+  then
  then
  dx s< if
   dx err +!
