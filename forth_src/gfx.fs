@@ -105,7 +105,8 @@ if 2drop else doplot then ;
 blitloc c@ and ;
 
 : dx 0 ; : dy 0 ;
-: sx 0 ; : sy 0 ;
+: sy 0 ;
+var sx
 var err
 
 var mask var addr
@@ -157,6 +158,9 @@ var dy2
 # dy2 @ err +!
 clc, dy2 lda, err adc, err sta,
 dy2 1+ lda, err 1+ adc, err 1+ sta,
+# sx @ penx +! 
+clc, sx lda, penx adc, penx sta,
+sx 1+ lda, penx 1+ adc, penx 1+ sta,
 ;asm
 
 : line ( x y -- )
@@ -164,7 +168,7 @@ dy2 1+ lda, err 1+ adc, err 1+ sta,
 penx @ - abs to dx
 2dup
 peny @ swap s< if 1 else ffff then to sy
-penx @ swap s< if 1 else ffff then to sx
+penx @ swap s< if 1 else ffff then sx !
 dx dy2 @ - err !
 dy2 @ negate dy2 !
 
@@ -174,8 +178,7 @@ begin
  err @ 2* dup
  dy2 @ s> if
   stepy
-  sx penx +! 
-  mask c@ sx 1 = if
+  mask c@ sx @ 1 = if
   2/ dup 0= if drop 80 8 addr +! then
   else 2* dup 100 = if drop 1 fff8 addr +! then
   then mask c!
