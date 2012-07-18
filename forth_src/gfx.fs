@@ -105,8 +105,7 @@ if 2drop else doplot then ;
 blitloc c@ and ;
 
 : dx 0 ; : dy 0 ;
-: sy 0 ;
-var sx
+var sy var sx
 var err
 
 var mask var addr
@@ -152,7 +151,7 @@ mask ora, 0
 zptmp2 sta,(y)
 ;asm
 
-var dy2
+var dx2 var dy2
 
 :asmsub maskrol
 # mask<<1,addr-8?
@@ -182,13 +181,22 @@ mask lsr, 3 bcs, ;asm
 clc, addr lda, 8 adc,# addr sta,
 3 bcc, addr 1+ inc, ;asm
 
+:asm stepx
+# dx2 @ err +!
+clc, dx2 lda, err adc, err sta,
+dx2 1+ lda, err 1+ adc, err 1+ sta,
+# sy @ peny +!
+clc, sy lda, peny adc, peny sta,
+sy 1+ lda, peny 1+ adc, peny 1+ sta,
+;asm
+
 : line ( x y -- )
 2dup peny @ - abs dy2 !
-penx @ - abs to dx
+penx @ - abs dx2 !
 2dup
-peny @ swap s< if 1 else ffff then to sy
+peny @ swap s< if 1 else ffff then sy !
 penx @ swap s< if 1 else ffff then sx !
-dx dy2 @ - err !
+dx2 @ dy2 @ - err !
 dy2 @ negate dy2 !
 
 penx @ peny @ blitloc addr ! mask !
@@ -196,10 +204,9 @@ penx @ peny @ blitloc addr ! mask !
 begin
  err @ 2*
  stepy 
- dx s< if
-  dx err +!
-  sy peny +!
-  addr @ sy 1 = if ( down )
+ dx2 @ s< if
+  stepx
+  addr @ sy @ 1 = if ( down )
    1+ dup 7 and 0= if 138 + then
   else ( up )
    dup 7 and 0= if 138 - then 1-
