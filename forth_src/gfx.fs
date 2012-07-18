@@ -170,6 +170,13 @@ mask lsr, 3 bcs, ;asm
 clc, addr lda, 8 adc,# addr sta,
 3 bcc, addr 1+ inc, ;asm
 
+:asm maskrol
+# mask<<1,addr-8?
+mask asl, 3 bcs, ;asm
+1 lda,# mask sta,
+sec, addr lda, 8 sbc,# addr sta,
+3 bcs, addr 1+ dec, ;asm
+
 : line ( x y -- )
 2dup peny @ - abs dy2 !
 penx @ - abs to dx
@@ -185,11 +192,7 @@ begin
  err @ 2* dup
  dy2 @ s> if
   stepy
-  sx @ 1 = if
-  maskror
-  else
-  mask c@ 2* dup 100 = if drop 1 fff8 addr +! then mask c!
-  then
+  sx @ 1 = if maskror else maskrol then
  then
  dx s< if
   dx err +!
