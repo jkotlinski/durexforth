@@ -154,6 +154,13 @@ zptmp2 sta,(y)
 
 var dy2
 
+:asmsub maskrol
+# mask<<1,addr-8?
+mask asl, 3 bcs, ;asm
+1 lda,# mask sta,
+sec, addr lda, 8 sbc,# addr sta,
+3 bcs, addr 1+ dec, ;asm
+
 :asm stepy
 # dy2 @ err +!
 clc, dy2 lda, err adc, err sta,
@@ -161,21 +168,14 @@ dy2 1+ lda, err 1+ adc, err 1+ sta,
 # sx @ penx +! 
 clc, sx lda, penx adc, penx sta,
 sx 1+ lda, penx 1+ adc, penx 1+ sta,
-;asm
 
-:asm maskror
-# mask>>1,addr+8?
+# sx @ 1 = if maskror else maskrol then
+sx lda, 1 cmp,# maskrol -branch bne,
+# maskror.mask>>1,addr+8?
 mask lsr, 3 bcs, ;asm
 80 lda,# mask sta,
 clc, addr lda, 8 adc,# addr sta,
 3 bcc, addr 1+ inc, ;asm
-
-:asm maskrol
-# mask<<1,addr-8?
-mask asl, 3 bcs, ;asm
-1 lda,# mask sta,
-sec, addr lda, 8 sbc,# addr sta,
-3 bcs, addr 1+ dec, ;asm
 
 : line ( x y -- )
 2dup peny @ - abs dy2 !
@@ -190,10 +190,7 @@ penx @ peny @ blitloc addr ! mask !
 
 begin
  err @ 2* dup
- dy2 @ s> if
-  stepy
-  sx @ 1 = if maskror else maskrol then
- then
+ dy2 @ s> if stepy then
  dx s< if
   dx err +!
   sy peny +!
