@@ -117,20 +117,20 @@ penx lda,# zptmp sta,
 penx 100/ lda,# zptmp 1+ sta,
 1 ldy,# zptmp lda,(y)
 +branch beq,
-1 cmp,# 3 beq, ;asm
+1 cmp,# 1 beq, rts,
 dey, zptmp lda,(y)
 sec, 40 sbc,#
-3 bcc, ;asm
+1 bcc, rts,
 :+
 
 # peny @ c8 <
 peny lda,# zptmp sta,
 peny 100/ lda,# zptmp 1+ sta,
 1 ldy,# zptmp lda,(y)
-3 beq, ;asm
+1 beq, rts,
 dey, zptmp lda,(y)
 sec, c8 sbc,#
-3 bcc, ;asm
+1 bcc, rts,
 
 # addr
 addr 100/
@@ -149,7 +149,7 @@ mask ora, 0
 
 # addr @ c!
 zptmp2 sta,(y)
-;asm
+rts,
 
 var dx2 var dy2
 
@@ -182,7 +182,7 @@ clc, addr lda, 38 adc,# addr sta,
 addr 1+ lda, 1 adc,# addr 1+ sta,
 lineplot jmp,
 
-:asm step ( 2err -- 2err )
+:asmsub step ( 2err -- 2err )
 # err @ 2* 2err !
 err lda, 2err sta,
 err 1+ lda, 2err 1+ sta,
@@ -217,6 +217,15 @@ mask asl, 3 bcs, stepx jmp,
 sec, addr lda, 8 sbc,# addr sta,
 3 bcs, addr 1+ dec, stepx jmp,
 
+:asm doline
+:- :- :- :-
+step jsr,
+peny lda, 0 cmp,x -branch bne,
+penx lda, 2 cmp,x -branch bne,
+peny 1+ lda, 1 cmp,x -branch bne,
+penx 1+ lda, 3 cmp,x -branch bne,
+inx, inx, inx, inx, ;asm
+
 : line ( x y -- )
 2dup peny @ - abs dy2 !
 penx @ - abs dx2 !
@@ -228,12 +237,7 @@ dy2 @ negate dy2 !
 
 penx @ peny @ blitloc addr ! mask !
 
-begin
- step
- dup peny @ = if over penx @ = if
-  2drop exit
- then then
-again ;
+doline ;
 
 # --- circle
 
