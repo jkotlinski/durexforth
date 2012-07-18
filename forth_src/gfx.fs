@@ -110,7 +110,7 @@ var err var 2err
 
 var mask var addr
 
-:asm lineplot ( -- )
+:asmsub lineplot ( -- )
 
 # penx @ 140 <
 penx lda,# zptmp sta,
@@ -157,7 +157,7 @@ var dx2 var dy2
 # 2err @ dx2 @ s< if
 sec, 2err lda, dx2 sbc,
 2err 1+ lda, dx2 1+ sbc,
-3 bmi, ;asm
+3 bmi, lineplot jmp,
 
 # dx2 @ err +!
 clc, dx2 lda, err adc, err sta,
@@ -174,13 +174,13 @@ sec, addr lda, 38 sbc,# addr sta,
 addr 1+ lda, 1 sbc,# addr 1+ sta,
 :+ 
 addr lda, 3 bne, addr 1+ dec, addr dec,
-;asm
+lineplot jmp,
 :+ # down
 addr inc, 3 bne, addr 1+ inc,
-addr lda, 7 and,# 3 beq, ;asm
+addr lda, 7 and,# 3 beq, lineplot jmp,
 clc, addr lda, 38 adc,# addr sta,
 addr 1+ lda, 1 adc,# addr 1+ sta,
-;asm
+lineplot jmp,
 
 :asm step ( 2err -- 2err )
 # err @ 2* 2err !
@@ -230,7 +230,6 @@ penx @ peny @ blitloc addr ! mask !
 
 begin
  step
- lineplot 
  dup peny @ = if over penx @ = if
   2drop exit
  then then
