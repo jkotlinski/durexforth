@@ -153,6 +153,12 @@ zptmp2 sta,(y)
 
 var dy2
 
+:asm stepy
+# dy2 @ err +!
+clc, dy2 lda, err adc, err sta,
+dy2 1+ lda, err 1+ adc, err 1+ sta,
+;asm
+
 : line ( x y -- )
 2dup peny @ - abs dy2 !
 penx @ - abs to dx
@@ -167,7 +173,7 @@ penx @ peny @ blitloc addr ! mask !
 begin
  err @ 2* dup
  dy2 @ s> if
-  dy2 @ err +!
+  stepy
   sx penx +! 
   mask c@ sx 1 = if
   2/ dup 0= if drop 80 8 addr +! then
