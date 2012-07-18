@@ -106,7 +106,7 @@ blitloc c@ and ;
 
 : dx 0 ; : dy 0 ;
 var sy var sx
-var err
+var err var 2err
 
 var mask var addr
 
@@ -153,39 +153,10 @@ zptmp2 sta,(y)
 
 var dx2 var dy2
 
-:asm stepy ( 2err -- 2err )
-# dy2 @ s> if 
-sec, dy2 lda, 0 sbc,x
-dy2 1+ lda, 1 sbc,x
-3 bmi, ;asm
-
-# dy2 @ err +!
-clc, dy2 lda, err adc, err sta,
-dy2 1+ lda, err 1+ adc, err 1+ sta,
-# sx @ penx +! 
-clc, sx lda, penx adc, penx sta,
-sx 1+ lda, penx 1+ adc, penx 1+ sta,
-
-# sx @ 1 = if maskror else maskrol then
-sx lda, 1 cmp,# +branch bne,
-# right
-# maskror.mask>>1,addr+8?
-mask lsr, 3 bcs, ;asm
-80 lda,# mask sta,
-clc, addr lda, 8 adc,# addr sta,
-3 bcc, addr 1+ inc, ;asm
-:+ # left
-# mask<<1,addr-8?
-mask asl, 3 bcs, ;asm
-1 lda,# mask sta,
-sec, addr lda, 8 sbc,# addr sta,
-3 bcs, addr 1+ dec, ;asm
-
-
-:asm stepx
-# dx2 @ s< if
-sec, 0 lda,x dx2 sbc,
-1 lda,x dx2 1+ sbc,
+:asmsub stepx
+# 2err @ dx2 @ s< if
+sec, 2err lda, dx2 sbc,
+2err 1+ lda, dx2 1+ sbc,
 3 bmi, ;asm
 
 # dx2 @ err +!
@@ -211,6 +182,40 @@ clc, addr lda, 38 adc,# addr sta,
 addr 1+ lda, 1 adc,# addr 1+ sta,
 ;asm
 
+:asm step ( 2err -- 2err )
+# err @ 2* 2err !
+err lda, 2err sta,
+err 1+ lda, 2err 1+ sta,
+2err asl, 2err 1+ rol,
+
+# step up/down
+
+# 2err @ dy2 @ s> if 
+sec, dy2 lda, 2err sbc,
+dy2 1+ lda, 2err 1+ sbc,
+3 bmi, stepx jmp,
+
+# dy2 @ err +!
+clc, dy2 lda, err adc, err sta,
+dy2 1+ lda, err 1+ adc, err 1+ sta,
+# sx @ penx +! 
+clc, sx lda, penx adc, penx sta,
+sx 1+ lda, penx 1+ adc, penx 1+ sta,
+
+# sx @ 1 = if maskror else maskrol then
+sx lda, 1 cmp,# +branch bne,
+# right
+# maskror.mask>>1,addr+8?
+mask lsr, 3 bcs, stepx jmp,
+80 lda,# mask sta,
+clc, addr lda, 8 adc,# addr sta,
+3 bcc, addr 1+ inc, stepx jmp,
+:+ # left
+# mask<<1,addr-8?
+mask asl, 3 bcs, stepx jmp,
+1 lda,# mask sta,
+sec, addr lda, 8 sbc,# addr sta,
+3 bcs, addr 1+ dec, stepx jmp,
 
 : line ( x y -- )
 2dup peny @ - abs dy2 !
@@ -224,9 +229,7 @@ dy2 @ negate dy2 !
 penx @ peny @ blitloc addr ! mask !
 
 begin
- err @ 2*
- stepy stepx
- drop
+ step
  lineplot 
  dup peny @ = if over penx @ = if
   2drop exit
