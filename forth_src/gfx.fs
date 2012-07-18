@@ -163,6 +163,13 @@ clc, sx lda, penx adc, penx sta,
 sx 1+ lda, penx 1+ adc, penx 1+ sta,
 ;asm
 
+:asm maskror
+# mask>>1,addr+8?
+mask lsr, 3 bcs, ;asm
+80 lda,# mask sta,
+clc, addr lda, 8 adc,# addr sta,
+3 bcc, addr 1+ inc, ;asm
+
 : line ( x y -- )
 2dup peny @ - abs dy2 !
 penx @ - abs to dx
@@ -179,7 +186,7 @@ begin
  dy2 @ s> if
   stepy
   sx @ 1 = if
-  mask c@ 2/ dup 0= if drop 80 8 addr +! then mask c!
+  maskror
   else
   mask c@ 2* dup 100 = if drop 1 fff8 addr +! then mask c!
   then
