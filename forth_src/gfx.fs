@@ -161,7 +161,12 @@ mask asl, 3 bcs, ;asm
 sec, addr lda, 8 sbc,# addr sta,
 3 bcs, addr 1+ dec, ;asm
 
-:asm stepy
+:asm stepy ( 2err -- 2err )
+# dy2 @ s> if 
+sec, dy2 lda, 0 sbc,x
+dy2 1+ lda, 1 sbc,x
+3 bmi, ;asm
+
 # dy2 @ err +!
 clc, dy2 lda, err adc, err sta,
 dy2 1+ lda, err 1+ adc, err 1+ sta,
@@ -189,8 +194,8 @@ dy2 @ negate dy2 !
 penx @ peny @ blitloc addr ! mask !
 
 begin
- err @ 2* dup
- dy2 @ s> if stepy then
+ err @ 2*
+ stepy 
  dx s< if
   dx err +!
   sy peny +!
