@@ -181,6 +181,13 @@ mask lsr, 3 bcs, ;asm
 clc, addr lda, 8 adc,# addr sta,
 3 bcc, addr 1+ inc, ;asm
 
+:asmsub down
+addr inc, 3 bne, addr 1+ inc,
+addr lda, 7 and,# 3 beq, ;asm
+clc, addr lda, 38 adc,# addr sta,
+addr 1+ lda, 1 adc,# addr 1+ sta,
+;asm
+
 :asm stepx
 # dx2 @ err +!
 clc, dx2 lda, err adc, err sta,
@@ -188,16 +195,10 @@ dx2 1+ lda, err 1+ adc, err 1+ sta,
 # sy @ peny +!
 clc, sy lda, peny adc, peny sta,
 sy 1+ lda, peny 1+ adc, peny 1+ sta,
-;asm
 
-:asm down
-addr inc, 3 bne, addr 1+ inc,
-addr lda, 7 and,# 3 beq, ;asm
-clc, addr lda, 38 adc,# addr sta,
-addr 1+ lda, 1 adc,# addr 1+ sta,
-;asm
-
-:asm up
+# sy @ 1 = if down else up then
+sy lda, 1 cmp,# down -branch beq,
+# up
 addr lda, 7 and,# +branch bne,
 sec, addr lda, 38 sbc,# addr sta,
 addr 1+ lda, 1 sbc,# addr 1+ sta,
@@ -221,7 +222,6 @@ begin
  stepy 
  dx2 @ s< if
   stepx
-  sy @ 1 = if down else up then
  then
  lineplot 
  dup peny @ = if over penx @ = if
