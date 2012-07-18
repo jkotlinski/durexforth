@@ -153,13 +153,6 @@ zptmp2 sta,(y)
 
 var dx2 var dy2
 
-:asmsub maskrol
-# mask<<1,addr-8?
-mask asl, 3 bcs, ;asm
-1 lda,# mask sta,
-sec, addr lda, 8 sbc,# addr sta,
-3 bcs, addr 1+ dec, ;asm
-
 :asm stepy ( 2err -- 2err )
 # dy2 @ s> if 
 sec, dy2 lda, 0 sbc,x
@@ -174,19 +167,20 @@ clc, sx lda, penx adc, penx sta,
 sx 1+ lda, penx 1+ adc, penx 1+ sta,
 
 # sx @ 1 = if maskror else maskrol then
-sx lda, 1 cmp,# maskrol -branch bne,
+sx lda, 1 cmp,# +branch bne,
+# right
 # maskror.mask>>1,addr+8?
 mask lsr, 3 bcs, ;asm
 80 lda,# mask sta,
 clc, addr lda, 8 adc,# addr sta,
 3 bcc, addr 1+ inc, ;asm
+:+ # left
+# mask<<1,addr-8?
+mask asl, 3 bcs, ;asm
+1 lda,# mask sta,
+sec, addr lda, 8 sbc,# addr sta,
+3 bcs, addr 1+ dec, ;asm
 
-:asmsub down
-addr inc, 3 bne, addr 1+ inc,
-addr lda, 7 and,# 3 beq, ;asm
-clc, addr lda, 38 adc,# addr sta,
-addr 1+ lda, 1 adc,# addr 1+ sta,
-;asm
 
 :asm stepx
 # dx2 @ s< if
@@ -202,7 +196,7 @@ clc, sy lda, peny adc, peny sta,
 sy 1+ lda, peny 1+ adc, peny 1+ sta,
 
 # sy @ 1 = if down else up then
-sy lda, 1 cmp,# down -branch beq,
+sy lda, 1 cmp,# +branch beq,
 # up
 addr lda, 7 and,# +branch bne,
 sec, addr lda, 38 sbc,# addr sta,
@@ -210,6 +204,13 @@ addr 1+ lda, 1 sbc,# addr 1+ sta,
 :+ 
 addr lda, 3 bne, addr 1+ dec, addr dec,
 ;asm
+:+ # down
+addr inc, 3 bne, addr 1+ inc,
+addr lda, 7 and,# 3 beq, ;asm
+clc, addr lda, 38 adc,# addr sta,
+addr 1+ lda, 1 adc,# addr 1+ sta,
+;asm
+
 
 : line ( x y -- )
 2dup peny @ - abs dy2 !
