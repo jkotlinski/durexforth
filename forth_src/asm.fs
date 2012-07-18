@@ -176,6 +176,7 @@ ba 1mi tsx,
 98 1mi tya,
 
 : -branch ( a - a ) here @ 2+ - ;
+# creates value pointer to asm code
 : :asmsub
 0 value here @ latest @ >dfa 2+ ! ;
 
