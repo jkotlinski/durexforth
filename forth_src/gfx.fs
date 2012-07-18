@@ -189,6 +189,11 @@ addr 1+ lda, 1 adc,# addr 1+ sta,
 ;asm
 
 :asm stepx
+# dx2 @ s< if
+sec, 0 lda,x dx2 sbc,
+1 lda,x dx2 1+ sbc,
+3 bmi, ;asm
+
 # dx2 @ err +!
 clc, dx2 lda, err adc, err sta,
 dx2 1+ lda, err 1+ adc, err 1+ sta,
@@ -219,10 +224,8 @@ penx @ peny @ blitloc addr ! mask !
 
 begin
  err @ 2*
- stepy 
- dx2 @ s< if
-  stepx
- then
+ stepy stepx
+ drop
  lineplot 
  dup peny @ = if over penx @ = if
   2drop exit
