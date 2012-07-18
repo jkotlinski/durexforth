@@ -151,23 +151,23 @@ mask ora, 0
 zptmp2 sta,(y)
 ;asm
 
-var ldy
+var dy2
 
 : line ( x y -- )
-2dup peny @ - abs ldy !
+2dup peny @ - abs dy2 !
 penx @ - abs to dx
 2dup
 peny @ swap s< if 1 else ffff then to sy
 penx @ swap s< if 1 else ffff then to sx
-dx ldy @ - err !
-ldy @ negate ldy !
+dx dy2 @ - err !
+dy2 @ negate dy2 !
 
 penx @ peny @ blitloc addr ! mask !
 
 begin
  err @ 2* dup
- ldy @ s> if
-  ldy @ err +!
+ dy2 @ s> if
+  dy2 @ err +!
   sx penx +! 
   mask c@ sx 1 = if
   2/ dup 0= if drop 80 8 addr +! then
