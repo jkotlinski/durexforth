@@ -116,11 +116,12 @@ var mask var addr
 penx lda,# zptmp sta,
 penx 100/ lda,# zptmp 1+ sta,
 1 ldy,# zptmp lda,(y)
-12 beq,
++branch beq,
 1 cmp,# 3 beq, ;asm
 dey, zptmp lda,(y)
 sec, 40 sbc,#
 3 bcc, ;asm
+:+
 
 # peny @ c8 <
 peny lda,# zptmp sta,

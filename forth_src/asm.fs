@@ -175,7 +175,22 @@ ba 1mi tsx,
 9a 1mi txs,
 98 1mi tya,
 
-: -branch ( a - a ) here @ 2+ - ;
+( usage:
+foo lda,
++branch beq,
+bar inc,
+:+ )
+: +branch ( -- a ) here @ 0 ;
+: :+ ( a -- )
+here @ over 2+ - swap 1+ c! ;
+
+( usage:
+:- d014 lda, f4 cmp,#
+-branch bne, )
+: :- here @ ;
+: -branch ( absaddr -- reladdr )
+here @ 2+ - ;
+
 # creates value pointer to asm code
 : :asmsub
 0 value here @ latest @ >dfa 2+ ! ;
