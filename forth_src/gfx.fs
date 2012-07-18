@@ -197,6 +197,14 @@ clc, addr lda, 38 adc,# addr sta,
 addr 1+ lda, 1 adc,# addr 1+ sta,
 ;asm
 
+:asm up
+addr lda, 7 and,# +branch bne,
+sec, addr lda, 38 sbc,# addr sta,
+addr 1+ lda, 1 sbc,# addr 1+ sta,
+:+ 
+addr lda, 3 bne, addr 1+ dec, addr dec,
+;asm
+
 : line ( x y -- )
 2dup peny @ - abs dy2 !
 penx @ - abs dx2 !
@@ -213,10 +221,7 @@ begin
  stepy 
  dx2 @ s< if
   stepx
-  sy @ 1 = if down
-  else ( up )
-   addr @ dup 7 and 0= if 138 - then 1- addr !
-  then
+  sy @ 1 = if down else up then
  then
  lineplot 
  dup peny @ = if over penx @ = if
