@@ -310,26 +310,6 @@ stk ! ;
 
 var l
 
-:asm bytewise
-:- # 8 +
-clc, 0 lda,x 8 adc,# 0 sta,x
-2 bcc, 1 inc,x
-# penx=140?
-penx lda, 40 cmp,# +branch bne,
-penx 1+ lda, 1 cmp,# +branch bne,
-;asm
-:+ :+
-0 lda,x zptmp sta,
-1 lda,x zptmp 1+ sta,
-0 ldy,# zptmp lda,(y) 3 beq, ;asm
-
-# ff over c!
-ff lda,# zptmp sta,(y)
-# 8 penx +!
-clc, penx lda, 8 adc,# penx sta,
-3 bcc, penx 1+ inc,
-jmp, # recurse
-
 # this one must be fast
 : fillr ( x y -- newx y )
 over 140 >= if exit then
@@ -353,8 +333,12 @@ penx @ 140 >= if
 then
 
 # bytewise
-nip # x y addr
-bytewise
+nip 8 + # x y addr
+begin
+penx @ 140 <
+over c@ 0= and while
+ff over c!
+8 dup penx +! + repeat
 
 # bitwise
 80 swap
