@@ -345,6 +345,15 @@ penx inc, 3 bne, penx 1+ inc,
 2 lsr,x
 ;asm
 
+:asm end?
+# 2dup c@ and
+0 lda,x zptmp sta,
+1 lda,x zptmp 1+ sta,
+0 ldy,# zptmp lda,(y)
+2 and,x dex, dex,
+0 sta,x 1 sta,x
+;asm
+
 # this one must be fast
 : fillr ( x y -- newx y )
 over 140 >= if exit then
@@ -355,7 +364,7 @@ over penx !
 # bitwise scan
 begin over while
 # x y mask addr
-2dup c@ and if # end?
+end? if
 2drop nip penx @ swap exit
 else # advance
 bitblt then repeat
@@ -372,7 +381,7 @@ mask80
 penx @ 140 < if
 begin
 # x y mask addr
-2dup c@ and if # end?
+end? if
 2drop nip penx @ swap exit
 else # advance
 bitblt then again then
