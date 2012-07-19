@@ -84,7 +84,7 @@ zptmp lda,(y) zptmp3 sta,
 
 clc,
 2 lda,x f8 and,# 0 adc,x 0 sta,x
-3 lda,x 1 adc,x a0 eor,# 1 sta,x
+3 lda,x 1 adc,x clc, a0 adc,# 1 sta,x
 zptmp3 lda, 2 sta,x
 0 lda,# 3 sta,x
 ;asm # blitloc
