@@ -335,6 +335,13 @@ jmp, # recurse
 0 lda,# 3 sta,x
 ;asm
 
+:asm bitblt ( mask addr -- mask addr )
+0 lda,x zptmp sta,
+1 lda,x zptmp 1+ sta,
+0 ldy,# zptmp lda,(y)
+2 ora,x zptmp sta,(y)
+;asm
+
 # this one must be fast
 : fillr ( x y -- newx y )
 over 140 >= if exit then
@@ -348,7 +355,7 @@ begin over while
 2dup c@ and if # end?
 2drop nip penx @ swap exit
 else # advance
-2dup c@ or over c!
+bitblt
 1 penx +! swap 2/ swap 
 then repeat
 
@@ -367,7 +374,7 @@ begin
 2dup c@ and if # end?
 2drop nip penx @ swap exit
 else # advance
-2dup c@ or over c!
+bitblt
 1 penx +! swap 2/ swap 
 then again then
 
