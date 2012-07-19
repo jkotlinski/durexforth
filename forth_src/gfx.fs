@@ -354,6 +354,12 @@ penx inc, 3 bne, penx 1+ inc,
 0 sta,x 1 sta,x
 ;asm
 
+:asm leave
+# 2drop nip penx @ swap 
+inx, inx, inx, inx,
+penx lda, 2 sta,x
+penx 1+ lda, 3 sta,x ;asm
+
 # this one must be fast
 : fillr ( x y -- newx y )
 over 140 >= if exit then
@@ -365,14 +371,13 @@ over penx !
 begin over while
 # x y mask addr
 end? if
-2drop nip penx @ swap exit
+leave exit
 else # advance
 bitblt then repeat
 
 # reached end?
 penx @ 140 >= if
-2drop nip penx @ swap exit
-then
+leave exit then
 
 bytewise
 
@@ -382,11 +387,11 @@ penx @ 140 < if
 begin
 # x y mask addr
 end? if
-2drop nip penx @ swap exit
+leave exit
 else # advance
 bitblt then again then
 
-2drop nip penx @ swap ;
+leave ;
 
 : paint ( x y -- )
 2dup c8 >= swap 140 >= or
