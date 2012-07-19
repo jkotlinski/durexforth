@@ -125,8 +125,7 @@ e8 88 line
 e8 begin dup 118 <= while
 50 begin dup 80 <= while
 2dup 7e blkcol
-8 + repeat drop 8 + repeat drop
-begin again ;
+8 + repeat drop 8 + repeat drop ;
 
 create jungledata
 c , a8 , ffff , 1 , e , 5f ,
@@ -176,10 +175,18 @@ b8 , 128 , 48 , 58 , d ,
 e8 , 128 , 40 , 40 , d6 ,
 130 , 138 , 40 , 58 , 0 ,
 
+var line? var data
+
 : jungle
 hires 10 clrcol 0 d020 c!
-0 0 # i f
+0 line? ! ['] jungledata data !
 begin
-again ;
+data @ dup @ swap 2+ @
+4 data +! # x y
+over ffff = if line? ! drop
+else over fffe = if begin again then
+line? @ if line else plot then
+then again ;
 
 # seascape
+jungle
