@@ -145,11 +145,10 @@ zptmp lda,(y) zptmp2 1+ sta, dey,
 # c@ mask c@ or
 zptmp2 lda,(y)
 here @ loc blitop >cfa 2+ !
-mask ora, 0
+mask ora,
 
 # addr @ c!
-zptmp2 sta,(y)
-rts,
+zptmp2 sta,(y) rts,
 
 var dx2 var dy2
 
