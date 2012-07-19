@@ -329,6 +329,12 @@ clc, penx lda, 8 adc,# penx sta,
 3 bcc, penx 1+ inc,
 jmp, # recurse
 
+:asm mask80
+# nip 80 swap # mask
+80 lda,# 2 sta,x
+0 lda,# 3 sta,x
+;asm
+
 # this one must be fast
 : fillr ( x y -- newx y )
 over 140 >= if exit then
@@ -354,16 +360,16 @@ then
 bytewise
 
 # bitwise
-nip 80 swap
+mask80
 penx @ 140 < if
-begin over while
+begin
 # x y mask addr
 2dup c@ and if # end?
 2drop nip penx @ swap exit
 else # advance
 2dup c@ or over c!
 1 penx +! swap 2/ swap 
-then repeat then
+then again then
 
 2drop nip penx @ swap ;
 
