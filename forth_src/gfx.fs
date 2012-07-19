@@ -381,14 +381,13 @@ else # advance
 bitblt then repeat
 
 # reached end?
-penx @ 140 >= if
-leave exit then
-
+penx @ 140 < if
 bytewise
 
 # bitwise
 penx @ 140 < if rightend then
-leave ;
+
+then leave ;
 
 : paint ( x y -- )
 2dup c8 >= swap 140 >= or
