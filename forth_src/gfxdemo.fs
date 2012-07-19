@@ -177,16 +177,31 @@ e8 , 128 , 40 , 40 , d6 ,
 
 var line? var data
 
+: jcol
+data @ @ 2 data +!
+data @ @ 2 data +!
+data @ @ 2 data +!
+data @ @ 2 data +!
+data @ @ 2 data +! # lx ux ly uy c
+4 pick # lx ux ly uy c x
+begin dup 5 pick <= while
+3 pick # lx ux ly uy c x y
+begin dup 4 pick <= while
+2dup 4 pick blkcol
+8 + repeat drop 8 + repeat
+2drop 2drop 2drop ;
+
 : jungle
 hires 10 clrcol 0 d020 c!
 0 line? ! ['] jungledata data !
 begin
-data @ dup @ swap 2+ @
-4 data +! # x y
+data @ @ 2 data +!
+data @ @ 2 data +! # x y
 over ffff = if line? ! drop
-else over fffe = if begin again then
+else over fffe = if
+2drop a0 50 paint a0 b4 paint
+jcol jcol jcol jcol jcol
+jcol jcol jcol jcol jcol
+exit then
 line? @ if line else plot then
 then again ;
-
-# seascape
-jungle
