@@ -360,6 +360,11 @@ inx, inx, inx, inx,
 penx lda, 2 sta,x
 penx 1+ lda, 3 sta,x ;asm
 
+: rightend
+mask80 begin
+# x y mask addr
+end? if exit else bitblt then again ;
+
 # this one must be fast
 : fillr ( x y -- newx y )
 over 140 >= if exit then
@@ -382,15 +387,7 @@ leave exit then
 bytewise
 
 # bitwise
-mask80
-penx @ 140 < if
-begin
-# x y mask addr
-end? if
-leave exit
-else # advance
-bitblt then again then
-
+penx @ 140 < if rightend then
 leave ;
 
 : paint ( x y -- )
