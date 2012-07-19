@@ -287,15 +287,31 @@ d ['] or then ['] blitop @ !
 # paul heckbert seed fill
 # from graphics gems
 var stk
+:asm foo
+stk lda, zptmp sta,
+stk 1+ lda, zptmp 1+ sta,
+
+# dy
+0 ldy,# 0 lda,x zptmp sta,(y)
+# xr
+iny, 2 lda,x zptmp sta,(y)
+iny, 3 lda,x zptmp sta,(y)
+# xl
+iny, 4 lda,x zptmp sta,(y)
+iny, 5 lda,x zptmp sta,(y)
+# y
+iny, 6 lda,x zptmp sta,(y)
+
+clc, stk lda, 6 adc,# stk sta,
+3 bcc, stk 1+ inc,
+inx, inx, inx, inx,
+inx, inx, inx, inx, ;asm
+
 : spush ( y xl xr dy -- )
 # y out of bounds?
 3 pick over + dup 0< swap c7 > or if
 2drop 2drop exit then
-stk @ tuck c! 1+ # dy
-tuck ! 2+ # xr
-tuck ! 2+ # xl
-tuck c! 1+ # y
-stk ! ;
+foo ;
 
 : x1 0 ; : x2 0 ;
 
