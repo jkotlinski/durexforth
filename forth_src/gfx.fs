@@ -352,12 +352,10 @@ penx @ 140 >= if
 2drop nip penx @ swap exit
 then
 
-# bytewise
-nip # x y addr
 bytewise
 
 # bitwise
-80 swap
+nip 80 swap
 penx @ 140 < if
 begin over while
 # x y mask addr
