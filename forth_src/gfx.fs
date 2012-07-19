@@ -392,18 +392,13 @@ over penx !
 # bitwise scan
 begin over while
 # x y mask addr
-end? if
-leave exit
-else # advance
-bitblt then repeat
+end? if leave exit
+else bitblt then repeat
 
 # reached end?
 penx @ 140 < if
 bytewise
-
-# bitwise
 penx @ 140 < if rightend then
-
 then leave ;
 
 : paint ( x y -- )
