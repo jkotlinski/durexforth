@@ -104,7 +104,8 @@ if 2drop else doplot then ;
 : peek ( x y -- b )
 blitloc c@ and ;
 
-: dx 0 ; : dy 0 ;
+: dx 0 ;
+var dy
 var sy var sx
 var err var 2err
 
@@ -314,15 +315,27 @@ tya, sec, c8 cmp,# 3 bcs, dopush jsr,
 inx, inx, inx, inx,
 inx, inx, inx, inx, ;asm
 
-: x1 0 ; : x2 0 ;
+var x1 var x2
 
-: spop ( -- y )
-stk @ 1- dup c@ swap # y
-1- 1- dup @ to x1
-1- 1- dup @ to x2
-1- dup c@
-ff = if ffff else 1 then to dy
-stk ! ;
+:asm spop ( -- y )
+dex, dex,
+stk 1+ lda, zptmp 1+ sta,
+stk lda,
+sec, 6 sbc,# zptmp sta, stk sta,
+5 bcs, zptmp 1+ dec, stk 1+ dec,
+
+# ff = if ffff else 1 then dy !
+0 ldy,# zptmp lda,(y)
+dy sta, dy 1+ sta,
+1 cmp,# 3 bne, dy 1+ sty,
+
+1 sty,x
+iny, zptmp lda,(y) x2 sta,
+iny, zptmp lda,(y) x2 1+ sta,
+iny, zptmp lda,(y) x1 sta,
+iny, zptmp lda,(y) x1 1+ sta,
+iny, zptmp lda,(y) 0 sta,x
+;asm
 
 var l
 
@@ -413,30 +426,30 @@ here @ stk !
 1+ swap dup ffff spush
 
 begin here @ stk @ < while
-spop dy + # y
+spop dy @ + # y
 
 # left line
-x1 over # y x y
+x1 @ over # y x y
 begin
 2dup peek not # y x y !peek
 2 pick 0< not and while
 2dup doplot
 swap 1- swap repeat
-over x1 # y x y x x1
+over x1 @ # y x y x x1
 s< not if
 branch [ here @ >r 0 , ] # goto skip
 then
 # y x y ...
 over 1+ dup l ! 
 # y x y l
-x1 < if # l < x1?
+x1 @ < if # l < x1?
 # y x y
 dup l @ # y x y y l
-x1 1- # y x y y l x1-1
-dy negate spush
+x1 @ 1- # y x y y l x1-1
+dy @ negate spush
 then
 # y x y
-nip x1 1+ swap # x=x1+1
+nip x1 @ 1+ swap # x=x1+1
 
 begin
 fillr
@@ -445,15 +458,15 @@ dup l @
 # y x y y l
 3 pick 1-
 # y x y y l x-1
-dy spush
+dy @ spush
 # y x y
 
 # leak on right?
-over x2 1+ > if
+over x2 @ 1+ > if
 dup # y x y y
-x2 1+ # y x y y x2+1
+x2 @ 1+ # y x y y x2+1
 3 pick 1- # y x y y x2+1 x-1
-dy negate spush
+dy @ negate spush
 then
 
 # skip: y x y
@@ -463,13 +476,13 @@ swap 1+ swap
 begin
 2dup peek not not
 # y x2 x y peek
-2 pick x2 <= and while
+2 pick x2 @ <= and while
 swap 1+ swap repeat
 
 over l ! # l=x
 
 # y x y
-over x2 > until
+over x2 @ > until
 
 2drop drop repeat ; 
 
