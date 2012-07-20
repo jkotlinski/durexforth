@@ -318,18 +318,18 @@ inx, inx, inx, inx, ;asm
 var x1 var x2
 
 :asm spop ( -- y )
-dex, dex,
-stk 1+ lda, zptmp 1+ sta,
 stk lda,
 sec, 6 sbc,# zptmp sta, stk sta,
-5 bcs, zptmp 1+ dec, stk 1+ dec,
+3 bcs, stk 1+ dec,
+stk 1+ lda, zptmp 1+ sta,
 
 # ff = if ffff else 1 then dy !
 0 ldy,# zptmp lda,(y)
 dy sta, dy 1+ sta,
 1 cmp,# 3 bne, dy 1+ sty,
 
-1 sty,x
+dex, dex,
+1 sty,x # msb y=0
 iny, zptmp lda,(y) x2 sta,
 iny, zptmp lda,(y) x2 1+ sta,
 iny, zptmp lda,(y) x1 sta,
