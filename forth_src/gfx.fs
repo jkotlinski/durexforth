@@ -414,10 +414,17 @@ bytewise
 penx @ 140 < if rightend then
 then leave ;
 
-:asm maskrol
+:asm scanl
+:-
+# x<0?
+3 lda,x 3 bpl, ;asm
+
 addr lda, zptmp sta,
 addr 1+ lda, zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
+mask and, 3 beq, ;asm
+
+zptmp lda,(y)
 mask ora, zptmp sta,(y)
 
 mask asl, +branch bcc,
@@ -425,17 +432,9 @@ mask asl, +branch bcc,
 addr lda, sec, 8 sbc,# addr sta, 
 3 bcs, addr 1+ dec,
 
-# 1-
-:+
+:+ # 1-
 2 lda,x 2 bne, 3 dec,x 2 dec,x
-;asm
-
-: scanl ( x y -- newx y )
-2dup blitloc addr ! mask !
-begin
-over 0<
-addr @ c@ mask c@ and
-or not while maskrol repeat ;
+jmp, # recurse
 
 : paint ( x y -- )
 2dup c8 >= swap 140 >= or
@@ -453,6 +452,7 @@ spop dy @ + # y
 
 # left line
 x1 @ over # y x y
+2dup blitloc addr ! mask !
 scanl
 over x1 @ # y x y x x1
 s< not if
