@@ -415,21 +415,27 @@ penx @ 140 < if rightend then
 then leave ;
 
 :asm maskrol
-mask asl, 3 bcs, ;asm
+addr lda, zptmp sta,
+addr 1+ lda, zptmp 1+ sta,
+0 ldy,# zptmp lda,(y)
+mask ora, zptmp sta,(y)
+
+mask asl, +branch bcc,
 1 lda,# mask sta,
 addr lda, sec, 8 sbc,# addr sta, 
-3 bcs, addr 1+ dec, ;asm
+3 bcs, addr 1+ dec,
+
+# 1-
+:+
+2 lda,x 2 bne, 3 dec,x 2 dec,x
+;asm
 
 : scanl ( x y -- newx y )
 2dup blitloc addr ! mask !
-swap # y x
 begin
-dup 0<
+over 0<
 addr @ c@ mask c@ and
-or not while
-addr @ c@ mask c@ or addr @ c!
-maskrol
-1- repeat swap ;
+or not while maskrol repeat ;
 
 : paint ( x y -- )
 2dup c8 >= swap 140 >= or
