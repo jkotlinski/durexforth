@@ -414,6 +414,13 @@ bytewise
 penx @ 140 < if rightend then
 then leave ;
 
+: scanl ( x y -- newx y )
+begin
+2dup peek # x y peek?
+2 pick 0< or not while
+2dup doplot
+swap 1- swap repeat ;
+
 : paint ( x y -- )
 2dup c8 >= swap 140 >= or
 if 2drop exit then
@@ -430,11 +437,7 @@ spop dy @ + # y
 
 # left line
 x1 @ over # y x y
-begin
-2dup peek # y x y peek?
-2 pick 0< or not while
-2dup doplot
-swap 1- swap repeat
+scanl
 over x1 @ # y x y x x1
 s< not if
 branch [ here @ >r 0 , ] # goto skip
