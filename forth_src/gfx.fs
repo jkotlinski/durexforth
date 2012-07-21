@@ -415,11 +415,16 @@ penx @ 140 < if rightend then
 then leave ;
 
 : scanl ( x y -- newx y )
+2dup blitloc addr ! mask !
+swap # y x
 begin
-2dup peek # x y peek?
-2 pick 0< or not while
-2dup doplot
-swap 1- swap repeat ;
+dup 0<
+addr @ c@ mask c@ and
+or not while
+addr @ c@ mask c@ or addr @ c!
+mask c@ 2* dup 100 = if drop 1
+fff8 addr +! then mask c!
+1- repeat swap ;
 
 : paint ( x y -- )
 2dup c8 >= swap 140 >= or
