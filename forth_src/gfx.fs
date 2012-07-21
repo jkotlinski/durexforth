@@ -414,6 +414,12 @@ bytewise
 penx @ 140 < if rightend then
 then leave ;
 
+:asm maskrol
+mask asl, 3 bcs, ;asm
+1 lda,# mask sta,
+addr lda, sec, 8 sbc,# addr sta, 
+3 bcs, addr 1+ dec, ;asm
+
 : scanl ( x y -- newx y )
 2dup blitloc addr ! mask !
 swap # y x
@@ -422,8 +428,7 @@ dup 0<
 addr @ c@ mask c@ and
 or not while
 addr @ c@ mask c@ or addr @ c!
-mask c@ 2* dup 100 = if drop 1
-fff8 addr +! then mask c!
+maskrol
 1- repeat swap ;
 
 : paint ( x y -- )
