@@ -431,8 +431,8 @@ spop dy @ + # y
 # left line
 x1 @ over # y x y
 begin
-2dup peek not # y x y !peek
-2 pick 0< not and while
+2dup peek # y x y peek?
+2 pick 0< or not while
 2dup doplot
 swap 1- swap repeat
 over x1 @ # y x y x x1
