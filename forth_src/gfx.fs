@@ -38,7 +38,7 @@ create blitop
 
 : 100/ 2/ 2/ 2/ 2/ 2/ 2/ 2/ 2/ ;
 
-:asm blitloc ( x y -- mask addr )
+:asmsub .blitloc
 0 lda,x zptmp sta,
 7 and,# zptmp3 sta,
 1 lda,x zptmp 1+ sta,
@@ -87,7 +87,10 @@ clc,
 3 lda,x 1 adc,x clc, a0 adc,# 1 sta,x
 zptmp3 lda, 2 sta,x
 0 lda,# 3 sta,x
-;asm # blitloc
+rts,
+
+:asm blitloc ( x y -- mask addr )
+.blitloc jsr, ;asm
 
 : doplot ( x y -- )
 blitloc tuck c@
@@ -415,14 +418,19 @@ penx 1+ lda, 0 cmp,# +branch beq,
 # over penx !
 2 lda,x penx sta,
 3 lda,x penx 1+ sta,
-;asm
+# 2dup blitloc # x y mask addr
+dex, dex, dex, dex,
+4 lda,x 0 sta,x
+5 lda,x 1 sta,x
+6 lda,x 2 sta,x
+7 lda,x 3 sta,x 
+.blitloc jsr, ;asm
 
 # this one must be fast
 : fillr ( x y -- newx y )
 over 140 >= if exit then
 
 .fillr
-2dup blitloc # x y mask addr
 
 leftend if bytewise rightend then
 leave ;
