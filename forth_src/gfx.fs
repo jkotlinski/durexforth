@@ -398,8 +398,20 @@ inx, inx, inx, inx,
 penx lda, 2 sta,x
 penx 1+ lda, 3 sta,x ;asm
 
-:asm leftend ( x y mask addr --
-               x y mask addr more? )
+:asm .fillr
+# over penx !
+2 lda,x penx sta,
+3 lda,x penx 1+ sta,
+# 2dup blitloc # x y mask addr
+dex, dex, dex, dex,
+4 lda,x 0 sta,x
+5 lda,x 1 sta,x
+6 lda,x 2 sta,x
+7 lda,x 3 sta,x 
+.blitloc jsr,
+
+# leftend ( x y mask addr --
+#           x y mask addr more? )
 :-
 2 lda,x +branch bne,
 # continue bytewise
@@ -414,25 +426,11 @@ dex, dex, 0 lda,# 0 sta,x 1 sta,x ;asm
 :+
 .bitblt jsr, jmp, # recurse
 
-:asm .fillr
-# over penx !
-2 lda,x penx sta,
-3 lda,x penx 1+ sta,
-# 2dup blitloc # x y mask addr
-dex, dex, dex, dex,
-4 lda,x 0 sta,x
-5 lda,x 1 sta,x
-6 lda,x 2 sta,x
-7 lda,x 3 sta,x 
-.blitloc jsr, ;asm
-
 # this one must be fast
 : fillr ( x y -- newx y )
 over 140 >= if exit then
 
-.fillr
-
-leftend if bytewise then
+.fillr if bytewise then
 leave ;
 
 :asm scanl
