@@ -411,11 +411,17 @@ penx 1+ lda, 0 cmp,# +branch beq,
 2 and,x 3 beq, ;asm
 .bitblt jsr, jmp, # recurse
 
+:asm .fillr
+# over penx !
+2 lda,x penx sta,
+3 lda,x penx 1+ sta,
+;asm
+
 # this one must be fast
 : fillr ( x y -- newx y )
 over 140 >= if exit then
 
-over penx !
+.fillr
 2dup blitloc # x y mask addr
 
 leftend if bytewise rightend then
