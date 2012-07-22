@@ -364,13 +364,8 @@ clc, penx lda, 8 adc,# penx sta,
 3 bcc, penx 1+ inc,
 jmp, # recurse
 
-:asm mask80
-# nip 80 swap # mask
-80 lda,# 2 sta,x
-0 lda,# 3 sta,x
-;asm
-
-:asmsub .bitblt
+:asmsub .bitblt ( mask addr --
+                  mask addr )
 0 lda,x zptmp sta,
 1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
@@ -378,18 +373,6 @@ jmp, # recurse
 # 1 penx +! swap 2/ swap 
 penx inc, 3 bne, penx 1+ inc,
 2 lsr,x rts,
-
-:asm bitblt ( mask addr -- mask addr )
-.bitblt jsr, ;asm
-
-:asm end?
-# 2dup c@ and
-0 lda,x zptmp sta,
-1 lda,x zptmp 1+ sta,
-0 ldy,# zptmp lda,(y)
-2 and,x dex, dex,
-0 sta,x 1 sta,x
-;asm
 
 :asm leave
 # 2drop nip penx @ swap 
@@ -411,10 +394,22 @@ dex, dex, 0 lda,# 0 sta,x 1 sta,x ;asm
 :+
 .bitblt jsr, jmp, # recurse
 
-: rightend
-mask80 begin
-# x y mask addr
-end? if exit else bitblt then again ;
+:asm rightend
+# penx @ 140 < if 
+penx 1+ lda, 0 cmp,# +branch beq,
+3f lda,# penx cmp, 3 bcs, ;asm
+:+
+
+# nip 80 swap # mask
+80 lda,# 2 sta,x 0 lda,# 3 sta,x
+
+:-
+2 lda,x 3 bne, ;asm
+0 lda,x zptmp sta,
+1 lda,x zptmp 1+ sta,
+0 ldy,# zptmp lda,(y)
+2 and,x 3 beq, ;asm
+.bitblt jsr, jmp, # recurse
 
 # this one must be fast
 : fillr ( x y -- newx y )
@@ -423,10 +418,8 @@ over 140 >= if exit then
 over penx !
 2dup blitloc # x y mask addr
 
-leftend if # bitwise
-bytewise
-penx @ 140 < if rightend
-then then leave ;
+leftend if bytewise rightend then
+leave ;
 
 :asm scanl
 :-
