@@ -288,6 +288,8 @@ hide cx hide cy
 d ['] or then ['] blitop @ ! 
 ['] blitop 2+ @ c! ;
 
+# --------------------------
+
 # paul heckbert seed fill
 # from graphics gems
 var stk
