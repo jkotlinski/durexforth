@@ -390,7 +390,8 @@ inx, inx, inx, inx,
 penx lda, 2 sta,x
 penx 1+ lda, 3 sta,x ;asm
 
-: leftend
+: leftend ( x y mask addr --
+            x y mask addr more? )
 begin over while
 # x y mask addr
 end? if 0 exit
