@@ -436,14 +436,28 @@ addr lda, sec, 8 sbc,# addr sta,
 2 lda,x 2 bne, 3 dec,x 2 dec,x
 jmp, # recurse
 
-:asm maskror
+:asm scanr ( x y -- newx y )
+:-
+# addr @ c@ mask c@ and
+addr lda, zptmp sta,
+addr 1+ lda, zptmp 1+ sta,
+0 ldy,# zptmp lda,(y)
+mask and, 3 bne, ;asm
+
+# x<=x2?
+x2 1+ lda, 3 cmp,x 3 bcs, ;asm
++branch bne,
+x2 lda, 2 cmp,x 3 bcs, ;asm
+:+
+
 mask lsr, +branch bne,
 80 lda,# mask sta,
 clc, addr lda, 8 adc,# addr sta,
 3 bcc, addr 1+ inc,
 
 :+ # x++
-2 inc,x 2 bne, 3 inc,x ;asm
+2 inc,x 2 bne, 3 inc,x
+jmp, # recurse
 
 : paint ( x y -- )
 2dup c8 >= swap 140 >= or
@@ -502,12 +516,7 @@ then
 
 swap 1+ swap
 2dup blitloc addr ! mask c!
-begin
-# y x2 x y
-over x2 @ <= 
-addr @ c@ mask c@ and
-and while maskror repeat
-
+scanr 
 over l ! # l=x
 
 # y x y
