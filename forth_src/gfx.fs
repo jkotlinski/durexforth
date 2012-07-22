@@ -492,10 +492,14 @@ then
 [ r> here @ over - swap ! ]
 
 swap 1+ swap
+2dup blitloc addr ! mask c!
 begin
-2dup peek not not
-# y x2 x y peek
-2 pick x2 @ <= and while
+# y x2 x y
+over x2 @ <= 
+addr @ c@ mask c@ and
+and while
+mask c@ dup 1 = if drop 80
+8 addr +! else 2/ then mask c!
 swap 1+ swap repeat
 
 over l ! # l=x
