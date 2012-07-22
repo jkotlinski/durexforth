@@ -551,27 +551,3 @@ hide plot4 hide plot8
 hide blitop
 hide bmpbase hide colbase
 hide mask hide fillr
-
-# test paint
-( hires 5 clrcol
-
-0 90 plot 13e 90 line
-2 0 plot 2 c7 line
-5 0 plot 5 c7 line
-3 30 paint
-
-60 60 20 circle
-60 60 10 circle
-7f 60 paint
-
-10 10 plot
-20 10 line
-20 35 line
-10 35 line
-10 12 line
-8 8 plot
-25 8 line
-25 40 line
-8 40 line
-8 18 line
-18 24 paint lores )
