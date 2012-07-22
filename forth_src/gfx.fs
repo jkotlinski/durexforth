@@ -392,11 +392,11 @@ clc, penx lda, 8 adc,# penx sta,
 3 bcc, penx 1+ inc,
 jmp, # recurse
 
-:asm leave
+:asmsub leave
 # 2drop nip penx @ swap 
 inx, inx, inx, inx,
 penx lda, 2 sta,x
-penx 1+ lda, 3 sta,x ;asm
+penx 1+ lda, 3 sta,x rts,
 
 :asm .fillr
 # over penx !
@@ -415,15 +415,14 @@ dex, dex, dex, dex,
 :-
 2 lda,x +branch bne,
 # continue bytewise
-bytewise jsr,
-;asm
+bytewise jsr, leave jsr, ;asm
 :+
 0 lda,x zptmp sta,
 1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
 2 and,x +branch beq,
 # done
-;asm
+leave jsr, ;asm
 :+
 .bitblt jsr, jmp, # recurse
 
@@ -431,7 +430,7 @@ bytewise jsr,
 : fillr ( x y -- newx y )
 over 140 >= if exit then
 
-.fillr leave ;
+.fillr ;
 
 :asm scanl
 :-
