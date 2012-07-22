@@ -340,6 +340,11 @@ iny, zptmp lda,(y) 0 sta,x
 var l
 
 :asm bytewise
+# penx @ 140 < if 
+penx 1+ lda, 0 cmp,# +branch beq,
+3f lda,# penx cmp, 3 bcs, ;asm
+:+
+
 :- # 8 +
 clc, 0 lda,x 8 adc,# 0 sta,x
 2 bcc, 1 inc,x
@@ -419,9 +424,9 @@ over penx !
 2dup blitloc # x y mask addr
 
 leftend if # bitwise
-penx @ 140 < if bytewise
+bytewise
 penx @ 140 < if rightend
-then then then leave ;
+then then leave ;
 
 :asm scanl
 :-
