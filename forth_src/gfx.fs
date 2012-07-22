@@ -436,6 +436,15 @@ addr lda, sec, 8 sbc,# addr sta,
 2 lda,x 2 bne, 3 dec,x 2 dec,x
 jmp, # recurse
 
+:asm maskror
+mask lsr, +branch bne,
+80 lda,# mask sta,
+clc, addr lda, 8 adc,# addr sta,
+3 bcc, addr 1+ inc,
+
+:+ # x++
+2 inc,x 2 bne, 3 inc,x ;asm
+
 : paint ( x y -- )
 2dup c8 >= swap 140 >= or
 if 2drop exit then
@@ -497,10 +506,7 @@ begin
 # y x2 x y
 over x2 @ <= 
 addr @ c@ mask c@ and
-and while
-mask c@ dup 1 = if drop 80
-8 addr +! else 2/ then mask c!
-swap 1+ swap repeat
+and while maskror repeat
 
 over l ! # l=x
 
