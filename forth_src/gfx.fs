@@ -436,18 +436,28 @@ addr lda, sec, 8 sbc,# addr sta,
 2 lda,x 2 bne, 3 dec,x 2 dec,x
 jmp, # recurse
 
-:asm scanr ( x y -- newx y )
+:asmsub .scanr
+# over l ! # l=x
+2 lda,x l sta, 3 lda,x l 1+ sta,
+;asm
+
+:asm scanr ( x y mask addr -- newx y )
+0 lda,x addr sta,
+1 lda,x addr 1+ sta,
+2 lda,x mask sta,
+inx, inx, inx, inx,
+
 :-
 # addr @ c@ mask c@ and
 addr lda, zptmp sta,
 addr 1+ lda, zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
-mask and, 3 bne, ;asm
+mask and, .scanr -branch beq,
 
 # x<=x2?
-x2 1+ lda, 3 cmp,x 3 bcs, ;asm
+x2 1+ lda, 3 cmp,x .scanr -branch bcc,
 +branch bne,
-x2 lda, 2 cmp,x 3 bcs, ;asm
+x2 lda, 2 cmp,x .scanr -branch bcc,
 :+
 
 mask lsr, +branch bne,
@@ -515,9 +525,7 @@ then
 [ r> here @ over - swap ! ]
 
 swap 1+ swap
-2dup blitloc addr ! mask c!
-scanr 
-over l ! # l=x
+2dup blitloc scanr 
 
 # y x y
 over x2 @ > until
