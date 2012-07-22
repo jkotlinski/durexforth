@@ -487,6 +487,13 @@ clc, addr lda, 8 adc,# addr sta,
 2 inc,x 2 bne, 3 inc,x
 jmp, # recurse
 
+: pushylx-1dy ( x y -- x y )
+dup l @
+# x y y l
+3 pick 1-
+# x y y l x-1
+dy @ spush ;
+
 : paint ( x y -- )
 2dup c8 >= swap 140 >= or
 if 2drop exit then
@@ -523,13 +530,7 @@ nip x1 @ 1+ swap # x=x1+1
 
 begin
 fillr
-# y x y
-dup l @
-# y x y y l
-3 pick 1-
-# y x y y l x-1
-dy @ spush
-# y x y
+pushylx-1dy
 
 # leak on right?
 over x2 @ 1+ > if
