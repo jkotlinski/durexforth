@@ -342,6 +342,30 @@ iny, zptmp lda,(y) 0 sta,x
 
 var l
 
+# ---
+
+:asmsub .bitblt ( mask addr --
+                  mask addr )
+0 lda,x zptmp sta,
+1 lda,x zptmp 1+ sta,
+0 ldy,# zptmp lda,(y)
+2 ora,x zptmp sta,(y)
+# 1 penx +! swap 2/ swap 
+penx inc, 3 bne, penx 1+ inc,
+2 lsr,x rts,
+
+:asmsub rightend
+# nip 80 swap # mask
+80 lda,# 2 sta,x 0 lda,# 3 sta,x
+
+:-
+2 lda,x 3 bne, ;asm
+0 lda,x zptmp sta,
+1 lda,x zptmp 1+ sta,
+0 ldy,# zptmp lda,(y)
+2 and,x 3 beq, ;asm
+.bitblt jsr, jmp, # recurse
+
 :asm bytewise
 # penx @ 140 < if 
 penx 1+ lda, 0 cmp,# +branch beq,
@@ -358,7 +382,8 @@ penx 1+ lda, 1 cmp,# +branch bne,
 :+ :+
 0 lda,x zptmp sta,
 1 lda,x zptmp 1+ sta,
-0 ldy,# zptmp lda,(y) 3 beq, ;asm
+0 ldy,# zptmp lda,(y)
+rightend -branch bne,
 
 # ff over c!
 ff lda,# zptmp sta,(y)
@@ -366,16 +391,6 @@ ff lda,# zptmp sta,(y)
 clc, penx lda, 8 adc,# penx sta,
 3 bcc, penx 1+ inc,
 jmp, # recurse
-
-:asmsub .bitblt ( mask addr --
-                  mask addr )
-0 lda,x zptmp sta,
-1 lda,x zptmp 1+ sta,
-0 ldy,# zptmp lda,(y)
-2 ora,x zptmp sta,(y)
-# 1 penx +! swap 2/ swap 
-penx inc, 3 bne, penx 1+ inc,
-2 lsr,x rts,
 
 :asm leave
 # 2drop nip penx @ swap 
@@ -387,31 +402,16 @@ penx 1+ lda, 3 sta,x ;asm
                x y mask addr more? )
 :-
 2 lda,x +branch bne,
+# continue bytewise
 dex, dex, ff lda,# 0 sta,x 1 sta,x ;asm
 :+
 0 lda,x zptmp sta,
 1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
 2 and,x +branch beq,
+# done
 dex, dex, 0 lda,# 0 sta,x 1 sta,x ;asm
 :+
-.bitblt jsr, jmp, # recurse
-
-:asm rightend
-# penx @ 140 < if 
-penx 1+ lda, 0 cmp,# +branch beq,
-3f lda,# penx cmp, 3 bcs, ;asm
-:+
-
-# nip 80 swap # mask
-80 lda,# 2 sta,x 0 lda,# 3 sta,x
-
-:-
-2 lda,x 3 bne, ;asm
-0 lda,x zptmp sta,
-1 lda,x zptmp 1+ sta,
-0 ldy,# zptmp lda,(y)
-2 and,x 3 beq, ;asm
 .bitblt jsr, jmp, # recurse
 
 :asm .fillr
@@ -432,7 +432,7 @@ over 140 >= if exit then
 
 .fillr
 
-leftend if bytewise rightend then
+leftend if bytewise then
 leave ;
 
 :asm scanl
