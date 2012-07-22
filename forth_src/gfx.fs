@@ -390,6 +390,12 @@ inx, inx, inx, inx,
 penx lda, 2 sta,x
 penx 1+ lda, 3 sta,x ;asm
 
+: leftend
+begin over while
+# x y mask addr
+end? if 0 exit
+else bitblt then repeat 1 ;
+
 : rightend
 mask80 begin
 # x y mask addr
@@ -402,17 +408,10 @@ over 140 >= if exit then
 over penx !
 2dup blitloc # x y mask addr
 
-# bitwise scan
-begin over while
-# x y mask addr
-end? if leave exit
-else bitblt then repeat
-
-# reached end?
-penx @ 140 < if
-bytewise
-penx @ 140 < if rightend then
-then leave ;
+leftend if # bitwise
+penx @ 140 < if bytewise
+penx @ 140 < if rightend
+then then then leave ;
 
 :asm scanl
 :-
