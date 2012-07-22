@@ -365,15 +365,17 @@ jmp, # recurse
 0 lda,# 3 sta,x
 ;asm
 
-:asm bitblt ( mask addr -- mask addr )
+:asmsub .bitblt
 0 lda,x zptmp sta,
 1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
 2 ora,x zptmp sta,(y)
 # 1 penx +! swap 2/ swap 
 penx inc, 3 bne, penx 1+ inc,
-2 lsr,x
-;asm
+2 lsr,x rts,
+
+:asm bitblt ( mask addr -- mask addr )
+.bitblt jsr, ;asm
 
 :asm end?
 # 2dup c@ and
@@ -390,12 +392,19 @@ inx, inx, inx, inx,
 penx lda, 2 sta,x
 penx 1+ lda, 3 sta,x ;asm
 
-: leftend ( x y mask addr --
-            x y mask addr more? )
-begin over while
-# x y mask addr
-end? if 0 exit
-else bitblt then repeat 1 ;
+:asm leftend ( x y mask addr --
+               x y mask addr more? )
+:-
+2 lda,x +branch bne,
+dex, dex, ff lda,# 0 sta,x 1 sta,x ;asm
+:+
+0 lda,x zptmp sta,
+1 lda,x zptmp 1+ sta,
+0 ldy,# zptmp lda,(y)
+2 and,x +branch beq,
+dex, dex, 0 lda,# 0 sta,x 1 sta,x ;asm
+:+
+.bitblt jsr, jmp, # recurse
 
 : rightend
 mask80 begin
