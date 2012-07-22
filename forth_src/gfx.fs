@@ -359,17 +359,17 @@ penx inc, 3 bne, penx 1+ inc,
 80 lda,# 2 sta,x 0 lda,# 3 sta,x
 
 :-
-2 lda,x 3 bne, ;asm
+2 lda,x 1 bne, rts,
 0 lda,x zptmp sta,
 1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
-2 and,x 3 beq, ;asm
+2 and,x 1 beq, rts,
 .bitblt jsr, jmp, # recurse
 
-:asm bytewise
+:asmsub bytewise
 # penx @ 140 < if 
 penx 1+ lda, 0 cmp,# +branch beq,
-3f lda,# penx cmp, 3 bcs, ;asm
+3f lda,# penx cmp, 1 bcs, rts,
 :+
 
 :- # 8 +
@@ -378,7 +378,7 @@ clc, 0 lda,x 8 adc,# 0 sta,x
 # penx=140?
 penx lda, 40 cmp,# +branch bne,
 penx 1+ lda, 1 cmp,# +branch bne,
-;asm
+rts,
 :+ :+
 0 lda,x zptmp sta,
 1 lda,x zptmp 1+ sta,
@@ -415,14 +415,15 @@ dex, dex, dex, dex,
 :-
 2 lda,x +branch bne,
 # continue bytewise
-dex, dex, ff lda,# 0 sta,x 1 sta,x ;asm
+bytewise jsr,
+;asm
 :+
 0 lda,x zptmp sta,
 1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
 2 and,x +branch beq,
 # done
-dex, dex, 0 lda,# 0 sta,x 1 sta,x ;asm
+;asm
 :+
 .bitblt jsr, jmp, # recurse
 
@@ -430,8 +431,7 @@ dex, dex, 0 lda,# 0 sta,x 1 sta,x ;asm
 : fillr ( x y -- newx y )
 over 140 >= if exit then
 
-.fillr if bytewise then
-leave ;
+.fillr leave ;
 
 :asm scanl
 :-
