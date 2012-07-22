@@ -398,7 +398,13 @@ inx, inx, inx, inx,
 penx lda, 2 sta,x
 penx 1+ lda, 3 sta,x rts,
 
-:asm .fillr
+# this one must be fast
+:asm fillr ( x y -- newx y )
+# over 140 >= if exit then
+3 lda,x 0 cmp,# +branch beq,
+3f lda,# 2 cmp,x 3 bcs, ;asm
+:+
+
 # over penx !
 2 lda,x penx sta,
 3 lda,x penx 1+ sta,
@@ -425,12 +431,6 @@ bytewise jsr, leave jsr, ;asm
 leave jsr, ;asm
 :+
 .bitblt jsr, jmp, # recurse
-
-# this one must be fast
-: fillr ( x y -- newx y )
-over 140 >= if exit then
-
-.fillr ;
 
 :asm scanl
 :-
