@@ -574,3 +574,14 @@ hide doplot
 hide blitloc
 hide .blitloc
 hide mask
+
+:asm sei sei, ;asm
+:asm cli cli, ;asm
+: text
+# disable interrupt,enable char rom
+sei 1 c@ dup fb and 1 c!
+d000 a000 1000 cmove
+1 c! cli ;
+
+hires 5 clrcol
+text
