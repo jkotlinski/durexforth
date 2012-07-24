@@ -71,6 +71,9 @@ hires 7 clrcol
 64 yd !
 a0 50 2reccircgo ;
 
+hide yd
+hide 2reccircgo
+
 : erasecirc
 hires 7 clrcol
 0 begin dup 140 < while
@@ -209,3 +212,5 @@ jcol jcol jcol jcol jcol
 exit then
 line? @ if line else plot then
 then again ;
+
+# jungle

@@ -89,6 +89,8 @@ zptmp3 lda, 2 sta,x
 0 lda,# 3 sta,x
 rts,
 
+hide mask
+
 :asm blitloc ( x y -- mask addr )
 .blitloc jsr, ;asm
 
@@ -551,3 +553,24 @@ hide plot4 hide plot8
 hide blitop
 hide bmpbase hide colbase
 hide mask hide fillr
+hide dy2
+hide dx2
+hide step stepx
+hide 2err
+hide addr
+hide rightend
+hide bytewise
+hide leave
+hide scanl
+hide .scanr
+hide scanr
+hide .bitblt
+hide spop
+hide spush
+hide dopush
+hide stk
+hide chkplot
+hide doplot
+hide blitloc
+hide .blitloc
+hide mask
