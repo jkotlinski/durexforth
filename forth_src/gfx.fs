@@ -551,13 +551,12 @@ hide err
 hide x1 hide x2 hide l
 hide plot4 hide plot8
 hide blitop
-hide bmpbase hide colbase
+hide colbase
 hide mask hide fillr
 hide dy2
 hide dx2
 hide step hide stepx
 hide 2err
-hide addr
 hide rightend
 hide bytewise
 hide leave
@@ -577,11 +576,17 @@ hide mask
 
 :asm sei sei, ;asm
 :asm cli cli, ;asm
-: text
+: text ( col row str strlen -- )
+# addr=dst
+rot 140 * addr !
+rot 8 * bmpbase + addr +!
 # disable interrupt,enable char rom
-sei 1 c@ dup fb and 1 c!
-d000 a000 1000 cmove
-1 c! cli ;
+1 c@ dup >r fb and 1 sei c!
+begin ?dup while
+swap dup c@ 8 * d800 + # strlen str ch
+addr @ 8 cmove
+1+ swap 8 addr +! 1- repeat
+r> 1 c! cli ;
 
-hires 5 clrcol
-text
+hide addr
+hide bmpbase
