@@ -555,7 +555,7 @@ hide bmpbase hide colbase
 hide mask hide fillr
 hide dy2
 hide dx2
-hide step stepx
+hide step hide stepx
 hide 2err
 hide addr
 hide rightend
