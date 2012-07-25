@@ -2093,25 +2093,36 @@ SPFETCH
 	!set	LINK = * - 2
 	!byte	9
 	!text	"litstring"
-LITSTRING
+LITSTRING ; ( -- addr len )
 	; grow stack
 	dex
 	dex
+    dex
+    dex
 
 	; copy string addr to stack
 	ldy	#0
+
 	lda	IP
 	sta	TMP
-	sta	0, x
+    sta 2, x ; addr lsb
 
 	iny
 	lda	IP + 1
 	sta	TMP + 1
-	sta	1, x
+    sta 3, x ; addr msb
+
+    inc 2, x ; skip len
+    bne +
+    inc 3, x
++
 
 	; TMP now points to string length
 	dey ; y = 0
+    sty 1, x ; len msb=0
 	lda	(TMP), y
+    sta 0, x ; len lsb
+
 	tay ; y = *TMP
 	iny ; add one for length byte
 	sty	.lstrlen + 1
