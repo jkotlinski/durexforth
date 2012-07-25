@@ -2,9 +2,7 @@
 
 # submitted by kevin reno
 : load$
-s" $"
-dup 1+ swap c@ here @
-loadb drop
+s" $" here @ loadb drop
 ae @ 2 - here @ ;
 
 : blocks ar ! xr ! bdcd jsr-wrap
