@@ -41,16 +41,11 @@ swap dup here @ swap - swap ! ;
 : min ( a b - c )
 2dup > if swap then drop ;
 
-: tell 
-	dup c@ ( get strlen )
-	begin 
-		swap 1+ ( inc strptr )
-		dup c@ emit ( print char )
-		swap 1- ( dec strlen )
-		dup 0= 
-	until
-	2drop
-;
+: tell ( addr len -- )
+begin over c@ emit ( print char )
+swap 1+ swap ( inc strptr )
+1- ( dec strlen )
+?dup 0= until drop ;
 : '"' [ key " ] literal ;
 : s" immed ( -- addr len )
 	state @ if
