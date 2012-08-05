@@ -26,7 +26,15 @@ tp @ if tx @ ty @ line then ;
 # --- demo
 
 : multishape
+# angle step (0-ff)
+." a? " interpret
+# init distance
+." d? " interpret 
+hires 7 clrcol
+5 d020 c!
 init
-." a? "
-." d? "
-hires 7 clrcol ;
+1 begin
+over forward
+2 pick right
+swap 3 + swap
+1+ dup 200 = until drop ;
