@@ -5,13 +5,12 @@ s" gfx" load
 ." sin"
 s" sin" load
 
-var tx var ty
-var ta var tp
+var tx var ty var ta var tp
 
-: init
-hires 10 clrcol
-a0 dup tx ! 64 dup ty ! plot
-0 ta ! 1 tp ! ;
+: pendown 1 tp ! tx @ ty @ plot ;
+: penup 0 tp ! ;
+
+: init 0 ta ! a0 tx ! 64 ty ! pendown ;
 
 : right ( a -- )
 ta +! ;
@@ -20,18 +19,14 @@ negate right ;
 : forward ( px -- )
 dup ta @ *cos tx +!
 ta @ *sin ty +!
-tx @ ty @ line ;
+tp @ if tx @ ty @ line then ;
 : back ( px -- )
-80 ta +! forward ff80 ta +! ;
-: pendown 1 tp c!
-tx @ ty @ plot ;
-: penup 0 tp c! ;
+80 right forward 80 right ;
 
 # --- demo
 
 : multishape
+init
 ." a? "
 ." d? "
-init ;
-
-init 10 back lores
+hires 7 clrcol ;
