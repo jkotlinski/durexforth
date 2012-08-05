@@ -25,16 +25,18 @@ tp @ if tx @ ty @ line then ;
 
 # --- demo
 
-: multishape
-# angle step (0-ff)
-." a? " interpret
+: polyspiral
 # init distance
 ." d? " interpret 
+# angle step (0-ff)
+." a? " interpret
+# distance step
+." c? " interpret 
 hires 7 clrcol
 5 d020 c!
 init
-1 begin
-over forward
-2 pick right
-swap 3 + swap
-1+ dup 200 = until drop ;
+1 >r begin
+2 pick forward
+over right
+rot over + -rot
+r> 1+ dup >r 100 = until r> drop ;
