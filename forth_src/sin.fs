@@ -73,7 +73,6 @@ f1d , 10a0 , 1235 , 13db ,
 # r = degree [0..ff]
 # todo: lerp?
 : *cos ( a r -- b )
-cos over 2* d* drop swap - ;
+cos over 2* 1+ d* drop swap - ;
 : *sin ( a r -- b )
-sin over 2* d* drop swap - ;
-
+sin over 2* 1+ d* drop swap - ;
