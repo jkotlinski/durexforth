@@ -1269,7 +1269,7 @@ PULL_KEY ; wastes x!!!
 	jsr	CHKIN
     jmp PULL_KEY  ; Try again.
 	
-; WORD
+; WORD ( -- strptr )
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	4
