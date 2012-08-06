@@ -4,14 +4,15 @@ s" gfx" load
 s" sin" load
 
 var tx var ty # 9.7 fixedpoint
-var ta var tp
+var ta 
+: tp 0 ;
 
 : s2/ ( signed 2/ )
 2/ dup 4000 and if 8000 or then ;
 : ls 2* 2* 2* 2* 2* 2* 2* ;
 : rs s2/ s2/ s2/ s2/ s2/ s2/ s2/ ;
-: pendown 1 tp ! tx @ rs ty @ rs plot ;
-: penup 0 tp ! ;
+: pendown 1 to tp tx @ rs ty @ rs plot ;
+: penup 0 to tp ;
 
 : init a0 ls tx ! 64 ls ty ! pendown 
 10e ta ! ( north ) ;
@@ -25,7 +26,7 @@ negate right ;
 : forward ( px -- )
 ls dup ta @ *cos tx +!
 ta @ *sin ty +!
-tp @ if tx @ rs ty @ rs line then ;
+tp if tx @ rs ty @ rs line then ;
 : back ( px -- )
 80 right forward 80 right ;
 
