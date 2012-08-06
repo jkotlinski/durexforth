@@ -6,8 +6,10 @@ s" sin" load
 var tx var ty # 9.7
 var ta var tp
 
+: s2/ ( signed 2/ )
+dup 2/ swap 8000 and if 8000 or then ;
 : ls 2* 2* 2* 2* 2* 2* 2* ;
-: rs 2/ 2/ 2/ 2/ 2/ 2/ 2/ ;
+: rs s2/ s2/ s2/ s2/ s2/ s2/ s2/ ;
 : pendown 1 tp ! tx @ rs ty @ rs plot ;
 : penup 0 tp ! ;
 
@@ -38,7 +40,7 @@ hires 7 clrcol
 init
 1 >r begin
 2 pick forward
-over right
+over left
 rot over + -rot
 r> 1+ dup >r 64 = until r> drop
 5 d020 c! key lores 0 d020 c! ;
