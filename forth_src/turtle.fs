@@ -3,14 +3,14 @@
 s" gfx" load
 s" sin" load
 
-var tx var ty # 9.7 fixedpoint
+var tx var ty # 10.6 fixedpoint
 var ta 
 : tp 0 ;
 
 : s2/ ( signed 2/ )
 2/ dup 4000 and if 8000 or then ;
-: ls 2* 2* 2* 2* 2* 2* 2* ;
-: rs s2/ s2/ s2/ s2/ s2/ s2/ s2/ ;
+: ls 2* 2* 2* 2* 2* 2* ;
+: rs s2/ s2/ s2/ s2/ s2/ s2/ ;
 : pendown 1 to tp tx @ rs ty @ rs plot ;
 : penup 0 to tp ;
 
@@ -34,16 +34,16 @@ tp if tx @ rs ty @ rs line then ;
 
 : polyspiral
 ." init distance? " interpret 
-." angle?" interpret
+." angle? " interpret
 ." distance step? " interpret 
 hires 7 clrcol
 init
-1 >r begin
+64 >r begin
 2 pick forward
 over left
 rot over + -rot
-r> 1+ dup >r 64 = until r> drop
-5 d020 c! key lores 0 d020 c! ;
+r> 1- dup >r 0= until r> 2drop 2drop
+5 d020 c! key drop lores 0 d020 c! ;
 
 : inward
 ." distance? " interpret 
