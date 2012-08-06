@@ -1,8 +1,6 @@
 
 
-." gfx"
 s" gfx" load
-." sin"
 s" sin" load
 
 var tx var ty var ta var tp
@@ -28,15 +26,15 @@ tp @ if tx @ ty @ line then ;
 : polyspiral
 # init distance
 ." d? " interpret 
-# angle step (0-ff)
+# angle step (degrees)
 ." a? " interpret
 # distance step
 ." c? " interpret 
 hires 7 clrcol
-5 d020 c!
 init
 1 >r begin
 2 pick forward
 over right
 rot over + -rot
-r> 1+ dup >r 100 = until r> drop ;
+r> 1+ dup >r 64 = until r> drop
+5 d020 c! key lores 0 d020 c! ;
