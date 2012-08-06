@@ -1,0 +1,19 @@
+\chapter{Graphics}
+
+As of durexForth v1.2, hi-res graphics support is included.
+
+\section{Turtle Graphics}
+
+Turtle graphics are mostly known from LOGO, a 1970s programming language.
+It enables control of a turtle that can move and turn while holding a pen.
+The turtle graphics library is loaded with \texttt{s" turtle" load}.
+
+\begin{description}
+\item[init ( -- )] Initializes turtle graphics.
+\item[forward ( px -- )] Moves the turtle \texttt{px} pixels forward.
+\item[back ( px -- )] Moves the turtle \texttt{px} pixels back.
+\item[left ( deg -- )] Rotates the turtle \texttt{deg} degrees left.
+\item[right ( deg -- )] Rotates the turtle \texttt{deg} degrees right.
+\item[penup ( -- )] Pen up (disables drawing).
+\item[pendown ( -- )] Pen down (enables drawing).
+\end{description}
