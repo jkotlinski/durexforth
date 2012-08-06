@@ -17,7 +17,9 @@ dup 2/ swap 8000 and if 8000 or then ;
 10e ta ! ( north ) ;
 
 : right ( a -- )
-ta +! ;
+ta @ +
+dup 8000 and if 168 + then
+168 mod ta ! ;
 : left ( a -- )
 negate right ;
 : forward ( px -- )
