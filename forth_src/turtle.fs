@@ -3,21 +3,25 @@
 s" gfx" load
 s" sin" load
 
-var tx var ty var ta var tp
+var tx var ty # 9.7
+var ta var tp
 
-: pendown 1 tp ! tx @ ty @ plot ;
+: ls 2* 2* 2* 2* 2* 2* 2* ;
+: rs 2/ 2/ 2/ 2/ 2/ 2/ 2/ ;
+: pendown 1 tp ! tx @ rs ty @ rs plot ;
 : penup 0 tp ! ;
 
-: init 10e ta ! a0 tx ! 64 ty ! pendown ;
+: init a0 ls tx ! 64 ls ty ! pendown 
+10e ta ! ( north ) ;
 
 : right ( a -- )
 ta +! ;
 : left ( a -- )
 negate right ;
 : forward ( px -- )
-dup ta @ *cos tx +!
+ls dup ta @ *cos tx +!
 ta @ *sin ty +!
-tp @ if tx @ ty @ line then ;
+tp @ if tx @ rs ty @ rs line then ;
 : back ( px -- )
 80 right forward 80 right ;
 
