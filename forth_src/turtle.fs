@@ -8,7 +8,7 @@ var tx var ty var ta var tp
 : pendown 1 tp ! tx @ ty @ plot ;
 : penup 0 tp ! ;
 
-: init 0 ta ! a0 tx ! 64 ty ! pendown ;
+: init 10e ta ! a0 tx ! 64 ty ! pendown ;
 
 : right ( a -- )
 ta +! ;
@@ -38,3 +38,15 @@ over right
 rot over + -rot
 r> 1+ dup >r 64 = until r> drop
 5 d020 c! key lores 0 d020 c! ;
+
+: inward
+# distance
+." d? " interpret 
+# init angle (deg)
+." a? " interpret
+# angle step (deg)
+." c? " interpret 
+hires 7 clrcol init
+begin 2 pick forward
+over right
+swap over + 168 mod swap again ;
