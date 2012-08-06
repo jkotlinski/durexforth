@@ -14,7 +14,8 @@ var ta
 : pendown 1 to tp tx @ rs ty @ rs plot ;
 : penup 0 to tp ;
 
-: init a0 ls tx ! 64 ls ty ! pendown 
+: init hires 7 clrcol 
+a0 ls tx ! 64 ls ty ! pendown 
 10e ta ! ( north ) ;
 
 : right ( a -- )
@@ -36,7 +37,6 @@ tp if tx @ rs ty @ rs line then ;
 ." init distance? " interpret 
 ." angle? " interpret
 ." distance step? " interpret 
-hires 7 clrcol
 init
 64 >r begin
 2 pick forward
@@ -49,7 +49,7 @@ r> 1- dup >r 0= until r> 2drop 2drop
 ." distance? " interpret 
 ." init angle? " interpret
 ." angle step? " interpret 
-hires 7 clrcol init
+init
 begin 2 pick forward
 over right
 swap over + 168 mod swap again ;
