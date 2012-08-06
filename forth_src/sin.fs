@@ -94,8 +94,7 @@ cf4 , df3 , efb , 100c ,
 6e2f , 7066 , 729e , 74d7 ,
 7711 , 794c , 7b87 , 7dc3 ,
 
-: sin 
-168 mod 2* ['] sintab + @ ;
+: sin 168 mod 2* ['] sintab + @ ;
 : cos 5a + sin ;
 
 # a = amplitude
