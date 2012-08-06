@@ -3,11 +3,11 @@
 s" gfx" load
 s" sin" load
 
-var tx var ty # 9.7
+var tx var ty # 9.7 fixedpoint
 var ta var tp
 
 : s2/ ( signed 2/ )
-dup 2/ swap 8000 and if 8000 or then ;
+2/ dup 4000 and if 8000 or then ;
 : ls 2* 2* 2* 2* 2* 2* 2* ;
 : rs s2/ s2/ s2/ s2/ s2/ s2/ s2/ ;
 : pendown 1 tp ! tx @ rs ty @ rs plot ;
