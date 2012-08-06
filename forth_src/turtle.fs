@@ -4,8 +4,7 @@ s" gfx" load
 s" sin" load
 
 var tx var ty # 10.6 fixedpoint
-var ta 
-: tp 0 ;
+var ta : tp 0 ;
 
 : s2/ ( signed 2/ )
 2/ dup 4000 and if 8000 or then ;
@@ -31,6 +30,7 @@ tp if tx @ rs ty @ rs line then ;
 : back ( px -- )
 80 right forward 80 right ;
 
+(
 # --- demo
 
 : polyspiral
@@ -53,3 +53,4 @@ init
 begin 2 pick forward
 over right
 swap over + 168 mod swap again ;
+)
