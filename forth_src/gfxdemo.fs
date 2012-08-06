@@ -23,7 +23,7 @@ rnd f8 / 20 - line
 
 : radiant
 hires d0 clrcol
-100 begin
+168 begin
 ?dup while
 32 64 plot
 12c over *cos 32 +
@@ -82,7 +82,7 @@ dup 0 plot dup c7 line
 0 begin dup c7 < while
 dup 0 swap plot dup 13f swap line
 14 + repeat drop
-begin 100 begin ?dup while
+begin 168 begin ?dup while
 a0 64 plot
 dup 64 swap *cos a0 +
 over 64 swap *sin 64 + line
