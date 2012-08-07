@@ -213,4 +213,12 @@ exit then
 line? @ if line else plot then
 then again ;
 
-# jungle
+defchar sqr
+00000000
+00000000
+00111100
+00111100
+00111100
+00111100
+00000000
+00000000
