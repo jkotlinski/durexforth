@@ -222,3 +222,24 @@ defchar sqr
 00111100
 00000000
 00000000
+
+: colorchart
+hires 9c clrcol c d020 c!
+80 0 plot 7c 17 line
+94 17 line 96 c line
+aa c line ac 17 line
+c4 17 line c0 0 line
+60 c7 plot 64 a8 line
+7c a8 line 78 c8 line
+c8 c8 line c4 a8 line
+dc a8 line e0 c7 line
+78 b4 paint d0 b4 paint a0 1 paint
+
+# black board
+40 begin dup f8 <= while
+18 begin dup a0 <= while
+2dup 10 blkcol
+8 + repeat drop
+8 + repeat drop ;
+
+colorchart

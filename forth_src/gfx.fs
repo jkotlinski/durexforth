@@ -589,7 +589,6 @@ addr @ 8 cmove
 r> 1 c! cli ;
 
 hide addr
-hide bmpbase
 
 : getbit
 2* key [ key 1 literal ] = if 1+ then ;
@@ -604,4 +603,5 @@ getrow getrow getrow getrow drop ;
 swap 140 * rot 8 * + bmpbase +
 8 cmove ;
 
+hide bmpbase
 hide getbit hide getrow
