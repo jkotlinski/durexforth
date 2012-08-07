@@ -104,3 +104,5 @@ cf4 , df3 , efb , 100c ,
 cos over 2* 1+ d* drop swap - ;
 : *sin ( a r -- b )
 sin over 2* 1+ d* drop swap - ;
+
+hide sintab

@@ -187,6 +187,8 @@ clc, addr lda, 38 adc,# addr sta,
 addr 1+ lda, 1 adc,# addr 1+ sta,
 lineplot jmp,
 
+hide lineplot
+
 :asmsub step ( 2err -- 2err )
 # err @ 2* 2err !
 err lda, 2err sta,
@@ -243,6 +245,8 @@ dy2 @ negate dy2 !
 penx @ peny @ blitloc addr ! mask !
 
 doline ;
+
+hide doline
 
 # --- circle
 

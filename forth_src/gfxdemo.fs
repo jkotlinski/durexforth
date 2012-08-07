@@ -267,4 +267,5 @@ rot d + 8 * rot 4 + 8 * rot blkcol
 1+ repeat drop
 1+ repeat drop ;
 
-# colorchart
+hide jungledata
+hide line? hide data
