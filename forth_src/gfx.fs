@@ -597,6 +597,10 @@ key drop ; # skip cr
 : defchar 8 allot dup value
 getrow getrow getrow getrow
 getrow getrow getrow getrow drop ;
+hide getbit hide getrow
+: drawchar ( col row srcaddr -- )
+swap 140 * rot 8 * + bmpbase +
+8 cmove ;
 
 hide addr
 hide bmpbase
