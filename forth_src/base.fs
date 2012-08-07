@@ -213,9 +213,9 @@ pha, 1 lda,x pha, ;asm
 # s" gfxdemo" load
 # ." turtle.."
 # s" turtle" load
+." vi.."
+s" vi" load
 ." ok" cr
-# ." vi.."
-# s" vi" load
 
 : scratch ( strptr strlen -- )
 tuck ( strlen strptr strlen )

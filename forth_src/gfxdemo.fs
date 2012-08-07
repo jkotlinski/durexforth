@@ -3,6 +3,7 @@
 # examples from c64 step by step
 # programming, gfx book 3, phil cornes
 
+s" gfx" load
 s" rnd" load
 s" sin" load
 
@@ -53,6 +54,8 @@ then 2drop ;
 : reccirc
 hires 7 clrcol
 a0 50 reccircgo ;
+
+hide reccircgo
 
 var yd
 
@@ -129,6 +132,8 @@ e8 begin dup 118 <= while
 50 begin dup 80 <= while
 2dup 7e blkcol
 8 + repeat drop 8 + repeat drop ;
+
+# --- jungle
 
 create jungledata
 c , a8 , ffff , 1 , e , 5f ,
@@ -213,6 +218,11 @@ exit then
 line? @ if line else plot then
 then again ;
 
+hide jcol hide line? hide data
+hide jungledata
+
+# --- colorchart
+
 defchar sqr
 00000000
 00000000
@@ -267,5 +277,4 @@ rot d + 8 * rot 4 + 8 * rot blkcol
 1+ repeat drop
 1+ repeat drop ;
 
-hide jungledata
-hide line? hide data
+hide sqr
