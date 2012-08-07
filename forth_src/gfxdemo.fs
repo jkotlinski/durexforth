@@ -240,6 +240,31 @@ dc a8 line e0 c7 line
 18 begin dup a0 <= while
 2dup 10 blkcol
 8 + repeat drop
-8 + repeat drop ;
+8 + repeat drop
 
-colorchart
+b 4 s" 0" text
+b 5 s" 1" text
+b 6 s" 2" text
+b 7 s" 3" text
+b 8 s" 4" text
+b 9 s" 5" text
+b a s" 6" text
+b b s" 7" text
+b c s" 8" text
+b d s" 9" text
+a e s" 10" text
+a f s" 11" text
+a 10 s" 12" text
+a 11 s" 13" text
+a 12 s" 14" text
+a 13 s" 15" text
+
+0 begin dup 10 < while
+0 begin dup 10 < while
+2dup 2dup swap 2* 2* 2* 2* or
+rot d + 8 * rot 4 + 8 * rot blkcol
+2dup swap d + swap 4 + sqr drawchar
+1+ repeat drop
+1+ repeat drop ;
+
+# colorchart
