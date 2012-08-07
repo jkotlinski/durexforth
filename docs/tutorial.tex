@@ -51,8 +51,8 @@ To stop the program, press RESTORE to get to the interpreter. Then enter \texttt
 \begin{verbatim}
 forget bg
 : bg d020 ; # border color addr
-: 1+c! dup c@ 1+ swap c! ; ( addr -- ) # inc addr by 1
-: flash dup 1+c! recurse ; ( addr -- ) # inc addr forever
+: inc dup c@ 1+ swap c! ; ( addr -- ) # inc addr by 1
+: flash dup inc recurse ; ( addr -- ) # inc addr forever
 bg flash
 \end{verbatim}
 
