@@ -908,15 +908,6 @@ STATE
 COMPILE_RAM
 	!word	0
 
-; COMPILE-LOAD-DEPTH
-	!word	LINK
-	!set	LINK = * - 2
-	!byte 10
-	!text	"load-depth"
-	+VAR_CODE	LOAD_DEPTH
-LOAD_DEPTH
-	!word	0
-
 ; HERE - points to the next free byte of memory. When compiling, compiled words go here.
 	!word	LINK
 	!set	LINK = * - 2
@@ -2516,7 +2507,6 @@ load_base
     lda #$50
     sta load_binary_laddr_hi
     sta COMPILE_RAM + 1
-    inc LOAD_DEPTH
 	ldx	#<basename
 	ldy	#>basename
 	lda	#basename_end - basename
