@@ -588,6 +588,9 @@ addr @ 8 cmove
 1+ swap 8 addr +! 1- repeat
 r> 1 c! cli ;
 
+hide addr
+hide bmpbase
+
 : getbit
 2* key [ key 1 literal ] = if 1+ then ;
 : getrow ( dst -- dst )
@@ -597,10 +600,8 @@ key drop ; # skip cr
 : defchar 8 allot dup value
 getrow getrow getrow getrow
 getrow getrow getrow getrow drop ;
-hide getbit hide getrow
 : drawchar ( col row srcaddr -- )
 swap 140 * rot 8 * + bmpbase +
 8 cmove ;
 
-hide addr
-hide bmpbase
+hide getbit hide getrow
