@@ -25,7 +25,6 @@ swap dup here @ swap - swap ! ;
 : recurse immed latest @ >cfa , ;
 : ( immed begin key [ key ) ] literal = until ;
 : # immed begin key d = until ; # comment
-: -rot rot rot ;
 : tuck ( x y -- y x y ) swap over ;
 : pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u ) 1+ 2 * sp@ + @ ;
 : ?dup dup if dup then ;
@@ -139,6 +138,13 @@ s" asm" load
 		!
 	then
 ;
+
+:asm rot ( a b c -- b c a )
+5 ldy,x 3 lda,x 5 sta,x 1 lda,x
+3 sta,x 1 sty,x
+4 ldy,x 2 lda,x 4 sta,x 0 lda,x
+2 sta,x 0 sty,x ;asm
+: -rot rot rot ;
 
 :asm 2swap ( a b c d -- c d a b )
 1 ldy,x 5 lda,x 1 sta,x 5 sty,x
