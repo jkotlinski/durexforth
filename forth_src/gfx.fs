@@ -556,7 +556,7 @@ hide x1 hide x2 hide l
 hide plot4 hide plot8
 hide blitop
 hide colbase
-hide mask hide fillr
+hide fillr
 hide dy2
 hide dx2
 hide step hide stepx
