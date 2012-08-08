@@ -346,19 +346,6 @@ ROT
 
 	+NEXT
 
-; 2DROP
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	5
-	!text	"2drop"
-TWODROP
-	inx
-	inx
-	inx
-	inx
-
-	+NEXT
-
 ; 1+
 	!word	LINK
 	!set	LINK = * - 2

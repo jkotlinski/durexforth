@@ -140,18 +140,21 @@ s" asm" load
 	then
 ;
 
+:asm 2swap ( a b c d -- c d a b )
+1 ldy,x 5 lda,x 1 sta,x 5 sty,x
+0 ldy,x 4 lda,x 0 sta,x 4 sty,x
+3 ldy,x 7 lda,x 3 sta,x 7 sty,x
+2 ldy,x 6 lda,x 2 sta,x 6 sty,x ;asm
+
+:asm 2drop ( a b -- )
+inx, inx, inx, inx, ;asm
+
 : hide
 loc ?dup if hidden else ." err" then ;
 : hide-to  ( -- )
 loc latest
 begin @ dup hidden 2dup = until
 2drop ;
-
-:asm 2swap ( a b c d -- c d a b )
-1 ldy,x 5 lda,x 1 sta,x 5 sty,x
-0 ldy,x 4 lda,x 0 sta,x 4 sty,x
-3 ldy,x 7 lda,x 3 sta,x 7 sty,x
-2 ldy,x 6 lda,x 2 sta,x 6 sty,x ;asm
 
 : save-forth ( strptr strlen -- )
 	compile-ram @ -rot
