@@ -135,7 +135,8 @@ swap 1+ swap ( inc strptr )
 	then
 ;
 
-: hide loc hidden ;
+: hide
+loc ?dup if hidden else ." err" then ;
 : hide-to  ( -- )
 loc latest
 begin @ dup hidden 2dup = until
