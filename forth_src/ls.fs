@@ -5,7 +5,7 @@
 s" $" here @ loadb drop
 ae @ 2 - here @ ;
 
-: blocks ar ! xr ! bdcd jsr-wrap
+: blocks ar ! xr ! bdcd jsr
 space ;
 
 : getreg dup c@ swap 1+ c@ ;

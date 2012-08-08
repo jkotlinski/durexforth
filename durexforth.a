@@ -1668,24 +1668,6 @@ INTERPRET
     ldx     #STACK_START ; wipe stack :(
 	+NEXT
 
-; JSR
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	3
-	!text	"jsr"
-_JSR
-	lda	0, x
-	sta	+ + 1
-	lda	1, x
-	sta	+ + 2
-	stx	tmp_x
-+
-	jsr 0 ; overwrite
-	ldx tmp_x
-	inx
-	inx
-	+NEXT
-
 ; TICK
 	!word	LINK
 	!set	LINK = * - 2

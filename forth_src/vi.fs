@@ -1,5 +1,5 @@
   : CR d ;
-: clrscr e544 jsr-wrap ;
+: clrscr e544 jsr ;
 
 : bufstart 5001 ;
 0 5000 c! # reverse sentinel
@@ -252,7 +252,7 @@ c begin cur-up 1- ?dup 0= until ;
 c begin cur-down 1- ?dup 0= until ;
 
 : setcur ( x y -- )
-xr ! yr ! e50c jsr-wrap ;
+xr ! yr ! e50c jsr ;
 
 : goto-eof ( can be much optimized... )
 bufstart eof @ = if exit then

@@ -190,7 +190,7 @@ here +! ;
 ' lit , , ' exit , ;
 
 var ar var xr var yr
-:asm jsr-wrap
+:asm jsr
 0 lda,x here @ 1+ 1234 sta, # lsb
 1 lda,x here @ 1+ 1234 sta, # msb
 txa, pha,
