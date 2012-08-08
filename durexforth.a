@@ -359,35 +359,6 @@ TWODROP
 
 	+NEXT
 
-; 2SWAP
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	5
-	!text	"2swap"
-TWOSWAP
-
-	ldy	1, x
-	lda	5, x
-	sta 1, x
-	sty	5, x
-
-	ldy	0, x
-	lda	4, x
-	sta 0, x
-	sty	4, x
-
-	ldy	3, x
-	lda	7, x
-	sta 3, x
-	sty	7, x
-
-	ldy	2, x
-	lda	6, x
-	sta 2, x
-	sty	6, x
-
-	+NEXT
-
 ; 1+
 	!word	LINK
 	!set	LINK = * - 2
