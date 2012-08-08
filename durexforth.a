@@ -2106,68 +2106,6 @@ LITSTRING ; ( -- addr len )
 
 ; -----------
 
-; jsr wrapper -- start
-
-	!word	LINK
-	!set	LINK = * - 2
-	!byte 2
-	!text	"xr"
-XREG
-	+VAR_CODE	_XREG
-_XREG
-	!word	1
-
-	!word	LINK
-	!set	LINK = * - 2
-	!byte 2
-	!text	"yr"
-YREG
-	+VAR_CODE	_YREG
-_YREG
-	!word	1
-
-	!word	LINK
-	!set	LINK = * - 2
-	!byte 2
-	!text	"ar"
-AREG
-	+VAR_CODE	_AREG
-_AREG
-	!word	1
-
-; JSR ( addr -- )
-	!word	LINK
-	!set	LINK = * - 2
-	!byte 8
-	!text	"jsr-wrap"
-
-	lda 0, x
-	sta	.jsraddr + 1
-	lda 1, x
-	sta	.jsraddr + 2
-
-	inx
-	inx
-
-	txa
-	pha
-
-	lda	_AREG
-	ldx	_XREG
-	ldy	_YREG
-
-.jsraddr
-	jsr	0
-
-	sta _AREG
-	stx _XREG
-	sty _YREG
-
-	pla
-	tax
-	+NEXT
-
-
 ; LINEBUF line buffering. 0 = off, 1 = on
 	!word	LINK
 	!set	LINK = * - 2
