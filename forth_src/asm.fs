@@ -109,7 +109,7 @@ a1 2mi lda,(x)
 b1 2mi lda,(y)
 
 a2 2mi ldx,#
-a6 a3 23mi ldx,
+a6 ae 23mi ldx,
 b6 be 23mi ldx,y
 
 a0 2mi ldy,#
