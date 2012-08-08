@@ -41,11 +41,6 @@ swap dup here @ swap - swap ! ;
 : min ( a b - c )
 2dup > if swap then drop ;
 
-: tell ( addr len -- )
-begin over c@ emit ( print char )
-swap 1+ swap ( inc strptr )
-1- ( dec strlen )
-?dup 0= until drop ;
 : '"' [ key " ] literal ;
 : s" immed ( -- addr len )
 	state @ if
@@ -78,6 +73,13 @@ swap 1+ swap ( inc strptr )
 		swap
 	then
 ;
+
+: tell ( addr len -- )
+begin over c@ emit ( print char )
+swap 1+ swap ( inc strptr )
+1- ( dec strlen )
+?dup 0= until drop ;
+
 : ." immed ( -- )
 	state @ if ( compiling? )
 		[compile] s"
@@ -126,6 +128,9 @@ swap 1+ swap ( inc strptr )
 	' lit , , ' exit ,
 ;
 
+." asm.."
+s" asm" load
+
 : to immed ( n -- )
 	loc >dfa 2+
 	state @ if
@@ -151,9 +156,6 @@ begin @ dup hidden 2dup = until
 	saveb	
 	compile-ram !
 ;
-
-." asm.."
-s" asm" load
 
 :asm 2*
 0 lda,x asla, 0 sta,x
