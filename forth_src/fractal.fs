@@ -8,14 +8,12 @@ s" turtle" load
 : Dd 0 ; # delta distance
 var rule var rulel
 
-var depth
-
-: dofract ( -- )
+: dofract ( depth -- depth )
 0 begin dup rulel < while
 dup rule + c@ case
 [ key f literal ] of
-depth @ if
-ffff depth +! recurse 1 depth +!
+over if
+swap 1- recurse 1+ swap
 else Dd forward then
 endof
 [ key + literal ] of Da right endof
@@ -25,12 +23,12 @@ endcase
 
 : fractal
 ( ax axl depth Dd Da rule rulel -- )
-to rulel to rule to Da to Dd depth !
-0 # axiom axioml i
-begin 2dup > while
-2 pick over + c@ case
-[ key f literal ] of depth @ if
-ffff depth +! dofract 1 depth +!
+to rulel to rule to Da to Dd
+0 # axiom axioml depth i
+begin 2 pick over > while
+3 pick over + c@ case
+[ key f literal ] of over if
+swap 1- dofract 1+ swap
 else Dd forward then endof
 [ key + literal ] of Da right endof
 [ key - literal ] of Da left endof
