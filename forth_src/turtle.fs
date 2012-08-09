@@ -30,6 +30,11 @@ tp if tx @ rs ty @ rs line then ;
 : back ( px -- )
 80 right forward 80 right ;
 
+: turtle@ ( -- x y angle )
+tx @ rs ty @ rs ta @ ;
+: turtle! ( x y angle -- )
+ta ! ls ty ! ls tx ! pendown ;
+
 (
 # --- demo
 
