@@ -13,9 +13,11 @@ var ta : tp 0 ;
 : pendown 1 to tp tx @ rs ty @ rs plot ;
 : penup 0 to tp ;
 
-: init hires 7 clrcol 
-a0 ls tx ! 64 ls ty ! pendown 
-10e ta ! ( north ) ;
+: moveto ( x y a -- )
+ta ! ls ty ! ls tx !
+pendown ;
+: init hires 7 clrcol
+a0 64 10e moveto ;
 
 : right ( a -- )
 ta @ +
@@ -31,9 +33,9 @@ tp if tx @ rs ty @ rs line then ;
 80 right forward 80 right ;
 
 : turtle@ ( -- x y angle )
-tx @ rs ty @ rs ta @ ;
+tx @ ty @ ta @ ;
 : turtle! ( x y angle -- )
-ta ! ls ty ! ls tx ! pendown ;
+ta ! ty ! tx ! pendown ;
 
 (
 # --- demo

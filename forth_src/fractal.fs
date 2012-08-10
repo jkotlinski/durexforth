@@ -48,15 +48,15 @@ endcase
 1+ repeat 2drop drop ;
 
 : koch init 10 clrcol
-20 4c 0 turtle!
+20 4c 0 moveto
 s" f" 3 100 9 3c s" f-f++f-f" fractal
-20 88 0 turtle!
+20 88 0 moveto
 s" f" 4 100 3 3c s" f-f++f-f" fractal
-20 c4 0 turtle!
+20 c4 0 moveto
 s" f" 5 100 1 3c s" f-f++f-f" fractal ;
 : bush1 init d clrcol
-a0 bb 10e turtle!
+a0 bb 10e moveto
 s" f" 4 100 3 19 s" ff+[+f-f-f]-[-f+f+f]" fractal ;
 : bush2 init d clrcol d d020 c!
-a0 c8 10e turtle!
-s" f" 5 80 64 14 s" @[+f]@[-f]+f" fractal ;
+a0 c8 10e moveto
+s" f" 6 80 64 14 s" @[+f]@[-f]+f" fractal ;
