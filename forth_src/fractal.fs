@@ -54,6 +54,9 @@ s" f" 3 100 9 3c s" f-f++f-f" fractal
 s" f" 4 100 3 3c s" f-f++f-f" fractal
 20 c4 0 moveto
 s" f" 5 100 1 3c s" f-f++f-f" fractal ;
+: weed1 init d clrcol
+a0 c4 10e moveto
+s" f" 3 100 7 19 s" f[-f]f[+f]f" fractal ;
 : bush1 init d clrcol
 a0 bb 10e moveto
 s" f" 4 100 3 19 s" ff+[+f-f-f]-[-f+f+f]" fractal ;
