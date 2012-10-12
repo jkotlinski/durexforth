@@ -84,12 +84,12 @@ dup @ 80 or
 swap c! ;
 
 : do-load
+0 bufstart 400 fill
 bufstart loadb
 
 if # file error?
 bufstart 1+ eof !
-0 dup dup dup eof @ c! curx ! cury !
-bufstart 400 fill
+0 dup dup eof @ c! curx ! cury !
 CR bufstart c!
 exit then
 
