@@ -353,28 +353,16 @@ key editpos c!
 : del-char force-cur-right backspace ;
 
 : join-lines
-	cury @
-	curx @
-	curlinestart @
+cury @ curx @ curlinestart @
 
-	editpos
-	cur-down
-	editpos = if 2drop drop exit then
-	sol
-	editpos ( src )
-	editpos 1- ( dst )
-	eof @ editpos - 1+
+editpos
+cur-down
+editpos = if 2drop drop exit then
+sol
+20 editpos 1- c! # cr => space
 
-	cmove
-
-	ffff eof +!
-
-	curlinestart !
-	curx !
-	cury !
-
-	1 to need-refresh
-;
+curlinestart ! curx ! cury !
+1 to need-refresh ;
 
 : insert-char
 	dup CR <> linelen 26 > and if drop exit then
