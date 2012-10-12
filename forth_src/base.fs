@@ -236,8 +236,8 @@ pha, 1 lda,x pha, ;asm
 : modules ;
 # ." debug.."
 # s" debug" load
-# ." gfx.."
-# s" gfx" load
+." gfx.."
+s" gfx" load
 # ." gfxdemo.."
 # s" gfxdemo" load
 # ." turtle.."
