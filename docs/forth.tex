@@ -275,9 +275,14 @@ This variable switches between buffered/unbuffered input. Disable input bufferin
 \section{Editing}
 
 \begin{description}
-\item[vi ( s -- )]
+\item[vi ( -- )]
 
-Open editor. Try \texttt{s" foo" vi}.
+Opens editor with untitled buffer.
+
+\begin{description}
+\item[vi ( file -- )]
+
+Opens file in editor. Try \texttt{s" foo" vi}.
 
 \item[fg]
 

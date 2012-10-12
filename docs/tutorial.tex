@@ -20,8 +20,7 @@ Let's define a word \texttt{bg} for setting the border color\ldots
 
 The editor (fully described in chapter \ref{editor}) is convenient for editing larger pieces of code. With it, you keep an entire source file loaded in RAM, and you can recompile and test it easily.
 
-Start the editor by typing \texttt{s" foo" vi}.\footnote{Yes, the space should be between \texttt{s"} and \texttt{foo"}. The \texttt{s"} word creates a string by reading characters until it hits a \texttt{"}.}
-It will try to open the (non-existant) file ``foo.'' After a little while you will be presented to the nice pink screen of the editor. 
+Start the editor by typing \texttt{vi}. You will enter the pink editor screen.
 
 To enter text, first press \texttt{i} to enter insert mode. This mode allows you to insert text into the buffer. You can see that it's active on the \texttt{I} that appears in the lower left corner.
 
@@ -31,11 +30,13 @@ This is a good start for making a program. But first, let's get rid of the junk 
 forget bg
 \end{verbatim}
 
-\ldots and press $\leftarrow$ to leave insert mode. This line forgets the \texttt{bg} word that you defined in the last section, and everything defined after it. Let's try out if it works.
+\ldots and press $\leftarrow$ to leave insert mode. The line you entered forgets the \texttt{bg} word that you defined in the last section, and everything defined after it. Let's try out if it works.
 
 First, quit the editor by pressing \texttt{:q}. You should now be back in the interpreter screen. Verify that the word \texttt{bg} still exists by  entering \texttt{0 bg}, \texttt{1 bg} like you did before. Then, jump back to the editor using the command \texttt{fg} (foreground). You should return to your edit buffer with the lonely \texttt{forget bg} line.
 
-Now, compile and run the buffer by pressing \texttt{F7}. You will be thrown out to the interpreter again. Entering \texttt{bg} should now give you the error \colorbox{yellow}{\texttt{bg?}}. Success --- we have forgotten the \texttt{bg} word. Now, get back into the editor with \texttt{fg} again.
+Now, compile and run the buffer by pressing \texttt{F7}. You will be thrown out to the interpreter
+again. Entering \texttt{bg} should now give you the error \colorbox{yellow}{\texttt{bg?}}. Success
+--- we have forgotten the \texttt{bg} word. Now, get back into the editor by entering \texttt{fg}.
 
 Under \texttt{forget bg}, add the following lines:
 
@@ -46,13 +47,13 @@ flash
 
 \texttt{flash} will cycle the border color infinitely. Before trying it out, go up and change \texttt{forget bg} to \texttt{forget flash}. This makes sure you won't run out of RAM, no matter how many times you recompile the program. Now press \texttt{F7} to compile and run. If everything is entered right, you will be facing a wonderful color cycle.
 
-To stop the program, press RESTORE to get to the interpreter. Then enter \texttt{fg} to get back into the editor. Let's see how we can factor the program to get something more Forth'y:
+To get back into the editor, press Restore key. Let's see how we can factor the program to get something more Forth'y:
 
 \begin{verbatim}
 forget bg
 : bg d020 ; # border color addr
-: inc dup c@ 1+ swap c! ; ( addr -- ) # inc addr by 1
-: flash dup inc recurse ; ( addr -- ) # inc addr forever
+: inc dup c@ 1+ swap c! ; ( addr -- )
+: flash dup inc recurse ; ( addr -- )
 bg flash
 \end{verbatim}
 
