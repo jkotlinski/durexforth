@@ -430,22 +430,15 @@ var clipboard-count
 
 # this can be much optimized by using cmove
 : del-line
-	0 clipboard-count !
-	sol
-	begin
-		linelen
-	while
-        # copy to clipboard
-		editpos c@
-		clipboard clipboard-count @ +
-		c!
-		1 clipboard-count +!
-
-		del-char
-	repeat
-	join-lines
-	1 to need-refresh
-;
+0 clipboard-count !
+sol begin linelen while
+# copy to clipboard
+editpos c@
+clipboard clipboard-count @ + c!
+1 clipboard-count +!
+del-char repeat
+join-lines del-char
+1 to need-refresh ;
 
 : delete-handler
 	[ key d ] literal set-status
