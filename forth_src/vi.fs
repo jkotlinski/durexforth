@@ -791,6 +791,9 @@ bufstart compile-ram ! ;
 ;
 
 : vi
+    # in case no param
+    sp@ sp0 = if s" untitled" then
+
 	init
 	go-to-file-start
 
