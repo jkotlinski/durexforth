@@ -178,6 +178,7 @@ begin @ dup hidden 2dup = until
 :asm 2/
 1 lda,x lsra, 1 sta,x
 0 lda,x rora, 0 sta,x ;asm
+: 100/ 2/ 2/ 2/ 2/ 2/ 2/ 2/ 2/ ;
 :asm or
 1 lda,x 3 ora,x 3 sta,x
 0 lda,x 2 ora,x 2 sta,x
@@ -232,6 +233,9 @@ pla, 1 sta,x pla, 0 sta,x ;asm
 :asm r@ dex, dex,
 pla, 1 sta,x pla, 0 sta,x
 pha, 1 lda,x pha, ;asm
+
+:asm sei sei, ;asm
+:asm cli cli, ;asm
 
 : modules ;
 # ." debug.."

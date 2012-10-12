@@ -689,6 +689,21 @@ key k c, loc cur-up >cfa ,
 key j c, loc cur-down >cfa ,
 0 c,
 
+# custom restore handler
+# "fg"
+here @ key f c, key g c, d c, 0 c,
+here @ cli, # entry
+swap dup # asm fg fg 
+# compile-ram="fg"
+lda,# compile-ram sta,
+100/ lda,# compile-ram 1+ sta,
+# lores
+9b lda,# d011 sta, 17 lda,# dd00 sta,
+17 lda,# d018 sta,
+318 @ jmp, # jump to normal restore
+: compile-run sei literal 318 ! cli
+bufstart compile-ram ! ;
+
 : main-handler ( key -- quit? )
 	['] maintable ( key tableptr )
 
@@ -737,7 +752,7 @@ key j c, loc cur-down >cfa ,
     # eof should be 0 terminated!
     eof @ c@ 0= assert
     # eof @ ae ! 
-	88 of bufstart compile-ram ! ffff exit endof # f7
+	88 of compile-run ffff exit endof # f7
 
 	endcase
 	0

@@ -36,8 +36,6 @@ create blitop
 0 , # doplot
 0 , # lineplot
 
-: 100/ 2/ 2/ 2/ 2/ 2/ 2/ 2/ 2/ ;
-
 :asmsub .blitloc
 0 lda,x zptmp sta,
 7 and,# zptmp3 sta,
