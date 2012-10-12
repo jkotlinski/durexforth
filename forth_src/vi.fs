@@ -1,6 +1,9 @@
   : CR d ;
 : clrscr e544 jsr ;
 
+: assert 0= if
+begin 1 d020 +! again then ;
+
 : bufstart 5001 ;
 0 5000 c! # reverse sentinel
 
@@ -749,7 +752,8 @@ key j c, loc cur-down >cfa ,
 	endof
 
 	( cursor )
-    # todo: null terminate eof?
+    # eof should be 0 terminated!
+    eof @ c@ 0= assert
     # eof @ ae ! 
 	88 of bufstart compile-ram ! ffff exit endof # f7
 
@@ -785,7 +789,7 @@ key j c, loc cur-down >cfa ,
 			then
 		then
 
-		sp@ 2+ <> if begin 1 d020 +! again then # warn if stack changed
+		sp@ 2+ = assert # warn if stack changed
 	again
 ;
 
