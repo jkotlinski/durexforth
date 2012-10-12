@@ -88,9 +88,9 @@ bufstart loadb
 
 if # file error?
 bufstart 1+ eof !
-CR bufstart c!
 0 dup dup dup eof @ c! curx ! cury !
 bufstart 400 fill
+CR bufstart c!
 exit then
 
 ae @ eof !
