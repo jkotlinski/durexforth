@@ -393,6 +393,7 @@ force-cur-right else cur-right then ;
 
 	dup
 	case
+    3 of drop endof # run/stop
 	5f of insert-stop drop endof # leftarrow
 	LEFT of cur-left drop endof
 	DOWN of cur-down drop endof
