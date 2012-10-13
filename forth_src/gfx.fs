@@ -20,9 +20,8 @@ bb lda,# d011 sta, # enable
 colbase 3e8 fill
 0 bmpbase 1f40 fill ;
 
-: blkcol ( x y c -- )
-rot 2/ 2/ 2/ rot 2/ 2/ 2/ 28 *
-+ colbase + c! ;
+: blkcol ( col row c -- )
+rot rot 28 * + colbase + c! ;
 
 create mask
 80 c, 40 c, 20 c, 10 c,

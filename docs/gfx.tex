@@ -29,7 +29,7 @@ Some demonstrations can be found in \texttt{gfxdemo}.
 \item[clrcol ( colors -- )] Clears the high-resolution display using \texttt{colors}. Colors is a
 byte value with foreground color in high nibble, background color in low nibble. E.g. \texttt{15
 clrcol} clears the screen with green background, white foreground.
-\item[blkcol ( x y colors -- )] Changes colors of the 8x8 block that contains the pixel coordinate given in x, y.
+\item[blkcol ( col row colors -- )] Changes colors of the 8x8 block at given position.
 \item[plot ( x y -- )] Sets the pixel at x, y.
 \item[peek ( x y -- p )] Gets the pixel at x, y.
 \item[line ( x y -- )] Draws a line to x, y.
