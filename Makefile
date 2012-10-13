@@ -1,5 +1,5 @@
 C1541   = c1541
-AS = acme
+AS = ~/bin/acme
 
 # generic rules
 

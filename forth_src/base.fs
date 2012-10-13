@@ -238,8 +238,10 @@ pha, 1 lda,x pha, ;asm
 :asm cli cli, ;asm
 
 : modules ;
-# ." debug.."
-# s" debug" load
+." debug.."
+s" debug" load
+." ls.."
+s" ls" load
 ." gfx.."
 s" gfx" load
 # ." gfxdemo.."
