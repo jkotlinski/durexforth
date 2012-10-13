@@ -587,7 +587,7 @@ begin ?dup while
 swap dup c@ 8 * d800 + # strlen str ch
 addr @ 8 cmove
 1+ swap 8 addr +! 1- repeat
-r> 1 c! cli ;
+r> 1 c! cli drop ;
 
 hide addr
 
