@@ -725,6 +725,10 @@ bufstart compile-ram ! ;
 
 	case ( key )
 
+    [ key y ] literal of # yy
+     key [ key y ] literal = if
+     del-line paste-line
+    then endof
 	[ key o ] literal of force-cur-down open-line endof
 	[ key p ] literal of force-cur-down paste-line endof
 	[ key Z ] literal of
