@@ -1597,6 +1597,7 @@ INTERPRET
 
     ; Resets some sensitive things, as part of error handling.
     ldx     #0
+    stx     STATE
     stx     KEY_BUF_READ_POS
     stx     KEY_BUF_WRITE_POS
     stx     COMPILE_RAM
