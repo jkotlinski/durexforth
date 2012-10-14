@@ -83,10 +83,39 @@ Note: As the x register contains the durexForth stack depth, it is important tha
 This piece of code reads from keyboard and sends back the chars to screen:
 
 \begin{verbatim}
-: init 0 linebuf c! ; # turn off key buffering
+: init 0 linebuf c! ; # disable key buffering
 : foo init begin key emit again ;
 foo
 \end{verbatim}
+
+\section{Avoiding Stack Crashes}
+
+durexForth should be one of the fastest and leanest Forths for the C64. To achieve this, there are
+not too many niceties for beginners. For example, compiled code has no checks for stack overflow
+and underflow. This means that the system may crash if you do too many pops or pushes. This is not
+much of a problem for an experienced Forth programmer, but until you reach that stage, handle the
+stack with care.
+
+One technique that can be useful to avoid stack crashes is to
+add comments about what your stack looks like at different times.
+In this example, we imagine a graphics word "drawbox" that draws a black box.
+\texttt{( -- )} indicates that it takes no arguments on stack, and on exit it should
+leave nothing on the stack. The comments inside the word indicate what the stack
+looks at the given points of time.
+
+\begin{verbatim}
+: drawbox ( color -- )
+10 begin dup 20 < while # color x
+10 begin dup 20 < while # color x y
+2dup # color x y x y
+4 pick # color x y x y color
+blkcol # color x y
+1+ repeat drop # color x
+1+ repeat 2drop ;
+\end{verbatim}
+
+Once the word is working, it may be nice to again remove the \texttt{\#} comments as
+they are no longer that interesting to read.
 
 \section{Configuring durexForth}
 
@@ -97,7 +126,9 @@ By default, durexForth boots up with all modules pre-compiled in RAM:
 \begin{description}
 \item[debug] Words for debugging.
 \item[asm] The assembler.
-\item[edit] The text editor.
+\item[vi] The text editor.
+\item[ls] List disk contents.
+\item[gfx] Graphics module.
 \end{description}
 
 To reduce RAM usage, you may make a stripped-down version of durexForth. Do this by following these steps:
@@ -143,5 +174,3 @@ To save the new configuration to disk, use \texttt{save-forth}.
 \begin{itemize}
 \item \href{http://code.google.com/p/durexforth/}{durexForth source code}
 \end{itemize}
-
-Quality coders may contact a Durex representative for assistance.
