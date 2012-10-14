@@ -1,0 +1,45 @@
+Changelog
+
+2009-02-06: v1.0 
+
+ * Initial version uploaded to CSDB.
+
+2011-08-08: v1.1
+
+ * Added experimental sid module.
+ * Added hide.
+ * Removed land.
+ * Bugfixed not, invert, c@.
+ * Assembler: Added lbl, -branch, :asmsub, ;asmsub
+ * Editor
+	 - Renamed edit => vi.
+	 - Renamed 0: => g
+	 - Speed-ups, bug-fixes
+
+2012-08-07: v1.2
+
+ * Added hi-res graphics module.
+ * Added sinus/cosinus module.
+ * Added 2*, 2/, s<, s>, abs, negate, 0<, d*.
+ * Assembler: Added :+, :-, +branch
+ * Bugfix s" - now it behaves the same in compile and immediate mode.
+ * Removed cells, 0>, write, char.
+ * Updated documentation.
+ * Made "load" load byte-by-byte again.
+ * Added hexdec, ls modules by Kevin Reno.
+ * Various bugfixes and optimizations.
+
+2012-10-14: v1.21
+
+ * Handle failed compiles better. Now it will not be necessary to
+   reboot computer that often.
+ * Editor:
+	- After pressing F7 to compile & run, Restore brings you back to editor.
+	- "vi" with empty stack now starts editor with empty buffer.
+	- Added yy command.
+	- Various bugfixes.
+ * Bugfix text, ldx,
+ * Rename jsr-wrap to jsr
+ * Added 100/.
+ * Change blkcol to take column, row instead of x, y.
+ * Updated documentation.
