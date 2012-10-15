@@ -33,6 +33,7 @@
 
 : see
 	word find
+    dup 0= if exit then
 	here @
 	latest @
 	begin
@@ -63,10 +64,9 @@
 		endof
 		' litstring of
 			[ key s ] literal emit '"' emit space
-			2+ c@  
-			swap dup tell
+			2+ dup 1+ over c@ tell
 			'"' emit space
-			+ 1-
+            dup c@ + 1-
 		endof
 		' ' of
 			[ key ' ] literal emit space
