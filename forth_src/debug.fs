@@ -59,34 +59,34 @@
 
 		case
 		' lit of
-			2 + dup @ .
+			2+ dup @ .
 		endof
 		' litstring of
 			[ key s ] literal emit '"' emit space
-			2 + dup c@ 
+			2+ c@  
 			swap dup tell
 			'"' emit space
 			+ 1-
 		endof
 		' ' of
 			[ key ' ] literal emit space
-			2 + dup @
+			2+ dup @
 			cfa>
 			id. space
 		endof
 		' branch of
 			." branch ( "
-			2 + dup @ .
+			2+ dup @ .
 			." ) "
 		endof
 		' 0branch of
 			." 0branch ( "
-			2 + dup @ .
+			2+ dup @ .
 			." ) "
 		endof
 		' exit of
 			2dup
-			2 +
+			2+
 			<> if
 				." exit "
 			then
@@ -96,7 +96,7 @@
 			cfa>
 			id. space
 		endcase
-		2 +
+		2+
 	repeat
 	[ key ; ] literal emit cr
 	2drop
