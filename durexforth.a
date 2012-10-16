@@ -854,14 +854,6 @@ EMIT
 	jsr	print_char
 	+NEXT
 
-print_char_surpress_file_io
-    ldy COMPILE_RAM + 1
-    bne +
-	ldy	COMPILE_FILENO
-	beq	print_char
-+
-	rts
-
 print_char
 	ldy	#20
 	sty CURSOR_TIMER
@@ -1071,19 +1063,19 @@ _KEY
 	beq	-
 	dec	KEY_BUF_WRITE_POS
 	tya
-	jsr	print_char_surpress_file_io
+	jsr	print_char
 	jmp	-
 +
-	jsr	print_char_surpress_file_io
+	jsr	print_char
 	
 	jsr	write_key
 	jmp	-
 
 .return	;done
 	lda	#K_SPACE
-	jsr	print_char_surpress_file_io
+	jsr	print_char
 	lda	#K_RETURN
-	jsr	print_char_surpress_file_io
+	jsr	print_char
 
 	jsr	write_key
 
