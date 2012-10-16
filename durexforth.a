@@ -1116,7 +1116,6 @@ get_char_from_ram_compile_area
 	sta	TMP + 1
 	ldy #0
 	lda	(TMP), y
-	sta	$d020
 	rts
 
 ; Reads a key, sources are prioritized as follows:
