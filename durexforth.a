@@ -1124,6 +1124,7 @@ PULL_KEY ; wastes x!!!
 ++
     ; Stop compiling from RAM.
 	sta	COMPILE_RAM + 1
+    sta _BLINK
 +++
     ; Read from console.
 	jmp	GETCHR
