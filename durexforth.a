@@ -1025,12 +1025,11 @@ KEY
 	rts
 
 _KEY
-	lda	_LINEBUF
-	beq	.unbuffered_key
     lda COMPILE_FILENO
-    ora COMPILE_RAM
     ora COMPILE_RAM + 1
 	bne	.unbuffered_key
+	lda	_LINEBUF
+	beq	.unbuffered_key
 	lda	KEY_BUF_WRITE_POS
 	beq	.fill_key_buf
 	cmp	KEY_BUF_READ_POS
