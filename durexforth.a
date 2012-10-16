@@ -1348,15 +1348,6 @@ EXEC
 	inx
 	jmp	(TMP)
 
-; NUMBER
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	6
-	!text	"number"
-NUMBER
-	jsr	_NUMBER
-	+NEXT
-
 ; Z set = success, clear = failed
 _NUMBER ; only hex
 	lda	1, x	
