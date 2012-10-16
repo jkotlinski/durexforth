@@ -5,7 +5,7 @@
 begin 1 d020 +! again then ;
 
 : bufstart 5001 ;
-0 5000 c! # reverse sentinel
+0 bufstart 1- c! # reverse sentinel
 
 var eof ( ram eof )
 0 eof !
@@ -818,6 +818,8 @@ bufstart compile-ram ! ;
 
 : fg # bring back editor
 eof @ 0= if ." no buffer" cr exit then
+# check sentinel
+bufstart 1- c@ if ." err" exit then
 init
 push-colors
 show-page
