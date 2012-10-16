@@ -1852,23 +1852,14 @@ IMMED
 	!text	"branch"
 BRANCH
 	; IP is now pointing to the offset by which IP should be modified...
-	lda	IP
-	sta	TMP
-	lda	IP + 1
-	sta	TMP + 1
-
 	ldy	#0
 	lda	(IP), y
 	clc
-	adc TMP
+	adc IP
 	sta	TMP
-	bcc	+
-	inc	TMP + 1
-+
 	iny
 	lda	(IP), y
-	clc
-	adc	TMP + 1
+	adc	IP + 1
 	sta	IP + 1
 
 	lda	TMP
