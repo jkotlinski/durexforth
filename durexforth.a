@@ -1254,7 +1254,7 @@ _FIND
 	bne	.word_not_equal
 
 	; equal strlen, now compare strings...
-	ldy	#1
+    dey
 -
 	iny
 	iny
@@ -1275,8 +1275,7 @@ _FIND
 	sta	0, x
 	lda	TMP + 1
 	sta	1, x
-	lda	#1
-	rts
+	rts ; a should be non-zero now
 
 .word_not_equal
 	; ok... no match, advance the linked list.
