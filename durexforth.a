@@ -1110,10 +1110,12 @@ PULL_KEY ; wastes x!!!
 	lda	COMPILE_RAM + 1
 	beq	+++
 	; yes - get char from RAM area
+    inc $d020
 	sta	TMP + 1
 	lda	COMPILE_RAM
 	sta	TMP
 	ldy #0
+    dec $d020
 	lda	(TMP), y
 	beq	++
 	inc	COMPILE_RAM
@@ -1133,18 +1135,18 @@ PULL_KEY ; wastes x!!!
     inc $d020
 	jsr	READST
 	bne .eof
+    dec $d020
 	jmp	CHRIN
 
 .eof
 	lda	COMPILE_FILENO
 	jsr	CLOSE
+    dec $d020
 
 	dec	COMPILE_FILENO
 	bne +
 	lda	_BLINK
 	sta	CURSOR_BLINK
-	lda	#BORDER_COLOR
-	sta	$d020
 +
 	lda	COMPILE_FILENO
 	jsr	CHKIN
