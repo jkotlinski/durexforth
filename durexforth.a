@@ -1109,15 +1109,6 @@ _KEY
 	sta	1, x
 	rts
 
-get_char_from_ram_compile_area
-	lda	COMPILE_RAM
-	sta	TMP
-	lda	COMPILE_RAM + 1
-	sta	TMP + 1
-	ldy #0
-	lda	(TMP), y
-	rts
-
 ; Reads a key, sources are prioritized as follows:
 ;  1. Streaming file from disk (COMPILE_FILENO)
 ;  2. Compile RAM area (COMPILE_RAM)
@@ -1126,11 +1117,15 @@ PULL_KEY ; wastes x!!!
 	lda	COMPILE_FILENO
 	bne	.get_char_from_disk
 
-	lda	COMPILE_RAM
-	ora	COMPILE_RAM + 1
+    ; compiling from RAM?
+	lda	COMPILE_RAM + 1
 	beq	+++
-	jsr	get_char_from_ram_compile_area
-	ora #0
+	; yes - get char from RAM area
+	sta	TMP + 1
+	lda	COMPILE_RAM
+	sta	TMP
+	ldy #0
+	lda	(TMP), y
 	beq	++
 	inc	COMPILE_RAM
 	bne	+
@@ -1138,8 +1133,6 @@ PULL_KEY ; wastes x!!!
 +
 	rts
 ++
-	lda	#0
-	sta	COMPILE_RAM
 	sta	COMPILE_RAM + 1
 +++
 	jmp	GETCHR
