@@ -147,12 +147,6 @@ s" asm" load
 2 sta,x 0 sty,x ;asm
 : -rot rot rot ;
 
-:asm 2swap ( a b c d -- c d a b )
-1 ldy,x 5 lda,x 1 sta,x 5 sty,x
-0 ldy,x 4 lda,x 0 sta,x 4 sty,x
-3 ldy,x 7 lda,x 3 sta,x 7 sty,x
-2 ldy,x 6 lda,x 2 sta,x 6 sty,x ;asm
-
 :asm 2drop ( a b -- )
 inx, inx, inx, inx, ;asm
 
@@ -164,14 +158,9 @@ begin @ dup hidden 2dup = until
 2drop ;
 
 : save-forth ( strptr strlen -- )
-	compile-ram @ -rot
-	0 compile-ram !
-	801
-	here @
-	2swap
-	saveb	
-	compile-ram !
-;
+compile-ram @ -rot 0 compile-ram !
+801 -rot here @ -rot saveb
+compile-ram ! ;
 
 :asm 2*
 0 lda,x asla, 0 sta,x
