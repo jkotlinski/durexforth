@@ -575,8 +575,6 @@ hide blitloc
 hide .blitloc
 hide mask
 
-:asm sei sei, ;asm
-:asm cli cli, ;asm
 : text ( col row str strlen -- )
 # addr=dst
 rot 140 * addr !
