@@ -1588,6 +1588,8 @@ INTERPRET
 	!byte	1
 	!text	"'"
 TICK
+    ; tick and lit do the same thing, but tick is used for
+    ; words, lit for numbers.
 	jmp	LIT
 
 ; LIT
