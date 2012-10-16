@@ -26,6 +26,8 @@ swap dup here @ swap - swap ! ;
 : ( immed begin key [ key ) ] literal = until ;
 : # immed begin key d = until ; # comment
 : tuck ( x y -- y x y ) swap over ;
+: pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u )
+1+ 2 * sp@ + @ ;
 : ?dup dup if dup then ;
 : not 0= ;
 : <> ( a b -- c ) = 0= ;
@@ -201,10 +203,6 @@ inx, inx, inx, inx, ;asm
 here @ ( n val )
 swap ( val n )
 here +! ;
-
-: pick ( x_u ... x_1 x_0 u
--- x_u ... x_1 x_0 x_u )
-1+ 2* sp@ + @ ;
 
 : var
 2 allot create jsr-docol,
