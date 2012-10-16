@@ -855,8 +855,6 @@ EMIT
 	+NEXT
 
 print_char_surpress_file_io
-    ldy COMPILE_RAM
-    bne +
     ldy COMPILE_RAM + 1
     bne +
 	ldy	COMPILE_FILENO
@@ -1468,7 +1466,6 @@ INTERPRET
 
 	jsr	_DUP ; dup string
 	jsr	_FIND ; replace string with dictionary ptr
-	ora	#0
 	bne	.found_word
 
 	; didn't find word...
