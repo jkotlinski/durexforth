@@ -140,7 +140,6 @@ a d020 c!
 
 : cleanup ( bordercolor bgcolor cursorcolor -- )
 1 linebuf c! # enable buffering
-1 blink
 40 28a c! # key repeat off
 286 c! # cursor col
 d021 c! d020 c!
@@ -734,7 +733,7 @@ bufstart compile-ram ! ;
 	[ key Z ] literal of
 		key
 		case
-		[ key Z ] literal of write-file ffff exit endof
+		[ key Z ] literal of write-file 1 blink ffff exit endof
 		endcase
 	endof
 	[ key : ] literal of 
@@ -742,7 +741,7 @@ bufstart compile-ram ! ;
 		key 
 		case
 		[ key w ] literal of colon-w endof
-		[ key q ] literal of ffff exit endof
+		[ key q ] literal of 1 blink ffff exit endof
 		endcase
 		clear-status
 	endof
