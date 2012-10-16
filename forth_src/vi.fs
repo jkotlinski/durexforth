@@ -4,7 +4,7 @@
 : assert 0= if
 begin 1 d020 +! again then ;
 
-: bufstart 5001 ;
+: bufstart 6001 ;
 0 bufstart 1- c! # reverse sentinel
 
 var eof ( ram eof )
