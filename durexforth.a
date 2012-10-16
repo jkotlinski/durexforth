@@ -1244,7 +1244,7 @@ _FIND
 .examine_word
 	ldy	#0
 	lda	(TMP2), y ; get length of find string
-	and	#STRLEN_MASK
+	; and #STRLEN_MASK - assume find string is not that long...
 	sta	.strlen
 
 	ldy	#2
