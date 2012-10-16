@@ -1122,8 +1122,10 @@ PULL_KEY ; wastes x!!!
 +
 	rts
 ++
+    ; Stop compiling from RAM.
 	sta	COMPILE_RAM + 1
 +++
+    ; Read from console.
 	jmp	GETCHR
 
 .get_char_from_disk
@@ -1137,14 +1139,13 @@ PULL_KEY ; wastes x!!!
 	jsr	CLOSE
 
 	dec	COMPILE_FILENO
-	lda	COMPILE_FILENO
 	bne +
 	lda	_BLINK
 	sta	CURSOR_BLINK
 	lda	#BORDER_COLOR
 	sta	$d020
-    lda #0
 +
+	lda	COMPILE_FILENO
 	jsr	CHKIN
     jmp PULL_KEY  ; Try again.
 	
