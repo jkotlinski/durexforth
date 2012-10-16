@@ -120,13 +120,17 @@ SCREEN_COLOR = 0
 	; first time ever app is started...
 	jsr	load_base
 
-	jsr	reset_start
+reset_print_ok
+	lda	#<print_ok
+	sta	_START
+	lda	#>print_ok
+	sta	_START + 1
+
 reset
 	lda	#BORDER_COLOR
 	sta	$d020
 	lda	#SCREEN_COLOR
 	sta	$d021
-
 	lda	#C_YELLOW
 	sta	CURSOR_COLOR
 
@@ -160,15 +164,7 @@ print_ok
 
 restore_handler
 	cli
-	jsr	reset_start
-	jmp reset
-
-reset_start
-	lda	#<print_ok
-	sta	_START
-	lda	#>print_ok
-	sta	_START + 1
-	rts
+    jmp reset_print_ok
 
 clrcol
 	lda	#C_YELLOW
@@ -236,7 +232,7 @@ NEXT_IMPL
 	lda	(IP), y
 	sta	++ + 1
 
-	; IP + 2 -> IP
+	; IP += 2
 	lda	IP
 	clc
 	adc	#2
