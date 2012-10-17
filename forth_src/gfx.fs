@@ -288,7 +288,7 @@ hide cx hide cy
 
 : erase dup if
 4d ['] xor else
-d ['] or then ['] blitop @ ! 
+d ['] or then ['] blitop @ c! 
 ['] blitop 2+ @ c! ;
 
 # --------------------------
