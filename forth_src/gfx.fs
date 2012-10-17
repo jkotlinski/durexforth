@@ -286,7 +286,7 @@ repeat 2drop ;
 
 hide cx hide cy
 
-: erase dup if
+: erase if
 4d ['] xor else
 d ['] or then ['] blitop @ ! 
 ['] blitop 2+ @ c! ;
