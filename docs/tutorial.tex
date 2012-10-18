@@ -96,12 +96,13 @@ and underflow. This means that the system may crash if you do too many pops or p
 much of a problem for an experienced Forth programmer, but until you reach that stage, handle the
 stack with care.
 
-One technique that can be useful to avoid stack crashes is to
-add comments about what your stack looks like at different times.
+\subsection{Commenting}
+
+One helpful technique to avoid stack crashes is to add comments about stack usage.
 In this example, we imagine a graphics word "drawbox" that draws a black box.
-\texttt{( -- )} indicates that it takes no arguments on stack, and on exit it should
+\texttt{( color -- )} indicates that it takes one argument on stack, and on exit it should
 leave nothing on the stack. The comments inside the word indicate what the stack
-looks at the given points of time.
+looks like after the line has executed.
 
 \begin{verbatim}
 : drawbox ( color -- )
@@ -115,7 +116,20 @@ blkcol # color x y
 \end{verbatim}
 
 Once the word is working, it may be nice to again remove the \texttt{\#} comments as
-they are no longer that interesting to read.
+they are no longer very interesting to read.
+
+\subsection{Stack Checks}
+
+Another useful technique during development is to check at the end of your main loop
+that the stack depth is what you expect it to. This will catch stack underflows
+and overflows.
+
+\begin{verbatim}
+: mainloop begin
+# do stuff here...
+sp@ sp0 <> if ." err" exit then
+again ;
+\end{verbatim}
 
 \section{Configuring durexForth}
 
