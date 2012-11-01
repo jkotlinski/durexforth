@@ -1244,6 +1244,8 @@ _FIND
 	sta	TMP2 ; TMP2 contains pointer to find string
 
 .examine_word
+
+    ; TODO - optimize. Don't need to get length for every word checked!
 	ldy	#0
 	lda	(TMP2), y ; get length of find string
 	; and #STRLEN_MASK - assume find string is not that long...
