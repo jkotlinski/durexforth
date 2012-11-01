@@ -1291,13 +1291,10 @@ _FIND
 	sta	TMP
 
 	; TMP now contains new dictionary word.
-	lda	TMP
 	ora	TMP + 1
-	beq	.not_found ; null link, give up
-	jmp	.examine_word
+    bne .examine_word  ; Is word null?
 
-.not_found
-	; a is zero
+	; Yes - give up.
 	sta	0, x
 	sta	1, x
 	rts
