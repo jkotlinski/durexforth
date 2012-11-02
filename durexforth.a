@@ -1411,19 +1411,16 @@ INTERPRET
 
 	jsr	_WORD ; push string to stack
 
-	jsr	_DUP ; dup string
+	jsr _NUMBER
+    beq .was_number
+
+    jsr _DUP
 	jsr	_FIND ; replace string with dictionary ptr
 	bne	.found_word
-
-	; didn't find word...
-	; assume it's a literal number.
-
-	inx ; drop null dictionary ptr
-	inx
-	jsr _NUMBER
-	bne	.on_word_not_found_error
+    jmp .on_word_not_found_error
 
 	; yep, it's a number...
+.was_number
 	lda	STATE ; are we compiling?
 	beq	.leave_number_on_stack ; no, leave number on stack
 	; yes. compile literal.
