@@ -1225,6 +1225,9 @@ FIND
 	jsr	_FIND
 	+NEXT
 _FIND
+    txa
+    pha
+
 	lda	#<_LATEST
 	sta	TMP2
 	lda	#>_LATEST
@@ -1260,14 +1263,38 @@ _FIND
 +   dec TMP2
 
 .examine_word
-
 	ldy	#2
 	lda	(TMP), y ; get string length of dictionary word
 	and	#STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
 .findlen
 	cmp	#0
-	bne	.word_not_equal
+	beq	.string_compare
 
+.word_not_equal
+	; no match, advance the linked list.
+	ldy	#0
+	lda	(TMP), y
+    tax
+	iny
+	lda	(TMP), y
+	sta	TMP + 1
+	stx	TMP
+	; TMP now contains new dictionary word.
+
+    ; Is word null? If not, examine it.
+    bne .examine_word
+	lda	TMP + 1
+    bne .examine_word
+
+	; It is null - give up.
+    pla
+    tax
+    lda #0
+	sta	0, x
+	sta	1, x
+	rts
+	
+.string_compare
 	; equal strlen, now compare strings...
 .findlen2
     lda #0
@@ -1287,34 +1314,14 @@ _FIND
 	
 .word_is_equal
 	; return address to dictionary word
+    pla
+    tax
 	lda	TMP
 	sta	0, x
 	lda	TMP + 1
 	sta	1, x
 	rts ; a should be non-zero now
 
-.word_not_equal
-	; ok... no match, advance the linked list.
-	ldy	#0
-	lda	(TMP), y
-	pha
-	iny
-	lda	(TMP), y
-	sta	TMP + 1
-	pla
-	sta	TMP
-	; TMP now contains new dictionary word.
-
-    ; Is word null? If not, examine it.
-    bne .examine_word
-	lda	TMP + 1
-    bne .examine_word
-
-	; It is null - give up.
-	sta	0, x
-	sta	1, x
-	rts
-	
 ; >CFA
 	!word	LINK
 	!set	LINK = * - 2
