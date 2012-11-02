@@ -1370,21 +1370,7 @@ _NUMBER ; only hex
 	sta	0, x
 	sta	1, x
 
-.number_handler
-	jsr	handle_input_digit_hex
-
-	bne	.not_digit
-
-	dec	.chars_to_process
-	bne	.number_handler
-
-.not_digit
-	rts
-
-.chars_to_process
-!byte 0
-
-handle_input_digit_hex
+.read_digit
 	; multiply stack top by 16
 	dex
 	dex
@@ -1436,12 +1422,16 @@ handle_input_digit_hex
 
 	jsr	_ADD
 
-	lda	#0
-	rts
+    dec .chars_to_process
+    bne .read_digit
+    rts
 
 .not_a_digit
-	lda	#1
-	rts
+    lda #$ff
+    rts
+
+.chars_to_process
+!byte 0
 
 ; INTERPRET
 	!word	LINK
