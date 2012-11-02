@@ -1168,20 +1168,8 @@ _WORD
 	cmp #K_SPACE
 	beq .whitespace
 
-	cmp	#K_BACKSPACE
-	bne	++
-	dec	TIB
-	lda	.dst+1
-	bne	+
-	dec	.dst+2
-+
-	dec	.dst+1
-	jmp	-
-++
-
 	inc	TIB
 
-	; put char in TIB
 .dst
 	sta $f00d
 	inc	.dst + 1
@@ -1191,7 +1179,7 @@ _WORD
 
 .whitespace
 	lda	TIB
-	beq - ; whoops, nothing entered, try again...
+	beq - ; Nothing entered yet, try again.
 
 	dex
 	dex
