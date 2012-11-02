@@ -1339,6 +1339,8 @@ _NUMBER ; only hex
 	; TMP3 now contains a string ptr...
 	ldy	#0
 	lda	(TMP3), y
+    cmp #5  ; Max 4 digits.
+    bcs .not_a_digit
 	sta	.chars_to_process
 	; clear stack...
 	lda	#0
