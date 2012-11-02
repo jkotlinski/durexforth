@@ -1622,6 +1622,12 @@ _BLINK
 CREATE
 	jsr	_WORD
 
+    ; It is senseless to create words named as numbers.
+    jsr _NUMBER
+    bne +
+    jmp .on_word_not_found_error
++
+
 	; store link in header. TMP = dst
 	lda	HERE
 	sta	TMP
