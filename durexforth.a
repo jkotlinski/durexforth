@@ -1243,28 +1243,38 @@ _FIND
 	lda	0, x
 	sta	TMP2 ; TMP2 contains pointer to find string
 
-.examine_word
-
-    ; TODO - optimize. Don't need to get length for every word checked!
 	ldy	#0
 	lda	(TMP2), y ; get length of find string
-	; and #STRLEN_MASK - assume find string is not that long...
-	sta	.strlen
+    ; store findlen
+	sta	.findlen + 1
+	sta	.findlen2 + 1
+
+    ; TMP2 -= 2
+    lda TMP2
+    bne +
+    dec TMP2 + 1
++   dec TMP2
+    lda TMP2
+    bne +
+    dec TMP2 + 1
++   dec TMP2
+
+.examine_word
 
 	ldy	#2
 	lda	(TMP), y ; get string length of dictionary word
 	and	#STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
-	cmp	.strlen
+.findlen
+	cmp	#0
 	bne	.word_not_equal
 
 	; equal strlen, now compare strings...
-    dey
+.findlen2
+    lda #0
+    sta .strlen
+    iny ; y = 3
 -
-	iny
-	iny
 	lda	(TMP), y ; get char of dictionary string
-	dey
-	dey
 	cmp	(TMP2), y ; compare with find string
 	bne	.word_not_equal
 	dec	.strlen
@@ -1272,6 +1282,8 @@ _FIND
 
 	iny ; advance char ptr
 	jmp	-
+
+.strlen !byte 0
 	
 .word_is_equal
 	; return address to dictionary word
@@ -1291,19 +1303,18 @@ _FIND
 	sta	TMP + 1
 	pla
 	sta	TMP
-
 	; TMP now contains new dictionary word.
-	ora	TMP + 1
-    bne .examine_word  ; Is word null?
 
-	; Yes - give up.
+    ; Is word null? If not, examine it.
+    bne .examine_word
+	lda	TMP + 1
+    bne .examine_word
+
+	; It is null - give up.
 	sta	0, x
 	sta	1, x
 	rts
 	
-.strlen
-	!byte 0
-
 ; >CFA
 	!word	LINK
 	!set	LINK = * - 2
