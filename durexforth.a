@@ -1245,7 +1245,7 @@ _FIND
 	sta	.findlen + 1
 	sta	.findlen2 + 1
 
-    ; TMP2 -= 2
+    ; TMP2 -= 2. This prepares for .string_compare.
     lda TMP2
     bne +
     dec TMP2 + 1
@@ -1481,8 +1481,8 @@ INTERPRET
 	sta	0, x
 	lda	#>LIT
 	sta	1, x
-	jsr	_COMMA
-	jsr	_COMMA
+	jsr	_COMMA ; writes LIT
+	jsr	_COMMA ; writes number
 
 .leave_number_on_stack
 	+NEXT
