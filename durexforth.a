@@ -1379,14 +1379,8 @@ _NUMBER ; only hex
 	bcc	.not_a_digit
 
 .ok
-	dex
-	dex
-
-	sta	0, x
-	lda	#0
-	sta	1, x
-
-	jsr	_ADD
+    ora 0, x
+    sta 0, x
 
     dec .chars_to_process
     bne .read_digit
