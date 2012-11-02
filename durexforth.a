@@ -1292,15 +1292,12 @@ _FIND
 .findlen2
     lda #0
     sta .strlen
-    iny ; y = 3
--
+-   iny
 	lda	(TMP), y ; get char of dictionary string
 	cmp	(TMP2), y ; compare with find string
 	bne	.word_not_equal
 	dec	.strlen
 	beq	.word_is_equal
-
-	iny ; advance char ptr
 	jmp	-
 
 .strlen !byte 0
