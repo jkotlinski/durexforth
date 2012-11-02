@@ -1251,8 +1251,6 @@ _FIND
 
     ; Is word null? If not, examine it.
     bne .examine_word
-	lda	TMP + 1
-    bne .examine_word
 
 	; It is null - give up.
     pla
