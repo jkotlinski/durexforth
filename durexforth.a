@@ -1344,19 +1344,19 @@ _NUMBER ; only hex
 	sta	.chars_to_process
 	; clear stack...
 	lda	#0
-	sta	0, x
-	sta	1, x
+	sta	TMP
+	sta	TMP + 1
 
 .read_digit
 	; multiply stack top by 16
-    asl 0, x
-    rol 1, x
-    asl 0, x
-    rol 1, x
-    asl 0, x
-    rol 1, x
-    asl 0, x
-    rol 1, x
+    asl TMP
+    rol TMP + 1
+    asl TMP
+    rol TMP + 1
+    asl TMP
+    rol TMP + 1
+    asl TMP
+    rol TMP + 1
 
 	; add *(++TMP3) to stack top
 	iny
@@ -1379,11 +1379,16 @@ _NUMBER ; only hex
 	bcc	.not_a_digit
 
 .ok
-    ora 0, x
-    sta 0, x
+    ora TMP
+    sta TMP
 
     dec .chars_to_process
     bne .read_digit
+    lda TMP
+    sta 0, x
+    lda TMP + 1
+    sta 1, x
+    lda #0
     rts
 
 .not_a_digit
