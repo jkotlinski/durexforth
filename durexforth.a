@@ -1372,25 +1372,14 @@ _NUMBER ; only hex
 
 .read_digit
 	; multiply stack top by 16
-	dex
-	dex
-
-	lda	#16
-	sta	0, x
-	lda	#0
-	sta	1, x
-
-	tya
-	pha
-	jsr	_MUL
-    inx
-    inx
-	lda	product
-	sta	0, x
-	lda	product + 1
-	sta	1, x
-	pla
-	tay
+    asl 0, x
+    rol 1, x
+    asl 0, x
+    rol 1, x
+    asl 0, x
+    rol 1, x
+    asl 0, x
+    rol 1, x
 
 	; add *(++TMP3) to stack top
 	iny
