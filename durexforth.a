@@ -958,18 +958,6 @@ TIB
 tmp_x
 	!byte	0
 
-; input key in a
-handle_input_char
-
-	; put char in TIB
-.dst
-	sta $f00d
-	inc	.dst + 1
-	bne	+
-	inc	.dst + 2
-+
-	rts
-
 KEY_BUF_SIZE = 80
 KEY_BUF
 	!fill KEY_BUF_SIZE
@@ -1167,7 +1155,7 @@ _WORD
 	lda	#>(TIB + 1)
 	sta	.dst + 2
 	lda	#0
-	sta	.entered_chars_count
+	sta	TIB
 	
 -
 	jsr	_KEY
@@ -1182,7 +1170,7 @@ _WORD
 
 	cmp	#K_BACKSPACE
 	bne	++
-	dec	.entered_chars_count
+	dec	TIB
 	lda	.dst+1
 	bne	+
 	dec	.dst+2
@@ -1191,17 +1179,19 @@ _WORD
 	jmp	-
 ++
 
-	inc	.entered_chars_count
+	inc	TIB
 
-	jsr	handle_input_char
-
+	; put char in TIB
+.dst
+	sta $f00d
+	inc	.dst + 1
+	bne	-
+	inc	.dst + 2
 	jmp	-
 
 .whitespace
-	; return text string
-	lda	.entered_chars_count
+	lda	TIB
 	beq - ; whoops, nothing entered, try again...
-	sta TIB 
 
 	dex
 	dex
@@ -1212,9 +1202,6 @@ _WORD
 	sta	1, x
 
 	rts
-
-.entered_chars_count
-	!byte	0
 
 ; FIND
 	!word	LINK
