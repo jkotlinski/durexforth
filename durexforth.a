@@ -967,7 +967,7 @@ KEY_BUF_READ_POS
 KEY_BUF_WRITE_POS
 	!byte 0
 
-write_key
+add_a_to_key_buf
 	ldy	#<KEY_BUF
 	sty	TMP
 	ldy	#>KEY_BUF 
@@ -1054,7 +1054,7 @@ _KEY
 +
 	jsr	print_char
 	
-	jsr	write_key
+	jsr	add_a_to_key_buf
 	jmp	-
 
 .return	;done
@@ -1063,7 +1063,7 @@ _KEY
 	lda	#K_RETURN
 	jsr	print_char
 
-	jsr	write_key
+	jsr	add_a_to_key_buf
 
 	jmp	_KEY
 
