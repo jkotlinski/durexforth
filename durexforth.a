@@ -1228,16 +1228,9 @@ _FIND
     txa
     pha
 
-	lda	#<_LATEST
-	sta	TMP2
-	lda	#>_LATEST
-	sta	TMP2 + 1
-	; TMP2 now contains pointer to pointer to the most recently defined dictionary word.
-	ldy	#0
-	lda	(TMP2), y
+	lda	_LATEST
 	sta	TMP
-	iny
-	lda	(TMP2), y
+	lda	_LATEST + 1
 	sta	TMP + 1
 	; TMP now contains pointer to the most recently defined dictionary word.
 
