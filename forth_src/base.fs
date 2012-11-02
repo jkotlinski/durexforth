@@ -162,12 +162,8 @@ compile-ram @ -rot 0 compile-ram !
 801 -rot here @ -rot saveb
 compile-ram ! ;
 
-:asm 2*
-0 lda,x asla, 0 sta,x
-1 lda,x rola, 1 sta,x ;asm
-:asm 2/
-1 lda,x lsra, 1 sta,x
-0 lda,x rora, 0 sta,x ;asm
+:asm 2* 0 asl,x 1 rol,x ;asm
+:asm 2/ 1 lsr,x 0 ror,x ;asm
 :asm 100/
 1 lda,x 0 sta,x 0 lda,# 1 sta,x ;asm
 :asm or
