@@ -253,6 +253,8 @@ cmove ( strlen )
 r> swap 2+ ( tmp strlen )
 openw closew ;
 
+s" purge-hidden" load
+
 ." scratch old durexforth.."
 s" durexforth" scratch
 
