@@ -172,20 +172,9 @@ var last-dump
 	cr
 ;
 
-: sizes
-	here @
-	latest @ ( here *latest )
-	begin
-		?dup
-	while
-		dup ?hidden not if
-			2dup - ( latest *latest diff )
-			.  ( latest *latest )
-			dup id. cr
-			swap drop ( *latest )
-		then
-		dup @
-	repeat
-	drop
-;
-
+: sizes ( -- )
+here @ latest @ # prev curr
+begin ?dup while
+dup ?hidden not if
+2dup - . dup id. cr
+then nip dup @ repeat drop ;
