@@ -456,13 +456,13 @@ join-lines del-char
 
 : are-equal ( len a1 a2 -- equal? )
 	rot ( a1 a2 len )
-	>r ( a1 a2 )
+	push ( a1 a2 )
 	begin
-		r@ ( a1 a2 len )
+		pop dup push ( a1 a2 len )
 		0= if ( is len 0? )
 			( matches! )
 			2drop
-			rdrop
+            pop drop
 			1
 			exit
 		then
@@ -475,13 +475,13 @@ join-lines del-char
 		if
 			( not equal!! )
 			2drop ( )
-			rdrop
+            pop drop
 			0
 			exit
 		then
 		1+ ( a2 a1 )
 		swap 1+ ( a1 a2 )
-		r> 1- >r
+		pop 1- push
 	again
 ;
 

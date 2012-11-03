@@ -512,7 +512,7 @@ x1 @ over # y x y
 scanl
 over x1 @ # y x y x x1
 s< not if
-branch [ here @ >r 0 , ] # goto skip
+branch [ here @ push 0 , ] # goto skip
 then
 # y x y ...
 over 1+ dup l ! 
@@ -536,7 +536,7 @@ dup x2 @ 1+ 3 pick 1- dy @ negate spush
 then
 
 # skip: y x y
-[ r> here @ over - swap ! ]
+[ pop here @ over - swap ! ]
 
 swap 1+ swap
 2dup blitloc scanr 
@@ -580,12 +580,12 @@ hide mask
 rot 140 * addr !
 rot 8 * bmpbase + addr +!
 # disable interrupt,enable char rom
-1 c@ dup >r fb and 1 sei c!
+1 c@ dup push fb and 1 sei c!
 begin ?dup while
 swap dup c@ 8 * d800 + # strlen str ch
 addr @ 8 cmove
 1+ swap 8 addr +! 1- repeat
-r> 1 c! cli drop ;
+pop 1 c! cli drop ;
 
 hide addr
 

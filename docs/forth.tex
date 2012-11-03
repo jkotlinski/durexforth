@@ -53,21 +53,13 @@ dup -rot
 
 Pick from stack element with depth u to top of stack.
 
-\item[$>$r ( a -- )]
+\item[push ( a -- )]
 
 Move value from top of parameter stack to top of return stack. 
 
-\item[r$>$ ( a -- )]
+\item[pop ( a -- )]
 
 Move value from top of return stack to top of parameter stack. 
-
-\item[r@ ( -- a )]
-
-Fetch value of top of return stack (without lifting it).
-
-\item[rdrop ( -- )]
-
-Drop value on top of return stack.
 
 \end{description}
 
