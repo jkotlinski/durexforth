@@ -201,7 +201,7 @@ __DOCOL
 	lda	IP
 	sta	TMP
 	lda	IP + 1
-	sta	TMP + 1
+    tay
 
 	pla
 	sta	IP
@@ -217,7 +217,7 @@ __DOCOL
 	; push old IP to return stack
 	lda	TMP
 	pha
-	lda	TMP + 1
+    tya
 	pha
 
 	; fall through...
