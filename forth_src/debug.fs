@@ -15,21 +15,10 @@
 	2drop
 ;
 
-: cfa>
-	latest @ ( start at latest dictionary entry... )
-	begin
-		?dup ( while link ptr != 0 )
-	while
-		2dup swap ( cfa curr curr cfa )
-		< if ( current dictionary entry < cfa ? )
-			nip ( leave it on stack )
-			exit
-		then
-		@ ( follow link ptr back )
-	repeat
-	drop
-	0
-;
+: cfa> ( codepointer -- word )
+latest @ begin ?dup while
+2dup > if nip exit then
+@ repeat drop 0 ;
 
 : see
 	word find
