@@ -128,17 +128,6 @@ s" asm" load
 :asm valapply
 dex, 0 sty,x dex, 0 sta,x ;asm
 
-:asm 100/
-1 lda,x 0 sta,x 0 lda,# 1 sta,x ;asm
-
-# creates constant value.
-# "0 value foo" has same meaning as
-# ": foo 0 ;", but is faster.
-: value ( n -- )
-dup :asm
-lda,# 100/ ldy,# 
-['] valapply jmp, ;
-
 :asm rot ( a b c -- b c a )
 5 ldy,x 3 lda,x 5 sta,x 1 lda,x
 3 sta,x 1 sty,x
@@ -146,7 +135,22 @@ lda,# 100/ ldy,#
 2 sta,x 0 sty,x ;asm
 : -rot rot rot ;
 
-: to immed ( n -- )
+:asm 100/
+1 lda,x 0 sta,x 0 lda,# 1 sta,x ;asm
+
+# creates value that is fast to read
+# but can only be rewritten by "to".
+#  0 value foo
+#  foo . # prints 0
+#  1 to foo
+#  foo . # prints 1
+: value ( n -- )
+dup :asm
+lda,# 100/ ldy,# 
+['] valapply jmp, ;
+
+# "0 to foo" sets value foo to 0
+: to immed
 state @ if
 loc >cfa 1+ dup 2+
 ' dup , ' 100/ ,
