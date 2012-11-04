@@ -122,11 +122,10 @@ swap 1+ swap ( inc strptr )
 ( get pointer to first data field - skip jsr DOCOL )
 : >dfa >cfa 1+ 2+ ;
 
+# creates constant value.
+# "0 value foo" equals ": foo 0 ;"
 : value ( n -- )
-	create
-	jsr-docol,
-	' lit , , ' exit ,
-;
+create jsr-docol, ' lit , , ' exit , ;
 
 ." asm.."
 s" asm" load
