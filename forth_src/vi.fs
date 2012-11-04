@@ -1,10 +1,10 @@
-  : CR d ;
+  d value CR
 : clrscr e544 jsr ;
 
 : assert 0= if
 begin 1 d020 +! again then ;
 
-: bufstart 6001 ;
+6001 value bufstart
 0 bufstart 1- c! # reverse sentinel
 
 var eof ( ram eof )
