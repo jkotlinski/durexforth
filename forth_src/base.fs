@@ -122,13 +122,22 @@ swap 1+ swap ( inc strptr )
 ( get pointer to first data field - skip jsr DOCOL )
 : >dfa >cfa 1+ 2+ ;
 
-# creates constant value.
-# "0 value foo" equals ": foo 0 ;"
-: value ( n -- )
-create jsr-docol, ' lit , , ' exit , ;
-
 ." asm.."
 s" asm" load
+
+:asm valapply
+dex, 0 sty,x dex, 0 sta,x ;asm
+
+:asm 100/
+1 lda,x 0 sta,x 0 lda,# 1 sta,x ;asm
+
+# creates constant value.
+# "0 value foo" has same meaning as
+# ": foo 0 ;", but is faster.
+: value ( n -- )
+dup :asm
+100/ ldy,# ff and lda,#
+['] valapply jmp, ;
 
 : to immed ( n -- )
 	loc >dfa 2+
@@ -163,8 +172,6 @@ compile-ram ! ;
 
 :asm 2* 0 asl,x 1 rol,x ;asm
 :asm 2/ 1 lsr,x 0 ror,x ;asm
-:asm 100/
-1 lda,x 0 sta,x 0 lda,# 1 sta,x ;asm
 :asm or
 1 lda,x 3 ora,x 3 sta,x
 0 lda,x 2 ora,x 2 sta,x
@@ -187,13 +194,7 @@ inx, inx, inx, inx, ;asm
 : allot ( n -- prev-here )
 here @ swap here +! ;
 
-:asm varapply
-dex, 0 sty,x dex, 0 sta,x ;asm
-
-: var
-2 allot dup :asm
-100/ ldy,# ff and lda,#
-['] varapply jmp, ;
+: var 2 allot value ;
 
 var ar var xr var yr
 
