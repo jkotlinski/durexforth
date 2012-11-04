@@ -195,7 +195,7 @@ here @ 2+ - ;
 : :asmsub
 0 value here @ latest @ >dfa 2+ ! ;
 
-84 value zptmp
-86 value zptmp2
-88 value zptmp3
+: zptmp 84 ;
+: zptmp2 86 ;
+: zptmp3 88 ;
 
