@@ -193,7 +193,8 @@ here @ 2+ - ;
 
 # creates value pointer to asm code
 : :asmsub
-0 value here @ latest @ >dfa 2+ ! ;
+0 create jsr-docol, ' lit , , ' exit ,
+here @ latest @ >dfa 2+ ! ;
 
 : zptmp 84 ;
 : zptmp2 86 ;
