@@ -162,11 +162,11 @@ Byte-to-byte copy like \texttt{cmove}, but starts with address src + len - 1 and
 
 \subsection{Values}
 
-Values are fast to read, slow to write.
+Values are fast to read, slow to write. Use values for variables
+that are rarely changed. 
 
 \begin{description}
-\item[: foo 1 ;] Define value foo.
-\item[1 value foo] Equivalent to the above.
+\item[1 value foo] Create value foo and set it to 1.
 \item[foo] Fetch value of foo.
 \item[0 to foo] Set foo to 0.
 \end{description}
@@ -176,9 +176,9 @@ Values are fast to read, slow to write.
 Variables are faster to write to than values.
 
 \begin{description}
-\item[var foo] Define variable foo.
-\item[foo @] Fetch value of foo.
-\item[1 foo !] Set value of foo to 1.
+\item[var bar] Define variable bar.
+\item[bar @] Fetch value of bar.
+\item[1 bar !] Set bar to 1.
 \end{description}
 
 \subsection{Arrays}
