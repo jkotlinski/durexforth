@@ -136,17 +136,8 @@ dex, 0 sty,x dex, 0 sta,x ;asm
 # ": foo 0 ;", but is faster.
 : value ( n -- )
 dup :asm
-100/ ldy,# ff and lda,#
+lda,# 100/ ldy,# 
 ['] valapply jmp, ;
-
-: to immed ( n -- )
-	loc >dfa 2+
-	state @ if
-		' lit , , ' ! ,
-	else
-		!
-	then
-;
 
 :asm rot ( a b c -- b c a )
 5 ldy,x 3 lda,x 5 sta,x 1 lda,x
@@ -154,6 +145,18 @@ dup :asm
 4 ldy,x 2 lda,x 4 sta,x 0 lda,x
 2 sta,x 0 sty,x ;asm
 : -rot rot rot ;
+
+: to immed ( n -- )
+state @ if
+loc >cfa 1+ dup 2+
+' dup , ' 100/ ,
+' lit , , ' c! , # msb
+' lit , , ' c! , # lsb
+else
+dup loc >cfa 1+ dup 2+
+-rot c! # lsb
+swap 100/ swap c! # msb
+then ;
 
 :asm 2drop ( a b -- )
 inx, inx, inx, inx, ;asm
