@@ -1,7 +1,7 @@
 
 
-: bmpbase a000 ;
-: colbase 8c00 ;
+a000 value bmpbase
+8c00 value colbase
 
 :asm hires 
 bb lda,# d011 sta, # enable
@@ -106,7 +106,6 @@ if 2drop else doplot then ;
 : peek ( x y -- b )
 blitloc c@ and ;
 
-: dx 0 ;
 var dy
 var sy var sx
 var err var 2err
@@ -546,7 +545,7 @@ over x2 @ > until
 
 2drop drop repeat ; 
 
-hide dx hide dy
+hide dy
 hide sx hide sy
 hide err
 hide x1 hide x2 hide l

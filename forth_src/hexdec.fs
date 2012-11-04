@@ -14,7 +14,7 @@ recurse then 1- ;
 expand each drop
 else 30 + emit
 then 20 emit ;
-: mx 1 ;
+1 value mx
 : last dup dup c@ + c@ 30 - 
 mx dup a * to mx *
 rot + swap ;

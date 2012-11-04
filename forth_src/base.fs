@@ -2,8 +2,7 @@
 
 7 287 c! 0 blink
 : 2dup over over ;
-: bl 20 ;
-: space bl emit ;
+: space 20 emit ;
 : cr d emit ;
 : nip swap drop ;
 : / /mod nip ;

@@ -101,7 +101,7 @@ ae @ eof !
 bufstart homepos !
 bufstart curlinestart ! ;
 
-: status-pos 7c0 ;
+7c0 value status-pos
 
 : show-page
 status-pos c@
