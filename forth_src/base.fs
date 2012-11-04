@@ -124,9 +124,6 @@ swap 1+ swap ( inc strptr )
 ." asm.."
 s" asm" load
 
-:asm valapply
-dex, 0 sty,x dex, 0 sta,x ;asm
-
 :asm rot ( a b c -- b c a )
 5 ldy,x 3 lda,x 5 sta,x 1 lda,x
 3 sta,x 1 sty,x
@@ -137,6 +134,9 @@ dex, 0 sty,x dex, 0 sta,x ;asm
 :asm 100/
 1 lda,x 0 sta,x 0 lda,# 1 sta,x ;asm
 
+:asm pushya
+dex, 0 sty,x dex, 0 sta,x ;asm
+
 # creates value that is fast to read
 # but can only be rewritten by "to".
 #  0 value foo
@@ -146,7 +146,7 @@ dex, 0 sty,x dex, 0 sta,x ;asm
 : value ( n -- )
 dup :asm
 lda,# 100/ ldy,# 
-['] valapply jmp, ;
+['] pushya jmp, ;
 
 # "0 to foo" sets value foo to 0
 : to immed
@@ -257,6 +257,8 @@ rot ( strlen strptr tmpbuf+2 strlen )
 cmove ( strlen )
 pop swap 2+ ( tmp strlen )
 openw closew ;
+
+hide pushya
 
 s" purge-hidden" load
 

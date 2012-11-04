@@ -1,4 +1,5 @@
   d value CR
+20 value bl
 : clrscr e544 jsr ;
 
 : assert 0= if
