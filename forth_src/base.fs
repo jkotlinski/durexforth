@@ -185,16 +185,19 @@ iny,
 zptmp lda,(y) 3 adc,x zptmp sta,(y)
 inx, inx, inx, inx, ;asm
 
-: allot ( n -- addr )
-here @ ( n val )
-swap ( val n )
-here +! ;
+: allot ( n -- prev-here )
+here @ swap here +! ;
+
+:asm varapply
+dex, 0 sty,x dex, 0 sta,x ;asm
 
 : var
-2 allot create jsr-docol,
-' lit , , ' exit , ;
+2 allot dup :asm
+100/ ldy,# ff and lda,#
+['] varapply jmp, ;
 
 var ar var xr var yr
+
 :asm jsr
 0 lda,x here @ 1+ 1234 sta, # lsb
 1 lda,x here @ 1+ 1234 sta, # msb
