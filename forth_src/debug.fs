@@ -172,9 +172,12 @@ var last-dump
 	cr
 ;
 
-: sizes ( -- )
+# size foo prints size of foo
+: size ( -- )
+word find push
 here @ latest @ # prev curr
-begin ?dup while
-dup ?hidden not if
-2dup - . dup id. cr
-then nip dup @ repeat drop ;
+begin dup while
+dup pop dup push = if
+- . pop drop exit then
+nip dup @ repeat
+. drop pop drop ;
