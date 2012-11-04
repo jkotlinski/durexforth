@@ -247,7 +247,7 @@ hide doline
 
 # --- circle
 
-: cx 0 ; : cy 0 ;
+0 value cx 0 value cy
 
 : plot4 ( x y -- x y )
 over cx + over cy + chkplot
