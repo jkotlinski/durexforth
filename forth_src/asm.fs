@@ -1,6 +1,6 @@
 
 
-: :asm create latest @ >cfa here ! ;
+: :asm create ;
 : ;asm 4c c, next , ; # jmp next
 
 : 1mi create jsr-docol,
