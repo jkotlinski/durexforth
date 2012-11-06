@@ -379,10 +379,10 @@ curlinestart ! curx ! cury !
 	1 to need-refresh-line
 ;
 
-: LEFT 9d ;
-: DOWN 11 ;
-: UP 91 ;
-: RIGHT 1d ;
+9d value LEFT
+11 value DOWN
+91 value UP
+1d value RIGHT
 
 : insert-right
 curx @ linelen 1- = if
