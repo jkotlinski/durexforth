@@ -80,21 +80,9 @@ swap 1+ swap ( inc strptr )
 ?dup 0= until drop ;
 
 : ." immed ( -- )
-	state @ if ( compiling? )
-		[compile] s"
-		' tell ,
-	else
-		( read and print chars )
-		begin
-			key
-			dup '"' = if
-				drop
-				exit
-			then
-			emit
-		again
-	then
-;
+state @ if [compile] s" ' tell , else
+begin key dup '"' <> while emit repeat
+drop then ;
 ." compile base.."
 
 : case immed 0 ;
