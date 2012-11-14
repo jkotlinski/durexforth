@@ -4,7 +4,7 @@ s" gfx" load
 s" sin" load
 
 var tx var ty # 10.6 fixedpoint
-var ta : tp 0 ;
+var ta 0 value tp
 
 : s2/ ( signed 2/ )
 2/ dup 4000 and if 8000 or then ;
