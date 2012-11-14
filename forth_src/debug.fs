@@ -163,10 +163,10 @@ var last-dump
 
 # size foo prints size of foo
 : size ( -- )
-word find push
+word find >r
 here @ latest @ # prev curr
 begin dup while
-dup pop dup push = if
-- . pop drop exit then
+dup r@ = if
+- . r> drop exit then
 nip dup @ repeat
-. drop pop drop ;
+. drop r> drop ;

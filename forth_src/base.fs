@@ -209,10 +209,11 @@ pla, tax, inx, inx, ;asm
 : s> swap s< ;
 
 # return stack
-:asm push 0 lda,x pha, 1 lda,x pha,
+:asm >r 0 lda,x pha, 1 lda,x pha,
 inx, inx, ;asm
-:asm pop dex, dex,
+:asm r> dex, dex,
 pla, 1 sta,x pla, 0 sta,x ;asm
+: r@ r> dup >r ;
 
 :asm sei sei, ;asm
 :asm cli cli, ;asm
@@ -235,7 +236,7 @@ s" vi" load
 : scratch ( strptr strlen -- )
 tuck ( strlen strptr strlen )
 dup here @ + ( strlen strptr strlen tmpbuf )
-dup push
+dup >r
 dup [ key s ] literal swap c! 1+
 dup [ key : ] literal swap c! 1+
 ( strlen strptr strlen tmpbuf+2 )
@@ -243,7 +244,7 @@ rot ( strlen strlen tmpbuf+2 strptr )
 swap ( strlen strlen strptr tmpbuf+2 )
 rot ( strlen strptr tmpbuf+2 strlen )
 cmove ( strlen )
-pop swap 2+ ( tmp strlen )
+r> swap 2+ ( tmp strlen )
 openw closew ;
 
 hide pushya
