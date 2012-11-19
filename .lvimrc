@@ -1,4 +1,4 @@
 map <F4> :wall!<CR>:make<CR>
 map <F5> :!x64 durexforth.d64 &<CR>
 
-set columns=40
+set columns=80
