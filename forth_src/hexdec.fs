@@ -1,5 +1,4 @@
 
-
 # by kevin reno
 : tens a /mod ;
 : digits tens tens tens tens tens 6 ;
@@ -10,7 +9,7 @@ recurse then 1- ;
 : expand digits lead ;
 : do swap digemit 1- ;
 : each begin do dup 0 = until ;
-: dec dup if
+: decimal dup if
 expand each drop
 else 30 + emit
 then 20 emit ;
