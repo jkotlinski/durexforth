@@ -6,7 +6,7 @@ them from the linked word list. After
 purge is done, the purge function will
 be deleted. )
 
-d020 c@ 2 d020 c! latest @ here @
+d020 c@ 7 d020 c! latest @ here @
 
 var prev-hidden
 var last-non-hidden
