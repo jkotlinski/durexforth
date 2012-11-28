@@ -2251,6 +2251,12 @@ LOAD_AND_COMPILE
 	ldx	COMPILE_FILENO ; file number
 	jsr	CHKIN
 
+    ; Skips load address.
+	stx	tmp_x
+    JSR CHRIN     ; get a byte from file
+    JSR CHRIN     ; get a byte from file
+    ldx tmp_x
+
 	pla
 	tax
     inx
