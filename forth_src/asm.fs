@@ -200,3 +200,10 @@ here @ latest @ >dfa 2+ ! ;
 : zptmp2 86 ;
 : zptmp3 88 ;
 
+hide 1mi
+hide do-2mi
+hide 2mi
+hide do-3mi
+hide 3mi
+hide do-23mi
+hide 23mi

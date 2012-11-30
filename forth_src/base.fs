@@ -109,6 +109,9 @@ drop then ;
 ( get pointer to first data field - skip jsr DOCOL )
 : >dfa >cfa 1+ 2+ ;
 
+: hide
+loc ?dup if hidden else ." err" then ;
+
 ." asm.."
 s" asm" load
 
@@ -152,8 +155,6 @@ then ;
 :asm 2drop ( a b -- )
 inx, inx, inx, inx, ;asm
 
-: hide
-loc ?dup if hidden else ." err" then ;
 : hide-to  ( -- )
 loc latest
 begin @ dup hidden 2dup = until
