@@ -1,5 +1,4 @@
-
-# by kevin reno
+  # by kevin reno
 : tens a /mod ;
 : digits tens tens tens tens tens 6 ;
 : lead swap dup if
