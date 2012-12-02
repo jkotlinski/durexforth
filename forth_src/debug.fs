@@ -109,7 +109,7 @@ var last-dump
 			?dup ( while bytes > 0 )
 		while
 			rot ( lines bytes addr )
-			dup c@ c. space ( print *addr )
+			dup c@ c. ( print *addr )
 
 			1+ ( incr addr )
 			-rot ( addr lines bytes )

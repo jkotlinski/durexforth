@@ -908,6 +908,9 @@ CDOT
 	and	#$f
 	jsr	print_hex_nibble
 
+    lda #K_SPACE
+	jsr	print_char
+
 	inx
 	inx
 
