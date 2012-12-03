@@ -22,6 +22,6 @@ dup dup c@ 1- swap c! ;
 last less dup c@ 0 = until ;
 : hex 1 to mx 0
 word doit drop ;
-: .dec sp0 1- 1- begin
+: .dec sp0 1- 1- begin # print stack
 dup sp@ 2+ > while
-dup @ dec 1- 1- repeat drop ;
+dup @ decimal 1- 1- repeat drop ;
