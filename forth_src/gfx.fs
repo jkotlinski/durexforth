@@ -23,7 +23,7 @@ colbase 3e8 fill
 : blkcol ( col row c -- )
 rot rot 28 * + colbase + c! ;
 
-create mask
+header mask
 80 c, 40 c, 20 c, 10 c,
 8 c, 4 c, 2 c, 1 c,
 
@@ -31,7 +31,7 @@ var penx var peny
 0 penx ! 0 peny !
 
 # blit operations for plot, line
-create blitop
+header blitop
 0 , # doplot
 0 , # lineplot
 

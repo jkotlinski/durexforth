@@ -1615,12 +1615,12 @@ BLINK
 _BLINK
 	!byte	0
 
-; CREATE ( name -- )
+; HEADER ( name -- )
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	6
-	!text	"create"
-CREATE
+	!text	"header"
+HEADER
 	jsr	_WORD
 
     ; It is senseless to create words named as numbers.
@@ -1855,6 +1855,17 @@ ZBRANCH
 +
 	+NEXT
 
+; jsr-docol,
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 10	
+	!text	"jsr-docol,"
+JSRDOCOL
+	jsr	__DOCOL
+	!word LIT, OP_JSR, CCOMMA ; insert jmp
+	!word LIT, __DOCOL, COMMA ; append __DOCOL (the codeword)
+	!word EXIT
+
 ; COLON
 	!word	LINK
 	!set	LINK = * - 2
@@ -1862,9 +1873,8 @@ ZBRANCH
 	!text	":"
 COLON
 	jsr	__DOCOL
-	!word CREATE ; CREATE the dictionary entry / header
-	!word LIT, OP_JSR, CCOMMA ; insert jmp
-	!word LIT, __DOCOL, COMMA ; append __DOCOL (the codeword)
+	!word HEADER ; make the dictionary entry / header
+    !word JSRDOCOL
 	!word LATEST, FETCH, HIDDEN ; hide word
 	!word RBRAC ; enter compile mode
 	!word EXIT

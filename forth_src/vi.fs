@@ -660,7 +660,7 @@ CR insert-char
 cur-down
 then ;
 
-create maintable
+header maintable
 key i c, loc insert-start >cfa ,
 key a c, loc append-start >cfa ,
 key / c, loc find-handler >cfa ,

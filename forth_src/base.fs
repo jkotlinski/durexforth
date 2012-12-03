@@ -11,7 +11,6 @@
 : loc word find ;
 : [compile] immed loc >cfa , ;
 : ['] immed ' lit , ;
-: jsr-docol, 20 c, docol , ;
 : if immed ' 0branch , here @ 0 , ;
 : then immed dup here @ swap - swap ! ;
 : else immed ' branch , here @ 0 ,

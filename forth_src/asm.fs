@@ -1,20 +1,20 @@
 
 
-: :asm create ;
+: :asm header ;
 : ;asm 4c c, next , ; # jmp next
 
-: 1mi create jsr-docol,
+: 1mi header jsr-docol,
 ' lit , , ' c, , ' exit , ;
 
 : do-2mi c, c, ;
 
-: 2mi create jsr-docol,
+: 2mi header jsr-docol,
 ' lit , , # op
 ' do-2mi , ' exit , ;
 
 : do-3mi c, , ;
 
-: 3mi create jsr-docol,
+: 3mi header jsr-docol,
 ' lit , , # op
 ' do-3mi , ' exit , ;
 
@@ -23,7 +23,7 @@
 else nip c, c, then ;
 
 : 23mi
-create jsr-docol,
+header jsr-docol,
 ' lit , , # op3
 ' lit , , # op2
 ' do-23mi ,
@@ -193,7 +193,7 @@ here @ 2+ - ;
 
 # creates value pointer to asm code
 : :asmsub
-create jsr-docol, ' lit , 0 , ' exit ,
+header jsr-docol, ' lit , 0 , ' exit ,
 here @ latest @ >dfa 2+ ! ;
 
 : zptmp 84 ;
