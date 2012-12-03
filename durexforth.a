@@ -1983,14 +1983,6 @@ _LINEBUF
 COMPILE_FILENO
 	!word	0
 
-; DOCOL
-	!word	LINK
-	!set	LINK = * - 2
-	!byte 5
-	!text	"docol"
-DOCOL
-	+VAR_CODE	__DOCOL
-
 ; CLOSEW
 	!word	LINK
 	!set	LINK = * - 2
