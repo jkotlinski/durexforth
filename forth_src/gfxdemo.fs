@@ -136,7 +136,7 @@ e8 begin dup 118 <= while
 
 # --- jungle
 
-create jungledata
+header jungledata
 c , a8 , ffff , 1 , e , 5f ,
 2f , 5f , f , 57 , f , 18 ,
 1c , 38 , 1c , 26 , 20 , 30 ,

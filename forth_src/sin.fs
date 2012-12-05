@@ -2,7 +2,7 @@
 
 ( cos 0-359 degrees
 could be more space optimized )
-create sintab
+header sintab
 7fff , 823b , 8477 , 86b2 ,
 88ed , 8b27 , 8d60 , 8f98 ,
 91cf , 9405 , 9639 , 986b ,
