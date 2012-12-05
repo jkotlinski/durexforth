@@ -138,6 +138,11 @@ dup :asm
 lda,# 100/ ldy,# 
 ['] pushya jmp, ;
 
+84 value zptmp
+86 value zptmp2
+88 value zptmp3
+8a value ip
+
 # "0 to foo" sets value foo to 0
 : to immed
 state @ if
@@ -218,6 +223,30 @@ pla, 1 sta,x pla, 0 sta,x ;asm
 :asm sei sei, ;asm
 :asm cli cli, ;asm
 
+:asm dodoes
+# Moves return address to TMP, TMP2.
+pla, zptmp sta,
+pla, zptmp 1+ sta, tay,
+
+# Pushes data pointer to parameter stack.
+dex, dex, clc, zptmp lda, 3 adc,#
+0 sta,x 1 bcc, iny, 1 sty,x
+
+# Is behavior pointer non-null?
+zptmp inc, 2 bne, zptmp 1+ inc,
+0 ldy,# zptmp lda,(y)
+iny, zptmp ora,(y) +branch beq,
+
+# Yes. Store away IP...
+ip lda, pha, ip 1+ lda, pha,
+
+# ...and set it to behavior pointer.
+zptmp lda,(y) ip 1+ sta,
+dey,
+zptmp lda,(y) ip sta,
+
+:+ ;asm
+    
 : create
 header 20 c, ['] dodoes , 0 , ;
 : does> r> latest @ >dfa ! ;

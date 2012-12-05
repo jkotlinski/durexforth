@@ -196,10 +196,6 @@ here @ 2+ - ;
 header jsr-docol, ' lit , 0 , ' exit ,
 here @ latest @ >dfa 2+ ! ;
 
-: zptmp 84 ;
-: zptmp2 86 ;
-: zptmp3 88 ;
-
 hide 1mi
 hide do-2mi
 hide 2mi
