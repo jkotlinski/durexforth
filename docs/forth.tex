@@ -157,7 +157,10 @@ Byte-to-byte copy like \texttt{cmove}, but starts with address src + len - 1 and
 \item[immed] Mark the word being compiled as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
 \item[[compile{]} xxx] Compile the immediate word \texttt{xxx} instead of executing it.
 \item[{[']} xxx] Compile the execution token of word \texttt{xxx} as a literal value.
-\item[create xxx] Create a dictionary header with name \texttt{xxx}. 
+\item[header xxx] Create a dictionary header with name \texttt{xxx}. 
+\item[create xxx/does$>$] Create a word creating word \texttt{xxx} with custom behavior
+specified after does>. For further description, see "Starting Forth."
+
 \end{description}
 
 \section{Variables}
