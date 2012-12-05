@@ -1855,16 +1855,72 @@ ZBRANCH
 +
 	+NEXT
 
-; jsr-docol,
+; DODOES
 	!word	LINK
 	!set	LINK = * - 2
-	!byte 10	
+	!byte	6
+	!text	"dodoes"
+DODOES
+    ; Moves return address to TMP, TMP2.
+    pla
+    sta TMP
+    sta TMP2
+    pla
+    sta TMP + 1
+    sta TMP2 + 1
+
+    ; Pushes data pointer to parameter stack.
+    clc
+    lda TMP
+    adc #3
+    sta TMP
+    bcc +
+    inc TMP + 1
++
+    dex
+    lda TMP + 1
+    sta 0, x
+    dex
+    lda TMP
+    sta 0, x
+
+    ; Do we have a behavior pointer?
+    lda TMP2
+    sta TMP
+    lda TMP2 + 1
+    sta TMP + 1
+    inc TMP
+    bne +
+    inc TMP + 1
++
+    ldy #0
+    lda (TMP), y
+    iny
+    ora (TMP), y
+    beq +
+    ; Yes, jump to it!
+    lda IP
+    pha
+    lda IP + 1
+    pha
+
+    lda (TMP), y
+    sta IP + 1
+    dey
+    lda (TMP), y
+    sta IP
++
+    +NEXT
+    
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 10
 	!text	"jsr-docol,"
-JSRDOCOL
+JSRDOCOLCOMMA
 	jsr	__DOCOL
-	!word LIT, OP_JSR, CCOMMA ; insert jmp
-	!word LIT, __DOCOL, COMMA ; append __DOCOL (the codeword)
-	!word EXIT
+    !word LIT, OP_JSR, CCOMMA ; insert jmp
+    !word LIT, __DOCOL, COMMA ; append __DOCOL (the codeword)
+    !word EXIT
 
 ; COLON
 	!word	LINK
@@ -1874,7 +1930,7 @@ JSRDOCOL
 COLON
 	jsr	__DOCOL
 	!word HEADER ; make the dictionary entry / header
-    !word JSRDOCOL
+    !word JSRDOCOLCOMMA
 	!word LATEST, FETCH, HIDDEN ; hide word
 	!word RBRAC ; enter compile mode
 	!word EXIT

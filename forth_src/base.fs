@@ -218,6 +218,10 @@ pla, 1 sta,x pla, 0 sta,x ;asm
 :asm sei sei, ;asm
 :asm cli cli, ;asm
 
+: create
+header 20 c, ['] dodoes , 0 , ;
+: does> r> latest @ >dfa ! ;
+
 : modules ;
 ." debug.."
 s" debug" load
