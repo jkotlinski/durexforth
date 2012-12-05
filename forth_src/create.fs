@@ -10,8 +10,7 @@ dex, dex, clc, zptmp lda, 3 adc,#
 0 sta,x 1 bcc, iny, 1 sty,x
 
 # Is behavior pointer null?
-zptmp inc, 2 bne, zptmp 1+ inc,
-0 ldy,# zptmp lda,(y)
+1 ldy,# zptmp lda,(y)
 iny,    zptmp ora,(y)
 +branch beq, # Yes: done.
 
