@@ -2,8 +2,7 @@
 
 :asm dodoes
 # r> zptmp !
-pla, zptmp sta,
-pla, zptmp 1+ sta, tay,
+pla, zptmp sta, pla, zptmp 1+ sta, tay,
 
 # Pushes data pointer to param stack.
 dex, dex, clc, zptmp lda, 3 adc,#
@@ -19,6 +18,6 @@ zptmp lda,(y) ip 1+ sta, dey,
 zptmp lda,(y) ip sta,
 :+ ;asm
     
-: create
+: create # 0 = behavior pointer
 header 20 c, ['] dodoes , 0 , ;
 : does> r> latest @ >dfa ! ;
