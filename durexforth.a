@@ -1885,18 +1885,14 @@ DODOES
     sta 0, x
 
     ; Do we have a behavior pointer?
-    lda TMP2
-    sta TMP
-    lda TMP2 + 1
-    sta TMP + 1
-    inc TMP
+    inc TMP2
     bne +
-    inc TMP + 1
+    inc TMP2 + 1
 +
     ldy #0
-    lda (TMP), y
+    lda (TMP2), y
     iny
-    ora (TMP), y
+    ora (TMP2), y
     beq +
     ; Yes, jump to it!
     lda IP
@@ -1904,10 +1900,10 @@ DODOES
     lda IP + 1
     pha
 
-    lda (TMP), y
+    lda (TMP2), y
     sta IP + 1
     dey
-    lda (TMP), y
+    lda (TMP2), y
     sta IP
 +
     +NEXT
