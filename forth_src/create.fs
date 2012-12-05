@@ -1,7 +1,5 @@
 
 
-# create/does>
-
 :asm dodoes
 # r> zptmp !
 pla, zptmp sta,
@@ -21,7 +19,6 @@ iny,    zptmp ora,(y)
 ip lda, pha, ip 1+ lda, pha,
 zptmp lda,(y) ip 1+ sta, dey,
 zptmp lda,(y) ip sta,
-
 :+ ;asm
     
 : create
