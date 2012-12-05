@@ -10,8 +10,7 @@ dex, dex, clc, zptmp lda, 3 adc,#
 0 sta,x 1 bcc, iny, 1 sty,x
 
 # Is behavior pointer null?
-1 ldy,# zptmp lda,(y)
-iny,    zptmp ora,(y)
+2 ldy,# zptmp lda,(y)
 +branch beq, # Yes: done.
 
 # No: behavior pointer => IP
