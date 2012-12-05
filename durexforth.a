@@ -1864,46 +1864,43 @@ DODOES
     ; Moves return address to TMP, TMP2.
     pla
     sta TMP
-    sta TMP2
     pla
     sta TMP + 1
-    sta TMP2 + 1
+    tay
 
     ; Pushes data pointer to parameter stack.
+    dex
+    dex
     clc
     lda TMP
     adc #3
-    sta TMP
+    sta 0, x
     bcc +
+    iny
++   sty 1, x
+
+    ; Is behavior pointer non-null?
+    inc TMP
+    bne +
     inc TMP + 1
 +
-    dex
-    lda TMP + 1
-    sta 0, x
-    dex
-    lda TMP
-    sta 0, x
-
-    ; Do we have a behavior pointer?
-    inc TMP2
-    bne +
-    inc TMP2 + 1
-+
     ldy #0
-    lda (TMP2), y
+    lda (TMP), y
     iny
-    ora (TMP2), y
+    ora (TMP), y
     beq +
-    ; Yes, jump to it!
+
+    ; Yes. Store away IP...
     lda IP
     pha
     lda IP + 1
     pha
 
-    lda (TMP2), y
+    ; ...and set it to behavior pointer.
+    lda (TMP), y
     sta IP + 1
     dey
-    lda (TMP2), y
+    lda (TMP), y
     sta IP
 +
     +NEXT
