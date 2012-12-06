@@ -1873,7 +1873,7 @@ DOCOLCOMMA
 COLON
 	jsr	__DOCOL
 	!word HEADER ; make the dictionary entry / header
-    !word JSRDOCOLCOMMA
+    !word DOCOLCOMMA
 	!word LATEST, FETCH, HIDDEN ; hide word
 	!word RBRAC ; enter compile mode
 	!word EXIT
