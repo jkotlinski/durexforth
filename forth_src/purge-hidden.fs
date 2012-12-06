@@ -17,13 +17,10 @@ latest @
 begin ?dup while
 dup ?hidden if 
 1 prev-hidden !
-else
-prev-hidden @ if
+else prev-hidden @ if
 dup last-non-hidden @ !
-then
-dup last-non-hidden !
+then dup last-non-hidden !
 0 prev-hidden !
-then @
-repeat ; purge
+then @ repeat ; purge
 
 here ! latest ! d020 c!
