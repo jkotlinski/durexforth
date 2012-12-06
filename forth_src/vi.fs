@@ -37,6 +37,14 @@ zptmp 1+ ldy, 1 sty,x
 0 ldy,x zptmp sty,
 1 ldy,x zptmp 1+ sty,
 0 ldy,#
+
+# highlight comments
+zptmp lda,(y)
+23 cmp,# +branch bne,
+96 lda,# 2 bne,
+:+ 5 lda,#
+ffd2 jsr,
+
 here @
 zptmp lda,(y)
 e716 jsr, # putchar
