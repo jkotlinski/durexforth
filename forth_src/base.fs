@@ -111,6 +111,12 @@ drop then ;
 : hide
 loc ?dup if hidden else ." err" then ;
 
+here @ [compile] exit
+: create
+# default behavior = exit
+header 20 c, ['] dodoes , literal , ;
+: does> r> latest @ >dfa ! ;
+
 ." asm.."
 s" asm" load
 
@@ -216,8 +222,6 @@ pla, tax, inx, inx, ;asm
 # return stack
 :asm >r 0 lda,x pha, 1 lda,x pha,
 inx, inx, ;asm
-:asm r> dex, dex,
-pla, 1 sta,x pla, 0 sta,x ;asm
 : r@ r> dup >r ;
 
 :asm sei sei, ;asm
@@ -228,8 +232,6 @@ pla, 1 sta,x pla, 0 sta,x ;asm
 s" debug" load
 ." ls.."
 s" ls" load
-." create.."
-s" create" load
 ." gfx.."
 s" gfx" load
 # ." gfxdemo.."
