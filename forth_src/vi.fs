@@ -698,11 +698,11 @@ key j c, [compile] cur-down
 0 c,
 
 # custom restore handler
-# "fg"
-here @ key f c, key g c, d c, 0 c,
+# "vi"
+here @ key v c, key i c, d c, 0 c,
 here @ cli, # entry
-swap dup # asm fg fg 
-# compile-ram="fg"
+swap dup # asm vi vi 
+# compile-ram="vi"
 lda,# compile-ram sta,
 100/ lda,# compile-ram 1+ sta,
 # lores
@@ -802,9 +802,20 @@ bufstart compile-ram ! ;
 	again
 ;
 
+# bring back editor
+: fg
+# check sentinel
+bufstart 1- c@ if ." err" exit then
+init
+push-colors
+show-page
+main-loop
+cleanup ;
+
 : vi
-# in case no param
-sp@ sp0 = if s" untitled" then
+sp@ sp0 = if # in case no param
+eof @ if fg exit else
+s" untitled" then then
 
 init
 go-to-file-start
@@ -820,17 +831,7 @@ show-page
 main-loop
 cleanup ;
 
-: fg # bring back editor
-eof @ 0= if ." no buffer" cr exit then
-# check sentinel
-bufstart 1- c@ if ." err" exit then
-init
-push-colors
-show-page
-main-loop
-cleanup ;
-
-loc fg loc vi
+loc vi
 hide-to CR
-hidden hidden
+hidden
 

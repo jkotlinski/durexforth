@@ -32,11 +32,13 @@ forget bg
 
 \ldots and press $\leftarrow$ to leave insert mode. The line you entered forgets the \texttt{bg} word that you defined in the last section, and everything defined after it. Let's try out if it works.
 
-First, quit the editor by pressing \texttt{:q}. You should now be back in the interpreter screen. Verify that the word \texttt{bg} still exists by  entering \texttt{0 bg}, \texttt{1 bg} like you did before. Then, jump back to the editor using the command \texttt{fg} (foreground). You should return to your edit buffer with the lonely \texttt{forget bg} line.
+First, quit the editor by pressing \texttt{:q}. You should now be back in the interpreter screen.
+Verify that the word \texttt{bg} still exists by  entering \texttt{0 bg}, \texttt{1 bg} like you did
+before. Then, jump back to the editor using the command \texttt{vi} (foreground). You should return to your edit buffer with the lonely \texttt{forget bg} line.
 
 Now, compile and run the buffer by pressing \texttt{F7}. You will be thrown out to the interpreter
 again. Entering \texttt{bg} should now give you the error \colorbox{yellow}{\texttt{bg?}}. Success
---- we have forgotten the \texttt{bg} word. Now, get back into the editor by entering \texttt{fg}.
+--- we have forgotten the \texttt{bg} word. Now, get back into the editor by entering \texttt{vi}.
 
 Under \texttt{forget bg}, add the following lines:
 
