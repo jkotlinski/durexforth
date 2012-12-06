@@ -803,27 +803,22 @@ bufstart compile-ram ! ;
 ;
 
 : vi
-    # in case no param
-    sp@ sp0 = if s" untitled" then
+# in case no param
+sp@ sp0 = if s" untitled" then
 
-	init
-	go-to-file-start
+init
+go-to-file-start
 
-	# store away filename
-	2dup ( str len str len )	
-	filename-len c!
-	filename f cmove
+# store away filename
+2dup ( str len str len )	
+filename-len c!
+filename f cmove
 
-	do-load
-
-	push-colors
-
-	show-page
-
-	main-loop
-
-	cleanup
-;
+do-load
+push-colors
+show-page
+main-loop
+cleanup ;
 
 : fg # bring back editor
 eof @ 0= if ." no buffer" cr exit then
