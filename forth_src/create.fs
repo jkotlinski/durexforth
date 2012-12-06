@@ -15,7 +15,7 @@ ip lda, pha, ip 1+ lda, pha,
 dey,    zptmp lda,(y) ip sta,
 ;asm
 
-here @ loc exit >cfa ,
+here @ [compile] exit
 : create
 # default behavior = exit
 header 20 c, ['] dodoes , literal , ;

@@ -669,32 +669,32 @@ cur-down
 then ;
 
 header maintable
-key i c, loc insert-start >cfa ,
-key a c, loc append-start >cfa ,
-key / c, loc find-handler >cfa ,
-key U c, loc half-page-back >cfa ,
-key D c, loc half-page-fwd >cfa ,
-key J c, loc join-lines >cfa ,
-key g c, loc goto-start >cfa ,
-key G c, loc goto-eof >cfa ,
-key $ c, loc eol >cfa ,
-key 0 c, loc sol >cfa ,
-key r c, loc replace-char >cfa ,
-key O c, loc open-line >cfa ,
-key P c, loc paste-line >cfa ,
-key x c, loc del-char >cfa ,
-key X c, loc backspace >cfa ,
-key b c, loc word-back >cfa ,
-key w c, loc word-fwd >cfa ,
-key d c, loc delete-handler >cfa ,
-LEFT c, loc cur-left >cfa ,
-RIGHT c, loc cur-right >cfa ,
-UP c, loc cur-up >cfa ,
-DOWN c, loc cur-down >cfa ,
-key h c, loc cur-left >cfa ,
-key l c, loc cur-right >cfa ,
-key k c, loc cur-up >cfa ,
-key j c, loc cur-down >cfa ,
+key i c, [compile] insert-start
+key a c, [compile] append-start
+key / c, [compile] find-handler
+key U c, [compile] half-page-back
+key D c, [compile] half-page-fwd
+key J c, [compile] join-lines
+key g c, [compile] goto-start
+key G c, [compile] goto-eof
+key $ c, [compile] eol
+key 0 c, [compile] sol
+key r c, [compile] replace-char
+key O c, [compile] open-line
+key P c, [compile] paste-line
+key x c, [compile] del-char
+key X c, [compile] backspace
+key b c, [compile] word-back
+key w c, [compile] word-fwd
+key d c, [compile] delete-handler
+LEFT c, [compile] cur-left
+RIGHT c, [compile] cur-right
+UP c, [compile] cur-up
+DOWN c, [compile] cur-down
+key h c, [compile] cur-left
+key l c, [compile] cur-right
+key k c, [compile] cur-up
+key j c, [compile] cur-down
 0 c,
 
 # custom restore handler
