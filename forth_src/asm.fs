@@ -3,31 +3,12 @@
 : :asm header ;
 : ;asm 4c c, next , ; # jmp next
 
-: 1mi header docol,
-' lit , , ' c, , ' exit , ;
-
-: do-2mi c, c, ;
-
-: 2mi header docol,
-' lit , , # op
-' do-2mi , ' exit , ;
-
-: do-3mi c, , ;
-
-: 3mi header docol,
-' lit , , # op
-' do-3mi , ' exit , ;
-
-: do-23mi ( arg op3 op2 )
-2 pick ff00 and if drop c, ,
-else nip c, c, then ;
-
-: 23mi
-header docol,
-' lit , , # op3
-' lit , , # op2
-' do-23mi ,
-' exit , ;
+: 1mi create c, does> c@ c, ;
+: 2mi create c, does> c@ c, c, ;
+: 3mi create c, does> c@ c, , ;
+: 23mi create c, c, does>
+over ff00 and if c@ c, ,
+else 1+ c@ c, c, then ;
 
 69 2mi adc,#
 65 6d 23mi adc,
@@ -195,11 +176,3 @@ here @ 2+ - ;
 : :asmsub
 header docol, ' lit , 0 , ' exit ,
 here @ latest @ >dfa 2+ ! ;
-
-hide 1mi
-hide do-2mi
-hide 2mi
-hide do-3mi
-hide 3mi
-hide do-23mi
-hide 23mi
