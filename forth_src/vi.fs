@@ -43,7 +43,7 @@ zptmp lda,(y)
 23 cmp,# +branch bne,
 96 lda,# 2 bne,
 :+ 5 lda,#
-ffd2 jsr,
+e716 jsr,
 
 here @
 zptmp lda,(y)
