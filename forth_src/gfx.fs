@@ -35,7 +35,7 @@ header blitop
 0 , # doplot
 0 , # lineplot
 
-:asmsub .blitloc
+create .blitloc
 0 lda,x zptmp sta,
 7 and,# zptmp3 sta,
 1 lda,x zptmp 1+ sta,
@@ -112,7 +112,7 @@ var err var 2err
 
 var mask var addr
 
-:asmsub lineplot ( -- )
+create lineplot ( -- )
 
 # penx @ 140 <
 penx lda,# zptmp sta,
@@ -154,7 +154,7 @@ zptmp2 sta,(y) rts,
 
 var dx2 var dy2
 
-:asmsub stepx
+create stepx
 # 2err @ dx2 @ s< if
 sec, 2err lda, dx2 sbc,
 2err 1+ lda, dx2 1+ sbc,
@@ -185,7 +185,7 @@ lineplot jmp,
 
 hide lineplot
 
-:asmsub step ( 2err -- 2err )
+create step ( 2err -- 2err )
 # err @ 2* 2err !
 err lda, 2err sta,
 err 1+ lda, 2err 1+ sta,
@@ -295,7 +295,7 @@ d ['] or then ['] blitop @ !
 # paul heckbert seed fill
 # from graphics gems
 var stk
-:asmsub dopush
+create dopush
 stk lda, zptmp sta,
 stk 1+ lda, zptmp 1+ sta,
 
@@ -348,7 +348,7 @@ var l
 
 # ---
 
-:asmsub .bitblt ( mask addr --
+create .bitblt ( mask addr --
                   mask addr )
 0 lda,x zptmp sta,
 1 lda,x zptmp 1+ sta,
@@ -358,7 +358,7 @@ var l
 penx inc, 3 bne, penx 1+ inc,
 2 lsr,x rts,
 
-:asmsub rightend
+create rightend
 # nip 80 swap # mask
 80 lda,# 2 sta,x 0 lda,# 3 sta,x
 
@@ -370,7 +370,7 @@ penx inc, 3 bne, penx 1+ inc,
 2 and,x 1 beq, rts,
 .bitblt jsr, jmp, # recurse
 
-:asmsub bytewise
+create bytewise
 # penx @ 140 < if 
 penx 1+ lda, 0 cmp,# +branch beq,
 3f lda,# penx cmp, 1 bcs, rts,
@@ -396,7 +396,7 @@ clc, penx lda, 8 adc,# penx sta,
 3 bcc, penx 1+ inc,
 jmp, # recurse
 
-:asmsub leave
+create leave
 # 2drop nip penx @ swap 
 inx, inx, inx, inx,
 penx lda, 2 sta,x
@@ -458,7 +458,7 @@ addr lda, sec, 8 sbc,# addr sta,
 2 lda,x 2 bne, 3 dec,x 2 dec,x
 jmp, # recurse
 
-:asmsub .scanr
+create .scanr
 # over l ! # l=x
 2 lda,x l sta, 3 lda,x l 1+ sta,
 ;asm

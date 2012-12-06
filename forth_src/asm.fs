@@ -171,8 +171,3 @@ here @ over 2+ - swap 1+ c! ;
 : :- here @ ;
 : -branch ( absaddr -- reladdr )
 here @ 2+ - ;
-
-# creates value pointer to asm code
-: :asmsub
-header docol, ' lit , 0 , ' exit ,
-here @ latest @ >dfa 2+ ! ;

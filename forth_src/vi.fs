@@ -28,7 +28,7 @@ value filename-len
 : editpos
 curlinestart @ curx @ + ;
 
-:asmsub foundeol
+create foundeol
 zptmp ldy, 0 sty,x
 zptmp 1+ ldy, 1 sty,x
 ;asm
