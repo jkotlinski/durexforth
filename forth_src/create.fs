@@ -4,7 +4,7 @@
 # r> zptmp !
 pla, zptmp sta, pla, zptmp 1+ sta, tay,
 
-# Pushes data pointer to param stack.
+# push data pointer to param stack
 dex, dex,
 clc, zptmp lda, 3 adc,# 0 sta,x
 1 bcc, iny, 1 sty,x
@@ -16,6 +16,8 @@ dey,    zptmp lda,(y) ip sta,
 ;asm
 
 here @ loc exit >cfa ,
-: create # default behavior = exit
+: create
+# default behavior = exit
 header 20 c, ['] dodoes , literal , ;
+
 : does> r> latest @ >dfa ! ;
