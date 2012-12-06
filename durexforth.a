@@ -1857,9 +1857,9 @@ ZBRANCH
     
 	!word	LINK
 	!set	LINK = * - 2
-	!byte 10
-	!text	"jsr-docol,"
-JSRDOCOLCOMMA
+	!byte 6
+	!text	"docol,"
+DOCOLCOMMA
 	jsr	__DOCOL
     !word LIT, OP_JSR, CCOMMA ; insert jmp
     !word LIT, __DOCOL, COMMA ; append __DOCOL (the codeword)

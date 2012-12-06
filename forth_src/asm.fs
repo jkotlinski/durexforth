@@ -3,18 +3,18 @@
 : :asm header ;
 : ;asm 4c c, next , ; # jmp next
 
-: 1mi header jsr-docol,
+: 1mi header docol,
 ' lit , , ' c, , ' exit , ;
 
 : do-2mi c, c, ;
 
-: 2mi header jsr-docol,
+: 2mi header docol,
 ' lit , , # op
 ' do-2mi , ' exit , ;
 
 : do-3mi c, , ;
 
-: 3mi header jsr-docol,
+: 3mi header docol,
 ' lit , , # op
 ' do-3mi , ' exit , ;
 
@@ -23,7 +23,7 @@
 else nip c, c, then ;
 
 : 23mi
-header jsr-docol,
+header docol,
 ' lit , , # op3
 ' lit , , # op2
 ' do-23mi ,
@@ -193,7 +193,7 @@ here @ 2+ - ;
 
 # creates value pointer to asm code
 : :asmsub
-header jsr-docol, ' lit , 0 , ' exit ,
+header docol, ' lit , 0 , ' exit ,
 here @ latest @ >dfa 2+ ! ;
 
 hide 1mi
