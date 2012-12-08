@@ -396,19 +396,7 @@ product = TMP
 	!byte	2
 	!text	"d*"
 DMUL
-	jsr	_MUL
-	lda	product
-	sta	0, x
-	lda	product + 1
-	sta	1, x
-	lda	product + 2
-	sta	2, x
-	lda	product + 3
-	sta	3, x
-	+NEXT
-
 ; wastes TMP, TMP2, y
-_MUL
 	lda #$00
 	sta product+2 ; clear upper bits of product
 	sta product+3 
@@ -432,7 +420,16 @@ rotate_r
 	dey
 	bne .shift_r 
 
-	rts
+	lda	product
+	sta	0, x
+	lda	product + 1
+	sta	1, x
+	lda	product + 2
+	sta	2, x
+	lda	product + 3
+	sta	3, x
+	+NEXT
+
 
 ; /MOD
 	!word	LINK
