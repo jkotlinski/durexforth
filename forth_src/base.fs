@@ -78,11 +78,10 @@ swap 1+ swap ( inc strptr )
 1- ( dec strlen )
 ?dup 0= until drop ;
 
-: ." immed ( -- )
-state @ if [compile] s" ' tell , else
-begin key dup '"' <> while emit repeat
-drop then ;
-." compile base.."
+: ." immed [compile] s" ' tell , ;
+: .( begin key dup [ key ) literal ] <>
+while emit repeat drop ;
+.( compile base..)
 
 : case immed 0 ;
 : of immed ' over , ' = , [compile] if ' drop , ;
@@ -117,7 +116,7 @@ here @ [compile] exit
 header 20 c, ['] dodoes , literal , ;
 : does> r> latest @ >dfa ! ;
 
-." asm.."
+.( asm..)
 s" asm" load
 
 :asm rot ( a b c -- b c a )
@@ -228,19 +227,19 @@ inx, inx, ;asm
 :asm cli cli, ;asm
 
 : modules ;
-." debug.."
+.( debug..)
 s" debug" load
-." ls.."
+.( ls..)
 s" ls" load
-." gfx.."
+.( gfx..)
 s" gfx" load
 # ." gfxdemo.."
 # s" gfxdemo" load
 # ." turtle.."
 # s" turtle" load
-." vi.."
+.( vi..)
 s" vi" load
-." ok" cr
+.( ok) cr
 
 : scratch ( strptr strlen -- )
 tuck ( strlen strptr strlen )
@@ -260,11 +259,11 @@ hide pushya
 
 s" purge-hidden" load
 
-." scratch old durexforth.."
+.( scratch old durexforth..)
 s" durexforth" scratch
 
-." save new durexforth.."
+.( save new durexforth..)
 s" durexforth" save-forth
 
-." done!" cr
+.( done!) cr
 1 blink
