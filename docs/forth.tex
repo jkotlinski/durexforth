@@ -290,18 +290,19 @@ Re-open editor to pick up where it left.
 \section{Strings}
 
 \begin{description}
+\item[.(]
+
+Print a string. Example: \texttt{.( foo)}
+
 \item[."]
 
-Print a string. E.g. \texttt{." foo"}
+Compile-time version of "\texttt{.(}". Example: \texttt{: foo ." bar" ;}
 
-\item[s"] Run time: ( -- strptr strlen ) Compile time: ( -- str )
+\item[s"] ( -- strptr strlen )
 
-Define a string and put it on the stack. E.g. \texttt{s" foo"}. 
-
-In run time, it puts the string length and a text pointer on the stack. In compile time (inside a colon definition), it puts a pointer to a Pascal-string on the stack.
+Define a string. Example: \texttt{s" foo"}. 
 
 \end{description}
-
 
 \section{Vectored Execution}
 
