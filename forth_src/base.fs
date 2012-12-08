@@ -25,7 +25,7 @@ swap dup here @ swap - swap ! ;
 : # immed begin key d = until ; # comment
 : tuck ( x y -- y x y ) swap over ;
 : pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u )
-1+ 2 * sp@ + @ ;
+1+ 2* sp@ + @ ;
 : ?dup dup if dup then ;
 : not 0= ;
 : <> ( a b -- c ) = 0= ;
@@ -174,7 +174,6 @@ compile-ram @ -rot 0 compile-ram !
 801 -rot here @ -rot saveb
 compile-ram ! ;
 
-:asm 2* 0 asl,x 1 rol,x ;asm
 :asm 2/ 1 lsr,x 0 ror,x ;asm
 :asm or
 1 lda,x 3 ora,x 3 sta,x

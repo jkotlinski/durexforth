@@ -1598,6 +1598,13 @@ EXIT
 	sta	IP
 	+NEXT
 
+	!word	LINK
+	!set	LINK = * - 2
+    !byte   2
+	!text	"2*"
+    asl 0, x
+    rol 1, x
+    +NEXT
 
 ; blink (0 = enable, 1 = disable)
 	!word	LINK
