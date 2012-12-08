@@ -5,6 +5,7 @@
 : space 20 emit ;
 : cr d emit ;
 : nip swap drop ;
+: * d* nip ;
 : / /mod nip ;
 : mod /mod drop ;
 : literal immed ' lit , , ;

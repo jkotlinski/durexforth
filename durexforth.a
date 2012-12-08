@@ -391,22 +391,6 @@ SUB
 
 product = TMP
 
-; * - this calculates a 32 bit result, actually. useful? wasteful?
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	1
-	!text	"*"
-MUL
-	jsr	_MUL
-    inx
-    inx
-	lda	product
-	sta	0, x
-	lda	product + 1
-	sta	1, x
-	+NEXT
-
-; * - this calculates a 32 bit result, actually. useful? wasteful?
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	2
