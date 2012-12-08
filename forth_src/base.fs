@@ -40,7 +40,7 @@ swap dup here @ swap - swap ! ;
 2dup > if swap then drop ;
 
 : '"' [ key " ] literal ;
-: s" immed ( -- addr len )
+: " immed ( -- addr len )
 	state @ if
 		' litstring ,
 		here @ ( save addr of length byte on stack )
@@ -78,7 +78,7 @@ swap 1+ swap ( inc strptr )
 1- ( dec strlen )
 ?dup 0= until drop ;
 
-: ." immed [compile] s" ' tell , ;
+: ." immed [compile] " ' tell , ;
 : .( begin key dup [ key ) literal ] <>
 while emit repeat drop ;
 .( compile base..)
@@ -117,7 +117,7 @@ header 20 c, ['] dodoes , literal , ;
 : does> r> latest @ >dfa ! ;
 
 .( asm..)
-s" asm" load
+" asm" load
 
 :asm rot ( a b c -- b c a )
 5 ldy,x 3 lda,x 5 sta,x 1 lda,x
@@ -228,17 +228,17 @@ inx, inx, ;asm
 
 : modules ;
 .( debug..)
-s" debug" load
+" debug" load
 .( ls..)
-s" ls" load
+" ls" load
 .( gfx..)
-s" gfx" load
+" gfx" load
 # ." gfxdemo.."
-# s" gfxdemo" load
+# " gfxdemo" load
 # ." turtle.."
-# s" turtle" load
+# " turtle" load
 .( vi..)
-s" vi" load
+" vi" load
 .( ok) cr
 
 : scratch ( strptr strlen -- )
@@ -257,13 +257,13 @@ openw closew ;
 
 hide pushya
 
-s" purge-hidden" load
+" purge-hidden" load
 
 .( scratch old durexforth..)
-s" durexforth" scratch
+" durexforth" scratch
 
 .( save new durexforth..)
-s" durexforth" save-forth
+" durexforth" save-forth
 
 .( done!) cr
 1 blink

@@ -815,7 +815,7 @@ cleanup ;
 : vi
 sp@ sp0 = if # in case no param
 eof @ if fg exit else
-s" untitled" then then
+" untitled" then then
 
 init
 go-to-file-start

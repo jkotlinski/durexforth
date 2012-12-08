@@ -279,7 +279,7 @@ Opens editor with untitled buffer.
 \begin{description}
 \item[vi ( file -- )]
 
-Opens file in editor. Try \texttt{s" foo" vi}.
+Opens file in editor. Try \texttt{" foo" vi}.
 
 \item[vi ( -- )]
 
@@ -294,9 +294,9 @@ Re-open editor to pick up where it left.
 
 Print a string. E.g. \texttt{." foo"}
 
-\item[s"] Run time: ( -- strptr strlen ) Compile time: ( -- str )
+\item["] Run time: ( -- strptr strlen ) Compile time: ( -- str )
 
-Define a string and put it on the stack. E.g. \texttt{s" foo"}. 
+Define a string and put it on the stack. E.g. \texttt{" foo"}. 
 
 In run time, it puts the string length and a text pointer on the stack. In compile time (inside a colon definition), it puts a pointer to a Pascal-string on the stack.
 
@@ -318,7 +318,7 @@ Example: \texttt{f = loc f >cfa exec}
 
 \section{Debugging}
 
-Debugging words are loaded with \texttt{s" debug" load}.
+Debugging words are loaded with \texttt{" debug" load}.
 
 \begin{description}
 \item[words] List all defined words.

@@ -2085,7 +2085,7 @@ geof
 
 
 ; LOADB ( filenameptr filenamelen dst -- status ) load binary file
-;  - s" base" 7000 loadb #load file to 7000
+;  - " base" 7000 loadb #load file to 7000
 ;  - end of loaded file is available in $ae/$af afterwards
 	!word	LINK
 	!set	LINK = * - 2
@@ -2172,7 +2172,7 @@ load_binary_laddr_hi = *+1
 	rts
 
 ; SAVEB (save binary file)
-;  - 7000 71ae s" base" saveb #save file from 7000 to 71ae (= the byte AFTER the last byte in the file)
+;  - 7000 71ae " base" saveb #save file from 7000 to 71ae (= the byte AFTER the last byte in the file)
 	!word	LINK
 	!set	LINK = * - 2
 	!byte 5
