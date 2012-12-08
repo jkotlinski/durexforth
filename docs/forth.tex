@@ -273,17 +273,15 @@ This variable switches between buffered/unbuffered input. Disable input bufferin
 \begin{description}
 \item[vi ( -- )]
 
-Opens editor with untitled buffer.
+Enter editor. If a buffer is already open, editor will pick up where it left.
+Otherwise, an untitled buffer will be created.
+
 \end{description}
 
 \begin{description}
-\item[vi ( file -- )]
+\item[vi ( filenameptr filenamelen -- )]
 
-Opens file in editor. Try \texttt{s" foo" vi}.
-
-\item[vi ( -- )]
-
-Re-open editor to pick up where it left.
+Edit a file. Try \texttt{s" ls" vi}.
 
 \end{description}
 
