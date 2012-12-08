@@ -6,7 +6,7 @@ As of durexForth v1.2, high-resolution graphics support is included.
 
 Turtle graphics are mostly known from LOGO, a 1970s programming language.
 It enables control of a turtle that can move and turn while holding a pen.
-The turtle graphics library is loaded with \texttt{" turtle" load}.
+The turtle graphics library is loaded with \texttt{s" turtle" load}.
 
 \begin{description}
 \item[init ( -- )] Initializes turtle graphics.
@@ -20,7 +20,7 @@ The turtle graphics library is loaded with \texttt{" turtle" load}.
 
 \section{High-Resolution Graphics}
 
-The high-resolution graphics library is loaded with \texttt{" gfx" load}. 
+The high-resolution graphics library is loaded with \texttt{s" gfx" load}. 
 It is inspired by "Step-by-Step Programming Commodore 64: Graphics Book 3."
 Some demonstrations can be found in \texttt{gfxdemo}. 
 \begin{description}
@@ -38,7 +38,7 @@ clrcol} clears the screen with green background, white foreground.
 for line drawing, \texttt{0 erase} switches back to \texttt{or}.
 \item[paint ( x y -- )] Paints the area at x, y.
 \item[text ( column row str strlen -- )] Draws a text string at the given position. E.g. \texttt{10
-8 " hallo" text} draws the message "hallo" at column 16, row 8.
+8 s" hallo" text} draws the message "hallo" at column 16, row 8.
 \item[drawchar ( column row char -- )] Draws a custom character at given column and row.
 \item[defchar] Defines an 8x8 character to use with the \texttt{drawchar} word. Example:
 

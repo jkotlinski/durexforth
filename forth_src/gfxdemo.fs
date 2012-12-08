@@ -3,8 +3,8 @@
 # examples from c64 step by step
 # programming, gfx book 3, phil cornes
 
-" rnd" load
-" sin" load
+s" rnd" load
+s" sin" load
 
 : blkcol rot 8 / rot 8 / rot blkcol ;
 
@@ -253,22 +253,22 @@ dc a8 line e0 c7 line
 8 + repeat drop
 8 + repeat drop
 
-b 4 " 0" text
-b 5 " 1" text
-b 6 " 2" text
-b 7 " 3" text
-b 8 " 4" text
-b 9 " 5" text
-b a " 6" text
-b b " 7" text
-b c " 8" text
-b d " 9" text
-a e " 10" text
-a f " 11" text
-a 10 " 12" text
-a 11 " 13" text
-a 12 " 14" text
-a 13 " 15" text
+b 4 s" 0" text
+b 5 s" 1" text
+b 6 s" 2" text
+b 7 s" 3" text
+b 8 s" 4" text
+b 9 s" 5" text
+b a s" 6" text
+b b s" 7" text
+b c s" 8" text
+b d s" 9" text
+a e s" 10" text
+a f s" 11" text
+a 10 s" 12" text
+a 11 s" 13" text
+a 12 s" 14" text
+a 13 s" 15" text
 
 0 begin dup 10 < while
 0 begin dup 10 < while

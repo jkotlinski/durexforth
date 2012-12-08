@@ -1,7 +1,7 @@
 
 
-" gfx" load
-" sin" load
+s" gfx" load
+s" sin" load
 
 var tx var ty # 10.6 fixedpoint
 var ta 0 value tp

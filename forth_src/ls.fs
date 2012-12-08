@@ -2,7 +2,7 @@
 
 # submitted by kevin reno
 : load$
-" $" here @ loadb drop
+s" $" here @ loadb drop
 ae @ 2 - here @ ;
 
 : blocks ar ! xr ! bdcd jsr
