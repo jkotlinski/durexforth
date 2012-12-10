@@ -990,7 +990,7 @@ _KEY
 
 -
 	stx	tmp_x
-	jsr PULL_KEY
+	jsr	GETCHR
 	ldx	tmp_x
 	ora	#0
 	beq	-
