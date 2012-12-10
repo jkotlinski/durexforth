@@ -1615,19 +1615,14 @@ HEADER
 	lda	(TMP2), y
 	sta	(TMP), y	
 
-	; save stack ptr to use x as loop counter
-	txa
-	pha
-
 	; copy string
 	lda	(TMP2), y
-	tax
--
-	iny
+	sta TMP3 ; string length
+-   iny
 	lda	(TMP2), y
 	sta	(TMP), y
 
-	dex
+	dec TMP3
 	bne	-
 
 	; update _LATEST
@@ -1647,10 +1642,6 @@ HEADER
 +
 	lda	TMP + 1
 	sta	HERE + 1
-
-	; restore stack ptr
-	pla
-	tax
 
 	inx
 	inx
