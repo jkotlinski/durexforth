@@ -134,13 +134,18 @@ reset
 	lda	#C_YELLOW
 	sta	CURSOR_COLOR
 
-	jsr	clrcol
+    ; Clears color area.
+	ldx	#0
+-	sta $d800, x
+	sta $d900, x
+	sta $da00, x
+	sta $db00, x
+	dex
+	bne	-
 
-	lda #0 ; Enables blinking.
-	sta	_BLINK
-	sta CURSOR_BLINK
-	lda	#1
-	sta	_LINEBUF
+	stx	_BLINK ; Enables blinking.
+    inx
+	stx	_LINEBUF ; Enables line buffering.
 	;lda	#$40 ; no key repeat
 	;sta	$28a
 
@@ -165,17 +170,6 @@ print_ok
 restore_handler
 	cli
     jmp reset_print_ok
-
-clrcol
-	lda	#C_YELLOW
-	ldx	#0
--	sta $d800, x
-	sta $d900, x
-	sta $da00, x
-	sta $db00, x
-	dex
-	bne	-
-	rts
 
 ; ----------- macros
 
