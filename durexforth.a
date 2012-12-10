@@ -41,9 +41,6 @@ OP_STA_AX = $9d
 
 STACK_START = $84
 
-; X = PSP
-; SP = RSP
-
 ; kernal defs
 
 CURSOR_BLINK = $cc
