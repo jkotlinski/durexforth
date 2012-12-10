@@ -128,7 +128,6 @@ clear-status status-pos c! ;
 
 : init
 	0 compile-ram ! # to enable editor start from base.src
-	0 blink
 	80 28a c! # key repeat on
 
 	( disable input buffering )
@@ -742,7 +741,7 @@ bufstart compile-ram ! ;
 	[ key Z ] literal of
 		key
 		case
-		[ key Z ] literal of write-file 1 blink ffff exit endof
+		[ key Z ] literal of write-file ffff exit endof
 		endcase
 	endof
 	[ key : ] literal of 
@@ -750,7 +749,7 @@ bufstart compile-ram ! ;
 		key 
 		case
 		[ key w ] literal of colon-w endof
-		[ key q ] literal of 1 blink ffff exit endof
+		[ key q ] literal of ffff exit endof
 		endcase
 		clear-status
 	endof

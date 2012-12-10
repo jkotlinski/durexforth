@@ -46,7 +46,7 @@ STACK_START = $84
 
 ; kernal defs
 
-CURSOR_BLINK = $cc ; 0 = enable; 1 = disable
+CURSOR_BLINK = $cc
 CURSOR_TIMER = $cd
 CURSOR_STATUS = $cf ; 0 = off; 1 = on
 
@@ -143,7 +143,6 @@ reset
 	dex
 	bne	-
 
-	stx	_BLINK ; Enables blinking.
     inx
 	stx	_LINEBUF ; Enables line buffering.
 
@@ -987,9 +986,8 @@ _KEY
 
 .fill_key_buf
 	; start filling key buf... TODO: add bounds check for buffer overwrite.
-    lda _BLINK
-    sta CURSOR_BLINK
 	lda	#0
+    sta CURSOR_BLINK  ; Enable blinking.
 	sta	KEY_BUF_READ_POS
 	sta	KEY_BUF_WRITE_POS
 
@@ -1440,8 +1438,7 @@ INTERPRET
 	+NEXT
 
 .execute_word
-	lda	#1 ; Disables blinking.
-    sta CURSOR_BLINK
+    stx CURSOR_BLINK ; Disable blinking. (Assumes x != 0.)
 	jsr	_TCFA
 
 	; copy CFA to TMP
@@ -1576,22 +1573,6 @@ EXIT
     asl 0, x
     rol 1, x
     +NEXT
-
-; blink (1 = enable, 0 = disable)
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	5
-	!text	"blink"
-BLINK
-	lda	0, x
-    eor #1
-	sta	_BLINK
-	sta	CURSOR_BLINK
-	inx
-	inx
-	+NEXT
-_BLINK
-	!byte	0
 
 ; HEADER ( name -- )
 	!word	LINK
