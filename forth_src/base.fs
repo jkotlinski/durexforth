@@ -1,6 +1,6 @@
   
 
-7 287 c! 0 blink
+7 287 c!
 : 2dup over over ;
 : space 20 emit ;
 : cr d emit ;
@@ -266,4 +266,3 @@ s" durexforth" scratch
 s" durexforth" save-forth
 
 .( done!) cr
-1 blink

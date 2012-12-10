@@ -149,12 +149,12 @@ var last-dump
 : n last-dump @ dump ;
 
 : words
-0 blink latest @
+latest @
 begin ?dup while
 dup ?hidden not if
 dup id. space
 then @ repeat
-cr 1 blink ;
+cr ;
 
 # size foo prints size of foo
 : size ( -- )

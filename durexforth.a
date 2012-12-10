@@ -136,7 +136,7 @@ reset
 
 	jsr	clrcol
 
-	lda #0
+	lda #0 ; Enables blinking.
 	sta	_BLINK
 	sta CURSOR_BLINK
 	lda	#1
@@ -839,8 +839,6 @@ print_char
 	ldy #1
 	sty CURSOR_STATUS ;Force cursor off
 	jsr	PUTCHR
-	ldy	_BLINK
-	sty	CURSOR_BLINK
 	rts
 
 print_hex_nibble
@@ -997,6 +995,8 @@ _KEY
 
 .fill_key_buf
 	; start filling key buf... TODO: add bounds check for buffer overwrite.
+    lda _BLINK
+    sta CURSOR_BLINK
 	lda	#0
 	sta	KEY_BUF_READ_POS
 	sta	KEY_BUF_WRITE_POS
@@ -1096,8 +1096,6 @@ PULL_KEY ; wastes x!!!
 ++
     ; Stop compiling from RAM.
 	sta	COMPILE_RAM + 1
-    sta _BLINK
-    sta CURSOR_BLINK
 +++
     ; Read from console.
 	jmp	GETCHR
@@ -1116,8 +1114,6 @@ PULL_KEY ; wastes x!!!
 
 	dec	COMPILE_FILENO
 	bne +
-	lda	_BLINK
-	sta	CURSOR_BLINK
 +
 	lda	COMPILE_FILENO
 	jsr	CHKIN
@@ -1452,6 +1448,8 @@ INTERPRET
 	+NEXT
 
 .execute_word
+	lda	#1 ; Disables blinking.
+    sta CURSOR_BLINK
 	jsr	_TCFA
 
 	; copy CFA to TMP
@@ -1587,7 +1585,7 @@ EXIT
     rol 1, x
     +NEXT
 
-; blink (0 = enable, 1 = disable)
+; blink (1 = enable, 0 = disable)
 	!word	LINK
 	!set	LINK = * - 2
 	!byte	5
@@ -2257,9 +2255,6 @@ OPENW
 	!byte 4
 	!text	"load"
 LOAD_AND_COMPILE
-    lda #1
-    sta CURSOR_BLINK
-
 	txa
 	pha
 
