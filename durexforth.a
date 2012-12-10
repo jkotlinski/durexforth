@@ -146,8 +146,6 @@ reset
 	stx	_BLINK ; Enables blinking.
     inx
 	stx	_LINEBUF ; Enables line buffering.
-	;lda	#$40 ; no key repeat
-	;sta	$28a
 
 	lda	#<_START
 	sta IP
