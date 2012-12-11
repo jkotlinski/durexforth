@@ -337,12 +337,7 @@ DECR
 	!set	LINK = * - 2
 	!byte	1
 	!text	"+"
-ADD
-	jsr	_ADD
-	+NEXT
-
-_ADD
-	lda	0, x
+  lda	0, x
 	clc
 	adc 2, x
 	sta	2, x
@@ -354,7 +349,7 @@ _ADD
 	inx
 	inx
 
-	rts
+	+NEXT
 
 ; -
 	!word	LINK
