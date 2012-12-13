@@ -971,11 +971,9 @@ _KEY
 	lda	_LINEBUF
 	beq	.unbuffered_key
 	lda	KEY_BUF_WRITE_POS
-	beq	.fill_key_buf
 	cmp	KEY_BUF_READ_POS
 	bne	.get_from_key_buf
 
-.fill_key_buf
 	; start filling key buf... TODO: add bounds check for buffer overwrite.
 	lda	#0
     sta CURSOR_BLINK  ; Enable blinking.
