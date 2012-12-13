@@ -111,9 +111,8 @@ SCREEN_COLOR = 0
 	lda	#SCREEN_COLOR
 	sta	$d021
 
-	lda	_START
-	ora	_START + 1
-	bne	reset
+	lda	_START + 1
+  bne	reset
 	; first time ever app is started...
 	jsr	load_base
 
@@ -338,12 +337,7 @@ DECR
 	!set	LINK = * - 2
 	!byte	1
 	!text	"+"
-ADD
-	jsr	_ADD
-	+NEXT
-
-_ADD
-	lda	0, x
+  lda	0, x
 	clc
 	adc 2, x
 	sta	2, x
@@ -355,7 +349,7 @@ _ADD
 	inx
 	inx
 
-	rts
+	+NEXT
 
 ; -
 	!word	LINK
