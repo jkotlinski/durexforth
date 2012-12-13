@@ -1023,13 +1023,12 @@ _KEY
 	jmp	-
 
 .return	;done
+    sta CURSOR_BLINK ; Disable blinking.
 	lda	#K_SPACE
 	jsr	print_char
 	lda	#K_RETURN
 	jsr	print_char
-
 	jsr	add_a_to_key_buf
-
 	jmp	_KEY
 
 .get_from_key_buf
@@ -1429,7 +1428,6 @@ INTERPRET
 	+NEXT
 
 .execute_word
-    stx CURSOR_BLINK ; Disable blinking. (Assumes x != 0.)
 	jsr	_TCFA
 
 	; copy CFA to TMP
