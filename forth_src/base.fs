@@ -2,7 +2,8 @@
 
 7 287 c!
 : 2dup over over ;
-: space 20 emit ;
+: bl 20 ;
+: space bl emit ;
 : cr d emit ;
 : nip swap drop ;
 : * d* nip ;
@@ -113,7 +114,7 @@ loc ?dup if hidden else ." err" then ;
 here @ [compile] exit
 : create
 # default behavior = exit
-header 20 c, ['] dodoes , literal , ;
+header bl c, ['] dodoes , literal , ;
 : does> r> latest @ >dfa ! ;
 
 .( asm..)
@@ -232,13 +233,13 @@ s" debug" load
 s" ls" load
 .( gfx..)
 s" gfx" load
+s" sprite" load
 # ." gfxdemo.."
 # s" gfxdemo" load
 # ." turtle.."
 # s" turtle" load
 .( vi..)
 s" vi" load
-.( ok) cr
 
 : scratch ( strptr strlen -- )
 tuck ( strlen strptr strlen )

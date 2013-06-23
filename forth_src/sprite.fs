@@ -65,19 +65,16 @@ dup sp-on
 18 19 6 * + 33 6 sp-xy!
 18 19 7 * + 33 7 sp-xy! ;
 
-( is next key space? )
-: sp<> key 20 <> ;
 ( read sprite byte )
 : rdb ( addr -- addr )
-0
-sp<> if 80 or then
-sp<> if 40 or then
-sp<> if 20 or then
-sp<> if 10 or then
-sp<> if 8 or then
-sp<> if 4 or then
-sp<> if 2 or then
-sp<> if 1 or then
+key bl <> 80 and
+key bl <> 40 and or
+key bl <> 20 and or
+key bl <> 10 and or
+key bl <> 8 and or
+key bl <> 4 and or
+key bl <> 2 and or
+key bl <> 1 and or
 over c! 1+ ;
 
 ( read sprite line )
