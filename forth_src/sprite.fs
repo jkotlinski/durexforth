@@ -51,6 +51,7 @@ fc 7fc ! fd 7fd ! fe 7fe ! ff 7ff ! ;
 : demo
 sp-init
 7 begin 
+ff over 7f8 + c!
 dup sp-on
 1 over + over sp-col!
 ?dup while 1- repeat
@@ -62,11 +63,53 @@ dup sp-on
 18 19 4 * + 33 4 sp-xy!
 18 19 5 * + 33 5 sp-xy!
 18 19 6 * + 33 6 sp-xy!
-18 19 7 * + 33 7 sp-xy!
+18 19 7 * + 33 7 sp-xy! ;
 
-begin
-1 7f8 +! 1 7f9 +! 1 7fa +! 1 7fb +!
-1 7fc +! 1 7fd +! 1 7fe +! 1 7ff +!
-again ;
+( is next key space? )
+: sp<> key 20 <> ;
+( read sprite byte )
+: rdb ( addr -- addr )
+0
+sp<> if 80 or then
+sp<> if 40 or then
+sp<> if 20 or then
+sp<> if 10 or then
+sp<> if 8 or then
+sp<> if 4 or then
+sp<> if 2 or then
+sp<> if 1 or then
+over c! 1+ ;
+
+( read sprite line )
+: rdl rdb rdb rdb key drop ;
+
+( read sprite to address )
+: sp-data ( addr -- )
+rdl rdl rdl rdl rdl rdl rdl
+rdl rdl rdl rdl rdl rdl rdl
+rdl rdl rdl rdl rdl rdl rdl ;
+
+3fc0 sp-data
+DDD  UU U RRR  EEEEX   X
+DDD  UU U RRR  EEEEX   X
+D DD UU U R RR E    X X 
+D DD UU U R RR E    X X 
+D  D UU U RRR  EEE   X  
+D  D UU U RRR  EEE   X  
+D  D UU U R RR E    X X 
+D  D UU U R RR E    X X 
+DDD   UUU R RR EEEEX   X
+DDD   UUU R RR EEEEX   X
+                        
+FFFF  OO  RRR TTTTTTH  H
+FFFF OOOO RRR TTTTTTH  H
+FF   O  O R RR  TT  H  H
+FF   O  O R RR  TT  H  H
+FFFF O  O RRR   TT  HHHH
+FFFF O  O RRR   TT  HHHH
+FF   O  O R RR  TT  H  H
+FF   O  O R RR  TT  H  H
+FF    OO  R RR  TT  H  H
+FF    OO  R RR  TT  H  H
 
 demo
