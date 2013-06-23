@@ -256,7 +256,7 @@ then
 dup if # y?
 over cx + over cy swap - chkplot
 then
-over not not over not not and if
+over 0= 0= over 0= 0= and if
 over cx swap - over cy swap - chkplot
 then ;
 
@@ -271,12 +271,12 @@ dup negate err !
 swap to cy
 swap to cx
 0 # x y
-begin 2dup s< not while
+begin 2dup s< 0= while
 plot8
 dup err +!
 1+
 dup err +!
-err @ 0< not if
+err @ 0< 0= if
 over negate err +!
 swap 1- swap
 over negate err +!
@@ -510,7 +510,7 @@ x1 @ over # y x y
 2dup blitloc addr ! mask !
 scanl
 over x1 @ # y x y x x1
-s< not if
+s< 0= if
 branch [ here @ >r 0 , ] # goto skip
 then
 # y x y ...

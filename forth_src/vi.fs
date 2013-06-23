@@ -2,9 +2,6 @@
 20 value bl
 : clrscr e544 jsr ;
 
-: assert 0= if
-begin 1 d020 +! again then ;
-
 6001 value bufstart
 0 bufstart 1- c! # reverse sentinel
 
@@ -226,8 +223,8 @@ curx ! ;
 	begin
 		editpos bufstart =
 		editpos 1- c@ is-whitespace
-		editpos c@ is-whitespace not and
-		or not
+		editpos c@ is-whitespace 0= and
+		or 0=
 	while
 		rewind-cur
 	repeat
@@ -248,8 +245,8 @@ curx ! ;
 	advance-cur if exit then
 	begin
 		editpos 1- c@ is-whitespace
-		editpos c@ is-whitespace not and
-		not
+		editpos c@ is-whitespace 0= and
+		0=
 	while
 		advance-cur if exit then
 	repeat

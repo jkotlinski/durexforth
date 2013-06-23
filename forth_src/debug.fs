@@ -151,7 +151,7 @@ var last-dump
 : words
 latest @
 begin ?dup while
-dup ?hidden not if
+dup ?hidden 0= if
 dup id. space
 then @ repeat
 cr ;
@@ -165,3 +165,7 @@ dup r@ = if
 - . r> drop exit then
 nip dup @ repeat
 . drop r> drop ;
+
+: assert 0= if
+begin 1 d020 +! again then ;
+
