@@ -42,16 +42,9 @@ tuck sp-y! sp-x! ;
 
 : sp-col! ( c n -- ) d027 + c! ;
 
-: sp-init
-( assume screen at $400, lowres,
-place sprites at 3e00-3fff )
-f8 7f8 ! f9 7f9 ! fa 7fa ! fb 7fb !
-fc 7fc ! fd 7fd ! fe 7fe ! ff 7ff ! ;
-
 : demo
-sp-init
 7 begin 
-ff over 7f8 + c!
+d over 7f8 + c! # sprite at $340
 dup sp-on
 1 over + over sp-col!
 ?dup while 1- repeat
@@ -79,9 +72,9 @@ over c! 1+ ;
 : sp-data ( addr -- )
 rdl rdl rdl rdl rdl rdl rdl
 rdl rdl rdl rdl rdl rdl rdl
-rdl rdl rdl rdl rdl rdl rdl ;
+rdl rdl rdl rdl rdl rdl rdl drop ;
 
-3fc0 sp-data
+340 sp-data
 DDD  UU U RRR  EEEEX   X
 DDD  UU U RRR  EEEEX   X
 D DD UU U R RR E    X X 
@@ -104,4 +97,4 @@ FF   O  O R RR  TT  H  H
 FF    OO  R RR  TT  H  H
 FF    OO  R RR  TT  H  H
 
-demo
+# demo
