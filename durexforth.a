@@ -29,10 +29,10 @@ F_IMMED = $80
 F_HIDDEN = $40
 STRLEN_MASK = $3f
 
-IP = $8a
-TMP = $84
-TMP2 = $86
-TMP3 = $88
+IP = $8e
+TMP = $88
+TMP2 = $8a
+TMP3 = $8c
 
 OP_JSR = $20
 OP_RTS = $60

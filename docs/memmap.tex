@@ -1,9 +1,9 @@
 \chapter{Memory Map}
 
 \begin{description}
-\item[... - \$83] Parameter stack (grows downwards).
-\item[\$84 - \$89] Temporary registers.
-\item[\$8a - \$8b] Instruction pointer.
+\item[... - \$87] Parameter stack (grows downwards). Placing parameter stack here gives good performance, but it also means that BASIC Kernal cannot be used without extra precautions.
+\item[\$88 - \$8d] Temporary storage for low-level Forth words.
+\item[\$8e - \$8f] Instruction pointer.
 \item[\ldots]
 \item[\$801 - \texttt{here}] Forth Kernel followed by dictionary.
 \item[\ldots]
