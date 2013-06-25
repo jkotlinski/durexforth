@@ -32,10 +32,10 @@ tuck sp-y! sp-x! ;
 : sp-col! ( c n -- ) d027 + c! ;
 
 ( read sprite byte )
-: ks key bl <> and ;
+: ks key bl <> and or ;
 : rdb ( addr -- addr )
-80 ks 40 ks or 20 ks or 10 ks or
-8 ks or 4 ks or 2 ks or 1 ks or
+0 80 ks 40 ks 20 ks 10 ks
+8 ks 4 ks 2 ks 1 ks
 over c! 1+ ;
 
 ( read sprite line )
