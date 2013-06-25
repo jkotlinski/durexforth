@@ -8,6 +8,7 @@ here @
 swap 80lsr over c@ or swap c! ;
 : clrbit ( n addr -- )
 swap 80lsr invert over c@ and swap c! ;
+hide 80lsr
 
 : sp-x! ( x n -- )
 2dup 2* d000 + c! # lsb
@@ -25,14 +26,6 @@ tuck sp-y! sp-x! ;
 : sp-1h ( n -- ) d017 clrbit ;
 : sp-2h ( n -- ) d017 setbit ;
 
-( multicolor )
-: sp-mc ( n -- ) d01c setbit ;
-: sp-1c ( n -- ) d01c clrbit ;
-
-( multicolor registers )
-: sp-mc0! ( c -- ) d022 ! ;
-: sp-mc1! ( c -- ) d023 ! ;
-
 ( bg priority )
 : sp-front ( n -- ) d01b clrbit ;
 : sp-back ( n -- ) d01b setbit ;
@@ -41,22 +34,6 @@ tuck sp-y! sp-x! ;
 : sp-off ( n -- ) d015 clrbit ;
 
 : sp-col! ( c n -- ) d027 + c! ;
-
-: demo
-7 begin 
-d over 7f8 + c! # sprite at $340
-dup sp-on
-1 over + over sp-col!
-?dup while 1- repeat
-
-18 33 0 sp-xy!
-18 19 + 33 1 sp-xy!
-18 19 2 * + 33 2 sp-xy!
-18 19 3 * + 33 3 sp-xy!
-18 19 4 * + 33 4 sp-xy!
-18 19 5 * + 33 5 sp-xy!
-18 19 6 * + 33 6 sp-xy!
-18 19 7 * + 33 7 sp-xy! ;
 
 ( read sprite byte )
 : ks key bl <> and ;
@@ -73,6 +50,11 @@ over c! 1+ ;
 rdl rdl rdl rdl rdl rdl rdl
 rdl rdl rdl rdl rdl rdl rdl
 rdl rdl rdl rdl rdl rdl rdl drop ;
+
+hide rdl hide rdb hide ks
+hide setbit hide clrbit
+
+( demo
 
 340 sp-data
 DDD  UU U RRR  EEEEX   X
@@ -97,4 +79,19 @@ FF   O  O R RR  TT  H  H
 FF    OO  R RR  TT  H  H
 FF    OO  R RR  TT  H  H
 
-# demo
+18 33 0 sp-xy!
+18 19 + 33 1 sp-xy!
+18 19 2 * + 33 2 sp-xy!
+18 19 3 * + 33 3 sp-xy!
+18 19 4 * + 33 4 sp-xy!
+18 19 5 * + 33 5 sp-xy!
+18 19 6 * + 33 6 sp-xy!
+18 19 7 * + 33 7 sp-xy!
+
+: setup
+7 begin 
+340 40 / over 7f8 + c!
+dup sp-on
+1 over + over sp-col!
+?dup while 1- repeat ; setup
+)
