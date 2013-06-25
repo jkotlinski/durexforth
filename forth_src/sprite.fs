@@ -21,14 +21,10 @@ else d010 clrbit then ;
 tuck sp-y! sp-x! ;
 
 ( expand width/height )
-: sp-1w ( n -- ) d01d clrbit ;
-: sp-2w ( n -- ) d01d setbit ;
-: sp-1h ( n -- ) d017 clrbit ;
-: sp-2h ( n -- ) d017 setbit ;
-
-( bg priority )
-: sp-front ( n -- ) d01b clrbit ;
-: sp-back ( n -- ) d01b setbit ;
+: sp-1w ( n -- ) 7 swap - d01d clrbit ;
+: sp-2w ( n -- ) 7 swap - d01d setbit ;
+: sp-1h ( n -- ) 7 swap - d017 clrbit ;
+: sp-2h ( n -- ) 7 swap - d017 setbit ;
 
 : sp-on ( n -- ) d015 setbit ;
 : sp-off ( n -- ) d015 clrbit ;
@@ -79,19 +75,19 @@ FF   O  O R RR  TT  H  H
 FF    OO  R RR  TT  H  H
 FF    OO  R RR  TT  H  H
 
-18 33 0 sp-xy!
-18 19 + 33 1 sp-xy!
-18 19 2 * + 33 2 sp-xy!
-18 19 3 * + 33 3 sp-xy!
-18 19 4 * + 33 4 sp-xy!
-18 19 5 * + 33 5 sp-xy!
-18 19 6 * + 33 6 sp-xy!
-18 19 7 * + 33 7 sp-xy!
-
-: setup
+s" rnd" load
+: rnds rnd 100/ 7 and ;
+: demo
 7 begin 
 340 40 / over 7f8 + c!
 dup sp-on
 1 over + over sp-col!
-?dup while 1- repeat ; setup
+?dup while 1- repeat
+
+begin
+rnd rnd rnds sp-xy!
+rnds sp-1h rnds sp-2h
+rnds sp-1w rnds sp-2w
+again ;
+demo
 )

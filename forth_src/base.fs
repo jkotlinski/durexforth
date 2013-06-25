@@ -233,7 +233,7 @@ s" debug" load
 s" ls" load
 .( gfx..)
 s" gfx" load
-s" sprite" load
+# s" sprite" load
 # ." gfxdemo.."
 # s" gfxdemo" load
 # ." turtle.."
