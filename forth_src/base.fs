@@ -221,9 +221,9 @@ pla, tax, inx, inx, ;asm
 # return stack
 :asm >r 0 lda,x pha, 1 lda,x pha,
 inx, inx, ;asm
-: r@ immed state @ if
-' r> , ' dup , ' >r ,
-else r> r> dup >r swap >r then ;
+:asm r@ dex, dex,
+pla, 1 sta,x pla, 0 sta,x
+pha, 1 lda,x pha, ;asm
 
 :asm sei sei, ;asm
 :asm cli cli, ;asm
