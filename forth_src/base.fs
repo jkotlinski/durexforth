@@ -221,12 +221,16 @@ pla, tax, inx, inx, ;asm
 # return stack
 :asm >r 0 lda,x pha, 1 lda,x pha,
 inx, inx, ;asm
-: r@ r> dup >r ;
+: r@ immed state @ if
+' r> , ' dup , ' >r ,
+else r> r> dup >r swap >r then ;
 
 :asm sei sei, ;asm
 :asm cli cli, ;asm
 
 : modules ;
+.( doloop..)
+s" doloop" load
 .( debug..)
 s" debug" load
 .( ls..)
