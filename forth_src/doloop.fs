@@ -12,9 +12,14 @@
 [compile] until ' 2drop , ;
 
 : i immed ' r@ , ;
+: j immed ' r> , ' r> , ' r@ ,
+' -rot , ' >r , ' >r , ;
 
 (
-: test 10 0 do i . loop ;
+: test
+2 0 do 3 0 do
+i . j . cr
+loop loop ;
 
 test
 )
