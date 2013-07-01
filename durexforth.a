@@ -112,7 +112,7 @@ SCREEN_COLOR = 0
 	sta	$d021
 
 	lda	_START + 1
-  bne	reset
+    bne	reset
 	; first time ever app is started...
 	jsr	load_base
 
@@ -924,7 +924,7 @@ tmp_x
 
 KEY_BUF_SIZE = 80
 KEY_BUF
-	!fill KEY_BUF_SIZE
+	!fill KEY_BUF_SIZE, K_RETURN
 
 KEY_BUF_READ_POS
 	!byte 0
@@ -964,6 +964,24 @@ KEY
 	sta	1, x
 	rts
 
+recall_last_line
+    ; erase curr line
+    lda KEY_BUF_WRITE_POS
+    beq +
+    lda #K_BACKSPACE
+-   jsr print_char
+    dec KEY_BUF_WRITE_POS
+    bne -
++
+    ; print KEY_BUF contents
+-   ldy KEY_BUF_WRITE_POS
+    lda KEY_BUF, y
+    cmp #K_RETURN
+    beq get_char
+    jsr print_char
+    inc KEY_BUF_WRITE_POS
+    jmp -
+
 _KEY
     lda COMPILE_FILENO
     ora COMPILE_RAM + 1
@@ -980,24 +998,25 @@ _KEY
 	sta	KEY_BUF_READ_POS
 	sta	KEY_BUF_WRITE_POS
 
--
+get_char
 	stx	tmp_x
 	jsr	GETCHR
 	ldx	tmp_x
 	ora	#0
-	beq	-
+	beq	get_char
 	cmp	#K_RETURN
 	beq	.return
 
 	; should key be ignored?
 	cmp	#K_LEFT
-	beq	-
+	beq	get_char
 	cmp	#K_RIGHT
-	beq	-
-	cmp	#K_UP
-	beq	-
+	beq	get_char
 	cmp	#K_DOWN
-	beq	-
+	beq	get_char
+
+	cmp	#K_UP
+	beq	recall_last_line
 
 	; shift + space => space
 	cmp	#$a0
@@ -1009,16 +1028,16 @@ _KEY
 	bne	+
 	tay
 	lda	KEY_BUF_WRITE_POS
-	beq	-
+	beq	get_char
 	dec	KEY_BUF_WRITE_POS
 	tya
 	jsr	print_char
-	jmp	-
+	jmp	get_char
 +
 	jsr	print_char
 	
 	jsr	add_a_to_key_buf
-	jmp	-
+	jmp	get_char
 
 .return	;done
     sta CURSOR_BLINK ; Disable blinking.
