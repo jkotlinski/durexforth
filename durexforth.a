@@ -29,17 +29,17 @@ F_IMMED = $80
 F_HIDDEN = $40
 STRLEN_MASK = $3f
 
-IP = $8e
+; zeropage
+STACK_START = $88
 TMP = $88
 TMP2 = $8a
 TMP3 = $8c
+IP = $8e
 
 OP_JSR = $20
 OP_RTS = $60
 OP_LDA_I = $a9
 OP_STA_AX = $9d
-
-STACK_START = $84
 
 ; kernal defs
 

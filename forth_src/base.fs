@@ -144,10 +144,10 @@ dup :asm
 lda,# 100/ ldy,# 
 ['] pushya jmp, ;
 
-84 value zptmp
-86 value zptmp2
-88 value zptmp3
-8a value ip
+88 value zptmp
+8a value zptmp2
+8c value zptmp3
+8e value ip
 
 # "0 to foo" sets value foo to 0
 : to immed
