@@ -214,10 +214,10 @@ NEXT_IMPL
 	; (IP) -> W
 	ldy	#1
 	lda	(IP), y
-	sta	++ + 2
+	sta	+ + 2
 	dey
 	lda	(IP), y
-	sta	++ + 1
+	sta	+ + 1
 
 	; IP += 2
 	lda	IP
@@ -226,10 +226,7 @@ NEXT_IMPL
 	sta	IP
 	bcc +
 	inc	IP + 1
-+
-
-++
-	jmp	0
++   jmp	0
 
 ; START - points to the code of the startup word.
 	!word	LINK
