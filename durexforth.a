@@ -424,7 +424,7 @@ remainder = TMP
 	sta remainder+1
 
 .divloop	
-	asl 2, x ; dividend	;dividend lb & hb*2, msb -> Carry
+	asl 2, x ; dividend lb & hb*2, msb -> Carry
 	rol 3, x ; dividend+1	
 	rol remainder	;remainder lb & hb * 2 + msb from carry
 	rol remainder+1
