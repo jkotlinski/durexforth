@@ -409,46 +409,63 @@ rotate_r
 	sta	3, x
 	+NEXT
 
-
-; /MOD
+; UM/MOD by Garth Wilson
+; http://6502.org/source/integers/ummodfix/ummodfix.htm
 	!word	LINK
 	!set	LINK = * - 2
-	!byte	4
-	!text	"/mod"
-DIVMOD
-remainder = TMP
-	lda #16	        ;repeat for each bit: ...
-	sta	TMP2
-	lda #0	        ;preset remainder to 0
-	sta remainder
-	sta remainder+1
+	!byte	6
+	!text	"um/mod"
+; ( lsw msw u -- rem quot )
+        N = TMP
+        SEC
+        LDA     2,X     ; Subtract hi cell of dividend by
+        SBC     0,X     ; divisor to see if there's an overflow condition.
+        LDA     3,X
+        SBC     1,X
+        BCS     oflo    ; Branch if /0 or overflow.
 
-.divloop	
-	asl 2, x ; dividend lb & hb*2, msb -> Carry
-	rol 3, x ; dividend+1	
-	rol remainder	;remainder lb & hb * 2 + msb from carry
-	rol remainder+1
-	lda remainder
-	sec
-	sbc 0, x ; divisor	;substract divisor to see if it fits in
-	tay	        ;lb result -> Y, for we may need it later
-	lda remainder+1
-	sbc 1, x ; divisor+1
-	bcc .skip	;if carry=0 then divisor didn't fit in yet
+        LDA     #17     ; Loop 17x.
+        STA     N       ; Use N for loop counter.
+loop:   ROL     4,X     ; Rotate dividend lo cell left one bit.
+        ROL     5,X
+        DEC     N       ; Decrement loop counter.
+        BEQ     end     ; If we're done, then branch to end.
+        ROL     2,X     ; Otherwise rotate dividend hi cell left one bit.
+        ROL     3,X
+        lda     #0
+        sta     N+1
+        ROL     N+1     ; Rotate the bit carried out of above into N+1.
 
-	sta remainder+1	;else save substraction result as new remainder,
-	sty remainder	
-	inc 2, x ; result	;and INCrement result cause divisor fit in 1 times
+        SEC
+        LDA     2,X     ; Subtract dividend hi cell minus divisor.
+        SBC     0,X
+        STA     N+2     ; Put result temporarily in N+2 (lo byte)
+        LDA     3,X
+        SBC     1,X
+        TAY             ; and Y (hi byte).
+        LDA     N+1     ; Remember now to bring in the bit carried out above.
+        SBC     #0
+        BCC     loop
 
-.skip	
-	dec	TMP2
-	bne .divloop	
+        LDA     N+2     ; If that didn't cause a borrow,
+        STA     2,X     ; make the result from above to
+        STY     3,X     ; be the new dividend hi cell
+        bcs     loop    ; and then branch up.
 
-	lda	remainder
-	sta	0, x
-	lda	remainder + 1
-	sta	1, x
-	jmp	SWAP
+oflo:   LDA     #$FF    ; If overflow or /0 condition found,
+        STA     2,X     ; just put FFFF in both the remainder
+        STA     3,X
+        STA     4,X     ; and the quotient.
+        STA     5,X
+
+end:    INX             ; When you're done, show one less cell on data stack,
+        INX             ; (INX INX is exactly what the Forth word DROP does)
+        JMP     SWAP    ; and swap the two top cells to put quotient on top.
+                        ; (Actually you'll jump to the beginning of SWAP's
+                        ; executable code.  Assembler label "SWAP" is at SWAP's
+                        ; PFA, not the CFA that ' SWAP would give you in Forth.
+
+; ------
 
 ; =
 	!word	LINK
