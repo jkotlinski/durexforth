@@ -361,12 +361,3 @@ Debugging words are loaded with \texttt{s" debug" load}.
 Safe kernel calls may be done from Forth words using \texttt{jsr} ( addr -- ). The helper variables \texttt{ar}, \texttt{xr} and \texttt{yr} can be used to set arguments and get results through the a, x and y registers.
 
 Example: \texttt{30 ar ! ffd2 jsr} prints \texttt{0} on screen.
-
-\section{``Missing'' Words}
-
-The following words might be expected in a "normal" Forth, but are not included in durexForth yet:
-
-\begin{itemize}
-\item leave
-\item */, */mod
-\end{itemize}
