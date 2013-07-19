@@ -415,32 +415,32 @@ rotate_r
 	!set	LINK = * - 2
 	!byte	6
 	!text	"um/mod"
-; ( lsw msw u -- rem quot )
+; ( msw lsw divisor -- rem quot )
         N = TMP
         SEC
-        LDA     2,X     ; Subtract hi cell of dividend by
+        LDA     4,X     ; Subtract hi cell of dividend by
         SBC     0,X     ; divisor to see if there's an overflow condition.
-        LDA     3,X
+        LDA     5,X
         SBC     1,X
         BCS     oflo    ; Branch if /0 or overflow.
 
         LDA     #17     ; Loop 17x.
         STA     N       ; Use N for loop counter.
-loop:   ROL     4,X     ; Rotate dividend lo cell left one bit.
-        ROL     5,X
+loop:   ROL     2,X     ; Rotate dividend lo cell left one bit.
+        ROL     3,X
         DEC     N       ; Decrement loop counter.
         BEQ     end     ; If we're done, then branch to end.
-        ROL     2,X     ; Otherwise rotate dividend hi cell left one bit.
-        ROL     3,X
+        ROL     4,X     ; Otherwise rotate dividend hi cell left one bit.
+        ROL     5,X
         lda     #0
         sta     N+1
         ROL     N+1     ; Rotate the bit carried out of above into N+1.
 
         SEC
-        LDA     2,X     ; Subtract dividend hi cell minus divisor.
+        LDA     4,X     ; Subtract dividend hi cell minus divisor.
         SBC     0,X
         STA     N+2     ; Put result temporarily in N+2 (lo byte)
-        LDA     3,X
+        LDA     5,X
         SBC     1,X
         TAY             ; and Y (hi byte).
         LDA     N+1     ; Remember now to bring in the bit carried out above.
@@ -448,8 +448,8 @@ loop:   ROL     4,X     ; Rotate dividend lo cell left one bit.
         BCC     loop
 
         LDA     N+2     ; If that didn't cause a borrow,
-        STA     2,X     ; make the result from above to
-        STY     3,X     ; be the new dividend hi cell
+        STA     4,X     ; make the result from above to
+        STY     5,X     ; be the new dividend hi cell
         bcs     loop    ; and then branch up.
 
 oflo:   LDA     #$FF    ; If overflow or /0 condition found,
@@ -460,7 +460,7 @@ oflo:   LDA     #$FF    ; If overflow or /0 condition found,
 
 end:    INX             ; When you're done, show one less cell on data stack,
         INX             ; (INX INX is exactly what the Forth word DROP does)
-        JMP     SWAP    ; and swap the two top cells to put quotient on top.
+        +NEXT           ; and swap the two top cells to put quotient on top.
                         ; (Actually you'll jump to the beginning of SWAP's
                         ; executable code.  Assembler label "SWAP" is at SWAP's
                         ; PFA, not the CFA that ' SWAP would give you in Forth.

@@ -7,9 +7,6 @@
 : cr d emit ;
 : nip swap drop ;
 : * d* nip ;
-: /mod 0 swap um/mod ;
-: / /mod nip ;
-: mod /mod drop ;
 : literal immed ' lit , , ;
 : loc word find ;
 : [compile] immed loc >cfa , ;
@@ -127,6 +124,10 @@ s" asm" load
 4 ldy,x 2 lda,x 4 sta,x 0 lda,x
 2 sta,x 0 sty,x ;asm
 : -rot rot rot ;
+
+: /mod 0 -rot um/mod ;
+: / /mod nip ;
+: mod /mod drop ;
 
 :asm 100/
 1 lda,x 0 sta,x 0 lda,# 1 sta,x ;asm
