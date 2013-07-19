@@ -128,6 +128,8 @@ s" asm" load
 : /mod 0 -rot um/mod ;
 : / /mod nip ;
 : mod /mod drop ;
+: */mod -rot d* rot um/mod ;
+: */ */mod nip ;
 
 :asm 100/
 1 lda,x 0 sta,x 0 lda,# 1 sta,x ;asm
