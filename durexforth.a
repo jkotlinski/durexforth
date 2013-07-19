@@ -458,12 +458,9 @@ oflo:   LDA     #$FF    ; If overflow or /0 condition found,
         STA     4,X     ; and the quotient.
         STA     5,X
 
-end:    INX             ; When you're done, show one less cell on data stack,
-        INX             ; (INX INX is exactly what the Forth word DROP does)
-        +NEXT           ; and swap the two top cells to put quotient on top.
-                        ; (Actually you'll jump to the beginning of SWAP's
-                        ; executable code.  Assembler label "SWAP" is at SWAP's
-                        ; PFA, not the CFA that ' SWAP would give you in Forth.
+end:    INX
+        INX
+        +NEXT
 
 ; ------
 
