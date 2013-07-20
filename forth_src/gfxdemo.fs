@@ -246,11 +246,9 @@ dc a8 line e0 c7 line
 78 b4 paint d0 b4 paint a0 1 paint
 
 # black board
-40 begin dup f8 <= while
-18 begin dup a0 <= while
-2dup 10 blkcol
-8 + repeat drop
-8 + repeat drop
+f9 40 do a1 18 do
+j i 10 blkcol
+8 +loop 8 +loop
 
 b 4 s" 0" text
 b 5 s" 1" text
