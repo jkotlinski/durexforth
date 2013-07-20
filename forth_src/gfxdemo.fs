@@ -124,19 +124,14 @@ e8 88 line
 88 70 paint 138 70 paint
 104 6c f circle 104 6c paint
 
-68 begin dup 138 <= while
-20 begin dup 88 < while
-2dup be blkcol
-8 + repeat
-begin dup c4 < while
-2dup 6 blkcol
-8 + repeat drop
-8 + repeat drop
-e8 begin dup 118 <= while
-50 begin dup 80 <= while
-2dup 7e blkcol
-8 + repeat drop
-8 + repeat drop ;
+139 68 do
+88 20 do j i be blkcol 8 +loop
+c4 88 do j i 6 blkcol 8 +loop
+8 +loop
+
+119 e8 do 81 50 do
+j i 7e blkcol
+8 +loop 8 +loop ;
 
 # --- jungle
 
