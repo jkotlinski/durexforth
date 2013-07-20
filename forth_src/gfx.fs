@@ -21,7 +21,7 @@ colbase 3e8 fill
 0 bmpbase 1f40 fill ;
 
 : blkcol ( col row c -- )
-rot rot 28 * + colbase + c! ;
+-rot 28 * + colbase + c! ;
 
 header mask
 80 c, 40 c, 20 c, 10 c,
