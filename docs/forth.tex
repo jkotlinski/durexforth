@@ -94,13 +94,17 @@ These words assume that the lowest number is 0 and highest is FFFF.
 \item[- ( a b -- c )] Subtract b from a.
 \item[* ( a b -- c )] Multiply a with b.
 \item[d* ( a b -- msw lsw )] 32-bit multiply a with b.
-\item[/mod ( a b -- r q )] Divide a with b. r = rest, q = quotient.
+\item[um/mod ( msw lsw d -- r q )] Divide 32-bit number by d, giving remainder r and quotient q.
+\item[/mod ( a b -- r q )] Divide a with b, giving remainder r and quotient q.
 \item[/ ( a b -- q )] Divide a with b.
-\item[mod ( a b -- r )] Rest of a divided by b.
+\item[mod ( a b -- r )] Remainder of a divided by b.
+\item[*/ ( a b c -- q )] Multiply a with b, then divide by c, using a 32-bit intermediary.
+\item[*/mod ( a b c -- r q )] Like */, but also keeping remainder r.
 \item[$<$ ( a b -- c )] Is a less than b?  
 \item[$>$ ( a b -- c )] Is a greater than b?  
-\item[$>=$ ( a b -- c)] Is a greater than or equal to b?  
-\item[$<=$ ( a b -- c)] Is a less than or equal to b?  
+\item[$>=$ ( a b -- c )] Is a greater than or equal to b?
+\item[$<=$ ( a b -- c )] Is a less than or equal to b?
+
 \end{description}
 
 \section{Signed Mathematics}
