@@ -4,7 +4,6 @@
 
 \begin{description}
 
-
 \item[drop ( a -- )]
 
 Drop top of stack.
@@ -215,6 +214,22 @@ condition IF true-part THEN rest
 \item[if ... else ... then]
 
 condition IF true-part ELSE false-part THEN rest
+
+\item[do ... loop] Start a loop with index \texttt{i} and limit. Example:
+
+\begin{verbatim}
+: print0to7 8 0 do i . loop ;
+\end{verbatim}
+
+\item[do ... +loop] Start a loop with a custom increment. Example:
+
+\begin{verbatim}
+( prints odd numbers from 1 to n )
+: printoddnumbers (n -- ) 1 do i . 2 +loop ;
+\end{verbatim}
+
+\item[i, j] Variables are to be used inside \texttt{do} .. \texttt{loop} constructs.
+\texttt{i} gives inner loop index, \texttt{j} gives outer loop index.
 
 \item[begin ... again]
 
