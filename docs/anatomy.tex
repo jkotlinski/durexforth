@@ -10,37 +10,40 @@ Let us define a word and see what it gets compiled to.
 
 When the word is defined, you can get its start address by \texttt{loc bg}, and the contents of bg can be dumped using \texttt{loc bg dump}. Try it, and you will get output like the following:
 
-\begin{verbatim}
+\begin{alltt}
 48e7  a0 48 02 42 47 20 86 08 .h.bg ..
 48ef  9c 10 20 d0 ae 0a ce 10 .. .....
-49f7  ...
-\end{verbatim}
+48f7  ff ff ff ff ff ff ff ff ........
+49ff  ...
+\end{alltt}
 
-Here, we can see that the "bg" word starts at address \$48e7.
+Here, we can see that the "bg" word is 16 bytes long and starts at address \$48e7. It contains three parts: Header, code field and data field.
 
 \section{Header}
 
-The first two bytes contains a back-pointer to the previous word (which starts at "a0 48," that is, \$48a0). The next byte, "02", is the length of "bg" name string. After that, the string "bg" follows.
+\begin{alltt}
+48e7  \textcolor{red}{a0 48 02 42 47} 20 86 08 \textcolor{red}{.h.bg} ..
+48ef  9c 10 20 d0 ae 0a ce 10 .. .....
+\end{alltt}
 
-The name length byte is also used to store special characteristics of the word. Bit 7 is "immediate" flag, which indicates that the word should execute immediately instead of being compiled into word definitions. ("(" is such an example of an immediate word, which does not get compiled.) Bit 6 is "hidden" flag, which makes a word unfindable.
+The first two bytes contain a back-pointer to the previous word, starting at \$48a0. The next byte, "02", is the length of "bg" name string. After that, the string "bg" follows. (42 = 'b', 47 = 'g')
+
+The name length byte is also used to store special attributes of the word. Bit 7 is "immediate" flag, which means that the word should execute immediately instead of being compiled into word definitions. ("(" is such an example of an immediate word that does not get compiled.) Bit 6 is "hidden" flag, which makes a word unfindable. Since bg is neither immediate nor hidden, bits 7-6 are both clear.
 
 \section{Code Field}
 
-The header is followed by the code field, which in the case of DurexForth contains pure machine code. The code field address (CFA) can be found by entering \texttt{loc bg >cfa}. \texttt{loc bg >cfa dump} will print something like:
+\begin{alltt}
+48e7  a0 48 02 42 47 \textcolor{red}{20 86 08} .h.bg \textcolor{red}{..}
+48ef  9c 10 20 d0 ae 0a ce 10 .. .....
+\end{alltt}
 
-\begin{verbatim}
-48ec  20 86 08 9c 10 20 d0 ae  .... .. 
-48ef  0a ce 10 ff ff ff ff ff  ........
-\end{verbatim}
-
-In this case, the bytes "20 86 08" equals 6502 assembly code "jsr \$886". \$886 is the place of the DurexForth internal DOCOL word, which is responsible for pushing the Forth instruction pointer (IP) to the return stack, and then changing IP to point to the "bg" data field.
+The code field contains the 6502 instruction "jsr \$886". \$886 is the place of the DOCOL word, which is responsible for pushing the Forth instruction pointer (IP) to the return stack, and then making IP point to the data field of bg.
 
 \section{Data Field}
 
-The code field is followed by the data field, which in the case of "bg" contains a list of pointers to Forth code fields. The data field adress of bg is given by \texttt{loc bg >dfa}, and \texttt{loc bg >dfa dump} will print something like the following:
+\begin{alltt}
+48e7  a0 48 02 42 47 20 86 08 .h.bg ..
+48ef  \textcolor{red}{9c 10 20 d0 ae 0a ce 10 .. .....}
+\end{alltt}
 
-\begin{verbatim}
-48ef  9c 10 20 d0 ae 0a ce 10  .. .....
-\end{verbatim}
-
-The first two bytes, "9c 10" or \$109c, is the CFA of the \texttt{lit} word. \texttt{lit} is responsible for pushing the two following bytes ("20 d0", or, \$d020) to the parameter stack. After that, we find "ae 0a" or \$aae, the CFA of \texttt{c!}. Finally, "ce 10" or \$10ce is the CFA of \texttt{exit}, which restores the instruction pointer from the return stack.
+The data field contains a list of pointers to code fields to be executed by DurexForth. The first two bytes contain \$109c, the code field adress (CFA) of the \texttt{lit} word. \texttt{lit} is responsible for pushing the two following bytes (\$d020) to the parameter stack. After that, we find \$aae, the CFA of \texttt{c!}. Finally, \$10ce is the CFA of \texttt{exit}, which restores the instruction pointer that DOCOL previously pushed to the return stack.
