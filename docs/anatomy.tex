@@ -37,7 +37,7 @@ The name length byte is also used to store special attributes of the word. Bit 7
 48ef  9c 10 20 d0 ae 0a ce 10 .. .....
 \end{alltt}
 
-The code field contains the 6502 instruction "jsr \$886". \$886 is the place of the DOCOL word, which is responsible for pushing the Forth instruction pointer (IP) to the return stack, and then making IP point to the data field of bg.
+The code field contains the 6502 instruction "jsr \$886". \$886 is the place of the DOCOL word, which is responsible for pushing the Forth instruction pointer (IP) to the return stack, and then redirecting IP to the data field of bg.
 
 \section{Data Field}
 
