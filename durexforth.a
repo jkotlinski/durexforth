@@ -62,7 +62,6 @@ CHRIN = $ffcf
 CHROUT = $ffd2
 LOAD = $ffd5
 SAVE = $ffd8
-WRITEFILENO = $f
 
 CURSOR_COLOR = $286
 
@@ -1993,19 +1992,22 @@ _LINEBUF
 COMPILE_FILENO
 	!word	0
 
-; CLOSEW
+; CLOSEW ( file# -- )
 	!word	LINK
 	!set	LINK = * - 2
 	!byte 6
 	!text	"closew"
 CLOSEW
-	stx	tmp_x
-	lda	#WRITEFILENO
+    lda 0,x
+    sta TMP
+	stx	TMP2
 	jsr	CLOSE 
-	ldx	#WRITEFILENO
+	ldx	TMP
 	jsr	CHKOUT
 	jsr	_errorchread
-	ldx tmp_x
+	ldx TMP2
+    inx
+    inx
 	+NEXT
 
 _errorchread
@@ -2196,34 +2198,37 @@ save_binary_srange_end_hi = *+1
 	inx
 	+NEXT
 
-
-; OPENW ( strptr strlen ) open file for writing
+; OPENW ( strptr strlen file# ) open file for writing
 	!word	LINK
 	!set	LINK = * - 2
 	!byte 5
 	!text	"openw"
 OPENW
-	stx	tmp_x
+    lda 0,x
+    sta TMP ; fileno
+	stx	TMP2
 
-	lda	0, x
-	ldy	3, x
-	pha
 	lda	2, x
+	ldy	5, x
+	pha
+	lda	4, x
 	tax
 	pla
 	
 	jsr	SETNAM
-	lda	#WRITEFILENO ; file number
+	lda	TMP ; file number
 	ldx	#8 ; default to device 8
 	tay ; secondary address
 	jsr	SETLFS
 	jsr	OPEN
 	bcs	.could_not_open
 
-	ldx	#WRITEFILENO ; file number
+	ldx	TMP ; file number
 	jsr	CHKOUT
 
-	ldx	tmp_x
+	ldx	TMP2
+	inx
+	inx
 	inx
 	inx
 	inx

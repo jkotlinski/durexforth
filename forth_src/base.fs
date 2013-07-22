@@ -261,7 +261,7 @@ swap ( strlen strlen strptr tmpbuf+2 )
 rot ( strlen strptr tmpbuf+2 strlen )
 cmove ( strlen )
 r> swap 2+ ( tmp strlen )
-openw closew ;
+f openw f closew ;
 
 hide pushya
 

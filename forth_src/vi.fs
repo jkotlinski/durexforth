@@ -532,8 +532,8 @@ join-lines del-char
 	filename-len c@ +
 	CR swap c!
 
-	drivebuf filename-len c@ 4 + openw
-	closew
+	drivebuf filename-len c@ 4 +
+    f openw f closew
 
 	# rename to new backup
 	drivebuf
@@ -547,8 +547,8 @@ join-lines del-char
 	filename-len c@ + # filename ok
 	CR swap c!
 
-	drivebuf filename-len c@ 2 * 5 + openw
-	closew
+	drivebuf filename-len c@ 2 * 5 +
+    f openw f closew
 ;
 
 : write-file
