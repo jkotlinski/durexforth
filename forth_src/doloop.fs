@@ -15,11 +15,11 @@
 : j immed ' r> , ' r> , ' r@ ,
 ' -rot , ' >r , ' >r , ;
 
-(
 : test
-2 0 do 3 0 do
-i . j . cr
-loop loop ;
+sp@
+2 0 do 2 0 do loop loop
+sp@ 2+ = if exit then
+begin 1 d020 +! again ;
 
 test
-)
+forget test
