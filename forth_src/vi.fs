@@ -110,12 +110,10 @@ bufstart curlinestart ! ;
 7c0 value status-pos
 
 : show-page
-status-pos c@
-clrscr
-status-pos c!
-homepos @ 18 begin
-swap print-line swap
-1- ?dup 0= until drop ;
+status-pos c@ clrscr status-pos c!
+homepos @
+18 0 do print-line loop
+drop ;
 
 : clear-status ( -- )
 bl status-pos 18 fill ;
