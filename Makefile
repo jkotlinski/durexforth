@@ -5,7 +5,7 @@ AS = acme
 
 all:	durexforth.d64
 
-durexforth.prg: durexforth.a
+durexforth.prg: durexforth.a number.a ummod.a
 	@$(AS) durexforth.a
 
 forth_src/purge-hidden.pet: forth_src/purge-hidden.fs ext/petcom

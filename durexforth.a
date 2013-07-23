@@ -368,7 +368,10 @@ product = TMP
     +BACKLINK
 	!byte	2
 	!text	"d*"
+    jsr DMUL
+    +NEXT
 ; wastes TMP, TMP2, y
+DMUL
 	lda #$00
 	sta product+2 ; clear upper bits of product
 	sta product+3 
@@ -400,7 +403,7 @@ rotate_r
 	sta	2, x
 	lda	product + 3
 	sta	3, x
-    +NEXT
+    rts
 
 !src "ummod.a"
 
