@@ -1315,13 +1315,30 @@ EXEC
 	inx
 	jmp	(TMP)
 
-; Z set = success, clear = failed
-_NUMBER ; only hex
+; base is single-byte variable.
+; allowed values: 10, 16
+	!word	LINK
+	!set	LINK = * - 2
+	!byte 4
+	!text	"base"
+BASE
+	+VAR_CODE	_BASE
+
+; Z = success, NZ = fail
+READ_NUMBER
 	lda	1, x	
 	sta	TMP3 + 1
 	lda	0, x	
 	sta	TMP3
 	; TMP3 now contains a string ptr...
+_BASE = * + 1
+    lda #16
+    cmp #16
+    beq READ_HEX_NUMBER
+    rts
+
+; Z = success, NZ = fail
+READ_HEX_NUMBER
 	ldy	#0
 	lda	(TMP3), y
     cmp #5  ; Max 4 digits.
@@ -1396,7 +1413,7 @@ INTERPRET
 
 	jsr	_WORD ; push string to stack
 
-	jsr _NUMBER
+	jsr READ_NUMBER
     beq .was_number
 
     jsr _DUP
@@ -1599,7 +1616,7 @@ HEADER
 	jsr	_WORD
 
     ; It is senseless to create words named as numbers.
-    jsr _NUMBER
+    jsr READ_NUMBER
     bne +
     jmp .on_word_not_found_error
 +
