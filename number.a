@@ -42,101 +42,10 @@ READ_NUMBER
 	sta	TMP3
     ; TMP3 now points to string length
     ; followed by string.
+
     ldy #0
     sty TMP
     sty TMP + 1
-    lda _BASE
-    cmp #16
-    beq READ_HEX_NUMBER
-    cmp #10
-    beq READ_DEC_NUMBER
-    cmp #2
-    beq READ_BIN_NUMBER
-    rts
-
-READ_DEC_NUMBER
-	lda	(TMP3), y
-    cmp #6  ; Max 5 digits.
-    bcs .not_a_digit
-	sta	.chars_to_process
-
-.read_dec_digit
-	; *= 10
-    asl TMP ; *2
-    rol TMP + 1
-    lda TMP
-    sta TMP2
-    lda TMP + 1
-    sta TMP2 + 1
-    asl TMP ; *4
-    rol TMP + 1
-    asl TMP ; *8
-    rol TMP + 1
-    lda TMP
-    adc TMP2
-    sta TMP
-    lda TMP + 1
-    adc TMP2 + 1
-    sta TMP + 1
-
-	; add *(++TMP3)
-	iny
-	lda	(TMP3), y
-	clc
-	adc	#-$30 ; petscii 0-9 -> 0-9
-
-	sec ; within 0-9?
-	cmp	#10
-	bcs	.not_a_digit
-
-    adc TMP
-    sta TMP
-    bcc +
-    inc TMP + 1
-+
-    dec .chars_to_process
-    bne .read_dec_digit
-    jmp got_number
-
-; Z = success, NZ = fail
-READ_BIN_NUMBER
-	lda	(TMP3), y
-    cmp #17  ; Max 16 digits.
-    bcs .not_a_digit
-	sta	.chars_to_process
-
-.read_bin_digit
-    asl TMP ; *= 2
-    rol TMP + 1
-
-	; add *(++TMP3)
-	iny
-	lda	(TMP3), y
-	clc
-	adc	#-$30 ; petscii 0-1 -> 0-1
-
-	sec ; within 0-1?
-	cmp	#2
-	bcs	.not_a_digit
-
-    ora TMP
-    sta TMP
-
-    dec .chars_to_process
-    bne .read_bin_digit
-    jmp got_number
-
-.overflow
-    inx
-    inx
-    inx
-    inx
-.not_a_digit
-    lda #$ff
-    rts
-
-; Z = success, NZ = fail
-READ_HEX_NUMBER
 	lda	(TMP3), y
 	sta	.chars_to_process
 
@@ -177,22 +86,25 @@ READ_HEX_NUMBER
 
 	sec ; within 0-9?
 	cmp	#10
-	bcc	.got_hex_digit
+	bcc	+
 
 	clc
-	adc	#-$7 ; a-f...
+	adc	#-$7 ; a-f..?
 
-	sec ; within a-f?
-	cmp	#16
-	bcs	.not_a_digit
 	sec
 	cmp	#10
 	bcc	.not_a_digit
 
-.got_hex_digit
-    ora TMP
-    sta TMP
++   sec
+    cmp _BASE
+    bcs .not_a_digit
 
+    adc TMP
+    sta TMP
+    bcc +
+    inc TMP + 1
+    beq .not_a_digit
++
     dec .chars_to_process
     bne .read_hex_digit
 
@@ -202,6 +114,15 @@ got_number
     lda TMP + 1
     sta 1, x
     lda #0
+    rts
+
+.overflow
+    inx
+    inx
+    inx
+    inx
+.not_a_digit
+    lda #$ff
     rts
 
 .chars_to_process
