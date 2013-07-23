@@ -126,6 +126,11 @@ READ_BIN_NUMBER
     bne .read_bin_digit
     jmp got_number
 
+.overflow
+    inx
+    inx
+    inx
+    inx
 .not_a_digit
     lda #$ff
     rts
@@ -133,8 +138,6 @@ READ_BIN_NUMBER
 ; Z = success, NZ = fail
 READ_HEX_NUMBER
 	lda	(TMP3), y
-    cmp #5  ; Max 4 digits.
-    bcs .not_a_digit
 	sta	.chars_to_process
 
 .read_hex_digit
@@ -152,6 +155,8 @@ READ_HEX_NUMBER
     lda TMP+1
     sta 3,x
     jsr DMUL
+    lda 2,x
+    bne .overflow
     lda 0,x
     sta TMP
     lda 1,x
