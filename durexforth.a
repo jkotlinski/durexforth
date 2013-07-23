@@ -1379,7 +1379,6 @@ READ_DEC_NUMBER
 	cmp	#10
 	bcs	.not_a_digit
 
-    clc
     adc TMP
     sta TMP
     bcc +
