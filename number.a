@@ -22,8 +22,6 @@
 
 ; Methods for number parsing
 
-; base is single-byte variable.
-; allowed values: 10, 16
     +BACKLINK
 	!byte 4
 	!text	"base"
