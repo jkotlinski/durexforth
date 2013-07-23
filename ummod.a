@@ -1,0 +1,53 @@
+; UM/MOD by Garth Wilson
+; http://6502.org/source/integers/ummodfix/ummodfix.htm
+	!word	LINK
+	!set	LINK = * - 2
+	!byte	6
+	!text	"um/mod"
+; ( msw lsw divisor -- rem quot )
+        N = TMP
+        SEC
+        LDA     4,X     ; Subtract hi cell of dividend by
+        SBC     0,X     ; divisor to see if there's an overflow condition.
+        LDA     5,X
+        SBC     1,X
+        BCS     oflo    ; Branch if /0 or overflow.
+
+        LDA     #17     ; Loop 17x.
+        STA     N       ; Use N for loop counter.
+loop:   ROL     2,X     ; Rotate dividend lo cell left one bit.
+        ROL     3,X
+        DEC     N       ; Decrement loop counter.
+        BEQ     end     ; If we're done, then branch to end.
+        ROL     4,X     ; Otherwise rotate dividend hi cell left one bit.
+        ROL     5,X
+        lda     #0
+        sta     N+1
+        ROL     N+1     ; Rotate the bit carried out of above into N+1.
+
+        SEC
+        LDA     4,X     ; Subtract dividend hi cell minus divisor.
+        SBC     0,X
+        STA     N+2     ; Put result temporarily in N+2 (lo byte)
+        LDA     5,X
+        SBC     1,X
+        TAY             ; and Y (hi byte).
+        LDA     N+1     ; Remember now to bring in the bit carried out above.
+        SBC     #0
+        BCC     loop
+
+        LDA     N+2     ; If that didn't cause a borrow,
+        STA     4,X     ; make the result from above to
+        STY     5,X     ; be the new dividend hi cell
+        bcs     loop    ; and then branch up.
+
+oflo:   LDA     #$FF    ; If overflow or /0 condition found,
+        STA     2,X     ; just put FFFF in both the remainder
+        STA     3,X
+        STA     4,X     ; and the quotient.
+        STA     5,X
+
+end:    INX
+        INX
+        +NEXT
+
