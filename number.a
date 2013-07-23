@@ -23,10 +23,10 @@
 ; Methods for number parsing
 
     +BACKLINK
-	!byte 4
-	!text	"base"
+    !byte 4
+    !text "base"
 BASE
-	+VAR_CODE	_BASE
+    +VAR_CODE	_BASE
 _BASE
     !word 16
 
@@ -34,10 +34,10 @@ _BASE
 ; success: ( string ptr -- number )
 ; fail: ( string ptr -- string ptr )
 READ_NUMBER
-	lda	1, x	
-	sta	TMP3 + 1
-	lda	0, x	
-	sta	TMP3
+    lda 1, x
+    sta TMP3 + 1
+    lda 0, x
+    sta TMP3
     ; TMP3 now points to string length
     ; followed by string.
 
@@ -49,11 +49,11 @@ READ_NUMBER
     ldy #0
     sty 0,x ; build number at top of stack
     sty 1,x
-	lda	(TMP3), y
-	sta	.chars_to_process
+    lda (TMP3), y
+    sta .chars_to_process
 
 .read_digit
-	; number *= _BASE
+    ; number *= _BASE
     lda _BASE
     sta 2,x
     lda _BASE+1
@@ -62,24 +62,24 @@ READ_NUMBER
     lda 2,x
     bne .parse_failed ; overflow!
 
-	; add *(++TMP3)
+    ; add *(++TMP3)
     inc TMP3
     bcc +
     inc TMP3+1
-+   lda	(TMP3), y
-	clc
-	adc	#-$30 ; petscii 0-9 -> 0-9
++   lda (TMP3), y
+    clc
+    adc #-$30 ; petscii 0-9 -> 0-9
 
-	sec ; within 0-9?
-	cmp	#10
-	bcc	+
+    sec ; within 0-9?
+    cmp	#10
+    bcc	+
 
-	clc
-	adc	#-$7 ; a-f..?
+    clc
+    adc	#-$7 ; a-f..?
 
-	sec
-	cmp	#10
-	bcc	.parse_failed
+    sec
+    cmp	#10
+    bcc	.parse_failed
 
 +   sec
     cmp _BASE
@@ -113,5 +113,5 @@ READ_NUMBER
     rts
 
 .chars_to_process
-!byte 0
+    !byte 0
 
