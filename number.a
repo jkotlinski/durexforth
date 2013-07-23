@@ -44,8 +44,6 @@ READ_NUMBER
     ; followed by string.
 
     ldy #0
-    sty TMP
-    sty TMP + 1
 	lda	(TMP3), y
 	sta	.chars_to_process
 
@@ -54,23 +52,18 @@ READ_NUMBER
     dex
     dex
 
+    sty 0,x
+    sty 1,x
+
 .read_digit
 	; TMP *= _BASE
     lda _BASE
-    sta 0,x
-    lda _BASE+1
-    sta 1,x
-    lda TMP
     sta 2,x
-    lda TMP+1
+    lda _BASE+1
     sta 3,x
     jsr DMUL
     lda 2,x
-    bne .parse_failed
-    lda 0,x
-    sta TMP
-    lda 1,x
-    sta TMP+1
+    bne .parse_failed ; overflow!
 
 	; add *(++TMP3)
     inc TMP3
@@ -95,24 +88,24 @@ READ_NUMBER
     cmp _BASE
     bcs .parse_failed
 
-    adc TMP
-    sta TMP
+    adc 0,x
+    sta 0,x
     bcc +
-    inc TMP + 1
+    inc 1,x
     beq .parse_failed
 +
     dec .chars_to_process
     bne .read_digit
 
     ; successful parse!
+    lda 0,x
+    sta 4,x
+    lda 1,x
+    sta 5,x
     inx
     inx
     inx
     inx
-    lda TMP
-    sta 0, x
-    lda TMP + 1
-    sta 1, x
     tya ; clear Z flag
     rts
 
