@@ -49,12 +49,13 @@ READ_NUMBER
 	lda	(TMP3), y
 	sta	.chars_to_process
 
-.read_hex_digit
+    dex
+    dex
+    dex
+    dex
+
+.read_digit
 	; TMP *= _BASE
-    dex
-    dex
-    dex
-    dex
     lda _BASE
     sta 0,x
     lda _BASE+1
@@ -65,15 +66,11 @@ READ_NUMBER
     sta 3,x
     jsr DMUL
     lda 2,x
-    bne .overflow
+    bne .parse_failed
     lda 0,x
     sta TMP
     lda 1,x
     sta TMP+1
-    inx
-    inx
-    inx
-    inx
 
 	; add *(++TMP3)
     ldy #0
@@ -93,36 +90,38 @@ READ_NUMBER
 
 	sec
 	cmp	#10
-	bcc	.not_a_digit
+	bcc	.parse_failed
 
 +   sec
     cmp _BASE
-    bcs .not_a_digit
+    bcs .parse_failed
 
     adc TMP
     sta TMP
     bcc +
     inc TMP + 1
-    beq .not_a_digit
+    beq .parse_failed
 +
     dec .chars_to_process
-    bne .read_hex_digit
+    bne .read_digit
 
-got_number
+    ; successful parse!
+    inx
+    inx
+    inx
+    inx
     lda TMP
     sta 0, x
     lda TMP + 1
     sta 1, x
-    lda #0
+    tya ; clear Z flag
     rts
 
-.overflow
+.parse_failed
     inx
     inx
     inx
-    inx
-.not_a_digit
-    lda #$ff
+    inx ; Z flag set
     rts
 
 .chars_to_process
