@@ -1,7 +1,6 @@
 ; UM/MOD by Garth Wilson
 ; http://6502.org/source/integers/ummodfix/ummodfix.htm
-	!word	LINK
-	!set	LINK = * - 2
+    +BACKLINK
 	!byte	6
 	!text	"um/mod"
 ; ( msw lsw divisor -- rem quot )

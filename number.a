@@ -24,8 +24,7 @@
 
 ; base is single-byte variable.
 ; allowed values: 10, 16
-	!word	LINK
-	!set	LINK = * - 2
+    +BACKLINK
 	!byte 4
 	!text	"base"
 BASE
