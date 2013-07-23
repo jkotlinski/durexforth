@@ -1331,10 +1331,11 @@ READ_NUMBER
 	sta	TMP3 + 1
 	lda	0, x	
 	sta	TMP3
+    ; TMP3 now points to string length
+    ; followed by string.
     ldy #0
     sty TMP
     sty TMP + 1
-	; TMP3 now contains a string ptr...
 _BASE = * + 1
     lda #16
     cmp #16
@@ -1345,7 +1346,6 @@ _BASE = * + 1
     beq READ_BIN_NUMBER
     rts
 
-; Z = success, NZ = fail
 READ_DEC_NUMBER
 	lda	(TMP3), y
     cmp #6  ; Max 5 digits.
@@ -1353,7 +1353,7 @@ READ_DEC_NUMBER
 	sta	.chars_to_process
 
 .read_dec_digit
-	; multiply stack top by 10
+	; *= 10
     asl TMP ; *2
     rol TMP + 1
     lda TMP
@@ -1371,7 +1371,7 @@ READ_DEC_NUMBER
     adc TMP2 + 1
     sta TMP + 1
 
-	; add *(++TMP3) to stack top
+	; add *(++TMP3)
 	iny
 	lda	(TMP3), y
 	clc
@@ -1398,10 +1398,10 @@ READ_BIN_NUMBER
 	sta	.chars_to_process
 
 .read_bin_digit
-    asl TMP ; * 2
+    asl TMP ; *= 2
     rol TMP + 1
 
-	; add *(++TMP3) to stack top
+	; add *(++TMP3)
 	iny
 	lda	(TMP3), y
 	clc
@@ -1430,7 +1430,7 @@ READ_HEX_NUMBER
 	sta	.chars_to_process
 
 .read_hex_digit
-	; multiply stack top by 16
+	; *= 16
     asl TMP
     rol TMP + 1
     asl TMP
@@ -1440,7 +1440,7 @@ READ_HEX_NUMBER
     asl TMP
     rol TMP + 1
 
-	; add *(++TMP3) to stack top
+	; add *(++TMP3)
 	iny
 	lda	(TMP3), y
 	clc
