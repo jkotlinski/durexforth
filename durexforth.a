@@ -1329,6 +1329,9 @@ READ_NUMBER
 	sta	TMP3 + 1
 	lda	0, x	
 	sta	TMP3
+    ldy #0
+    sty TMP
+    sty TMP + 1
 	; TMP3 now contains a string ptr...
 _BASE = * + 1
     lda #16
@@ -1336,19 +1339,16 @@ _BASE = * + 1
     beq READ_HEX_NUMBER
     cmp #10
     beq READ_DEC_NUMBER
+    cmp #2
+    beq READ_BIN_NUMBER
     rts
 
 ; Z = success, NZ = fail
 READ_DEC_NUMBER
-	ldy	#0
 	lda	(TMP3), y
     cmp #6  ; Max 5 digits.
     bcs .not_a_digit
 	sta	.chars_to_process
-	; clear stack...
-	lda	#0
-	sta	TMP
-	sta	TMP + 1
 
 .read_dec_digit
 	; multiply stack top by 10
@@ -1386,12 +1386,35 @@ READ_DEC_NUMBER
 +
     dec .chars_to_process
     bne .read_dec_digit
-    lda TMP
-    sta 0, x
-    lda TMP + 1
-    sta 1, x
-    lda #0
-    rts
+    jmp got_number
+
+; Z = success, NZ = fail
+READ_BIN_NUMBER
+	lda	(TMP3), y
+    cmp #17  ; Max 16 digits.
+    bcs .not_a_digit
+	sta	.chars_to_process
+
+.read_bin_digit
+    asl TMP ; * 2
+    rol TMP + 1
+
+	; add *(++TMP3) to stack top
+	iny
+	lda	(TMP3), y
+	clc
+	adc	#-$30 ; petscii 0-1 -> 0-1
+
+	sec ; within 0-1?
+	cmp	#2
+	bcs	.not_a_digit
+
+    ora TMP
+    sta TMP
+
+    dec .chars_to_process
+    bne .read_bin_digit
+    jmp got_number
 
 .not_a_digit
     lda #$ff
@@ -1399,15 +1422,10 @@ READ_DEC_NUMBER
 
 ; Z = success, NZ = fail
 READ_HEX_NUMBER
-	ldy	#0
 	lda	(TMP3), y
     cmp #5  ; Max 4 digits.
     bcs .not_a_digit
 	sta	.chars_to_process
-	; clear stack...
-	lda	#0
-	sta	TMP
-	sta	TMP + 1
 
 .read_hex_digit
 	; multiply stack top by 16
@@ -1446,6 +1464,8 @@ READ_HEX_NUMBER
 
     dec .chars_to_process
     bne .read_hex_digit
+
+got_number
     lda TMP
     sta 0, x
     lda TMP + 1

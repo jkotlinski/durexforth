@@ -39,6 +39,7 @@ swap dup here @ swap - swap ! ;
 2dup > if swap then drop ;
 : hex 10 base c! ;
 : decimal a base c! ;
+: bin 2 base c! ;
 
 : '"' [ key " ] literal ;
 : s" immed ( -- addr len )
