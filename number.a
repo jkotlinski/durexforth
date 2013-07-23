@@ -28,7 +28,7 @@
 BASE
     +VAR_CODE	_BASE
 _BASE
-    !word 16
+    !byte 16
 
 ; Z = success, NZ = fail
 ; success: ( string ptr -- number )
@@ -49,6 +49,7 @@ READ_NUMBER
     ldy #0
     sty 0,x ; build number at top of stack
     sty 1,x
+    sty 3,x
     lda (TMP3), y
     sta .chars_to_process
 
@@ -56,8 +57,6 @@ READ_NUMBER
     ; number *= _BASE
     lda _BASE
     sta 2,x
-    lda _BASE+1
-    sta 3,x
     jsr DMUL
     lda 2,x
     bne .parse_failed ; overflow!
