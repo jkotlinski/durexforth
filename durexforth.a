@@ -1324,6 +1324,8 @@ BASE
 	+VAR_CODE	_BASE
 
 ; Z = success, NZ = fail
+; success: ( string ptr -- number )
+; fail: ( string ptr -- string ptr )
 READ_NUMBER
 	lda	1, x	
 	sta	TMP3 + 1
