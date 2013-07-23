@@ -29,6 +29,8 @@
 	!text	"base"
 BASE
 	+VAR_CODE	_BASE
+_BASE
+    !word 16
 
 ; Z = success, NZ = fail
 ; success: ( string ptr -- number )
@@ -43,8 +45,7 @@ READ_NUMBER
     ldy #0
     sty TMP
     sty TMP + 1
-_BASE = * + 1
-    lda #16
+    lda _BASE
     cmp #16
     beq READ_HEX_NUMBER
     cmp #10
