@@ -43,20 +43,19 @@ READ_NUMBER
     ; TMP3 now points to string length
     ; followed by string.
 
+    dex
+    dex
+    dex
+    dex
+
     ldy #0
+    sty 0,x ; build number at top of stack
+    sty 1,x
 	lda	(TMP3), y
 	sta	.chars_to_process
 
-    dex
-    dex
-    dex
-    dex
-
-    sty 0,x
-    sty 1,x
-
 .read_digit
-	; TMP *= _BASE
+	; number *= _BASE
     lda _BASE
     sta 2,x
     lda _BASE+1
@@ -93,8 +92,7 @@ READ_NUMBER
     bcc +
     inc 1,x
     beq .parse_failed
-+
-    dec .chars_to_process
++   dec .chars_to_process
     bne .read_digit
 
     ; successful parse!
