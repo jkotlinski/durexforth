@@ -73,7 +73,6 @@ READ_NUMBER
     sta TMP+1
 
 	; add *(++TMP3)
-    ldy #0
     inc TMP3
     bcc +
     inc TMP3+1
