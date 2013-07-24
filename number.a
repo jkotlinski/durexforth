@@ -54,16 +54,9 @@ READ_NUMBER
     sta .chars_to_process
 
 .read_digit
-    ; number *= _BASE
-    lda _BASE
-    sta 2,x
-    jsr DMUL
-    lda 2,x
-    bne .parse_failed ; overflow!
-
     ; add *(++TMP3)
     inc TMP3
-    bcc +
+    bne +
     inc TMP3+1
 +   lda (TMP3), y
     clc
@@ -90,9 +83,17 @@ READ_NUMBER
     inc 1,x
     beq .parse_failed
 +   dec .chars_to_process
-    bne .read_digit
+    beq .done
 
-    ; successful parse!
+    ; number *= _BASE
+    lda _BASE
+    sta 2,x
+    jsr DMUL
+    lda 2,x
+    bne .parse_failed ; overflow!
+    jmp .read_digit
+
+.done
     lda 0,x
     sta 4,x
     lda 1,x
