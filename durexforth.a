@@ -266,27 +266,22 @@ SWAP
 	sty	2, x
 	+NEXT
 
+!macro _DUP {
+	dex
+	dex
+	lda	3, x
+	sta	1, x
+	lda	2, x
+	sta	0, x
+}
+
 ; DUP
     +BACKLINK
 	!byte	3
 	!text	"dup"
 DUP
-	dex
-	dex
-	lda	3, x
-	sta	1, x
-	lda	2, x
-	sta	0, x
+    +_DUP
 	+NEXT
-
-_DUP
-	dex
-	dex
-	lda	3, x
-	sta	1, x
-	lda	2, x
-	sta	0, x
-	rts
 
 ; OVER
     +BACKLINK
@@ -1241,7 +1236,7 @@ INTERPRET
 	jsr READ_NUMBER
     beq .was_number
 
-    jsr _DUP
+    +_DUP
 	jsr	_FIND ; replace string with dictionary ptr
 	bne	.found_word
     jmp .on_word_not_found_error
