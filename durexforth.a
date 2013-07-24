@@ -302,23 +302,21 @@ OVER
 	!byte	2
 	!text	"1+"
 INCR
-	inc	0, x
-	bne	+
-	inc	1, x
-+
-	+NEXT
+    inc 0, x
+    bne +
+    inc 1, x
++   +NEXT
 
 ; 1-
     +BACKLINK
 	!byte	2
 	!text	"1-"
 DECR
-	lda	0, x
-	bne	+
-	dec	1, x
-+
-	dec	0, x
-	+NEXT
+    lda 0, x
+    bne +
+    dec 1, x
++   dec 0, x
+    +NEXT
 
 ; +
     +BACKLINK
