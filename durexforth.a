@@ -87,8 +87,6 @@ C_YELLOW = 7
 
 !ct pet
 
-SCREEN_COLOR = 0
-	
 !macro NEXT {
 	jmp	NEXT_IMPL
 }
@@ -108,7 +106,7 @@ SCREEN_COLOR = 0
 	lda	#%00010110 ; lowercase
 	sta	$d018
 
-	lda	#SCREEN_COLOR
+	lda	#0
 	sta	$d020
 	sta	$d021
 
@@ -124,14 +122,14 @@ reset_print_ok
 	sta	_START + 1
 
 reset
-	lda	#SCREEN_COLOR
-	sta	$d020
-	sta	$d021
 	lda	#C_YELLOW
 	sta	CURSOR_COLOR
 
-    ; Clears color area.
 	ldx	#0
+	stx	$d020
+	stx	$d021
+
+    ; Clears color area.
 -	sta $d800, x
 	sta $d900, x
 	sta $da00, x
