@@ -136,9 +136,6 @@ s" asm" load
 :asm 100/
 1 lda,x 0 sta,x 0 lda,# 1 sta,x ;asm
 
-:asm pushya
-dex, 0 sty,x dex, 0 sta,x ;asm
-
 # creates value that is fast to read
 # but can only be rewritten by "to".
 #  0 value foo

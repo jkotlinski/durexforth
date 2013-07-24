@@ -163,24 +163,30 @@ restore_handler
 
 ; ----------- macros
 
+!set LINK = 0
+
 !macro BACKLINK {
 	!word	LINK
 	!set	LINK = * - 2
 }
 
-!macro VAR_CODE .word {
+    +BACKLINK
+	!byte 6
+	!text	"pushya"
+pushya
 	dex
 	dex
-	lda	#<.word
 	sta	0, x
-	lda	#>.word
-	sta	1, x
+	sty	1, x
 	+NEXT
+
+!macro VAR_CODE .word {
+	lda	#<.word
+	ldy	#>.word
+    jmp pushya
 }
 
 ; ---------- words
-
-!set LINK = 0
 
 __DOCOL
 	lda	IP
