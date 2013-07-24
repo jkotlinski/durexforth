@@ -87,9 +87,12 @@ C_YELLOW = 7
 
 !ct pet
 
-BORDER_COLOR = 0
 SCREEN_COLOR = 0
 	
+!macro NEXT {
+	jmp	NEXT_IMPL
+}
+
 	; set up restore key
 	sei
 	lda	#<restore_handler
@@ -105,9 +108,8 @@ SCREEN_COLOR = 0
 	lda	#%00010110 ; lowercase
 	sta	$d018
 
-	lda	#BORDER_COLOR
-	sta	$d020
 	lda	#SCREEN_COLOR
+	sta	$d020
 	sta	$d021
 
 	lda	_START + 1
@@ -122,9 +124,8 @@ reset_print_ok
 	sta	_START + 1
 
 reset
-	lda	#BORDER_COLOR
-	sta	$d020
 	lda	#SCREEN_COLOR
+	sta	$d020
 	sta	$d021
 	lda	#C_YELLOW
 	sta	CURSOR_COLOR
@@ -147,8 +148,7 @@ reset
 	sta IP + 1
 
 	ldx	#STACK_START
-
-	jmp	NEXT_IMPL
+    +NEXT
 
 print_ok
 	lda	#'o'
@@ -157,17 +157,13 @@ print_ok
 	jsr	PUTCHR
 	lda	#$d
 	jsr	PUTCHR
-	jmp	NEXT_IMPL
+    +NEXT
 
 restore_handler
 	cli
     jmp reset_print_ok
 
 ; ----------- macros
-
-!macro NEXT {
-	jmp	NEXT_IMPL
-}
 
 !macro BACKLINK {
 	!word	LINK
