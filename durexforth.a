@@ -710,9 +710,9 @@ COMPILE_RAM
 	!byte 4
 	!text	"here"
 HERE_CODE
-	+VAR_CODE	HERE
-HERE
-	!word	_LATEST + 2
+HERE_LSB = * + 1
+HERE_MSB = * + 3
+	+VAR_CODE	_LATEST + 2
 
 ; NEXT
     +BACKLINK
@@ -1430,9 +1430,9 @@ HEADER
 	jsr	_WORD
 
 	; store link in header. TMP = dst
-	lda	HERE
+	lda	HERE_LSB
 	sta	TMP
-	lda	HERE + 1
+	lda	HERE_MSB
 	sta	TMP + 1
 
 	ldy	#0
@@ -1470,9 +1470,9 @@ HEADER
 	bne	-
 
 	; update _LATEST
-	lda	HERE
+	lda	HERE_LSB
 	sta	_LATEST
-	lda	HERE + 1
+	lda	HERE_MSB
 	sta	_LATEST + 1
 	
 	; update HERE
@@ -1480,12 +1480,12 @@ HEADER
 	tya
 	clc
 	adc	TMP
-	sta	HERE
+	sta	HERE_LSB
 	bcc	+
 	inc	TMP + 1
 +
 	lda	TMP + 1
-	sta	HERE + 1
+	sta	HERE_MSB
 
 	inx
 	inx
@@ -1497,9 +1497,9 @@ HEADER
 	!byte	2
 	!text	"c,"
 CCOMMA
-	lda	HERE
+	lda	HERE_LSB
 	sta	TMP
-	lda	HERE + 1
+	lda	HERE_MSB
 	sta	TMP + 1
 
 	ldy	#0
@@ -1507,9 +1507,9 @@ CCOMMA
 	sta	(TMP), y
 
 	; update HERE
-	inc	HERE
+	inc	HERE_LSB
 	bne	+
-	inc HERE + 1
+	inc HERE_MSB
 +
 	inx
 	inx
@@ -1523,9 +1523,9 @@ COMMA
 	jsr	_COMMA
 	+NEXT
 _COMMA
-	lda	HERE
+	lda	HERE_LSB
 	sta	TMP
-	lda	HERE + 1
+	lda	HERE_MSB
 	sta	TMP + 1
 
 	ldy	#0
@@ -1536,12 +1536,12 @@ _COMMA
 	sta	(TMP), y
 
 	; update HERE
-	lda	HERE
+	lda	HERE_LSB
 	clc
 	adc	#2
-	sta	HERE
+	sta	HERE_LSB
 	bcc	+
-	inc HERE + 1
+	inc HERE_MSB
 +
 	inx
 	inx

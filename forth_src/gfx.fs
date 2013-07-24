@@ -93,7 +93,7 @@ hide mask
 
 : doplot ( x y -- )
 blitloc tuck c@
-[ here @ loc blitop >cfa ! ] or
+[ here loc blitop >cfa ! ] or
 swap c! ;
 
 : chkplot ( x y -- )
@@ -146,7 +146,7 @@ zptmp lda,(y) zptmp2 1+ sta, dey,
 
 # c@ mask c@ or
 zptmp2 lda,(y)
-here @ loc blitop >cfa 2+ !
+here loc blitop >cfa 2+ !
 mask ora,
 
 # addr @ c!
@@ -496,13 +496,13 @@ jmp, # recurse
 if 2drop exit then
 2dup peek if 2drop exit then
 
-here @ stk !
+here stk !
 # push y x x 1
 2dup swap dup 1 spush
 # push y+1 x x -1
 1+ swap dup ffff spush
 
-begin here @ stk @ < while
+begin here stk @ < while
 spop dy @ + # y
 
 # left line
@@ -511,7 +511,7 @@ x1 @ over # y x y
 scanl
 over x1 @ # y x y x x1
 s< 0= if
-branch [ here @ >r 0 , ] # goto skip
+branch [ here >r 0 , ] # goto skip
 then
 # y x y ...
 over 1+ dup l ! 
@@ -535,7 +535,7 @@ dup x2 @ 1+ 3 pick 1- dy @ negate spush
 then
 
 # skip: y x y
-[ r> here @ over - swap ! ]
+[ r> here over - swap ! ]
 
 swap 1+ swap
 2dup blitloc scanr 

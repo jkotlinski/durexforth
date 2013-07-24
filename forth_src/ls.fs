@@ -2,8 +2,8 @@
 
 # submitted by kevin reno
 : load$
-s" $" here @ loadb drop
-ae @ 2 - here @ ;
+s" $" here loadb drop
+ae @ 2 - here ;
 
 : blocks ar ! xr ! bdcd jsr
 space ;

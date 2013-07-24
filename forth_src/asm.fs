@@ -161,15 +161,15 @@ foo lda,
 +branch beq,
 bar inc,
 :+ )
-: +branch ( -- a ) here @ 0 ;
+: +branch ( -- a ) here 0 ;
 : :+ ( a -- )
-here @ over 2+ - swap 1+ c! ;
+here over 2+ - swap 1+ c! ;
 
 ( usage:
 :- d014 lda, f4 cmp,#
 -branch bne, )
-: :- here @ ;
+: :- here ;
 : -branch ( absaddr -- reladdr )
-here @ 2+ - ;
+here 2+ - ;
 
 hide 1mi hide 2mi hide 3mi hide 23mi

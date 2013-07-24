@@ -23,7 +23,7 @@ latest @ begin ?dup while
 : see
 	word find
     dup 0= if exit then
-	here @
+	here
 	latest @
 	begin
 		2 pick
@@ -159,7 +159,7 @@ cr ;
 # size foo prints size of foo
 : size ( -- )
 word find >r
-here @ latest @ # prev curr
+here latest @ # prev curr
 begin dup while
 dup r@ = if
 - . r> drop exit then

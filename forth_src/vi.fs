@@ -42,7 +42,7 @@ a lda,# 2 bne, ( a = lt red )
 :+ 1 lda,# ( 1 = white )
 286 sta, ( switch color code )
 
-here @
+here
 zptmp lda,(y)
 e716 jsr, # putchar
 zptmp inc,
@@ -58,7 +58,7 @@ jmp,
 0 ldy,x zptmp sty,
 1 ldy,x zptmp 1+ sty,
 0 ldy,#
-here @
+here
 zptmp lda,(y)
 zptmp inc, 2 bne, zptmp 1+ inc,
 0 cmp,#
@@ -693,8 +693,8 @@ key j c, [compile] cur-down
 
 # custom restore handler
 # "vi"
-here @ key v c, key i c, d c, 0 c,
-here @ cli, # entry
+here key v c, key i c, d c, 0 c,
+here cli, # entry
 swap dup # asm vi vi 
 # compile-ram="vi"
 lda,# compile-ram sta,

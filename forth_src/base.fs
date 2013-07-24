@@ -11,15 +11,15 @@
 : loc word find ;
 : [compile] immed loc >cfa , ;
 : ['] immed ' lit , ;
-: if immed ' 0branch , here @ 0 , ;
-: then immed dup here @ swap - swap ! ;
-: else immed ' branch , here @ 0 ,
-swap dup here @ swap - swap ! ;
-: begin immed here @ ;
-: until immed ' 0branch , here @ - , ;
-: again immed ' branch , here @ - , ;
-: while immed ' 0branch , here @ 0 , ;
-: repeat immed ' branch , swap here @ - , dup here @ swap - swap ! ;
+: if immed ' 0branch , here 0 , ;
+: then immed dup here swap - swap ! ;
+: else immed ' branch , here 0 ,
+swap dup here swap - swap ! ;
+: begin immed here ;
+: until immed ' 0branch , here - , ;
+: again immed ' branch , here - , ;
+: while immed ' 0branch , here 0 , ;
+: repeat immed ' branch , swap here - , dup here swap - swap ! ;
 : recurse immed latest @ >cfa , ;
 : ( immed begin key [ key ) ] literal = until ;
 : # immed begin key d = until ; # comment
@@ -44,7 +44,7 @@ swap dup here @ swap - swap ! ;
 : s" immed ( -- addr len )
 	state @ if
 		' litstring ,
-		here @ ( save addr of length byte on stack )
+		here ( save addr of length byte on stack )
 		0 c, ( dummy length - we don't know what it is yet )
 		begin
 			key
@@ -54,11 +54,11 @@ swap dup here @ swap - swap ! ;
 		repeat
 		drop
 		dup
-		here @ swap -
+		here swap -
 		1- ( subtract to compensate for length byte )
 		swap c!
 	else ( immediate mode )
-		here @
+		here
 		begin
 			key
 			dup '"' <>
@@ -67,8 +67,8 @@ swap dup here @ swap - swap ! ;
 			1+
 		repeat
 		drop
-		here @ -
-		here @
+		here -
+		here
 		swap
 	then
 ;
@@ -88,8 +88,6 @@ while emit repeat drop ;
 : of immed ' over , ' = , [compile] if ' drop , ;
 : endof immed [compile] else ;
 : endcase immed ' drop , begin ?dup while [compile] then repeat ;
-
-: forget loc ?dup if dup @ latest ! here ! then ;
 
 : .s ( -- )
 	sp0 1- 1-
@@ -111,7 +109,7 @@ while emit repeat drop ;
 : hide
 loc ?dup if hidden else ." err" then ;
 
-here @ [compile] exit
+here [compile] exit
 : create
 # default behavior = exit
 header bl c, ['] dodoes , literal , ;
@@ -177,6 +175,8 @@ then ;
 :asm 2drop ( a b -- )
 inx, inx, inx, inx, ;asm
 
+: forget loc ?dup if dup @ latest ! to here then ;
+
 : hide-to  ( -- )
 loc latest
 begin @ dup hidden 2dup = until
@@ -184,7 +184,7 @@ begin @ dup hidden 2dup = until
 
 : save-forth ( strptr strlen -- )
 compile-ram @ -rot 0 compile-ram !
-801 -rot here @ -rot saveb
+801 -rot here -rot saveb
 compile-ram ! ;
 
 :asm 2/ 1 lsr,x 0 ror,x ;asm
@@ -208,18 +208,18 @@ zptmp lda,(y) 3 adc,x zptmp sta,(y)
 inx, inx, inx, inx, ;asm
 
 : allot ( n -- prev-here )
-here @ swap here +! ;
+here swap over + to here ;
 
 : var 2 allot value ;
 
 var ar var xr var yr
 
 :asm jsr
-0 lda,x here @ 1+ 1234 sta, # lsb
-1 lda,x here @ 1+ 1234 sta, # msb
+0 lda,x here 1+ 1234 sta, # lsb
+1 lda,x here 1+ 1234 sta, # msb
 txa, pha,
 ar lda, xr ldx, yr ldy,
-here @ 2+ swap ! here @ 1+ swap !
+here 2+ swap ! here 1+ swap !
 1234 jsr,
 ar sta, xr stx, yr sty,
 pla, tax, inx, inx, ;asm
@@ -259,7 +259,7 @@ s" vi" load
 
 : scratch ( strptr strlen -- )
 tuck ( strlen strptr strlen )
-dup here @ + ( strlen strptr strlen tmpbuf )
+dup here + ( strlen strptr strlen tmpbuf )
 dup >r
 dup [ key s ] literal swap c! 1+
 dup [ key : ] literal swap c! 1+
