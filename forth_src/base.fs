@@ -118,15 +118,6 @@ header bl c, ['] dodoes , literal , ;
 .( asm..)
 s" asm" load
 
-:asm 0 latest @ hidden
-dex, dex, 0 lda,#
-0 sta,x 1 sta,x ;asm
-latest @ hidden
-:asm 1 latest @ hidden
-dex, dex, 1 ldy,#
-0 sty,x dey, 1 sty,x ;asm
-latest @ hidden
-
 :asm rot ( a b c -- b c a )
 5 ldy,x 3 lda,x 5 sta,x 1 lda,x
 3 sta,x 1 sty,x
@@ -154,6 +145,7 @@ dup :asm
 lda,# 100/ ldy,# 
 ['] pushya jmp, ;
 
+0 value 0 1 value 1
 88 value zptmp
 8a value zptmp2
 8c value zptmp3
