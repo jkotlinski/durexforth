@@ -191,8 +191,7 @@ restore_handler
 __DOCOL
 	lda	IP
 	sta	TMP
-	lda	IP + 1
-    tay
+	ldy	IP + 1
 
 	pla
 	sta	IP
