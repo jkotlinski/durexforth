@@ -460,18 +460,15 @@ LT
 	!byte	2
 	!text	"0="
 ZEQU
-	lda	1, x
-	bne +
-	lda	0, x
-	bne +
-	lda	#$ff
-	jmp	++
-+
-	lda	#0
-++
-	sta	1, x
-	sta	0, x
-	+NEXT
+    ldy #0
+    lda 1, x
+    bne +
+    lda 0, x
+    bne +
+    ldy #$ff
++   sty 1, x
+    sty 0, x
+    +NEXT
 
 ; AND
     +BACKLINK
