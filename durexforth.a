@@ -434,25 +434,22 @@ EQU
 	!byte	1
 	!text	"<"
 LT
+    ldy #0
 	lda	1, x
 	cmp	3, x
 	bcc .false
 	bne	.true
 	; ok, msb are equal...
-	lda	0, x
-	cmp	2, x
-	bcc	.false
-	bne	.true
-.false
-	lda	#0
-	jmp	++
+	lda	2, x
+	cmp	0, x
+	bcs	.false
 .true
-	lda	#$ff
-++
+	ldy	#$ff
+.false
 	inx
 	inx
-	sta	1, x
-	sta	0, x
+	sty	1, x
+	sty	0, x
 	+NEXT
 
 ; 0=
