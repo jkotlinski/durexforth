@@ -1230,12 +1230,15 @@ INTERPRET
 
 	jsr	_WORD ; push string to stack
 
-	jsr READ_NUMBER
-    beq .was_number
-
     +_DUP
 	jsr	_FIND ; replace string with dictionary ptr
 	bne	.found_word
+
+    inx ; drop
+    inx
+	jsr READ_NUMBER
+    beq .was_number
+
     jmp .on_word_not_found_error
 
 	; yep, it's a number...
