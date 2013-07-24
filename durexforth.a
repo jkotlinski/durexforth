@@ -407,26 +407,21 @@ rotate_r
 
 !src "ummod.a"
 
-; =
     +BACKLINK
 	!byte	1
 	!text	"="
-EQU
+    ldy #0
 	lda	1, x
 	cmp	3, x
 	bne	+
 	lda	0, x
 	cmp	2, x
 	bne	+
-	lda	#$ff
-	jmp	++
-+
-	lda	#0
-++
+	ldy	#$ff
++   inx
 	inx
-	inx
-	sta	1, x
-	sta	0, x
+	sty 1, x
+	sty	0, x
 	+NEXT
 
 ; <
