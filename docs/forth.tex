@@ -123,9 +123,10 @@ and 0 - 7FFF are positive. (E.g., FFFF means -1.)
 \section{Logic}
 
 \begin{description}
-\item[0= ( a -- b)] Is a equal to zero?  
-\item[= ( a b -- c )] Is a equal to b?
-\item[$<>$ ( a b -- c )] Does a differ from b?
+\item[0= ( a -- flag)] Is a equal to zero?
+\item[0$<>$ ( a -- flag )] Is a not equal to 0?
+\item[= ( a b -- flag )] Is a equal to b?
+\item[$<>$ ( a b -- flag )] Does a differ from b?
 \item[and ( a b -- c )] Binary and.  
 \item[or ( a b -- c )] Binary or.  
 \item[xor ( a b -- c )] Binary exclusive or.  
