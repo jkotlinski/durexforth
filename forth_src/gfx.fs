@@ -256,7 +256,7 @@ then
 dup if # y?
 over cx + over cy swap - chkplot
 then
-over 0= 0= over 0= 0= and if
+over 0<> over 0<> and if
 over cx swap - over cy swap - chkplot
 then ;
 
