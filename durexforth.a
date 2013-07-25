@@ -88,77 +88,77 @@ C_YELLOW = 7
 !ct pet
 
 !macro NEXT {
-	jmp	NEXT_IMPL
+    jmp	NEXT_IMPL
 }
 
-	; set up restore key
-	sei
-	lda	#<restore_handler
-	sta $318
-	lda	#>restore_handler
-	sta $319
-	cli
+    ; set up restore key
+    sei
+    lda	#<restore_handler
+    sta $318
+    lda	#>restore_handler
+    sta $319
+    cli
 
-	; clrscr
-	lda #K_CLRSCR
-	jsr PUTCHR
+    ; clrscr
+    lda #K_CLRSCR
+    jsr PUTCHR
 
-	lda	#%00010110 ; lowercase
-	sta	$d018
+    lda	#%00010110 ; lowercase
+    sta	$d018
 
-	lda	#0
-	sta	$d020
-	sta	$d021
+    lda	#0
+    sta	$d020
+    sta	$d021
 
-	lda	_START + 1
+    lda	_START + 1
     bne	reset
-	; first time ever app is started...
-	jsr	load_base
+    ; first time ever app is started...
+    jsr	load_base
 
 reset_print_ok
-	lda	#<print_ok
-	sta	_START
-	lda	#>print_ok
-	sta	_START + 1
+    lda	#<print_ok
+    sta	_START
+    lda	#>print_ok
+    sta	_START + 1
 
 reset
-	lda	#C_YELLOW
-	sta	CURSOR_COLOR
+    lda	#C_YELLOW
+    sta	CURSOR_COLOR
 
-	ldx	#0
-	stx	$d020
-	stx	$d021
+    ldx	#0
+    stx	$d020
+    stx	$d021
 
     ; Clears color area.
 -	sta $d800, x
-	sta $d900, x
-	sta $da00, x
-	sta $db00, x
-	dex
-	bne	-
+    sta $d900, x
+    sta $da00, x
+    sta $db00, x
+    dex
+    bne	-
 
     inx
-	stx	_LINEBUF ; Enables line buffering.
+    stx	_LINEBUF ; Enables line buffering.
 
-	lda	#<_START
-	sta IP
-	lda #>_START
-	sta IP + 1
+    lda	#<_START
+    sta IP
+    lda #>_START
+    sta IP + 1
 
-	ldx	#STACK_START
+    ldx	#STACK_START
     +NEXT
 
 print_ok
-	lda	#'o'
-	jsr	PUTCHR
-	lda	#'k'
-	jsr	PUTCHR
-	lda	#$d
-	jsr	PUTCHR
+    lda	#'o'
+    jsr	PUTCHR
+    lda	#'k'
+    jsr	PUTCHR
+    lda	#$d
+    jsr	PUTCHR
     +NEXT
 
 restore_handler
-	cli
+    cli
     jmp reset_print_ok
 
 ; ----------- macros
@@ -166,141 +166,141 @@ restore_handler
 !set LINK = 0
 
 !macro BACKLINK {
-	!word	LINK
-	!set	LINK = * - 2
+    !word	LINK
+    !set	LINK = * - 2
 }
 
     +BACKLINK
-	!byte 6
-	!text	"pushya"
+    !byte 6
+    !text	"pushya"
 pushya
-	dex
-	dex
-	sta	0, x
-	sty	1, x
-	+NEXT
+    dex
+    dex
+    sta	0, x
+    sty	1, x
+    +NEXT
 
 !macro VALUE .word {
-	lda	#<.word
-	ldy	#>.word
+    lda	#<.word
+    ldy	#>.word
     jmp pushya
 }
 
 ; ---------- words
 
 __DOCOL
-	lda	IP
-	sta	TMP
-	ldy	IP + 1
+    lda	IP
+    sta	TMP
+    ldy	IP + 1
 
-	pla
-	sta	IP
-	pla
-	sta	IP + 1
+    pla
+    sta	IP
+    pla
+    sta	IP + 1
 
-	; adjust for weird return address after jsr...
-	inc	IP
-	bne +
-	inc	IP + 1
+    ; adjust for weird return address after jsr...
+    inc	IP
+    bne +
+    inc	IP + 1
 +
 
-	; push old IP to return stack
-	lda	TMP
-	pha
+    ; push old IP to return stack
+    lda	TMP
+    pha
     tya
-	pha
+    pha
 
-	; fall through...
+    ; fall through...
 
 NEXT_IMPL
 
-	; (IP) -> W
-	ldy	#1
-	lda	(IP), y
-	sta	+ + 2
-	dey
-	lda	(IP), y
-	sta	+ + 1
+    ; (IP) -> W
+    ldy	#1
+    lda	(IP), y
+    sta	+ + 2
+    dey
+    lda	(IP), y
+    sta	+ + 1
 
-	; IP += 2
-	lda	IP
-	clc
-	adc	#2
-	sta	IP
-	bcc +
-	inc	IP + 1
+    ; IP += 2
+    lda	IP
+    clc
+    adc	#2
+    sta	IP
+    bcc +
+    inc	IP + 1
 +   jmp	0
 
 ; START - points to the code of the startup word.
     +BACKLINK
-	!byte 5
-	!text	"start"
-	+VALUE	_START
+    !byte 5
+    !text	"start"
+    +VALUE	_START
 _START
-	!word	0
-	!word	QUIT
+    !word	0
+    !word	QUIT
 
 ; DROP
     +BACKLINK
-	!byte	4
-	!text	"drop"
+    !byte	4
+    !text	"drop"
 DROP
-	inx
-	inx
-	+NEXT
+    inx
+    inx
+    +NEXT
 
 ; SWAP
     +BACKLINK
-	!byte	4
-	!text	"swap"
+    !byte	4
+    !text	"swap"
 SWAP
-	ldy	1, x
-	lda	3, x
-	sta 1, x
-	sty	3, x
+    ldy	1, x
+    lda	3, x
+    sta 1, x
+    sty	3, x
 
-	ldy	0, x
-	lda	2, x
-	sta 0, x
-	sty	2, x
-	+NEXT
+    ldy	0, x
+    lda	2, x
+    sta 0, x
+    sty	2, x
+    +NEXT
 
 !macro _DUP {
-	dex
-	dex
-	lda	3, x
-	sta	1, x
-	lda	2, x
-	sta	0, x
+    dex
+    dex
+    lda	3, x
+    sta	1, x
+    lda	2, x
+    sta	0, x
 }
 
 ; DUP
     +BACKLINK
-	!byte	3
-	!text	"dup"
+    !byte	3
+    !text	"dup"
 DUP
     +_DUP
-	+NEXT
+    +NEXT
 
 ; OVER
     +BACKLINK
-	!byte	4
-	!text	"over"
+    !byte	4
+    !text	"over"
 OVER
-	dex
-	dex
+    dex
+    dex
 
-	lda	5, x
-	sta	1, x
-	lda	4, x
-	sta	0, x
+    lda	5, x
+    sta	1, x
+    lda	4, x
+    sta	0, x
 
-	+NEXT
+    +NEXT
 
 ; 1+
     +BACKLINK
-	!byte	2
-	!text	"1+"
+    !byte	2
+    !text	"1+"
 INCR
     inc 0, x
     bne +
@@ -309,8 +309,8 @@ INCR
 
 ; 1-
     +BACKLINK
-	!byte	2
-	!text	"1-"
+    !byte	2
+    !text	"1-"
 DECR
     lda 0, x
     bne +
@@ -320,129 +320,129 @@ DECR
 
 ; +
     +BACKLINK
-	!byte	1
-	!text	"+"
+    !byte	1
+    !text	"+"
   lda	0, x
-	clc
-	adc 2, x
-	sta	2, x
+    clc
+    adc 2, x
+    sta	2, x
 
-	lda	1, x
-	adc 3, x
-	sta 3, x
+    lda	1, x
+    adc 3, x
+    sta 3, x
 
-	inx
-	inx
+    inx
+    inx
 
-	+NEXT
+    +NEXT
 
 ; -
     +BACKLINK
-	!byte	1
-	!text	"-"
+    !byte	1
+    !text	"-"
 SUB
-	lda	2, x
-	sec
-	sbc 0, x
-	sta	2, x
+    lda	2, x
+    sec
+    sbc 0, x
+    sta	2, x
 
-	lda 3, x
-	sbc 1, x
-	sta 3, x
+    lda 3, x
+    sbc 1, x
+    sta 3, x
 
-	inx
-	inx
+    inx
+    inx
 
-	+NEXT
+    +NEXT
 
 product = TMP
 
     +BACKLINK
-	!byte	2
-	!text	"d*"
+    !byte	2
+    !text	"d*"
     jsr DMUL
     +NEXT
 ; wastes TMP, TMP2, y
 DMUL
-	lda #$00
-	sta product+2 ; clear upper bits of product
-	sta product+3 
-	ldy #$10 ; set binary count to 16 
+    lda #$00
+    sta product+2 ; clear upper bits of product
+    sta product+3 
+    ldy #$10 ; set binary count to 16 
 .shift_r
-	lsr 3, x ; multiplier+1 ; divide multiplier by 2 
-	ror 2, x ; multiplier
-	bcc rotate_r 
-	lda product+2 ; get upper half of product and add multiplicand
-	clc
-	adc 0, x ; multiplicand
-	sta product+2
-	lda product+3 
-	adc 1, x ; multiplicand+1
+    lsr 3, x ; multiplier+1 ; divide multiplier by 2 
+    ror 2, x ; multiplier
+    bcc rotate_r 
+    lda product+2 ; get upper half of product and add multiplicand
+    clc
+    adc 0, x ; multiplicand
+    sta product+2
+    lda product+3 
+    adc 1, x ; multiplicand+1
 rotate_r 
-	ror ; rotate partial product 
-	sta product+3 
-	ror product+2
-	ror product+1 
-	ror product 
-	dey
-	bne .shift_r 
+    ror ; rotate partial product 
+    sta product+3 
+    ror product+2
+    ror product+1 
+    ror product 
+    dey
+    bne .shift_r 
 
-	lda	product
-	sta	0, x
-	lda	product + 1
-	sta	1, x
-	lda	product + 2
-	sta	2, x
-	lda	product + 3
-	sta	3, x
+    lda	product
+    sta	0, x
+    lda	product + 1
+    sta	1, x
+    lda	product + 2
+    sta	2, x
+    lda	product + 3
+    sta	3, x
     rts
 
 !src "ummod.a"
 
     +BACKLINK
-	!byte	1
-	!text	"="
+    !byte	1
+    !text	"="
     ldy #0
-	lda	1, x
-	cmp	3, x
-	bne	+
-	lda	0, x
-	cmp	2, x
-	bne	+
-	ldy	#$ff
+    lda	1, x
+    cmp	3, x
+    bne	+
+    lda	0, x
+    cmp	2, x
+    bne	+
+    ldy	#$ff
 +   inx
-	inx
-	sty 1, x
-	sty	0, x
-	+NEXT
+    inx
+    sty 1, x
+    sty	0, x
+    +NEXT
 
 ; <
     +BACKLINK
-	!byte	1
-	!text	"<"
+    !byte	1
+    !text	"<"
 LT
     ldy #0
-	lda	1, x
-	cmp	3, x
-	bcc .false
-	bne	.true
-	; ok, msb are equal...
-	lda	2, x
-	cmp	0, x
-	bcs	.false
+    lda	1, x
+    cmp	3, x
+    bcc .false
+    bne	.true
+    ; ok, msb are equal...
+    lda	2, x
+    cmp	0, x
+    bcs	.false
 .true
-	ldy	#$ff
+    ldy	#$ff
 .false
-	inx
-	inx
-	sty	1, x
-	sty	0, x
-	+NEXT
+    inx
+    inx
+    sty	1, x
+    sty	0, x
+    +NEXT
 
 ; 0=
     +BACKLINK
-	!byte	2
-	!text	"0="
+    !byte	2
+    !text	"0="
 ZEQU
     ldy #0
     lda 1, x
@@ -456,427 +456,427 @@ ZEQU
 
 ; AND
     +BACKLINK
-	!byte	3
-	!text	"and"
+    !byte	3
+    !text	"and"
 AAND
-	lda	1, x
-	and 3, x
-	sta 3, x
+    lda	1, x
+    and 3, x
+    sta 3, x
 
-	lda	0, x
-	and 2, x
-	sta 2, x
+    lda	0, x
+    and 2, x
+    sta 2, x
 
-	inx
-	inx
+    inx
+    inx
 
-	+NEXT
+    +NEXT
 
 ; !
     +BACKLINK
-	!byte	1
-	!text	"!"
+    !byte	1
+    !text	"!"
 STORE
-	lda	2, x
-	sta (0, x)
-	inc	0, x
-	bne	+
-	inc	1, x
+    lda	2, x
+    sta (0, x)
+    inc	0, x
+    bne	+
+    inc	1, x
 +
-	lda	3, x
-	sta	(0, x)
+    lda	3, x
+    sta	(0, x)
 
-	inx
-	inx
-	inx
-	inx
-	+NEXT
+    inx
+    inx
+    inx
+    inx
+    +NEXT
 
 ; @
     +BACKLINK
-	!byte	1
-	!text	"@"
+    !byte	1
+    !text	"@"
 FETCH
-	lda	(0, x)
-	tay
-	inc	0, x
-	bne +
-	inc 1, x
+    lda	(0, x)
+    tay
+    inc	0, x
+    bne +
+    inc 1, x
 +
-	lda (0, x)
-	sta	1, x
-	sty	0, x
+    lda (0, x)
+    sta	1, x
+    sty	0, x
 
-	+NEXT
+    +NEXT
 
 ; C!
     +BACKLINK
-	!byte	2
-	!text	"c!"
+    !byte	2
+    !text	"c!"
 STOREBYTE
-	lda	2, x
-	sta (0, x)
+    lda	2, x
+    sta (0, x)
 
-	inx
-	inx
-	inx
-	inx
+    inx
+    inx
+    inx
+    inx
 
-	+NEXT
+    +NEXT
 
 ; C@
     +BACKLINK
-	!byte	2
-	!text	"c@"
+    !byte	2
+    !text	"c@"
 FETCHBYTE
-	lda	(0, x)
-	sta 0, x
-	ldy #0
-	sty	1, x
-	+NEXT
+    lda	(0, x)
+    sta 0, x
+    ldy #0
+    sty	1, x
+    +NEXT
 
 ; FILL ( val start len -- )
     +BACKLINK
-	!byte	4
-	!text	"fill"
+    !byte	4
+    !text	"fill"
 FILL
-	lda	4, x
-	sta	.fsrc + 1
-	lda	2, x
-	sta	.fdst + 1
-	lda	3, x
-	sta	.fdst + 2
-	lda	0, x
-	eor	#$ff
-	sta	TMP
-	lda	1, x
-	eor	#$ff
-	sta	TMP + 1
+    lda	4, x
+    sta	.fsrc + 1
+    lda	2, x
+    sta	.fdst + 1
+    lda	3, x
+    sta	.fdst + 2
+    lda	0, x
+    eor	#$ff
+    sta	TMP
+    lda	1, x
+    eor	#$ff
+    sta	TMP + 1
 
-	inx
-	inx
-	inx
-	inx
-	inx
-	inx
+    inx
+    inx
+    inx
+    inx
+    inx
+    inx
 -
-	inc	TMP
-	bne	+
-	inc	TMP + 1
-	bne	+
-	+NEXT
+    inc	TMP
+    bne	+
+    inc	TMP + 1
+    bne	+
+    +NEXT
 +
 .fsrc
-	lda	#0 ; overwrite
+    lda	#0 ; overwrite
 .fdst
-	sta	$ffff ; overwrite
+    sta	$ffff ; overwrite
 
-	; advance
-	inc	.fdst + 1
-	bne	+
-	inc	.fdst + 2
+    ; advance
+    inc	.fdst + 1
+    bne	+
+    inc	.fdst + 2
 +
-	bne	-
+    bne	-
 
 
 ; CMOVE> ( src dst len -- )
     +BACKLINK
-	!byte	6
-	!text	"cmove>"
+    !byte	6
+    !text	"cmove>"
 CMOVE_BACK
-	lda	4, x
-	sta	.bsrc + 1
-	lda	5, x
-	sta	.bsrc + 2
-	lda	2, x
-	sta	.bdst + 1
-	lda	3, x
-	sta	.bdst + 2
-	lda	0, x
-	eor	#$ff
-	sta	TMP
-	lda	1, x
-	eor	#$ff
-	sta	TMP + 1
+    lda	4, x
+    sta	.bsrc + 1
+    lda	5, x
+    sta	.bsrc + 2
+    lda	2, x
+    sta	.bdst + 1
+    lda	3, x
+    sta	.bdst + 2
+    lda	0, x
+    eor	#$ff
+    sta	TMP
+    lda	1, x
+    eor	#$ff
+    sta	TMP + 1
 
-	inx
-	inx
-	inx
-	inx
-	inx
-	inx
+    inx
+    inx
+    inx
+    inx
+    inx
+    inx
 -
-	inc	TMP
-	bne	+
-	inc	TMP + 1
-	bne	+
-	+NEXT
+    inc	TMP
+    bne	+
+    inc	TMP + 1
+    bne	+
+    +NEXT
 +
 .bsrc
-	lda	$ffff ; overwrite
+    lda	$ffff ; overwrite
 .bdst
-	sta	$ffff ; overwrite
+    sta	$ffff ; overwrite
 
-	; back
-	dec	.bsrc + 1
-	lda	.bsrc + 1
-	cmp	#$ff
-	bne	+
-	dec	.bsrc + 2
+    ; back
+    dec	.bsrc + 1
+    lda	.bsrc + 1
+    cmp	#$ff
+    bne	+
+    dec	.bsrc + 2
 +
-	dec	.bdst + 1
-	lda	.bdst + 1
-	cmp	#$ff
-	bne	+
-	dec	.bdst + 2
+    dec	.bdst + 1
+    lda	.bdst + 1
+    cmp	#$ff
+    bne	+
+    dec	.bdst + 2
 +
-	bne	-
+    bne	-
 
 ; CMOVE ( src dst len -- ) forward move
     +BACKLINK
-	!byte	5
-	!text	"cmove"
+    !byte	5
+    !text	"cmove"
 CMOVE
-	lda	4, x
-	sta	.csrc + 1
-	lda	5, x
-	sta	.csrc + 2
-	lda	2, x
-	sta	.cdst + 1
-	lda	3, x
-	sta	.cdst + 2
-	lda	0, x
-	eor	#$ff
-	sta	TMP
-	lda	1, x
-	eor	#$ff
-	sta	TMP + 1
+    lda	4, x
+    sta	.csrc + 1
+    lda	5, x
+    sta	.csrc + 2
+    lda	2, x
+    sta	.cdst + 1
+    lda	3, x
+    sta	.cdst + 2
+    lda	0, x
+    eor	#$ff
+    sta	TMP
+    lda	1, x
+    eor	#$ff
+    sta	TMP + 1
 
-	inx
-	inx
-	inx
-	inx
-	inx
-	inx
+    inx
+    inx
+    inx
+    inx
+    inx
+    inx
 -
-	inc	TMP
-	bne	+
-	inc	TMP + 1
-	bne	+
-	+NEXT
+    inc	TMP
+    bne	+
+    inc	TMP + 1
+    bne	+
+    +NEXT
 +
 .csrc
-	lda	$ffff ; overwrite
+    lda	$ffff ; overwrite
 .cdst
-	sta	$ffff ; overwrite
+    sta	$ffff ; overwrite
 
-	; advance
-	inc	.csrc + 1
-	bne	+
-	inc	.csrc + 2
+    ; advance
+    inc	.csrc + 1
+    bne	+
+    inc	.csrc + 2
 +
-	inc	.cdst + 1
-	bne	+
-	inc	.cdst + 2
+    inc	.cdst + 1
+    bne	+
+    inc	.cdst + 2
 +
-	bne	-
+    bne	-
 
 ; ---------- variables
 
 ; S0
     +BACKLINK
-	!byte 3
-	!text	"sp0"
-	+VALUE	STACK_START
+    !byte 3
+    !text	"sp0"
+    +VALUE	STACK_START
 
 ; STATE - Is the interpreter executing code (0) or compiling a word (non-zero)?
     +BACKLINK
-	!byte 5
-	!text	"state"
-	+VALUE	STATE
+    !byte 5
+    !text	"state"
+    +VALUE	STATE
 STATE
-	!word	0
+    !word	0
 
 ; COMPILE_RAM - points to RAM source code to be compiled.
     +BACKLINK
-	!byte 11
-	!text	"compile-ram"
-	+VALUE	COMPILE_RAM
+    !byte 11
+    !text	"compile-ram"
+    +VALUE	COMPILE_RAM
 COMPILE_RAM
-	!word	0
+    !word	0
 
 ; HERE - points to the next free byte of memory. When compiling, compiled words go here.
     +BACKLINK
-	!byte 4
-	!text	"here"
+    !byte 4
+    !text	"here"
 HERE_LSB = * + 1
 HERE_MSB = * + 3
-	+VALUE	_LATEST + 2
+    +VALUE	_LATEST + 2
 
 ; NEXT
     +BACKLINK
-	!byte 4
-	!text	"next"
-	+VALUE	NEXT_IMPL
+    !byte 4
+    !text	"next"
+    +VALUE	NEXT_IMPL
 
 ; ------------ i/o
 
 ; EMIT
     +BACKLINK
-	!byte	4
-	!text	"emit"
+    !byte	4
+    !text	"emit"
 EMIT
-	lda	0, x
-	inx
-	inx
-	jsr	print_char
-	+NEXT
+    lda	0, x
+    inx
+    inx
+    jsr	print_char
+    +NEXT
 
 print_char
-	ldy	#20
-	sty CURSOR_TIMER
-	ldy #1
-	sty CURSOR_STATUS ;Force cursor off
-	jsr	PUTCHR
-	rts
+    ldy	#20
+    sty CURSOR_TIMER
+    ldy #1
+    sty CURSOR_STATUS ;Force cursor off
+    jsr	PUTCHR
+    rts
 
 print_hex_nibble
-	cmp	#10
+    cmp	#10
 
-	bcc	.dec
-	; hex
-	clc
-	adc	#$41 - 10
-	jmp	+
+    bcc	.dec
+    ; hex
+    clc
+    adc	#$41 - 10
+    jmp	+
 
 .dec
-	eor	#$30
+    eor	#$30
 
 +
-	jmp	print_char
+    jmp	print_char
 
 print_hex_char
-	pha
-	lsr
-	lsr
-	lsr
-	lsr
-	jsr	print_hex_nibble
-	pla
-	pha
-	and	#$f
-	jsr	print_hex_nibble
-	pla
-	rts
+    pha
+    lsr
+    lsr
+    lsr
+    lsr
+    jsr	print_hex_nibble
+    pla
+    pha
+    and	#$f
+    jsr	print_hex_nibble
+    pla
+    rts
 
 ; c.
     +BACKLINK
-	!byte	2
-	!text	"c."
+    !byte	2
+    !text	"c."
 CDOT
-	lda	0, x
-	lsr
-	lsr
-	lsr
-	lsr
-	jsr	print_hex_nibble
-	
-	lda	0, x
-	and	#$f
-	jsr	print_hex_nibble
+    lda	0, x
+    lsr
+    lsr
+    lsr
+    lsr
+    jsr	print_hex_nibble
+    
+    lda	0, x
+    and	#$f
+    jsr	print_hex_nibble
 
     lda #K_SPACE
-	jsr	print_char
+    jsr	print_char
 
-	inx
-	inx
+    inx
+    inx
 
-	+NEXT
+    +NEXT
 
 ; . - display number on screen
     +BACKLINK
-	!byte	1
-	!text	"."
+    !byte	1
+    !text	"."
 DOT
-	jsr	_DOT
-	+NEXT
+    jsr	_DOT
+    +NEXT
 _DOT
-	lda	1, x
-	lsr
-	lsr
-	lsr
-	lsr
-	jsr print_hex_nibble
+    lda	1, x
+    lsr
+    lsr
+    lsr
+    lsr
+    jsr print_hex_nibble
 
-	lda	1, x
-	and	#$f
-	jsr	print_hex_nibble
+    lda	1, x
+    and	#$f
+    jsr	print_hex_nibble
 
-	lda	0, x
-	lsr
-	lsr
-	lsr
-	lsr
-	jsr	print_hex_nibble
-	
-	lda	0, x
-	and	#$f
-	jsr	print_hex_nibble
+    lda	0, x
+    lsr
+    lsr
+    lsr
+    lsr
+    jsr	print_hex_nibble
+    
+    lda	0, x
+    and	#$f
+    jsr	print_hex_nibble
 
-	lda	#K_SPACE
-	jsr	print_char
+    lda	#K_SPACE
+    jsr	print_char
 
-	inx
-	inx
+    inx
+    inx
 
-	rts
+    rts
 
 TIB
-	!fill 33
+    !fill 33
 
 tmp_x
-	!byte	0
+    !byte	0
 
 KEY_BUF_SIZE = 80
 KEY_BUF
-	!fill KEY_BUF_SIZE, K_RETURN
+    !fill KEY_BUF_SIZE, K_RETURN
 
 KEY_BUF_READ_POS
-	!byte 0
+    !byte 0
 KEY_BUF_WRITE_POS
-	!byte 0
+    !byte 0
 
 add_a_to_key_buf
-	ldy	#<KEY_BUF
-	sty	TMP
-	ldy	#>KEY_BUF 
-	sty	TMP + 1
+    ldy	#<KEY_BUF
+    sty	TMP
+    ldy	#>KEY_BUF 
+    sty	TMP + 1
 
-	ldy	KEY_BUF_WRITE_POS
-	sta	(TMP), y
-	inc	KEY_BUF_WRITE_POS
-	rts
+    ldy	KEY_BUF_WRITE_POS
+    sta	(TMP), y
+    inc	KEY_BUF_WRITE_POS
+    rts
 
 ; KEY... read a key from disk (if open) or keyboard.
     +BACKLINK
-	!byte	3
-	!text	"key"
+    !byte	3
+    !text	"key"
 KEY
-	jsr	_KEY
-	+NEXT
+    jsr	_KEY
+    +NEXT
 
 .unbuffered_key
-	stx	tmp_x
-	jsr	PULL_KEY
+    stx	tmp_x
+    jsr	PULL_KEY
     ldx tmp_x
-	ora	#0
-	beq	_KEY
-	dex
-	dex
-	sta	0, x
-	lda	#0
-	sta	1, x
-	rts
+    ora	#0
+    beq	_KEY
+    dex
+    dex
+    sta	0, x
+    lda	#0
+    sta	1, x
+    rts
 
 recall_last_line
     ; erase curr line
@@ -899,215 +899,215 @@ recall_last_line
 _KEY
     lda COMPILE_FILENO
     ora COMPILE_RAM + 1
-	bne	.unbuffered_key
-	lda	_LINEBUF
-	beq	.unbuffered_key
-	lda	KEY_BUF_WRITE_POS
-	cmp	KEY_BUF_READ_POS
-	bne	.get_from_key_buf
+    bne	.unbuffered_key
+    lda	_LINEBUF
+    beq	.unbuffered_key
+    lda	KEY_BUF_WRITE_POS
+    cmp	KEY_BUF_READ_POS
+    bne	.get_from_key_buf
 
-	; start filling key buf... TODO: add bounds check for buffer overwrite.
-	lda	#0
+    ; start filling key buf... TODO: add bounds check for buffer overwrite.
+    lda	#0
     sta CURSOR_BLINK  ; Enable blinking.
-	sta	KEY_BUF_READ_POS
-	sta	KEY_BUF_WRITE_POS
+    sta	KEY_BUF_READ_POS
+    sta	KEY_BUF_WRITE_POS
 
 get_char
-	stx	tmp_x
-	jsr	GETCHR
-	ldx	tmp_x
-	ora	#0
-	beq	get_char
-	cmp	#K_RETURN
-	beq	.return
+    stx	tmp_x
+    jsr	GETCHR
+    ldx	tmp_x
+    ora	#0
+    beq	get_char
+    cmp	#K_RETURN
+    beq	.return
 
-	; should key be ignored?
-	cmp	#K_LEFT
-	beq	get_char
-	cmp	#K_RIGHT
-	beq	get_char
-	cmp	#K_DOWN
-	beq	get_char
+    ; should key be ignored?
+    cmp	#K_LEFT
+    beq	get_char
+    cmp	#K_RIGHT
+    beq	get_char
+    cmp	#K_DOWN
+    beq	get_char
 
-	cmp	#K_UP
-	beq	recall_last_line
+    cmp	#K_UP
+    beq	recall_last_line
 
-	; shift + space => space
-	cmp	#$a0
-	bne +
-	lda	#K_SPACE	
+    ; shift + space => space
+    cmp	#$a0
+    bne +
+    lda	#K_SPACE	
 +
 
-	cmp	#K_BACKSPACE
-	bne	+
-	tay
-	lda	KEY_BUF_WRITE_POS
-	beq	get_char
-	dec	KEY_BUF_WRITE_POS
-	tya
-	jsr	print_char
-	jmp	get_char
+    cmp	#K_BACKSPACE
+    bne	+
+    tay
+    lda	KEY_BUF_WRITE_POS
+    beq	get_char
+    dec	KEY_BUF_WRITE_POS
+    tya
+    jsr	print_char
+    jmp	get_char
 +
-	jsr	print_char
-	
-	jsr	add_a_to_key_buf
-	jmp	get_char
+    jsr	print_char
+    
+    jsr	add_a_to_key_buf
+    jmp	get_char
 
 .return	;done
     sta CURSOR_BLINK ; Disable blinking.
-	lda	#K_SPACE
-	jsr	print_char
-	lda	#K_RETURN
-	jsr	print_char
-	jsr	add_a_to_key_buf
-	jmp	_KEY
+    lda	#K_SPACE
+    jsr	print_char
+    lda	#K_RETURN
+    jsr	print_char
+    jsr	add_a_to_key_buf
+    jmp	_KEY
 
 .get_from_key_buf
-	ldy	#<KEY_BUF
-	sty	TMP
-	ldy	#>KEY_BUF 
-	sty	TMP + 1
+    ldy	#<KEY_BUF
+    sty	TMP
+    ldy	#>KEY_BUF 
+    sty	TMP + 1
 
-	ldy	KEY_BUF_READ_POS
-	lda	(TMP), y
-	inc	KEY_BUF_READ_POS
+    ldy	KEY_BUF_READ_POS
+    lda	(TMP), y
+    inc	KEY_BUF_READ_POS
 
-	dex
-	dex
-	sta	0, x
-	lda	#0
-	sta	1, x
-	rts
+    dex
+    dex
+    sta	0, x
+    lda	#0
+    sta	1, x
+    rts
 
 ; Reads a key, sources are prioritized as follows:
 ;  1. Streaming file from disk (COMPILE_FILENO)
 ;  2. Compile RAM area (COMPILE_RAM)
 ;  3. Console input
 PULL_KEY ; wastes x!!!
-	lda	COMPILE_FILENO
-	bne	.get_char_from_disk
+    lda	COMPILE_FILENO
+    bne	.get_char_from_disk
 
     ; compiling from RAM?
-	lda	COMPILE_RAM + 1
-	beq	+++
-	; yes - get char from RAM area
+    lda	COMPILE_RAM + 1
+    beq	+++
+    ; yes - get char from RAM area
     inc $d020
-	sta	TMP + 1
-	lda	COMPILE_RAM
-	sta	TMP
-	ldy #0
+    sta	TMP + 1
+    lda	COMPILE_RAM
+    sta	TMP
+    ldy #0
     dec $d020
-	lda	(TMP), y
-	beq	++
-	inc	COMPILE_RAM
-	bne	+
-	inc	COMPILE_RAM + 1
+    lda	(TMP), y
+    beq	++
+    inc	COMPILE_RAM
+    bne	+
+    inc	COMPILE_RAM + 1
 +
-	rts
+    rts
 ++
     ; Stop compiling from RAM.
-	sta	COMPILE_RAM + 1
+    sta	COMPILE_RAM + 1
 +++
     ; Read from console.
-	jmp	GETCHR
+    jmp	GETCHR
 
 .get_char_from_disk
     inc $d020
-	jsr	READST
-	bne .eof
+    jsr	READST
+    bne .eof
     dec $d020
-	jmp	CHRIN
+    jmp	CHRIN
 
 .eof
-	lda	COMPILE_FILENO
-	jsr	CLOSE
+    lda	COMPILE_FILENO
+    jsr	CLOSE
     dec $d020
 
-	dec	COMPILE_FILENO
-	bne +
+    dec	COMPILE_FILENO
+    bne +
 +
-	lda	COMPILE_FILENO
-	jsr	CHKIN
+    lda	COMPILE_FILENO
+    jsr	CHKIN
     jmp PULL_KEY  ; Try again.
-	
+    
 ; WORD ( -- strptr )
     +BACKLINK
-	!byte	4
-	!text	"word"
+    !byte	4
+    !text	"word"
 WORD
-	jsr _WORD
-	+NEXT
+    jsr _WORD
+    +NEXT
 
 _WORD
-	; prepare text input
-	lda	#<(TIB + 1) 
-	sta	.dst + 1
-	lda	#>(TIB + 1)
-	sta	.dst + 2
-	lda	#0
-	sta	TIB
-	
+    ; prepare text input
+    lda	#<(TIB + 1) 
+    sta	.dst + 1
+    lda	#>(TIB + 1)
+    sta	.dst + 2
+    lda	#0
+    sta	TIB
+    
 -
-	jsr	_KEY
-	lda	0, x
-	inx
-	inx
+    jsr	_KEY
+    lda	0, x
+    inx
+    inx
 
-	cmp #K_RETURN
-	beq .whitespace
-	cmp #K_SPACE
-	beq .whitespace
+    cmp #K_RETURN
+    beq .whitespace
+    cmp #K_SPACE
+    beq .whitespace
 
-	inc	TIB
+    inc	TIB
 
 .dst
-	sta $f00d
-	inc	.dst + 1
-	bne	-
-	inc	.dst + 2
-	jmp	-
+    sta $f00d
+    inc	.dst + 1
+    bne	-
+    inc	.dst + 2
+    jmp	-
 
 .whitespace
-	lda	TIB
-	beq - ; Nothing entered yet, try again.
+    lda	TIB
+    beq - ; Nothing entered yet, try again.
 
-	dex
-	dex
+    dex
+    dex
 
-	lda	#<TIB
-	sta	0, x
-	lda	#>TIB
-	sta	1, x
+    lda	#<TIB
+    sta	0, x
+    lda	#>TIB
+    sta	1, x
 
-	rts
+    rts
 
 ; FIND
     +BACKLINK
-	!byte	4
-	!text	"find"
+    !byte	4
+    !text	"find"
 FIND
-	jsr	_FIND
-	+NEXT
+    jsr	_FIND
+    +NEXT
 _FIND
     txa
     pha
 
-	lda	_LATEST
-	sta	TMP
-	lda	_LATEST + 1
-	sta	TMP + 1
-	; TMP now contains pointer to the most recently defined dictionary word.
+    lda	_LATEST
+    sta	TMP
+    lda	_LATEST + 1
+    sta	TMP + 1
+    ; TMP now contains pointer to the most recently defined dictionary word.
 
-	lda	1, x
-	sta	TMP2 + 1
-	lda	0, x
-	sta	TMP2 ; TMP2 contains pointer to find string
+    lda	1, x
+    sta	TMP2 + 1
+    lda	0, x
+    sta	TMP2 ; TMP2 contains pointer to find string
 
-	ldy	#0
-	lda	(TMP2), y ; get length of find string
+    ldy	#0
+    lda	(TMP2), y ; get length of find string
     ; store findlen
-	sta	.findlen + 1
-	sta	.findlen2 + 1
+    sta	.findlen + 1
+    sta	.findlen2 + 1
 
     ; TMP2 -= 2. This prepares for .string_compare.
     lda TMP2
@@ -1120,100 +1120,100 @@ _FIND
 +   dec TMP2
 
 .examine_word
-	ldy	#2
-	lda	(TMP), y ; get string length of dictionary word
-	and	#STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
+    ldy	#2
+    lda	(TMP), y ; get string length of dictionary word
+    and	#STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
 .findlen
-	cmp	#0
-	beq	.string_compare
+    cmp	#0
+    beq	.string_compare
 
 .word_not_equal
-	; no match, advance the linked list.
-	ldy	#0
-	lda	(TMP), y
+    ; no match, advance the linked list.
+    ldy	#0
+    lda	(TMP), y
     tax
-	iny
-	lda	(TMP), y
-	sta	TMP + 1
-	stx	TMP
-	; TMP now contains new dictionary word.
+    iny
+    lda	(TMP), y
+    sta	TMP + 1
+    stx	TMP
+    ; TMP now contains new dictionary word.
 
     ; Is word null? If not, examine it.
     bne .examine_word
 
-	; It is null - give up.
+    ; It is null - give up.
     pla
     tax
     lda #0
-	sta	0, x
-	sta	1, x
-	rts
-	
+    sta	0, x
+    sta	1, x
+    rts
+    
 .string_compare
-	; equal strlen, now compare strings...
+    ; equal strlen, now compare strings...
 .findlen2
     lda #0
     sta .strlen
 -   iny
-	lda	(TMP), y ; get char of dictionary string
-	cmp	(TMP2), y ; compare with find string
-	bne	.word_not_equal
-	dec	.strlen
-	beq	.word_is_equal
-	jmp	-
+    lda	(TMP), y ; get char of dictionary string
+    cmp	(TMP2), y ; compare with find string
+    bne	.word_not_equal
+    dec	.strlen
+    beq	.word_is_equal
+    jmp	-
 
 .strlen !byte 0
-	
+    
 .word_is_equal
-	; return address to dictionary word
+    ; return address to dictionary word
     pla
     tax
-	lda	TMP
-	sta	0, x
-	lda	TMP + 1
-	sta	1, x
-	rts ; a should be non-zero now
+    lda	TMP
+    sta	0, x
+    lda	TMP + 1
+    sta	1, x
+    rts ; a should be non-zero now
 
 ; >CFA
     +BACKLINK
-	!byte	4
-	!text	">cfa"
+    !byte	4
+    !text	">cfa"
 TCFA
-	jsr _TCFA
-	+NEXT
+    jsr _TCFA
+    +NEXT
 _TCFA
-	lda	1, x
-	sta	TMP + 1
-	lda	0, x
-	sta TMP
-	; TMP contains pointer to word
-	ldy	#2
-	lda	(TMP), y ; a contains string length + mask
-	and	#STRLEN_MASK
-	clc
-	adc	#3 ; offset for link + string length
-	sta	.addend + 1
-	lda	0, x
+    lda	1, x
+    sta	TMP + 1
+    lda	0, x
+    sta TMP
+    ; TMP contains pointer to word
+    ldy	#2
+    lda	(TMP), y ; a contains string length + mask
+    and	#STRLEN_MASK
+    clc
+    adc	#3 ; offset for link + string length
+    sta	.addend + 1
+    lda	0, x
 .addend
-	adc	#0
-	sta	0, x
-	bcc	+
-	inc	1, x
+    adc	#0
+    sta	0, x
+    bcc	+
+    inc	1, x
 +
-	rts
+    rts
 
 ; EXEC
     +BACKLINK
-	!byte	4
-	!text	"exec"
+    !byte	4
+    !text	"exec"
 EXEC
-	lda	0, x
-	sta TMP
-	lda	1, x
-	sta	TMP + 1
-	inx
-	inx
-	jmp	(TMP)
+    lda	0, x
+    sta TMP
+    lda	1, x
+    sta	TMP + 1
+    inx
+    inx
+    jmp	(TMP)
 
 !src "number.a"
 
@@ -1241,119 +1241,119 @@ LITERAL
 
 ; INTERPRET
     +BACKLINK
-	!byte	9
-	!text	"interpret"
+    !byte	9
+    !text	"interpret"
 INTERPRET
     ; Checks for stack underflow.
     txa
     cmp #STACK_START+1
     bpl .on_stack_underflow
 
-	jsr	_WORD ; push string to stack
+    jsr	_WORD ; push string to stack
 
     +_DUP
-	jsr	_FIND ; replace string with dictionary ptr
-	bne	.found_word
+    jsr	_FIND ; replace string with dictionary ptr
+    bne	.found_word
 
     inx ; drop
     inx
-	jsr READ_NUMBER
+    jsr READ_NUMBER
     beq .was_number
 
     jmp .on_word_not_found_error
 
-	; yep, it's a number...
+    ; yep, it's a number...
 .was_number
-	lda	STATE ; are we compiling?
-	bne	LITERAL ; yes, compile the number
+    lda	STATE ; are we compiling?
+    bne	LITERAL ; yes, compile the number
     +NEXT
 
 .on_stack_underflow
-	lda	#$12 ; reverse on
-	jsr	print_char
+    lda	#$12 ; reverse on
+    jsr	print_char
     lda #'e'
-	jsr	print_char
+    jsr	print_char
     lda #'r'
-	jsr	print_char
-	jsr	print_char
+    jsr	print_char
+    jsr	print_char
     jmp .stop_error_print
 
 .found_word
-	; OK, we found a word...
+    ; OK, we found a word...
 
-	; is it immediate?
-	lda	0, x
-	sta	TMP
-	lda	1, x
-	sta	TMP + 1
-	ldy	#2 ; skip link ptr, look at flags
-	lda	(TMP), y
-	and	#F_IMMED
-	bne	.execute_word ; yes... execute it.
+    ; is it immediate?
+    lda	0, x
+    sta	TMP
+    lda	1, x
+    sta	TMP + 1
+    ldy	#2 ; skip link ptr, look at flags
+    lda	(TMP), y
+    and	#F_IMMED
+    bne	.execute_word ; yes... execute it.
 
-	lda	STATE ; are we compiling?
-	beq	.execute_word ; no, execute it.
+    lda	STATE ; are we compiling?
+    beq	.execute_word ; no, execute it.
 
-	; OK, this word should be compiled...
-	jsr	_TCFA
-	jsr	_COMMA
-	inx ; drop string
-	inx
-	+NEXT
+    ; OK, this word should be compiled...
+    jsr	_TCFA
+    jsr	_COMMA
+    inx ; drop string
+    inx
+    +NEXT
 
 .execute_word
-	jsr	_TCFA
+    jsr	_TCFA
 
-	; copy CFA to TMP
-	lda	0, x
-	sta	TMP
-	lda	1, x
-	sta	TMP + 1
-	; drop CFA + string
-	inx
-	inx
-	inx
-	inx
-	jmp	(TMP)
+    ; copy CFA to TMP
+    lda	0, x
+    sta	TMP
+    lda	1, x
+    sta	TMP + 1
+    ; drop CFA + string
+    inx
+    inx
+    inx
+    inx
+    jmp	(TMP)
 
 .on_word_not_found_error
-	lda	#$12 ; reverse on
-	jsr	print_char
+    lda	#$12 ; reverse on
+    jsr	print_char
 
-	ldy	TIB
-	lda	#<TIB
-	sta	TMP
-	lda	#>TIB
-	sta	TMP + 1
+    ldy	TIB
+    lda	#<TIB
+    sta	TMP
+    lda	#>TIB
+    sta	TMP + 1
 
 -
-	inc	TMP
-	bne	+
-	inc	TMP + 1
+    inc	TMP
+    bne	+
+    inc	TMP + 1
 +
 
-	tya
-	pha
+    tya
+    pha
 
-	ldy	#0
-	lda	(TMP), y
-	jsr	print_char
+    ldy	#0
+    lda	(TMP), y
+    jsr	print_char
 
-	pla
-	tay
+    pla
+    tay
 
-	dey
-	bne -
+    dey
+    bne -
 
-	lda	#'?'
-	jsr	print_char
+    lda	#'?'
+    jsr	print_char
 
 .stop_error_print
-	lda	#$92 ; reverse off
-	jsr	print_char
+    lda	#$92 ; reverse off
+    jsr	print_char
 
-	lda	#' '
-	jsr	print_char
+    lda	#' '
+    jsr	print_char
 
     ; Resets some sensitive things, as part of error handling.
     ldx     #0
@@ -1364,264 +1364,264 @@ INTERPRET
     stx     COMPILE_RAM + 1
     jsr     CHKIN
     ldx     #STACK_START ; wipe stack :(
-	+NEXT
+    +NEXT
 
 ; TICK
     +BACKLINK
-	!byte	1
-	!text	"'"
+    !byte	1
+    !text	"'"
 TICK
     ; tick and lit do the same thing, but tick is used for
     ; words, lit for numbers.
-	jmp	LIT
+    jmp	LIT
 
     +BACKLINK
-	!byte	4
-	!text	"litc"
+    !byte	4
+    !text	"litc"
 LITC
-	dex
-	dex
+    dex
+    dex
 
-	; copy literal to stack
-	ldy	#0
-	lda	(IP), y
-	sta	0, x
-	sty	1, x
+    ; copy literal to stack
+    ldy	#0
+    lda	(IP), y
+    sta	0, x
+    sty	1, x
 
     inc IP
     bne +
-	inc	IP + 1
+    inc	IP + 1
 +   +NEXT
 
 ; LIT
     +BACKLINK
-	!byte	3
-	!text	"lit"
+    !byte	3
+    !text	"lit"
 LIT
-	; grow stack
-	dex
-	dex
+    ; grow stack
+    dex
+    dex
 
-	; copy literal to stack
-	ldy	#0
-	lda	(IP), y
-	sta	0, x
+    ; copy literal to stack
+    ldy	#0
+    lda	(IP), y
+    sta	0, x
 
-	iny
-	lda	(IP), y
-	sta	1, x
+    iny
+    lda	(IP), y
+    sta	1, x
 
-	; IP += 2
-	clc
-	lda	IP
-	adc #2	
-	bcc	+
-	inc	IP + 1
+    ; IP += 2
+    clc
+    lda	IP
+    adc #2	
+    bcc	+
+    inc	IP + 1
 +   sta	IP
 
-	+NEXT
+    +NEXT
 
 ; QUIT
     +BACKLINK
-	!byte	4
-	!text	"quit"
+    !byte	4
+    !text	"quit"
 QUIT
-	jsr	__DOCOL
-	!word	INTERPRET
-	!word	BRANCH
-	!word	-4
+    jsr	__DOCOL
+    !word	INTERPRET
+    !word	BRANCH
+    !word	-4
 
 ; EXIT
     +BACKLINK
-	!byte	4
-	!text	"exit"
+    !byte	4
+    !text	"exit"
 EXIT
-	pla
-	sta	IP + 1
-	pla
-	sta	IP
-	+NEXT
+    pla
+    sta	IP + 1
+    pla
+    sta	IP
+    +NEXT
 
     +BACKLINK
     !byte   2
-	!text	"2*"
+    !text	"2*"
     asl 0, x
     rol 1, x
     +NEXT
 
 ; HEADER ( name -- )
     +BACKLINK
-	!byte	6
-	!text	"header"
+    !byte	6
+    !text	"header"
 HEADER
-	jsr	_WORD
+    jsr	_WORD
 
-	; store link in header. TMP = dst
-	lda	HERE_LSB
-	sta	TMP
-	lda	HERE_MSB
-	sta	TMP + 1
+    ; store link in header. TMP = dst
+    lda	HERE_LSB
+    sta	TMP
+    lda	HERE_MSB
+    sta	TMP + 1
 
-	ldy	#0
-	lda	_LATEST
-	sta	(TMP), y
+    ldy	#0
+    lda	_LATEST
+    sta	(TMP), y
 
-	inc	TMP
-	bne	+
-	inc	TMP + 1
+    inc	TMP
+    bne	+
+    inc	TMP + 1
 +
-	lda	_LATEST + 1
-	sta	(TMP), y
+    lda	_LATEST + 1
+    sta	(TMP), y
 
-	inc	TMP
-	bne	+
-	inc	TMP + 1
+    inc	TMP
+    bne	+
+    inc	TMP + 1
 +
 
-	; store length byte in header. TMP2 = src
-	lda	0, x
-	sta	TMP2
-	lda	1, x
-	sta	TMP2 + 1
-	lda	(TMP2), y
-	sta	(TMP), y	
+    ; store length byte in header. TMP2 = src
+    lda	0, x
+    sta	TMP2
+    lda	1, x
+    sta	TMP2 + 1
+    lda	(TMP2), y
+    sta	(TMP), y	
 
-	; copy string
-	lda	(TMP2), y
-	sta TMP3 ; string length
+    ; copy string
+    lda	(TMP2), y
+    sta TMP3 ; string length
 -   iny
-	lda	(TMP2), y
-	sta	(TMP), y
+    lda	(TMP2), y
+    sta	(TMP), y
 
-	dec TMP3
-	bne	-
+    dec TMP3
+    bne	-
 
-	; update _LATEST
-	lda	HERE_LSB
-	sta	_LATEST
-	lda	HERE_MSB
-	sta	_LATEST + 1
-	
-	; update HERE
-	iny
-	tya
-	clc
-	adc	TMP
-	sta	HERE_LSB
-	bcc	+
-	inc	TMP + 1
+    ; update _LATEST
+    lda	HERE_LSB
+    sta	_LATEST
+    lda	HERE_MSB
+    sta	_LATEST + 1
+    
+    ; update HERE
+    iny
+    tya
+    clc
+    adc	TMP
+    sta	HERE_LSB
+    bcc	+
+    inc	TMP + 1
 +
-	lda	TMP + 1
-	sta	HERE_MSB
+    lda	TMP + 1
+    sta	HERE_MSB
 
-	inx
-	inx
+    inx
+    inx
 
-	+NEXT
+    +NEXT
 
 ; CCOMMA - write char
     +BACKLINK
-	!byte	2
-	!text	"c,"
+    !byte	2
+    !text	"c,"
 CCOMMA
-	lda	HERE_LSB
-	sta	TMP
-	lda	HERE_MSB
-	sta	TMP + 1
+    lda	HERE_LSB
+    sta	TMP
+    lda	HERE_MSB
+    sta	TMP + 1
 
-	ldy	#0
-	lda	0, x
-	sta	(TMP), y
+    ldy	#0
+    lda	0, x
+    sta	(TMP), y
 
-	; update HERE
-	inc	HERE_LSB
-	bne	+
-	inc HERE_MSB
+    ; update HERE
+    inc	HERE_LSB
+    bne	+
+    inc HERE_MSB
 +
-	inx
-	inx
-	+NEXT
+    inx
+    inx
+    +NEXT
 
 ; COMMA - write word
     +BACKLINK
-	!byte	1
-	!text	","
+    !byte	1
+    !text	","
 COMMA
-	jsr	_COMMA
-	+NEXT
+    jsr	_COMMA
+    +NEXT
 _COMMA
-	lda	HERE_LSB
-	sta	TMP
-	lda	HERE_MSB
-	sta	TMP + 1
+    lda	HERE_LSB
+    sta	TMP
+    lda	HERE_MSB
+    sta	TMP + 1
 
-	ldy	#0
-	lda	0, x
-	sta	(TMP), y
-	iny
-	lda	1, x
-	sta	(TMP), y
+    ldy	#0
+    lda	0, x
+    sta	(TMP), y
+    iny
+    lda	1, x
+    sta	(TMP), y
 
-	; update HERE
-	lda	HERE_LSB
-	clc
-	adc	#2
-	sta	HERE_LSB
-	bcc	+
-	inc HERE_MSB
+    ; update HERE
+    lda	HERE_LSB
+    clc
+    adc	#2
+    sta	HERE_LSB
+    bcc	+
+    inc HERE_MSB
 +
-	inx
-	inx
-	rts
+    inx
+    inx
+    rts
 
 ; LBRAC
     +BACKLINK
-	!byte	1 | F_IMMED
-	!text	"["
+    !byte	1 | F_IMMED
+    !text	"["
 LBRAC
-	lda	#0
-	sta	STATE
-	+NEXT
+    lda	#0
+    sta	STATE
+    +NEXT
 
 ; RBRAC
     +BACKLINK
-	!byte	1
-	!text	"]"
+    !byte	1
+    !text	"]"
 RBRAC
-	lda	#1
-	sta	STATE
-	+NEXT
+    lda	#1
+    sta	STATE
+    +NEXT
 
 ; SEMICOLON
     +BACKLINK
-	!byte	1 | F_IMMED
-	!text	";"
+    !byte	1 | F_IMMED
+    !text	";"
 SEMICOLON
-	jsr	__DOCOL
-	!word LIT, EXIT, COMMA ; append EXIT (so that the word will return).
-	!word LATEST, FETCH, HIDDEN ; unhide the word.
-	!word LBRAC ; go back to IMMEDIATE mode.
-	!word EXIT
+    jsr	__DOCOL
+    !word LIT, EXIT, COMMA ; append EXIT (so that the word will return).
+    !word LATEST, FETCH, HIDDEN ; unhide the word.
+    !word LBRAC ; go back to IMMEDIATE mode.
+    !word EXIT
 
 ; IMMEDIATE. Flip the immediate flag of the LATEST word.
     +BACKLINK
-	!byte	5 | F_IMMED
-	!text	"immed"
+    !byte	5 | F_IMMED
+    !text	"immed"
 IMMED
-	lda	_LATEST
-	sta	TMP
-	lda	_LATEST + 1
-	sta	TMP + 1
-	ldy	#2
-	lda	(TMP), y
-	eor	#F_IMMED
-	sta	(TMP), y
-	+NEXT
+    lda	_LATEST
+    sta	TMP
+    lda	_LATEST + 1
+    sta	TMP + 1
+    ldy	#2
+    lda	(TMP), y
+    eor	#F_IMMED
+    sta	(TMP), y
+    +NEXT
 
-	!word	LINK
-	!set	LINK = * - 2
-	!byte	6
-	!text	"dodoes"
+    !word	LINK
+    !set	LINK = * - 2
+    !byte	6
+    !text	"dodoes"
     pla
     sta TMP
     pla
@@ -1653,8 +1653,8 @@ IMMED
     +NEXT
 
     +BACKLINK
-	!byte	2
-	!text	"r>"
+    !byte	2
+    !text	"r>"
     dex
     dex
     pla
@@ -1664,123 +1664,123 @@ IMMED
     +NEXT
 
     +BACKLINK
-	!byte	6
-	!text	"branch"
+    !byte	6
+    !text	"branch"
 BRANCH
-	; IP is now pointing to the offset by which IP should be modified...
-	ldy	#0
-	lda	(IP), y
-	clc
-	adc IP
-	sta	TMP
-	iny
-	lda	(IP), y
-	adc	IP + 1
-	sta	IP + 1
+    ; IP is now pointing to the offset by which IP should be modified...
+    ldy	#0
+    lda	(IP), y
+    clc
+    adc IP
+    sta	TMP
+    iny
+    lda	(IP), y
+    adc	IP + 1
+    sta	IP + 1
 
-	lda	TMP
-	sta	IP
+    lda	TMP
+    sta	IP
 
-	+NEXT
+    +NEXT
 
 ; 0BRANCH
     +BACKLINK
-	!byte	7
-	!text	"0branch"
+    !byte	7
+    !text	"0branch"
 ZBRANCH
-	lda	1, x
-	ora	0, x
-	bne .dont_branch
-	inx
-	inx
-	jmp BRANCH
+    lda	1, x
+    ora	0, x
+    bne .dont_branch
+    inx
+    inx
+    jmp BRANCH
 
 .dont_branch
-	inx
-	inx
-	; skip offset
-	lda	IP
-	clc
-	adc	#2
-	sta	IP
-	bcc	+
-	inc	IP + 1
+    inx
+    inx
+    ; skip offset
+    lda	IP
+    clc
+    adc	#2
+    sta	IP
+    bcc	+
+    inc	IP + 1
 +
-	+NEXT
+    +NEXT
     
     +BACKLINK
-	!byte 6
-	!text	"docol,"
+    !byte 6
+    !text	"docol,"
 DOCOLCOMMA
-	jsr	__DOCOL
+    jsr	__DOCOL
     !word LIT, OP_JSR, CCOMMA ; insert jmp
     !word LIT, __DOCOL, COMMA ; append __DOCOL (the codeword)
     !word EXIT
 
 ; COLON
     +BACKLINK
-	!byte	1
-	!text	":"
+    !byte	1
+    !text	":"
 COLON
-	jsr	__DOCOL
-	!word HEADER ; make the dictionary entry / header
+    jsr	__DOCOL
+    !word HEADER ; make the dictionary entry / header
     !word DOCOLCOMMA
-	!word LATEST, FETCH, HIDDEN ; hide word
-	!word RBRAC ; enter compile mode
-	!word EXIT
+    !word LATEST, FETCH, HIDDEN ; hide word
+    !word RBRAC ; enter compile mode
+    !word EXIT
 
 ; HIDDEN
     +BACKLINK
-	!byte	6
-	!text	"hidden"
+    !byte	6
+    !text	"hidden"
 HIDDEN
-	lda	0, x
-	sta	TMP
-	lda	1, x
-	sta TMP + 1
+    lda	0, x
+    sta	TMP
+    lda	1, x
+    sta TMP + 1
 
-	ldy	#2 ; skip link, point to flags
-	lda	(TMP), y
-	eor	#F_HIDDEN ; toggle hidden flag
-	sta	(TMP), y
-	inx
-	inx
-	+NEXT
+    ldy	#2 ; skip link, point to flags
+    lda	(TMP), y
+    eor	#F_HIDDEN ; toggle hidden flag
+    sta	(TMP), y
+    inx
+    inx
+    +NEXT
 
 ; SP@
     +BACKLINK
-	!byte	3
-	!text	"sp@"
+    !byte	3
+    !text	"sp@"
 SPFETCH
-	txa
-	dex
-	dex
-	sta	0, x
-	lda	#0
-	sta	1, x
-	+NEXT
+    txa
+    dex
+    dex
+    sta	0, x
+    lda	#0
+    sta	1, x
+    +NEXT
 
 ; LITSTRING
     +BACKLINK
-	!byte	9
-	!text	"litstring"
+    !byte	9
+    !text	"litstring"
 LITSTRING ; ( -- addr len )
-	; grow stack
-	dex
-	dex
+    ; grow stack
+    dex
+    dex
     dex
     dex
 
-	; copy string addr to stack
-	ldy	#0
+    ; copy string addr to stack
+    ldy	#0
 
-	lda	IP
-	sta	TMP
+    lda	IP
+    sta	TMP
     sta 2, x ; addr lsb
 
-	iny
-	lda	IP + 1
-	sta	TMP + 1
+    iny
+    lda	IP + 1
+    sta	TMP + 1
     sta 3, x ; addr msb
 
     inc 2, x ; skip len
@@ -1788,62 +1788,62 @@ LITSTRING ; ( -- addr len )
     inc 3, x
 +
 
-	; TMP now points to string length
-	dey ; y = 0
+    ; TMP now points to string length
+    dey ; y = 0
     sty 1, x ; len msb=0
-	lda	(TMP), y
+    lda	(TMP), y
     sta 0, x ; len lsb
 
-	tay ; y = *TMP
-	iny ; add one for length byte
-	sty	.lstrlen + 1
+    tay ; y = *TMP
+    iny ; add one for length byte
+    sty	.lstrlen + 1
 
-	; skip string
-	lda	IP
-	clc
+    ; skip string
+    lda	IP
+    clc
 .lstrlen
-	adc #0 ; overwritten
-	sta	IP
-	bcc	+
-	inc	IP + 1
+    adc #0 ; overwritten
+    sta	IP
+    bcc	+
+    inc	IP + 1
 +
-	+NEXT
+    +NEXT
 
 ; -----------
 
 ; LINEBUF line buffering. 0 = off, 1 = on
     +BACKLINK
-	!byte 7
-	!text	"linebuf"
+    !byte 7
+    !text	"linebuf"
 LINEBUF
-	+VALUE	_LINEBUF
+    +VALUE	_LINEBUF
 _LINEBUF
-	!word	1
+    !word	1
 
 ; COMPILE_FILENO - active file stream to compile from.
     +BACKLINK
-	!byte 6
-	!text	"compile-fileno"
-	+VALUE	COMPILE_FILENO
+    !byte 6
+    !text	"compile-fileno"
+    +VALUE	COMPILE_FILENO
 COMPILE_FILENO
-	!word	0
+    !word	0
 
 ; CLOSEW ( file# -- )
     +BACKLINK
-	!byte 6
-	!text	"closew"
+    !byte 6
+    !text	"closew"
 CLOSEW
     lda 0,x
     sta TMP
-	stx	TMP2
-	jsr	CLOSE 
-	ldx	TMP
-	jsr	CHKOUT
-	jsr	_errorchread
-	ldx TMP2
+    stx	TMP2
+    jsr	CLOSE 
+    ldx	TMP
+    jsr	CHKOUT
+    jsr	_errorchread
+    ldx TMP2
     inx
     inx
-	+NEXT
+    +NEXT
 
 _errorchread
         LDA #$00      ; no filename
@@ -1892,46 +1892,46 @@ geof
 ;  - s" base" 7000 loadb #load file to 7000
 ;  - end of loaded file is available in $ae/$af afterwards
     +BACKLINK
-	!byte 5
-	!text	"loadb"
+    !byte 5
+    !text	"loadb"
 LOADB
-	txa
-	pha
+    txa
+    pha
 
-	lda 1, x		; >destination
-	sta load_binary_laddr_hi
-	lda 0, x		; <destination
-	sta load_binary_laddr_lo
+    lda 1, x		; >destination
+    sta load_binary_laddr_hi
+    lda 0, x		; <destination
+    sta load_binary_laddr_lo
 
-	lda 2, x		; a filename length
-	pha
-	ldy 5, x 		; y >basename 
-	lda 4, x		; x <basename 
-	tax
-	pla
-	jsr	load_binary
-	
-	pla
-	tax
+    lda 2, x		; a filename length
+    pha
+    ldy 5, x 		; y >basename 
+    lda 4, x		; x <basename 
+    tax
+    pla
+    jsr	load_binary
+    
+    pla
+    tax
 
-	inx
-	inx
-	inx
-	inx
-	lda	load_binary_status
-	sta	1, x
-	sta	0, x
-	beq	+
-	txa
-	pha
-	jsr	_errorchread
-	pla
-	tax
+    inx
+    inx
+    inx
+    inx
+    lda	load_binary_status
+    sta	1, x
+    sta	0, x
+    beq	+
+    txa
+    pha
+    jsr	_errorchread
+    pla
+    tax
 +
-	+NEXT
+    +NEXT
 
 load_binary_status
-	!byte	0
+    !byte	0
 
 ;load_binary_base
 ;	lda	#basename_end - basename
@@ -1940,180 +1940,180 @@ load_binary_status
 ;	; fall through...
 
 load_binary
-	jsr .disk_io_setnamsetlfs
+    jsr .disk_io_setnamsetlfs
 
 load_binary_laddr_lo = *+1
-	ldx #$ff	;<load_address
+    ldx #$ff	;<load_address
 load_binary_laddr_hi = *+1
-	ldy #$ff	;>load_address
-	lda #0		;0 = load to memory (no verify)
-	sta	load_binary_status
-	jsr LOAD
-	bcs .disk_io_error
-	ldx #$00      ; filenumber 0 = keyboard
-	jmp CHKIN     ; call CHKIN (keyboard now input device again)
+    ldy #$ff	;>load_address
+    lda #0		;0 = load to memory (no verify)
+    sta	load_binary_status
+    jsr LOAD
+    bcs .disk_io_error
+    ldx #$00      ; filenumber 0 = keyboard
+    jmp CHKIN     ; call CHKIN (keyboard now input device again)
 
 .disk_io_setnamsetlfs ;reused by both loadb and saveb
-	jsr SETNAM
-	lda $ba		;last used device number
-	and #3		;Make 0-3 possible numbers
-	ora #8		;Transform to 8-B
-	tax
-	lda #1
-	ldy #0		;if load: 0 = load to new address, if save: 0 = dunno, but okay... 
-	jmp SETLFS	;End with JMP instead of jsr/rts to save a jsr/rts pair...
+    jsr SETNAM
+    lda $ba		;last used device number
+    and #3		;Make 0-3 possible numbers
+    ora #8		;Transform to 8-B
+    tax
+    lda #1
+    ldy #0		;if load: 0 = load to new address, if save: 0 = dunno, but okay... 
+    jmp SETLFS	;End with JMP instead of jsr/rts to save a jsr/rts pair...
 
 
 .disk_io_error
-	; Accumulator contains BASIC error code
-	
-	;... error handling ...
-	ldx #$00      ; filenumber 0 = keyboard
-	jsr CHKIN     ; call CHKIN (keyboard now input device again)
-	lda	#1
-	sta	load_binary_status
-	rts
+    ; Accumulator contains BASIC error code
+    
+    ;... error handling ...
+    ldx #$00      ; filenumber 0 = keyboard
+    jsr CHKIN     ; call CHKIN (keyboard now input device again)
+    lda	#1
+    sta	load_binary_status
+    rts
 
 ; SAVEB (save binary file)
 ;  - 7000 71ae s" base" saveb #save file from 7000 to 71ae (= the byte AFTER the last byte in the file)
     +BACKLINK
-	!byte 5
-	!text	"saveb"
+    !byte 5
+    !text	"saveb"
 SAVEB
-	stx tmp_x
+    stx tmp_x
 
-	lda	$ae
-	pha
-	lda	$af
-	pha
+    lda	$ae
+    pha
+    lda	$af
+    pha
 
-	lda 6, x		; range begin lo
-	sta $c1
-	lda 7, x		; range begin hi
-	sta $c2
-	
-	lda 4, x		; range end lo
-	sta save_binary_srange_end_lo
-	lda 5, x		; range end hi
-	sta save_binary_srange_end_hi
+    lda 6, x		; range begin lo
+    sta $c1
+    lda 7, x		; range begin hi
+    sta $c2
+    
+    lda 4, x		; range end lo
+    sta save_binary_srange_end_lo
+    lda 5, x		; range end hi
+    sta save_binary_srange_end_hi
 
-	lda 0, x		; a filename length
-	pha
-	ldy 3, x 		; y basename hi
-	lda 2, x		; x basename lo
-	tax
-	pla
+    lda 0, x		; a filename length
+    pha
+    ldy 3, x 		; y basename hi
+    lda 2, x		; x basename lo
+    tax
+    pla
 
-	jsr .disk_io_setnamsetlfs
-	
-	;This should point to the byte AFTER the last byte in the file.
+    jsr .disk_io_setnamsetlfs
+    
+    ;This should point to the byte AFTER the last byte in the file.
 save_binary_srange_end_lo = *+1
-	ldx #$ff	;load_address lo
+    ldx #$ff	;load_address lo
 save_binary_srange_end_hi = *+1
-	ldy #$ff	;load_address hi
-	lda #$c1	;tell routine that start address is located in $c1/$c2
-	jsr SAVE
-	bcs .disk_io_error
+    ldy #$ff	;load_address hi
+    lda #$c1	;tell routine that start address is located in $c1/$c2
+    jsr SAVE
+    bcs .disk_io_error
 
-	pla
-	sta	$af
-	pla
-	sta	$ae
+    pla
+    sta	$af
+    pla
+    sta	$ae
 
-	ldx tmp_x
-	inx
-	inx
-	inx
-	inx
-	inx
-	inx
-	inx
-	inx
-	+NEXT
+    ldx tmp_x
+    inx
+    inx
+    inx
+    inx
+    inx
+    inx
+    inx
+    inx
+    +NEXT
 
 ; OPENW ( strptr strlen file# ) open file for writing
     +BACKLINK
-	!byte 5
-	!text	"openw"
+    !byte 5
+    !text	"openw"
 OPENW
     lda 0,x
     sta TMP ; fileno
-	stx	TMP2
+    stx	TMP2
 
-	lda	2, x
-	ldy	5, x
-	pha
-	lda	4, x
-	tax
-	pla
-	
-	jsr	SETNAM
-	lda	TMP ; file number
-	ldx	#8 ; default to device 8
-	tay ; secondary address
-	jsr	SETLFS
-	jsr	OPEN
-	bcs	.could_not_open
+    lda	2, x
+    ldy	5, x
+    pha
+    lda	4, x
+    tax
+    pla
+    
+    jsr	SETNAM
+    lda	TMP ; file number
+    ldx	#8 ; default to device 8
+    tay ; secondary address
+    jsr	SETLFS
+    jsr	OPEN
+    bcs	.could_not_open
 
-	ldx	TMP ; file number
-	jsr	CHKOUT
+    ldx	TMP ; file number
+    jsr	CHKOUT
 
-	ldx	TMP2
-	inx
-	inx
-	inx
-	inx
-	inx
-	inx
-	+NEXT
+    ldx	TMP2
+    inx
+    inx
+    inx
+    inx
+    inx
+    inx
+    +NEXT
 
 ; LOAD_AND_COMPILE (load and compile source file)
     +BACKLINK
-	!byte 4
-	!text	"load"
+    !byte 4
+    !text	"load"
 LOAD_AND_COMPILE
-	txa
-	pha
+    txa
+    pha
 
-	lda	0, x
-	ldy	3, x
-	pha
-	lda	2, x
-	tax
-	pla
+    lda	0, x
+    ldy	3, x
+    pha
+    lda	2, x
+    tax
+    pla
 
     ; open file
-	; a = filename length
-	; y = basename hi
-	; x = basename lo
-	jsr	SETNAM
-	inc	COMPILE_FILENO
-	lda	COMPILE_FILENO ; file number
-	ldx	#8 ; default to device 8
-	tay
-	iny ; secondary address
-	jsr	SETLFS
-	jsr	OPEN
-	bcs	.could_not_open
+    ; a = filename length
+    ; y = basename hi
+    ; x = basename lo
+    jsr	SETNAM
+    inc	COMPILE_FILENO
+    lda	COMPILE_FILENO ; file number
+    ldx	#8 ; default to device 8
+    tay
+    iny ; secondary address
+    jsr	SETLFS
+    jsr	OPEN
+    bcs	.could_not_open
 
-	ldx	COMPILE_FILENO ; file number
-	jsr	CHKIN
+    ldx	COMPILE_FILENO ; file number
+    jsr	CHKIN
 
     ; Skips load address.
     JSR CHRIN     ; get a byte from file
     JSR CHRIN     ; get a byte from file
 
-	pla
-	tax
+    pla
+    tax
     inx
     inx
     inx
     inx
-	+NEXT
+    +NEXT
 
 .could_not_open
-	inc	$d020
-	jmp	.could_not_open
+    inc	$d020
+    jmp	.could_not_open
 
 load_base
     ; loads base.fs to $5000
@@ -2123,9 +2123,9 @@ load_base
     lda #$50
     sta load_binary_laddr_hi
     sta COMPILE_RAM + 1
-	ldx	#<basename
-	ldy	#>basename
-	lda	#basename_end - basename
+    ldx	#<basename
+    ldy	#>basename
+    lda	#basename_end - basename
     jsr load_binary
     ; Null terminates source code.
     lda $ae    
@@ -2142,11 +2142,11 @@ basename_end
 
 ; LATEST - points to the most recently defined dictionary word.
     +BACKLINK
-	!byte 6
-	!text	"latest"
+    !byte 6
+    !text	"latest"
 LATEST
-	+VALUE	_LATEST
+    +VALUE	_LATEST
 _LATEST
-	!word	LINK
+    !word	LINK
 
 ; PUT NO CONTENT AFTER LATEST!!!! It will be overwritten!!!!
