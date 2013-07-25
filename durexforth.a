@@ -709,7 +709,6 @@ COMPILE_RAM
     +BACKLINK
 	!byte 4
 	!text	"here"
-HERE_CODE
 HERE_LSB = * + 1
 HERE_MSB = * + 3
 	+VALUE	_LATEST + 2
