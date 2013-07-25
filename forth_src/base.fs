@@ -28,6 +28,7 @@ swap here swap ! ;
 : ?dup dup if dup then ;
 : <> ( a b -- c ) = 0= ;
 : > ( n -- b ) swap < ;
+: 0<> ( x -- flag ) 0= 0= ;
 
 : <= > 0= ;
 : >= < 0= ;
