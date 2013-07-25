@@ -1249,11 +1249,11 @@ INTERPRET
 	dex
     lda 3,x
     bne .16bit
-    lda #<CLIT
+    lda #<LITC
     sta 0,x
-    lda #>CLIT
+    lda #>LITC
     sta 1,x
-	jsr	_COMMA ; writes CLIT
+	jsr	_COMMA ; writes LITC
 	jmp	CCOMMA ; writes byte
 .16bit
 	lda	#<LIT
@@ -1373,8 +1373,8 @@ TICK
 
     +BACKLINK
 	!byte	4
-	!text	"clit"
-CLIT
+	!text	"litc"
+LITC
 	dex
 	dex
 

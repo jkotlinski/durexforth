@@ -51,7 +51,7 @@ latest @ begin ?dup while
 		' lit of
 			2+ dup @ .
 		endof
-		' clit of
+		' litc of
 			2+ dup c@ c. 1-
 		endof
 		' litstring of
