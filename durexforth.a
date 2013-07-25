@@ -830,6 +830,11 @@ tmp_x
     !text	"key"
 KEY
     jsr	_KEY
+    dex
+    dex
+    sta	0, x
+    lda	#0
+    sta	1, x
     +NEXT
 
 .unbuffered_key
@@ -838,12 +843,6 @@ KEY
     ldx tmp_x
     ora	#0
     beq	_KEY
-.ret_a
-    dex
-    dex
-    sta	0, x
-    lda	#0
-    sta	1, x
     rts
 
 _KEY
@@ -859,7 +858,7 @@ KEY_BUF_READ_POS = * + 1
     lda $200
     beq +
     inc KEY_BUF_READ_POS ; found buffered char, return it
-    jmp .ret_a
+    rts
 +
     lda KEY_BUF_READ_POS
     bne +
@@ -877,7 +876,7 @@ KEY_BUF_READ_POS = * + 1
     sta KEY_BUF_READ_POS
     sta $200
     lda #K_RETURN
-    jmp .ret_a
+    rts
 
 ; Reads a key, sources are prioritized as follows:
 ;  1. Streaming file from disk (COMPILE_FILENO)
@@ -949,9 +948,6 @@ _WORD
     
 -
     jsr	_KEY
-    lda	0, x
-    inx
-    inx
 
     cmp #K_RETURN
     beq .whitespace
