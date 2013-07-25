@@ -1374,6 +1374,7 @@ TICK
     +BACKLINK
 	!byte	4
 	!text	"clit"
+CLIT
 	dex
 	dex
 
