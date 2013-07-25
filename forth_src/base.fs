@@ -216,7 +216,7 @@ ar sta, xr stx, yr sty,
 pla, tax, inx, inx, ;asm
 
 # signedness
-: 0< 8000 and 0= 0= ;
+: 0< 7fff > ;
 : abs dup 0< if negate then ;
 : s< - 0< ;
 : s> swap s< ;
