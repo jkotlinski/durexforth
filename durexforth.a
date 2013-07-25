@@ -1243,19 +1243,25 @@ INTERPRET
 	; yep, it's a number...
 .was_number
 	lda	STATE ; are we compiling?
-	beq	.leave_number_on_stack ; no, leave number on stack
-	; yes. compile literal.
+	beq	.next ; no, leave number on stack
+    ; yes. compile literal.
 	dex
 	dex
+    lda 3,x
+    bne .16bit
+    lda #<CLIT
+    sta 0,x
+    lda #>CLIT
+    sta 1,x
+	jsr	_COMMA ; writes CLIT
+	jmp	CCOMMA ; writes byte
+.16bit
 	lda	#<LIT
 	sta	0, x
 	lda	#>LIT
 	sta	1, x
 	jsr	_COMMA ; writes LIT
-	jsr	_COMMA ; writes number
-
-.leave_number_on_stack
-	+NEXT
+	jmp	COMMA ; writes number
 
 .on_stack_underflow
 	lda	#$12 ; reverse on
@@ -1288,6 +1294,7 @@ INTERPRET
 	jsr	_COMMA
 	inx ; drop string
 	inx
+.next
 	+NEXT
 
 .execute_word
@@ -1364,6 +1371,23 @@ TICK
     ; words, lit for numbers.
 	jmp	LIT
 
+    +BACKLINK
+	!byte	4
+	!text	"clit"
+	dex
+	dex
+
+	; copy literal to stack
+	ldy	#0
+	lda	(IP), y
+	sta	0, x
+	sty	1, x
+
+    inc IP
+    bne +
+	inc	IP + 1
++   +NEXT
+
 ; LIT
     +BACKLINK
 	!byte	3
@@ -1388,8 +1412,7 @@ LIT
 	adc #2	
 	bcc	+
 	inc	IP + 1
-+
-	sta	IP
++   sta	IP
 
 	+NEXT
 
