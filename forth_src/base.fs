@@ -1,6 +1,5 @@
   
 
-7 287 c!
 : 2dup over over ;
 : bl 20 ;
 : space bl emit ;

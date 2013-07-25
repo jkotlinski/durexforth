@@ -41,12 +41,6 @@ OP_RTS = $60
 OP_LDA_I = $a9
 OP_STA_AX = $9d
 
-; kernal defs
-
-CURSOR_BLINK = $cc
-CURSOR_TIMER = $cd
-CURSOR_STATUS = $cf ; 0 = off; 1 = on
-
 GETCHR = $ffe4 ; get char from kbd
 PUTCHR = $ffd2 ; put char
 
@@ -109,6 +103,7 @@ C_YELLOW = 7
     lda	#0
     sta	$d020
     sta	$d021
+    sta $200
 
     lda	_START + 1
     bne	reset
@@ -729,16 +724,8 @@ EMIT
     lda	0, x
     inx
     inx
-    jsr	print_char
-    +NEXT
-
-print_char
-    ldy	#20
-    sty CURSOR_TIMER
-    ldy #1
-    sty CURSOR_STATUS ;Force cursor off
     jsr	PUTCHR
-    rts
+    +NEXT
 
 print_hex_nibble
     cmp	#10
@@ -753,7 +740,7 @@ print_hex_nibble
     eor	#$30
 
 +
-    jmp	print_char
+    jmp	PUTCHR
 
 print_hex_char
     pha
@@ -786,7 +773,7 @@ CDOT
     jsr	print_hex_nibble
 
     lda #K_SPACE
-    jsr	print_char
+    jsr	PUTCHR
 
     inx
     inx
@@ -824,7 +811,7 @@ _DOT
     jsr	print_hex_nibble
 
     lda	#K_SPACE
-    jsr	print_char
+    jsr	PUTCHR
 
     inx
     inx
@@ -836,26 +823,6 @@ TIB
 
 tmp_x
     !byte	0
-
-KEY_BUF_SIZE = 80
-KEY_BUF
-    !fill KEY_BUF_SIZE, K_RETURN
-
-KEY_BUF_READ_POS
-    !byte 0
-KEY_BUF_WRITE_POS
-    !byte 0
-
-add_a_to_key_buf
-    ldy	#<KEY_BUF
-    sty	TMP
-    ldy	#>KEY_BUF 
-    sty	TMP + 1
-
-    ldy	KEY_BUF_WRITE_POS
-    sta	(TMP), y
-    inc	KEY_BUF_WRITE_POS
-    rts
 
 ; KEY... read a key from disk (if open) or keyboard.
     +BACKLINK
@@ -871,30 +838,13 @@ KEY
     ldx tmp_x
     ora	#0
     beq	_KEY
+.ret_a
     dex
     dex
     sta	0, x
     lda	#0
     sta	1, x
     rts
-
-recall_last_line
-    ; erase curr line
-    lda KEY_BUF_WRITE_POS
-    beq +
-    lda #K_BACKSPACE
--   jsr print_char
-    dec KEY_BUF_WRITE_POS
-    bne -
-+
-    ; print KEY_BUF contents
--   ldy KEY_BUF_WRITE_POS
-    lda KEY_BUF, y
-    cmp #K_RETURN
-    beq get_char
-    jsr print_char
-    inc KEY_BUF_WRITE_POS
-    jmp -
 
 _KEY
     lda COMPILE_FILENO
@@ -902,82 +852,32 @@ _KEY
     bne	.unbuffered_key
     lda	_LINEBUF
     beq	.unbuffered_key
-    lda	KEY_BUF_WRITE_POS
-    cmp	KEY_BUF_READ_POS
-    bne	.get_from_key_buf
 
-    ; start filling key buf... TODO: add bounds check for buffer overwrite.
-    lda	#0
-    sta CURSOR_BLINK  ; Enable blinking.
-    sta	KEY_BUF_READ_POS
-    sta	KEY_BUF_WRITE_POS
-
-get_char
-    stx	tmp_x
-    jsr	GETCHR
-    ldx	tmp_x
-    ora	#0
-    beq	get_char
-    cmp	#K_RETURN
-    beq	.return
-
-    ; should key be ignored?
-    cmp	#K_LEFT
-    beq	get_char
-    cmp	#K_RIGHT
-    beq	get_char
-    cmp	#K_DOWN
-    beq	get_char
-
-    cmp	#K_UP
-    beq	recall_last_line
-
-    ; shift + space => space
-    cmp	#$a0
+    ; buffered key input
+KEY_BUF_READ_POS = * + 1
+-
+    lda $200
+    beq +
+    inc KEY_BUF_READ_POS ; found buffered char, return it
+    jmp .ret_a
++
+    lda KEY_BUF_READ_POS
     bne +
-    lda	#K_SPACE	
+    txa ; ask for new chars
+    pha
+    lda 1
+    ora #3 ; make sure basic is switched in
+    sta 1
+    jsr $a560
+    pla
+    tax
+    jmp -
 +
-
-    cmp	#K_BACKSPACE
-    bne	+
-    tay
-    lda	KEY_BUF_WRITE_POS
-    beq	get_char
-    dec	KEY_BUF_WRITE_POS
-    tya
-    jsr	print_char
-    jmp	get_char
-+
-    jsr	print_char
-    
-    jsr	add_a_to_key_buf
-    jmp	get_char
-
-.return	;done
-    sta CURSOR_BLINK ; Disable blinking.
-    lda	#K_SPACE
-    jsr	print_char
-    lda	#K_RETURN
-    jsr	print_char
-    jsr	add_a_to_key_buf
-    jmp	_KEY
-
-.get_from_key_buf
-    ldy	#<KEY_BUF
-    sty	TMP
-    ldy	#>KEY_BUF 
-    sty	TMP + 1
-
-    ldy	KEY_BUF_READ_POS
-    lda	(TMP), y
-    inc	KEY_BUF_READ_POS
-
-    dex
-    dex
-    sta	0, x
-    lda	#0
-    sta	1, x
-    rts
+    lda #0 ; finish reading line, setup next line
+    sta KEY_BUF_READ_POS
+    sta $200
+    lda #K_RETURN
+    jmp .ret_a
 
 ; Reads a key, sources are prioritized as follows:
 ;  1. Streaming file from disk (COMPILE_FILENO)
@@ -1270,12 +1170,12 @@ INTERPRET
 
 .on_stack_underflow
     lda	#$12 ; reverse on
-    jsr	print_char
+    jsr	PUTCHR
     lda #'e'
-    jsr	print_char
+    jsr	PUTCHR
     lda #'r'
-    jsr	print_char
-    jsr	print_char
+    jsr	PUTCHR
+    jsr	PUTCHR
     jmp .stop_error_print
 
 .found_word
@@ -1318,7 +1218,7 @@ INTERPRET
 
 .on_word_not_found_error
     lda	#$12 ; reverse on
-    jsr	print_char
+    jsr	PUTCHR
 
     ldy	TIB
     lda	#<TIB
@@ -1337,7 +1237,7 @@ INTERPRET
 
     ldy	#0
     lda	(TMP), y
-    jsr	print_char
+    jsr	PUTCHR
 
     pla
     tay
@@ -1346,20 +1246,20 @@ INTERPRET
     bne -
 
     lda	#'?'
-    jsr	print_char
+    jsr	PUTCHR
 
 .stop_error_print
     lda	#$92 ; reverse off
-    jsr	print_char
+    jsr	PUTCHR
 
     lda	#' '
-    jsr	print_char
+    jsr	PUTCHR
 
     ; Resets some sensitive things, as part of error handling.
     ldx     #0
     stx     STATE
+    stx     $200
     stx     KEY_BUF_READ_POS
-    stx     KEY_BUF_WRITE_POS
     stx     COMPILE_FILENO
     stx     COMPILE_RAM + 1
     jsr     CHKIN
