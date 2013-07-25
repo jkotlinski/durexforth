@@ -68,12 +68,12 @@ latest @ begin ?dup while
 		endof
 		' branch of
 			." branch ( "
-			2+ dup @ over - .
+			2+ dup @ .
 			." ) "
 		endof
 		' 0branch of
 			." 0branch ( "
-			2+ dup @ over - .
+			2+ dup @ .
 			." ) "
 		endof
 		' exit of
