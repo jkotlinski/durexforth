@@ -1429,7 +1429,7 @@ QUIT
     jsr	__DOCOL
     !word	INTERPRET
     !word	BRANCH
-    !word	-4
+    !word	* - 4
 
 ; EXIT
     +BACKLINK
@@ -1670,13 +1670,10 @@ BRANCH
     ; IP is now pointing to the offset by which IP should be modified...
     ldy	#0
     lda	(IP), y
-    clc
-    adc IP
     sta	TMP
     iny
     lda	(IP), y
-    adc	IP + 1
-    sta	IP + 1
+    sta IP + 1
 
     lda	TMP
     sta	IP

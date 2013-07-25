@@ -535,7 +535,7 @@ dup x2 @ 1+ 3 pick 1- dy @ negate spush
 then
 
 # skip: y x y
-[ r> here over - swap ! ]
+[ r> here swap ! ]
 
 swap 1+ swap
 2dup blitloc scanr 

@@ -11,14 +11,14 @@
 : [compile] immed loc >cfa , ;
 : ['] immed ' lit , ;
 : if immed ' 0branch , here 0 , ;
-: then immed dup here swap - swap ! ;
+: then immed here swap ! ;
 : else immed ' branch , here 0 ,
-swap dup here swap - swap ! ;
+swap here swap ! ;
 : begin immed here ;
-: until immed ' 0branch , here - , ;
-: again immed ' branch , here - , ;
+: until immed ' 0branch , , ;
+: again immed ' branch , , ;
 : while immed ' 0branch , here 0 , ;
-: repeat immed ' branch , swap here - , dup here swap - swap ! ;
+: repeat immed ' branch , swap , here swap ! ;
 : recurse immed latest @ >cfa , ;
 : ( immed begin key [ key ) ] literal = until ;
 : # immed begin key d = until ; # comment
