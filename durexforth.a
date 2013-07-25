@@ -1224,14 +1224,14 @@ LITERAL
     dex
     dex
     lda 3,x
-    bne .16bit
+    bne +
     lda #<LITC
     sta 0,x
     lda #>LITC
     sta 1,x
     jsr _COMMA ; writes LITC
     jmp CCOMMA ; writes byte
-.16bit
++
     lda #<LIT
     sta 0, x
     lda #>LIT
