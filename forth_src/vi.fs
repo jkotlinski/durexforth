@@ -341,30 +341,35 @@ insert-start ;
 key editpos c!
 1 to need-refresh-line ;
 
+: nipchar
+editpos 1+
+editpos
+eof @ editpos - 1+
+cmove 
+ffff eof +! ;
 : backspace
-	curx @ 0= if exit then
-	ffff curx +!
-	editpos 1+
-	editpos
-	eof @ editpos - 1+
-	ffff eof +!
-	cmove
-	1 to need-refresh-line
-;
+curx @ 0= if exit then
+ffff curx +!
+nipchar
+1 to need-refresh-line ;
 
 : del-char force-cur-right backspace ;
 
 : join-lines
+1 to need-refresh
+linelen 0= if nipchar exit then
+
 cury @ curx @ curlinestart @
 
 editpos
 cur-down
 editpos = if 2drop drop exit then
 sol
+linelen if
 20 editpos 1- c! # cr => space
+else nipchar then
 
-curlinestart ! curx ! cury !
-1 to need-refresh ;
+curlinestart ! curx ! cury ! ;
 
 : insert-char
 	dup CR <> linelen 26 > and if drop exit then
