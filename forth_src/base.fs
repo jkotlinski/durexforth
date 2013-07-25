@@ -7,7 +7,6 @@
 : cr d emit ;
 : nip swap drop ;
 : * d* nip ;
-: literal immed ' lit , , ;
 : loc word find ;
 : [compile] immed loc >cfa , ;
 : ['] immed ' lit , ;

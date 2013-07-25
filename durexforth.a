@@ -1217,6 +1217,28 @@ EXEC
 
 !src "number.a"
 
+    +BACKLINK
+    !byte 7 | F_IMMED
+    !text "literal"
+LITERAL
+    dex
+    dex
+    lda 3,x
+    bne .16bit
+    lda #<LITC
+    sta 0,x
+    lda #>LITC
+    sta 1,x
+    jsr _COMMA ; writes LITC
+    jmp CCOMMA ; writes byte
+.16bit
+    lda #<LIT
+    sta 0, x
+    lda #>LIT
+    sta 1, x
+    jsr _COMMA ; writes LIT
+    jmp COMMA ; writes number
+
 ; INTERPRET
     +BACKLINK
 	!byte	9
@@ -1244,24 +1266,7 @@ INTERPRET
 .was_number
 	lda	STATE ; are we compiling?
 	beq	.next ; no, leave number on stack
-    ; yes. compile literal.
-	dex
-	dex
-    lda 3,x
-    bne .16bit
-    lda #<LITC
-    sta 0,x
-    lda #>LITC
-    sta 1,x
-	jsr	_COMMA ; writes LITC
-	jmp	CCOMMA ; writes byte
-.16bit
-	lda	#<LIT
-	sta	0, x
-	lda	#>LIT
-	sta	1, x
-	jsr	_COMMA ; writes LIT
-	jmp	COMMA ; writes number
+    jmp LITERAL
 
 .on_stack_underflow
 	lda	#$12 ; reverse on
