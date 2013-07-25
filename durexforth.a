@@ -1265,8 +1265,8 @@ INTERPRET
 	; yep, it's a number...
 .was_number
 	lda	STATE ; are we compiling?
-	beq	.next ; no, leave number on stack
-    jmp LITERAL
+	bne	LITERAL ; yes, compile the number
+    +NEXT
 
 .on_stack_underflow
 	lda	#$12 ; reverse on
@@ -1299,7 +1299,6 @@ INTERPRET
 	jsr	_COMMA
 	inx ; drop string
 	inx
-.next
 	+NEXT
 
 .execute_word
