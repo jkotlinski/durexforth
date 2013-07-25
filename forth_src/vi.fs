@@ -347,13 +347,6 @@ editpos
 eof @ editpos - 1+
 cmove 
 ffff eof +! ;
-: backspace
-curx @ 0= if exit then
-ffff curx +!
-nipchar
-1 to need-refresh-line ;
-
-: del-char force-cur-right backspace ;
 
 : join-lines
 1 to need-refresh
@@ -370,6 +363,19 @@ linelen if
 else nipchar then
 
 curlinestart ! curx ! cury ! ;
+
+: backspace
+curx @ 0= if cury @ if
+linelen 0<> cur-up eol linelen 0<>
+join-lines
+and if cur-right nipchar then then
+exit then
+
+ffff curx +!
+nipchar
+1 to need-refresh-line ;
+
+: del-char force-cur-right backspace ;
 
 : insert-char
 	dup CR <> linelen 26 > and if drop exit then
