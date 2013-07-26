@@ -43,7 +43,7 @@ a0 over line
 13f 64 line
 a0 over c7 swap - line
 0 64 line
-5 + repeat ;
+5 + repeat drop ;
 
 : reccircgo ( x r -- )
 dup if
