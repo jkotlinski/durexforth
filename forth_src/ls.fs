@@ -15,7 +15,8 @@ space ;
 emit 1+ else drop 1+ cr exit
 then again ;
 
-: ls load$ begin
+: ls 1 c@ 3 or 1 c! # basic in
+load$ begin
 2dup <> if
        tobl
        to0

@@ -865,9 +865,12 @@ KEY_BUF_READ_POS = * + 1
     txa ; ask for new chars
     pha
     lda 1
+    pha
     ora #3 ; make sure basic is switched in
     sta 1
     jsr $a560
+    pla
+    sta 1
     pla
     tax
     jmp -
