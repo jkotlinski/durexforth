@@ -956,6 +956,8 @@ _WORD
     beq .whitespace
     cmp #K_SPACE
     beq .whitespace
+    cmp #(K_SPACE|$80)
+    beq .whitespace
 
     inc	TIB
 
