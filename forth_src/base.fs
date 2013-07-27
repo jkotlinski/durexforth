@@ -36,8 +36,6 @@ swap here swap ! ;
 2dup < if swap then drop ;
 : min ( a b - c )
 2dup > if swap then drop ;
-: hex 10 base c! ;
-: decimal a base c! ;
 
 : '"' [ key " ] literal ;
 : s" immed ( -- addr len )
@@ -162,6 +160,9 @@ dup loc >cfa 1+ dup 2+
 -rot c! # lsb
 swap 100/ swap c! # msb
 then ;
+
+: hex 10 to base ;
+: decimal a to base ;
 
 :asm 2drop ( a b -- )
 inx, inx, inx, inx, ;asm

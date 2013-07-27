@@ -26,9 +26,8 @@
     !byte 4
     !text "base"
 BASE
-    +VALUE	_BASE
-_BASE
-    !byte 16
+_BASE = * + 1
+    +VALUE	16
 
 ; Z = success, NZ = fail
 ; success: ( string ptr -- number )
