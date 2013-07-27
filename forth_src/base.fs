@@ -39,7 +39,7 @@ swap here swap ! ;
 
 : '"' [ key " ] literal ;
 : s" immed ( -- addr len )
-	state @ if
+	state if
 		' litstring ,
 		here ( save addr of length byte on stack )
 		0 c, ( dummy length - we don't know what it is yet )
@@ -151,7 +151,7 @@ lda,# 100/ ldy,#
 # "0 to foo" sets value foo to 0
 : (to) over 100/ over 2+ c! c! ;
 : to immed loc >cfa 1+
-state @ if [compile] ['] , ' (to) ,
+state if [compile] ['] , ' (to) ,
 else (to) then ;
 
 : hex 10 to base ;

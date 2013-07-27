@@ -688,9 +688,8 @@ CMOVE
     +BACKLINK
     !byte 5
     !text	"state"
-    +VALUE	STATE
-STATE
-    !word	0
+STATE = * + 1
+    +VALUE	0
 
 ; COMPILE_RAM - points to RAM source code to be compiled.
     +BACKLINK
