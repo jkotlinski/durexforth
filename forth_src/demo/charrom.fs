@@ -8,7 +8,7 @@ sei
 1 c@ 11111000 and 11 or 1 c!
 
 ( copy char ROM to $7800 )
-[ hex ] d800 7800 1000 cmove
+[ hex ] d800 7800 800 cmove
 
 ( switch back I/O + kernal )
 [ 2 to base ]
