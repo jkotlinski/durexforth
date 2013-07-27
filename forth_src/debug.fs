@@ -38,7 +38,7 @@ latest @ begin ?dup while
 	swap ( end-of-word start-of-word )
 
 	[ key : ] literal emit space dup id. space
-	dup ?immed if ." immed " then
+	dup 2+ c@ 80 and if ." immed " then
 
 	>dfa ( get data addr )
 

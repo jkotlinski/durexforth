@@ -98,7 +98,6 @@ while emit repeat drop ;
 ;
 
 : ?hidden 2+ c@ 40 and ;
-: ?immed 2+ c@ 80 and ;
 
 ( get pointer to first data field - skip jsr DOCOL )
 : >dfa >cfa 1+ 2+ ;
