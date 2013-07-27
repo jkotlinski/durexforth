@@ -86,16 +86,8 @@ while emit repeat drop ;
 : endof immed [compile] else ;
 : endcase immed ' drop , begin ?dup while [compile] then repeat ;
 
-: .s ( -- )
-	sp0 1- 1-
-	begin
-		dup sp@ 2+ >
-	while
-		dup @ .
-		1- 1-
-	repeat
-	drop
-;
+: .s sp0 begin 1- 1- dup sp@ 2+ > while
+dup @ . repeat drop ;
 
 : ?hidden 2+ c@ 40 and ;
 
