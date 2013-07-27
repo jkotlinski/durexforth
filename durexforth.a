@@ -1946,7 +1946,7 @@ OPENW
     
     jsr	SETNAM
     lda	TMP ; file number
-    ldx	#8 ; default to device 8
+    ldx	$ba ; last used device#
     tay ; secondary address
     jsr	SETLFS
     jsr	OPEN
@@ -1986,7 +1986,7 @@ LOAD_AND_COMPILE
     jsr	SETNAM
     inc	COMPILE_FILENO
     lda	COMPILE_FILENO ; file number
-    ldx	#8 ; default to device 8
+    ldx	$ba ; last used device#
     tay
     iny ; secondary address
     jsr	SETLFS
