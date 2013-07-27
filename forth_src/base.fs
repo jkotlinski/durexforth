@@ -183,6 +183,11 @@ iny,
 zptmp lda,(y) 3 adc,x zptmp sta,(y)
 inx, inx, inx, inx, ;asm
 
+: lshift ( x1 u -- x2 )
+begin ?dup while swap 2* swap 1- repeat ;
+: rshift ( x1 u -- x2 )
+begin ?dup while swap 2/ swap 1- repeat ;
+
 : allot ( n -- prev-here )
 here swap over + to here ;
 
