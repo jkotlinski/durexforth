@@ -6,14 +6,14 @@ sei
 
 ( switch in char ROM )
 [ 2 to base ]
-1 c@ dup 11111000 and 11 or 1 c!
+1 c@ 11111000 and 11 or 1 c!
 
 ( copy char ROM to $5800 )
 [ hex ] d800 5800 1000 cmove
 
 ( switch back I/O + kernal )
 [ 2 to base ]
-1 c@ dup 11111000 and 110 or 1 c!
+1 c@ 11111000 and 110 or 1 c!
 
 cli
 
