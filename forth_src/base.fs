@@ -151,7 +151,7 @@ lda,# 100/ ldy,#
 # "0 to foo" sets value foo to 0
 : (to) over 100/ over 2+ c! c! ;
 : to immed loc >cfa 1+
-state @ if ' ' , , ' (to) ,
+state @ if [compile] ['] , ' (to) ,
 else (to) then ;
 
 : hex 10 to base ;
