@@ -8,7 +8,7 @@
 : * d* nip ;
 : loc word find ;
 : [compile] immed loc >cfa , ;
-: ['] immed ' lit , ;
+: ['] immed ' ' , ;
 : if immed ' 0branch , here 0 , ;
 : then immed here swap ! ;
 : else immed ' branch , here 0 ,
