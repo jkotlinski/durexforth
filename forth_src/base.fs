@@ -149,16 +149,10 @@ lda,# 100/ ldy,#
 8e value ip
 
 # "0 to foo" sets value foo to 0
-: (to)
-over 100/ over 2+ c! c! ;
-: to immed
-state @ if
-loc >cfa 1+ ' ' , , ' (to) ,
-else
-dup loc >cfa 1+ dup 2+
--rot c! # lsb
-swap 100/ swap c! # msb
-then ;
+: (to) over 100/ over 2+ c! c! ;
+: to immed loc >cfa 1+
+state @ if ' ' , , ' (to) ,
+else (to) then ;
 
 : hex 10 to base ;
 : decimal a to base ;
