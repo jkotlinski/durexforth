@@ -153,7 +153,7 @@ lda,# 100/ ldy,#
 over 100/ over 2+ c! c! ;
 : to immed
 state @ if
-loc >cfa 1+ ' lit , , ' (to) ,
+loc >cfa 1+ ' ' , , ' (to) ,
 else
 dup loc >cfa 1+ dup 2+
 -rot c! # lsb
