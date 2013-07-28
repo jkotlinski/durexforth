@@ -193,18 +193,6 @@ here swap over + to here ;
 
 : var 2 allot value ;
 
-var ar var xr var yr
-
-:asm jsr
-0 lda,x here 1+ 1234 sta, # lsb
-1 lda,x here 1+ 1234 sta, # msb
-txa, pha,
-ar lda, xr ldx, yr ldy,
-here 2+ swap ! here 1+ swap !
-1234 jsr,
-ar sta, xr stx, yr sty,
-pla, tax, inx, inx, ;asm
-
 # signedness
 : 0< 7fff > ;
 : abs dup 0< if negate then ;
@@ -224,6 +212,8 @@ pha, 1 lda,x pha, ;asm
 : modules ;
 .( doloop..)
 s" doloop" load
+.( jsr..)
+s" jsr" load
 .( debug..)
 s" debug" load
 .( ls..)
