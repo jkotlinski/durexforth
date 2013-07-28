@@ -728,65 +728,26 @@ EMIT
 
 print_hex_nibble
     cmp	#10
-
     bcc	.dec
     ; hex
     clc
     adc	#$41 - 10
-    jmp	+
-
+    jmp	PUTCHR
 .dec
     eor	#$30
-
-+
     jmp	PUTCHR
-
-print_hex_char
-    pha
-    lsr
-    lsr
-    lsr
-    lsr
-    jsr	print_hex_nibble
-    pla
-    pha
-    and	#$f
-    jsr	print_hex_nibble
-    pla
-    rts
 
 ; c.
     +BACKLINK
     !byte	2
     !text	"c."
-CDOT
-    lda	0, x
-    lsr
-    lsr
-    lsr
-    lsr
-    jsr	print_hex_nibble
-    
-    lda	0, x
-    and	#$f
-    jsr	print_hex_nibble
-
-    lda #K_SPACE
-    jsr	PUTCHR
-
-    inx
-    inx
-
-    +NEXT
+    jmp CDOT
 
 ; . - display number on screen
     +BACKLINK
     !byte	1
     !text	"."
 DOT
-    jsr	_DOT
-    +NEXT
-_DOT
     lda	1, x
     lsr
     lsr
@@ -798,6 +759,7 @@ _DOT
     and	#$f
     jsr	print_hex_nibble
 
+CDOT
     lda	0, x
     lsr
     lsr
@@ -815,7 +777,7 @@ _DOT
     inx
     inx
 
-    rts
+    +NEXT
 
 TIB
     !fill 33
