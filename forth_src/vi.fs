@@ -450,8 +450,7 @@ editpos c@
 clipboard clipboard-count @ + c!
 1 clipboard-count +!
 del-char repeat
-join-lines del-char
-1 to need-refresh ;
+join-lines 1 to need-refresh ;
 
 : del
 [ key d ] literal set-status
