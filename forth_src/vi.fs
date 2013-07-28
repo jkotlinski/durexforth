@@ -453,18 +453,12 @@ del-char repeat
 join-lines del-char
 1 to need-refresh ;
 
-: delete-handler
-	[ key d ] literal set-status
-
-	key
-
-	case
-	[ key w ] literal of del-word endof
-	[ key d ] literal of del-line endof
-	endcase
-
-	clear-status
-;
+: del
+[ key d ] literal set-status
+key case
+[ key w ] literal of del-word endof
+[ key d ] literal of del-line endof
+endcase clear-status ;
 
 10 allot value search-buf
 
@@ -691,7 +685,7 @@ key x c, [compile] del-char
 key X c, [compile] backspace
 key b c, [compile] word-back
 key w c, [compile] word-fwd
-key d c, [compile] delete-handler
+key d c, [compile] del
 LEFT c, [compile] cur-left
 RIGHT c, [compile] cur-right
 UP c, [compile] cur-up
