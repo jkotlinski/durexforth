@@ -1768,7 +1768,6 @@ load_binary_laddr_hi = *+1
     ldy #0		;if load: 0 = load to new address, if save: 0 = dunno, but okay... 
     jmp SETLFS	;End with JMP instead of jsr/rts to save a jsr/rts pair...
 
-
 .disk_io_error
     ; Accumulator contains BASIC error code
     
@@ -1936,12 +1935,9 @@ load_base
     lda	#basename_end - basename
     jsr load_binary
     ; Null terminates source code.
-    lda $ae    
-    sta + + 1
-    lda $af
-    sta + + 2
     lda #0
-+   sta $1234
+    tay
+    sta ($ae),y
     rts
 
 basename
