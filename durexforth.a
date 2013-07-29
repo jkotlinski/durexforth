@@ -1922,6 +1922,17 @@ LOAD_AND_COMPILE
     inc	$d020
     jmp	.could_not_open
 
+; LATEST - points to the most recently defined dictionary word.
+    +BACKLINK
+    !byte 6
+    !text	"latest"
+LATEST
+    +VALUE	_LATEST
+_LATEST
+    !word	LINK
+
+; ALL CONTENTS BELOW LATEST WILL BE OVERWRITTEN!!!
+
 load_base
     ; loads base.fs to $5000
     lda #0
@@ -1943,14 +1954,3 @@ load_base
 basename
 !text	"base"
 basename_end
-
-; LATEST - points to the most recently defined dictionary word.
-    +BACKLINK
-    !byte 6
-    !text	"latest"
-LATEST
-    +VALUE	_LATEST
-_LATEST
-    !word	LINK
-
-; PUT NO CONTENT AFTER LATEST!!!! It will be overwritten!!!!
