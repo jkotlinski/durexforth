@@ -30,7 +30,7 @@ F_HIDDEN = $40
 STRLEN_MASK = $3f
 
 ; zeropage
-STACK_START = $88
+STACK_START = $86 ; Leaves 86-87 unused to reduce risk of underflow crashes!
 TMP = $88
 TMP2 = $8a
 TMP3 = $8c
