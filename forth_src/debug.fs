@@ -3,19 +3,9 @@
 : c. ff and
 dup 10 < if [ key 0 ] literal emit then . ;
 : id.
-	2+ ( skip over link ptr )
-	dup c@
-	3f and ( 3f = length mask )
-	begin
-		dup
-	while
-		swap 1+
-		dup c@
-		emit
-		swap 1-
-	repeat
-	2drop
-;
+2+ ( skip over link ptr )
+dup c@ 3f and ( length )
+swap 1+ tuck + swap do i c@ emit loop ;
 
 : cfa> ( codepointer -- word )
 latest @ begin ?dup while
