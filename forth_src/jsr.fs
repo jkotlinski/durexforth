@@ -2,7 +2,7 @@
 
 var ar var xr var yr 
 ( For BASIC CHRGET support:
-  1c allot value jsrtmp )
+  1d allot value jsrtmp )
 :asm jsr
 0 lda,x here 1+ 1234 sta, # lsb
 1 lda,x here 1+ 1234 sta, # msb
