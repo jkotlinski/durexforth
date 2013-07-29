@@ -1,12 +1,10 @@
 
 
-: c. ff and
-dup 10 < if [ key 0 ] literal emit then . ;
-: id.
-2+ ( skip over link ptr )
+: c. ff and dup 10 < if
+[ key 0 ] literal emit then . ;
+: id. 2+ ( skip over link ptr )
 dup c@ 3f and ( length )
 swap 1+ tuck + swap do i c@ emit loop ;
-
 : cfa> ( codepointer -- word )
 latest @ begin ?dup while
 2dup > if nip exit then
@@ -55,8 +53,7 @@ latest @ begin ?dup while
 		' ' of
 			[ key ' ] literal emit space
 			2+ dup @
-			cfa>
-			id. space
+			cfa> id. space
 		endof
 		' branch of
 			." branch ( "
@@ -77,8 +74,7 @@ latest @ begin ?dup while
 		endof
 			( default )
 			dup
-			cfa>
-			id. space
+			cfa> id. space
 		endcase
 		2+
 	repeat
