@@ -14,8 +14,9 @@ inx, inx, inx, inx, ;asm
 [compile] repeat ' 2drop , ;
 
 : +loop immed
-' r> , ' + , ' r> , ' 2dup , ' >= ,
-[compile] until ' 2drop , ;
+' r> , ' + , ' r> , ' 2dup , ' < ,
+[compile] while ' >r , ' >r ,
+[compile] repeat ' 2drop , ;
 
 : i immed ' r@ , ;
 : j immed ' r> , ' r> , ' r@ ,
