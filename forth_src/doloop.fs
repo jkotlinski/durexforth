@@ -6,7 +6,7 @@
 inx, inx, inx, inx, ;asm
 
 : do ( limit first -- ) immed
-' (do) , [compile] begin ;
+' (do) , here ;
 
 : loop immed
 ' r> , ' 1+ , ' r> , ' 2dup , ' < ,
