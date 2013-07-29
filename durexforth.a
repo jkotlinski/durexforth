@@ -1475,7 +1475,7 @@ IMMED
     !byte	6
     !text	"branch"
 BRANCH
-    ; IP is now pointing to the offset by which IP should be modified...
+    ; IP is now pointing to what IP should be changed to.
     ldy	#0
     lda	(IP), y
     sta	TMP
