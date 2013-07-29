@@ -1,6 +1,6 @@
 
 
-( Used to make Basic or Kernal calls.
+( Used to make Basic/Kernal calls.
   Variables ar, xr, yr are used for
   register I/O. $100-$11c is used as
   temporary storage for the Forth
