@@ -317,7 +317,7 @@ DECR
     +BACKLINK
     !byte	1
     !text	"+"
-  lda	0, x
+    lda	0, x
     clc
     adc 2, x
     sta	2, x
@@ -328,7 +328,6 @@ DECR
 
     inx
     inx
-
     +NEXT
 
 ; -
@@ -724,59 +723,6 @@ EMIT
     inx
     inx
     jsr	PUTCHR
-    +NEXT
-
-print_hex_nibble
-    cmp	#10
-    bcc	.dec
-    ; hex
-    clc
-    adc	#$41 - 10
-    jmp	PUTCHR
-.dec
-    eor	#$30
-    jmp	PUTCHR
-
-; c.
-    +BACKLINK
-    !byte	2
-    !text	"c."
-    jmp CDOT
-
-; . - display number on screen
-    +BACKLINK
-    !byte	1
-    !text	"."
-DOT
-    lda	1, x
-    lsr
-    lsr
-    lsr
-    lsr
-    jsr print_hex_nibble
-
-    lda	1, x
-    and	#$f
-    jsr	print_hex_nibble
-
-CDOT
-    lda	0, x
-    lsr
-    lsr
-    lsr
-    lsr
-    jsr	print_hex_nibble
-    
-    lda	0, x
-    and	#$f
-    jsr	print_hex_nibble
-
-    lda	#K_SPACE
-    jsr	PUTCHR
-
-    inx
-    inx
-
     +NEXT
 
 TIB

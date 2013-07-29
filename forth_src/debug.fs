@@ -1,5 +1,7 @@
 
 
+: c. ff and
+dup 10 < if [ key 0 ] literal emit then . ;
 : id.
 	2+ ( skip over link ptr )
 	dup c@

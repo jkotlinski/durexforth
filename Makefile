@@ -32,8 +32,6 @@ forth_src/sin.pet: forth_src/sin.fs ext/petcom
 	cat forth_src/sin.fs | ext/petcom - > forth_src/sin.pet
 forth_src/ls.pet: forth_src/ls.fs ext/petcom
 	cat forth_src/ls.fs | ext/petcom - > forth_src/ls.pet
-forth_src/hexdec.pet: forth_src/hexdec.fs ext/petcom
-	cat forth_src/hexdec.fs | ext/petcom - > forth_src/hexdec.pet
 forth_src/sprite.pet: forth_src/sprite.fs ext/petcom
 	cat forth_src/sprite.fs | ext/petcom - > forth_src/sprite.pet
 forth_src/doloop.pet: forth_src/doloop.fs ext/petcom
@@ -41,9 +39,9 @@ forth_src/doloop.pet: forth_src/doloop.fs ext/petcom
 forth_src/jsr.pet: forth_src/jsr.fs ext/petcom
 	cat forth_src/jsr.fs | ext/petcom - > forth_src/jsr.pet
 
-FORTHLIST=base debug vi asm gfx gfxdemo rnd sin ls hexdec turtle fractal purge-hidden sprite doloop jsr
+FORTHLIST=base debug vi asm gfx gfxdemo rnd sin ls turtle fractal purge-hidden sprite doloop jsr
 
-durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet forth_src/vi.pet forth_src/asm.pet forth_src/gfx.pet forth_src/gfxdemo.pet forth_src/rnd.pet forth_src/sin.pet forth_src/hexdec.pet forth_src/ls.pet forth_src/turtle.pet forth_src/fractal.pet forth_src/purge-hidden.pet forth_src/sprite.pet forth_src/doloop.pet forth_src/jsr.pet Makefile
+durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet forth_src/vi.pet forth_src/asm.pet forth_src/gfx.pet forth_src/gfxdemo.pet forth_src/rnd.pet forth_src/sin.pet forth_src/ls.pet forth_src/turtle.pet forth_src/fractal.pet forth_src/purge-hidden.pet forth_src/sprite.pet forth_src/doloop.pet forth_src/jsr.pet Makefile
 	$(C1541) -format durexforth,DF  d64 durexforth.d64 # > /dev/null
 	$(C1541) -attach $@ -write durexforth.prg durexforth  # > /dev/null
 	# $(C1541) -attach $@ -write debug.bak

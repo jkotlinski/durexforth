@@ -86,9 +86,6 @@ while emit repeat drop ;
 : endof immed [compile] else ;
 : endcase immed ' drop , begin ?dup while [compile] then repeat ;
 
-: .s sp0 begin 1- 1- dup sp@ 2+ > while
-dup @ . repeat drop ;
-
 : ?hidden 2+ c@ 40 and ;
 
 ( get pointer to first data field - skip jsr DOCOL )
@@ -205,6 +202,13 @@ inx, inx, ;asm
 :asm r@ dex, dex,
 pla, 1 sta,x pla, 0 sta,x
 pha, 1 lda,x pha, ;asm
+
+: . 0 >r begin base /mod swap
+dup a < if 7 - then 37 + >r
+?dup 0= until
+begin r> ?dup while emit repeat space ;
+: .s sp0 begin 1- 1- dup sp@ 2+ > while
+dup @ . repeat drop ;
 
 :asm sei sei, ;asm
 :asm cli cli, ;asm
