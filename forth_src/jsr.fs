@@ -1,5 +1,11 @@
 
 
+( Used to make Basic or Kernal calls.
+  Variables ar, xr, yr are used for
+  register I/O. $100-$11c is used as
+  temporary storage for the Forth
+  zeropage, so that CHRGET can be in
+  place for any Basic calls. )
 var ar var xr var yr 
 :asm jsr
 0 lda,x here 1+ 1234 sta, # lsb
