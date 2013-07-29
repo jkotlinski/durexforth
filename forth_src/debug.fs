@@ -54,7 +54,7 @@ latest @ begin ?dup while
 			2+ dup @ .
 		endof
 		' litc of
-			2+ dup c@ c. 1-
+			2+ dup c@ . 1-
 		endof
 		' litstring of
 			[ key s ] literal emit '"' emit space
