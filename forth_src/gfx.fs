@@ -413,7 +413,7 @@ penx 1+ lda, 3 sta,x rts,
 2 lda,x penx sta,
 3 lda,x penx 1+ sta,
 # 2dup blitloc # x y mask addr
-dex, dex, dex, dex,
+txa, 4 sbx,#
 4 lda,x 0 sta,x
 5 lda,x 1 sta,x
 6 lda,x 2 sta,x

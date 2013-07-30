@@ -938,8 +938,7 @@ _FIND
 .word_not_equal
     ; no match, advance the linked list.
     ldy	#0
-    lda	(TMP), y
-    tax
+    lax	(TMP), y
     iny
     lda	(TMP), y
     sta	TMP + 1
@@ -1571,10 +1570,8 @@ SPFETCH
     !text	"litstring"
 LITSTRING ; ( -- addr len )
     ; grow stack
-    dex
-    dex
-    dex
-    dex
+    txa
+    sbx #4
 
     ; copy string addr to stack
     ldy	#0

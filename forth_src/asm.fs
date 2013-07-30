@@ -156,6 +156,9 @@ ba 1mi tsx,
 9a 1mi txs,
 98 1mi tya,
 
+# illegal opcodes
+cb 2mi sbx,#
+
 ( usage:
 foo lda,
 +branch beq,

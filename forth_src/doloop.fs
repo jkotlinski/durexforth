@@ -19,8 +19,13 @@ inx, inx, inx, inx, ;asm
 [compile] repeat ' 2drop , ;
 
 : i immed ' r@ , ;
-: j immed ' r> , ' r> , ' r@ ,
-' -rot , ' >r , ' >r , ;
+:asm j txa, 6 sbx,#
+pla, 0 sta,x pla, 1 sta,x
+pla, 2 sta,x pla, 3 sta,x
+pla, 5 sta,x pla, 4 sta,x pha,
+5 lda,x pha, 3 lda,x pha,
+2 lda,x pha, 1 lda,x pha,
+0 lda,x pha, inx, inx, inx, inx, ;asm
 
 ( : test
 sp@
