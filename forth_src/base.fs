@@ -97,7 +97,7 @@ loc ?dup if hidden else ." err" then ;
 here [compile] exit
 : create
 # default behavior = exit
-header bl c, ['] dodoes , literal , ;
+header 20 c, ' dodoes , literal , ;
 : does> r> latest @ >dfa ! ;
 
 .( asm..)
