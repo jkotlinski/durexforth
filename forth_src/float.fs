@@ -16,8 +16,8 @@ dup 100/ yr ! ar ! ba28 jsr ;
 
 ( example:
 
-s" 3.14159" strf pi
-2 negate intf -2.
-pi fac! -2. fac* fac.
+s" .5" strf .5
+s" .8" strf .8
+.5 fac! .8 fac* fac.
 
-...prints -6.28318001 )
+...prints .4! )
