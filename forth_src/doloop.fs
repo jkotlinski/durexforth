@@ -19,10 +19,13 @@ inx, inx, inx, inx, ;asm
 [compile] repeat ' 2drop , ;
 
 : i immed ' r@ , ;
+( buggy!
 :asm j txa, tsx,
 106 ldy,x zptmp sty, 107 ldy,x
 tax, dex, dex,
-1 sty,x zptmp lda, 0 sta,x ;asm
+1 sty,x zptmp lda, 0 sta,x ;asm )
+: j immed ' r> , ' r> , ' r@ ,
+' -rot , ' >r , ' >r , ;
 
 ( : test
 sp@
