@@ -14,8 +14,8 @@ txa, tay, tsx, # x = stack pointer
 102 lda,x 104 cmp,x +branch bne,
 101 lda,x 103 cmp,x +branch bne,
 # loop done
+inx, inx, inx, inx, txs,
 tya, tax,
-pla, pla, pla, pla,
 # skip branch addr
 ip inc, 2 bne, ip 1+ inc,
 ip inc, 2 bne, ip 1+ inc,
