@@ -8,10 +8,25 @@ inx, inx, inx, inx, ;asm
 : do ( limit first -- ) immed
 ' (do) , here ;
 
+:asm (loop)
+txa, tay, tsx, # x = stack pointer
+102 inc,x 3 bne, 101 inc,x # index++
+102 lda,x 104 cmp,x +branch bne,
+101 lda,x 103 cmp,x +branch bne,
+# loop done
+tya, tax,
+pla, pla, pla, pla,
+# skip branch addr
+ip inc, 2 bne, ip 1+ inc,
+ip inc, 2 bne, ip 1+ inc,
+;asm
+:+ :+
+# not done, branch back
+tya, tax,
+loc branch >cfa jmp,
+
 : loop immed
-' r> , ' 1+ , ' r> , ' 2dup , ' < ,
-[compile] while ' >r , ' >r ,
-[compile] repeat ' 2drop , ;
+' (loop) , , ; # store branch address
 
 : +loop immed
 ' r> , ' + , ' r> , ' 2dup , ' < ,
