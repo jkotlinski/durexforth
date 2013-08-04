@@ -10,7 +10,7 @@ inx, inx, inx, inx, ;asm
 
 :asm (loop)
 txa, tay, tsx, # x = stack pointer
-102 inc,x 3 bne, 101 inc,x # index++
+102 inc,x 3 bne, 101 inc,x # i++
 102 lda,x 104 cmp,x +branch bne,
 101 lda,x 103 cmp,x +branch bne,
 # loop done
