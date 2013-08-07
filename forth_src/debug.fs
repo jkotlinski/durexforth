@@ -94,53 +94,13 @@ latest @ begin ?dup while
 var last-dump
 
 : dump ( addr -- )
-	8 ( addr lines )
-	begin
-		?dup ( while lines > 0 )
-	while
-		over . space ( print addr )
-
-		8 ( addr lines bytes )
-		begin
-			?dup ( while bytes > 0 )
-		while
-			rot ( lines bytes addr )
-			dup c@ c. ( print *addr )
-
-			1+ ( incr addr )
-			-rot ( addr lines bytes )
-
-			1-
-		repeat
-		( addr lines )
-
-		swap 8 - swap ( roll back address )
-
-		( ... emit chars ... )
-
-		8 ( addr lines bytes )
-		begin
-			?dup ( while bytes > 0 )
-		while
-			rot ( lines bytes addr )
-			dup c@
-			dup 20 5e within if
-				emit
-			else
-				drop [ key . ] literal emit
-			then
-
-			1+ ( incr addr )
-			-rot ( addr lines bytes )
-
-			1-
-		repeat
-
-		cr
-		1-
-	repeat
-	last-dump !
-;
+8 0 do dup . space
+dup 8 0 do dup c@ c. 1+ loop drop
+8 0 do dup c@
+dup 20 5e within 0= if
+drop [ key . ] literal
+then emit 1+ loop cr loop
+last-dump ! ;
 
 : n last-dump @ dump ;
 
