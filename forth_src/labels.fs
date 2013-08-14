@@ -7,10 +7,10 @@ n @@ = branch to label n
 
 ...where n is in range[0, ff]
 
-relative branches are resolved by :asm
+relative branches are resolved by ;asm
 - this allows for mixed forward and
 backward references, but it is not
-possible to branch over :asm
+possible to branch over ;asm
 
 -- example --
 :asm clrscr
@@ -38,7 +38,7 @@ here refp @ !
 locp @ [ locs f + ] literal < assert
 here locp @ !
 2 locp +! locp @ c! 1 locp +! ;
-: :asm :asm
+: ;asm ;asm
 locs begin dup locp @ < while
 refs begin dup refp @ < while
 over 2+ c@ over 2+ c@ = if
