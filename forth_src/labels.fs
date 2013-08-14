@@ -17,8 +17,8 @@ locp @ [ locs f + ] literal < assert
 here locp @ !
 2 locp +! locp @ c! 1 locp +! ;
 : ;asm ;asm
-locs begin dup [ locs f + ] literal < while
-refs begin dup [ refs 18 + ] literal < while
+locs begin dup locp @ < while
+refs begin dup refp @ < while
 dup @ if over @ if
 2dup 2+ c@ swap 2+ c@ = if
 over @ over @ 2+ - over @ 1+ c!
