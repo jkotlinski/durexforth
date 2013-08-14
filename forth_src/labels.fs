@@ -13,8 +13,8 @@ backward references, but it is not
 possible to branch over ;asm
 
 -- example --
-:asm clrscr
-0 ldy,# tya, 1 @:
+:asm checkers
+7f lda,# 0 ldy,# 1 @:
 400 sta,y 500 sta,y
 600 sta,y 700 sta,y
 dey, 1 @@ bne, ;asm )
