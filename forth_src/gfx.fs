@@ -221,12 +221,11 @@ sec, addr lda, 8 sbc,# addr sta,
 3 bcs, addr 1+ dec, stepx jmp,
 
 :asm doline
-:- :- :- :-
-step jsr,
-peny lda, 0 cmp,x -branch bne,
-penx lda, 2 cmp,x -branch bne,
-peny 1+ lda, 1 cmp,x -branch bne,
-penx 1+ lda, 3 cmp,x -branch bne,
+1 @: step jsr,
+peny lda, 0 cmp,x 1 @@ bne,
+penx lda, 2 cmp,x 1 @@ bne,
+peny 1+ lda, 1 cmp,x 1 @@ bne,
+penx 1+ lda, 3 cmp,x 1 @@ bne,
 inx, inx, inx, inx, ;asm
 
 : line ( x y -- )

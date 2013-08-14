@@ -214,6 +214,8 @@ dup @ . repeat drop ;
 :asm cli cli, ;asm
 
 : modules ;
+.( labels..)
+s" labels" load
 .( doloop..)
 s" doloop" load
 .( jsr..)
