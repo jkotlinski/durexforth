@@ -213,6 +213,9 @@ dup @ . repeat drop ;
 :asm sei sei, ;asm
 :asm cli cli, ;asm
 
+: assert 0= if
+begin 1 d020 +! again then ;
+
 : modules ;
 .( labels..)
 s" labels" load

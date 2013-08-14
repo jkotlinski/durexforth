@@ -162,6 +162,3 @@ dup r@ = if
 nip dup @ repeat
 . drop r> drop ;
 
-: assert 0= if
-begin 1 d020 +! again then ;
-
