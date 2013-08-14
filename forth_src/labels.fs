@@ -19,8 +19,6 @@ here locp @ !
 : ;asm ;asm
 locs begin dup locp @ < while
 refs begin dup refp @ < while
-dup @ if over @ if
-2dup 2+ c@ swap 2+ c@ = if
+over 2+ c@ over 2+ c@ = if
 over @ over @ 2+ - over @ 1+ c!
-then then then
-3 + repeat drop 3 + repeat drop ;
+then 3 + repeat drop 3 + repeat drop ;
