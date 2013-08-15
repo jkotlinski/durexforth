@@ -853,10 +853,6 @@ WORD
 
 _WORD
     ; prepare text input
-    lda	#<(TIB_DATA)
-    sta	.dst + 1
-    lda	#>(TIB_DATA)
-    sta	.dst + 2
     lda	#0
     sta	TIB_LENGTH
     
@@ -870,17 +866,14 @@ _WORD
     cmp #(K_SPACE|$80)
     beq .word_end
 .dst
-    sta $f00d
-
-    inc TIB_LENGTH
-    lda TIB_LENGTH
+    ldy TIB_LENGTH
+    sta TIB_DATA,y
+    iny
+    sty TIB_LENGTH
+    tya
     cmp #MAX_TIB_LENGTH
+    bne .get_key
     beq .word_done
-
-    inc	.dst + 1
-    bne .get_key	
-    inc	.dst + 2
-    jmp	.get_key
 
 .word_end
     lda	TIB_LENGTH
