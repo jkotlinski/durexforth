@@ -726,7 +726,11 @@ EMIT
     +NEXT
 
 TIB
-    !fill 33
+TIB_LENGTH
+    !byte 0
+MAX_TIB_LENGTH = 20
+TIB_DATA
+    !fill MAX_TIB_LENGTH
 
 tmp_x
     !byte	0
@@ -849,24 +853,29 @@ WORD
 
 _WORD
     ; prepare text input
-    lda	#<(TIB + 1) 
+    lda	#<(TIB_DATA)
     sta	.dst + 1
-    lda	#>(TIB + 1)
+    lda	#>(TIB_DATA)
     sta	.dst + 2
     lda	#0
-    sta	TIB
+    sta	TIB_LENGTH
     
 -
     jsr	_KEY
 
     cmp #K_RETURN
-    beq .whitespace
+    beq .word_done
     cmp #K_SPACE
-    beq .whitespace
+    beq .word_done
     cmp #(K_SPACE|$80)
-    beq .whitespace
+    beq .word_done
 
-    inc	TIB
+    tay
+    lda TIB_LENGTH
+    cmp #MAX_TIB_LENGTH
+    beq .word_done
+    inc TIB_LENGTH
+    tya
 
 .dst
     sta $f00d
@@ -875,8 +884,8 @@ _WORD
     inc	.dst + 2
     jmp	-
 
-.whitespace
-    lda	TIB
+.word_done
+    lda	TIB_LENGTH
     beq - ; Nothing entered yet, try again.
 
     dex
@@ -1127,7 +1136,7 @@ INTERPRET
     lda	#$12 ; reverse on
     jsr	PUTCHR
 
-    ldy	TIB
+    ldy	TIB_LENGTH
     lda	#<TIB
     sta	TMP
     lda	#>TIB
