@@ -865,7 +865,7 @@ _WORD
     beq .word_end
     cmp #(K_SPACE|$80)
     beq .word_end
-.dst
+
     ldy TIB_LENGTH
     sta TIB_DATA,y
     iny
