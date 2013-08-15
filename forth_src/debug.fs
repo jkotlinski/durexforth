@@ -105,7 +105,7 @@ var last-dump
 		while
 			rot ( lines bytes addr )
             ( print *addr )
-			dup c@ dup fff and 0= if
+			dup c@ dup fff0 and 0= if
             [ key 0 ] literal emit then .
 
 			1+ ( incr addr )
