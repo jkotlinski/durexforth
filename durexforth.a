@@ -878,7 +878,6 @@ _WORD
     lda	TIB_LENGTH
     beq .get_key ; Nothing entered yet, try again.
 
-.word_done
     dex
     dex
 
