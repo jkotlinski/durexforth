@@ -860,34 +860,33 @@ _WORD
     lda	#0
     sta	TIB_LENGTH
     
--
+.get_key
     jsr	_KEY
 
     cmp #K_RETURN
-    beq .word_done
+    beq .word_end
     cmp #K_SPACE
-    beq .word_done
+    beq .word_end
     cmp #(K_SPACE|$80)
-    beq .word_done
+    beq .word_end
+.dst
+    sta $f00d
 
-    tay
+    inc TIB_LENGTH
     lda TIB_LENGTH
     cmp #MAX_TIB_LENGTH
     beq .word_done
-    inc TIB_LENGTH
-    tya
 
-.dst
-    sta $f00d
     inc	.dst + 1
-    bne	-
+    bne .get_key	
     inc	.dst + 2
-    jmp	-
+    jmp	.get_key
+
+.word_end
+    lda	TIB_LENGTH
+    beq .get_key ; Nothing entered yet, try again.
 
 .word_done
-    lda	TIB_LENGTH
-    beq - ; Nothing entered yet, try again.
-
     dex
     dex
 
