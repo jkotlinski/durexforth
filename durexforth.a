@@ -873,7 +873,6 @@ _WORD
     tya
     cmp #MAX_TIB_LENGTH
     bne .get_key
-    beq .word_done
 
 .word_end
     lda	TIB_LENGTH
