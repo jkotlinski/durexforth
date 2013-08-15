@@ -1126,7 +1126,6 @@ INTERPRET
     lda	#$12 ; reverse on
     jsr	PUTCHR
 
-    ldy	TIB_LENGTH
     lda	#<TIB
     sta	TMP
     lda	#>TIB
@@ -1138,17 +1137,11 @@ INTERPRET
     inc	TMP + 1
 +
 
-    tya
-    pha
-
     ldy	#0
     lda	(TMP), y
     jsr	PUTCHR
 
-    pla
-    tay
-
-    dey
+    dec TIB_LENGTH
     bne -
 
     lda	#'?'
