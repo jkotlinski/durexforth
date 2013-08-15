@@ -26,7 +26,6 @@ f allot value locs # 5 locs
 var locp var refp
 
 locs locp ! refs refp ! # init
-0 refs 18 fill 0 locs f fill
 
 # reference
 : @@ ( index -- dummy )
@@ -44,8 +43,7 @@ refs begin dup refp @ < while
 over 2+ c@ over 2+ c@ = if
 over @ over @ 2+ - over @ 1+ c!
 then 3 + repeat drop 3 + repeat drop
-
-locs locp ! refs refp ! # reset
-0 refs 18 fill 0 locs f fill ;
+# reset
+locs locp ! refs refp ! ;
 
 hide locs hide refs hide locp hide refp
