@@ -1081,7 +1081,6 @@ INTERPRET
     jsr	PUTCHR
     lda #'r'
     jsr	PUTCHR
-    jsr	PUTCHR
     jmp .stop_error_print
 
 .found_word
@@ -1145,13 +1144,10 @@ INTERPRET
     bne -
 
     lda	#'?'
-    jsr	PUTCHR
-
 .stop_error_print
-    lda	#$92 ; reverse off
     jsr	PUTCHR
 
-    lda	#' '
+    lda	#$92 ; reverse off
     jsr	PUTCHR
 
     ; Resets some sensitive things, as part of error handling.
