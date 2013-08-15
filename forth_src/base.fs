@@ -141,6 +141,7 @@ lda,# 100/ ldy,#
 : to immed loc >cfa 1+
 state if [compile] ['] , ' (to) ,
 else (to) then ;
+hide (to)
 
 : hex 10 to base ;
 : decimal a to base ;

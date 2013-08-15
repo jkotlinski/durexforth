@@ -40,6 +40,8 @@ ip inc, 2 bne, ip 1+ inc,
 tax, dex, dex,
 1 sty,x zptmp lda, 0 sta,x ;asm
 
+hide (do) hide (loop)
+
 ( : test
 sp@
 2 0 do 2 0 do loop loop
