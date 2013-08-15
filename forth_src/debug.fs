@@ -145,12 +145,13 @@ var last-dump
 : n last-dump @ dump ;
 
 : words
-latest @
-begin ?dup while
+93 emit latest @ begin ?dup while
+d6 c@ 18 = if ." <more>"
+0 linebuf c! key drop 1 linebuf c!
+93 emit then
 dup ?hidden 0= if
 dup id. space
-then @ repeat
-cr ;
+then @ repeat cr ;
 
 # size foo prints size of foo
 : size ( -- )
