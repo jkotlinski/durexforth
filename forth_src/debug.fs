@@ -86,6 +86,7 @@ latest @ begin ?dup while
 	[ key ; ] literal emit cr
 	2drop
 ;
+hide (loop)
 
 ( c a b within returns true if a <= c and c < b )
 : within -rot over
