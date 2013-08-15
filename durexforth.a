@@ -1631,13 +1631,9 @@ LINEBUF
 _LINEBUF
     !word	1
 
-; COMPILE_FILENO - active file stream to compile from.
-    +BACKLINK
-    !byte 6
-    !text	"compile-fileno"
-    +VALUE	COMPILE_FILENO
+; Active file stream to compile from.
 COMPILE_FILENO
-    !word	0
+    !byte	0
 
 ; CLOSEW ( file# -- )
     +BACKLINK
