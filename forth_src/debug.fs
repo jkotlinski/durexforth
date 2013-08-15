@@ -1,7 +1,5 @@
 
 
-: c. ff and dup 10 < if
-[ key 0 ] literal emit then . ;
 : id. 2+ ( skip over link ptr )
 dup c@ 3f and ( length )
 swap 1+ tuck + swap do i c@ emit loop ;
@@ -106,7 +104,9 @@ var last-dump
 			?dup ( while bytes > 0 )
 		while
 			rot ( lines bytes addr )
-			dup c@ c. ( print *addr )
+            ( print *addr )
+			dup c@ dup fff and 0= if
+            [ key 0 ] literal emit then .
 
 			1+ ( incr addr )
 			-rot ( addr lines bytes )
