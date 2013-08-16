@@ -1130,16 +1130,10 @@ INTERPRET
     lda	#>TIB
     sta	TMP + 1
 
--
-    inc	TMP
-    bne	+
-    inc	TMP + 1
-+
-
-    ldy	#0
-    lda	(TMP), y
+    ldy	#1
+-   lda	(TMP), y
     jsr	PUTCHR
-
+    iny
     dec TIB_LENGTH
     bne -
 
