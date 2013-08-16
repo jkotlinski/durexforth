@@ -1125,8 +1125,8 @@ INTERPRET
     lda	#$12 ; reverse on
     jsr	PUTCHR
 
-    ldy	#1
--   lda	TIB, y
+    ldy	#0
+-   lda	TIB_DATA, y
     jsr	PUTCHR
     iny
     dec TIB_LENGTH
