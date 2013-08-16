@@ -1288,14 +1288,13 @@ HEADER
     
     ; update HERE
     tya
+    ldy	TMP + 1
     clc
     adc	TMP
     sta	HERE_LSB
     bcc	+
-    inc	TMP + 1
-+
-    lda	TMP + 1
-    sta	HERE_MSB
+    iny
++   sty HERE_MSB
 
     inx
     inx
