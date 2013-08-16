@@ -71,10 +71,9 @@ swap here swap ! ;
 ;
 
 : tell ( addr len -- )
-begin over c@ emit ( print char )
-swap 1+ swap ( inc strptr )
-1- ( dec strlen )
-?dup 0= until drop ;
+begin ?dup while
+swap dup c@ emit 1+ swap 1-
+repeat drop ;
 
 : ." immed [compile] s" ' tell , ;
 : .( begin key dup [ key ) literal ] <>
