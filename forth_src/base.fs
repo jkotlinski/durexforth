@@ -210,8 +210,8 @@ dup @ . repeat drop ;
 :asm sei sei, ;asm
 :asm cli cli, ;asm
 
-: marker create here , latest @ ,
-does> dup @ to here 2+ @ latest ! ;
+: marker here create ,
+does> @ dup to here @ latest ! ;
 
 marker modules
 
