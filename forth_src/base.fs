@@ -147,7 +147,7 @@ hide (to)
 :asm 2drop ( a b -- )
 inx, inx, inx, inx, ;asm
 
-: forget loc ?dup if dup @ latest ! to here then ;
+: forget loc dup @ latest ! to here ;
 
 : hide-to  ( -- )
 loc latest
@@ -215,7 +215,7 @@ dup @ . repeat drop ;
 : assert 0= if
 begin 1 d020 +! again then ;
 
-: modules ;
+header modules
 .( labels..)
 s" labels" load
 .( doloop..)
