@@ -147,6 +147,8 @@ hide (to)
 :asm 2drop ( a b -- )
 inx, inx, inx, inx, ;asm
 
+: forget loc ?dup if dup @ latest ! to here then ;
+
 : hide-to  ( -- )
 loc latest
 begin @ dup hidden 2dup = until
@@ -210,14 +212,10 @@ dup @ . repeat drop ;
 :asm sei sei, ;asm
 :asm cli cli, ;asm
 
-: marker create here , latest @ ,
-does> dup @ to here 2+ @ latest ! ;
-
-marker modules
-
 : assert 0= if
 begin 1 d020 +! again then ;
 
+: modules ;
 .( labels..)
 s" labels" load
 .( doloop..)

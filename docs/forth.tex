@@ -144,7 +144,7 @@ and 0 - 7FFF are positive. (E.g., FFFF means -1.)
 Copy len bytes from src to dst. The move begins with the contents of src and proceeds towards high memory.
 \item[cmove$>$ ( src dst len -- )]
 Byte-to-byte copy like \texttt{cmove}, but starts with address src + len - 1 and proceeds towards src.
-\item[marker xxx] Creates name 'xxx' that forgets itself and everything defined after it.
+\item[forget xxx] Forget Forth word \texttt{xxx} and everything defined after it.
 
 \end{description}
 \section{Compiling}
