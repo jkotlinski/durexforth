@@ -1,8 +1,7 @@
 
 
-: id. 2+ ( skip over link ptr )
-dup c@ 3f and ( length )
-swap 1+ tuck + swap do i c@ emit loop ;
+: id. ( header -- )
+2+ dup 1+ swap c@ 3f and tell ;
 : cfa> ( codepointer -- word )
 latest @ begin ?dup while
 2dup > if nip exit then
