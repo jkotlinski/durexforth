@@ -37,7 +37,6 @@ swap here swap ! ;
 : min ( a b - c )
 2dup > if swap then drop ;
 
-: '"' [ key " ] literal ;
 : s" immed ( -- addr len )
 	state if
 		' litstring ,
@@ -45,7 +44,7 @@ swap here swap ! ;
 		0 c, ( dummy length - we don't know what it is yet )
 		begin
 			key
-			dup '"' <>
+			dup [ key " ] literal <>
 		while
 			c,
 		repeat
@@ -58,7 +57,7 @@ swap here swap ! ;
 		here
 		begin
 			key
-			dup '"' <>
+			dup [ key " ] literal <>
 		while
 			over c!
 			1+

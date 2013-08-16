@@ -42,9 +42,10 @@ latest @ begin ?dup while
 			2+ dup c@ . 1-
 		endof
 		' litstring of
-			[ key s ] literal emit '"' emit space
+			[ key s ] literal emit
+            [ key " ] literal emit space
 			2+ dup 1+ over c@ tell
-			'"' emit space
+			[ key " ] literal emit space
             dup c@ + 1-
 		endof
 		' ' of
