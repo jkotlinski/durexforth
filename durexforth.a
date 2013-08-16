@@ -1150,6 +1150,9 @@ INTERPRET
     lda	#$92 ; reverse off
     jsr	PUTCHR
 
+    lda	#$d ; cr
+    jsr	PUTCHR
+
     ; Resets some sensitive things, as part of error handling.
     ldx     #0
     stx     STATE
