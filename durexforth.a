@@ -1274,21 +1274,16 @@ HEADER
 +
 
     ; store length byte in header. TMP2 = src
-    lda	0, x
-    sta	TMP2
-    lda	1, x
-    sta	TMP2 + 1
-    lda	(TMP2), y
+    lda	TIB, y
     sta	(TMP), y	
 
     ; copy string
-    lda	(TMP2), y
-    sta TMP3 ; string length
--   iny
-    lda	(TMP2), y
+-
+    iny
+    lda	TIB, y
     sta	(TMP), y
 
-    dec TMP3
+    dec TIB_LENGTH
     bne	-
 
     ; update _LATEST
