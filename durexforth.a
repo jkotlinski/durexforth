@@ -1273,18 +1273,12 @@ HEADER
     inc	TMP + 1
 +
 
-    ; store length byte in header. TMP2 = src
-    lda	TIB, y
-    sta	(TMP), y	
-
-    ; copy string
--
-    iny
-    lda	TIB, y
+    ; copy length byte + string
+-   lda	TIB, y
     sta	(TMP), y
-
+    iny
     dec TIB_LENGTH
-    bne	-
+    bpl	-
 
     ; update _LATEST
     lda	HERE_LSB
@@ -1293,7 +1287,6 @@ HEADER
     sta	_LATEST + 1
     
     ; update HERE
-    iny
     tya
     clc
     adc	TMP
