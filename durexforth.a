@@ -1,4 +1,4 @@
-;The MIT License
+;{{{ The MIT License
 ;
 ;Copyright (c) 2008-2013 Johan Kotlinski, Mats Andren
 ;
@@ -18,7 +18,7 @@
 ;AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ;LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-;THE SOFTWARE.
+;THE SOFTWARE. }}}
 
 ; ACME assembler
 
@@ -1125,13 +1125,8 @@ INTERPRET
     lda	#$12 ; reverse on
     jsr	PUTCHR
 
-    lda	#<TIB
-    sta	TMP
-    lda	#>TIB
-    sta	TMP + 1
-
     ldy	#1
--   lda	(TMP), y
+-   lda	TIB, y
     jsr	PUTCHR
     iny
     dec TIB_LENGTH
