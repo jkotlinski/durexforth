@@ -108,8 +108,7 @@ last-dump ! ;
 : words
 93 emit latest @ begin ?dup while
 d6 c@ 18 = if ." <more>"
-0 linebuf c! key drop 1 linebuf c!
-93 emit then
+key drop 93 emit then
 dup ?hidden 0= if
 dup id.
 then @ repeat cr ;

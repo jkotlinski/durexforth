@@ -54,4 +54,4 @@ durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet forth_src/
     done;
 
 clean:
-	rm -f *.lbl *.prg forth_src/*.pet
+	rm -f *.lbl *.prg forth_src/*.pet *.d64

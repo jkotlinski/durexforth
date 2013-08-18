@@ -132,9 +132,6 @@ reset
     dex
     bne	-
 
-    inx
-    stx	_LINEBUF ; Enables line buffering.
-
     lda	#<_START
     sta IP
     lda #>_START
@@ -750,19 +747,13 @@ KEY
 
 .unbuffered_key
     stx	tmp_x
-    jsr	PULL_KEY
+    jsr	PULL_KEY ; read from disk/ram/console
     ldx tmp_x
     ora	#0
     beq	_KEY
     rts
 
 _KEY
-    lda COMPILE_FILENO
-    ora COMPILE_RAM + 1
-    bne	.unbuffered_key
-    lda	_LINEBUF
-    beq	.unbuffered_key
-
     ; buffered key input
 KEY_BUF_READ_POS = * + 1
 -
@@ -771,6 +762,12 @@ KEY_BUF_READ_POS = * + 1
     inc KEY_BUF_READ_POS ; found buffered char, return it
     rts
 +
+    lda COMPILE_FILENO
+    ora COMPILE_RAM + 1
+PREVENT_BASIC_GETLINE = * + 1
+    ora	#1
+    bne	.unbuffered_key
+
     lda KEY_BUF_READ_POS
     bne +
     txa ; ask for new chars
@@ -779,7 +776,7 @@ KEY_BUF_READ_POS = * + 1
     pha
     ora #3 ; make sure basic is switched in
     sta 1
-    jsr $a560
+    jsr $a560 ; basic read line
     pla
     sta 1
     pla
@@ -1055,7 +1052,9 @@ INTERPRET
     cmp #STACK_START+1
     bpl .on_stack_underflow
 
+    dec PREVENT_BASIC_GETLINE
     jsr	_WORD ; push string to stack
+    inc PREVENT_BASIC_GETLINE
 
     +_DUP
     jsr	_FIND ; replace string with dictionary ptr
@@ -1579,15 +1578,6 @@ LITSTRING ; ( -- addr len )
     +NEXT
 
 ; -----------
-
-; LINEBUF line buffering. 0 = off, 1 = on
-    +BACKLINK
-    !byte 7
-    !text	"linebuf"
-LINEBUF
-    +VALUE	_LINEBUF
-_LINEBUF
-    !word	1
 
 ; Active file stream to compile from.
 COMPILE_FILENO

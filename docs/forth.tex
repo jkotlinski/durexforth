@@ -277,14 +277,10 @@ endcase
 \begin{description}
 \item[key ( -- n )]
 
-Reads a character from input. Buffered/unbuffered reading is controlled by the \texttt{linebuf} variable.
+Reads a character from input.
 
 \item[word ( -- addr )] Reads a word from input and put the string address on the stack.
 \item[interpret ( -- value )] Interprets a word from input and puts it on the stack.
-
-\item[linebuf]
-
-This variable switches between buffered/unbuffered input. Disable input buffering with \texttt{0 linebuf c!}, enable with \texttt{1 linebuf c!}.
 
 \end{description}
 

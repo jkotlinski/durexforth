@@ -125,9 +125,6 @@ clear-status status-pos c! ;
 	0 compile-ram ! # to enable editor start from base.src
 	80 28a c! # key repeat on
 
-	( disable input buffering )
-	0 linebuf c! 
-
 	clear-status
 ;
 
@@ -142,7 +139,6 @@ a d020 c!
 1 d800 400 fill ;
 
 : cleanup ( bordercolor bgcolor cursorcolor -- )
-1 linebuf c! # enable buffering
 40 28a c! # key repeat off
 286 c! # cursor col
 d021 c! d020 c!

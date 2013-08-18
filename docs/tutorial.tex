@@ -85,8 +85,7 @@ Note: As the x register contains the durexForth stack depth, it is important tha
 This piece of code reads from keyboard and sends back the chars to screen:
 
 \begin{verbatim}
-: init 0 linebuf c! ; # disable key buffering
-: foo init begin key emit again ;
+: foo key emit recurse ;
 foo
 \end{verbatim}
 
