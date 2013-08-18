@@ -11,13 +11,13 @@ inx, inx, inx, inx, ;asm
 :asm (loop)
 txa, tay, tsx, # x = stack pointer
 102 inc,x 3 bne, 101 inc,x # i++
-102 lda,x 104 cmp,x 1 @@ bne, # lsb
-101 lda,x 103 cmp,x 2 @@ beq, # msb
-1 @:
+102 lda,x 104 cmp,x 1 @@ beq, # lsb
+2 @:
 # not done, branch back
 tya, tax,
 loc branch >cfa jmp,
-2 @:
+1 @:
+101 lda,x 103 cmp,x 2 @@ bne, # msb
 # loop done
 inx, inx, inx, inx, txs,
 tya, tax,
