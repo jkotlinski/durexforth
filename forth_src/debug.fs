@@ -8,7 +8,7 @@ latest @ begin ?dup while
 @ repeat drop 0 ;
 
 : see
-	word find
+	loc
     dup 0= if exit then
 	here
 	latest @
@@ -116,7 +116,7 @@ then @ repeat cr ;
 
 # size foo prints size of foo
 : size ( -- )
-word find >r
+loc >r
 here latest @ # prev curr
 begin dup while
 dup r@ = if
