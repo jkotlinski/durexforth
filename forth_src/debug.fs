@@ -1,7 +1,7 @@
 
 
 : id. ( header -- )
-2+ dup 1+ swap c@ 3f and tell ;
+2+ dup 1+ swap c@ 3f and tell space ;
 : cfa> ( codepointer -- word )
 latest @ begin ?dup while
 2dup > if nip exit then
@@ -24,7 +24,7 @@ latest @ begin ?dup while
 	drop
 	swap ( end-of-word start-of-word )
 
-	[ key : ] literal emit space dup id. space
+	[ key : ] literal emit space dup id.
 	dup 2+ c@ 80 and if ." immed " then
 
 	>dfa ( get data addr )
@@ -51,7 +51,7 @@ latest @ begin ?dup while
 		' ' of
 			[ key ' ] literal emit space
 			2+ dup @
-			cfa> id. space
+			cfa> id.
 		endof
 		' (loop) of
 			." (loop) ( "
@@ -77,7 +77,7 @@ latest @ begin ?dup while
 		endof
 			( default )
 			dup
-			cfa> id. space
+			cfa> id.
 		endcase
 		2+
 	repeat
@@ -111,7 +111,7 @@ d6 c@ 18 = if ." <more>"
 0 linebuf c! key drop 1 linebuf c!
 93 emit then
 dup ?hidden 0= if
-dup id. space
+dup id.
 then @ repeat cr ;
 
 # size foo prints size of foo
