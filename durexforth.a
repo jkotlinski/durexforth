@@ -1052,9 +1052,11 @@ INTERPRET
     cmp #STACK_START+1
     bpl .on_stack_underflow
 
-    dec PREVENT_BASIC_GETLINE
+    lda #0
+    sta PREVENT_BASIC_GETLINE
     jsr	_WORD ; push string to stack
-    inc PREVENT_BASIC_GETLINE
+    lda #1
+    sta PREVENT_BASIC_GETLINE
 
     +_DUP
     jsr	_FIND ; replace string with dictionary ptr
