@@ -1,8 +1,6 @@
   
 
 : 2dup over over ;
-: bl 20 ;
-: space bl emit ;
 : cr d emit ;
 : nip swap drop ;
 : * d* nip ;
@@ -128,6 +126,9 @@ s" asm" load
 dup :asm
 lda,# 100/ ldy,# 
 ['] pushya jmp, ;
+
+20 value bl
+: space bl emit ;
 
 0 value 0 1 value 1
 88 value zptmp
