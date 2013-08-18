@@ -569,7 +569,6 @@ FILL
 +
     bne	-
 
-
 ; CMOVE> ( src dst len -- )
     +BACKLINK
     !byte	6
@@ -762,14 +761,15 @@ KEY_BUF_READ_POS = * + 1
     inc KEY_BUF_READ_POS ; found buffered char, return it
     rts
 +
+    lda KEY_BUF_READ_POS
+    bne +
+
     lda COMPILE_FILENO
     ora COMPILE_RAM + 1
 PREVENT_BASIC_GETLINE = * + 1
     ora	#1
     bne	.unbuffered_key
 
-    lda KEY_BUF_READ_POS
-    bne +
     txa ; ask for new chars
     pha
     lda 1
