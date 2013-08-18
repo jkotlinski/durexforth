@@ -1,4 +1,4 @@
-;The MIT License
+;{{{ The MIT License
 ;
 ;Copyright (c) 2008-2013 Johan Kotlinski, Mats Andren
 ;
@@ -18,7 +18,7 @@
 ;AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 ;LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-;THE SOFTWARE.
+;THE SOFTWARE. }}}
 
 ; ACME assembler
 
@@ -212,10 +212,10 @@ NEXT_IMPL
     ; (IP) -> W
     ldy	#1
     lda	(IP), y
-    sta	+ + 2
+    sta	TMP + 1
     dey
     lda	(IP), y
-    sta	+ + 1
+    sta	TMP
 
     ; IP += 2
     lda	IP
@@ -224,7 +224,7 @@ NEXT_IMPL
     sta	IP
     bcc +
     inc	IP + 1
-+   jmp	0
++   jmp	(TMP)
 
 ; START - points to the code of the startup word.
     +BACKLINK
@@ -726,7 +726,11 @@ EMIT
     +NEXT
 
 TIB
-    !fill 33
+TIB_LENGTH
+    !byte 0
+MAX_TIB_LENGTH = 20
+TIB_DATA
+    !fill MAX_TIB_LENGTH
 
 tmp_x
     !byte	0
@@ -849,35 +853,30 @@ WORD
 
 _WORD
     ; prepare text input
-    lda	#<(TIB + 1) 
-    sta	.dst + 1
-    lda	#>(TIB + 1)
-    sta	.dst + 2
     lda	#0
-    sta	TIB
+    sta	TIB_LENGTH
     
--
+.get_key
     jsr	_KEY
 
     cmp #K_RETURN
-    beq .whitespace
+    beq .word_end
     cmp #K_SPACE
-    beq .whitespace
+    beq .word_end
     cmp #(K_SPACE|$80)
-    beq .whitespace
+    beq .word_end
 
-    inc	TIB
+    ldy TIB_LENGTH
+    sta TIB_DATA,y
+    iny
+    sty TIB_LENGTH
+    tya
+    cmp #MAX_TIB_LENGTH
+    bne .get_key
 
-.dst
-    sta $f00d
-    inc	.dst + 1
-    bne	-
-    inc	.dst + 2
-    jmp	-
-
-.whitespace
-    lda	TIB
-    beq - ; Nothing entered yet, try again.
+.word_end
+    lda	TIB_LENGTH
+    beq .get_key ; Nothing entered yet, try again.
 
     dex
     dex
@@ -1082,7 +1081,6 @@ INTERPRET
     jsr	PUTCHR
     lda #'r'
     jsr	PUTCHR
-    jsr	PUTCHR
     jmp .stop_error_print
 
 .found_word
@@ -1127,39 +1125,21 @@ INTERPRET
     lda	#$12 ; reverse on
     jsr	PUTCHR
 
-    ldy	TIB
-    lda	#<TIB
-    sta	TMP
-    lda	#>TIB
-    sta	TMP + 1
-
--
-    inc	TMP
-    bne	+
-    inc	TMP + 1
-+
-
-    tya
-    pha
-
     ldy	#0
-    lda	(TMP), y
+-   lda	TIB_DATA, y
     jsr	PUTCHR
-
-    pla
-    tay
-
-    dey
+    iny
+    dec TIB_LENGTH
     bne -
 
     lda	#'?'
+.stop_error_print
     jsr	PUTCHR
 
-.stop_error_print
     lda	#$92 ; reverse off
     jsr	PUTCHR
 
-    lda	#' '
+    lda	#$d ; cr
     jsr	PUTCHR
 
     ; Resets some sensitive things, as part of error handling.
@@ -1285,23 +1265,12 @@ HEADER
     inc	TMP + 1
 +
 
-    ; store length byte in header. TMP2 = src
-    lda	0, x
-    sta	TMP2
-    lda	1, x
-    sta	TMP2 + 1
-    lda	(TMP2), y
-    sta	(TMP), y	
-
-    ; copy string
-    lda	(TMP2), y
-    sta TMP3 ; string length
--   iny
-    lda	(TMP2), y
+    ; copy length byte + string
+-   lda	TIB, y
     sta	(TMP), y
-
-    dec TMP3
-    bne	-
+    iny
+    dec TIB_LENGTH
+    bpl	-
 
     ; update _LATEST
     lda	HERE_LSB
@@ -1310,16 +1279,14 @@ HEADER
     sta	_LATEST + 1
     
     ; update HERE
-    iny
     tya
+    ldy	TMP + 1
     clc
     adc	TMP
     sta	HERE_LSB
     bcc	+
-    inc	TMP + 1
-+
-    lda	TMP + 1
-    sta	HERE_MSB
+    iny
++   sty HERE_MSB
 
     inx
     inx
@@ -1622,13 +1589,9 @@ LINEBUF
 _LINEBUF
     !word	1
 
-; COMPILE_FILENO - active file stream to compile from.
-    +BACKLINK
-    !byte 6
-    !text	"compile-fileno"
-    +VALUE	COMPILE_FILENO
+; Active file stream to compile from.
 COMPILE_FILENO
-    !word	0
+    !byte	0
 
 ; CLOSEW ( file# -- )
     +BACKLINK

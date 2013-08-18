@@ -1,10 +1,7 @@
 
 
-: c. ff and dup 10 < if
-[ key 0 ] literal emit then . ;
-: id. 2+ ( skip over link ptr )
-dup c@ 3f and ( length )
-swap 1+ tuck + swap do i c@ emit loop ;
+: id. ( header -- )
+2+ dup 1+ swap c@ 3f and tell ;
 : cfa> ( codepointer -- word )
 latest @ begin ?dup while
 2dup > if nip exit then
@@ -45,9 +42,10 @@ latest @ begin ?dup while
 			2+ dup c@ . 1-
 		endof
 		' litstring of
-			[ key s ] literal emit '"' emit space
+			[ key s ] literal emit
+            [ key " ] literal emit space
 			2+ dup 1+ over c@ tell
-			'"' emit space
+			[ key " ] literal emit space
             dup c@ + 1-
 		endof
 		' ' of
@@ -86,6 +84,7 @@ latest @ begin ?dup while
 	[ key ; ] literal emit cr
 	2drop
 ;
+hide (loop)
 
 ( c a b within returns true if a <= c and c < b )
 : within -rot over
@@ -93,6 +92,8 @@ latest @ begin ?dup while
 
 var last-dump
 
+: c. dup fff0 and 0= if
+[ key 0 ] literal emit then . ;
 : dump ( addr -- )
 8 0 do dup . space
 dup 8 0 do dup c@ c. 1+ loop drop
@@ -105,12 +106,13 @@ last-dump ! ;
 : n last-dump @ dump ;
 
 : words
-latest @
-begin ?dup while
+93 emit latest @ begin ?dup while
+d6 c@ 18 = if ." <more>"
+0 linebuf c! key drop 1 linebuf c!
+93 emit then
 dup ?hidden 0= if
 dup id. space
-then @ repeat
-cr ;
+then @ repeat cr ;
 
 # size foo prints size of foo
 : size ( -- )
@@ -121,7 +123,4 @@ dup r@ = if
 - . r> drop exit then
 nip dup @ repeat
 . drop r> drop ;
-
-: assert 0= if
-begin 1 d020 +! again then ;
 

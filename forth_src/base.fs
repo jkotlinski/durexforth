@@ -37,7 +37,6 @@ swap here swap ! ;
 : min ( a b - c )
 2dup > if swap then drop ;
 
-: '"' [ key " ] literal ;
 : s" immed ( -- addr len )
 	state if
 		' litstring ,
@@ -45,7 +44,7 @@ swap here swap ! ;
 		0 c, ( dummy length - we don't know what it is yet )
 		begin
 			key
-			dup '"' <>
+			dup [ key " ] literal <>
 		while
 			c,
 		repeat
@@ -58,7 +57,7 @@ swap here swap ! ;
 		here
 		begin
 			key
-			dup '"' <>
+			dup [ key " ] literal <>
 		while
 			over c!
 			1+
@@ -71,10 +70,9 @@ swap here swap ! ;
 ;
 
 : tell ( addr len -- )
-begin over c@ emit ( print char )
-swap 1+ swap ( inc strptr )
-1- ( dec strlen )
-?dup 0= until drop ;
+begin ?dup while
+swap dup c@ emit 1+ swap 1-
+repeat drop ;
 
 : ." immed [compile] s" ' tell , ;
 : .( begin key dup [ key ) literal ] <>
@@ -141,6 +139,7 @@ lda,# 100/ ldy,#
 : to immed loc >cfa 1+
 state if [compile] ['] , ' (to) ,
 else (to) then ;
+hide (to)
 
 : hex 10 to base ;
 : decimal a to base ;
@@ -148,7 +147,7 @@ else (to) then ;
 :asm 2drop ( a b -- )
 inx, inx, inx, inx, ;asm
 
-: forget loc ?dup if dup @ latest ! to here then ;
+: forget loc dup @ latest ! to here ;
 
 : hide-to  ( -- )
 loc latest
@@ -213,7 +212,12 @@ dup @ . repeat drop ;
 :asm sei sei, ;asm
 :asm cli cli, ;asm
 
-: modules ;
+: assert 0= if
+begin 1 d020 +! again then ;
+
+header modules
+.( labels..)
+s" labels" load
 .( doloop..)
 s" doloop" load
 .( jsr..)

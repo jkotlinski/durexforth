@@ -6,7 +6,8 @@
 s" rnd" load
 s" sin" load
 
-: blkcol rot 8 / rot 8 / rot blkcol ;
+: blkcol rot 2/ 2/ 2/
+rot 2/ 2/ 2/ rot blkcol ;
 
 : lineweb
 hires 7 clrcol

@@ -11,8 +11,13 @@ inx, inx, inx, inx, ;asm
 :asm (loop)
 txa, tay, tsx, # x = stack pointer
 102 inc,x 3 bne, 101 inc,x # i++
-102 lda,x 104 cmp,x +branch bne, # lsb
-101 lda,x 103 cmp,x +branch bne, # msb
+102 lda,x 104 cmp,x 1 @@ bne, # lsb
+101 lda,x 103 cmp,x 2 @@ beq, # msb
+1 @:
+# not done, branch back
+tya, tax,
+loc branch >cfa jmp,
+2 @:
 # loop done
 inx, inx, inx, inx, txs,
 tya, tax,
@@ -20,10 +25,6 @@ tya, tax,
 ip inc, 2 bne, ip 1+ inc,
 ip inc, 2 bne, ip 1+ inc,
 ;asm
-:+ :+
-# not done, branch back
-tya, tax,
-loc branch >cfa jmp,
 
 : loop immed
 ' (loop) , , ; # store branch address
@@ -38,6 +39,8 @@ loc branch >cfa jmp,
 106 ldy,x zptmp sty, 105 ldy,x
 tax, dex, dex,
 1 sty,x zptmp lda, 0 sta,x ;asm
+
+hide (do)
 
 ( : test
 sp@
