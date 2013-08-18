@@ -563,9 +563,9 @@ FILL
     sta	$ffff ; overwrite
 
     ; advance
-    inc	.fdst + 1
+    inc	.fdst
     bne	-
-    inc	.fdst + 2
+    inc	.fdst + 1
     bne	-
 
 ; CMOVE> ( src dst len -- )
@@ -796,9 +796,9 @@ PULL_KEY ; wastes x!!!
     lda	COMPILE_FILENO
     bne	.get_char_from_disk
 
-    ; compiling from RAM?
+    ; Compiling from RAM?
     lda	COMPILE_RAM + 1
-    beq	+++
+    beq	.read_from_console
     ; yes - get char from RAM area
     inc $d020
     sta	TMP + 1
@@ -807,17 +807,14 @@ PULL_KEY ; wastes x!!!
     ldy #0
     dec $d020
     lda	(TMP), y
-    beq	++
+    beq	.ram_compile_done
     inc	COMPILE_RAM
     bne	+
     inc	COMPILE_RAM + 1
-+
-    rts
-++
-    ; Stop compiling from RAM.
-    sta	COMPILE_RAM + 1
-+++
-    ; Read from console.
++   rts
+.ram_compile_done
+    sta	COMPILE_RAM + 1  ; Turns off RAM compilation.
+.read_from_console
     jmp	GETCHR
 
 .get_char_from_disk
