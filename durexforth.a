@@ -532,11 +532,11 @@ FETCHBYTE
     !text	"fill"
 FILL
     lda	4, x
-    sta	.fsrc + 1
+    sta	.fsrc
     lda	2, x
-    sta	.fdst + 1
+    sta	.fdst
     lda	3, x
-    sta	.fdst + 2
+    sta	.fdst + 1
     lda	0, x
     eor	#$ff
     sta	TMP
@@ -557,16 +557,15 @@ FILL
     bne	+
     +NEXT
 +
-.fsrc
+.fsrc = * + 1
     lda	#0 ; overwrite
-.fdst
+.fdst = * + 1
     sta	$ffff ; overwrite
 
     ; advance
     inc	.fdst + 1
-    bne	+
+    bne	-
     inc	.fdst + 2
-+
     bne	-
 
 ; CMOVE> ( src dst len -- )
