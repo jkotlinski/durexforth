@@ -155,6 +155,7 @@ Byte-to-byte copy like \texttt{cmove}, but starts with address src + len - 1 and
 \item[, ( n -- )] Write word on stack to \texttt{here} position and increase \texttt{here} by 2.
 \item[c, ( n -- )] Write byte on stack to \texttt{here} position and increase \texttt{here} by 1.
 \item[literal ( n -- )] Compile a value from the stack as a literal value.
+\item[[char{]} c] Compile character \texttt{c} as a literal value.
 \item[[ ( -- )] Leave compile mode. Execute the following words immediately instead of compiling them.
 \item[{]} ( -- )] Return to compile mode.
 \item[immed] Mark the word being compiled as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).

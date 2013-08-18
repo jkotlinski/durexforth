@@ -24,7 +24,7 @@ latest @ begin ?dup while
 	drop
 	swap ( end-of-word start-of-word )
 
-	[ key : ] literal emit space dup id.
+	[char] : emit space dup id.
 	dup 2+ c@ 80 and if ." immed " then
 
 	>dfa ( get data addr )
@@ -42,14 +42,14 @@ latest @ begin ?dup while
 			2+ dup c@ . 1-
 		endof
 		' litstring of
-			[ key s ] literal emit
-            [ key " ] literal emit space
+			[char] s emit
+            [char] " emit space
 			2+ dup 1+ over c@ tell
-			[ key " ] literal emit space
+			[char] " emit space
             dup c@ + 1-
 		endof
 		' ' of
-			[ key ' ] literal emit space
+			[char] ' emit space
 			2+ dup @
 			cfa> id.
 		endof
@@ -81,7 +81,7 @@ latest @ begin ?dup while
 		endcase
 		2+
 	repeat
-	[ key ; ] literal emit cr
+	[char] ; emit cr
 	2drop
 ;
 hide (loop)
@@ -93,13 +93,13 @@ hide (loop)
 var last-dump
 
 : c. dup fff0 and 0= if
-[ key 0 ] literal emit then . ;
+[char] 0 emit then . ;
 : dump ( addr -- )
 8 0 do dup . space
 dup 8 0 do dup c@ c. 1+ loop drop
 8 0 do dup c@
 dup 20 5e within 0= if
-drop [ key . ] literal
+drop [char] .
 then emit 1+ loop cr loop
 last-dump ! ;
 

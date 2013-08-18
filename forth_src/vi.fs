@@ -279,7 +279,7 @@ bufstart dup homepos ! curlinestart !
 
 : insert-start
 1 to insert-active
-[ key i ] literal set-status ;
+[char] i set-status ;
 
 : force-cur-right
 linelen if 1 curx +! then ;
@@ -453,10 +453,10 @@ del-char repeat
 join-lines 1 to need-refresh ;
 
 : del
-[ key d ] literal set-status
+[char] d set-status
 key case
-[ key w ] literal of del-word endof
-[ key d ] literal of del-line endof
+[char] w of del-word endof
+[char] d of del-line endof
 endcase clear-status ;
 
 10 allot value search-buf
@@ -526,9 +526,9 @@ endcase clear-status ;
 : do-backup
 	# scratch old backup
 	drivebuf
-	dup [ key s ] literal swap c! 1+
-	dup [ key : ] literal swap c! 1+
-	dup [ key . ] literal swap c! 1+
+	dup [char] s swap c! 1+
+	dup [char] : swap c! 1+
+	dup [char] . swap c! 1+
 	dup
 	filename swap filename-len c@ cmove
 	filename-len c@ +
@@ -539,11 +539,11 @@ endcase clear-status ;
 
 	# rename to new backup
 	drivebuf
-	dup [ key r ] literal swap c! 1+
+	dup [char] r swap c! 1+
 	1+ # colon already in place...
-	dup [ key . ] literal swap c! 1+
+	dup [char] . swap c! 1+
 	filename-len c@ + # filename ok
-	dup [ key = ] literal swap c! 1+
+	dup [char] = swap c! 1+
 	dup
 	filename swap filename-len c@ cmove
 	filename-len c@ + # filename ok
@@ -563,7 +563,7 @@ saveb
 1 to need-refresh ;
 
 : save-as
-	[ key ! ] literal emit
+	[char] ! emit
 	0 ( len )
 	filename ( len filename )
 	begin
@@ -595,18 +595,18 @@ saveb
 
 : colon-w
 	1 18 setcur
-	[ key w ] literal emit
+	[char] w emit
 	key
 	case
 	CR of write-file endof
-	[ key ! ] literal of save-as endof
+	[char] ! of save-as endof
 	endcase
 ;
 
 : find-handler
 	0 18 setcur
 	clear-status
-	[ key / ] literal emit
+	[char] / emit
 	0 ( count )
 	begin
 		key dup
@@ -731,31 +731,31 @@ bufstart compile-ram ! ;
 
 	case ( key )
 
-    [ key y ] literal of # yy
-     key [ key y ] literal = if
+    [char] y of # yy
+     key [char] y = if
      del-line paste-line
     then endof
-	[ key o ] literal of force-cur-down open-line endof
-	[ key p ] literal of force-cur-down paste-line endof
-	[ key Z ] literal of
+	[char] o of force-cur-down open-line endof
+	[char] p of force-cur-down paste-line endof
+	[char] Z of
 		key
 		case
-		[ key Z ] literal of write-file ffff exit endof
+		[char] Z of write-file ffff exit endof
 		endcase
 	endof
-	[ key : ] literal of 
-		[ key : ] literal set-status
+	[char] : of 
+		[char] : set-status
 		key 
 		case
-		[ key w ] literal of colon-w endof
-		[ key q ] literal of ffff exit endof
+		[char] w of colon-w endof
+		[char] q of ffff exit endof
 		endcase
 		clear-status
 	endof
 
-	[ key c ] literal of
+	[char] c of
 		key
-		[ key w ] literal = if change-word then
+		[char] w = if change-word then
 	endof
 
 	( cursor )

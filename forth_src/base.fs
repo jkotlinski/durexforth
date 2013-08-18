@@ -9,6 +9,7 @@
 : loc word find ;
 : [compile] immed loc >cfa , ;
 : ['] immed ' ' , ;
+: [char] immed ' litc , key c, ;
 : if immed ' 0branch , here 0 , ;
 : then immed here swap ! ;
 : else immed ' branch , here 0 ,
@@ -19,7 +20,7 @@ swap here swap ! ;
 : while immed ' 0branch , here 0 , ;
 : repeat immed ' branch , swap , here swap ! ;
 : recurse immed latest @ >cfa , ;
-: ( immed begin key [ key ) ] literal = until ;
+: ( immed begin key [char] ) = until ;
 : # immed begin key d = until ; # comment
 : tuck ( x y -- y x y ) swap over ;
 : pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u )
@@ -44,7 +45,7 @@ swap here swap ! ;
 		0 c, ( dummy length - we don't know what it is yet )
 		begin
 			key
-			dup [ key " ] literal <>
+			dup [char] " <>
 		while
 			c,
 		repeat
@@ -57,7 +58,7 @@ swap here swap ! ;
 		here
 		begin
 			key
-			dup [ key " ] literal <>
+			dup [char] " <>
 		while
 			over c!
 			1+
@@ -75,7 +76,7 @@ swap dup c@ emit 1+ swap 1-
 repeat drop ;
 
 : ." immed [compile] s" ' tell , ;
-: .( begin key dup [ key ) literal ] <>
+: .( begin key dup [char] ) <>
 while emit repeat drop ;
 .( compile base..)
 
@@ -240,8 +241,8 @@ s" vi" load
 tuck ( strlen strptr strlen )
 dup here + ( strlen strptr strlen tmpbuf )
 dup >r
-dup [ key s ] literal swap c! 1+
-dup [ key : ] literal swap c! 1+
+dup [char] s swap c! 1+
+dup [char] : swap c! 1+
 ( strlen strptr strlen tmpbuf+2 )
 rot ( strlen strlen tmpbuf+2 strptr )
 swap ( strlen strlen strptr tmpbuf+2 )
