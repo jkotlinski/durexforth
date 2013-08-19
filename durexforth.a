@@ -29,6 +29,8 @@ F_IMMED = $80
 F_HIDDEN = $40
 STRLEN_MASK = $3f
 
+BASIC_INPUT_BUFFER = $200
+
 ; zeropage
 STACK_START = $86 ; Leaves 86-87 unused to reduce risk of underflow crashes!
 TMP = $88
@@ -103,7 +105,7 @@ C_YELLOW = 7
     lda	#0
     sta	$d020
     sta	$d021
-    sta $200
+    sta BASIC_INPUT_BUFFER
 
     lda	_START + 1
     bne	reset
@@ -755,7 +757,7 @@ _KEY
     ; buffered key input
 KEY_BUF_READ_POS = * + 1
 -
-    lda $200
+    lda BASIC_INPUT_BUFFER
     beq +
     inc KEY_BUF_READ_POS ; found buffered char, return it
     rts
@@ -769,13 +771,14 @@ PREVENT_BASIC_GETLINE = * + 1
     ora	#1
     bne	.unbuffered_key
 
-    txa ; ask for new chars
+    ; Buffered line input.
+    txa
     pha
     lda 1
     pha
-    ora #3 ; make sure basic is switched in
+    ora #3 ; Makes sure basic is switched in.
     sta 1
-    jsr $a560 ; basic read line
+    jsr $a560 ; Input line into BASIC_INPUT_BUFFER.
     pla
     sta 1
     pla
@@ -784,7 +787,7 @@ PREVENT_BASIC_GETLINE = * + 1
 +
     lda #0 ; finish reading line, setup next line
     sta KEY_BUF_READ_POS
-    sta $200
+    sta BASIC_INPUT_BUFFER
     lda #K_RETURN
     rts
 
@@ -1141,7 +1144,7 @@ INTERPRET
     ; Resets some sensitive things, as part of error handling.
     ldx     #0
     stx     STATE
-    stx     $200
+    stx     BASIC_INPUT_BUFFER
     stx     KEY_BUF_READ_POS
     stx     COMPILE_FILENO
     stx     COMPILE_RAM + 1
