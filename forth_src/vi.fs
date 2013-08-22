@@ -122,11 +122,9 @@ bl status-pos 18 fill ;
 clear-status status-pos c! ;
 
 : init
-	0 compile-ram ! # to enable editor start from base.src
-	80 28a c! # key repeat on
-
-	clear-status
-;
+0 compile-ram ! # to enable editor start from base.src
+80 28a c! # key repeat on
+clear-status ;
 
 : push-colors
 d020 c@
@@ -195,20 +193,12 @@ or if exit then
 1 curx +! ;
 
 : eol
-linelen
-dup if 1- then
-curx ! ;
+linelen dup if 1- then curx ! ;
 
 ( left, or up + eol if we're at xpos 0 )
 : rewind-cur
-		curx @ 0= if
-			bufstart editpos <> if
-				cur-up eol
-			then
-		else
-			cur-left
-		then
-;
+curx @ 0= if bufstart editpos <> if
+cur-up eol then else cur-left then ;
 
 : sol 0 curx ! ;
 
