@@ -1004,11 +1004,11 @@ _TCFA
 +
     rts
 
-; EXEC
+; EXECUTE
     +BACKLINK
-    !byte	4
-    !text	"exec"
-EXEC
+    !byte	7
+    !text	"execute"
+EXECUTE
     lda	0, x
     sta TMP
     lda	1, x
@@ -1114,20 +1114,6 @@ INTERPRET
     inx
     inx
     jmp EXECUTE
-
-    +BACKLINK
-    !byte	7
-    !text	"execute"
-EXECUTE
-    ; copy CFA to TMP
-    lda	0, x
-    sta	TMP
-    lda	1, x
-    sta	TMP + 1
-    ; drop CFA + string
-    inx
-    inx
-    jmp	(TMP)
 
 .on_word_not_found_error
     lda	#$12 ; reverse on

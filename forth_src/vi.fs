@@ -705,7 +705,7 @@ bufstart compile-ram ! ;
 		c@ = if
 			( key tableptr )
 			1+ @ 
-			exec
+			execute
 			drop 0 exit
 		then
 		3 +
