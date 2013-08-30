@@ -1107,15 +1107,24 @@ INTERPRET
 
 .execute_word
     jsr	_TCFA
+    lda 0,x
+    sta 2,x
+    lda 1,x
+    sta 3,x
+    inx
+    inx
+    jmp EXECUTE
 
+    +BACKLINK
+    !byte	7
+    !text	"execute"
+EXECUTE
     ; copy CFA to TMP
     lda	0, x
     sta	TMP
     lda	1, x
     sta	TMP + 1
     ; drop CFA + string
-    inx
-    inx
     inx
     inx
     jmp	(TMP)
