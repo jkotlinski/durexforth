@@ -687,7 +687,7 @@ CMOVE
 STATE = * + 1
     +VALUE	0
 
-; COMPILE_RAM - points to RAM source code to be compiled.
+; COMPILE_RAM - points to RAM source code to be interpreted.
     +BACKLINK
     !byte 11
     !text	"compile-ram"
