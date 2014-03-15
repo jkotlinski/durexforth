@@ -43,3 +43,39 @@ Changelog
  * Added 100/.
  * Change blkcol to take column, row instead of x, y.
  * Updated documentation.
+ 
+2012-11-01: v1.22
+
+ - Bugfixed erase, see
+ - Removed 2swap, number
+ - Moved editor buffer from 5000 to 6000, giving more space for code
+ - Make "fg" fail if editor buffer has been overwritten by code
+ - Improved border flashing + cursor blinking during compile
+ - Improved error handling further
+ - Minor optimizations
+
+2012-11-25: v1.23
+
+ * Some pretty good speed and size optimizations.
+ * Removed rdrop.
+
+2013-06-22: v1.24
+
+ * Added create/does>
+ * Removed fg word - just use vi
+ * Renamed dec to decimal
+ * Make c. add trailing space
+ * Split up ." in ." (compile-time) and .( (run-time)
+ * Various small improvements
+
+2013-07-22: v1.25
+
+ * math: added um/mod, */, */mod
+ * loops: added do, loop, +loop, i, j
+ * interpreter: make key up recall previous line entered
+ * bugfixed r@
+ * dropped "not" word - replaced by 0=
+ * rearranged zeropage usage so that parameter stack is a bit bigger
+ * documented layout of forth words
+ * bugfixed docs: invert, not "not", flips all bits
+ * added "bl" word (for space)
