@@ -79,3 +79,17 @@ Changelog
  * documented layout of forth words
  * bugfixed docs: invert, not "not", flips all bits
  * added "bl" word (for space)
+
+2014-03-15: v1.26
+
+ * Improved line buffering, removed "linebuf"
+ * Added assembler labels
+ * Added "base", "hex", "decimal"
+ * Renamed "exec" => "execute"
+ * Added "[char]"
+ * Added some support for floating point values (float.fs)
+ * Removed "?immed"
+ * Made "words" pause when screen is full
+ * Added "lshift", "rshift"
+ * Added demo how to modify character ROM
+ * Optimizations, bugfixes, more documentation

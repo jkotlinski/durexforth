@@ -75,6 +75,8 @@ Copy value from top of return stack to top of parameter stack.
 \item[\#] Comment to end of line.
 \item[(] Start multi-line comment.
 \item[)] End multi-line comment.
+\item[bl] Space character (value).
+\item[space] Prints a space (\texttt{bl emit}).
 \end{description}
 
 \section{Mathematics}
@@ -103,6 +105,11 @@ These words assume that the lowest number is 0 and highest is FFFF.
 \item[$>$ ( a b -- c )] Is a greater than b?  
 \item[$>=$ ( a b -- c )] Is a greater than or equal to b?
 \item[$<=$ ( a b -- c )] Is a less than or equal to b?
+\item[lshift ( a b -- c )] Binary shift a left by b.
+\item[rshift ( a b -- c )] Binary shift a right by b.
+\item[base (value)] Numerical base.
+\item[decimal] Sets base to 10.
+\item[hex] Sets base to 16.
 
 \end{description}
 
@@ -374,7 +381,6 @@ Debugging words are loaded with \texttt{s" debug" load}.
 \item[saveb ( start end filenameptr filenamelength -- )] Save binary block.
 \item[scratch ( filenameptr filenamelength -- )] Scratch file.
 \end{description}
-
 
 \section{Kernel Calls}
 
