@@ -54,6 +54,7 @@ OPEN = $ffc0
 CLOSE = $ffc3
 CHKIN = $ffc6
 CHKOUT = $ffc9
+CLRCHN = $ffcc
 CHRIN = $ffcf
 CHROUT = $ffd2
 LOAD = $ffd5
@@ -1802,11 +1803,13 @@ OPENW
     tay ; secondary address
     jsr	SETLFS
     jsr	OPEN
-    bcs	+
-
+    bcc	+
+    jsr .close
+    jmp ++
++
     ldx	TMP ; file number
     jsr	CHKOUT
-
+++
     ldx	TMP2
     inx
     inx
@@ -1814,8 +1817,12 @@ OPENW
     inx
     inx
     inx
-+
     +NEXT
+
+.close
+    lda $b8 ; current file
+    jsr CLOSE
+    jmp CLRCHN
 
 ; LOAD_AND_COMPILE (load and compile source file)
     +BACKLINK
@@ -1844,8 +1851,11 @@ LOAD_AND_COMPILE
     iny ; secondary address
     jsr	SETLFS
     jsr	OPEN
-    bcs	+
-
+    bcc	+
+    dec COMPILE_FILENO
+    jsr .close
+    jmp ++
++
     ldx	COMPILE_FILENO ; file number
     jsr	CHKIN
 
@@ -1855,14 +1865,13 @@ LOAD_AND_COMPILE
     ; ." foo,s" load instead of ." foo" load.
     JSR CHRIN     ; get a byte from file
     JSR CHRIN     ; get a byte from file
-
+++
     pla
     tax
     inx
     inx
     inx
     inx
-+
     +NEXT
 
 ; LATEST - points to the most recently defined dictionary word.
