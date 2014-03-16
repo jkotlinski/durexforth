@@ -1802,7 +1802,7 @@ OPENW
     tay ; secondary address
     jsr	SETLFS
     jsr	OPEN
-    bcs	.could_not_open
+    bcs	+
 
     ldx	TMP ; file number
     jsr	CHKOUT
@@ -1814,6 +1814,7 @@ OPENW
     inx
     inx
     inx
++
     +NEXT
 
 ; LOAD_AND_COMPILE (load and compile source file)
@@ -1843,7 +1844,7 @@ LOAD_AND_COMPILE
     iny ; secondary address
     jsr	SETLFS
     jsr	OPEN
-    bcs	.could_not_open
+    bcs	+
 
     ldx	COMPILE_FILENO ; file number
     jsr	CHKIN
@@ -1861,11 +1862,8 @@ LOAD_AND_COMPILE
     inx
     inx
     inx
++
     +NEXT
-
-.could_not_open
-    inc	$d020
-    jmp	.could_not_open
 
 ; LATEST - points to the most recently defined dictionary word.
     +BACKLINK
