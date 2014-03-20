@@ -54,9 +54,7 @@ latest @ begin ?dup while
 			cfa> id.
 		endof
 		' (loop) of
-			." (loop) ( "
-			2+ dup @ .
-			." ) "
+			." (loop) " 2+
 		endof
 		' branch of
 			." branch ( "
