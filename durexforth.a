@@ -103,11 +103,6 @@ C_YELLOW = 7
     lda	#%00010110 ; lowercase
     sta	$d018
 
-    lda	#0
-    sta	$d020
-    sta	$d021
-    sta BASIC_INPUT_BUFFER
-
     lda	_START + 1
     bne	reset
     ; first time ever app is started...
@@ -124,6 +119,7 @@ reset
     sta	CURSOR_COLOR
 
     ldx	#0
+    stx BASIC_INPUT_BUFFER
     stx	$d020
     stx	$d021
 

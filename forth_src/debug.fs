@@ -103,12 +103,11 @@ last-dump ! ;
 
 : n last-dump @ dump ;
 
+: more d6 c@ 18 = if ." <more>"
+key drop 93 emit then ;
 : words
 93 emit latest @ begin ?dup while
-d6 c@ 18 = if ." <more>"
-key drop 93 emit then
-dup ?hidden 0= if
-dup id.
+more dup ?hidden 0= if dup id.
 then @ repeat cr ;
 
 # size foo prints size of foo
