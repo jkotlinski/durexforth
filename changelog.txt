@@ -93,3 +93,7 @@ Changelog
  * Added "lshift", "rshift"
  * Added demo how to modify character ROM
  * Optimizations, bugfixes, more documentation
+
+2014-03-30: v1.27
+
+ * "forget" did not handle missing word
