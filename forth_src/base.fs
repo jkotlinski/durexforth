@@ -149,7 +149,8 @@ hide (to)
 :asm 2drop ( a b -- )
 inx, inx, inx, inx, ;asm
 
-: forget loc dup @ latest ! to here ;
+: forget loc ?dup if
+dup @ latest ! to here then ;
 
 : hide-to  ( -- )
 loc latest
