@@ -99,3 +99,9 @@ Changelog
  * "forget" did not handle missing word
  * factor "more" to separate word
  * improve seeing of do..loop
+
+2014-03-31: v1.28
+
+ * Improved documentation, describe demos and fix some
+   error in tutorial.
+ * Bugfixed some demos.
