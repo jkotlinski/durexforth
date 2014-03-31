@@ -99,6 +99,8 @@ void AscToPet( FILE *fin, FILE *fout )
     int     c;
 
     while( (c=getc(fin)) != EOF ) {
-        putc( ascToPetTable[c], fout );
+        if (c != 0xd) {
+            putc( ascToPetTable[c], fout );
+        }
     }
 }
