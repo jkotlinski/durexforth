@@ -6,6 +6,8 @@
 s" rnd" load
 s" sin" load
 
+: done key drop lores ;
+
 : blkcol rot 2/ 2/ 2/
 rot 2/ 2/ 2/ rot blkcol ;
 
@@ -15,14 +17,14 @@ hires 7 clrcol
 dup 140 < while
 dup 0 plot 96 c8 line
 dup c7 plot 96 0 line
-a + repeat drop ;
+a + repeat drop done ;
 
 : rndline
 hires 10 clrcol
 80 begin ?dup while
 rnd ab / 20 -
 rnd f8 / 20 - line
-1- repeat ;
+1- repeat done ;
 
 : radiant
 hires d0 clrcol
@@ -32,7 +34,7 @@ hires d0 clrcol
 12c over *cos 32 +
 over 12c swap *sin 64 +
 line
-1- repeat ;
+1- repeat done ;
 
 : diamond
 hires 12 clrcol
@@ -44,7 +46,7 @@ a0 over line
 13f 64 line
 a0 over c7 swap - line
 0 64 line
-5 + repeat drop ;
+5 + repeat drop done ;
 
 : reccircgo ( x r -- )
 dup if
@@ -55,7 +57,7 @@ then 2drop ;
 
 : reccirc
 hires 7 clrcol
-a0 50 reccircgo ;
+a0 50 reccircgo done ;
 
 hide reccircgo
 
@@ -74,7 +76,7 @@ then 2drop ;
 : 2reccirc
 hires 7 clrcol
 64 yd !
-a0 50 2reccircgo ;
+a0 50 2reccircgo done ;
 
 hide yd
 hide 2reccircgo
@@ -87,16 +89,17 @@ dup 0 plot dup c7 line
 0 begin dup c7 < while
 dup 0 swap plot dup 13f swap line
 14 + repeat drop
-begin 168 begin ?dup while
+2 0 do 168 begin ?dup while
 a0 64 plot
 dup 64 swap *cos a0 +
 over 64 swap *sin 64 + line
-1- repeat 1 erase again ;
+1- repeat 1 erase loop done 
+0 erase ;
 
 : rotsqr
 hires 16 clrcol
 8 d020 c! 1 erase
-begin fa begin ?dup while
+2 0 do fa begin ?dup while
 dup dup *cos a0 +
 over dup *sin 64 + 2dup plot plot
 dup dup *sin a0 swap -
@@ -107,7 +110,7 @@ dup dup *sin a0 +
 over dup *cos 64 swap - line
 dup dup *cos a0 +
 over dup *sin 64 + line
-5 - repeat again ;
+5 - repeat loop 0 erase lores ;
 
 : seascape
 0 d020 c!
@@ -132,7 +135,7 @@ c4 88 do j i 6 blkcol 8 +loop
 
 119 e8 do 81 50 do
 j i 7e blkcol
-8 +loop 8 +loop ;
+8 +loop 8 +loop done ;
 
 # --- jungle
 
@@ -215,7 +218,7 @@ else over fffe = if
 2drop a0 50 paint a0 b4 paint
 jcol jcol jcol jcol jcol
 jcol jcol jcol jcol jcol
-exit then
+done exit then
 line? @ if line else plot then
 then again ;
 
@@ -274,6 +277,12 @@ a 13 s" 15" text
 rot d + 8 * rot 4 + 8 * rot blkcol
 2dup swap d + swap 4 + sqr drawchar
 1+ repeat drop
-1+ repeat drop ;
+1+ repeat drop done ;
 
 hide sqr
+hide done
+
+: gfxdemo
+lineweb rndline radiant diamond
+reccirc 2reccirc erasecirc rotsqr
+seascape jungle colorchart ;
