@@ -14,7 +14,8 @@ Let's define a word \texttt{bg!} for setting the border color\ldots
 : bg! d020 c! ;
 \end{verbatim}
 
-\texttt{0 bg!}, \texttt{1 bg!} and so on will let you set border color. Cool! 
+Now try entering \texttt{1 bg!} to change the border color to white.
+Then, try changing it back again with \texttt{0 bg!}.
 
 \section{Editor}
 
@@ -48,7 +49,7 @@ Beneath \texttt{forget bg!}, add the following lines:
 flash
 \end{verbatim}
 
-\texttt{flash} will cycle the border color infinitely. Before trying it out, go up and change \texttt{forget bg} to \texttt{forget flash}. This makes sure you won't run out of RAM, no matter how many times you recompile the program. Now press \texttt{F7} to compile and run. If everything is entered right, you will be facing a wonderful color cycle.
+\texttt{flash} will cycle the border color infinitely. Before trying it out, go up and change \texttt{forget bg!} to \texttt{forget flash}. This makes sure you won't run out of RAM, no matter how many times you recompile the program. Now press \texttt{F7} to compile and run. If everything is entered right, you will be facing a wonderful color cycle.
 
 To get back into the editor, press Restore key. Let's see how we can factor the program to get something more Forth'y:
 
