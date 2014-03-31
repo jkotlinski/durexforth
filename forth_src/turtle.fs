@@ -1,6 +1,5 @@
 
 
-s" gfx" load
 s" sin" load
 
 var tx var ty # 10.6 fixedpoint
