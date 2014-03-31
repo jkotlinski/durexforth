@@ -41,22 +41,25 @@ else Dd forward then endof
 endcase
 1+ repeat 2drop drop ;
 
+: done key drop lores ;
 : koch init 10 clrcol
 20 4c 0 moveto
 s" f" 3 100 9 3c s" f-f++f-f" fractal
 20 88 0 moveto
 s" f" 4 100 3 3c s" f-f++f-f" fractal
 20 c4 0 moveto
-s" f" 5 100 1 3c s" f-f++f-f" fractal ;
+s" f" 5 100 1 3c s" f-f++f-f" fractal 
+done ;
 : weed1 init d clrcol
 a0 c4 10e moveto
 s" f" 3 100 7 19 s" f[-f]f[+f]f"
-fractal ;
+fractal done ;
 : bush1 init d clrcol
 a0 bb 10e moveto
 s" f" 4 100 3 19
-s" ff+[+f-f-f]-[-f+f+f]" fractal ;
+s" ff+[+f-f-f]-[-f+f+f]" fractal done ;
 : bush2 init d clrcol d d020 c!
 a0 c8 10e moveto
 s" f" 6 80 64 14
-s" @[+f]@[-f]+f" fractal ;
+s" @[+f]@[-f]+f" fractal done ;
+hide done
