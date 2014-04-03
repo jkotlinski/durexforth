@@ -1,25 +1,11 @@
 
 
-( Used to make Basic/Kernal calls.
-  Variables ar, xr, yr are used for
-  register I/O. The Forth zeropage is
-  stored away so that CHRGET is in
-  place for any Basic calls. )
-var ar var xr var yr 
-1d allot dup >r >r
+( Jumps to Basic/Kernal methods.
+  Use ar, xr, yr, sr for register 
+  I/O. )
+30c value ar 30d value xr
+30e value yr 30f value sr
 :asm jsr
-0 lda,x here 1+ 1234 sta, # lsb
-1 lda,x here 1+ 1234 sta, # msb
-txa, pha,
-1c ldx,# :-
-73 lda,x r> sta,x # save zp
-e3a2 lda,x 73 sta,x # restore CHRGET
-dex, -branch bpl,
-ar lda, xr ldx, yr ldy,
-here 2+ swap ! here 1+ swap !
-1234 jsr,
-ar sta, xr stx, yr sty,
-1c ldx,# :-
-r> lda,x 73 sta,x # restore zp
-dex, -branch bpl,
+0 lda,x 14 sta, 1 lda,x 15 sta,
+txa, pha, e130 jsr,
 pla, tax, inx, inx, ;asm
