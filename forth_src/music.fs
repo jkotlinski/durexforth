@@ -37,7 +37,7 @@ voicedata ctl
 
 : freq! d400 voice7 + ! ;
 : sid-pulse d402 voice7 + ! ;
-: ctl! dup ctl c! d404 voice7 + c! ;
+: ctl! dup d404 voice7 + c! ctl c! ;
 
 : sid-cutoff d415 ! ;
 : sid-flt d417 c! ;
@@ -51,26 +51,22 @@ voice hidden
 : note! ( i -- )
 2* ['] freqtab + @ freq! ;
 
-: gate! ( onoff -- )
-ctl c@ swap if 1 or else fe and then
-ctl! ;
+: gate-on ctl c@ 1 or ctl! ;
+: gate-off ctl c@ fe and ctl! ;
 
 : music
 
 # init
 f sid-vol
-0 voice! 10 ctl! 9 srad!
-1 voice! 10 ctl! 9 srad!
-2 voice! 10 ctl! 9 srad!
+3 0 do i voice! 10 ctl! 9 srad! loop
 
 5f 0 do
-0 voice!
-0 gate! i note! 1 gate!
-1 voice!
-0 gate! i c + note! 1 gate!
-2 voice!
-0 gate! i 18 + note! 1 gate!
-200 0 do loop
+3 0 do i voice!
+gate-off
+i c * j + note!
+gate-on
+loop
+1 d020 +!
 loop ;
 music
 
