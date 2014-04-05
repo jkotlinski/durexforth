@@ -25,7 +25,7 @@ ea24 , f810 ,
 
 # creates array of 3 bytes, one
 # for each voice.
-: voicedata create here 0 , 0 c,
+: voicedata create 0 , 0 c,
 does> voice + ;
 voicedata octave
 voicedata ctl
@@ -56,13 +56,8 @@ voice hidden
 : gate-off ctl c@ fe and ctl! ;
 
 : str2note ( str strlen -- note )
-# sharp/flat
-1 > if dup 1+ c@ case
-[char] + of 1 endof
-[char] - of ffff endof
-endcase else 0 then
 # note
-swap c@ case 
+over c@ case 
 [char] c of 0 endof
 [char] d of 2 endof
 [char] e of 4 endof
@@ -70,7 +65,12 @@ swap c@ case
 [char] g of 7 endof
 [char] a of 9 endof
 [char] b of b endof
-endcase + ;
+endcase -rot
+# sharp/flat
+1 > if 1+ c@ case
+[char] + of 1+ endof
+[char] - of 1- endof
+endcase else drop then ;
 
 : play-note ( str strlen -- )
 str2note
@@ -98,7 +98,7 @@ s" d" play-note pause
 s" d" play-note pause
 s" c" play-note pause 
 pause pause pause ;
-music
+# music
 
 ( :asm burst
 f lda, 0 ldy,
