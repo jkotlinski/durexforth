@@ -25,13 +25,14 @@ ea24 , f810 ,
 
 # creates array of 3 bytes, one
 # for each voice.
-: voicedata create 3 allot 
+: voicedata create here 0 , 0 c,
 does> voice + ;
 voicedata octave
 voicedata ctl
 
-: o> 1 octave +! ;
-: o< ffff octave +! ;
+: o c * octave c! ;
+: o> octave c@ c + octave c! ;
+: o< octave c@ c - octave c! ;
 
 : voice! dup to voice 7 * to voice7 ;
 
@@ -54,20 +55,49 @@ voice hidden
 : gate-on ctl c@ 1 or ctl! ;
 : gate-off ctl c@ fe and ctl! ;
 
-: music
+: str2note ( str strlen -- note )
+# sharp/flat
+1 > if dup 1+ c@ case
+[char] + of 1 endof
+[char] - of ffff endof
+endcase else 0 then
+# note
+swap c@ case 
+[char] c of 0 endof
+[char] d of 2 endof
+[char] e of 4 endof
+[char] f of 5 endof
+[char] g of 7 endof
+[char] a of 9 endof
+[char] b of b endof
+endcase + ;
 
+: play-note ( str strlen -- )
+str2note
+gate-off
+octave c@ + note! 
+gate-on ;
+
+: pause 800 0 do loop ;
+: music
 # init
 f sid-vol
-3 0 do i voice! 10 ctl! 9 srad! loop
-
-5f 0 do
-3 0 do i voice!
-gate-off
-i c * j + note!
-gate-on
-loop
-1 d020 +!
-loop ;
+10 ctl! 9 srad!
+4 o
+s" c" play-note pause
+s" c" play-note pause
+s" c" play-note pause
+s" e" play-note pause
+s" d" play-note pause
+s" d" play-note pause
+s" d" play-note pause
+s" f" play-note pause
+s" e" play-note pause
+s" e" play-note pause
+s" d" play-note pause
+s" d" play-note pause
+s" c" play-note pause 
+pause pause pause ;
 music
 
 ( :asm burst
