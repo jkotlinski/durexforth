@@ -384,6 +384,6 @@ Debugging words are loaded with \texttt{s" debug" load}.
 
 \section{Kernel Calls}
 
-Safe kernel calls may be done from Forth words using \texttt{jsr} ( addr -- ). The helper variables \texttt{ar}, \texttt{xr} and \texttt{yr} can be used to set arguments and get results through the a, x and y registers.
+Safe kernel calls may be done from Forth words using \texttt{jsr} ( addr -- ). The helper variables \texttt{ar}, \texttt{xr}, \texttt{yr} and \texttt{sr} can be used to set arguments and get results through the a, x, y and status registers.
 
-Example: \texttt{30 ar ! ffd2 jsr} prints \texttt{0} on screen.
+Example: \texttt{key 0 ar ! ffd2 jsr} prints \texttt{0} on screen.
