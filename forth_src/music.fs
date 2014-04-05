@@ -1,6 +1,7 @@
 
 
 0 value voice
+0 value voice7
 
 header freqtab # 95 notes from c0, pal
 116 , 127 , 138 , 14b , 15e , 173 ,
@@ -22,37 +23,56 @@ c4e , d09 , dd0 , ea2 , f81 , 106d ,
 af68 , b9d6 , c4e3 , d098 , dd00 , 
 ea24 , f810 ,
 
-: sid-voice 7 * to voice ;
+# creates array of 3 bytes, one
+# for each voice.
+: voicedata create 3 allot 
+does> voice + ;
+voicedata octave
+voicedata ctl
 
-: freq! d400 voice + ! ;
-: sid-pulse d402 voice + ! ;
-: sid-ctl d404 voice + c! ;
-: sid-ad d405 voice + c! ;
-: sid-sr d406 voice + c! ;
+: o> 1 octave +! ;
+: o< ffff octave +! ;
+
+: voice! dup to voice 7 * to voice7 ;
+
+: freq! d400 voice7 + ! ;
+: sid-pulse d402 voice7 + ! ;
+: ctl! dup ctl c! d404 voice7 + c! ;
 
 : sid-cutoff d415 ! ;
 : sid-flt d417 c! ;
 : sid-vol d418 c! ;
 
 ( write adsr )
-: srad! ( SR AD -- ) d405 voice + ! ;
+: srad! ( SR AD -- ) d405 voice7 + ! ;
 
 voice hidden
 
 : note! ( i -- )
-2* ['] freqtab + @ freq!  ;
+2* ['] freqtab + @ freq! ;
+
+: gate! ( onoff -- )
+ctl c@ swap if 1 or else fe and then
+ctl! ;
 
 : music
+
+# init
 f sid-vol
-9 srad!
-30 note!
+0 voice! 10 ctl! 9 srad!
+1 voice! 10 ctl! 9 srad!
+2 voice! 10 ctl! 9 srad!
+
 5f 0 do
-10 sid-ctl
-i note!
-11 sid-ctl
+0 voice!
+0 gate! i note! 1 gate!
+1 voice!
+0 gate! i c + note! 1 gate!
+2 voice!
+0 gate! i 18 + note! 1 gate!
 200 0 do loop
 loop ;
-# music
+music
 
 ( :asm burst
 f lda, 0 ldy,
