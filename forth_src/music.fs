@@ -102,21 +102,3 @@ f sid-vol
 4 o
 s" cccedddfeeddc" play-melody ;
 # music
-
-( :asm burst
-f lda, 0 ldy,
-d418 sta, d418 sty, d418 sta, d418 sty,
-d418 sta, d418 sty, d418 sta, d418 sty,
-d418 sta, d418 sty, d418 sta, d418 sty,
-d418 sta, d418 sty, d418 sta, d418 sty,
-d418 sta, d418 sty, d418 sta, d418 sty,
-d418 sta, d418 sty, d418 sta, d418 sty,
-;asm
-
-:asm digi-init
-ff lda,# d406 sta, d40d sta, d414 sta,
-49 lda,# d404 sta, d40b sta, d412 sta,
-;asm
-
-: digi digi-init begin burst again ; )
-
