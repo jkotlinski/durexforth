@@ -78,6 +78,15 @@ gate-off
 octave c@ + note! 
 gate-on ;
 
+: tick 1 d020 +! ;
+: play 
+# a2 = clock, advanced by 60 Hz
+a2 c@ begin 
+tick
+begin dup a2 c@ <> until
+1+ ff and
+again drop ;
+
 : pause 800 0 do loop ;
 : music
 # init
