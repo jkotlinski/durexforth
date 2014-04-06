@@ -55,9 +55,15 @@ voice hidden
 : gate-on ctl c@ 1 or ctl! ;
 : gate-off ctl c@ fe and ctl! ;
 
-: str2note ( str strlen -- note )
+0 value str
+0 value strlen
+: str-pop 
+str 1+ to str
+strlen 1- to strlen ;
+
+: str2note ( -- note )
 # note
-over c@ case 
+str c@ case 
 [char] c of 0 endof
 [char] d of 2 endof
 [char] e of 4 endof
@@ -65,40 +71,34 @@ over c@ case
 [char] g of 7 endof
 [char] a of 9 endof
 [char] b of b endof
-endcase -rot
+endcase str-pop
 # sharp/flat
-1 > if 1+ c@ case
-[char] + of 1+ endof
-[char] - of 1- endof
-endcase else drop then ;
+strlen if str c@ case
+[char] + of 1+ str-pop endof
+[char] - of 1- str-pop endof
+endcase then ;
 
-: play-note ( str strlen -- )
-str2note
+: play-note ( -- )
 gate-off
-octave c@ + note! 
+str2note octave c@ + note! 
 gate-on ;
 
-: tick 1 d020 +! ;
+var pause
+: tick 
+pause @ if ffff pause +! else
+play-note 17 pause ! then ;
 : play 
-# a2 = clock, advanced by 60 Hz
-a2 c@ begin 
+0 pause !
+a2 c@ begin strlen while
 tick
 begin dup a2 c@ <> until
 1+ ff and
-again drop ;
-
-: pause 800 0 do loop ;
-: play-melody ( str strlen -- )
-begin ?dup while
-2dup play-note
-1- swap 1+ swap
-pause
 repeat drop ;
 
+: play-melody ( str strlen -- )
+to strlen to str
+f sid-vol 10 ctl! 9 srad! 4 o
+play ;
+
 : music
-# init
-f sid-vol
-10 ctl! 9 srad!
-4 o
 s" cccedddfeeddc" play-melody ;
-# music
