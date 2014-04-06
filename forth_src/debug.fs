@@ -103,6 +103,7 @@ last-dump ! ;
 
 : n last-dump @ dump ;
 
+: ?hidden 2+ c@ 40 and ;
 : more d6 c@ 18 = if ." <more>"
 key drop 93 emit then ;
 : words

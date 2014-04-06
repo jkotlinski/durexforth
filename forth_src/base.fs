@@ -83,8 +83,6 @@ while emit repeat drop ;
 : endof immed [compile] else ;
 : endcase immed ' drop , begin ?dup while [compile] then repeat ;
 
-: ?hidden 2+ c@ 40 and ;
-
 ( get pointer to first data field - skip jsr DOCOL )
 : >dfa >cfa 1+ 2+ ;
 

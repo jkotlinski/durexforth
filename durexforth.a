@@ -448,7 +448,6 @@ ZEQU
     +BACKLINK
     !byte	3
     !text	"and"
-AAND
     lda	1, x
     and 3, x
     sta 3, x
