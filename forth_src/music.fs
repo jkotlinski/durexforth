@@ -88,25 +88,19 @@ begin dup a2 c@ <> until
 again drop ;
 
 : pause 800 0 do loop ;
+: play-melody ( str strlen -- )
+begin ?dup while
+2dup play-note
+1- swap 1+ swap
+pause
+repeat drop ;
+
 : music
 # init
 f sid-vol
 10 ctl! 9 srad!
 4 o
-s" c" play-note pause
-s" c" play-note pause
-s" c" play-note pause
-s" e" play-note pause
-s" d" play-note pause
-s" d" play-note pause
-s" d" play-note pause
-s" f" play-note pause
-s" e" play-note pause
-s" e" play-note pause
-s" d" play-note pause
-s" d" play-note pause
-s" c" play-note pause 
-pause pause pause ;
+s" cccedddfeeddc" play-melody ;
 # music
 
 ( :asm burst
