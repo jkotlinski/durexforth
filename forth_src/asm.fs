@@ -78,7 +78,7 @@ e8 1mi inx,
 c8 1mi iny,
 
 4c 3mi jmp,
-6c 3mi jmp,()
+6c 3mi (jmp),
 
 20 3mi jsr,
 
