@@ -71,6 +71,7 @@ str c@ case
 [char] g of 7 endof
 [char] a of 9 endof
 [char] b of b endof
+[char] r of 7f endof
 endcase str-pop
 # sharp/flat
 strlen if str c@ case
@@ -98,8 +99,8 @@ read-num 60 swap / default-pause c! ;
 : play-note ( -- )
 strlen if
 gate-off
-str2note octave c@ + note! 
-gate-on 
+str2note dup 7f = if drop else
+octave c@ + note! gate-on then
 read-pause then ;
 
 : do-commands ( -- done )
@@ -108,6 +109,7 @@ read-pause then ;
 [char] < of str-pop o< 1- endof
 [char] > of str-pop o> 1- endof
 d of str-pop 1- endof
+bl of str-pop 1- endof
 endcase then ;
 
 : tick 
@@ -130,4 +132,11 @@ f sid-vol 10 ctl! 9 srad! 4 o
 play ;
 
 : music
-s" cccedddfeeddc" play-melody ;
+s" d+16d16d8d+16d16d8d+16d16d8b-4
+b-16a16g8g16f16e-8e-16d16c8c4
+d16c16c8d16c16c8d16c16c8a4
+a16g16f+8f+16e-16d8d16c16<b-8b-4>
+b-16a16a8>c8<f+8a8g8d4
+b-16a16a8>c8<f+8a8g8b-8a16g16f16e-16
+d2c+2d4c+4d8r8r8"
+play-melody ;
