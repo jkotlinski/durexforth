@@ -83,13 +83,19 @@ dup [char] 0 >= swap [char] 9 <= and ;
 
 voicedata default-pause
 voicedata pause
-: read-pause
+: read-num
 0 begin strlen str c@ isnum and while
 a * str c@ [char] 0 - +
-str-pop repeat
-?dup if 60 swap / else
+str-pop repeat ;
+: read-pause
+read-num ?dup if 60 swap / else
 default-pause c@ then
 pause c! ;
+
+: read-default-pause
+strlen str c@ [char] l = and if str-pop
+read-num 60 swap / default-pause c!
+then ;
 
 : play-note ( -- )
 gate-off
@@ -99,6 +105,7 @@ read-pause ;
 
 : tick 
 pause c@ if ffff pause +! else
+read-default-pause
 play-note then ;
 
 : play 
