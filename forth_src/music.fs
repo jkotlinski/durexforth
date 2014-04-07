@@ -78,17 +78,32 @@ strlen if str c@ case
 [char] - of 1- str-pop endof
 endcase then ;
 
+: isnum ( ch -- v )
+dup [char] 0 >= swap [char] 9 <= and ;
+
+voicedata default-pause
+voicedata pause
+: read-pause
+0 begin strlen str c@ isnum and while
+a * str c@ [char] 0 - +
+str-pop repeat
+?dup if 60 swap / else
+default-pause c@ then
+pause c! ;
+
 : play-note ( -- )
 gate-off
 str2note octave c@ + note! 
-gate-on ;
+gate-on 
+read-pause ;
 
-var pause
 : tick 
-pause @ if ffff pause +! else
-play-note 17 pause ! then ;
+pause c@ if ffff pause +! else
+play-note then ;
+
 : play 
-0 pause !
+18 default-pause c!
+0 pause c!
 a2 c@ begin strlen while
 tick
 begin dup a2 c@ <> until
