@@ -105,6 +105,8 @@ read-pause then ;
 : do-commands ( -- done )
 1 strlen if str c@ case
 [char] l of str-pop read-default-pause 1- endof
+[char] < of str-pop o< 1- endof
+[char] > of str-pop o> 1- endof
 d of str-pop 1- endof
 endcase then ;
 
