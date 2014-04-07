@@ -93,19 +93,24 @@ default-pause c@ then
 pause c! ;
 
 : read-default-pause
-strlen str c@ [char] l = and if str-pop
-read-num 60 swap / default-pause c!
-then ;
+read-num 60 swap / default-pause c! ;
 
 : play-note ( -- )
+strlen if
 gate-off
 str2note octave c@ + note! 
 gate-on 
-read-pause ;
+read-pause then ;
+
+: do-commands ( -- done )
+1 strlen if str c@ case
+[char] l of str-pop read-default-pause 1- endof
+d of str-pop 1- endof
+endcase then ;
 
 : tick 
+begin do-commands until
 pause c@ if ffff pause +! else
-read-default-pause
 play-note then ;
 
 : play 
