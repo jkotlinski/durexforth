@@ -57,9 +57,19 @@ voice hidden
 
 0 value str
 0 value strlen
+voicedata tie
 : str-pop 
+str c@ emit
 str 1+ to str
 strlen 1- to strlen ;
+
+: isnum ( ch -- v )
+dup [char] 0 >= swap [char] 9 <= and ;
+
+: read-num
+0 begin strlen str c@ isnum and while
+a * str c@ [char] 0 - +
+str-pop repeat ;
 
 : str2note ( -- note )
 # note
@@ -71,6 +81,7 @@ str c@ case
 [char] g of 7 endof
 [char] a of 9 endof
 [char] b of b endof
+[char] n of read-num endof
 [char] r of 7f endof
 endcase str-pop
 # sharp/flat
@@ -79,31 +90,23 @@ strlen if str c@ case
 [char] - of 1- str-pop endof
 endcase then ;
 
-: isnum ( ch -- v )
-dup [char] 0 >= swap [char] 9 <= and ;
-
 voicedata default-pause
 voicedata pause
-: read-num
-0 begin strlen str c@ isnum and while
-a * str c@ [char] 0 - +
-str-pop repeat ;
 : read-pause
 read-num ?dup if 60 swap / else
 default-pause c@ then
 strlen str c@ [char] . = and if
-str-pop dup 2/ + then
-pause c! ;
+str-pop dup 2/ + then ;
 
 : read-default-pause
-read-num 60 swap / default-pause c! ;
+read-pause default-pause c! ;
 
 : play-note ( -- )
 strlen if
-gate-off
+tie c@ if 0 tie c! else gate-off then
 str2note dup 7f = if drop else
 octave c@ + note! gate-on then
-read-pause then ;
+read-pause pause c! then ;
 
 : do-commands ( -- done )
 1 strlen if str c@ case
@@ -111,6 +114,8 @@ read-pause then ;
 [char] o of str-pop read-num o 1- endof
 [char] < of str-pop o< 1- endof
 [char] > of str-pop o> 1- endof
+[char] & of str-pop 1 tie c! 1- endof
+[char] v of str-pop read-num d418 c! 1- endof
 d of str-pop 1- endof
 bl of str-pop 1- endof
 endcase then ;
@@ -135,11 +140,5 @@ f sid-vol 10 ctl! 9 srad! 4 o
 play ;
 
 : music
-s" d+16d16d8d+16d16d8d+16d16d8b-4
-b-16a16g8g16f16e-8e-16d16c8c4
-d16c16c8d16c16c8d16c16c8a4
-a16g16f+8f+16e-16d8d16c16<b-8b-4>
-b-16a16a8>c8<f+8a8g8d4
-b-16a16a8>c8<f+8a8g8b-8a16g16f16e-16
-d2c+2d4c+4d8r8r8"
+s" v15l8>fab4fab4fab>ed4c-c<b8ge2&e8d8ege2&e8.&e16fab4fab4fab>ed4c-ce8<bg2&g8bg8de2&e8.&e16r1r1f8ga4b8>cd4e8fg2&g8.&g32r1r1r32<f8ea8gb8ab+8b>d8ce8df8ec-16c<a16b1r1"
 play-melody ;
