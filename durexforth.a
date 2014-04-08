@@ -1428,6 +1428,17 @@ IMMED
     +NEXT
 
     +BACKLINK
+    !byte	2
+    !text	">r"
+    lda 0,x
+    pha
+    lda 1,x
+    pha
+    inx
+    inx
+    +NEXT
+
+    +BACKLINK
     !byte	6
     !text	"branch"
 BRANCH
@@ -1519,53 +1530,6 @@ SPFETCH
     sta	0, x
     lda	#0
     sta	1, x
-    +NEXT
-
-; LITSTRING
-    +BACKLINK
-    !byte	9
-    !text	"litstring"
-LITSTRING ; ( -- addr len )
-    ; grow stack
-    txa
-    sbx #4
-
-    ; copy string addr to stack
-    ldy	#0
-
-    lda	IP
-    sta	TMP
-    sta 2, x ; addr lsb
-
-    iny
-    lda	IP + 1
-    sta	TMP + 1
-    sta 3, x ; addr msb
-
-    inc 2, x ; skip len
-    bne +
-    inc 3, x
-+
-
-    ; TMP now points to string length
-    dey ; y = 0
-    sty 1, x ; len msb=0
-    lda	(TMP), y
-    sta 0, x ; len lsb
-
-    tay ; y = *TMP
-    iny ; add one for length byte
-    sty	.lstrlen + 1
-
-    ; skip string
-    lda	IP
-    clc
-.lstrlen
-    adc #0 ; overwritten
-    sta	IP
-    bcc	+
-    inc	IP + 1
-+
     +NEXT
 
 ; -----------

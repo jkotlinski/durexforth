@@ -44,9 +44,9 @@ latest @ begin ?dup while
 		' litstring of
 			[char] s emit
             [char] " emit space
-			2+ dup 1+ over c@ tell
+			2+ dup 2+ over @ tell
 			[char] " emit space
-            dup c@ + 1-
+            dup @ +
 		endof
 		' ' of
 			[char] ' emit space

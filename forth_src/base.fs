@@ -36,22 +36,16 @@ swap here swap ! ;
 : min ( a b - c )
 2dup > if swap then drop ;
 
+: litstring ( -- addr len )
+r> dup 2+ swap @ 2dup + >r ;
+
 : s" immed ( -- addr len )
 	state if
 		' litstring ,
-		here ( save addr of length byte on stack )
-		0 c, ( dummy length - we don't know what it is yet )
-		begin
-			key
-			dup [char] " <>
-		while
-			c,
-		repeat
-		drop
-		dup
-		here swap -
-		1- ( subtract to compensate for length byte )
-		swap c!
+		here 0 , 0
+		begin key dup [char] " <>
+		while c, 1+ repeat
+		drop swap !
 	else ( immediate mode )
 		here
 		begin
@@ -196,8 +190,6 @@ here swap over + to here ;
 : s> swap s< ;
 
 # return stack
-:asm >r 0 lda,x pha, 1 lda,x pha,
-inx, inx, ;asm
 :asm r@ dex, dex,
 pla, 1 sta,x pla, 0 sta,x
 pha, 1 lda,x pha, ;asm
