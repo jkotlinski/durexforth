@@ -40,27 +40,16 @@ swap here swap ! ;
 r> dup 2+ swap @ 2dup + >r ;
 
 : s" immed ( -- addr len )
-	state if
-		' litstring ,
-		here 0 , 0
-		begin key dup [char] " <>
-		while c, 1+ repeat
-		drop swap !
-	else ( immediate mode )
-		here
-		begin
-			key
-			dup [char] " <>
-		while
-			over c!
-			1+
-		repeat
-		drop
-		here -
-		here
-		swap
-	then
-;
+state if ( compile mode )
+' litstring , here 0 , 0
+begin key dup [char] " <>
+while c, 1+ repeat
+drop swap !
+else ( immediate mode )
+here here
+begin key dup [char] " <>
+while over c! 1+ repeat
+drop here - then ;
 
 : tell ( addr len -- )
 begin ?dup while
