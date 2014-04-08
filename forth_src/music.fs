@@ -91,6 +91,8 @@ str-pop repeat ;
 : read-pause
 read-num ?dup if 60 swap / else
 default-pause c@ then
+strlen str c@ [char] . = and if
+str-pop dup 2/ + then
 pause c! ;
 
 : read-default-pause
