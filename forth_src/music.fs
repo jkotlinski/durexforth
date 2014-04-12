@@ -121,9 +121,8 @@ bl of str-pop recurse endof
 endcase then ;
 
 : tick 
-do-commands
-pause c@ if ffff pause +! else
-play-note then ;
+pause c@ ?dup if 1- pause c! else
+do-commands play-note then ;
 
 : play 
 18 default-pause c!
@@ -140,5 +139,7 @@ f sid-vol 10 ctl! 9 srad! 4 o
 play ;
 
 : music
-s" v15l8>fab4fab4fab>ed4c-c<b8ge2&e8d8ege2&e8.&e16fab4fab4fab>ed4c-ce8<bg2&g8bg8de2&e8.&e16r1r1f8ga4b8>cd4e8fg2&g8.&g32r1r1r32<f8ea8gb8ab+8b>d8ce8df8ec-16c<a16b1r1"
+# s" l64c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&c&cr1<f8l16arararf8arararf8arararf8ararare8grgrgre8grgrgre8grgrgre8grgrgrf8arararf8arararf8arararf8ararare8grgrgre8grgrgre8grgrgre8grgrgrdrfrdrfr<gr>dr<gr>grcrgrcrgr<ar>er<a>rardrfrdrfr<gr>dr<gr>grcrgrcrgr<ar>er<a>rardrfrdrfr<gr>dr<gr>grcrgrcrgr<ar>er<a>rardrfrfr8.drarar8.crbrbr8.crbrbr8.erar8.arerar8.arerg+rg+rerer8.er8."
+# s" r1r1r8v10l16crcrcr8.crcrcr8.crcrcr8.crcrcr8.crcrcr8.crcrcr8.crcrcr8.crcrcr8.crcrcr8.crcrcr8.crcrcr8.crcrcr8.crcrcr8.crcrcr8.crcrcr8.crcrcrl8def4gab4b+be2&e.l32&erd8e16.rf4g8a16.rb4>c8d16.re2&e8.&er<d8e16.rf4g8a16.rb4b+8b16.re2&e8.&erl8dcfegfagbab+b>dcl16ef8de1r4.<<g+rg+r8.g+r8."
+s" r1r1v15l8>fab4fab4fab>ed4c-c<b8ge2&e8d8ege2&e8.&e16fab4fab4fab>ed4c-ce8<bg2&g8bg8de2&e8.&e16r1r1f8ga4b8>cd4e8fg2&g8.&g32r1r1r32<f8ea8gb8ab+8b>d8ce8df8ec-16c<a16b1r1"
 play-melody ;
