@@ -109,19 +109,19 @@ octave c@ + note! gate-on then
 read-pause pause c! then ;
 
 : do-commands ( -- done )
-1 strlen if str c@ case
-[char] l of str-pop read-default-pause 1- endof
-[char] o of str-pop read-num o 1- endof
-[char] < of str-pop o< 1- endof
-[char] > of str-pop o> 1- endof
-[char] & of str-pop 1 tie c! 1- endof
-[char] v of str-pop read-num d418 c! 1- endof
-d of str-pop 1- endof
-bl of str-pop 1- endof
+strlen if str c@ case
+[char] l of str-pop read-default-pause recurse endof
+[char] o of str-pop read-num o recurse endof
+[char] < of str-pop o< recurse endof
+[char] > of str-pop o> recurse endof
+[char] & of str-pop 1 tie c! recurse endof
+[char] v of str-pop read-num d418 c! recurse endof
+d of str-pop recurse endof
+bl of str-pop recurse endof
 endcase then ;
 
 : tick 
-begin do-commands until
+do-commands
 pause c@ if ffff pause +! else
 play-note then ;
 
