@@ -29,10 +29,6 @@ does> voice + ;
 voicedata octave
 voicedata ctl
 
-: o c * octave c! ;
-: o> octave c@ c + octave c! ;
-: o< octave c@ c - octave c! ;
-
 : voice7 voice 7 * ;
 
 : freq! d400 voice7 + ! ;
@@ -102,7 +98,7 @@ endcase then ;
 voicedata default-pause
 voicedata pause
 : read-pause
-read-num ?dup if 60 swap / else
+read-num ?dup if 60 swap / 1- else
 default-pause c@ then
 strget if [char] . = if
 str-pop dup 2/ + then then ;
@@ -115,14 +111,14 @@ strget if
 tie c@ if 0 tie c! else gate-off then
 str2note dup 7f = if drop else
 octave c@ + note! gate-on then
-read-pause 1- pause c! then ;
+read-pause pause c! then ;
 
 : do-commands ( -- done )
 strget if case
 [char] l of str-pop read-default-pause recurse endof
-[char] o of str-pop read-num o recurse endof
-[char] < of str-pop o< recurse endof
-[char] > of str-pop o> recurse endof
+[char] o of str-pop read-num c * octave c! recurse endof
+[char] < of str-pop fff4 octave +! recurse endof
+[char] > of str-pop c octave +! recurse endof
 [char] & of str-pop 1 tie c! recurse endof
 [char] v of str-pop read-num sid-vol! recurse endof
 d of str-pop recurse endof
