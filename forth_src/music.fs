@@ -121,19 +121,19 @@ bl of str-pop recurse endof
 endcase then ;
 
 : voicetick
-pause c@ ?dup if 1- pause c! else
+pause c@ if ffff pause +! else
 do-commands play-note then ;
 
 : tick 
-1 d020 c!
 0 to voice voicetick
 1 to voice voicetick
-2 to voice voicetick
-0 d020 c! ;
+2 to voice voicetick ;
 
 : play 
 a2 c@ begin strlen @ while
+1 d020 c!
 tick
+0 d020 c!
 begin dup a2 c@ <> until
 1+ ff and
 repeat drop ;
