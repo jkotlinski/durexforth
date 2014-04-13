@@ -42,7 +42,6 @@ voice lda,
 7 lda,# 0 sta,x ;asm
 :+ 7 2* lda,# 0 sta,x ;asm
 
-: freq! d400 voice7 + ! ;
 : sid-pulse d402 voice7 + ! ;
 : ctl! dup d404 voice7 + c! ctl c! ;
 
@@ -54,7 +53,7 @@ voice lda,
 : srad! ( SR AD -- ) d405 voice7 + ! ;
 
 : note! ( i -- )
-2* ['] freqtab + @ freq! ;
+2* ['] freqtab + @ d400 voice7 or ! ;
 
 : gate-on ctl c@ 1 or ctl! ;
 : gate-off ctl c@ fe and ctl! ;
@@ -180,11 +179,8 @@ endcase then ;
 
 : voicetick
 pause c@ if ffff pause +! else
-1 d020 c!
 do-commands 
-2 d020 c!
 play-note 
-0 d020 c!
 then ;
 
 : tick 
@@ -205,7 +201,7 @@ repeat drop ;
 : init-voices
 f sid-vol!
 3 0 do i voice ! 0 pause c!
-strlen ! str ! 10 ctl! 8919 srad!
+strlen ! str ! 10 ctl! 3 srad!
 loop ;
 
 : play-melody ( str strlen -- )
