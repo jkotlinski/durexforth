@@ -28,6 +28,9 @@ ea24 , f810 ,
 does> voice c@ + ;
 voicedata octave
 voicedata ctl
+voicedata tie
+voicedata default-pause
+voicedata pause
 
 : voice7 voice c@ 7 * ;
 
@@ -103,7 +106,6 @@ voice lda, asl,a
     1   sty,x
 ;asm
 
-voicedata tie
 : str-pop 
 1 str +! ffff strlen +! ;
 
@@ -139,8 +141,6 @@ strget if case
 [char] - of 1- str-pop endof
 endcase then ;
 
-voicedata default-pause
-voicedata pause
 : read-pause
 read-num ?dup if 60 swap / 1- else
 default-pause c@ then
