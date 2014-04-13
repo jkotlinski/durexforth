@@ -42,7 +42,7 @@ voicedata ctl
 
 : sid-cutoff d415 ! ;
 : sid-flt d417 c! ;
-: sid-vol d418 c! ;
+: sid-vol! d418 c! ;
 
 ( write adsr )
 : srad! ( SR AD -- ) d405 voice7 + ! ;
@@ -116,15 +116,17 @@ strlen @ if str @ c@ case
 [char] < of str-pop o< recurse endof
 [char] > of str-pop o> recurse endof
 [char] & of str-pop 1 tie c! recurse endof
-[char] v of str-pop read-num d418 c! recurse endof
+[char] v of str-pop read-num sid-vol! recurse endof
 d of str-pop recurse endof
 bl of str-pop recurse endof
 endcase then ;
 
 : tick 
-3 0 do i voice!
+3 0 do i dup 1+ d020 c! voice!
 pause c@ ?dup if 1- pause c! else
-do-commands play-note then loop ;
+do-commands play-note then 
+loop 
+0 d020 c! ;
 
 : play 
 a2 c@ begin strlen @ while
@@ -139,7 +141,7 @@ strlen ! str ! 10 ctl! 8919 srad!
 loop ;
 
 : play-melody ( str strlen -- )
-init-voices play ;
+init-voices play 0 sid-vol! ;
 
 : music
 s" v10l16o3f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cre8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcro3c8f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cro3e8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcrc8o3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drararrrdrararrrcrbrbrrrcrbrbrrrerarrrarerarrrarerg+rg+rg+rg+rrre&v5er"
