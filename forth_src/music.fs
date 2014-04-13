@@ -1,7 +1,6 @@
 
 
 0 value voice
-0 value voice7
 
 header freqtab # 95 notes from c0, pal
 116 , 127 , 138 , 14b , 15e , 173 ,
@@ -34,7 +33,7 @@ voicedata ctl
 : o> octave c@ c + octave c! ;
 : o< octave c@ c - octave c! ;
 
-: voice! dup to voice 7 * to voice7 ;
+: voice7 voice 7 * ;
 
 : freq! d400 voice7 + ! ;
 : sid-pulse d402 voice7 + ! ;
@@ -121,11 +120,15 @@ d of str-pop recurse endof
 bl of str-pop recurse endof
 endcase then ;
 
-: tick 
-3 0 do i dup 1+ d020 c! voice!
+: voicetick
 pause c@ ?dup if 1- pause c! else
-do-commands play-note then 
-loop 
+do-commands play-note then ;
+
+: tick 
+1 d020 c!
+0 to voice voicetick
+1 to voice voicetick
+2 to voice voicetick
 0 d020 c! ;
 
 : play 
@@ -136,7 +139,7 @@ begin dup a2 c@ <> until
 repeat drop ;
 
 : init-voices
-3 0 do i voice! 0 pause c!
+3 0 do i to voice 0 pause c!
 strlen ! str ! 10 ctl! 8919 srad!
 loop ;
 
