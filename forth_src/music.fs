@@ -55,25 +55,26 @@ voice hidden
 : gate-on ctl c@ 1 or ctl! ;
 : gate-off ctl c@ fe and ctl! ;
 
-0 value str
-0 value strlen
+: voicedata2 create 0 , 0 , 0 ,
+does> voice 2* + ;
+voicedata2 str
+voicedata2 strlen
 voicedata tie
 : str-pop 
-str c@ emit
-str 1+ to str
-strlen 1- to strlen ;
+str @ c@ emit
+1 str +! ffff strlen +! ;
 
 : isnum ( ch -- v )
 dup [char] 0 >= swap [char] 9 <= and ;
 
 : read-num
-0 begin strlen str c@ isnum and while
-a * str c@ [char] 0 - +
+0 begin strlen @ str @ c@ isnum and while
+a * str @ c@ [char] 0 - +
 str-pop repeat ;
 
 : str2note ( -- note )
 # note
-str c@ case 
+str @ c@ case 
 [char] c of 0 endof
 [char] d of 2 endof
 [char] e of 4 endof
@@ -85,7 +86,7 @@ str c@ case
 [char] r of 7f endof
 endcase str-pop
 # sharp/flat
-strlen if str c@ case
+strlen @ if str @ c@ case
 [char] + of 1+ str-pop endof
 [char] - of 1- str-pop endof
 endcase then ;
@@ -95,21 +96,21 @@ voicedata pause
 : read-pause
 read-num ?dup if 60 swap / else
 default-pause c@ then
-strlen str c@ [char] . = and if
+strlen @ str @ c@ [char] . = and if
 str-pop dup 2/ + then ;
 
 : read-default-pause
 read-pause default-pause c! ;
 
 : play-note ( -- )
-strlen if
+strlen @ if
 tie c@ if 0 tie c! else gate-off then
 str2note dup 7f = if drop else
 octave c@ + note! gate-on then
 read-pause pause c! then ;
 
 : do-commands ( -- done )
-strlen if str c@ case
+strlen @ if str @ c@ case
 [char] l of str-pop read-default-pause recurse endof
 [char] o of str-pop read-num o recurse endof
 [char] < of str-pop o< recurse endof
@@ -121,23 +122,24 @@ bl of str-pop recurse endof
 endcase then ;
 
 : tick 
+3 0 do i voice!
 pause c@ ?dup if 1- pause c! else
-do-commands play-note then ;
+do-commands play-note then loop ;
 
 : play 
-18 default-pause c!
-0 pause c!
-a2 c@ begin strlen while
+a2 c@ begin strlen @ while
 tick
 begin dup a2 c@ <> until
 1+ ff and
 repeat drop ;
 
+: init-voices
+3 0 do i voice! 0 pause c!
+strlen ! str ! 10 ctl! 8919 srad!
+loop ;
+
 : play-melody ( str strlen -- )
-to strlen to str
-f sid-vol 
-10 ctl! 9 srad!
-play ;
+init-voices play ;
 
 : music
 s" v10l16o3f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cre8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcro3c8f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cro3e8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcrc8o3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drararrrdrararrrcrbrbrrrcrbrbrrrerarrrarerarrrarerg+rg+rg+rg+rrre&v5er"
