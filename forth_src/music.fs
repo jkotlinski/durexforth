@@ -74,8 +74,7 @@ a * str @ c@ [char] 0 - +
 str-pop repeat ;
 
 : str2note ( -- note )
-# note
-str @ c@ case 
+case 
 [char] c of 0 endof
 [char] d of 2 endof
 [char] e of 4 endof
@@ -83,7 +82,6 @@ str @ c@ case
 [char] g of 7 endof
 [char] a of 9 endof
 [char] b of b endof
-[char] n of read-num endof
 [char] r of 7f endof
 endcase str-pop
 # sharp/flat
@@ -104,7 +102,7 @@ str-pop dup 2/ + then then ;
 read-pause default-pause c! ;
 
 : play-note ( -- )
-strlen @ if
+strget if
 tie c@ if 0 tie c! else gate-off then
 str2note dup 7f = if drop else
 octave c@ + note! gate-on then
