@@ -1,6 +1,6 @@
 
 
-0 value voice
+var voice
 
 header freqtab # 95 notes from c0, pal
 116 , 127 , 138 , 14b , 15e , 173 ,
@@ -25,11 +25,11 @@ ea24 , f810 ,
 # creates array of 3 bytes, one
 # for each voice.
 : voicedata create 0 , 0 c,
-does> voice + ;
+does> voice @ + ;
 voicedata octave
 voicedata ctl
 
-: voice7 voice 7 * ;
+: voice7 voice @ 7 * ;
 
 : freq! d400 voice7 + ! ;
 : sid-pulse d402 voice7 + ! ;
@@ -42,8 +42,6 @@ voicedata ctl
 ( write adsr )
 : srad! ( SR AD -- ) d405 voice7 + ! ;
 
-voice hidden
-
 : note! ( i -- )
 2* ['] freqtab + @ freq! ;
 
@@ -52,8 +50,8 @@ voice hidden
 
 here 0 , 0 , 0 , value .str
 here 0 , 0 , 0 , value .strlen
-: str .str voice 2* + ;
-: strlen .strlen voice 2* + ;
+: str .str voice @ 2* + ;
+: strlen .strlen voice @ 2* + ;
 
 voicedata tie
 : str-pop 
@@ -131,9 +129,9 @@ pause c@ if ffff pause +! else
 do-commands play-note then ;
 
 : tick 
-0 to voice voicetick
-1 to voice voicetick
-2 to voice voicetick ;
+0 voice ! voicetick
+1 voice ! voicetick
+2 voice ! voicetick ;
 
 :asm wait 0 lda,x
 :- a2 cmp, -branch beq,
@@ -148,7 +146,7 @@ wait
 repeat drop ;
 
 : init-voices
-3 0 do i to voice 0 pause c!
+3 0 do i voice ! 0 pause c!
 strlen ! str ! 10 ctl! 8919 srad!
 loop ;
 
