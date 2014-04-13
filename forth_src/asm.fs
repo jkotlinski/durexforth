@@ -24,7 +24,7 @@ else 1+ c@ c, c, then ;
 21 2mi and,(x)
 31 2mi and,(y)
 
-a 1mi asla,
+a 1mi asl,a
 6 e 23mi asl,
 16 1e 23mi asl,x
 
@@ -97,7 +97,7 @@ a0 2mi ldy,#
 a4 ac 23mi ldy,
 b4 bc 23mi ldy,x
 
-4a 1mi lsra,
+4a 1mi lsr,a
 46 4e 23mi lsr,
 56 5e 23mi lsr,x
 
@@ -115,11 +115,11 @@ ea 1mi nop,
 68 1mi pla,
 28 1mi plp,
 
-2a 1mi rola,
+2a 1mi rol,a
 26 2e 23mi rol,
 36 3e 23mi rol,x
 
-6a 1mi rora,
+6a 1mi ror,a
 66 6e 23mi ror,
 76 7e 23mi ror,x
 
