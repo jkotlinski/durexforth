@@ -185,9 +185,7 @@ do-commands play-note then ;
 
 : play 
 a2 c@ begin strlen@ while
-1 d020 c!
 tick
-0 d020 c!
 wait
 repeat drop ;
 
