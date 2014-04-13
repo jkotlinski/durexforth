@@ -50,10 +50,11 @@ voice hidden
 : gate-on ctl c@ 1 or ctl! ;
 : gate-off ctl c@ fe and ctl! ;
 
-: voicedata2 create 0 , 0 , 0 ,
-does> voice 2* + ;
-voicedata2 str
-voicedata2 strlen
+here 0 , 0 , 0 , value .str
+here 0 , 0 , 0 , value .strlen
+: str .str voice 2* + ;
+: strlen .strlen voice 2* + ;
+
 voicedata tie
 : str-pop 
 str @ c@ emit
