@@ -63,6 +63,8 @@ voicedata tie
 str @ c@ emit
 1 str +! ffff strlen +! ;
 
+: strget strlen @ if str @ c@ dup else 0 then ;
+
 : isnum ( ch -- v )
 dup [char] 0 >= swap [char] 9 <= and ;
 
@@ -85,7 +87,7 @@ str @ c@ case
 [char] r of 7f endof
 endcase str-pop
 # sharp/flat
-strlen @ if str @ c@ case
+strget if case
 [char] + of 1+ str-pop endof
 [char] - of 1- str-pop endof
 endcase then ;
@@ -95,8 +97,8 @@ voicedata pause
 : read-pause
 read-num ?dup if 60 swap / else
 default-pause c@ then
-strlen @ str @ c@ [char] . = and if
-str-pop dup 2/ + then ;
+strget if [char] . = if
+str-pop dup 2/ + then then ;
 
 : read-default-pause
 read-pause default-pause c! ;
@@ -109,7 +111,7 @@ octave c@ + note! gate-on then
 read-pause 1- pause c! then ;
 
 : do-commands ( -- done )
-strlen @ if str @ c@ case
+strget if case
 [char] l of str-pop read-default-pause recurse endof
 [char] o of str-pop read-num o recurse endof
 [char] < of str-pop o< recurse endof
