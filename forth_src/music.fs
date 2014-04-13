@@ -107,7 +107,7 @@ strlen @ if
 tie c@ if 0 tie c! else gate-off then
 str2note dup 7f = if drop else
 octave c@ + note! gate-on then
-read-pause pause c! then ;
+read-pause 1- pause c! then ;
 
 : do-commands ( -- done )
 strlen @ if str @ c@ case
