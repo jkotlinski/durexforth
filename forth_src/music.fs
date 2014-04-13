@@ -73,17 +73,26 @@ dup [char] 0 >= swap [char] 9 <= and ;
 a * str @ c@ [char] 0 - +
 str-pop repeat ;
 
+:asm notetab ( char -- notediff )
+0 lda,x
+key c cmp,# +branch bne,
+0 lda,# 0 sta,x ;asm
+:+ key d cmp,# +branch bne,
+2 lda,# 0 sta,x ;asm
+:+ key e cmp,# +branch bne,
+4 lda,# 0 sta,x ;asm
+:+ key f cmp,# +branch bne,
+5 lda,# 0 sta,x ;asm
+:+ key g cmp,# +branch bne,
+7 lda,# 0 sta,x ;asm
+:+ key a cmp,# +branch bne,
+9 lda,# 0 sta,x ;asm
+:+ key b cmp,# +branch bne,
+b lda,# 0 sta,x ;asm
+:+ 7f lda,# 0 sta,x ;asm
+
 : str2note ( -- note )
-case 
-[char] c of 0 endof
-[char] d of 2 endof
-[char] e of 4 endof
-[char] f of 5 endof
-[char] g of 7 endof
-[char] a of 9 endof
-[char] b of b endof
-[char] r of 7f endof
-endcase str-pop
+notetab str-pop
 # sharp/flat
 strget if case
 [char] + of 1+ str-pop endof
