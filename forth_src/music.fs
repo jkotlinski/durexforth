@@ -134,13 +134,16 @@ do-commands play-note then ;
 1 to voice voicetick
 2 to voice voicetick ;
 
+:asm wait 0 lda,x
+:- a2 cmp, -branch beq,
+0 inc,x ;asm
+
 : play 
 a2 c@ begin strlen @ while
 1 d020 c!
 tick
 0 d020 c!
-begin dup a2 c@ <> until
-1+ ff and
+wait
 repeat drop ;
 
 : init-voices
