@@ -109,13 +109,9 @@ voicedata tie
 
 : strget strlen@ if str@c@ dup else 0 then ;
 
-: isnum ( ch -- v )
-dup [char] 0 >= swap [char] 9 <= and ;
-
 : read-num
-0 begin strlen@ str@c@ isnum and while
-a * str@c@ [char] 0 - +
-str-pop repeat ;
+0 begin str@c@ [char] 0 - dup 9 <= strlen@ and while
+swap a * + str-pop repeat drop ;
 
 :asm notetab ( char -- notediff )
 0 lda,x
