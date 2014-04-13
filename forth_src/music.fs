@@ -25,11 +25,11 @@ ea24 , f810 ,
 # creates array of 3 bytes, one
 # for each voice.
 : voicedata create 0 , 0 c,
-does> voice @ + ;
+does> voice c@ + ;
 voicedata octave
 voicedata ctl
 
-: voice7 voice @ 7 * ;
+: voice7 voice c@ 7 * ;
 
 : freq! d400 voice7 + ! ;
 : sid-pulse d402 voice7 + ! ;
@@ -50,8 +50,8 @@ voicedata ctl
 
 here 0 , 0 , 0 , value .str
 here 0 , 0 , 0 , value .strlen
-: str .str voice @ 2* + ;
-: strlen .strlen voice @ 2* + ;
+: str .str voice c@ 2* + ;
+: strlen .strlen voice c@ 2* + ;
 
 voicedata tie
 : str-pop 
@@ -129,9 +129,9 @@ pause c@ if ffff pause +! else
 do-commands play-note then ;
 
 : tick 
-0 voice ! voicetick
-1 voice ! voicetick
-2 voice ! voicetick ;
+0 voice c! voicetick
+1 voice c! voicetick
+2 voice c! voicetick ;
 
 :asm wait 0 lda,x
 :- a2 cmp, -branch beq,
