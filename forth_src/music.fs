@@ -157,10 +157,11 @@ str2note dup 7f = if drop else
 octave c@ + note! gate-on then
 read-pause pause c! then ;
 
+: o str-pop str@c@ [char] 0 - str-pop c * octave c! ;
 : do-commands ( -- done )
 strget if case
 [char] l of str-pop read-default-pause recurse endof
-[char] o of str-pop read-num c * octave c! recurse endof
+[char] o of o recurse endof
 [char] < of str-pop fff4 octave +! recurse endof
 [char] > of str-pop c octave +! recurse endof
 [char] & of str-pop 1 tie c! recurse endof
@@ -197,7 +198,7 @@ strlen ! str ! 10 ctl! 8919 srad!
 loop ;
 
 : play-melody ( str strlen -- )
-init-voices play 0 sid-vol! ;
+init-voices play ;
 
 : music
 s" l16o3f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cre8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcro3c8f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cro3e8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcrc8o3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drararrrdrararrrcrbrbrrrcrbrbrrrerarrrarerarrrarerg+rg+rg+rg+rrre&v5er"
