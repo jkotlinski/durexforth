@@ -61,12 +61,31 @@ voice lda, asl,a
 .strlen ff and adc,# 0 sta,x
 .strlen 100/ lda,# 0 adc,# 1 sta,x ;asm
 
+:asm strlen@
+dex, dex,
+voice lda, asl,a
+.strlen ff and adc,# 0 sta,x
+.strlen 100/ lda,# 0 adc,# 1 sta,x 
+
+# @
+    0   lda,(x)
+    tay,
+    0   inc,x
+    +branch bne,
+    1   inc,x
+:+
+    0   lda,(x)
+    1   sta,x
+    0   sty,x
+;asm
+
 :asm str@c@
 dex, dex,
 voice lda, asl,a
 .str ff and adc,# 0 sta,x
 .str 100/ lda,# 0 adc,# 1 sta,x 
 
+# @
     0   lda,(x)
     tay,
     0   inc,x
@@ -77,6 +96,7 @@ voice lda, asl,a
     1   sta,x
     0   sty,x
 
+# c@
     0   lda,(x)
     0   sta,x
     0   ldy,#
@@ -85,16 +105,15 @@ voice lda, asl,a
 
 voicedata tie
 : str-pop 
-str@c@ emit
 1 str +! ffff strlen +! ;
 
-: strget strlen @ if str@c@ dup else 0 then ;
+: strget strlen@ if str@c@ dup else 0 then ;
 
 : isnum ( ch -- v )
 dup [char] 0 >= swap [char] 9 <= and ;
 
 : read-num
-0 begin strlen @ str@c@ isnum and while
+0 begin strlen@ str@c@ isnum and while
 a * str@c@ [char] 0 - +
 str-pop repeat ;
 
@@ -168,7 +187,7 @@ do-commands play-note then ;
 0 inc,x ;asm
 
 : play 
-a2 c@ begin strlen @ while
+a2 c@ begin strlen@ while
 1 d020 c!
 tick
 0 d020 c!
