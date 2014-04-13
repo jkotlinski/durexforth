@@ -393,11 +393,11 @@ rotate_r
     !byte	1
     !text	"="
     ldy #0
-    lda	1, x
-    cmp	3, x
-    bne	+
     lda	0, x
     cmp	2, x
+    bne	+
+    lda	1, x
+    cmp	3, x
     bne	+
     ldy	#$ff
 +   inx
