@@ -61,19 +61,41 @@ voice lda, asl,a
 .strlen ff and adc,# 0 sta,x
 .strlen 100/ lda,# 0 adc,# 1 sta,x ;asm
 
+:asm str@c@
+dex, dex,
+voice lda, asl,a
+.str ff and adc,# 0 sta,x
+.str 100/ lda,# 0 adc,# 1 sta,x 
+
+    0   lda,(x)
+    tay,
+    0   inc,x
+    +branch bne,
+    1   inc,x
+:+
+    0   lda,(x)
+    1   sta,x
+    0   sty,x
+
+    0   lda,(x)
+    0   sta,x
+    0   ldy,#
+    1   sty,x
+;asm
+
 voicedata tie
 : str-pop 
-str @ c@ emit
+str@c@ emit
 1 str +! ffff strlen +! ;
 
-: strget strlen @ if str @ c@ dup else 0 then ;
+: strget strlen @ if str@c@ dup else 0 then ;
 
 : isnum ( ch -- v )
 dup [char] 0 >= swap [char] 9 <= and ;
 
 : read-num
-0 begin strlen @ str @ c@ isnum and while
-a * str @ c@ [char] 0 - +
+0 begin strlen @ str@c@ isnum and while
+a * str@c@ [char] 0 - +
 str-pop repeat ;
 
 :asm notetab ( char -- notediff )
