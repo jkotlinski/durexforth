@@ -115,8 +115,6 @@ voice lda, asl,a
 : str-pop 
 1 str +! ffff strlen +! ;
 
-: strget strlen@ if str@c@ dup else 0 then ;
-
 :asm notetab ( char -- notediff )
 0 lda,x
 key c cmp,# +branch bne,
@@ -138,10 +136,10 @@ b lda,# 0 sta,x ;asm
 : str2note ( -- note )
 notetab str-pop
 # sharp/flat
-strget if case
+str@c@ case
 [char] + of 1+ str-pop endof
 [char] - of 1- str-pop endof
-endcase then ;
+endcase ;
 
 :asm dur
 0 lda,x
@@ -170,21 +168,21 @@ endcase then ;
 swap a * + str-pop repeat drop
 ?dup if dur else
 default-pause c@ then
-strget if [char] . = if
-str-pop dup 2/ + then then ;
+str@c@ [char] . = if
+str-pop dup 2/ + then ;
 
 : read-default-pause
 read-pause default-pause c! ;
 
 : play-note ( -- )
-strget if
+str@c@ ?dup if
 str2note dup 7f = if drop else
 octave c@ + note! gate-on then
 read-pause pause c! then ;
 
 : o str-pop str@c@ [char] 0 - str-pop c * octave c! ;
 : do-commands ( -- done )
-strget if case
+str@c@ case
 [char] l of str-pop read-default-pause recurse endof
 [char] o of o recurse endof
 [char] < of str-pop fff4 octave +! recurse endof
@@ -192,7 +190,7 @@ strget if case
 [char] & of str-pop 1 tie c! recurse endof
 d of str-pop recurse endof
 bl of str-pop recurse endof
-endcase then ;
+endcase ;
 
 : stop-note
 tie c@ if 0 tie c! else gate-off then ;
