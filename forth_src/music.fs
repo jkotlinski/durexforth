@@ -36,27 +36,29 @@ voicedata tie
 voicedata default-pause
 voicedata pause
 
-:asm voice7 # voice c@ 7 *
-dex, dex, 0 lda,# 1 sta,x
+:asm voice7+ # voice c@ 7 * +
 voice lda,
-+branch bne,
-0 sta,x ;asm
-:+ 1 cmp,#
-+branch bne,
-7 lda,# 0 sta,x ;asm
-:+ 7 2* lda,# 0 sta,x ;asm
++branch bne, ;asm
+:+ 
+7 ldy,# 1 cmp,# +branch beq,
+7 2* ldy,# :+ tya,
+clc, 0 adc,x 0 sta,x +branch bcc,
+1 inc,x :+ ;asm
 
-: ctl [ sid 4 + literal ] voice7 + ;
+:asm incbg d020 inc, ;asm
+:asm decbg d020 dec, ;asm
+
+: ctl [ sid 4 + literal ] voice7+ ;
 
 : sid-cutoff d415 ! ;
 : sid-flt d417 c! ;
 : sid-vol! d418 c! ;
 
 ( write adsr )
-: srad! ( SR AD -- ) [ sid 5 + literal ] voice7 + ! ;
+: srad! ( SR AD -- ) [ sid 5 + literal ] voice7+ ! ;
 
 : note! ( i -- )
-2* ['] freqtab + @ sid voice7 + ! ;
+2* ['] freqtab + @ sid voice7+ ! ;
 
 : gate-on ctl dup c@ 1 or swap c! ;
 : gate-off ctl dup c@ fe and swap c! ;
