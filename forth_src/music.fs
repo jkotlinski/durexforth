@@ -58,35 +58,11 @@ voice lda,
 : gate-off ctl dup c@ fe and swap c! ;
 
 here 0 , 0 , 0 , value .str
-here 0 , 0 , 0 , value .strlen
 :asm str
 dex, dex,
 voice lda, asl,a
 .str ff and adc,# 0 sta,x
 .str 100/ lda,# 0 adc,# 1 sta,x ;asm
-:asm strlen
-dex, dex,
-voice lda, asl,a
-.strlen ff and adc,# 0 sta,x
-.strlen 100/ lda,# 0 adc,# 1 sta,x ;asm
-
-:asm strlen@
-dex, dex,
-voice lda, asl,a
-.strlen ff and adc,# 0 sta,x
-.strlen 100/ lda,# 0 adc,# 1 sta,x 
-
-# @
-    0   lda,(x)
-    tay,
-    0   inc,x
-    +branch bne,
-    1   inc,x
-:+
-    0   lda,(x)
-    1   sta,x
-    0   sty,x
-;asm
 
 :asm str@c@
 dex, dex,
@@ -112,8 +88,7 @@ voice lda, asl,a
     1   sty,x
 ;asm
 
-: str-pop 
-1 str +! ffff strlen +! ;
+: str-pop 1 str +! ;
 
 :asm notetab ( char -- notediff )
 0 lda,x
@@ -164,7 +139,7 @@ endcase ;
 :+ 60 20 / 1- lda,# 0 sta,x ;asm
 
 : read-pause
-0 begin str@c@ [char] 0 - dup a < strlen@ and while
+0 begin str@c@ [char] 0 - dup a < while
 swap a * + str-pop repeat drop
 ?dup if dur else
 default-pause c@ then
@@ -217,7 +192,7 @@ then ;
 dey, -branch bpl, ;asm
 
 : play 
-a2 c@ begin strlen@ while
+a2 c@ begin str@c@ while
 tick
 wait
 apply-sid
@@ -226,10 +201,10 @@ repeat drop ;
 : init-voices
 f sid-vol!
 3 0 do i voice ! 1 pause c!
-strlen ! str ! 10 ctl c! 891a srad!
+drop str ! 10 ctl c! 891a srad!
 loop ;
 
-: play-melody ( str strlen -- )
+: play-melody ( -- )
 d400 sid 15 cmove
 init-voices play 
 3 0 do i voice ! gate-off loop
