@@ -106,33 +106,32 @@ strget case
 [char] - of 1- str-pop endof
 endcase ;
 
-:asm dur
-0 lda,x
-1 cmp,# +branch bne,
-60 1 / 1- lda,# 0 sta,x ;asm
-:+ 2 cmp,# +branch bne,
-60 2 / 1- lda,# 0 sta,x ;asm
-:+ 3 cmp,# +branch bne,
-60 3 / 1- lda,# 0 sta,x ;asm
-:+ 4 cmp,# +branch bne,
-60 4 / 1- lda,# 0 sta,x ;asm
-:+ 6 cmp,# +branch bne,
-60 6 / 1- lda,# 0 sta,x ;asm
-:+ 8 cmp,# +branch bne,
-60 8 / 1- lda,# 0 sta,x ;asm
-:+ c cmp,# +branch bne,
-60 c / 1- lda,# 0 sta,x ;asm
-:+ 10 cmp,# +branch bne,
-60 10 / 1- lda,# 0 sta,x ;asm
-:+ 18 cmp,# +branch bne,
-60 18 / 1- lda,# 0 sta,x ;asm
-:+ 60 20 / 1- lda,# 0 sta,x ;asm
-
 : read-pause
-0 begin strget [char] 0 - dup a < while
-swap a * + str-pop repeat drop
-?dup if dur else
-default-pause c@ then
+incbg incbg
+strget case
+[char] 1 of
+str-pop strget [char] 6 = if
+str-pop [ 60 10 / 1- literal ]
+else [ 60 1- literal ] then
+endof
+[char] 2 of
+str-pop strget [char] 4 = if
+str-pop [ 60 18 / 1- literal ]
+else [ 60 2 / 1- literal ] then
+endof
+[char] 3 of
+str-pop strget [char] 2 = if
+str-pop [ 60 20 / 1- literal ]
+else [ 60 3 / 1- literal ] then
+endof
+[char] 4 of str-pop [ 60 4 / 1- literal ] endof
+[char] 6 of str-pop [ 60 6 / 1- literal ] endof
+[char] 8 of str-pop [ 60 8 / 1- literal ] endof
+dup of 0 endof
+endcase
+decbg decbg
+
+?dup 0= if default-pause c@ then
 strget [char] . = if
 str-pop dup 2/ + then ;
 
@@ -162,21 +161,21 @@ tie c@ if 0 tie c! else gate-off then ;
 : voicetick
 pause c@ ?dup if 
 1- dup pause c! 0= if 
-    2 d020 c!
 do-commands stop-note then 
 else
-    1 d020 c!
 play-note 
-then 0 d020 c! ;
+then ;
 
+:asm voice0 0 lda,# voice sta, ;asm
+:asm voice1+ voice inc, ;asm
 : tick 
-0 voice c! voicetick
-1 voice c! voicetick
-2 voice c! voicetick ;
+voice0 voicetick
+voice1+ voicetick
+voice1+ voicetick ;
 
-:asm wait 0 lda,x
+:asm wait d020 inc, 0 lda,x
 :- a2 cmp, -branch beq,
-0 inc,x ;asm
+0 inc,x d020 dec, ;asm
 
 :asm apply-sid
 14 ldy,#
@@ -190,7 +189,7 @@ repeat drop ;
 
 : init-voices
 f sid-vol!
-3 0 do i voice ! 1 pause c!
+3 0 do i voice c! 1 pause c!
 10 ctl c! 891a srad!
 loop ;
 
@@ -202,7 +201,7 @@ over + dup >r dup c@ >r 0 swap c! .str 2+ 2+ !
 
 d400 sid 15 cmove
 init-voices play
-3 0 do i voice ! gate-off loop
+3 0 do i voice c! gate-off loop
 apply-sid
 
 # restore sentinels
