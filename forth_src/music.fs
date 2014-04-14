@@ -57,7 +57,7 @@ voice lda,
 : gate-on ctl dup c@ 1 or swap c! ;
 : gate-off ctl dup c@ fe and swap c! ;
 
-here 0 , 0 , 0 , value .str
+2b value .str
 :asm str
 dex, dex,
 voice lda, asl,a
@@ -66,27 +66,11 @@ voice lda, asl,a
 
 :asm strget
 dex, dex,
-voice lda, asl,a
-.str ff and adc,# 0 sta,x
-.str 100/ lda,# 0 adc,# 1 sta,x 
-
-# @
-    0   lda,(x)
-    tay,
-    0   inc,x
-    +branch bne,
-    1   inc,x
-:+
-    0   lda,(x)
-    1   sta,x
-    0   sty,x
-
-# c@
-    0   lda,(x)
-    0   sta,x
-    0   ldy,#
-    1   sty,x
-;asm
+0 lda,# 1 sta,x
+txa, pha,
+voice lda, asl,a tax,
+.str lda,(x) tay,
+pla, tax, 0 sty,x ;asm
 
 : str-pop 1 str +! ;
 
