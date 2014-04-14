@@ -66,11 +66,11 @@ clc, 0 adc,x 0 sta,x +branch bcc,
 
 2b value .str
 :asm str-pop
-txa, pha,
+txa, tay,
 voice lda, asl,a tax,
 .str inc,x +branch bne,
 .str 1+ inc,x :+
-pla, tax, ;asm
+tya, tax, ;asm
 
 :asm strget
 dex, dex,
