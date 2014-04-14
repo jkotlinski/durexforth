@@ -64,7 +64,7 @@ voice lda, asl,a
 .str ff and adc,# 0 sta,x
 .str 100/ lda,# 0 adc,# 1 sta,x ;asm
 
-:asm str@c@
+:asm strget
 dex, dex,
 voice lda, asl,a
 .str ff and adc,# 0 sta,x
@@ -111,7 +111,7 @@ b lda,# 0 sta,x ;asm
 : str2note ( -- note )
 notetab str-pop
 # sharp/flat
-str@c@ case
+strget case
 [char] + of 1+ str-pop endof
 [char] - of 1- str-pop endof
 endcase ;
@@ -139,25 +139,25 @@ endcase ;
 :+ 60 20 / 1- lda,# 0 sta,x ;asm
 
 : read-pause
-0 begin str@c@ [char] 0 - dup a < while
+0 begin strget [char] 0 - dup a < while
 swap a * + str-pop repeat drop
 ?dup if dur else
 default-pause c@ then
-str@c@ [char] . = if
+strget [char] . = if
 str-pop dup 2/ + then ;
 
 : read-default-pause
 read-pause default-pause c! ;
 
 : play-note ( -- )
-str@c@ ?dup if
+strget ?dup if
 str2note dup 7f = if drop else
 octave c@ + note! gate-on then
 read-pause pause c! then ;
 
-: o str-pop str@c@ [char] 0 - str-pop c * octave c! ;
+: o str-pop strget [char] 0 - str-pop c * octave c! ;
 : do-commands ( -- done )
-str@c@ case
+strget case
 [char] l of str-pop read-default-pause recurse endof
 [char] o of o recurse endof
 [char] < of str-pop fff4 octave +! recurse endof
@@ -192,23 +192,29 @@ then ;
 dey, -branch bpl, ;asm
 
 : play 
-a2 c@ begin str@c@ while
-tick
-wait
-apply-sid
+a2 c@ begin strget while
+tick wait apply-sid
 repeat drop ;
 
 : init-voices
 f sid-vol!
 3 0 do i voice ! 1 pause c!
-drop str ! 10 ctl c! 891a srad!
+10 ctl c! 891a srad!
 loop ;
 
 : play-melody ( -- )
+# init sentinels
+over + dup >r dup c@ >r 0 swap c! .str !
+over + dup >r dup c@ >r 0 swap c! .str 2+ !
+over + dup >r dup c@ >r 0 swap c! .str 2+ 2+ !
+
 d400 sid 15 cmove
-init-voices play 
+init-voices play
 3 0 do i voice ! gate-off loop
-apply-sid ;
+apply-sid
+
+# restore sentinels
+r> r> r> r> r> r> c! c! c! ;
 
 : music
 s" l16o3f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cre8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcro3c8f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cro3e8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcrc8o3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drararrrdrararrrcrbrbrrrcrbrbrrrerarrrarerarrrarerg+rg+rg+rg+rrre&er"
