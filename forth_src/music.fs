@@ -196,11 +196,16 @@ then ;
 :- a2 cmp, -branch beq,
 0 inc,x ;asm
 
+:asm apply-sid
+14 ldy,#
+:- sid lda,y d400 sta,y
+dey, -branch bpl, ;asm
+
 : play 
 a2 c@ begin strlen@ while
 tick
 wait
-sid d400 15 cmove
+apply-sid
 repeat drop ;
 
 : init-voices
@@ -213,7 +218,7 @@ loop ;
 d400 sid 15 cmove
 init-voices play 
 3 0 do i voice ! gate-off loop
-sid d400 15 cmove ;
+apply-sid ;
 
 : music
 s" l16o3f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cre8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcro3c8f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cro3e8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcrc8o3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drararrrdrararrrcrbrbrrrcrbrbrrrerarrrarerarrrarerg+rg+rg+rg+rrre&er"
