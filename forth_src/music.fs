@@ -1,6 +1,6 @@
 
 
-19 allot value sid
+15 allot value sid
 var voice
 
 header freqtab # 95 notes from c0, pal
@@ -46,9 +46,9 @@ voice lda,
 : sid-pulse [ sid 2 + literal ] voice7 + ! ;
 : ctl! dup [ sid 4 + literal ] voice7 + c! ctl c! ;
 
-: sid-cutoff [ sid 15 + literal ] ! ;
-: sid-flt [ sid 17 + literal ] c! ;
-: sid-vol! [ sid 18 + literal ] c! ;
+: sid-cutoff d415 ! ;
+: sid-flt d417 c! ;
+: sid-vol! d418 c! ;
 
 ( write adsr )
 : srad! ( SR AD -- ) [ sid 5 + literal ] voice7 + ! ;
@@ -200,7 +200,7 @@ then ;
 a2 c@ begin strlen@ while
 tick
 wait
-sid d400 19 cmove
+sid d400 15 cmove
 repeat drop ;
 
 : init-voices
@@ -210,10 +210,10 @@ strlen ! str ! 10 ctl! 891a srad!
 loop ;
 
 : play-melody ( str strlen -- )
-d400 sid 19 cmove
+d400 sid 15 cmove
 init-voices play 
 3 0 do i voice ! gate-off loop
-sid d400 19 cmove ;
+sid d400 15 cmove ;
 
 : music
 s" l16o3f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cre8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcro3c8f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cro3e8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcrc8o3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drararrrdrararrrcrbrbrrrcrbrbrrrerarrrarerarrrarerg+rg+rg+rg+rrre&er"
