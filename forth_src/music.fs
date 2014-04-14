@@ -42,7 +42,6 @@ voice lda,
 7 lda,# 0 sta,x ;asm
 :+ 7 2* lda,# 0 sta,x ;asm
 
-: sid-pulse [ sid 2 + literal ] voice7 + ! ;
 : ctl [ sid 4 + literal ] voice7 + ;
 
 : sid-cutoff d415 ! ;
@@ -118,10 +117,6 @@ voice lda, asl,a
 
 : strget strlen@ if str@c@ dup else 0 then ;
 
-: read-num
-0 begin str@c@ [char] 0 - dup a < strlen@ and while
-swap a * + str-pop repeat drop ;
-
 :asm notetab ( char -- notediff )
 0 lda,x
 key c cmp,# +branch bne,
@@ -149,7 +144,9 @@ strget if case
 endcase then ;
 
 : read-pause
-read-num ?dup if 60 swap / 1- else
+0 begin str@c@ [char] 0 - dup a < strlen@ and while
+swap a * + str-pop repeat drop
+?dup if 60 swap / 1- else
 default-pause c@ then
 strget if [char] . = if
 str-pop dup 2/ + then then ;
@@ -171,7 +168,6 @@ strget if case
 [char] < of str-pop fff4 octave +! recurse endof
 [char] > of str-pop c octave +! recurse endof
 [char] & of str-pop 1 tie c! recurse endof
-[char] v of str-pop read-num sid-vol! recurse endof
 d of str-pop recurse endof
 bl of str-pop recurse endof
 endcase then ;
