@@ -181,9 +181,9 @@ endcase then ;
 tie c@ if 0 tie c! else gate-off then ;
 : voicetick
 pause c@ ?dup if 
-1- dup pause c! 0= if stop-note then 
+1- dup pause c! 0= if 
+do-commands stop-note then 
 else
-do-commands 
 play-note 
 then ;
 
