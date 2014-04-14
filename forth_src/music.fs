@@ -23,10 +23,14 @@ c4e , d09 , dd0 , ea2 , f81 , 106d ,
 af68 , b9d6 , c4e3 , d098 , dd00 , 
 ea24 , f810 ,
 
+:asm voicec@+
+voice lda, clc, 0 adc,x 0 sta,x
++branch bcc, 1 inc,x :+ ;asm
+
 # creates array of 3 bytes, one
 # for each voice.
 : voicedata create 0 , 0 c,
-does> voice c@ + ;
+does> voicec@+ ;
 voicedata octave
 voicedata tie
 voicedata default-pause
