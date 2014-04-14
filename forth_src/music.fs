@@ -1,5 +1,6 @@
 
 
+19 allot value sid
 var voice
 
 header freqtab # 95 notes from c0, pal
@@ -42,18 +43,18 @@ voice lda,
 7 lda,# 0 sta,x ;asm
 :+ 7 2* lda,# 0 sta,x ;asm
 
-: sid-pulse d402 voice7 + ! ;
-: ctl! dup d404 voice7 + c! ctl c! ;
+: sid-pulse [ sid 2 + literal ] voice7 + ! ;
+: ctl! dup [ sid 4 + literal ] voice7 + c! ctl c! ;
 
-: sid-cutoff d415 ! ;
-: sid-flt d417 c! ;
-: sid-vol! d418 c! ;
+: sid-cutoff [ sid 15 + literal ] ! ;
+: sid-flt [ sid 17 + literal ] c! ;
+: sid-vol! [ sid 18 + literal ] c! ;
 
 ( write adsr )
-: srad! ( SR AD -- ) d405 voice7 + ! ;
+: srad! ( SR AD -- ) [ sid 5 + literal ] voice7 + ! ;
 
 : note! ( i -- )
-2* ['] freqtab + @ d400 voice7 or ! ;
+2* ['] freqtab + @ sid voice7 + ! ;
 
 : gate-on ctl c@ 1 or ctl! ;
 : gate-off ctl c@ fe and ctl! ;
@@ -159,7 +160,6 @@ read-pause default-pause c! ;
 
 : play-note ( -- )
 strget if
-tie c@ if 0 tie c! else gate-off then
 str2note dup 7f = if drop else
 octave c@ + note! gate-on then
 read-pause pause c! then ;
@@ -177,8 +177,12 @@ d of str-pop recurse endof
 bl of str-pop recurse endof
 endcase then ;
 
+: stop-note
+tie c@ if 0 tie c! else gate-off then ;
 : voicetick
-pause c@ if ffff pause +! else
+pause c@ ?dup if 
+1- dup pause c! 0= if stop-note then 
+else
 do-commands 
 play-note 
 then ;
@@ -196,17 +200,20 @@ then ;
 a2 c@ begin strlen@ while
 tick
 wait
+sid d400 19 cmove
 repeat drop ;
 
 : init-voices
 f sid-vol!
 3 0 do i voice ! 0 pause c!
-strlen ! str ! 10 ctl! 3 srad!
+strlen ! str ! 10 ctl! 891a srad!
 loop ;
 
 : play-melody ( str strlen -- )
+d400 sid 19 cmove
 init-voices play 
-3 0 do i voice ! gate-off loop ;
+3 0 do i voice ! gate-off loop
+sid d400 19 cmove ;
 
 : music
 s" l16o3f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cre8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcro3c8f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cro3e8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcrc8o3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drararrrdrararrrcrbrbrrrcrbrbrrrerarrrarerarrrarerg+rg+rg+rg+rrre&er"
