@@ -143,10 +143,32 @@ strget if case
 [char] - of 1- str-pop endof
 endcase then ;
 
+:asm dur
+0 lda,x
+1 cmp,# +branch bne,
+60 1 / 1- lda,# 0 sta,x ;asm
+:+ 2 cmp,# +branch bne,
+60 2 / 1- lda,# 0 sta,x ;asm
+:+ 3 cmp,# +branch bne,
+60 3 / 1- lda,# 0 sta,x ;asm
+:+ 4 cmp,# +branch bne,
+60 4 / 1- lda,# 0 sta,x ;asm
+:+ 6 cmp,# +branch bne,
+60 6 / 1- lda,# 0 sta,x ;asm
+:+ 8 cmp,# +branch bne,
+60 8 / 1- lda,# 0 sta,x ;asm
+:+ c cmp,# +branch bne,
+60 c / 1- lda,# 0 sta,x ;asm
+:+ 10 cmp,# +branch bne,
+60 10 / 1- lda,# 0 sta,x ;asm
+:+ 18 cmp,# +branch bne,
+60 18 / 1- lda,# 0 sta,x ;asm
+:+ 60 20 / 1- lda,# 0 sta,x ;asm
+
 : read-pause
 0 begin str@c@ [char] 0 - dup a < strlen@ and while
 swap a * + str-pop repeat drop
-?dup if 60 swap / 1- else
+?dup if dur else
 default-pause c@ then
 strget if [char] . = if
 str-pop dup 2/ + then then ;
