@@ -3,7 +3,7 @@
 15 allot value sid
 var voice
 
-header freqtab # 95 notes from c0, pal
+here # 95 notes from c0, pal
 116 , 127 , 138 , 14b , 15e , 173 ,
 189 , 1a1 , 1ba , 1d4 , 1f0 , 20d , 
 22c , 24e , 271 , 296 , 2bd , 2e7 , 
@@ -22,6 +22,7 @@ c4e , d09 , dd0 , ea2 , f81 , 106d ,
 8368 , 8b38 , 9380 , 9c45 , a590 ,
 af68 , b9d6 , c4e3 , d098 , dd00 , 
 ea24 , f810 ,
+value freqtab 
 
 :asm voicec@+
 voice lda, clc, 0 adc,x 0 sta,x
@@ -58,7 +59,7 @@ clc, 0 adc,x 0 sta,x +branch bcc,
 : srad! ( SR AD -- ) [ sid 5 + literal ] voice7+ ! ;
 
 : note! ( i -- )
-2* ['] freqtab + @ sid voice7+ ! ;
+2* freqtab + @ sid voice7+ ! ;
 
 : gate-on ctl dup c@ 1 or swap c! ;
 : gate-off ctl dup c@ fe and swap c! ;
@@ -161,19 +162,21 @@ tie c@ if 0 tie c! else gate-off then ;
 : voicetick
 pause c@ ?dup if 
 1- dup pause c! 0= if 
+    2 d020 c!
 do-commands stop-note then 
 else
+    1 d020 c!
 play-note 
-then ;
+then 0 d020 c! ;
 
 : tick 
 0 voice c! voicetick
 1 voice c! voicetick
 2 voice c! voicetick ;
 
-:asm wait d020 inc, 0 lda,x
+:asm wait 0 lda,x
 :- a2 cmp, -branch beq,
-0 inc,x d020 dec, ;asm
+0 inc,x ;asm
 
 :asm apply-sid
 14 ldy,#
@@ -210,8 +213,8 @@ s" l16o3f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cre8o4crcrcro3e8o4crcrcro3
 s" l16o5frarb4frarb4frarbr>erd4<b8>cr<brgre2&e8drergre2&e4frarb4frarb4frarbr>erd4<b8>crer<brg2&g8brgrdre2&e4r1r1frgra4br>crd4e8frg2&g4r1r1<f8era8grb8ar>c8<br>d8cre8drf8er<b>cr<ab1&b2r4e&e&er"
 s" l16r1r1r1r1r1r1r1r1o4drerf4grarb4>c8<bre2&e4drerf4grarb4>c8dre2&e4<drerf4grarb4>c8<bre2&e4d8crf8erg8fra8grb8ar>c8<br>d8crefrde1&e2r4"
 (
-s" o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8"
-s" o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8"
-s" o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8"
+s" o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16"
+s" o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16"
+s" o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16"
 )
 play-melody ;
