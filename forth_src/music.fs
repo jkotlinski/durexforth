@@ -28,7 +28,6 @@ ea24 , f810 ,
 : voicedata create 0 , 0 c,
 does> voice c@ + ;
 voicedata octave
-voicedata ctl
 voicedata tie
 voicedata default-pause
 voicedata pause
@@ -44,7 +43,7 @@ voice lda,
 :+ 7 2* lda,# 0 sta,x ;asm
 
 : sid-pulse [ sid 2 + literal ] voice7 + ! ;
-: ctl! dup [ sid 4 + literal ] voice7 + c! ctl c! ;
+: ctl [ sid 4 + literal ] voice7 + ;
 
 : sid-cutoff d415 ! ;
 : sid-flt d417 c! ;
@@ -56,8 +55,8 @@ voice lda,
 : note! ( i -- )
 2* ['] freqtab + @ sid voice7 + ! ;
 
-: gate-on ctl c@ 1 or ctl! ;
-: gate-off ctl c@ fe and ctl! ;
+: gate-on ctl dup c@ 1 or swap c! ;
+: gate-off ctl dup c@ fe and swap c! ;
 
 here 0 , 0 , 0 , value .str
 here 0 , 0 , 0 , value .strlen
@@ -192,9 +191,9 @@ then ;
 1 voice c! voicetick
 2 voice c! voicetick ;
 
-:asm wait 0 lda,x
+:asm wait d020 inc, 0 lda,x
 :- a2 cmp, -branch beq,
-0 inc,x ;asm
+0 inc,x d020 dec, ;asm
 
 :asm apply-sid
 14 ldy,#
@@ -211,7 +210,7 @@ repeat drop ;
 : init-voices
 f sid-vol!
 3 0 do i voice ! 1 pause c!
-strlen ! str ! 10 ctl! 891a srad!
+strlen ! str ! 10 ctl c! 891a srad!
 loop ;
 
 : play-melody ( str strlen -- )
@@ -224,4 +223,9 @@ apply-sid ;
 s" l16o3f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cre8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcro3c8f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cro3e8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcrc8o3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drararrrdrararrrcrbrbrrrcrbrbrrrerarrrarerarrrarerg+rg+rg+rg+rrre&er"
 s" l16o5frarb4frarb4frarbr>erd4<b8>cr<brgre2&e8drergre2&e4frarb4frarb4frarbr>erd4<b8>crer<brg2&g8brgrdre2&e4r1r1frgra4br>crd4e8frg2&g4r1r1<f8era8grb8ar>c8<br>d8cre8drf8er<b>cr<ab1&b2r4e&e&er"
 s" l16r1r1r1r1r1r1r1r1o4drerf4grarb4>c8<bre2&e4drerf4grarb4>c8dre2&e4<drerf4grarb4>c8<bre2&e4d8crf8erg8fra8grb8ar>c8<br>d8crefrde1&e2r4"
+(
+s" o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8"
+s" o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8"
+s" o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c4o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8o4c8"
+)
 play-melody ;
