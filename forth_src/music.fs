@@ -74,13 +74,15 @@ tya, tax, rts,
 :asm str-pop .str-pop jsr, ;asm
 
 create .strget
+zptmp stx,
+voice lda, asl,a tax,
+.str lda,(x)
+zptmp ldx, rts,
+:asm strget 
 dex, dex,
 0 lda,# 1 sta,x
-txa, pha,
-voice lda, asl,a tax,
-.str lda,(x) tay,
-pla, tax, 0 sty,x rts,
-:asm strget .strget jsr, ;asm
+.strget jsr, 
+0 sta,x ;asm
 
 :asm notetab ( char -- notediff )
 0 lda,x
