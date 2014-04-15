@@ -65,20 +65,22 @@ clc, 0 adc,x 0 sta,x +branch bcc,
 : gate-off ctl dup c@ fe and swap c! ;
 
 2b value .str
-:asm str-pop
+create .str-pop
 txa, tay,
 voice lda, asl,a tax,
 .str inc,x +branch bne,
 .str 1+ inc,x :+
-tya, tax, ;asm
+tya, tax, rts,
+:asm str-pop .str-pop jsr, ;asm
 
-:asm strget
+create .strget
 dex, dex,
 0 lda,# 1 sta,x
 txa, pha,
 voice lda, asl,a tax,
 .str lda,(x) tay,
-pla, tax, 0 sty,x ;asm
+pla, tax, 0 sty,x rts,
+:asm strget .strget jsr, ;asm
 
 :asm notetab ( char -- notediff )
 0 lda,x
