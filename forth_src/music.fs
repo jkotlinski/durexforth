@@ -46,9 +46,6 @@ voice lda,
 clc, 0 adc,x 0 sta,x +branch bcc,
 1 inc,x :+ ;asm
 
-:asm incbg d020 inc, ;asm
-:asm decbg d020 dec, ;asm
-
 : ctl [ sid 4 + literal ] voice7+ ;
 
 : sid-cutoff d415 ! ;
@@ -106,30 +103,34 @@ strget case
 [char] - of 1- str-pop endof
 endcase ;
 
+:asm read-pause
+dex, dex, 0 lda,# 1 sta,x
+.strget jsr,
+key 1 cmp,# +branch bne,
+.str-pop jsr, .strget jsr,
+key 6 cmp,# +branch bne,
+.str-pop jsr, 60 10 / 1- lda,# 0 sta,x ;asm
+:+ 60 1- lda,# 0 sta,x ;asm
+:+ key 2 cmp,# +branch bne,
+.str-pop jsr, .strget jsr,
+key 4 cmp,# +branch bne,
+.str-pop jsr, 60 18 / 1- lda,# 0 sta,x ;asm
+:+ 60 2 / 1- lda,# 0 sta,x ;asm
+:+ key 3 cmp,# +branch bne,
+.str-pop jsr, .strget jsr,
+key 2 cmp,# +branch bne,
+.str-pop jsr, 60 20 / 1- lda,# 0 sta,x ;asm
+:+ 60 3 / 1- lda,# 0 sta,x ;asm
+:+ key 4 cmp,# +branch bne,
+.str-pop jsr, 60 4 / 1- lda,# 0 sta,x ;asm
+:+ key 6 cmp,# +branch bne,
+.str-pop jsr, 60 6 / 1- lda,# 0 sta,x ;asm
+:+ key 8 cmp,# +branch bne,
+.str-pop jsr, 60 8 / 1- lda,# 0 sta,x ;asm
+:+ 0 lda,# 0 sta,x ;asm
+
 : read-pause
-incbg incbg
-strget case
-[char] 1 of
-str-pop strget [char] 6 = if
-str-pop [ 60 10 / 1- literal ]
-else [ 60 1- literal ] then
-endof
-[char] 2 of
-str-pop strget [char] 4 = if
-str-pop [ 60 18 / 1- literal ]
-else [ 60 2 / 1- literal ] then
-endof
-[char] 3 of
-str-pop strget [char] 2 = if
-str-pop [ 60 20 / 1- literal ]
-else [ 60 3 / 1- literal ] then
-endof
-[char] 4 of str-pop [ 60 4 / 1- literal ] endof
-[char] 6 of str-pop [ 60 6 / 1- literal ] endof
-[char] 8 of str-pop [ 60 8 / 1- literal ] endof
-dup of 0 endof
-endcase
-decbg decbg
+read-pause
 
 ?dup 0= if default-pause c@ then
 strget [char] . = if
