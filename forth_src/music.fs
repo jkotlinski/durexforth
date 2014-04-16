@@ -73,8 +73,14 @@ zptmp 1+ lda, 1 sta,x
 : note! ( i -- )
 2* freqtab + @ sid voice7+ ! ;
 
-: gate-on ctl dup c@ 1 or swap c! ;
-: gate-off ctl dup c@ fe and swap c! ;
+:asm gate-on 
+.ctl jsr, 0 ldy,#
+zptmp lda,(y) 1 eor,#
+zptmp sta,(y) ;asm
+:asm gate-off 
+.ctl jsr, 0 ldy,#
+zptmp lda,(y) fe and,#
+zptmp sta,(y) ;asm
 
 2b value .str
 create .str-pop
