@@ -272,11 +272,23 @@ default-pause lda, default-pause 3 + sta,
 :- sid lda,y d400 sta,y
 dey, -branch bpl, ;asm
 
+:asm notdone
+dex, dex,
+0 lda,# voice sta,
+.strget jsr, 0 ora,# +branch bne,
+voice inc,
+.strget jsr, 0 ora,# +branch bne,
+voice inc,
+.strget jsr, 0 ora,# +branch bne,
+0 lda,# 0 sta,x 1 sta,x ;asm
+:+ :+ :+
+0 sta,x ;asm
+
 : play 
 voice0 do-commands
 voice1 do-commands
 voice2 do-commands voicedone 
-a2 c@ wait begin strget while
+a2 c@ wait begin notdone while
 voice0 voicetick
 voice1 voicetick
 voice2 voicetick voicedone 
