@@ -39,16 +39,24 @@ voicedata tie
 voicedata default-pause
 voicedata pause
 
-:asm voice7+ # voice c@ 7 * +
+create .voice7*
 voice lda,
-+branch bne, ;asm
-:+ 
-7 ldy,# 1 cmp,# +branch beq,
-7 2* ldy,# :+ tya,
++branch bne, rts,
+:+ 1 cmp,# +branch bne,
+7 lda,# rts,
+:+ 7 2* lda,# rts,
+
+:asm voice7+ # voice c@ 7 * +
+.voice7* jsr,
 clc, 0 adc,x 0 sta,x +branch bcc,
 1 inc,x :+ ;asm
 
-: ctl [ sid 4 + literal ] voice7+ ;
+:asm ctl
+dex, dex,
+sid 4 + 100/ lda,# 1 sta,x 
+.voice7* jsr,
+clc, sid 4 + ff and adc,# 0 sta,x
++branch bcc, 1 inc,x :+ ;asm
 
 : sid-cutoff d415 ! ;
 : sid-flt d417 c! ;
