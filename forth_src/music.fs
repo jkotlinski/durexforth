@@ -189,24 +189,21 @@ tie lda, +branch beq,
 0 lda,# tie sta, ;asm
 :+ loc gate-off >cfa jmp,
 
-:asm pausec@?dup
+:asm pause>0
 dex, dex,
 pause lda,
-+branch bne,
 0 sta,x 1 sta,x ;asm
-:+
-dex, dex,
-0 sta,x 2 sta,x
-0 lda,#
-1 sta,x 3 sta,x ;asm
+
+:asm decpause1=
+dex, dex, 0 ldy,#
+pause dec, +branch beq,
+0 sty,x 1 sty,x ;asm
+:+ iny, 0 sty,x ;asm
 
 : voicetick
-pausec@?dup if 
-1- dup pause c! 0= if 
+pause>0 if decpause1= if 
 do-commands stop-note then 
-else
-play-note 
-then ;
+else play-note then ;
 
 :asm voice0 
 0 lda,# voice sta, 
