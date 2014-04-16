@@ -77,11 +77,10 @@ zptmp 1+ lda, 1 sta,x
 .ctl jsr, 0 ldy,#
 zptmp lda,(y) 1 eor,#
 zptmp sta,(y) ;asm
-create .gate-off
+:asm gate-off
 .ctl jsr, 0 ldy,#
 zptmp lda,(y) fe and,#
-zptmp sta,(y) rts,
-:asm gate-off .gate-off jsr, ;asm
+zptmp sta,(y) ;asm
 
 2b value .str
 create .str-pop
@@ -188,7 +187,7 @@ endcase ;
 :asm stop-note
 tie lda, +branch beq,
 0 lda,# tie sta, ;asm
-:+ .gate-off jsr, ;asm
+:+ loc gate-off >cfa jmp,
 
 : voicetick
 pause c@ ?dup if 
