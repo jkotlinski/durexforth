@@ -260,15 +260,9 @@ pause lda, pause 3 + sta,
 default-pause lda, default-pause 3 + sta,
 ;asm
 
-: tick 
-voice0 voicetick
-voice1 voicetick
-voice2 voicetick voicedone ;
-
 :asm wait 
-# visualize
-a2 lda, sec, 0 sbc,x d020 sta,
-
+# visualize lag
+# a2 lda, sec, 0 sbc,x d020 sta,
 0 lda,x
 :- a2 cmp, -branch beq,
 0 inc,x ;asm
@@ -280,14 +274,20 @@ dey, -branch bpl, ;asm
 
 : play 
 a2 c@ wait begin strget while
-tick wait apply-sid
+voice0 voicetick
+voice1 voicetick
+voice2 voicetick
+voicedone wait
+apply-sid
 repeat drop ;
 
 : init-voices
 f sid-vol!
-3 0 do i voice c! 1 pause i + 1+ c!
-10 ctl c! 891a srad!
-loop ;
+3 0 do i voice c! 0 pause i + 1+ c!
+10 ctl c! 891a srad! loop 
+voice0 do-commands
+voice1 do-commands
+voice2 do-commands voicedone ;
 
 : play-melody ( -- )
 # init sentinels
