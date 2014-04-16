@@ -166,7 +166,8 @@ default-pause lda, 0 sta,x
 key . cmp,# +branch bne,
 .str-pop jsr,
 0 lda,x lsr,a clc, 0 adc,x 0 sta,x
-:+ ;asm
+:+ 
+0 lda,x pause sta, inx, inx, ;asm
 
 :asm read-default-pause
 .read-pause jsr,
@@ -176,7 +177,7 @@ default-pause sta, inx, inx, ;asm
 strget ?dup if
 str2note if
 octave c@ + note! gate-on then
-read-pause pause c! then ;
+read-pause then ;
 
 :asm o
 .str-pop jsr,
