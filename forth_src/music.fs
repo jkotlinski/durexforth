@@ -131,43 +131,42 @@ key + cmp,# +branch bne,
 0 dec,x .str-pop jsr, notrest jmp,
 :+ notrest jmp,
 
-:asm read-pause
+create .read-pause
 dex, dex, 0 lda,# 1 sta,x
 .strget jsr,
 key 1 cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 key 6 cmp,# +branch bne,
-.str-pop jsr, 60 10 / 1- lda,# 0 sta,x ;asm
-:+ 60 1- lda,# 0 sta,x ;asm
+.str-pop jsr, 60 10 / 1- lda,# 0 sta,x rts,
+:+ 60 1- lda,# 0 sta,x rts,
 :+ key 2 cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 key 4 cmp,# +branch bne,
-.str-pop jsr, 60 18 / 1- lda,# 0 sta,x ;asm
-:+ 60 2 / 1- lda,# 0 sta,x ;asm
+.str-pop jsr, 60 18 / 1- lda,# 0 sta,x rts,
+:+ 60 2 / 1- lda,# 0 sta,x rts,
 :+ key 3 cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 key 2 cmp,# +branch bne,
-.str-pop jsr, 60 20 / 1- lda,# 0 sta,x ;asm
-:+ 60 3 / 1- lda,# 0 sta,x ;asm
+.str-pop jsr, 60 20 / 1- lda,# 0 sta,x rts,
+:+ 60 3 / 1- lda,# 0 sta,x rts,
 :+ key 4 cmp,# +branch bne,
-.str-pop jsr, 60 4 / 1- lda,# 0 sta,x ;asm
+.str-pop jsr, 60 4 / 1- lda,# 0 sta,x rts,
 :+ key 6 cmp,# +branch bne,
-.str-pop jsr, 60 6 / 1- lda,# 0 sta,x ;asm
+.str-pop jsr, 60 6 / 1- lda,# 0 sta,x rts,
 :+ key 8 cmp,# +branch bne,
-.str-pop jsr, 60 8 / 1- lda,# 0 sta,x ;asm
-:+ 0 lda,# 0 sta,x ;asm
+.str-pop jsr, 60 8 / 1- lda,# 0 sta,x rts,
+:+ 0 lda,# 0 sta,x rts,
 
-:asm read-dot
+:asm read-pause
+.read-pause jsr,
+0 lda,x +branch bne,
+default-pause lda, 0 sta,x
+:+ 
 .strget jsr,
 key . cmp,# +branch bne,
 .str-pop jsr,
 0 lda,x lsr,a clc, 0 adc,x 0 sta,x
 :+ ;asm
-
-: read-pause
-read-pause
-?dup 0= if default-pause c@ then
-read-dot ;
 
 : read-default-pause
 read-pause default-pause c! ;
