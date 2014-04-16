@@ -105,3 +105,12 @@ Changelog
  * Improved documentation, describe demos and fix some
    error in tutorial.
  * Bugfixed some demos.
+
+2014-04-16: v1.3
+
+ * Music Macro Language (MML) support!
+ * Renamed some assembly mnemonics.
+    asla, lsra, rora, rola,  =>
+    asl,a lsr,a ror,a rol,a
+ * Allow strings longer than 256 bytes.
+ * Optimized jsr. (Thanks to Kevin Lee Reno!)
