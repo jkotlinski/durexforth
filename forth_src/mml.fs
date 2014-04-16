@@ -24,10 +24,6 @@ af68 , b9d6 , c4e3 , d098 , dd00 ,
 ea24 , f810 ,
 value freqtab 
 
-:asm voicec@+
-voice lda, clc, 0 adc,x 0 sta,x
-+branch bcc, 1 inc,x :+ ;asm
-
 # creates array of 4 bytes.
 # first: current byte
 # 2nd. voice 0
