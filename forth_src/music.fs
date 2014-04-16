@@ -51,12 +51,17 @@ voice lda,
 clc, 0 adc,x 0 sta,x +branch bcc,
 1 inc,x :+ ;asm
 
-:asm ctl
-dex, dex,
-sid 4 + 100/ lda,# 1 sta,x 
+create .ctl
+sid 4 + 100/ lda,# zptmp 1+ sta,
 .voice7* jsr,
-clc, sid 4 + ff and adc,# 0 sta,x
-+branch bcc, 1 inc,x :+ ;asm
+clc, sid 4 + ff and adc,# zptmp sta,
++branch bcc, zptmp 1+ inc, :+ rts,
+:asm ctl 
+dex, dex,
+.ctl jsr, 
+zptmp lda, 0 sta,x
+zptmp 1+ lda, 1 sta,x
+;asm
 
 : sid-cutoff d415 ! ;
 : sid-flt d417 c! ;
