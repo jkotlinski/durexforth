@@ -28,10 +28,12 @@ value freqtab
 voice lda, clc, 0 adc,x 0 sta,x
 +branch bcc, 1 inc,x :+ ;asm
 
-# creates array of 3 bytes, one
-# for each voice.
-: voicedata create 0 , 0 c,
-does> voicec@+ ;
+# creates array of 4 bytes.
+# first: current byte
+# 2nd. voice 0
+# 3rd. voice 1
+# 4th. voice 2
+: voicedata here 0 , 0 , value ;
 voicedata octave
 voicedata tie
 voicedata default-pause
@@ -131,7 +133,6 @@ key 2 cmp,# +branch bne,
 
 : read-pause
 read-pause
-
 ?dup 0= if default-pause c@ then
 strget [char] . = if
 str-pop dup 2/ + then ;
@@ -162,17 +163,56 @@ tie c@ if 0 tie c! else gate-off then ;
 : voicetick
 pause c@ ?dup if 
 1- dup pause c! 0= if 
+# 1 d020 c!
 do-commands stop-note then 
 else
+# 2 d020 c!
 play-note 
-then ;
+then ( 0 d020 c! ) ;
 
-:asm voice0 0 lda,# voice sta, ;asm
-:asm voice1+ voice inc, ;asm
+:asm voice0 
+0 lda,# voice sta, 
+octave 1+ lda, octave sta,
+tie 1+ lda, tie sta,
+pause 1+ lda, pause sta,
+default-pause 1+ lda, default-pause sta,
+;asm
+
+:asm voice1 
+octave lda, octave 1+ sta,
+tie lda, tie 1+ sta,
+pause lda, pause 1+ sta,
+default-pause lda, default-pause 1+ sta,
+1 lda,# voice sta, 
+octave 2+ lda, octave sta,
+tie 2+ lda, tie sta,
+pause 2+ lda, pause sta,
+default-pause 2+ lda, default-pause sta,
+;asm
+
+:asm voice2 
+octave lda, octave 2+ sta,
+tie lda, tie 2+ sta,
+pause lda, pause 2+ sta,
+default-pause lda, default-pause 2+ sta,
+2 lda,# voice sta, 
+octave 3 + lda, octave sta,
+tie 3 + lda, tie sta,
+pause 3 + lda, pause sta,
+default-pause 3 + lda, default-pause sta,
+;asm
+
+:asm voicedone
+octave lda, octave 3 + sta,
+tie lda, tie 3 + sta,
+pause lda, pause 3 + sta,
+default-pause lda, default-pause 3 + sta,
+;asm
+
 : tick 
 voice0 voicetick
-voice1+ voicetick
-voice1+ voicetick ;
+voice1 voicetick
+voice2 voicetick voicedone ;
 
 :asm wait d020 inc, 0 lda,x
 :- a2 cmp, -branch beq,
@@ -190,7 +230,7 @@ repeat drop ;
 
 : init-voices
 f sid-vol!
-3 0 do i voice c! 1 pause c!
+3 0 do i voice c! 1 pause i + 1+ c!
 10 ctl c! 891a srad!
 loop ;
 
@@ -213,8 +253,8 @@ s" l16o3f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cre8o4crcrcro3e8o4crcrcro3
 s" l16o5frarb4frarb4frarbr>erd4<b8>cr<brgre2&e8drergre2&e4frarb4frarb4frarbr>erd4<b8>crer<brg2&g8brgrdre2&e4r1r1frgra4br>crd4e8frg2&g4r1r1<f8era8grb8ar>c8<br>d8cre8drf8er<b>cr<ab1&b2r4e&e&er"
 s" l16r1r1r1r1r1r1r1r1o4drerf4grarb4>c8<bre2&e4drerf4grarb4>c8dre2&e4<drerf4grarb4>c8<bre2&e4d8crf8erg8fra8grb8ar>c8<br>d8crefrde1&e2r4"
 (
-s" o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16"
-s" o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16"
-s" o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16o4c16"
+s" o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32"
+s" o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32"
+s" o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32o4>c+32&c+32"
 )
 play-melody ;
