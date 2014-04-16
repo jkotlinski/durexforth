@@ -79,31 +79,33 @@ zptmp stx, voice lda, asl,a tax,
 dex, dex, 0 lda,# 1 sta,x
 .strget jsr, 0 sta,x ;asm
 
-:asm notetab ( char -- notediff )
+create notetab ( char -- notediff )
 0 lda,x
 key c cmp,# +branch bne,
-0 lda,# 0 sta,x ;asm
+0 lda,# 0 sta,x rts,
 :+ key d cmp,# +branch bne,
-2 lda,# 0 sta,x ;asm
+2 lda,# 0 sta,x rts,
 :+ key e cmp,# +branch bne,
-4 lda,# 0 sta,x ;asm
+4 lda,# 0 sta,x rts,
 :+ key f cmp,# +branch bne,
-5 lda,# 0 sta,x ;asm
+5 lda,# 0 sta,x rts,
 :+ key g cmp,# +branch bne,
-7 lda,# 0 sta,x ;asm
+7 lda,# 0 sta,x rts,
 :+ key a cmp,# +branch bne,
-9 lda,# 0 sta,x ;asm
+9 lda,# 0 sta,x rts,
 :+ key b cmp,# +branch bne,
-b lda,# 0 sta,x ;asm
-:+ 7f lda,# 0 sta,x ;asm
+b lda,# 0 sta,x rts,
+:+ 7f lda,# 0 sta,x rts,
 
-: str2note ( -- note )
-notetab str-pop
-# sharp/flat
-strget case
-[char] + of 1+ str-pop endof
-[char] - of 1- str-pop endof
-endcase ;
+:asm str2note
+notetab jsr,
+.str-pop jsr,
+.strget jsr,
+key + cmp,# +branch bne,
+0 inc,x .str-pop jsr, ;asm
+:+ key - cmp,# +branch bne,
+0 dec,x .str-pop jsr, ;asm
+:+ ;asm
 
 :asm read-pause
 dex, dex, 0 lda,# 1 sta,x
@@ -163,12 +165,10 @@ tie c@ if 0 tie c! else gate-off then ;
 : voicetick
 pause c@ ?dup if 
 1- dup pause c! 0= if 
-# 1 d020 c!
 do-commands stop-note then 
 else
-# 2 d020 c!
 play-note 
-then ( 0 d020 c! ) ;
+then ;
 
 :asm voice0 
 0 lda,# voice sta, 
