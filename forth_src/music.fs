@@ -214,9 +214,13 @@ voice0 voicetick
 voice1 voicetick
 voice2 voicetick voicedone ;
 
-:asm wait d020 inc, 0 lda,x
+:asm wait 
+# visualize
+a2 lda, sec, 0 sbc,x d020 sta,
+
+0 lda,x
 :- a2 cmp, -branch beq,
-0 inc,x d020 dec, ;asm
+0 inc,x ;asm
 
 :asm apply-sid
 14 ldy,#
