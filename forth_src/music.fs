@@ -172,15 +172,16 @@ str2note if
 octave c@ + note! gate-on then
 read-pause pause c! then ;
 
-:asm .o
+:asm o
 .str-pop jsr,
 .strget jsr, # new character in a
 sec, key 0 sbc,#
-dex, dex,
-0 sta,x 0 lda,# 1 sta,x
-.str-pop jsr,
-;asm
-: o .o c * octave c! ;
+# multiply by c
+asl,a asl,a zptmp sta,
+asl,a clc, zptmp adc,
+octave sta,
+.str-pop jsr, ;asm
+
 : do-commands ( -- done )
 strget case
 [char] l of str-pop read-default-pause recurse endof
