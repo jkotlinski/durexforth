@@ -189,8 +189,19 @@ tie lda, +branch beq,
 0 lda,# tie sta, ;asm
 :+ loc gate-off >cfa jmp,
 
+:asm pausec@?dup
+dex, dex,
+pause lda,
++branch bne,
+0 sta,x 1 sta,x ;asm
+:+
+dex, dex,
+0 sta,x 2 sta,x
+0 lda,#
+1 sta,x 3 sta,x ;asm
+
 : voicetick
-pause c@ ?dup if 
+pausec@?dup if 
 1- dup pause c! 0= if 
 do-commands stop-note then 
 else
@@ -255,7 +266,7 @@ a2 lda, sec, 0 sbc,x d020 sta,
 dey, -branch bpl, ;asm
 
 : play 
-a2 c@ begin strget while
+a2 c@ wait a2 c@ begin strget while
 tick wait apply-sid
 repeat drop ;
 
