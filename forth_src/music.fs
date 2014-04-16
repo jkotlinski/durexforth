@@ -277,7 +277,7 @@ a2 lda, sec, 0 sbc,x d020 sta,
 dey, -branch bpl, ;asm
 
 : play 
-a2 c@ wait a2 c@ begin strget while
+a2 c@ wait begin strget while
 tick wait apply-sid
 repeat drop ;
 
