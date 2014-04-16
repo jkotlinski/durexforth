@@ -168,8 +168,9 @@ key . cmp,# +branch bne,
 0 lda,x lsr,a clc, 0 adc,x 0 sta,x
 :+ ;asm
 
-: read-default-pause
-read-pause default-pause c! ;
+:asm read-default-pause
+.read-pause jsr,
+default-pause sta, inx, inx, ;asm
 
 : play-note ( -- )
 strget ?dup if
