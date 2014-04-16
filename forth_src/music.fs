@@ -157,11 +157,17 @@ key 2 cmp,# +branch bne,
 .str-pop jsr, 60 8 / 1- lda,# 0 sta,x ;asm
 :+ 0 lda,# 0 sta,x ;asm
 
+:asm read-dot
+.strget jsr,
+key . cmp,# +branch bne,
+.str-pop jsr,
+0 lda,x lsr,a clc, 0 adc,x 0 sta,x
+:+ ;asm
+
 : read-pause
 read-pause
 ?dup 0= if default-pause c@ then
-strget [char] . = if
-str-pop dup 2/ + then ;
+read-dot ;
 
 : read-default-pause
 read-pause default-pause c! ;
