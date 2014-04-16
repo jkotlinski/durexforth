@@ -77,10 +77,11 @@ zptmp 1+ lda, 1 sta,x
 .ctl jsr, 0 ldy,#
 zptmp lda,(y) 1 eor,#
 zptmp sta,(y) ;asm
-:asm gate-off 
+create .gate-off
 .ctl jsr, 0 ldy,#
 zptmp lda,(y) fe and,#
-zptmp sta,(y) ;asm
+zptmp sta,(y) rts,
+:asm gate-off .gate-off jsr, ;asm
 
 2b value .str
 create .str-pop
@@ -184,8 +185,11 @@ d of str-pop recurse endof
 bl of str-pop recurse endof
 endcase ;
 
-: stop-note
-tie c@ if 0 tie c! else gate-off then ;
+:asm stop-note
+tie lda, +branch beq,
+0 lda,# tie sta, ;asm
+:+ .gate-off jsr, ;asm
+
 : voicetick
 pause c@ ?dup if 
 1- dup pause c! 0= if 
