@@ -97,15 +97,20 @@ key c cmp,# +branch bne,
 b lda,# 0 sta,x rts,
 :+ 7f lda,# 0 sta,x rts,
 
+create notrest
+0 lda,x 7f cmp,# +branch beq,
+dex, dex, 1 lda,# 0 sta,x ;asm
+:+ 0 lda,# 0 sta,x 1 sta,x ;asm
+
 :asm str2note
 notetab jsr,
 .str-pop jsr,
 .strget jsr,
 key + cmp,# +branch bne,
-0 inc,x .str-pop jsr, ;asm
+0 inc,x .str-pop jsr, notrest jmp,
 :+ key - cmp,# +branch bne,
-0 dec,x .str-pop jsr, ;asm
-:+ ;asm
+0 dec,x .str-pop jsr, notrest jmp,
+:+ notrest jmp,
 
 :asm read-pause
 dex, dex, 0 lda,# 1 sta,x
@@ -144,7 +149,7 @@ read-pause default-pause c! ;
 
 : play-note ( -- )
 strget ?dup if
-str2note dup 7f = if drop else
+str2note if
 octave c@ + note! gate-on then
 read-pause pause c! then ;
 
