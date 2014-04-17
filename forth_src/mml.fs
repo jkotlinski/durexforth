@@ -133,24 +133,24 @@ dex, dex, 0 lda,# 1 sta,x
 key 1 cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 key 6 cmp,# +branch bne,
-.str-pop jsr, 60 10 / 1- lda,# 0 sta,x rts,
-:+ 60 1- lda,# 0 sta,x rts,
+.str-pop jsr, 60 10 / lda,# 0 sta,x rts,
+:+ 60 lda,# 0 sta,x rts,
 :+ key 2 cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 key 4 cmp,# +branch bne,
-.str-pop jsr, 60 18 / 1- lda,# 0 sta,x rts,
-:+ 60 2 / 1- lda,# 0 sta,x rts,
+.str-pop jsr, 60 18 / lda,# 0 sta,x rts,
+:+ 60 2 / lda,# 0 sta,x rts,
 :+ key 3 cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 key 2 cmp,# +branch bne,
-.str-pop jsr, 60 20 / 1- lda,# 0 sta,x rts,
-:+ 60 3 / 1- lda,# 0 sta,x rts,
+.str-pop jsr, 60 20 / lda,# 0 sta,x rts,
+:+ 60 3 / lda,# 0 sta,x rts,
 :+ key 4 cmp,# +branch bne,
-.str-pop jsr, 60 4 / 1- lda,# 0 sta,x rts,
+.str-pop jsr, 60 4 / lda,# 0 sta,x rts,
 :+ key 6 cmp,# +branch bne,
-.str-pop jsr, 60 6 / 1- lda,# 0 sta,x rts,
+.str-pop jsr, 60 6 / lda,# 0 sta,x rts,
 :+ key 8 cmp,# +branch bne,
-.str-pop jsr, 60 8 / 1- lda,# 0 sta,x rts,
+.str-pop jsr, 60 8 / lda,# 0 sta,x rts,
 :+ 0 lda,# 0 sta,x rts,
 
 :asm read-pause
@@ -163,17 +163,18 @@ key . cmp,# +branch bne,
 .str-pop jsr,
 0 lda,x lsr,a clc, 0 adc,x 0 sta,x
 :+ 
-0 lda,x pause sta, inx, inx, ;asm
+0 dec,x ;asm
 
 :asm read-default-pause
 .read-pause jsr,
-default-pause sta, inx, inx, ;asm
+0 lda,x default-pause sta, 
+inx, inx, ;asm
 
 : play-note ( -- )
 strget ?dup if
 str2note if
 octave c@ + note! gate-on then
-read-pause then ;
+read-pause pause c! then ;
 
 :asm o
 .str-pop jsr,
