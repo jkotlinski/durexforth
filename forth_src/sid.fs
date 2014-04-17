@@ -4,7 +4,7 @@
 
 0 value voice
 
-header freqtab # 95 notes from c0, pal
+here # 95 notes from c0, pal
 116 , 127 , 138 , 14b , 15e , 173 ,
 189 , 1a1 , 1ba , 1d4 , 1f0 , 20d , 
 22c , 24e , 271 , 296 , 2bd , 2e7 , 
@@ -22,31 +22,31 @@ c4e , d09 , dd0 , ea2 , f81 , 106d ,
 6271 , 684c , 6e80 , 7512 , 7c08 , 
 8368 , 8b38 , 9380 , 9c45 , a590 ,
 af68 , b9d6 , c4e3 , d098 , dd00 , 
-ea24 , f810 ,
+ea24 , f810 , value freqtab
 
-: sid-voice! 7 * to voice ;
+: voice! 7 * to voice ;
 
-: sid-freq! d400 voice + ! ;
-: sid-pulse! d402 voice + ! ;
-: sid-control! d404 voice + c! ;
+: freq! d400 voice + ! ;
+: pulse! d402 voice + ! ;
+: control! d404 voice + c! ;
 
-: sid-cutoff! d415 ! ;
-: sid-filter! d417 c! ;
-: sid-volume! d418 c! ;
+: cutoff! d415 ! ;
+: filter! d417 c! ;
+: volume! d418 c! ;
 
 ( write adsr )
-: sid-srad! ( SR AD -- ) d405 voice + ! ;
+: srad! ( SR AD -- ) d405 voice + ! ;
 
-: sid-note! ( i -- )
-2* ['] freqtab + @ sid-freq! ;
+: note! ( i -- )
+2* freqtab + @ freq! ;
 
 : sid-demo
-f sid-volume!
-9 sid-srad!
+f volume!
+9 srad!
 5f 0 do
-10 sid-control!
-i sid-note!
-11 sid-control!
+10 control!
+i note!
+11 control!
 200 0 do loop
 loop ;
 
