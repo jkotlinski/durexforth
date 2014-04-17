@@ -272,11 +272,11 @@ dey, -branch bpl, ;asm
 :asm notdone
 dex, dex,
 0 lda,# voice sta,
-.strget jsr, 0 ora,# +branch bne,
+.strget jsr, pause 1+ ora, +branch bne,
 voice inc,
-.strget jsr, 0 ora,# +branch bne,
+.strget jsr, pause 2+ ora, +branch bne,
 voice inc,
-.strget jsr, 0 ora,# +branch bne,
+.strget jsr, pause 3 + ora, +branch bne,
 0 lda,# 0 sta,x 1 sta,x ;asm
 :+ :+ :+
 0 sta,x ;asm
