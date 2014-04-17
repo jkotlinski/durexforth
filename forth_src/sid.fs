@@ -4,7 +4,20 @@
 
 0 value voice
 
-header freqtab # 95 notes from c0, pal
+: voice! 7 * to voice ;
+
+: freq! d400 voice + ! ;
+: pulse! d402 voice + ! ;
+: control! d404 voice + c! ;
+
+: cutoff! d415 ! ;
+: filter! d417 c! ;
+: volume! d418 c! ;
+
+( write adsr )
+: srad! ( SR AD -- ) d405 voice + ! ;
+
+here # 95 notes from c0, pal
 116 , 127 , 138 , 14b , 15e , 173 ,
 189 , 1a1 , 1ba , 1d4 , 1f0 , 20d , 
 22c , 24e , 271 , 296 , 2bd , 2e7 , 
@@ -23,22 +36,8 @@ c4e , d09 , dd0 , ea2 , f81 , 106d ,
 8368 , 8b38 , 9380 , 9c45 , a590 ,
 af68 , b9d6 , c4e3 , d098 , dd00 , 
 ea24 , f810 ,
-
-: voice! 7 * to voice ;
-
-: freq! d400 voice + ! ;
-: pulse! d402 voice + ! ;
-: control! d404 voice + c! ;
-
-: cutoff! d415 ! ;
-: filter! d417 c! ;
-: volume! d418 c! ;
-
-( write adsr )
-: srad! ( SR AD -- ) d405 voice + ! ;
-
 : note! ( i -- )
-2* ['] freqtab + @ freq! ;
+2* literal + @ freq! ;
 
 : sid-demo
 f volume!
@@ -50,4 +49,4 @@ i note!
 200 0 do loop
 loop ;
 
-hide voice hide freqtab
+hide voice
