@@ -12,7 +12,6 @@
 : then immed here swap ! ;
 : else immed ' branch , here 0 ,
 swap here swap ! ;
-: ' immed state if ' ' , else loc >cfa then ;
 : begin immed here ;
 : until immed ' 0branch , , ;
 : again immed ' branch , , ;
