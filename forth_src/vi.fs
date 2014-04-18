@@ -697,7 +697,7 @@ lda,# compile-ram sta,
 bufstart compile-ram ! ;
 
 : main-handler ( key -- quit? )
-	['] maintable ( key tableptr )
+	' maintable ( key tableptr )
 
 	begin
 		( key tableptr )

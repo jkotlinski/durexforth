@@ -6,7 +6,6 @@
 : * d* nip ;
 : loc word find ;
 : [compile] immed loc >cfa , ;
-: ['] immed ' ' , ;
 : [char] immed ' litc , key c, ;
 : if immed ' 0branch , here 0 , ;
 : then immed here swap ! ;
@@ -107,7 +106,7 @@ s" asm" load
 : value ( n -- )
 dup :asm
 lda,# 100/ ldy,# 
-['] pushya jmp, ;
+' pushya jmp, ;
 
 20 value bl
 : space bl emit ;
@@ -121,7 +120,7 @@ lda,# 100/ ldy,#
 # "0 to foo" sets value foo to 0
 : (to) over 100/ over 2+ c! c! ;
 : to immed loc >cfa 1+
-state if [compile] ['] , ' (to) ,
+state if [compile] ' , ' (to) ,
 else (to) then ;
 
 : hex 10 to base ;

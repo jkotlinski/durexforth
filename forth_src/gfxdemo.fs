@@ -209,7 +209,7 @@ begin dup 4 pick <= while
 
 : jungle
 hires 10 clrcol 0 d020 c!
-0 line? ! ['] jungledata data !
+0 line? ! ' jungledata data !
 begin
 data @ @ 2 data +!
 data @ @ 2 data +! # x y
