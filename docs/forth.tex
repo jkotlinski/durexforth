@@ -167,6 +167,7 @@ Byte-to-byte copy like \texttt{cmove}, but starts with address src + len - 1 and
 \item[{]} ( -- )] Return to compile mode.
 \item[immed] Mark the word being compiled as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
 \item[[compile{]} xxx] Compile the immediate word \texttt{xxx} instead of executing it.
+\item[{[']} xxx] Compile the execution token of word \texttt{xxx} as a literal value.
 \item[header xxx] Create a dictionary header with name \texttt{xxx}. 
 \item[create xxx/does$>$] Create a word creating word \texttt{xxx} with custom behavior
 specified after does>. For further description, see "Starting Forth."
@@ -210,7 +211,7 @@ It is also possible to build arrays using \texttt{create}. The initialization is
 create 2powtable
 1 c, 2 c, 4 c, 8 c,
 10 c, 20 c, 40 c, 80 c,
-: 2pow ( n -- 2**n ) ' 2powtable + c@ ;
+: 2pow ( n -- 2**n ) ['] 2powtable + c@ ;
 \end{verbatim}
 
 \section{Control Flow}
@@ -336,7 +337,7 @@ Prints a string.
 \section{Vectored Execution}
 
 \begin{description}
-\item[' xxx ( -- addr )] Find execution token of word \texttt{xxx}.
+\item[' xxx ( -- addr )] Compile-time only: Find execution token of word \texttt{xxx}.
 \item[lit xxx ( -- addr )] Equal to \texttt{'} but used for clarity. Use \texttt{' lit , ,} to compile the (run-time) value on top of stack.
 \item[execute ( xt -- )] Execute the execution token on top of stack.
 \item[loc xxx ( -- addr )] Run-time only: Get adress of word xxx.
