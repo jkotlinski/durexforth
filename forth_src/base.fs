@@ -5,8 +5,8 @@
 : nip swap drop ;
 : * d* nip ;
 : loc word find ;
-: [compile] immed loc >cfa , ;
 : ' loc >cfa ;
+: [compile] immed ' , ;
 : [char] immed key [compile] literal ;
 : if immed ['] 0branch , here 0 , ;
 : then immed here swap ! ;
@@ -119,7 +119,7 @@ lda,# 100/ ldy,#
 
 # "0 to foo" sets value foo to 0
 : (to) over 100/ over 2+ c! c! ;
-: to immed loc >cfa 1+
+: to immed ' 1+
 state if ['] ['] , , ['] (to) ,
 else (to) then ;
 
