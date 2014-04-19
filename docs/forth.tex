@@ -166,8 +166,8 @@ Byte-to-byte copy like \texttt{cmove}, but starts with address src + len - 1 and
 \item[[ ( -- )] Leave compile mode. Execute the following words immediately instead of compiling them.
 \item[{]} ( -- )] Return to compile mode.
 \item[immed] Mark the word being compiled as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
-\item[[compile{]} xxx] Compile the immediate word \texttt{xxx} instead of executing it.
-\item[{[']} xxx] Compile the execution token of word \texttt{xxx} as a literal value.
+\item[{[']} xxx] Compile the execution token of word \texttt{xxx} as a literal value instead of executing it. (This does not work if \texttt{xxx} is an immediate words.)
+\item[[compile{]} xxx] Compile the execution token of immediate word \texttt{xxx} instead of executing it.
 \item[header xxx] Create a dictionary header with name \texttt{xxx}. 
 \item[create xxx/does$>$] Create a word creating word \texttt{xxx} with custom behavior
 specified after does>. For further description, see "Starting Forth."
@@ -337,13 +337,13 @@ Prints a string.
 \section{Vectored Execution}
 
 \begin{description}
-\item[' xxx ( -- addr )] Compile-time only: Find execution token of word \texttt{xxx}.
+\item[' xxx ( -- addr )] Find execution token of word \texttt{xxx}.
 \item[lit xxx ( -- addr )] Equal to \texttt{'} but used for clarity. Use \texttt{' lit , ,} to compile the (run-time) value on top of stack.
 \item[execute ( xt -- )] Execute the execution token on top of stack.
 \item[loc xxx ( -- addr )] Run-time only: Get adress of word xxx.
 \item[$>$cfa ( addr -- xt )] Get execution token (a.k.a. code field adress) of word at adress \texttt{addr}.
 
-Example: \texttt{loc words >cfa execute} equals \texttt{words}.
+Example: \texttt{' words execute} equals \texttt{loc words >cfa execute} equals \texttt{words}.
 \end{description}
 
 
