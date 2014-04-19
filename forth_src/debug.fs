@@ -35,38 +35,37 @@ latest @ begin ?dup while
 		dup @
 
 		case
-		' lit of
+		['] lit of
 			2+ dup @ .
 		endof
-		' litc of
+		['] litc of
 			2+ dup c@ . 1-
 		endof
-		' litstring of
+		['] litstring of
 			[char] s emit
             [char] " emit space
 			2+ dup 2+ over @ tell
 			[char] " emit space
             dup @ +
 		endof
-		' ' of
-			[char] ' emit space
-			2+ dup @
-			cfa> id.
+		['] ['] of
+            ." ['] "
+			2+ dup @ cfa> id.
 		endof
-		' (loop) of
+		['] (loop) of
 			." (loop) " 2+
 		endof
-		' branch of
+		['] branch of
 			." branch ( "
 			2+ dup @ .
 			." ) "
 		endof
-		' 0branch of
+		['] 0branch of
 			." 0branch ( "
 			2+ dup @ .
 			." ) "
 		endof
-		' exit of
+		['] exit of
 			2dup
 			2+
 			<> if

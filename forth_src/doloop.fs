@@ -6,7 +6,7 @@
 inx, inx, inx, inx, ;asm
 
 : do ( limit first -- ) immed
-' (do) , here ;
+['] (do) , here ;
 
 :asm (loop)
 txa, tay, tsx, # x = stack pointer
@@ -27,14 +27,14 @@ ip inc, 2 bne, ip 1+ inc,
 ;asm
 
 : loop immed
-' (loop) , , ; # store branch address
+['] (loop) , , ; # store branch address
 
 : +loop immed
-' r> , ' + , ' r> , ' 2dup , ' < ,
-[compile] while ' >r , ' >r ,
-[compile] repeat ' 2drop , ;
+['] r> , ['] + , ['] r> , ['] 2dup , ['] < ,
+[compile] while ['] >r , ['] >r ,
+[compile] repeat ['] 2drop , ;
 
-: i immed ' r@ , ;
+: i immed ['] r@ , ;
 :asm j txa, tsx,
 106 ldy,x zptmp sty, 105 ldy,x
 tax, dex, dex,

@@ -1143,12 +1143,10 @@ INTERPRET
     ldx     #STACK_START ; wipe stack :(
     +NEXT
 
-; TICK
     +BACKLINK
-    !byte	1
-    !text	"'"
-TICK
-    ; tick and lit do the same thing, but tick is used for
+    !byte	3
+    !text	"[']"
+    ; ['] and lit do the same thing, but ['] is used for
     ; words, lit for numbers.
     jmp	LIT
 

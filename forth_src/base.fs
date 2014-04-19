@@ -6,17 +6,17 @@
 : * d* nip ;
 : loc word find ;
 : [compile] immed loc >cfa , ;
-: ['] immed ' ' , ;
-: [char] immed ' litc , key c, ;
-: if immed ' 0branch , here 0 , ;
+: ' loc >cfa ;
+: [char] immed key [compile] literal ;
+: if immed ['] 0branch , here 0 , ;
 : then immed here swap ! ;
-: else immed ' branch , here 0 ,
+: else immed ['] branch , here 0 ,
 swap here swap ! ;
 : begin immed here ;
-: until immed ' 0branch , , ;
-: again immed ' branch , , ;
-: while immed ' 0branch , here 0 , ;
-: repeat immed ' branch , swap , here swap ! ;
+: until immed ['] 0branch , , ;
+: again immed ['] branch , , ;
+: while immed ['] 0branch , here 0 , ;
+: repeat immed ['] branch , swap , here swap ! ;
 : recurse immed latest @ >cfa , ;
 : ( immed begin key [char] ) = until ;
 : # immed begin key d = until ; # comment
@@ -41,7 +41,7 @@ r> dup 2+ swap @ 2dup + >r ;
 
 : s" immed ( -- addr len )
 state if ( compile mode )
-' litstring , here 0 , 0
+['] litstring , here 0 , 0
 begin key dup [char] " <>
 while c, 1+ repeat
 drop swap !
@@ -56,15 +56,15 @@ begin ?dup while
 swap dup c@ emit 1+ swap 1-
 repeat drop ;
 
-: ." immed [compile] s" ' tell , ;
+: ." immed [compile] s" ['] tell , ;
 : .( begin key dup [char] ) <>
 while emit repeat drop ;
 .( compile base..)
 
 : case immed 0 ;
-: of immed ' over , ' = , [compile] if ' drop , ;
+: of immed ['] over , ['] = , [compile] if ['] drop , ;
 : endof immed [compile] else ;
-: endcase immed ' drop , begin ?dup while [compile] then repeat ;
+: endcase immed ['] drop , begin ?dup while [compile] then repeat ;
 
 ( get pointer to first data field - skip jsr DOCOL )
 : >dfa >cfa 1+ 2+ ;
@@ -75,7 +75,7 @@ loc ?dup if hidden else ." err" then ;
 here [compile] exit
 : create
 # default behavior = exit
-header 20 c, ' dodoes , literal , ;
+header 20 c, ['] dodoes , literal , ;
 : does> r> latest @ >dfa ! ;
 
 .( asm..)
@@ -120,7 +120,7 @@ lda,# 100/ ldy,#
 # "0 to foo" sets value foo to 0
 : (to) over 100/ over 2+ c! c! ;
 : to immed loc >cfa 1+
-state if [compile] ['] , ' (to) ,
+state if ['] ['] , , ['] (to) ,
 else (to) then ;
 
 : hex 10 to base ;
