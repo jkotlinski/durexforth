@@ -114,3 +114,9 @@ Changelog
     asl,a lsr,a ror,a rol,a
  * Allow strings longer than 256 bytes.
  * Optimized jsr. (Thanks to Kevin Lee Reno!)
+
+2014-04-20: v1.31
+
+ * changed ' ['] to be according to standard
+ * re-add sid.fs, which contains SID manipulation words
+ * bugfix . in mml player
