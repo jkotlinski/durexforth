@@ -5,15 +5,15 @@
 6001 value bufstart
 0 bufstart 1- c! # reverse sentinel
 
-var eof ( ram eof )
+variable eof ( ram eof )
 0 eof !
 
-var homepos ( position at screen home )
-var curlinestart
+variable homepos ( position at screen home )
+variable curlinestart
 
 ( cursor screen pos )
-var curx
-var cury
+variable curx
+variable cury
 0 value need-refresh
 0 value need-refresh-line
 0 value insert-active
@@ -424,7 +424,7 @@ curlinestart ! cury ! curx ! ;
 ;
 
 28 allot value clipboard
-var clipboard-count
+variable clipboard-count
 0 clipboard-count !
 
 # this can be much optimized by using cmove

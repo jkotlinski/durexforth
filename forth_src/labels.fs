@@ -23,7 +23,7 @@ dey, 1 @@ bne, ;asm )
 2-byte address + 1-byte index )
 18 allot value refs # 8 refs
 f allot value locs # 5 locs
-var locp var refp
+variable locp variable refp
 
 locs locp ! refs refp ! # init
 

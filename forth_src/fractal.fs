@@ -7,7 +7,7 @@ s" turtle" load
 0 value Da # delta angle
 0 value Dd # delta distance
 
-var rule var rulel var scale
+variable rule variable rulel variable scale
 
 : dofract ( depth -- depth )
 scale @ 100 <> if

@@ -1,7 +1,7 @@
 
 
 15 allot value sid
-var voice
+variable voice
 
 # creates array of 4 bytes.
 # first: current byte

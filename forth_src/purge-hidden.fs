@@ -8,8 +8,8 @@ be deleted. )
 
 d020 c@ 7 d020 c! latest @ here
 
-var prev-hidden
-var last-non-hidden
+variable prev-hidden
+variable last-non-hidden
 : purge ( -- )
 0 prev-hidden !
 latest @ last-non-hidden !

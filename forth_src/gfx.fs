@@ -27,7 +27,7 @@ header mask
 80 c, 40 c, 20 c, 10 c,
 8 c, 4 c, 2 c, 1 c,
 
-var penx var peny
+variable penx variable peny
 0 penx ! 0 peny !
 
 # blit operations for plot, line
@@ -106,11 +106,11 @@ if 2drop else doplot then ;
 : peek ( x y -- b )
 blitloc c@ and ;
 
-var dy
-var sy var sx
-var err var 2err
+variable dy
+variable sy variable sx
+variable err variable 2err
 
-var mask var addr
+variable mask variable addr
 
 create lineplot ( -- )
 
@@ -152,7 +152,7 @@ mask ora,
 # addr @ c!
 zptmp2 sta,(y) rts,
 
-var dx2 var dy2
+variable dx2 variable dy2
 
 create stepx
 # 2err @ dx2 @ s< if
@@ -293,7 +293,7 @@ d ['] or then ['] blitop @ !
 
 # paul heckbert seed fill
 # from graphics gems
-var stk
+variable stk
 create dopush
 stk lda, zptmp sta,
 stk 1+ lda, zptmp 1+ sta,
@@ -321,7 +321,7 @@ tya, sec, c8 cmp,# 3 bcs, dopush jsr,
 inx, inx, inx, inx,
 inx, inx, inx, inx, ;asm
 
-var x1 var x2
+variable x1 variable x2
 
 :asm spop ( -- y )
 stk lda,
@@ -343,7 +343,7 @@ iny, zptmp lda,(y) x1 1+ sta,
 iny, zptmp lda,(y) 0 sta,x
 ;asm
 
-var l
+variable l
 
 # ---
 

@@ -87,7 +87,7 @@ hide (loop)
 : within -rot over
 <= if > else 2drop 0 then ;
 
-var last-dump
+variable last-dump
 
 : c. dup fff0 and 0= if
 [char] 0 emit then . ;

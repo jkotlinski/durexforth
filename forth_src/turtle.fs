@@ -2,8 +2,8 @@
 
 s" sin" load
 
-var tx var ty # 10.6 fixedpoint
-var ta 0 value tp
+variable tx variable ty # 10.6 fixedpoint
+variable ta 0 value tp
 
 : s2/ ( signed 2/ )
 2/ dup 4000 and if 8000 or then ;

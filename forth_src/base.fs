@@ -170,7 +170,7 @@ begin ?dup while swap 2/ swap 1- repeat ;
 : allot ( n -- prev-here )
 here swap over + to here ;
 
-: var 2 allot value ;
+: variable 2 allot value ;
 
 # signedness
 : 0< 7fff > ;

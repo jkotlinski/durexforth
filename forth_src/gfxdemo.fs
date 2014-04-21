@@ -61,7 +61,7 @@ a0 50 reccircgo done ;
 
 hide reccircgo
 
-var yd
+variable yd
 
 : 2reccircgo ( x r -- )
 dup if
@@ -191,7 +191,7 @@ b8 , 128 , 48 , 58 , d ,
 e8 , 128 , 40 , 40 , d6 ,
 130 , 138 , 40 , 58 , 0 ,
 
-var line? var data
+variable line? variable data
 
 : jcol
 data @ @ 2 data +!
