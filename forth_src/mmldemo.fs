@@ -3,7 +3,7 @@
 s" mml" load
 : frere-jaques
 s" o3l4fgaffgafab->c&c<ab->c&cl8cdc<b-l4af>l8cdc<b-l4affcf&ffcf&f"
-s" r1o3l4fgaffgafab->c&c<ab->c&cl8cdc<b-l4af>l8cdc<b-l4affcf&ffcf&f"
+s" r1r1o3l4fgaffgafab->c&c<ab->c&cl8cdc<b-l4af>l8cdc<b-l4affcf&ffcf&f"
 s" " play-mml ;
 : sarias-song
 s" l16o3f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cre8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcro3c8f8o4crcrcro3f8o4crcrcro3f8o4crcrcro3f8o4crcro3cro3e8o4crcrcro3e8o4crcrcro3e8o4crcrcro3e8o4crcrc8o3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drardraro2gro3gro2gro3grcro4cro3cro4cro2aro3aro2aro3aro3drararrrdrararrrcrbrbrrrcrbrbrrrerarrrarerarrrarerg+rg+rg+rg+rrre&er"
