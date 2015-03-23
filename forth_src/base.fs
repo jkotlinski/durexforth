@@ -112,10 +112,10 @@ lda,# 100/ ldy,#
 : space bl emit ;
 
 0 value 0 1 value 1
-88 value zptmp
-8a value zptmp2
-8c value zptmp3
-8e value ip
+8b value zptmp
+8d value zptmp2
+9e value zptmp3
+fb value ip
 
 # "0 to foo" sets value foo to 0
 : (to) over 100/ over 2+ c! c! ;

@@ -33,10 +33,10 @@ BASIC_INPUT_BUFFER = $200
 
 ; zeropage
 STACK_START = $86 ; Leaves 86-87 unused to reduce risk of underflow crashes!
-TMP = $88
-TMP2 = $8a
-TMP3 = $8c
-IP = $8e
+TMP = $8b ; rnd seed
+TMP2 = $8d ; rnd seed
+TMP3 = $9e ; tape error log
+IP = $fb ; free space for user programs
 
 OP_JSR = $20
 OP_RTS = $60
