@@ -1526,19 +1526,6 @@ HIDDEN
     sta 1, x
     +NEXT
 
-; SP@
-    +BACKLINK
-    !byte	3
-    !text	"sp@"
-SPFETCH
-    txa
-    dex
-    dex
-    sta	0, x
-    lda	#0
-    sta	1, x
-    +NEXT
-
 ; -----------
 
 ; Active file stream to compile from.

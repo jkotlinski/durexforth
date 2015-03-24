@@ -759,7 +759,7 @@ bufstart compile-ram ! ;
 		0 to need-refresh
 		0 to need-refresh-line
 
-		sp@ # stack check...
+		depth # stack check...
 
 		show-cursor
 		key
@@ -782,7 +782,7 @@ bufstart compile-ram ! ;
 			then
 		then
 
-		sp@ 2+ = assert # warn if stack changed
+		depth 1- = assert # warn if stack changed
 	again
 ;
 

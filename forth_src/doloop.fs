@@ -39,9 +39,3 @@ ip inc, 2 bne, ip 1+ inc,
 106 ldy,x zptmp sty, 105 ldy,x
 tax, dex, dex,
 1 sty,x zptmp lda, 0 sta,x ;asm
-
-( : test
-sp@
-2 0 do 2 0 do loop loop
-sp@ 2+ = if exit then
-begin 1 d020 +! again ; test )
