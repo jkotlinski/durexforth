@@ -1437,7 +1437,7 @@ IMMED
     !text	"branch"
 BRANCH
     ; IP is now pointing to what IP should be changed to.
-    ldy	#0
+    ; y = 0 after next
     lda	(IP), y
     sta	TMP
     iny
@@ -1447,7 +1447,7 @@ BRANCH
     lda	TMP
     sta	IP
 
-    +NEXT
+    jmp NEXT_IMPL + 2 ; skip y = 1
 
 ; 0BRANCH
     +BACKLINK
