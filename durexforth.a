@@ -1831,6 +1831,21 @@ LOAD_AND_COMPILE
     inx
     +NEXT
 
+    +BACKLINK
+    !byte 5
+    !text	"depth"
+    stx + + 1
+    lda #STACK_START
+    sec
++   sbc #0
+    lsr
+    dex
+    dex
+    sta 0,x
+    lda #0
+    sta 1,x
+    +NEXT
+
 ; LATEST - points to the most recently defined dictionary word.
     +BACKLINK
     !byte 6
