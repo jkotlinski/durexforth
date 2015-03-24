@@ -21,8 +21,6 @@ swap here swap ! ;
 : ( immed begin key [char] ) = until ;
 : # immed begin key d = until ; # comment
 : tuck ( x y -- y x y ) swap over ;
-: pick ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u )
-1+ 2* sp@ + @ ;
 : ?dup dup if dup then ;
 : <> ( a b -- c ) = 0= ;
 : > ( n -- b ) swap < ;

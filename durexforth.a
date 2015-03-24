@@ -1511,6 +1511,21 @@ HIDDEN
     inx
     +NEXT
 
+    +BACKLINK
+    !byte   4
+    !text   "pick" ; ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u )
+    inc 0, x 
+    asl 0, x
+    clc
+    txa
+    adc 0, x
+    tay
+    lda 0, y
+    sta 0, x
+    lda 1, y
+    sta 1, x
+    +NEXT
+
 ; SP@
     +BACKLINK
     !byte	3
