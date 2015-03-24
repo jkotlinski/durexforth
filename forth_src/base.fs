@@ -187,8 +187,8 @@ pha, 1 lda,x pha, ;asm
 dup a < if 7 - then 37 + >r
 ?dup 0= until
 begin r> ?dup while emit repeat space ;
-: .s sp0 begin 1- 1- dup sp@ 2+ > while
-dup @ . repeat drop ;
+: .s depth begin ?dup while
+dup pick . 1- repeat ;
 
 :asm sei sei, ;asm
 :asm cli cli, ;asm
