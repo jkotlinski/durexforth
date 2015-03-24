@@ -1454,16 +1454,12 @@ BRANCH
     !byte	7
     !text	"0branch"
 ZBRANCH
-    lda	1, x
-    ora	0, x
-    bne .dont_branch
     inx
     inx
-    jmp BRANCH
+    lda	$ff, x
+    ora	$fe, x
+    beq BRANCH
 
-.dont_branch
-    inx
-    inx
     ; skip offset
     lda	IP
     clc
@@ -1471,8 +1467,7 @@ ZBRANCH
     sta	IP
     bcc	+
     inc	IP + 1
-+
-    +NEXT
++   +NEXT
     
     +BACKLINK
     !byte 6
