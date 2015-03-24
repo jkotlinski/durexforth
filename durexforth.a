@@ -394,14 +394,14 @@ rotate_r
     +BACKLINK
     !byte	1
     !text	"="
-    ; y = 0 after next
+    ldy #0
     lda	0, x
     cmp	2, x
     bne	+
     lda	1, x
     cmp	3, x
     bne	+
-    dey
+    ldy	#$ff
 +   inx
     inx
     sty 1, x
@@ -412,7 +412,8 @@ rotate_r
     +BACKLINK
     !byte	1
     !text	"<"
-    ; y = 0 after next
+LT
+    ldy #0
     lda	1, x
     cmp	3, x
     bcc .false
@@ -422,7 +423,7 @@ rotate_r
     cmp	0, x
     bcs	.false
 .true
-    dey
+    ldy	#$ff
 .false
     inx
     inx
@@ -434,12 +435,13 @@ rotate_r
     +BACKLINK
     !byte	2
     !text	"0="
-    ; y = 0 after next
+ZEQU
+    ldy #0
     lda 1, x
     bne +
     lda 0, x
     bne +
-    dey
+    ldy #$ff
 +   sty 1, x
     sty 0, x
     +NEXT
@@ -517,9 +519,10 @@ STOREBYTE
     +BACKLINK
     !byte	2
     !text	"c@"
-    ; y = 0 after next
+FETCHBYTE
     lda	(0, x)
     sta 0, x
+    ldy #0
     sty	1, x
     +NEXT
 
@@ -895,7 +898,7 @@ _FIND
     lda	0, x
     sta	TMP2 ; TMP2 contains pointer to find string
 
-    ldy #0
+    ldy	#0
     lda	(TMP2), y ; get length of find string
     ; store findlen
     sta	.findlen + 1
@@ -1147,11 +1150,11 @@ INTERPRET
     !byte	4
     !text	"litc"
 LITC
-    ; y = 0 after next
     dex
     dex
 
     ; copy literal to stack
+    ldy	#0
     lda	(IP), y
     sta	0, x
     sty	1, x
@@ -1166,12 +1169,12 @@ LITC
     !byte	3
     !text	"lit"
 LIT
-    ; y = 0 after next
     ; grow stack
     dex
     dex
 
     ; copy literal to stack
+    ldy	#0
     lda	(IP), y
     sta	0, x
 
@@ -1284,7 +1287,7 @@ CCOMMA
     lda	HERE_MSB
     sta	TMP + 1
 
-    ldy #0
+    ldy	#0
     lda	0, x
     sta	(TMP), y
 
@@ -1310,7 +1313,7 @@ _COMMA
     lda	HERE_MSB
     sta	TMP + 1
 
-    ldy #0
+    ldy	#0
     lda	0, x
     sta	(TMP), y
     iny
@@ -1433,8 +1436,8 @@ IMMED
     !byte	6
     !text	"branch"
 BRANCH
-    ; y = 0 after next
     ; IP is now pointing to what IP should be changed to.
+    ldy	#0
     lda	(IP), y
     sta	TMP
     iny
