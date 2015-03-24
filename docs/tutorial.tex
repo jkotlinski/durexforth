@@ -130,7 +130,7 @@ and overflows.
 \begin{verbatim}
 : mainloop begin
 # do stuff here...
-sp@ sp0 <> if ." err" exit then
+depth if ." err" exit then
 again ;
 \end{verbatim}
 

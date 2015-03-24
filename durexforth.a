@@ -670,12 +670,6 @@ CMOVE
 
 ; ---------- variables
 
-; S0
-    +BACKLINK
-    !byte 3
-    !text	"sp0"
-    +VALUE	STACK_START
-
 ; STATE - Is the interpreter executing code (0) or compiling a word (non-zero)?
     +BACKLINK
     !byte 5

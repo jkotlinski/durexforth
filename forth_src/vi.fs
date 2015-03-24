@@ -797,7 +797,7 @@ main-loop
 cleanup ;
 
 : vi
-sp@ sp0 = if # in case no param
+depth 0= if # in case no param
 eof @ if fg exit else
 s" untitled" then then
 
