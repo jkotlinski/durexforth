@@ -206,21 +206,23 @@ __DOCOL
 NEXT_IMPL
 
     ; (IP) -> W
-    ldy	#1
-    lda	(IP), y
-    sta	TMP + 1
-    dey
-    lda	(IP), y
-    sta	TMP
+    ldy	#1          ; 2
+    lda	(IP), y     ; 5
+    sta	TMP + 1     ; 3
+    dey             ; 2
+    lda	(IP), y     ; 5
+    sta	TMP         ; 3
 
     ; IP += 2
-    lda	IP
-    clc
-    adc	#2
-    sta	IP
-    bcc +
-    inc	IP + 1
-+   jmp	(TMP)
+    lda	IP          ; 3
+    clc             ; 2
+    adc	#2          ; 2
+    sta	IP          ; 3
+    bcc +           ; 2
+    inc	IP + 1      ; 5
++   jmp	(TMP)       ; 5
+
+                    ; total: 42
 
 ; START - points to the code of the startup word.
     +BACKLINK
