@@ -401,7 +401,7 @@ rotate_r
     lda	1, x
     cmp	3, x
     bne	+
-    ldy	#$ff
+    dey
 +   inx
     inx
     sty 1, x
@@ -423,7 +423,7 @@ LT
     cmp	0, x
     bcs	.false
 .true
-    ldy	#$ff
+    dey
 .false
     inx
     inx
