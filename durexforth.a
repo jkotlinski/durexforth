@@ -441,7 +441,7 @@ ZEQU
     bne +
     lda 0, x
     bne +
-    ldy #$ff
+    dey
 +   sty 1, x
     sty 0, x
     +NEXT
