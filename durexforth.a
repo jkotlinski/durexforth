@@ -237,12 +237,12 @@ _START
 
     +BACKLINK
     !byte 3
-    !text	"sp>"
+    !text	"sp1"
     +VALUE	MSB
 
     +BACKLINK
     !byte 3
-    !text	"sp<"
+    !text	"sp0"
     +VALUE	LSB
 
 ; DROP
