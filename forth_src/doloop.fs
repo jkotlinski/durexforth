@@ -1,9 +1,9 @@
 
 
 :asm (do)
-2 lda,x pha, 3 lda,x pha,
-0 lda,x pha, 1 lda,x pha,
-inx, inx, inx, inx, ;asm
+sp0 1+ lda,x pha, sp1 1+ lda,x pha,
+sp0 lda,x pha, sp1 lda,x pha,
+inx, inx, ;asm
 
 : do ( limit first -- ) immed
 ['] (do) , here ;
@@ -37,5 +37,5 @@ ip inc, 2 bne, ip 1+ inc,
 : i immed ['] r@ , ;
 :asm j txa, tsx,
 106 ldy,x zptmp sty, 105 ldy,x
-tax, dex, dex,
-1 sty,x zptmp lda, 0 sta,x ;asm
+tax, dex, 
+sp1 sty,x zptmp lda, sp0 sta,x ;asm
