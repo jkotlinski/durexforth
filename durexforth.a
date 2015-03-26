@@ -235,6 +235,16 @@ _START
     !word	0
     !word	QUIT
 
+    +BACKLINK
+    !byte 3
+    !text	"sp>"
+    +VALUE	MSB
+
+    +BACKLINK
+    !byte 3
+    !text	"sp<"
+    +VALUE	LSB
+
 ; DROP
     +BACKLINK
     !byte	4
