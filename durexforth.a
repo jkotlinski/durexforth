@@ -398,7 +398,7 @@ rotate_r
     cmp	MSB + 1, x
     bne	+
     dey
-    inx
++   inx
     sty MSB, x
     sty	LSB, x
     +NEXT
