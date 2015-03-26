@@ -110,6 +110,7 @@ lda,# 100/ ldy,#
 : space bl emit ;
 
 0 value 0 1 value 1
+73 value sp> 3b value sp<
 8b value zptmp
 8d value zptmp2
 9e value zptmp3
