@@ -36,9 +36,9 @@ header blitop
 0 , # lineplot
 
 create .blitloc
-0 lda,x zptmp sta,
+sp0 lda,x zptmp sta,
 7 and,# zptmp3 sta,
-1 lda,x zptmp 1+ sta,
+sp1 lda,x zptmp 1+ sta,
 
 zptmp lda, f8 and,# zptmp sta,
 
@@ -62,8 +62,8 @@ clc,
 zptmp lda, zptmp3 adc, zptmp sta,
 2 bcc, zptmp 1+ inc,
 
-zptmp lda, 0 sta,x
-zptmp 1+ lda, 1 sta,x
+zptmp lda, sp0 sta,x
+zptmp 1+ lda, sp1 sta,x
 
 # ...
 
@@ -71,7 +71,7 @@ loc mask >cfa 100/
 lda,# zptmp 1+ sta,
 
 clc,
-2 lda,x 7 and,# loc mask >cfa adc,#
+sp0 1+ lda,x 7 and,# loc mask >cfa adc,#
 zptmp sta,
 2 bcc, zptmp 1+ inc,
 
@@ -80,10 +80,10 @@ zptmp sta,
 zptmp lda,(y) zptmp3 sta,
 
 clc,
-2 lda,x f8 and,# 0 adc,x 0 sta,x
-3 lda,x 1 adc,x clc, a0 adc,# 1 sta,x
-zptmp3 lda, 2 sta,x
-0 lda,# 3 sta,x
+sp0 1+ lda,x f8 and,# sp0 adc,x sp0 sta,x
+sp1 1+ lda,x sp1 adc,x clc, a0 adc,# sp1 sta,x
+zptmp3 lda, sp0 1+ sta,x
+0 lda,# sp1 1+ sta,x
 rts,
 
 hide mask
@@ -222,11 +222,11 @@ sec, addr lda, 8 sbc,# addr sta,
 
 :asm doline
 1 @: step jsr,
-peny lda, 0 cmp,x 1 @@ bne,
-penx lda, 2 cmp,x 1 @@ bne,
-peny 1+ lda, 1 cmp,x 1 @@ bne,
-penx 1+ lda, 3 cmp,x 1 @@ bne,
-inx, inx, inx, inx, ;asm
+peny lda, sp0 cmp,x 1 @@ bne,
+penx lda, sp0 1+ cmp,x 1 @@ bne,
+peny 1+ lda, sp1 cmp,x 1 @@ bne,
+penx 1+ lda, sp1 1+ cmp,x 1 @@ bne,
+inx, inx, ;asm
 
 : line ( x y -- )
 2dup peny @ - abs dy2 !
@@ -299,26 +299,25 @@ stk lda, zptmp sta,
 stk 1+ lda, zptmp 1+ sta,
 
 # dy
-0 ldy,# 0 lda,x zptmp sta,(y)
+0 ldy,# sp0 lda,x zptmp sta,(y)
 # xr
-iny, 2 lda,x zptmp sta,(y)
-iny, 3 lda,x zptmp sta,(y)
+iny, sp0 1+ lda,x zptmp sta,(y)
+iny, sp1 1+ lda,x zptmp sta,(y)
 # xl
-iny, 4 lda,x zptmp sta,(y)
-iny, 5 lda,x zptmp sta,(y)
+iny, sp0 2 + lda,x zptmp sta,(y)
+iny, sp1 2 + lda,x zptmp sta,(y)
 # y
-iny, 6 lda,x zptmp sta,(y)
+iny, sp0 3 + lda,x zptmp sta,(y)
 
 clc, stk lda, 6 adc,# stk sta,
 3 bcc, stk 1+ inc, rts,
 
 :asm spush ( y xl xr dy -- )
 # y out of bounds?
-clc, 0 lda,x 6 adc,x tay,
-1 lda,x 7 adc,x +branch bne,
+clc, sp0 lda,x sp0 3 + adc,x tay,
+sp1 lda,x sp1 3 + adc,x +branch bne,
 tya, sec, c8 cmp,# 3 bcs, dopush jsr,
 :+
-inx, inx, inx, inx,
 inx, inx, inx, inx, ;asm
 
 variable x1 variable x2
@@ -334,13 +333,13 @@ stk 1+ lda, zptmp 1+ sta,
 dy sta, dy 1+ sta,
 1 cmp,# 3 bne, dy 1+ sty,
 
-dex, dex,
-1 sty,x # msb y=0
+dex,
+sp1 sty,x # msb y=0
 iny, zptmp lda,(y) x2 sta,
 iny, zptmp lda,(y) x2 1+ sta,
 iny, zptmp lda,(y) x1 sta,
 iny, zptmp lda,(y) x1 1+ sta,
-iny, zptmp lda,(y) 0 sta,x
+iny, zptmp lda,(y) sp0 sta,x
 ;asm
 
 variable l
@@ -349,24 +348,25 @@ variable l
 
 create .bitblt ( mask addr --
                   mask addr )
-0 lda,x zptmp sta,
-1 lda,x zptmp 1+ sta,
+sp0 lda,x zptmp sta,
+sp1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
-2 ora,x zptmp sta,(y)
+sp0 1+ ora,x zptmp sta,(y)
 # 1 penx +! swap 2/ swap 
 penx inc, 3 bne, penx 1+ inc,
-2 lsr,x rts,
+sp0 1+ lsr,x rts,
 
 create rightend
 # nip 80 swap # mask
-80 lda,# 2 sta,x 0 lda,# 3 sta,x
+80 lda,# sp0 1+ sta,x 
+0 lda,# sp1 1+ sta,x
 
 :-
-2 lda,x 1 bne, rts,
-0 lda,x zptmp sta,
-1 lda,x zptmp 1+ sta,
+sp0 1+ lda,x 1 bne, rts,
+sp0 lda,x zptmp sta,
+sp1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
-2 and,x 1 beq, rts,
+sp0 1+ and,x 1 beq, rts,
 .bitblt jsr, jmp, # recurse
 
 create bytewise
@@ -376,15 +376,15 @@ penx 1+ lda, 0 cmp,# +branch beq,
 :+
 
 :- # 8 +
-clc, 0 lda,x 8 adc,# 0 sta,x
-2 bcc, 1 inc,x
+clc, sp0 lda,x 8 adc,# sp0 sta,x
+2 bcc, sp1 inc,x
 # penx=140?
 penx lda, 40 cmp,# +branch bne,
 penx 1+ lda, 1 cmp,# +branch bne,
 rts,
 :+ :+
-0 lda,x zptmp sta,
-1 lda,x zptmp 1+ sta,
+sp0 lda,x zptmp sta,
+sp1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
 rightend -branch bne,
 
@@ -397,39 +397,39 @@ jmp, # recurse
 
 create leave
 # 2drop nip penx @ swap 
-inx, inx, inx, inx,
-penx lda, 2 sta,x
-penx 1+ lda, 3 sta,x rts,
+inx, inx,
+penx lda, sp0 1+ sta,x
+penx 1+ lda, sp1 1+ sta,x rts,
 
 # this one must be fast
 :asm fillr ( x y -- newx y )
 # over 140 >= if exit then
-3 lda,x 0 cmp,# +branch beq,
-3f lda,# 2 cmp,x 3 bcs, ;asm
+sp1 1+ lda,x 0 cmp,# +branch beq,
+3f lda,# sp0 1+ cmp,x 3 bcs, ;asm
 :+
 
 # over penx !
-2 lda,x penx sta,
-3 lda,x penx 1+ sta,
+sp0 1+ lda,x penx sta,
+sp1 1+ lda,x penx 1+ sta,
 # 2dup blitloc # x y mask addr
-txa, 4 sbx,#
-4 lda,x 0 sta,x
-5 lda,x 1 sta,x
-6 lda,x 2 sta,x
-7 lda,x 3 sta,x 
+dex, dex,
+sp0 2 + lda,x sp0 sta,x
+sp1 2 + lda,x sp1 sta,x
+sp0 3 + lda,x sp0 1+ sta,x
+sp1 3 + lda,x sp1 1+ sta,x 
 .blitloc jsr,
 
 # leftend ( x y mask addr --
 #           x y mask addr more? )
 :-
-2 lda,x +branch bne,
+sp0 1+ lda,x +branch bne,
 # continue bytewise
 bytewise jsr, leave jsr, ;asm
 :+
-0 lda,x zptmp sta,
-1 lda,x zptmp 1+ sta,
+sp0 lda,x zptmp sta,
+sp1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
-2 and,x +branch beq,
+sp0 1+ and,x +branch beq,
 # done
 leave jsr, ;asm
 :+
@@ -438,7 +438,7 @@ leave jsr, ;asm
 :asm scanl
 :-
 # x<0?
-3 lda,x 3 bpl, ;asm
+sp1 1+ lda,x 3 bpl, ;asm
 
 addr lda, zptmp sta,
 addr 1+ lda, zptmp 1+ sta,
@@ -454,19 +454,21 @@ addr lda, sec, 8 sbc,# addr sta,
 3 bcs, addr 1+ dec,
 
 :+ # 1-
-2 lda,x 2 bne, 3 dec,x 2 dec,x
+sp0 1+ lda,x 2 bne, sp1 1+ dec,x 
+sp0 1+ dec,x
 jmp, # recurse
 
 create .scanr
 # over l ! # l=x
-2 lda,x l sta, 3 lda,x l 1+ sta,
+sp0 1+ lda,x l sta, 
+sp1 1+ lda,x l 1+ sta,
 ;asm
 
 :asm scanr ( x y mask addr -- newx y )
-0 lda,x addr sta,
-1 lda,x addr 1+ sta,
-2 lda,x mask sta,
-inx, inx, inx, inx,
+sp0 lda,x addr sta,
+sp1 lda,x addr 1+ sta,
+sp0 1+ lda,x mask sta,
+inx, inx,
 
 :-
 # addr @ c@ mask c@ and
@@ -476,9 +478,9 @@ addr 1+ lda, zptmp 1+ sta,
 mask and, .scanr -branch beq,
 
 # x<=x2?
-x2 1+ lda, 3 cmp,x .scanr -branch bcc,
+x2 1+ lda, sp1 1+ cmp,x .scanr -branch bcc,
 +branch bne,
-x2 lda, 2 cmp,x .scanr -branch bcc,
+x2 lda, sp0 1+ cmp,x .scanr -branch bcc,
 :+
 
 mask lsr, +branch bne,
@@ -487,7 +489,7 @@ clc, addr lda, 8 adc,# addr sta,
 3 bcc, addr 1+ inc,
 
 :+ # x++
-2 inc,x 2 bne, 3 inc,x
+sp0 1+ inc,x 2 bne, sp1 1+ inc,x
 jmp, # recurse
 
 : paint ( x y -- )

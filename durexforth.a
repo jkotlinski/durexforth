@@ -739,10 +739,6 @@ KEY
     jsr	PULL_KEY ; read from disk/ram/console
     ldx tmp_x
 
-    pha
-    jsr PUTCHR
-    pla
-
     ora	#0
     beq	_KEY
     rts
@@ -1498,15 +1494,17 @@ HIDDEN
     +BACKLINK
     !byte   4
     !text   "pick" ; ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u )
+    stx tmp_x
     txa
     clc
-    adc LSB, x
-    tay
-    iny
-    lda LSB, y
-    sta LSB, x
-    lda MSB, y
-    sta MSB, x
+    adc LSB,x
+    tax
+    inx
+    lda LSB,x
+    ldy MSB,x
+    ldx tmp_x
+    sta LSB,x
+    sty MSB,x
     +NEXT
 
 ; -----------
