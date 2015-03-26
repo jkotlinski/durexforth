@@ -460,16 +460,16 @@ ZEQU
     !byte	1
     !text	"!"
 STORE
-    lda 0, x
+    lda LSB, x
     sta TMP
-    lda 1, x
+    lda MSB, x
     sta TMP + 1
 
     ldy #0
-    lda	2, x
+    lda	LSB+1, x
     sta (TMP), y
     iny
-    lda	3, x
+    lda	MSB+1, x
     sta	(TMP), y
 
     inx
