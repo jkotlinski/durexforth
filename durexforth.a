@@ -738,6 +738,11 @@ KEY
     stx	tmp_x
     jsr	PULL_KEY ; read from disk/ram/console
     ldx tmp_x
+
+    pha
+    jsr PUTCHR
+    pla
+
     ora	#0
     beq	_KEY
     rts
@@ -800,10 +805,6 @@ PULL_KEY ; wastes x!!!
     dec $d020
     lda	(TMP), y
     beq	.ram_compile_done
-
-    pha
-    jsr PUTCHR
-    pla
 
     inc	COMPILE_RAM
     bne	+

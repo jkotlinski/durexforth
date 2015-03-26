@@ -157,7 +157,7 @@ inx, ;asm
 :asm +! ( num addr -- ) 
 sp0 lda,x zptmp sta,
 sp1 lda,x zptmp 1+ sta,
-sp0 ldy,# clc,
+0 ldy,# clc,
 zptmp lda,(y) sp0 1+ adc,x 
 zptmp sta,(y) iny,
 zptmp lda,(y) sp1 1+ adc,x 
