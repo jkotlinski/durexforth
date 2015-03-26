@@ -1403,9 +1403,9 @@ IMMED
     +BACKLINK
     !byte	2
     !text	">r"
-    lda MSB,x
-    pha
     lda LSB,x
+    pha
+    lda MSB,x
     pha
     inx
     +NEXT
