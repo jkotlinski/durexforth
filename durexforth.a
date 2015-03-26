@@ -32,7 +32,10 @@ STRLEN_MASK = $3f
 BASIC_INPUT_BUFFER = $200
 
 ; zeropage
-STACK_START = $86 ; Leaves 86-87 unused to reduce risk of underflow crashes!
+X_INIT = 0
+MSB = $73 ; msb stack is [$3b, $72]
+LSB = $3b ; lsb stack is [3, $3a]
+
 TMP = $8b ; rnd seed
 TMP2 = $8d ; rnd seed
 TMP3 = $9e ; tape error log
@@ -136,7 +139,7 @@ reset
     lda #>_START
     sta IP + 1
 
-    ldx	#STACK_START
+    ldx	#X_INIT
     +NEXT
 
 print_ok
@@ -166,9 +169,8 @@ restore_handler
     !text	"pushya"
 pushya
     dex
-    dex
-    sta	0, x
-    sty	1, x
+    sta	LSB, x
+    sty	MSB, x
     +NEXT
 
 !macro VALUE .word {
@@ -239,7 +241,6 @@ _START
     !text	"drop"
 DROP
     inx
-    inx
     +NEXT
 
 ; SWAP
@@ -247,24 +248,23 @@ DROP
     !byte	4
     !text	"swap"
 SWAP
-    ldy	1, x
-    lda	3, x
-    sta 1, x
-    sty	3, x
+    ldy	MSB, x
+    lda	MSB + 1, x
+    sta MSB, x
+    sty	MSB + 1, x
 
-    ldy	0, x
-    lda	2, x
-    sta 0, x
-    sty	2, x
+    ldy	LSB, x
+    lda	LSB + 1, x
+    sta LSB, x
+    sty	LSB + 1, x
     +NEXT
 
 !macro _DUP {
     dex
-    dex
-    lda	3, x
-    sta	1, x
-    lda	2, x
-    sta	0, x
+    lda	MSB + 1, x
+    sta	MSB, x
+    lda	LSB + 1, x
+    sta	LSB, x
 }
 
 ; DUP
@@ -281,12 +281,11 @@ DUP
     !text	"over"
 OVER
     dex
-    dex
 
-    lda	5, x
-    sta	1, x
-    lda	4, x
-    sta	0, x
+    lda	MSB + 2, x
+    sta	MSB, x
+    lda	LSB + 2, x
+    sta	LSB, x
 
     +NEXT
 
@@ -295,9 +294,9 @@ OVER
     !byte	2
     !text	"1+"
 INCR
-    inc 0, x
+    inc LSB, x
     bne +
-    inc 1, x
+    inc MSB, x
 +   +NEXT
 
 ; 1-
@@ -305,26 +304,25 @@ INCR
     !byte	2
     !text	"1-"
 DECR
-    lda 0, x
+    lda LSB, x
     bne +
-    dec 1, x
-+   dec 0, x
+    dec MSB, x
++   dec LSB, x
     +NEXT
 
 ; +
     +BACKLINK
     !byte	1
     !text	"+"
-    lda	0, x
+    lda	LSB, x
     clc
-    adc 2, x
-    sta	2, x
+    adc LSB + 1, x
+    sta	LSB + 1, x
 
-    lda	1, x
-    adc 3, x
-    sta 3, x
+    lda	MSB, x
+    adc MSB + 1, x
+    sta MSB + 1, x
 
-    inx
     inx
     +NEXT
 
@@ -333,18 +331,16 @@ DECR
     !byte	1
     !text	"-"
 SUB
-    lda	2, x
+    lda	LSB + 1, x
     sec
-    sbc 0, x
-    sta	2, x
+    sbc LSB, x
+    sta	LSB + 1, x
 
-    lda 3, x
-    sbc 1, x
-    sta 3, x
+    lda MSB + 1, x
+    sbc MSB, x
+    sta MSB + 1, x
 
     inx
-    inx
-
     +NEXT
 
 product = TMP
@@ -361,15 +357,15 @@ DMUL
     sta product+3 
     ldy #$10 ; set binary count to 16 
 .shift_r
-    lsr 3, x ; multiplier+1 ; divide multiplier by 2 
-    ror 2, x ; multiplier
+    lsr MSB + 1, x ; multiplier+1 ; divide multiplier by 2 
+    ror LSB + 1, x ; multiplier
     bcc rotate_r 
     lda product+2 ; get upper half of product and add multiplicand
     clc
-    adc 0, x ; multiplicand
+    adc LSB, x ; multiplicand
     sta product+2
     lda product+3 
-    adc 1, x ; multiplicand+1
+    adc MSB, x ; multiplicand+1
 rotate_r 
     ror ; rotate partial product 
     sta product+3 
@@ -380,13 +376,13 @@ rotate_r
     bne .shift_r 
 
     lda	product
-    sta	0, x
+    sta	LSB, x
     lda	product + 1
-    sta	1, x
+    sta	MSB, x
     lda	product + 2
-    sta	2, x
+    sta	LSB + 1, x
     lda	product + 3
-    sta	3, x
+    sta	MSB + 1, x
     rts
 
 !src "ummod.a"
@@ -395,17 +391,16 @@ rotate_r
     !byte	1
     !text	"="
     ldy #0
-    lda	0, x
-    cmp	2, x
+    lda	LSB, x
+    cmp	LSB + 1, x
     bne	+
-    lda	1, x
-    cmp	3, x
+    lda	MSB, x
+    cmp	MSB + 1, x
     bne	+
     dey
-+   inx
     inx
-    sty 1, x
-    sty	0, x
+    sty MSB, x
+    sty	LSB, x
     +NEXT
 
 ; <
@@ -414,21 +409,20 @@ rotate_r
     !text	"<"
 LT
     ldy #0
-    lda	1, x
-    cmp	3, x
+    lda	MSB, x
+    cmp	MSB + 1, x
     bcc .false
     bne	.true
     ; ok, msb are equal...
-    lda	2, x
-    cmp	0, x
+    lda	LSB + 1, x
+    cmp	LSB, x
     bcs	.false
 .true
     dey
 .false
     inx
-    inx
-    sty	1, x
-    sty	0, x
+    sty	MSB, x
+    sty	LSB, x
     +NEXT
 
 ; 0=
@@ -437,30 +431,28 @@ LT
     !text	"0="
 ZEQU
     ldy #0
-    lda 1, x
+    lda MSB, x
     bne +
-    lda 0, x
+    lda LSB, x
     bne +
     dey
-+   sty 1, x
-    sty 0, x
++   sty MSB, x
+    sty LSB, x
     +NEXT
 
 ; AND
     +BACKLINK
     !byte	3
     !text	"and"
-    lda	1, x
-    and 3, x
-    sta 3, x
+    lda	MSB, x
+    and MSB + 1, x
+    sta MSB + 1, x
 
-    lda	0, x
-    and 2, x
-    sta 2, x
+    lda	LSB, x
+    and LSB + 1, x
+    sta LSB + 1, x
 
     inx
-    inx
-
     +NEXT
 
 ; !
@@ -468,17 +460,18 @@ ZEQU
     !byte	1
     !text	"!"
 STORE
-    lda	2, x
-    sta (0, x)
-    inc	0, x
-    bne	+
-    inc	1, x
-+
-    lda	3, x
-    sta	(0, x)
+    lda 0, x
+    sta TMP
+    lda 1, x
+    sta TMP + 1
 
-    inx
-    inx
+    ldy #0
+    lda	2, x
+    sta (TMP), y
+    iny
+    lda	3, x
+    sta	(TMP), y
+
     inx
     inx
     +NEXT
@@ -488,16 +481,17 @@ STORE
     !byte	1
     !text	"@"
 FETCH
-    lda	(0, x)
-    tay
-    inc	0, x
-    bne +
-    inc 1, x
-+
-    lda (0, x)
-    sta	1, x
-    sty	0, x
+    lda LSB,x
+    sta TMP
+    lda MSB,x
+    sta TMP+1
 
+    ldy #0
+    lda	(TMP),y
+    sta LSB,x
+    iny
+    lda	(TMP),y
+    sta MSB,x
     +NEXT
 
 ; C!
@@ -505,14 +499,14 @@ FETCH
     !byte	2
     !text	"c!"
 STOREBYTE
-    lda	2, x
-    sta (0, x)
-
+    lda LSB,x
+    sta + + 1
+    lda MSB,x
+    sta + + 2
+    lda	LSB+1,x
++   sta $cafe
     inx
     inx
-    inx
-    inx
-
     +NEXT
 
 ; C@
@@ -520,10 +514,14 @@ STOREBYTE
     !byte	2
     !text	"c@"
 FETCHBYTE
-    lda	(0, x)
-    sta 0, x
-    ldy #0
-    sty	1, x
+    lda LSB,x
+    sta + + 1
+    lda MSB,x
+    sta + + 2
++   lda $cafe
+    sta LSB,x
+    lda #0
+    sta MSB,x
     +NEXT
 
 ; FILL ( val start len -- )
@@ -531,22 +529,19 @@ FETCHBYTE
     !byte	4
     !text	"fill"
 FILL
-    lda	4, x
+    lda	LSB + 2, x
     sta	.fsrc
-    lda	2, x
+    lda	LSB + 1, x
     sta	.fdst
-    lda	3, x
+    lda	MSB + 1, x
     sta	.fdst + 1
-    lda	0, x
+    lda	LSB, x
     eor	#$ff
     sta	TMP
-    lda	1, x
+    lda	MSB, x
     eor	#$ff
     sta	TMP + 1
 
-    inx
-    inx
-    inx
     inx
     inx
     inx
@@ -573,24 +568,21 @@ FILL
     !byte	6
     !text	"cmove>"
 CMOVE_BACK
-    lda	4, x
+    lda	LSB + 2, x
     sta	.bsrc + 1
-    lda	5, x
+    lda	MSB + 2, x
     sta	.bsrc + 2
-    lda	2, x
+    lda	LSB + 1, x
     sta	.bdst + 1
-    lda	3, x
+    lda	MSB + 1, x
     sta	.bdst + 2
-    lda	0, x
+    lda	LSB, x
     eor	#$ff
     sta	TMP
-    lda	1, x
+    lda	MSB, x
     eor	#$ff
     sta	TMP + 1
 
-    inx
-    inx
-    inx
     inx
     inx
     inx
@@ -626,24 +618,21 @@ CMOVE_BACK
     !byte	5
     !text	"cmove"
 CMOVE
-    lda	4, x
+    lda	LSB+2, x
     sta	.csrc + 1
-    lda	5, x
+    lda	MSB+2, x
     sta	.csrc + 2
-    lda	2, x
+    lda	LSB+1, x
     sta	.cdst + 1
-    lda	3, x
+    lda	MSB+1, x
     sta	.cdst + 2
-    lda	0, x
+    lda	LSB, x
     eor	#$ff
     sta	TMP
-    lda	1, x
+    lda	MSB, x
     eor	#$ff
     sta	TMP + 1
 
-    inx
-    inx
-    inx
     inx
     inx
     inx
@@ -708,8 +697,7 @@ HERE_MSB = * + 3
     !byte	4
     !text	"emit"
 EMIT
-    lda	0, x
-    inx
+    lda	LSB, x
     inx
     jsr	PUTCHR
     +NEXT
@@ -731,10 +719,9 @@ tmp_x
 KEY
     jsr	_KEY
     dex
-    dex
-    sta	0, x
+    sta	LSB, x
     lda	#0
-    sta	1, x
+    sta	MSB, x
     +NEXT
 
 .unbuffered_key
@@ -803,6 +790,11 @@ PULL_KEY ; wastes x!!!
     dec $d020
     lda	(TMP), y
     beq	.ram_compile_done
+
+    pha
+    jsr PUTCHR
+    pla
+
     inc	COMPILE_RAM
     bne	+
     inc	COMPILE_RAM + 1
@@ -867,12 +859,11 @@ _WORD
     beq .get_key ; Nothing entered yet, try again.
 
     dex
-    dex
 
     lda	#<TIB
-    sta	0, x
+    sta	LSB, x
     lda	#>TIB
-    sta	1, x
+    sta	MSB, x
 
     rts
 
@@ -893,9 +884,9 @@ _FIND
     sta	TMP + 1
     ; TMP now contains pointer to the most recently defined dictionary word.
 
-    lda	1, x
+    lda	MSB, x
     sta	TMP2 + 1
-    lda	0, x
+    lda	LSB, x
     sta	TMP2 ; TMP2 contains pointer to find string
 
     ldy	#0
@@ -939,8 +930,8 @@ _FIND
     pla
     tax
     lda #0
-    sta	0, x
-    sta	1, x
+    sta	LSB, x
+    sta	MSB, x
     rts
     
 .string_compare
@@ -963,9 +954,9 @@ _FIND
     pla
     tax
     lda	TMP
-    sta	0, x
+    sta	LSB, x
     lda	TMP + 1
-    sta	1, x
+    sta	MSB, x
     rts ; a should be non-zero now
 
 ; >CFA
@@ -976,9 +967,9 @@ TCFA
     jsr _TCFA
     +NEXT
 _TCFA
-    lda	1, x
+    lda	MSB, x
     sta	TMP + 1
-    lda	0, x
+    lda	LSB, x
     sta TMP
     ; TMP contains pointer to word
     ldy	#2
@@ -987,12 +978,12 @@ _TCFA
     clc
     adc	#3 ; offset for link + string length
     sta	.addend + 1
-    lda	0, x
+    lda	LSB, x
 .addend
     adc	#0
-    sta	0, x
+    sta	LSB, x
     bcc	+
-    inc	1, x
+    inc	MSB, x
 +
     rts
 
@@ -1001,11 +992,10 @@ _TCFA
     !byte	7
     !text	"execute"
 EXECUTE
-    lda	0, x
+    lda	LSB, x
     sta TMP
-    lda	1, x
+    lda	MSB, x
     sta	TMP + 1
-    inx
     inx
     jmp	(TMP)
 
@@ -1016,20 +1006,19 @@ EXECUTE
     !text "literal"
 LITERAL
     dex
-    dex
-    lda 3,x
+    lda MSB+1,x
     bne +
     lda #<LITC
-    sta 0,x
+    sta LSB,x
     lda #>LITC
-    sta 1,x
+    sta MSB,x
     jsr _COMMA ; writes LITC
     jmp CCOMMA ; writes byte
 +
     lda #<LIT
-    sta 0, x
+    sta LSB, x
     lda #>LIT
-    sta 1, x
+    sta MSB, x
     jsr _COMMA ; writes LIT
     jmp COMMA ; writes number
 
@@ -1040,7 +1029,7 @@ LITERAL
 INTERPRET
     ; Checks for stack underflow.
     txa
-    cmp #STACK_START+1
+    cmp #X_INIT+1
     bpl .on_stack_underflow
 
     lda #0
@@ -1053,7 +1042,6 @@ INTERPRET
     bne	.found_word
 
     inx ; drop
-    inx
     jsr READ_NUMBER
     beq .was_number
 
@@ -1078,9 +1066,9 @@ INTERPRET
     ; OK, we found a word...
 
     ; is it immediate?
-    lda	0, x
+    lda	LSB, x
     sta	TMP
-    lda	1, x
+    lda	MSB, x
     sta	TMP + 1
     ldy	#2 ; skip link ptr, look at flags
     lda	(TMP), y
@@ -1094,16 +1082,14 @@ INTERPRET
     jsr	_TCFA
     jsr	_COMMA
     inx ; drop string
-    inx
     +NEXT
 
 .execute_word
     jsr	_TCFA
-    lda 0,x
-    sta 2,x
-    lda 1,x
-    sta 3,x
-    inx
+    lda LSB,x
+    sta LSB+1,x
+    lda MSB,x
+    sta MSB+1,x
     inx
     jmp EXECUTE
 
@@ -1136,7 +1122,7 @@ INTERPRET
     stx     COMPILE_FILENO
     stx     COMPILE_RAM + 1
     jsr     CHKIN
-    ldx     #STACK_START ; wipe stack :(
+    ldx     #X_INIT ; wipe stack :(
     +NEXT
 
     +BACKLINK
@@ -1151,13 +1137,12 @@ INTERPRET
     !text	"litc"
 LITC
     dex
-    dex
 
     ; copy literal to stack
     ldy	#0
     lda	(IP), y
-    sta	0, x
-    sty	1, x
+    sta	LSB, x
+    sty	MSB, x
 
     inc IP
     bne +
@@ -1171,16 +1156,15 @@ LITC
 LIT
     ; grow stack
     dex
-    dex
 
     ; copy literal to stack
     ldy	#0
     lda	(IP), y
-    sta	0, x
+    sta	LSB, x
 
     iny
     lda	(IP), y
-    sta	1, x
+    sta	MSB, x
 
     ; IP += 2
     clc
@@ -1216,8 +1200,8 @@ EXIT
     +BACKLINK
     !byte   2
     !text	"2*"
-    asl 0, x
-    rol 1, x
+    asl LSB, x
+    rol MSB, x
     +NEXT
 
 ; HEADER ( name -- )
@@ -1273,7 +1257,6 @@ HEADER
 +   sty HERE_MSB
 
     inx
-    inx
 
     +NEXT
 
@@ -1288,7 +1271,7 @@ CCOMMA
     sta	TMP + 1
 
     ldy	#0
-    lda	0, x
+    lda	LSB, x
     sta	(TMP), y
 
     ; update HERE
@@ -1296,7 +1279,6 @@ CCOMMA
     bne	+
     inc HERE_MSB
 +
-    inx
     inx
     +NEXT
 
@@ -1314,10 +1296,10 @@ _COMMA
     sta	TMP + 1
 
     ldy	#0
-    lda	0, x
+    lda	LSB, x
     sta	(TMP), y
     iny
-    lda	1, x
+    lda	MSB, x
     sta	(TMP), y
 
     ; update HERE
@@ -1328,7 +1310,6 @@ _COMMA
     bcc	+
     inc HERE_MSB
 +
-    inx
     inx
     rts
 
@@ -1388,14 +1369,13 @@ IMMED
 
     ; push data pointer to param stack
     dex
-    dex
     clc
     lda TMP
     adc #3
-    sta 0,x
+    sta LSB,x
     bcc +
     iny
-+   sty 1,x
++   sty MSB,x
 
     ; behavior pointer => IP
     lda IP
@@ -1414,21 +1394,19 @@ IMMED
     !byte	2
     !text	"r>"
     dex
-    dex
     pla
-    sta 1,x
+    sta MSB,x
     pla
-    sta 0,x
+    sta LSB,x
     +NEXT
 
     +BACKLINK
     !byte	2
     !text	">r"
-    lda 0,x
+    lda MSB,x
     pha
-    lda 1,x
+    lda LSB,x
     pha
-    inx
     inx
     +NEXT
 
@@ -1455,9 +1433,8 @@ BRANCH
     !text	"0branch"
 ZBRANCH
     inx
-    inx
-    lda	$ff, x
-    ora	$fe, x
+    lda	LSB-1, x
+    ora	MSB-1, x
     beq BRANCH
 
     ; skip offset
@@ -1495,9 +1472,9 @@ COLON
     !byte	6
     !text	"hidden"
 HIDDEN
-    lda	0, x
+    lda	LSB, x
     sta	TMP
-    lda	1, x
+    lda	MSB, x
     sta TMP + 1
 
     ldy	#2 ; skip link, point to flags
@@ -1505,22 +1482,20 @@ HIDDEN
     eor	#F_HIDDEN ; toggle hidden flag
     sta	(TMP), y
     inx
-    inx
     +NEXT
 
     +BACKLINK
     !byte   4
     !text   "pick" ; ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u )
-    inc 0, x 
-    asl 0, x
-    clc
     txa
-    adc 0, x
+    clc
+    adc LSB, x
     tay
-    lda 0, y
-    sta 0, x
-    lda 1, y
-    sta 1, x
+    iny
+    lda LSB, y
+    sta LSB, x
+    lda MSB, y
+    sta MSB, x
     +NEXT
 
 ; -----------
@@ -1534,7 +1509,7 @@ COMPILE_FILENO
     !byte 6
     !text	"closew"
 CLOSEW
-    lda 0,x
+    lda LSB,x
     sta TMP
     stx	TMP2
     jsr	CLOSE 
@@ -1542,7 +1517,6 @@ CLOSEW
     jsr	CHKOUT
     jsr	_errorchread
     ldx TMP2
-    inx
     inx
     +NEXT
 
@@ -1580,7 +1554,7 @@ geof
         JSR CHKIN     ; keyboard now input device again
         RTS
 .error
-        ; Akkumulator contains BASIC error code
+        ; Accumulator contains BASIC error code
 
         ; most likely error:
         ; A = $05 (DEVICE NOT PRESENT)
@@ -1599,15 +1573,15 @@ LOADB
     txa
     pha
 
-    lda 1, x		; >destination
+    lda LSB, x		; >destination
     sta load_binary_laddr_hi
-    lda 0, x		; <destination
+    lda MSB, x		; <destination
     sta load_binary_laddr_lo
 
-    lda 2, x		; a filename length
+    lda LSB+1, x		; a filename length
     pha
-    ldy 5, x 		; y >basename 
-    lda 4, x		; x <basename 
+    ldy MSB+2, x 		; y >basename 
+    lda LSB+2, x		; x <basename 
     tax
     pla
     jsr	load_binary
@@ -1617,11 +1591,9 @@ LOADB
 
     inx
     inx
-    inx
-    inx
     lda	load_binary_status
-    sta	1, x
-    sta	0, x
+    sta	MSB, x
+    sta	LSB, x
     beq	+
     txa
     pha
@@ -1687,20 +1659,20 @@ SAVEB
     lda	$af
     pha
 
-    lda 6, x		; range begin lo
+    lda LSB+3, x		; range begin lo
     sta $c1
-    lda 7, x		; range begin hi
+    lda MSB+3, x		; range begin hi
     sta $c2
     
-    lda 4, x		; range end lo
+    lda LSB+2, x		; range end lo
     sta save_binary_srange_end_lo
-    lda 5, x		; range end hi
+    lda MSB+2, x		; range end hi
     sta save_binary_srange_end_hi
 
-    lda 0, x		; a filename length
+    lda LSB, x		; a filename length
     pha
-    ldy 3, x 		; y basename hi
-    lda 2, x		; x basename lo
+    ldy MSB+1, x 		; y basename hi
+    lda LSB+1, x		; x basename lo
     tax
     pla
 
@@ -1725,10 +1697,6 @@ save_binary_srange_end_hi = *+1
     inx
     inx
     inx
-    inx
-    inx
-    inx
-    inx
     +NEXT
 
 ; OPENW ( strptr strlen file# ) open file for writing
@@ -1736,14 +1704,14 @@ save_binary_srange_end_hi = *+1
     !byte 5
     !text	"openw"
 OPENW
-    lda 0,x
+    lda LSB,x
     sta TMP ; fileno
     stx	TMP2
 
-    lda	2, x
-    ldy	5, x
+    lda	LSB+1, x
+    ldy	MSB+2, x
     pha
-    lda	4, x
+    lda	LSB+2, x
     tax
     pla
     
@@ -1764,9 +1732,6 @@ OPENW
     inx
     inx
     inx
-    inx
-    inx
-    inx
     +NEXT
 
 .close
@@ -1782,10 +1747,10 @@ LOAD_AND_COMPILE
     txa
     pha
 
-    lda	0, x
-    ldy	3, x
+    lda	LSB, x
+    ldy	MSB+1, x
     pha
-    lda	2, x
+    lda	LSB+1, x
     tax
     pla
 
@@ -1820,23 +1785,19 @@ LOAD_AND_COMPILE
     tax
     inx
     inx
-    inx
-    inx
     +NEXT
 
     +BACKLINK
     !byte 5
     !text	"depth"
-    stx + + 1
-    lda #STACK_START
-    sec
-+   sbc #0
-    lsr
+    txa
+    eor #$ff
+    tay
+    iny
     dex
-    dex
-    sta 0,x
+    sty LSB,x
     lda #0
-    sta 1,x
+    sta MSB,x
     +NEXT
 
 ; LATEST - points to the most recently defined dictionary word.

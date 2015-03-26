@@ -33,22 +33,20 @@ _BASE = * + 1
 ; success: ( string ptr -- number )
 ; fail: ( string ptr -- string ptr )
 READ_NUMBER
-    lda 1, x
+    lda MSB, x
     sta TMP3 + 1
-    lda 0, x
+    lda LSB, x
     sta TMP3
     ; TMP3 now points to string length
     ; followed by string.
 
     dex
     dex
-    dex
-    dex
 
     ldy #0
-    sty 0,x ; build number at top of stack
-    sty 1,x
-    sty 3,x
+    sty LSB,x ; build number at top of stack
+    sty MSB,x
+    sty MSB+1,x
     lda (TMP3), y
     sta .chars_to_process
     jmp .read_digit
@@ -56,9 +54,9 @@ READ_NUMBER
 .next_digit
     ; number *= _BASE
     lda _BASE
-    sta 2,x
+    sta LSB+1,x
     jsr DMUL
-    lda 2,x
+    lda LSB+1,x
     bne .parse_failed ; overflow!
 
 .read_digit
@@ -85,20 +83,18 @@ READ_NUMBER
     cmp _BASE
     bcs .parse_failed
 
-    adc 0,x
-    sta 0,x
+    adc LSB,x
+    sta LSB,x
     bcc +
-    inc 1,x
+    inc MSB,x
     beq .parse_failed
 +   dec .chars_to_process
     bne .next_digit
 
-    lda 0,x
-    sta 4,x
-    lda 1,x
-    sta 5,x
-    inx
-    inx
+    lda LSB,x
+    sta LSB+2,x
+    lda MSB,x
+    sta MSB+2,x
     inx
     inx
     tya ; clear Z flag
@@ -106,11 +102,8 @@ READ_NUMBER
 
 .parse_failed
     inx
-    inx
-    inx
     inx ; Z flag set
     rts
 
 .chars_to_process
     !byte 0
-
