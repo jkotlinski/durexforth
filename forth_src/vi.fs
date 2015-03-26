@@ -31,8 +31,8 @@ zptmp 1+ ldy, 1 sty,x
 ;asm
 
 :asm print-line
-0 ldy,x zptmp sty,
-1 ldy,x zptmp 1+ sty,
+sp0 ldy,x zptmp sty,
+sp1 ldy,x zptmp 1+ sty,
 0 ldy,#
 
 # different color for comments
@@ -55,8 +55,8 @@ foundeol -branch beq,
 jmp,
 
 :asm next-line
-0 ldy,x zptmp sty,
-1 ldy,x zptmp 1+ sty,
+sp0 ldy,x zptmp sty,
+sp1 ldy,x zptmp 1+ sty,
 0 ldy,#
 here
 zptmp lda,(y)
