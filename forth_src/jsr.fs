@@ -9,7 +9,7 @@
 30e value yr 30f value sr
 1d allot dup >r >r
 :asm jsr ( addr -- )
-0 lda,x 14 sta, 1 lda,x 15 sta,
+sp0 lda,x 14 sta, sp1 lda,x 15 sta,
 txa, pha,
 1c ldx,# :-
 73 lda,x r> sta,x # save zp
@@ -19,4 +19,4 @@ e130 jsr, # perform [sys]
 1c ldx,# :- 
 r> lda,x 73 sta,x # restore zp
 dex, -branch bpl,
-pla, tax, inx, inx, ;asm
+pla, tax, inx, ;asm
