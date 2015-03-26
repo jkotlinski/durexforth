@@ -80,10 +80,12 @@ header 20 c, ['] dodoes , literal , ;
 s" asm" load
 
 :asm rot ( a b c -- b c a )
-5 ldy,x 3 lda,x 5 sta,x 1 lda,x
-3 sta,x 1 sty,x
-4 ldy,x 2 lda,x 4 sta,x 0 lda,x
-2 sta,x 0 sty,x ;asm
+sp1 2+ ldy,x sp1 1+ lda,x 
+sp1 2+ sta,x sp1    lda,x
+sp1 1+ sta,x sp1    sty,x
+sp0 2+ ldy,x sp0 1+ lda,x 
+sp0 2+ sta,x sp0    lda,x
+sp0 1+ sta,x sp0    sty,x ;asm
 : -rot rot rot ;
 
 : /mod 0 -rot um/mod ;
@@ -93,7 +95,8 @@ s" asm" load
 : */ */mod nip ;
 
 :asm 100/
-1 lda,x 0 sta,x 0 lda,# 1 sta,x ;asm
+sp1 lda,x sp0 sta,x 
+0 lda,#   sp1 sta,x ;asm
 
 # creates value that is fast to read
 # but can only be rewritten by "to".
@@ -125,7 +128,7 @@ else (to) then ;
 : decimal a to base ;
 
 :asm 2drop ( a b -- )
-inx, inx, inx, inx, ;asm
+inx, inx, ;asm
 
 : forget loc ?dup if
 dup @ latest ! to here then ;
@@ -140,25 +143,26 @@ compile-ram @ -rot 0 compile-ram !
 801 -rot here -rot saveb
 compile-ram ! ;
 
-:asm 2/ 1 lsr,x 0 ror,x ;asm
+:asm 2/ sp1 lsr,x sp0 ror,x ;asm
 :asm or
-1 lda,x 3 ora,x 3 sta,x
-0 lda,x 2 ora,x 2 sta,x
-inx, inx, ;asm
+sp1 lda,x sp1 1+ ora,x sp1 1+ sta,x
+sp0 lda,x sp0 1+ ora,x sp0 1+ sta,x
+inx, ;asm
 :asm xor
-1 lda,x 3 eor,x 3 sta,x
-0 lda,x 2 eor,x 2 sta,x
-inx, inx, ;asm
+sp1 lda,x sp1 1+ eor,x sp1 1+ sta,x
+sp0 lda,x sp0 1+ eor,x sp0 1+ sta,x
+inx, ;asm
 : invert ffff xor ;
 : negate invert 1+ ;
 :asm +! ( num addr -- ) 
-0 lda,x zptmp sta,
-1 lda,x zptmp 1+ sta,
-0 ldy,# clc,
-zptmp lda,(y) 2 adc,x zptmp sta,(y)
-iny,
-zptmp lda,(y) 3 adc,x zptmp sta,(y)
-inx, inx, inx, inx, ;asm
+sp0 lda,x zptmp sta,
+sp1 lda,x zptmp 1+ sta,
+sp0 ldy,# clc,
+zptmp lda,(y) sp0 1+ adc,x 
+zptmp sta,(y) iny,
+zptmp lda,(y) sp1 1+ adc,x 
+zptmp sta,(y)
+inx, inx, ;asm
 
 : lshift ( x1 u -- x2 )
 begin ?dup while swap 2* swap 1- repeat ;
@@ -177,9 +181,9 @@ here swap over + to here ;
 : s> swap s< ;
 
 # return stack
-:asm r@ dex, dex,
-pla, 1 sta,x pla, 0 sta,x
-pha, 1 lda,x pha, ;asm
+:asm r@ dex,
+pla, sp1 sta,x pla, sp0 sta,x
+pha, sp1 lda,x pha, ;asm
 
 : . 0 >r begin base /mod swap
 dup a < if 7 - then 37 + >r
