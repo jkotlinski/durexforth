@@ -1,10 +1,7 @@
 
 
 ( Calls Basic/Kernal routines.
-  Uses ar, xr, yr,sr for register I/O.
-  The Forth stack is temporarily 
-  stored away so that CHRGET is in 
-  place for Basic calls. )
+  Uses ar/xr/yr/sr for register I/O. )
 30c value ar 30d value xr
 30e value yr 30f value sr
 :asm jsr ( addr -- )

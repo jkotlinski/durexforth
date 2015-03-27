@@ -26,8 +26,8 @@ value filename-len
 curlinestart @ curx @ + ;
 
 create foundeol
-zptmp ldy, 0 sty,x
-zptmp 1+ ldy, 1 sty,x
+zptmp ldy, sp0 sty,x
+zptmp 1+ ldy, sp1 sty,x
 ;asm
 
 :asm print-line
