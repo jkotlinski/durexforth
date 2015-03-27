@@ -5,20 +5,13 @@
 s" $" here loadb drop
 ae @ 2 - here ;
 
-: blocks ar ! xr ! bdcd jsr
-space ;
-
-: getreg dup c@ swap 1+ c@ ;
-
-: tobl 2 + dup getreg blocks 2 + ;
-: to0 begin dup c@ dup if
+: tobl 2+ dup @ . space 2+ ;
+: to0 begin
+dup c@ dup if
 emit 1+ else drop 1+ cr exit
 then again ;
 
-: ls 1 c@ 3 or 1 c! # basic in
+: ls base decimal
 load$ begin
-2dup <> if
-       tobl
-       to0
-       else 2drop exit
-       then again ;
+2dup <> while tobl to0 repeat
+2drop to base ;
