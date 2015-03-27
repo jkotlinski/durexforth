@@ -1582,9 +1582,9 @@ LOADB
     txa
     pha
 
-    lda LSB, x		; >destination
+    lda MSB, x		; >destination
     sta load_binary_laddr_hi
-    lda MSB, x		; <destination
+    lda LSB, x		; <destination
     sta load_binary_laddr_lo
 
     lda LSB+1, x		; a filename length
