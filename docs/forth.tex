@@ -64,6 +64,18 @@ Move value from top of return stack to top of parameter stack.
 
 Copy value from top of return stack to top of parameter stack. 
 
+\item[depth ( -- n)] 
+
+\texttt{n} is the number of single-cell values contained in the data stack before \texttt{n} was placed on the stack.
+
+\item[sp0 ( -- addr)] 
+
+The bottom address of the LSB section of the parameter stack.
+
+\item[sp1 ( -- addr)] 
+
+The bottom address of the MSB section of the parameter stack.
+
 \end{description}
 
 \section{Utility}
@@ -367,9 +379,6 @@ Debugging words are loaded with \texttt{s" debug" load}.
 
 \item[here (variable)] Write position of the Forth compiler (usually first unused byte of memory). Many C64 assemblers refer to this as program counter or \texttt{*}.
 
-\item[depth ( -- n)] \texttt{n} is the number of single-cell values contained in the data stack before \texttt{n} was placed on the stack.
-\item[sp0 ( -- addr)] The bottom address of the LSB section of the parameter stack.
-\item[sp1 ( -- addr)] The bottom address of the MSB section of the parameter stack.
 
 \end{description}
 
