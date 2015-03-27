@@ -120,3 +120,15 @@ Changelog
  * changed ' ['] to be according to standard
  * re-add sid.fs, which contains SID manipulation words
  * bugfix . in mml player
+
+2015-03-27: v1.32
+
+ * switched to dual parameter stack that is split up in MSB/LSB sections
+ * optimized "branch"
+ * renamed "var" to "variable"
+ * added "depth" (gives depth of parameter stack)
+ * added "sp0" (bottom address of LSB parameter stack)
+ * added "sp1" (bottom address of MSB parameter stack)
+ * removed "sp@"
+ * bugfixed & optimized "ls"
+ * moved zptmp, zptmp2, zptmp3 and ip to new locations
