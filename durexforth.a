@@ -1456,23 +1456,19 @@ ZBRANCH
 +   
     +NEXT
     
-    +BACKLINK
-    !byte 6
-    !text	"docol,"
-DOCOLCOMMA
-    jsr	__DOCOL
-    !word LIT, OP_JSR, CCOMMA ; insert jmp
-    !word LIT, __DOCOL, COMMA ; append __DOCOL (the codeword)
-    !word EXIT
-
 ; COLON
     +BACKLINK
     !byte	1
     !text	":"
 COLON
     jsr	__DOCOL
-    !word HEADER ; make the dictionary entry / header
-    !word DOCOLCOMMA
+    !word HEADER ; makes the dictionary entry / header
+
+    !word LITC ; compiles jsr __DOCOL
+    !byte OP_JSR
+    !word CCOMMA
+    !word LIT, __DOCOL, COMMA
+
     !word LATEST, FETCH, HIDDEN ; hide word
     !word RBRAC ; enter compile mode
     !word EXIT
