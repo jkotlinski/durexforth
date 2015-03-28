@@ -90,6 +90,9 @@ C_YELLOW = 7
 !macro NEXT {
     jmp	NEXT_IMPL
 }
+!macro NEXT_WITH_Y1 {
+    jmp	NEXT_IMPL + 2
+}
 
     ; set up restore key
     sei
@@ -206,7 +209,6 @@ __DOCOL
     ; fall through...
 
 NEXT_IMPL
-
     ; (IP) -> W
     ldy	#1          ; 2
     lda	(IP), y     ; 5
@@ -484,7 +486,7 @@ STORE
 
     inx
     inx
-    +NEXT
+    +NEXT_WITH_Y1
 
 ; @
     +BACKLINK
@@ -502,7 +504,7 @@ FETCH
     iny
     lda	(TMP),y
     sta MSB,x
-    +NEXT
+    +NEXT_WITH_Y1
 
 ; C!
     +BACKLINK
@@ -1181,7 +1183,7 @@ LIT
     inc	IP + 1
 +   sta	IP
 
-    +NEXT
+    +NEXT_WITH_Y1
 
 ; QUIT
     +BACKLINK
@@ -1295,7 +1297,7 @@ CCOMMA
     !text	","
 COMMA
     jsr	_COMMA
-    +NEXT
+    +NEXT_WITH_Y1
 _COMMA
     lda	HERE_LSB
     sta	TMP
@@ -1432,7 +1434,7 @@ BRANCH
     lda	TMP
     sta	IP
 
-    jmp NEXT_IMPL + 2 ; skip y = 1
+    +NEXT_WITH_Y1
 
 ; 0BRANCH
     +BACKLINK
@@ -1451,7 +1453,8 @@ ZBRANCH
     sta	IP
     bcc	+
     inc	IP + 1
-+   +NEXT
++   
+    +NEXT
     
     +BACKLINK
     !byte 6
