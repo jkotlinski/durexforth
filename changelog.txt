@@ -123,7 +123,8 @@ Changelog
 
 2015-03-27: v1.32
 
- * switched to dual parameter stack that is split up in MSB/LSB sections
+ * switched to dual parameter stack that is split up in MSB/LSB sections.
+   this is a nice optimization!
  * optimized "branch"
  * renamed "var" to "variable"
  * added "depth" (gives depth of parameter stack)
