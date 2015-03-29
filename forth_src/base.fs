@@ -223,8 +223,8 @@ s" vi" load
 tuck ( strlen strptr strlen )
 dup here + ( strlen strptr strlen tmpbuf )
 dup >r
-dup [char] s swap c! 1+
-dup [char] : swap c! 1+
+[char] s over c! 1+
+[char] : over c! 1+
 ( strlen strptr strlen tmpbuf+2 )
 swap ( strlen strptr tmpbuf+2 strlen )
 cmove ( strlen )
