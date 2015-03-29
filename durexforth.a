@@ -1554,13 +1554,6 @@ _errorchread
         JMP .loop     ; next byte
 
 geof
-.glose
-        LDA #$0F      ; filenumber 15
-        JSR CLOSE
-
-        LDX #$00      ; filenumber 0 = keyboard
-        JSR CHKIN     ; keyboard now input device again
-        RTS
 .error
         ; Accumulator contains BASIC error code
 
@@ -1568,7 +1561,14 @@ geof
         ; A = $05 (DEVICE NOT PRESENT)
 
         ; ... error handling for open errors ...
-        JMP .glose    ; even if OPEN failed, the file has to be closed
+
+.glose
+        LDA #$0F      ; filenumber 15
+        JSR CLOSE
+
+        LDX #$00      ; filenumber 0 = keyboard
+        JSR CHKIN     ; keyboard now input device again
+        RTS
 
 
 ; LOADB ( filenameptr filenamelen dst -- status ) load binary file
