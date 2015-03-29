@@ -226,9 +226,7 @@ dup >r
 dup [char] s swap c! 1+
 dup [char] : swap c! 1+
 ( strlen strptr strlen tmpbuf+2 )
-rot ( strlen strlen tmpbuf+2 strptr )
-swap ( strlen strlen strptr tmpbuf+2 )
-rot ( strlen strptr tmpbuf+2 strlen )
+swap ( strlen strptr tmpbuf+2 strlen )
 cmove ( strlen )
 r> swap 2+ ( tmp strlen )
 f openw f closew ;
