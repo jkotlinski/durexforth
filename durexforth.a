@@ -580,19 +580,19 @@ FILL
     !byte	6
     !text	"cmove>"
 CMOVE_BACK
-    clc
+    sec
     lda LSB, x
-    adc LSB + 2, x
+    sbc LSB + 2, x
     sta .bsrc + 1
     lda MSB, x
-    adc MSB + 2, x
+    sbc MSB + 2, x
     sta .bsrc + 2
-    clc
+    sec
     lda LSB, x
-    adc LSB + 1, x
+    sbc LSB + 1, x
     sta .bdst + 1
     lda MSB, x
-    adc MSB + 1, x
+    sbc MSB + 1, x
     sta .bdst + 2
 
     lda	LSB, x
