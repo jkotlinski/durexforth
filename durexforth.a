@@ -580,14 +580,21 @@ FILL
     !byte	6
     !text	"cmove>"
 CMOVE_BACK
-    lda	LSB + 2, x
-    sta	.bsrc + 1
-    lda	MSB + 2, x
-    sta	.bsrc + 2
-    lda	LSB + 1, x
-    sta	.bdst + 1
-    lda	MSB + 1, x
-    sta	.bdst + 2
+    clc
+    lda LSB, x
+    adc LSB + 2, x
+    sta .bsrc + 1
+    lda MSB, x
+    adc MSB + 2, x
+    sta .bsrc + 2
+    clc
+    lda LSB, x
+    adc LSB + 1, x
+    sta .bdst + 1
+    lda MSB, x
+    adc MSB + 1, x
+    sta .bdst + 2
+
     lda	LSB, x
     eor	#$ff
     sta	TMP
@@ -605,10 +612,6 @@ CMOVE_BACK
     bne	+
     +NEXT
 +
-.bsrc
-    lda	$ffff ; overwrite
-.bdst
-    sta	$ffff ; overwrite
 
     ; back
     dec	.bsrc + 1
@@ -623,6 +626,10 @@ CMOVE_BACK
     bne	+
     dec	.bdst + 2
 +
+.bsrc
+    lda	$ffff ; overwrite
+.bdst
+    sta	$ffff ; overwrite
     bne	-
 
 ; CMOVE ( src dst len -- ) forward move

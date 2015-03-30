@@ -220,15 +220,11 @@ s" gfx" load
 s" vi" load
 
 : scratch ( strptr strlen -- )
-tuck ( strlen strptr strlen )
-dup here + ( strlen strptr strlen tmpbuf )
-dup >r
-[char] s over c! 1+
-[char] : over c! 1+
-( strlen strptr strlen tmpbuf+2 )
-swap ( strlen strptr tmpbuf+2 strlen )
-cmove ( strlen )
-r> swap 2+ ( tmp strlen )
+2dup here 2+ swap 
+cmove>
+[char] s here c!
+[char] : here 1+ c!
+nip 2+ here swap ( tmp strlen )
 f openw f closew ;
 
 hide pushya

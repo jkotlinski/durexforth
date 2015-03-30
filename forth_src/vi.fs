@@ -366,10 +366,9 @@ nipchar
 : insert-char
 	dup CR <> linelen 26 > and if drop exit then
 
-	eof @ editpos - ( u )
-	dup 1- editpos + ( u src )
-	over 1- editpos + 1+ ( u src dst )
-	rot ( src dst u )
+	editpos 1-
+	editpos
+	eof @ editpos -
 	cmove>
 	editpos c!
 	1 curx +!
