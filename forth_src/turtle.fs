@@ -58,7 +58,7 @@ r> 1- dup r> 0= until r> 2drop 2drop
 init
 begin 2 pick forward
 over right
-swap over + 168 mod swap again ;
+tuck + 168 mod swap again ;
 )
 
 hide tx hide ty hide ta hide tp

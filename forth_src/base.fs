@@ -171,7 +171,7 @@ begin ?dup while swap 2* swap 1- repeat ;
 begin ?dup while swap 2/ swap 1- repeat ;
 
 : allot ( n -- prev-here )
-here swap over + to here ;
+here tuck + to here ;
 
 : variable 2 allot value ;
 
