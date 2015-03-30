@@ -221,12 +221,10 @@ s" gfx" load
 s" vi" load
 
 : scratch ( strptr strlen -- )
-2dup here 2+ swap 
-cmove>
+2dup here 2+ swap cmove>
 [char] s here c!
 [char] : here 1+ c!
-nip 2+ here swap ( tmp strlen )
-f openw f closew ;
+nip 2+ here swap f openw f closew ;
 
 hide pushya
 
