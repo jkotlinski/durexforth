@@ -65,13 +65,6 @@ latest @ begin ?dup while
 			2+ dup @ .
 			." ) "
 		endof
-		['] exit of
-			2dup
-			2+
-			<> if
-				." exit "
-			then
-		endof
 			( default )
 			dup
 			cfa> id.
