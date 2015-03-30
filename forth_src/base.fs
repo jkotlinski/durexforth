@@ -16,10 +16,11 @@ swap here swap ! ;
 : until immed ['] 0branch , , ;
 : again immed ['] branch , , ;
 : while immed ['] 0branch , here 0 , ;
-: repeat immed ['] branch , swap , here swap ! ;
+: repeat immed ['] branch , 
+swap , here swap ! ;
 : recurse immed latest @ >cfa , ;
 : ( immed begin key [char] ) = until ;
-: # immed begin key d = until ; # comment
+: # immed begin key d = until ;
 : tuck ( x y -- y x y ) swap over ;
 : ?dup dup if dup then ;
 : <> ( a b -- c ) = 0= ;
