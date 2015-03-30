@@ -1,5 +1,4 @@
   d value CR
-20 value bl
 : clrscr e544 jsr ;
 
 6001 value bufstart
