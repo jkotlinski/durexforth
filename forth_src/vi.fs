@@ -365,8 +365,8 @@ nipchar
 : insert-char
 	dup CR <> linelen 26 > and if drop exit then
 
-	editpos 1-
 	editpos
+	editpos 1+
 	eof @ editpos -
 	cmove>
 	editpos c!
