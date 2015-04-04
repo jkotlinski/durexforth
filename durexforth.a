@@ -175,16 +175,14 @@ __DOCOL
     sta	TMP
     ldy	IP + 1
 
-    pla
-    sta	IP
-    pla
-    sta	IP + 1
-
     ; adjust for weird return address after jsr...
-    inc	IP
-    bne +
-    inc	IP + 1
-+
+    pla         ; 4
+    clc         ; 2
+    adc #1      ; 2
+    sta IP      ; 3
+    pla         ; 4
+    adc #0      ; 2
+    sta IP+1    ; 3
 
     ; push old IP to return stack
     lda	TMP
