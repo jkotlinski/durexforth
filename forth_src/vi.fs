@@ -403,12 +403,6 @@ force-cur-right else cur-right then ;
 	endcase
 ;
 
-: push-cursor
-curx @ cury @ curlinestart @ ;
-
-: pop-cursor
-curlinestart ! cury ! curx ! ;
-
 : del-word
 	1 to need-refresh-line
 	begin
