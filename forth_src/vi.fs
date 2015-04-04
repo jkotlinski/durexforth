@@ -150,7 +150,7 @@ next-line dup ( 2xnextline )
 eof @ >= if drop exit then
 curlinestart !
 cury @ 17 < if 1 cury +! else
-homepos dup @ next-line swap !
+homepos next-line over @ !
 1 to need-refresh then
 fit-curx-in-linelen ;
 
@@ -504,9 +504,9 @@ endcase clear-status ;
 : do-backup
 	# scratch old backup
 	drivebuf
-	dup [char] s swap c! 1+
-	dup [char] : swap c! 1+
-	dup [char] . swap c! 1+
+	[char] s over c! 1+
+	[char] : over c! 1+
+	[char] . over c! 1+
 	dup
 	filename swap filename-len c@ cmove
 	filename-len c@ +
@@ -517,11 +517,11 @@ endcase clear-status ;
 
 	# rename to new backup
 	drivebuf
-	dup [char] r swap c! 1+
+	[char] r over c! 1+
 	1+ # colon already in place...
-	dup [char] . swap c! 1+
+	[char] . over c! 1+
 	filename-len c@ + # filename ok
-	dup [char] = swap c! 1+
+	[char] = over c! 1+
 	dup
 	filename swap filename-len c@ cmove
 	filename-len c@ + # filename ok
