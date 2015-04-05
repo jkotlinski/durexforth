@@ -1,6 +1,17 @@
 # durexforth
 
-Modern, lean C64 Forth inspired by colorForth, JONESFORTH and Blazin' Forth. Direct threaded for simplicity. Project includes a vi clone written in Forth, a high-resolution graphics library, plus MML music support (new in 1.3!).
+Modern, lean C64 Forth inspired by colorForth, JONESFORTH and Blazin' Forth. Project includes a vi clone written in Forth, a high-resolution graphics library, plus MML music support (new in 1.3!).
+
+Goals (in order of priority):
+
+* Make a system that is nice to work with on the real machine.
+* Simplicity. The core should be small, leaving a lot of space for user code and data.
+* Speed. durexForth should be at least as fast as Blazin' Forth.
+
+Non-goals:
+
+* Being the fastest C64 Forth. There are optimizations that could make durexForth four times faster, at the cost of increased code size and complexity. I believe pursuing this is a red herring; it is better to prototype in Forth and then rewrite crucial parts in assembly. For that purpose, durexForth includes an assembler.
+
 
 <img src=http://noname.c64.org/csdb/gfx/releases/75000/75456.png>
 
