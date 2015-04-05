@@ -10,7 +10,7 @@ Goals (in order of priority):
 
 Non-goals:
 
-* Being the fastest C64 Forth. durexForth could probably be made four times faster, but only at the cost of increased code size and complexity. I believe pursuing this is a red herring; it is better to prototype in Forth and then rewrite crucial parts in assembly. For that purpose, durexForth includes an assembler.
+* Being the fastest possible C64 Forth. Subroutine-threading would certainly be faster, but the durexForth way is to first write correct code in Forth, then hand-optimize crucial words using the inbuilt assembler.
 
 
 <img src=http://noname.c64.org/csdb/gfx/releases/75000/75456.png>
