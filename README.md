@@ -2,7 +2,7 @@
 
 Modern, lean C64 Forth inspired by colorForth, JONESFORTH and Blazin' Forth. Project includes a vi clone written in Forth, a high-resolution graphics library, plus MML music support (new in 1.3!).
 
-Goals (in order of priority):
+Goals:
 
 * Fun. The system should be nice to work with on the real machine.
 * Simplicity. The core should be small, leaving a lot of space for user code and data.
