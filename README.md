@@ -4,7 +4,7 @@ Modern, lean C64 Forth inspired by colorForth, JONESFORTH and Blazin' Forth. Pro
 
 Goals (in order of priority):
 
-* Make a system that is nice to work with on the real machine.
+* Fun. The system should be nice to work with on the real machine.
 * Simplicity. The core should be small, leaving a lot of space for user code and data.
 * Speed. durexForth should be at least as fast as Blazin' Forth.
 
