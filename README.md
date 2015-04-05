@@ -10,7 +10,7 @@ Goals (in order of priority):
 
 Non-goals:
 
-* Being the fastest possible C64 Forth. Subroutine-threading would certainly be faster, but the durexForth way is to first write correct code in Forth, then hand-optimize crucial words using the inbuilt assembler.
+* Being the fastest possible C64 Forth. If you have a word that needs to be fast, the recommended approach is to first write it in Forth, then rewrite it using the in-built assembler.
 
 
 <img src=http://noname.c64.org/csdb/gfx/releases/75000/75456.png>
