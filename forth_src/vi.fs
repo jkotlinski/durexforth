@@ -327,10 +327,9 @@ key editpos c!
 1 to need-refresh-line ;
 
 : nipchar
-editpos 1+
-editpos
-eof @ editpos - 1+
-cmove 
+editpos 1+ eof @ = if exit then
+editpos 1+ editpos
+eof @ editpos - cmove 
 ffff eof +! ;
 
 : join-lines
