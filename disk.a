@@ -95,8 +95,7 @@ geof
         JSR CLOSE
 
         LDX #$00      ; filenumber 0 = keyboard
-        JSR CHKIN     ; keyboard now input device again
-        RTS
+        JMP CHKIN     ; keyboard now input device again
 
 
 ; LOADB ( filenameptr filenamelen dst -- status ) load binary file
