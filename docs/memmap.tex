@@ -1,7 +1,8 @@
 \chapter{Memory Map}
 
 \begin{description}
-\item[... - \$87] Parameter stack (grows downwards). Placing parameter stack here gives good performance, but it also means that BASIC Kernal cannot be used without extra precautions.
+\item[3 - \$3a] Parameter stack, LSB section.
+\item[\$3b - \$72] Parameter stack, MSB section.
 \item[\$8b - \$8c] zptmp (temporary storage for low-level Forth words).
 \item[\$8d - \$8e] zptmp2 (temporary storage for low-level Forth words).
 \item[\$9e - \$9f] zptmp3 (temporary storage for low-level Forth words).
