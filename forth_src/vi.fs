@@ -150,7 +150,7 @@ next-line dup ( 2xnextline )
 eof @ >= if drop exit then
 curlinestart !
 cury @ 17 < if 1 cury +! else
-homepos next-line over @ !
+homepos @ next-line homepos !
 1 to need-refresh then
 fit-curx-in-linelen ;
 
