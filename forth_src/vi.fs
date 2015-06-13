@@ -348,12 +348,15 @@ else nipchar then
 
 curlinestart ! curx ! cury ! ;
 
+: backspace-sol
+cury @ 0= if exit then
+linelen cur-up eol linelen join-lines
+( from-linelen to-linelen )
+swap if if cur-right nipchar then 
+else drop force-cur-right then ;
+
 : backspace
-curx @ 0= if cury @ if
-linelen 0<> cur-up eol linelen 0<>
-join-lines
-and if cur-right nipchar then then
-exit then
+curx @ 0= if backspace-sol exit then
 
 ffff curx +!
 nipchar
