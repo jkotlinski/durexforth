@@ -2,7 +2,6 @@
 : clrscr e544 jsr ;
 
 6001 value bufstart
-0 bufstart 1- c! # reverse sentinel
 
 variable eof ( ram eof )
 0 eof !
@@ -121,6 +120,7 @@ bl status-pos 18 fill ;
 clear-status status-pos c! ;
 
 : init
+0 bufstart 1- c! # sentinel
 0 compile-ram ! # to enable editor start from base.src
 80 28a c! # key repeat on
 clear-status ;
