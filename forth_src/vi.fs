@@ -179,8 +179,7 @@ ffff cury +!
 then ;
 
 : cur-left
-curx @ 0= if exit then
-ffff curx +! ;
+curx @ ?dup if 1- curx ! then ;
 
 : is-eof-or-CR dup 0= swap CR = or ;
 : is-whitespace dup CR = swap bl = or ;
@@ -274,12 +273,9 @@ force-cur-right
 insert-start ;
 
 : insert-stop
-	curx @ if
-		ffff curx +!
-	then
-	0 to insert-active
-	clear-status
-;
+cur-left
+0 to insert-active
+clear-status ;
 
 : show-location
 	dup ( loc sol )
@@ -356,11 +352,9 @@ swap if if cur-right nipchar then
 else drop force-cur-right then ;
 
 : backspace
-curx @ 0= if backspace-sol exit then
-
-ffff curx +!
-nipchar
-1 to need-refresh-line ;
+curx @ if cur-left nipchar
+1 to need-refresh-line
+else backspace-sol then ;
 
 : del-char force-cur-right backspace ;
 
