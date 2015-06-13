@@ -156,15 +156,12 @@ homepos @ next-line homepos !
 1 to need-refresh then
 fit-curx-in-linelen ;
 
-: find-start-of-line
-begin
-1- ( addr )
-dup c@ dup ( addr char char )
-d = ( addr char cr? )
-swap 0= ( addr cr? sof? )
-or ( addr isprevline )
-until
-1+ ;
+: cr= CR = ;
+: eol= dup 0= swap cr= or ;
+: space= dup cr= swap bl = or ;
+
+: find-start-of-line ( addr -- addr )
+begin 1- dup c@ eol= until 1+ ;
 
 : cur-up
 curlinestart @
@@ -183,13 +180,9 @@ then ;
 : cur-left
 curx @ ?dup if 1- curx ! then ;
 
-: is-eof-or-CR dup 0= swap CR = or ;
-: is-whitespace dup CR = swap bl = or ;
-
 : cur-right
-editpos c@ is-eof-or-CR
-editpos 1+ c@ is-eof-or-CR
-or if exit then
+editpos c@ eol=
+editpos 1+ c@ eol= or if exit then
 1 curx +! ;
 
 : eol
@@ -202,13 +195,15 @@ cur-up eol then else cur-left then ;
 
 : sol 0 curx ! ;
 
+: is-wordstart
+editpos 1- c@ space=
+editpos c@ space= 0= and ;
+
 : word-back
 	rewind-cur
 	begin
 		editpos bufstart =
-		editpos 1- c@ is-whitespace
-		editpos c@ is-whitespace 0= and
-		or 0=
+        is-wordstart or 0=
 	while
 		rewind-cur
 	repeat
@@ -228,9 +223,7 @@ cur-up eol then else cur-left then ;
 : word-fwd
 	advance-cur if exit then
 	begin
-		editpos 1- c@ is-whitespace
-		editpos c@ is-whitespace 0= and
-		0=
+        is-wordstart 0=
 	while
 		advance-cur if exit then
 	repeat
@@ -282,7 +275,7 @@ clear-status ;
 : show-location
 	dup ( loc sol )
 	begin
-		dup c@ CR = if
+		dup c@ cr= if
 			1+ ( loc sol )
 			tuck ( sol loc sol )
 			- curx !
@@ -548,7 +541,7 @@ saveb
 			drop
 			exit
 		then
-		dup CR = if
+		dup cr= if
 			2drop ( len )
 			filename-len c!
 			write-file
