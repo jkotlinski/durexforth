@@ -13,8 +13,10 @@ variable curlinestart
 variable curx
 variable cury
 0 value need-refresh
-0 value need-refresh-line
+variable line-dirty
 0 value insert-active
+
+: line-dirty! 1 line-dirty c! ;
 
 10 allot dup
 value filename-len
@@ -319,8 +321,7 @@ clear-status ;
 ;
 
 : replace-char
-key editpos c!
-1 to need-refresh-line ;
+key editpos c! line-dirty! ;
 
 : nipchar
 editpos 1+ eof @ = if exit then
@@ -352,8 +353,7 @@ swap if if cur-right nipchar then
 else drop force-cur-right then ;
 
 : backspace
-curx @ if cur-left nipchar
-1 to need-refresh-line
+curx @ if cur-left nipchar line-dirty!
 else backspace-sol then ;
 
 : del-char force-cur-right backspace ;
@@ -369,7 +369,7 @@ else backspace-sol then ;
 	1 curx +!
 	1 eof +!
 	0 eof @ c!
-	1 to need-refresh-line
+    line-dirty!
 ;
 
 9d value LEFT
@@ -400,7 +400,7 @@ force-cur-right else cur-right then ;
 ;
 
 : del-word
-	1 to need-refresh-line
+    line-dirty!
 	begin
 		editpos c@ 20 = if
 			del-char exit
@@ -745,7 +745,7 @@ bufstart compile-ram ! ;
 : main-loop
 	begin
 		0 to need-refresh
-		0 to need-refresh-line
+		0 line-dirty c!
 
 		depth # stack check...
 
@@ -765,7 +765,7 @@ bufstart compile-ram ! ;
 		need-refresh if
 			show-page
 		else
-			need-refresh-line if
+			line-dirty c@ if
 				refresh-line
 			then
 		then
