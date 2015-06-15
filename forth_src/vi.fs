@@ -1,4 +1,4 @@
-  d value CR
+d value CR
 : clrscr e544 jsr ;
 
 6001 value bufstart

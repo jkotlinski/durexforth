@@ -1,5 +1,3 @@
-
-
 # lindenmayer systems
 
 s" turtle" load
