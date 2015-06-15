@@ -637,8 +637,10 @@ header maintable
 key i c, [compile] insert-start
 key a c, [compile] append-start
 key / c, [compile] find-handler
-key U c, [compile] half-page-back
-key D c, [compile] half-page-fwd
+( ctrl+u )
+b8 c, [compile] half-page-back
+( ctrl+d )
+ac c, [compile] half-page-fwd
 key J c, [compile] join-lines
 key g c, [compile] goto-start
 key G c, [compile] goto-eof
