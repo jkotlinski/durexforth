@@ -54,7 +54,7 @@ d cmp,#
 foundeol -branch beq,
 jmp,
 
-:asm next-line
+:asm next-line ( addr -- addr )
 sp0 ldy,x zptmp sty,
 sp1 ldy,x zptmp 1+ sty,
 0 ldy,#
@@ -322,11 +322,9 @@ editpos 1+ editpos
 eof @ editpos - cmove 
 ffff eof +! ;
 
-: find-eol ( addr -- addr )
-begin dup c@ eol= 0= while 1+ repeat ;
 : too-long-to-join
-curlinestart @ find-eol 1+ find-eol
-curlinestart @ - 27 > ;
+curlinestart @ next-line next-line
+curlinestart @ - 28 > ;
 
 : join-lines
 too-long-to-join if exit then
