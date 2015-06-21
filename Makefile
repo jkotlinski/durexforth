@@ -14,8 +14,8 @@ durexforth.d64: durexforth.prg forth_src/base.fs forth_src/debug.fs forth_src/vi
 	$(C1541) -format durexforth,DF  d64 durexforth.d64 # > /dev/null
 	$(C1541) -attach $@ -write durexforth.prg durexforth # > /dev/null
 # $(C1541) -attach $@ -write debug.bak
-	echo -n "aa" > build/header
 	mkdir -p build
+	echo -n "aa" > build/header
 	@for forth in $(FORTHLIST); do\
         cat build/header forth_src/$$forth.fs | ext/petcom - > build/$$forth.pet; \
         $(C1541) -attach $@ -write build/$$forth.pet $$forth; \
