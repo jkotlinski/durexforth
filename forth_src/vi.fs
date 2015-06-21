@@ -322,7 +322,14 @@ editpos 1+ editpos
 eof @ editpos - cmove 
 ffff eof +! ;
 
+: find-eol ( addr -- addr )
+begin dup c@ eol= 0= while 1+ repeat ;
+: too-long-to-join
+curlinestart @ find-eol 1+ find-eol
+curlinestart @ - 27 > ;
+
 : join-lines
+too-long-to-join if exit then
 1 to need-refresh
 linelen 0= if nipchar exit then
 
