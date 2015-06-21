@@ -308,6 +308,13 @@ LOAD_AND_COMPILE
 +
     ldx	COMPILE_FILENO ; file number
     jsr	CHKIN
+
+    ; Skips load address. It is tempting to keep the source
+    ; code as .SEQ files instead of .PRG to avoid this step.
+    ; The drawback with that is that one would have to type
+    ; ." foo,s" load instead of ." foo" load.
+    JSR CHRIN     ; get a byte from file
+    JSR CHRIN     ; get a byte from file
 ++
     pla
     tax

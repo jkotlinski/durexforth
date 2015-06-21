@@ -56,7 +56,7 @@ durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet forth_src/
 	$(C1541) -attach $@ -write durexforth.prg durexforth  # > /dev/null
 	# $(C1541) -attach $@ -write debug.bak
 	@for forth in $(FORTHLIST); do\
-        $(C1541) -attach $@ -write forth_src/$$forth.pet $$forth,s; \
+        $(C1541) -attach $@ -write forth_src/$$forth.pet $$forth; \
     done;
 
 clean:

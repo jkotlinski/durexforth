@@ -1544,6 +1544,6 @@ load_base
     rts
 
 basename
-!text	"base,s"
+!text	"base"
 basename_end
 
