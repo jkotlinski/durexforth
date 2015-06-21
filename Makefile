@@ -8,56 +8,18 @@ all:	durexforth.d64
 durexforth.prg: durexforth.a number.a ummod.a
 	@$(AS) durexforth.a
 
-forth_src/purge-hidden.pet: forth_src/purge-hidden.fs ext/petcom
-	cat forth_src/purge-hidden.fs | ext/petcom - > forth_src/purge-hidden.pet
-forth_src/base.pet: forth_src/base.fs ext/petcom
-	cat forth_src/base.fs | ext/petcom - > forth_src/base.pet
-forth_src/debug.pet: forth_src/debug.fs ext/petcom
-	cat forth_src/debug.fs | ext/petcom - > forth_src/debug.pet
-forth_src/vi.pet: forth_src/vi.fs ext/petcom
-	cat forth_src/vi.fs | ext/petcom - > forth_src/vi.pet
-forth_src/asm.pet: forth_src/asm.fs ext/petcom
-	cat forth_src/asm.fs | ext/petcom - > forth_src/asm.pet
-forth_src/labels.pet: forth_src/labels.fs ext/petcom
-	cat forth_src/labels.fs | ext/petcom - > forth_src/labels.pet
-forth_src/gfx.pet: forth_src/gfx.fs ext/petcom
-	cat forth_src/gfx.fs | ext/petcom - > forth_src/gfx.pet
-forth_src/gfxdemo.pet: forth_src/gfxdemo.fs ext/petcom
-	cat forth_src/gfxdemo.fs | ext/petcom - > forth_src/gfxdemo.pet
-forth_src/turtle.pet: forth_src/turtle.fs ext/petcom
-	cat forth_src/turtle.fs | ext/petcom - > forth_src/turtle.pet
-forth_src/fractal.pet: forth_src/fractal.fs ext/petcom
-	cat forth_src/fractal.fs | ext/petcom - > forth_src/fractal.pet
-forth_src/rnd.pet: forth_src/rnd.fs ext/petcom
-	cat forth_src/rnd.fs | ext/petcom - > forth_src/rnd.pet
-forth_src/sin.pet: forth_src/sin.fs ext/petcom
-	cat forth_src/sin.fs | ext/petcom - > forth_src/sin.pet
-forth_src/ls.pet: forth_src/ls.fs ext/petcom
-	cat forth_src/ls.fs | ext/petcom - > forth_src/ls.pet
-forth_src/sprite.pet: forth_src/sprite.fs ext/petcom
-	cat forth_src/sprite.fs | ext/petcom - > forth_src/sprite.pet
-forth_src/doloop.pet: forth_src/doloop.fs ext/petcom
-	cat forth_src/doloop.fs | ext/petcom - > forth_src/doloop.pet
-forth_src/jsr.pet: forth_src/jsr.fs ext/petcom
-	cat forth_src/jsr.fs | ext/petcom - > forth_src/jsr.pet
-forth_src/float.pet: forth_src/float.fs ext/petcom
-	cat forth_src/float.fs | ext/petcom - > forth_src/float.pet
-forth_src/sid.pet: forth_src/sid.fs ext/petcom
-	cat forth_src/sid.fs | ext/petcom - > forth_src/sid.pet
-forth_src/mml.pet: forth_src/mml.fs ext/petcom
-	cat forth_src/mml.fs | ext/petcom - > forth_src/mml.pet
-forth_src/mmldemo.pet: forth_src/mmldemo.fs ext/petcom
-	cat forth_src/mmldemo.fs | ext/petcom - > forth_src/mmldemo.pet
-
 FORTHLIST=base debug vi asm gfx gfxdemo rnd sin ls turtle fractal purge-hidden sprite doloop jsr float labels mml mmldemo sid
 
-durexforth.d64: durexforth.prg forth_src/base.pet forth_src/debug.pet forth_src/vi.pet forth_src/asm.pet forth_src/gfx.pet forth_src/gfxdemo.pet forth_src/rnd.pet forth_src/sin.pet forth_src/ls.pet forth_src/turtle.pet forth_src/fractal.pet forth_src/purge-hidden.pet forth_src/sprite.pet forth_src/doloop.pet forth_src/jsr.pet forth_src/float.pet forth_src/labels.pet forth_src/mml.pet forth_src/mmldemo.pet forth_src/sid.pet Makefile
+durexforth.d64: durexforth.prg forth_src/base.fs forth_src/debug.fs forth_src/vi.fs forth_src/asm.fs forth_src/gfx.fs forth_src/gfxdemo.fs forth_src/rnd.fs forth_src/sin.fs forth_src/ls.fs forth_src/turtle.fs forth_src/fractal.fs forth_src/purge-hidden.fs forth_src/sprite.fs forth_src/doloop.fs forth_src/jsr.fs forth_src/float.fs forth_src/labels.fs forth_src/mml.fs forth_src/mmldemo.fs forth_src/sid.fs Makefile ext/petcom
 	$(C1541) -format durexforth,DF  d64 durexforth.d64 # > /dev/null
-	$(C1541) -attach $@ -write durexforth.prg durexforth  # > /dev/null
-	# $(C1541) -attach $@ -write debug.bak
+	$(C1541) -attach $@ -write durexforth.prg durexforth # > /dev/null
+# $(C1541) -attach $@ -write debug.bak
+	mkdir -p build
 	@for forth in $(FORTHLIST); do\
-        $(C1541) -attach $@ -write forth_src/$$forth.pet $$forth; \
+        cat forth_src/$$forth.fs | ext/petcom - > build/$$forth.pet; \
+        $(C1541) -attach $@ -write build/$$forth.pet $$forth; \
     done;
 
 clean:
-	rm -f *.lbl *.prg forth_src/*.pet *.d64
+	rm -f *.lbl *.prg forth_src/*.pet *.d64 
+	rm -rf build
