@@ -22,5 +22,5 @@ durexforth.d64: durexforth.prg forth_src/base.fs forth_src/debug.fs forth_src/vi
     done;
 
 clean:
-	rm -f *.lbl *.prg forth_src/*.pet *.d64 
+	rm -f *.lbl *.prg *.d64 
 	rm -rf build
