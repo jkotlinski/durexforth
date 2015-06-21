@@ -311,8 +311,9 @@ LOAD_AND_COMPILE
 
     ; Skips load address. It is tempting to keep the source
     ; code as .SEQ files instead of .PRG to avoid this step.
-    ; The drawback with that is that one would have to type
-    ; ." foo,s" load instead of ." foo" load.
+    ; However, the advantage with .PRG is that loading/saving
+    ; files from text editor can be dramatically speeded up
+    ; by fast loader cartridges such as Retro Replay.
     JSR CHRIN     ; get a byte from file
     JSR CHRIN     ; get a byte from file
 ++
