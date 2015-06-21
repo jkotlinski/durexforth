@@ -1,5 +1,3 @@
-
-
 :asm (do)
 sp0 1+ lda,x pha, sp1 1+ lda,x pha,
 sp0 lda,x pha, sp1 lda,x pha,

@@ -1,5 +1,3 @@
-
-
 variable seed
 # Random number generator from
 # Starting Forth. MSB has better

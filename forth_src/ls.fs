@@ -1,5 +1,3 @@
-
-
 # submitted by kevin reno
 
 : ls base decimal

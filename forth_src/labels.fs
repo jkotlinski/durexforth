@@ -1,5 +1,3 @@
-
-
 ( asm local labels.
 
 n @: = label n

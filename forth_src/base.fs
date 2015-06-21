@@ -1,5 +1,3 @@
-  
-
 : 2dup over over ;
 : cr d emit ;
 : nip swap drop ;

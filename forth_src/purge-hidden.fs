@@ -1,5 +1,3 @@
-
-
 ( Loading this file permanently
 forgets every hidden word by removing
 them from the linked word list. After
