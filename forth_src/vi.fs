@@ -638,9 +638,9 @@ key i c, [compile] insert-start
 key a c, [compile] append-start
 key / c, [compile] find-handler
 ( ctrl+u )
-b8 c, [compile] half-page-back
+15 c, [compile] half-page-back
 ( ctrl+d )
-ac c, [compile] half-page-fwd
+4 c, [compile] half-page-fwd
 key J c, [compile] join-lines
 key g c, [compile] goto-start
 key G c, [compile] goto-eof
