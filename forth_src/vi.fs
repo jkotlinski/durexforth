@@ -414,10 +414,15 @@ variable clipboard-count
 0 clipboard-count !
 
 : del-line
+( copy line to clipboard )
 linelen clipboard-count !
 curlinestart @ clipboard linelen cmove
-begin linelen while del-char repeat
-join-lines 1 to need-refresh ;
+( delete line )
+curlinestart @ next-line 
+curlinestart @ 
+eof @ 1+ curlinestart @ next-line -
+cmove
+1 to need-refresh ;
 
 : del
 [char] d set-status
