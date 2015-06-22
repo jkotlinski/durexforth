@@ -413,15 +413,10 @@ force-cur-right else cur-right then ;
 variable clipboard-count
 0 clipboard-count !
 
-# this can be much optimized by using cmove
 : del-line
-0 clipboard-count !
-sol begin linelen while
-# copy to clipboard
-editpos c@
-clipboard clipboard-count @ + c!
-1 clipboard-count +!
-del-char repeat
+linelen clipboard-count !
+curlinestart @ clipboard linelen cmove
+begin linelen while del-char repeat
 join-lines 1 to need-refresh ;
 
 : del
