@@ -293,11 +293,14 @@ f sid-vol!
 3 0 do i voice c! 0 pause i + 1+ c!
 10 ctl c! 891a srad! loop ;
 
-: play-mml ( string1 string2 string3 -- )
+: play-mml ( str1 str2 str3 -- )
 # init sentinels
-over + dup >r dup c@ >r 0 swap c! .str !
-over + dup >r dup c@ >r 0 swap c! .str 2+ !
-over + dup >r dup c@ >r 0 swap c! .str 2+ 2+ !
+over + dup >r dup c@ >r 0 swap c! .str
+!
+over + dup >r dup c@ >r 0 swap c! .str
+2+ !
+over + dup >r dup c@ >r 0 swap c! .str
+2+ 2+ !
 
 init-voices play
 3 0 do i voice c! gate-off loop
