@@ -54,7 +54,7 @@ d cmp,#
 foundeol -branch beq,
 jmp,
 
-:asm next-line ( addr -- addr )
+:asm find-next-line ( addr -- addr )
 sp0 ldy,x zptmp sty,
 sp1 ldy,x zptmp 1+ sty,
 0 ldy,#
@@ -69,7 +69,7 @@ jmp,
 
 : linelen
 curlinestart @ dup ( addr )
-next-line 1- swap - ;
+find-next-line 1- swap - ;
 
 : cursor-scr-pos
 cury @ 28 *
@@ -148,11 +148,11 @@ linelen curx @ min curx ! ;
 
 : cur-down
 curlinestart @ ( curline )
-next-line dup ( 2xnextline )
+find-next-line dup ( 2xnextline )
 eof @ >= if drop exit then
 curlinestart !
 cury @ 17 < if 1 cury +! else
-homepos @ next-line homepos !
+homepos @ find-next-line homepos !
 1 to need-refresh then
 fit-curx-in-linelen ;
 
@@ -323,7 +323,7 @@ eof @ editpos - cmove
 ffff eof +! ;
 
 : too-long-to-join
-curlinestart @ next-line next-line
+curlinestart @ find-next-line find-next-line
 curlinestart @ - 28 > ;
 
 : join-lines
