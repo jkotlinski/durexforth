@@ -614,20 +614,17 @@ insert-start
 1 to need-refresh ;
 
 : paste-line
-	open-line
-	clipboard-count @
-	0
-	begin
-		2dup <> 
-	while
-		clipboard over + @
-		insert-char
-		1+
-	repeat
-	2drop
-	insert-stop
-	sol
-;
+open-line insert-stop
+( make room for clipboard contents )
+curlinestart @
+dup clipboard-count @ +
+eof @ 1+ curlinestart @ - cmove>
+( copy from clipboard )
+clipboard
+curlinestart @
+clipboard-count @ cmove
+( update eof )
+clipboard-count @ eof +! ;
 
 : change-word
 del-word
