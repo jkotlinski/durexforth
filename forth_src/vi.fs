@@ -170,7 +170,8 @@ curlinestart !
 fit-curx-in-linelen
 cury @ 0= if
 curlinestart @ homepos !
-1 to need-refresh
+400 428 398 cmove>
+line-dirty!
 else
 ffff cury +!
 then ;
