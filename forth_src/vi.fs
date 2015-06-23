@@ -112,7 +112,8 @@ bufstart curlinestart ! ;
 : show-page
 status-pos c@ clrscr status-pos c!
 homepos @
-18 0 do print-line loop
+18 0 do dup eof @ < if 
+print-line then loop
 drop ;
 
 : clear-status ( -- )
@@ -414,10 +415,17 @@ variable clipboard-count
 0 clipboard-count !
 
 : del-line
+curlinestart @ eof @ = if exit then
+sol 1 to need-refresh 
+( copy line to clipboard )
 linelen clipboard-count !
 curlinestart @ clipboard linelen cmove
-begin linelen while del-char repeat
-join-lines 1 to need-refresh ;
+( contract buffer )
+linelen 1+
+curlinestart @ find-next-line
+curlinestart @
+eof @ curlinestart @ - cmove
+eof @ swap - eof ! ;
 
 : del
 [char] d set-status
