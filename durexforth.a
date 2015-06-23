@@ -614,7 +614,7 @@ CMOVE_BACK
     lda	$ffff ; overwrite
 .bdst
     sta	$ffff ; overwrite
-    bne	-
+    jmp	-
 
 ; CMOVE ( src dst len -- ) forward move
     +BACKLINK
