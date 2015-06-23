@@ -41,7 +41,8 @@ zptmp 1+ lda, sp1 sta,x
 : sid-vol! d418 c! ;
 
 ( write adsr )
-: srad! ( SR AD -- ) [ sid 5 + literal ] voice7+ ! ;
+: srad! ( SR AD -- ) 
+[ sid 5 + literal ] voice7+ ! ;
 
 here # 95 notes from c0, pal
 116 , 127 , 138 , 14b , 15e , 173 ,
@@ -129,24 +130,30 @@ dex, 0 lda,# sp1 sta,x
 key 1 cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 key 6 cmp,# +branch bne,
-.str-pop jsr, 60 10 / lda,# sp0 sta,x rts,
+.str-pop jsr, 60 10 / lda,# sp0 sta,x 
+rts,
 :+ 60 lda,# sp0 sta,x rts,
 :+ key 2 cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 key 4 cmp,# +branch bne,
-.str-pop jsr, 60 18 / lda,# sp0 sta,x rts,
+.str-pop jsr, 60 18 / lda,# sp0 sta,x 
+rts,
 :+ 60 2 / lda,# sp0 sta,x rts,
 :+ key 3 cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 key 2 cmp,# +branch bne,
-.str-pop jsr, 60 20 / lda,# sp0 sta,x rts,
+.str-pop jsr, 60 20 / lda,# sp0 sta,x 
+rts,
 :+ 60 3 / lda,# sp0 sta,x rts,
 :+ key 4 cmp,# +branch bne,
-.str-pop jsr, 60 4 / lda,# sp0 sta,x rts,
+.str-pop jsr, 60 4 / lda,# sp0 sta,x 
+rts,
 :+ key 6 cmp,# +branch bne,
-.str-pop jsr, 60 6 / lda,# sp0 sta,x rts,
+.str-pop jsr, 60 6 / lda,# sp0 sta,x 
+rts,
 :+ key 8 cmp,# +branch bne,
-.str-pop jsr, 60 8 / lda,# sp0 sta,x rts,
+.str-pop jsr, 60 8 / lda,# sp0 sta,x 
+rts,
 :+ 0 lda,# sp0 sta,x rts,
 
 :asm read-pause
@@ -157,7 +164,8 @@ default-pause lda, sp0 sta,x
 .strget jsr,
 key . cmp,# +branch bne,
 .str-pop jsr,
-sp0 lda,x lsr,a clc, sp0 adc,x sp0 sta,x
+sp0 lda,x lsr,a clc, 
+sp0 adc,x sp0 sta,x
 :+ 
 sp0 dec,x ;asm
 
@@ -184,11 +192,15 @@ octave sta,
 
 : do-commands ( -- done )
 strget case
-[char] l of str-pop read-default-pause recurse endof
+[char] l of str-pop 
+read-default-pause recurse endof
 [char] o of o recurse endof
-[char] < of str-pop fff4 octave +! recurse endof
-[char] > of str-pop c octave +! recurse endof
-[char] & of str-pop 1 tie c! recurse endof
+[char] < of str-pop fff4 octave +!
+recurse endof
+[char] > of str-pop c octave +! 
+recurse endof
+[char] & of str-pop 1 tie c! 
+recurse endof
 d of str-pop recurse endof
 bl of str-pop recurse endof
 endcase ;
@@ -219,38 +231,44 @@ else play-note then ;
 octave 1+ lda, octave sta,
 tie 1+ lda, tie sta,
 pause 1+ lda, pause sta,
-default-pause 1+ lda, default-pause sta,
+default-pause 1+ lda, 
+default-pause sta,
 ;asm
 
 :asm voice1 
 octave lda, octave 1+ sta,
 tie lda, tie 1+ sta,
 pause lda, pause 1+ sta,
-default-pause lda, default-pause 1+ sta,
+default-pause lda, 
+default-pause 1+ sta,
 1 lda,# voice sta, 
 octave 2+ lda, octave sta,
 tie 2+ lda, tie sta,
 pause 2+ lda, pause sta,
-default-pause 2+ lda, default-pause sta,
+default-pause 2+ lda, 
+default-pause sta,
 ;asm
 
 :asm voice2 
 octave lda, octave 2+ sta,
 tie lda, tie 2+ sta,
 pause lda, pause 2+ sta,
-default-pause lda, default-pause 2+ sta,
+default-pause lda, 
+default-pause 2+ sta,
 2 lda,# voice sta, 
 octave 3 + lda, octave sta,
 tie 3 + lda, tie sta,
 pause 3 + lda, pause sta,
-default-pause 3 + lda, default-pause sta,
+default-pause 3 + lda, 
+default-pause sta,
 ;asm
 
 :asm voicedone
 octave lda, octave 3 + sta,
 tie lda, tie 3 + sta,
 pause lda, pause 3 + sta,
-default-pause lda, default-pause 3 + sta,
+default-pause lda, 
+default-pause 3 + sta,
 ;asm
 
 :asm wait 
