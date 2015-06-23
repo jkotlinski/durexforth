@@ -44,12 +44,12 @@ a lda,# 2 bne, ( a = lt red )
 
 here
 zptmp lda,(y)
+0 cmp,#
+foundeol -branch beq,
 e716 jsr, # putchar
 zptmp inc,
 2 bne,
 zptmp 1+ inc,
-0 cmp,#
-foundeol -branch beq,
 d cmp,#
 foundeol -branch beq,
 jmp,
@@ -66,10 +66,13 @@ foundeol -branch beq,
 d cmp,#
 foundeol -branch beq,
 jmp,
+: find-next-line ( addr -- addr )
+dup eof @ < if find-next-line then ;
 
 : linelen
-curlinestart @ dup ( addr )
-find-next-line 1- swap - ;
+curlinestart @ find-next-line 
+curlinestart @ -
+dup if 1- then ;
 
 : cursor-scr-pos
 cury @ 28 *
@@ -112,8 +115,7 @@ bufstart curlinestart ! ;
 : show-page
 status-pos c@ clrscr status-pos c!
 homepos @
-18 0 do dup eof @ < if 
-print-line then loop
+18 0 do print-line loop
 drop ;
 
 : clear-status ( -- )
@@ -415,17 +417,16 @@ variable clipboard-count
 0 clipboard-count !
 
 : del-line
-curlinestart @ eof @ = if exit then
 sol 1 to need-refresh 
 ( copy line to clipboard )
 linelen clipboard-count !
 curlinestart @ clipboard linelen cmove
 ( contract buffer )
-linelen 1+
 curlinestart @ find-next-line
 curlinestart @
+2dup swap - -rot
 eof @ curlinestart @ - cmove
-eof @ swap - eof ! ;
+eof +! ;
 
 : del
 [char] d set-status
