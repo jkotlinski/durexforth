@@ -30,17 +30,10 @@ zptmp ldy, sp0 sty,x
 zptmp 1+ ldy, sp1 sty,x
 ;asm
 
-:asm print-line
+:asm print-line ( addr -- addr )
 sp0 ldy,x zptmp sty,
 sp1 ldy,x zptmp 1+ sty,
 0 ldy,#
-
-# different color for comments
-zptmp lda,(y)
-key # cmp,# +branch bne,
-a lda,# 2 bne, ( a = lt red )
-:+ 1 lda,# ( 1 = white )
-286 sta, ( switch color code )
 
 here
 zptmp lda,(y)
@@ -156,7 +149,9 @@ eof @ >= if drop exit then
 curlinestart !
 cury @ 17 < if 1 cury +! else
 homepos @ find-next-line homepos !
-1 to need-refresh then
+428 400 398 cmove
+line-dirty!
+then
 fit-curx-in-linelen ;
 
 : cr= CR = ;
@@ -294,27 +289,9 @@ clear-status ;
 ;
 
 : refresh-line
-	curx @
-	sol
-	0 cury @ setcur
-	27 linelen - ( spaces )
-	linelen ( spaces chars )
-	begin
-		?dup
-	while
-		editpos @ emit
-		1 curx +!
-		1-
-	repeat
-	begin
-		?dup
-	while
-		bl emit
-		1-
-	repeat
-	curx !
-	curx @ cury @ setcur
-;
+20 cury @ 28 * 400 + 28 fill
+0 cury @ setcur
+curlinestart @ print-line drop ;
 
 : replace-char
 key editpos c! line-dirty! ;
