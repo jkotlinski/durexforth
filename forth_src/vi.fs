@@ -416,11 +416,14 @@ force-cur-right else cur-right then ;
 variable clipboard-count
 0 clipboard-count !
 
+: yank-line
+linelen clipboard-count !
+curlinestart @ clipboard linelen 
+cmove ;
+
 : del-line
 sol 1 to need-refresh 
-( copy line to clipboard )
-linelen clipboard-count !
-curlinestart @ clipboard linelen cmove
+yank-line
 ( contract buffer )
 curlinestart @ find-next-line
 curlinestart @
@@ -711,7 +714,7 @@ bufstart compile-ram ! ;
 
     [char] y of # yy
      key [char] y = if
-     del-line paste-line
+     yank-line
     then endof
 	[char] o of force-cur-down open-line endof
 	[char] p of force-cur-down paste-line endof
