@@ -58,8 +58,8 @@ CLOSEW
 
 _errorchread
         LDA #$00      ; no filename
-        LDX #$00
-        LDY #$00
+        tax
+        tay
         JSR SETNAM
         LDA #$0F      ; file number 15
         LDX $BA       ; last used device number
