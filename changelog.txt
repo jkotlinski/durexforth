@@ -133,3 +133,11 @@ Changelog
  * removed "sp@"
  * bugfixed & optimized "ls"
  * moved zptmp, zptmp2, zptmp3 and ip to new locations
+
+2015-06-24: v1.33
+
+ * vi: changed half-page scrolling from U/D to CTRL+u/d
+ * vi: many bugfixes and optimizations
+ * forth: many small optimizations
+ * forth: made cmove> ANS Forth compliant
+ * updated memory map documentation
