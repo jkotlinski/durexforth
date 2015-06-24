@@ -379,16 +379,11 @@ force-cur-right else cur-right then ;
 ;
 
 : del-word
-    line-dirty!
-	begin
-		editpos c@ 20 = if
-			del-char exit
-		then
-		editpos c@ d = if exit then
-		editpos c@ 0 = if exit then
-		del-char
-	again
-;
+line-dirty!
+begin 
+editpos c@ eol= if exit then
+editpos c@ del-char space= if exit then
+again ;
 
 28 allot value clipboard
 variable clipboard-count
