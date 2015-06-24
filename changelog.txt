@@ -140,4 +140,4 @@ Changelog
  * vi: many bugfixes and optimizations
  * forth: many small optimizations
  * forth: made cmove> ANS Forth compliant
- * updated memory map documentation
+ * doc: updated memory map documentation
