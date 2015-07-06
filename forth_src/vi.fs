@@ -26,8 +26,10 @@ value filename-len
 curlinestart @ curx @ + ;
 
 create foundeol
-zptmp ldy, sp0 sty,x
-zptmp 1+ ldy, sp1 sty,x
+clc,
+tya, zptmp adc, sp0 sta,x
+2 bcc,
+sp1 inc,x
 ;asm
 
 :asm print-line ( addr -- addr )
@@ -40,9 +42,7 @@ zptmp lda,(y)
 0 cmp,#
 foundeol -branch beq,
 e716 jsr, # putchar
-zptmp inc,
-2 bne,
-zptmp 1+ inc,
+iny,
 d cmp,#
 foundeol -branch beq,
 jmp,
@@ -53,7 +53,7 @@ sp1 ldy,x zptmp 1+ sty,
 0 ldy,#
 here
 zptmp lda,(y)
-zptmp inc, 2 bne, zptmp 1+ inc,
+iny,
 0 cmp,#
 foundeol -branch beq,
 d cmp,#
