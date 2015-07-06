@@ -228,14 +228,19 @@ editpos c@ space= 0= and ;
 	repeat
 ;
 
-: half-page-back
-c begin cur-up 1- ?dup 0= until ;
-
-: half-page-fwd
-c begin cur-down 1- ?dup 0= until ;
-
 : setcur ( x y -- )
 xr ! yr ! e50c jsr ;
+
+: refresh-line
+20 cury @ 28 * 400 + 28 fill
+0 cury @ setcur
+curlinestart @ print-line drop ;
+
+: half-page-back
+c begin cur-up refresh-line 1- ?dup 0= until ;
+
+: half-page-fwd
+c begin cur-down refresh-line 1- ?dup 0= until ;
 
 : goto-eof ( can be much optimized... )
 bufstart eof @ = if exit then
@@ -288,11 +293,6 @@ clear-status ;
 		1-
 	again
 ;
-
-: refresh-line
-20 cury @ 28 * 400 + 28 fill
-0 cury @ setcur
-curlinestart @ print-line drop ;
 
 : replace-char
 key editpos c! line-dirty! ;
