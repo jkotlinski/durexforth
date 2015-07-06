@@ -8,9 +8,9 @@ all:	durexforth.d64
 durexforth.prg: durexforth.a number.a ummod.a
 	@$(AS) durexforth.a
 
-FORTHLIST=base debug vi asm gfx gfxdemo rnd sin ls turtle fractal purge-hidden sprite doloop jsr float labels mml mmldemo sid
+FORTHLIST=base debug vi asm gfx gfxdemo rnd sin ls turtle fractal purge-hidden sprite doloop jsr float labels mml mmldemo sid spritedemo
 
-durexforth.d64: durexforth.prg forth_src/base.fs forth_src/debug.fs forth_src/vi.fs forth_src/asm.fs forth_src/gfx.fs forth_src/gfxdemo.fs forth_src/rnd.fs forth_src/sin.fs forth_src/ls.fs forth_src/turtle.fs forth_src/fractal.fs forth_src/purge-hidden.fs forth_src/sprite.fs forth_src/doloop.fs forth_src/jsr.fs forth_src/float.fs forth_src/labels.fs forth_src/mml.fs forth_src/mmldemo.fs forth_src/sid.fs Makefile ext/petcom
+durexforth.d64: durexforth.prg forth_src/base.fs forth_src/debug.fs forth_src/vi.fs forth_src/asm.fs forth_src/gfx.fs forth_src/gfxdemo.fs forth_src/rnd.fs forth_src/sin.fs forth_src/ls.fs forth_src/turtle.fs forth_src/fractal.fs forth_src/purge-hidden.fs forth_src/sprite.fs forth_src/doloop.fs forth_src/jsr.fs forth_src/float.fs forth_src/labels.fs forth_src/mml.fs forth_src/mmldemo.fs forth_src/sid.fs forth_src/spritedemo.fs Makefile ext/petcom
 	$(C1541) -format durexforth,DF  d64 durexforth.d64 # > /dev/null
 	$(C1541) -attach $@ -write durexforth.prg durexforth # > /dev/null
 # $(C1541) -attach $@ -write debug.bak
