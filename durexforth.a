@@ -815,10 +815,7 @@ PULL_KEY ; wastes x!!!
     lda	COMPILE_FILENO
     jsr	CLOSE
     dec $d020
-
     dec	COMPILE_FILENO
-    bne +
-+
     lda	COMPILE_FILENO
     jsr	CHKIN
     jmp PULL_KEY  ; Try again.
