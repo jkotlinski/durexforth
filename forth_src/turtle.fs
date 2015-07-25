@@ -42,11 +42,11 @@ ta ! ty ! tx ! pendown ;
 ." angle? " interpret
 ." distance step? " interpret 
 init
-64 r> begin
+64 >r begin
 2 pick forward
 over left
 rot over + -rot
-r> 1- dup r> 0= until r> 2drop 2drop
+r> 1- dup >r 0= until r> 2drop 2drop
 5 d020 c! key drop lores 0 d020 c! ;
 
 : inward
