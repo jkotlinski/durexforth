@@ -806,19 +806,19 @@ PULL_KEY ; wastes x!!!
 
 .get_char_from_disk
     inc $d020
+    jsr	CHRIN
+    pha
     jsr	READST
-    bne .eof
-    dec $d020
-    jmp	CHRIN
-
-.eof
+    beq +
+    ; handle EOF
     lda	COMPILE_FILENO
     jsr	CLOSE
-    dec $d020
     dec	COMPILE_FILENO
-    lda	COMPILE_FILENO
-    jsr	CHKIN
-    jmp PULL_KEY  ; Try again.
+    ldx COMPILE_FILENO
+    jsr CHKIN
++   pla
+    dec $d020
+    rts
     
 ; WORD ( -- strptr )
     +BACKLINK
