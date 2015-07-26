@@ -128,7 +128,9 @@ reset
     lda #>_START
     sta IP + 1
 
-    ldx	#X_INIT
+    ; At this point, we know that x = 0 = X_INIT, which is what we want.
+    ; ldx	#X_INIT
+
     +NEXT
 
 print_ok
