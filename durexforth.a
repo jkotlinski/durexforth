@@ -1121,11 +1121,11 @@ LIT
     inc TMP
     bne +
     inc	TMP + 1
-+   lda TMP + 1
++   
+    lda TMP + 1
     pha
     lda TMP
     pha
-
     rts
 
 ; --- QUIT
@@ -1398,20 +1398,17 @@ ZBRANCH
     ora	MSB-1, x
     beq BRANCH
 
-    ; TODO zbranch is broken
--   inc $d020
-    jmp -
-
-;
-;    ; skip offset
-;    lda	IP
-;    clc
-;    adc	#2
-;    sta	IP
-;    bcc	+
-;    inc	IP + 1
-;+   
-;    rts
+    ; skip offset
+    pla
+    clc
+    adc #2
+    tay
+    pla
+    adc #0
+    pha
+    tya
+    pha
+    rts
     
 ; COLON
     +BACKLINK
