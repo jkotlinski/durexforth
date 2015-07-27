@@ -1002,6 +1002,12 @@ INTERPRET
     beq	.execute_word ; no, execute it.
 
     ; OK, this word should be compiled...
+    ; insert jsr
+    dex
+    lda #$20 ;jsr
+    sta LSB,x
+    jsr CCOMMA
+    ; insert pointer
     jsr	TCFA
     jsr	COMMA
     inx ; drop string
