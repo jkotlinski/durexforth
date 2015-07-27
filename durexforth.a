@@ -1126,7 +1126,8 @@ LIT
 
     rts
 
-; QUIT
+; --- QUIT
+
     +BACKLINK
     !byte	4
     !text	"quit"
@@ -1134,12 +1135,15 @@ QUIT
     jsr	INTERPRET
     jmp QUIT
 
-; EXIT
+; --- EXIT
+
     +BACKLINK
     !byte	4 | F_IMMED
     !text	"exit"
 EXIT
-    lda #$60 ; rts
+    dex
+    lda #OP_RTS
+    sta LSB, x
     jmp CCOMMA
 
     +BACKLINK
@@ -1149,7 +1153,7 @@ EXIT
     rol MSB, x
     rts
 
-; HEADER ( name -- )
+; --- HEADER ( name -- )
     +BACKLINK
     !byte	6
     !text	"header"
@@ -1276,10 +1280,7 @@ RBRAC
     !byte	1 | F_IMMED
     !text	";"
 SEMICOLON
-    ; append rts (so that the word will return).
-    jsr LITC
-    !byte $60 ; rts
-    jsr	CCOMMA
+    jsr EXIT
 
     ; unhide the word.
     jsr LATEST
