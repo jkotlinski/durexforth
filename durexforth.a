@@ -1071,12 +1071,14 @@ LITC
 
     ; load IP
     pla
-    clc
-    adc #1
     sta TMP
     pla
-    adc #0
     sta TMP + 1
+
+    inc TMP
+    bne +
+    inc TMP + 1
++
 
     ; copy literal to stack
     ldy	#0
@@ -1084,10 +1086,7 @@ LITC
     sta	LSB, x
     sty	MSB, x
 
-    inc TMP
-    bne +
-    inc	TMP + 1
-+   lda TMP + 1
+    lda TMP + 1
     pha
     lda TMP
     pha
@@ -1103,13 +1102,14 @@ LIT
 
     ; load IP
     pla
-    clc
-    adc #1
     sta TMP
     pla
-    adc #0
     sta TMP + 1
 
+    inc TMP
+    bne +
+    inc TMP + 1
++
     ; copy literal to stack
     ldy	#0
     lda	(TMP), y
@@ -1393,14 +1393,15 @@ BRANCH
     !byte	7
     !text	"0branch"
 ZBRANCH
+    inx
+    lda	LSB-1, x
+    ora	MSB-1, x
+    beq BRANCH
+
+    ; TODO zbranch is broken
 -   inc $d020
     jmp -
 
-    ; TODO zbranch is broken
-;    inx
-;    lda	LSB-1, x
-;    ora	MSB-1, x
-;    beq BRANCH
 ;
 ;    ; skip offset
 ;    lda	IP
