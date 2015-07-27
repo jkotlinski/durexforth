@@ -47,5 +47,5 @@ oflo:   LDA     #$FF    ; If overflow or /0 condition found,
         STA     MSB+2,X
 
 end:    INX
-        +NEXT
+        RTS
 

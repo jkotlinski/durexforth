@@ -54,7 +54,7 @@ CLOSEW
     jsr	_errorchread
     ldx TMP2
     inx
-    +NEXT
+    rts
 
 _errorchread
         LDA #$00      ; no filename
@@ -136,7 +136,7 @@ LOADB
     pla
     tax
 +
-    +NEXT
+    rts
 
 load_binary_status
     !byte	0
@@ -232,7 +232,7 @@ save_binary_srange_end_hi = *+1
     inx
     inx
     inx
-    +NEXT
+    rts
 
 ; OPENW ( strptr strlen file# ) open file for writing
     +BACKLINK
@@ -267,7 +267,7 @@ OPENW
     inx
     inx
     inx
-    +NEXT
+    rts
 
 .close
     lda $b8 ; current file
@@ -321,4 +321,4 @@ LOAD_AND_COMPILE
     tax
     inx
     inx
-    +NEXT
+    rts

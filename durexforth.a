@@ -39,7 +39,6 @@ LSB = $3b ; lsb stack is [3, $3a]
 TMP = $8b ; rnd seed
 TMP2 = $8d ; rnd seed
 TMP3 = $9e ; tape error log
-IP = $fb ; free space for user programs
 
 OP_JSR = $20
 OP_RTS = $60
@@ -64,13 +63,6 @@ K_UP = $91
 K_LEFT = $9d
 
 C_YELLOW = 7
-
-!macro NEXT {
-    jmp	NEXT_IMPL
-}
-!macro NEXT_WITH_Y1 {
-    jmp	NEXT_IMPL + 2
-}
 
 !ct pet
 
@@ -123,15 +115,10 @@ reset
     dex
     bne	-
 
-    lda	#<_START
-    sta IP
-    lda #>_START
-    sta IP + 1
-
     ; At this point, we know that x = 0 = X_INIT, which is what we want.
     ; ldx	#X_INIT
 
-    +NEXT
+    jmp _START
 
 print_ok
     lda	#'o'
@@ -139,8 +126,7 @@ print_ok
     lda	#'k'
     jsr	PUTCHR
     lda	#$d
-    jsr	PUTCHR
-    +NEXT
+    jmp	PUTCHR
 
 restore_handler
     cli
@@ -162,7 +148,7 @@ pushya
     dex
     sta	LSB, x
     sty	MSB, x
-    +NEXT
+    rts
 
 !macro VALUE .word {
     lda	#<.word
@@ -171,48 +157,6 @@ pushya
 }
 
 ; ---------- words
-
-__DOCOL
-    lda	IP
-    sta	TMP
-    ldy	IP + 1
-
-    ; adjust for weird return address after jsr...
-    pla         ; 4
-    clc         ; 2
-    adc #1      ; 2
-    sta IP      ; 3
-    pla         ; 4
-    adc #0      ; 2
-    sta IP+1    ; 3
-
-    ; push old IP to return stack
-    lda	TMP
-    pha
-    tya
-    pha
-
-    ; fall through...
-
-NEXT_IMPL
-    ; (IP) -> W
-    ldy	#1          ; 2
-    lda	(IP), y     ; 5
-    sta	TMP + 1     ; 3
-    dey             ; 2
-    lda	(IP), y     ; 5
-    sta	TMP         ; 3
-
-    ; IP += 2
-    lda	IP          ; 3
-    clc             ; 2
-    adc	#2          ; 2
-    sta	IP          ; 3
-    bcc +           ; 2
-    inc	IP + 1      ; 5
-+   jmp	(TMP)       ; 5
-
-                    ; total: 42
 
 ; START - points to the code of the startup word.
     +BACKLINK
@@ -239,7 +183,7 @@ _START
     !text	"drop"
 DROP
     inx
-    +NEXT
+    rts
 
 ; SWAP
     +BACKLINK
@@ -255,7 +199,7 @@ SWAP
     lda	LSB + 1, x
     sta LSB, x
     sty	LSB + 1, x
-    +NEXT
+    rts
 
 !macro _DUP {
     dex
@@ -271,7 +215,7 @@ SWAP
     !text	"dup"
 DUP
     +_DUP
-    +NEXT
+    rts
 
 ; OVER
     +BACKLINK
@@ -285,7 +229,7 @@ OVER
     lda	LSB + 2, x
     sta	LSB, x
 
-    +NEXT
+    rts
 
 ; 1+
     +BACKLINK
@@ -295,7 +239,7 @@ INCR
     inc LSB, x
     bne +
     inc MSB, x
-+   +NEXT
++   rts
 
 ; 1-
     +BACKLINK
@@ -306,7 +250,7 @@ DECR
     bne +
     dec MSB, x
 +   dec LSB, x
-    +NEXT
+    rts
 
 ; +
     +BACKLINK
@@ -322,7 +266,7 @@ DECR
     sta MSB + 1, x
 
     inx
-    +NEXT
+    rts
 
 ; -
     +BACKLINK
@@ -339,15 +283,14 @@ SUB
     sta MSB + 1, x
 
     inx
-    +NEXT
+    rts
 
 product = TMP
 
     +BACKLINK
     !byte	2
     !text	"d*"
-    jsr DMUL
-    +NEXT
+    jmp DMUL
 ; wastes TMP, TMP2, y
 DMUL
     lda #$00
@@ -399,7 +342,7 @@ rotate_r
 +   inx
     sty MSB, x
     sty	LSB, x
-    +NEXT
+    rts
 
 ; <
     +BACKLINK
@@ -421,7 +364,7 @@ LT
     inx
     sty	MSB, x
     sty	LSB, x
-    +NEXT
+    rts
 
 ; 0=
     +BACKLINK
@@ -436,7 +379,7 @@ ZEQU
     dey
 +   sty MSB, x
     sty LSB, x
-    +NEXT
+    rts
 
 ; AND
     +BACKLINK
@@ -451,7 +394,7 @@ ZEQU
     sta LSB + 1, x
 
     inx
-    +NEXT
+    rts
 
 ; !
     +BACKLINK
@@ -472,7 +415,7 @@ STORE
 
     inx
     inx
-    +NEXT_WITH_Y1
+    rts
 
 ; @
     +BACKLINK
@@ -490,7 +433,7 @@ FETCH
     iny
     lda	(TMP),y
     sta MSB,x
-    +NEXT_WITH_Y1
+    rts
 
 ; C!
     +BACKLINK
@@ -505,7 +448,7 @@ STOREBYTE
 +   sta $cafe
     inx
     inx
-    +NEXT
+    rts
 
 ; C@
     +BACKLINK
@@ -520,7 +463,7 @@ FETCHBYTE
     sta LSB,x
     lda #0
     sta MSB,x
-    +NEXT
+    rts
 
 ; FILL ( val start len -- )
     +BACKLINK
@@ -548,7 +491,7 @@ FILL
     bne	+
     inc	TMP + 1
     bne	+
-    +NEXT
+    rts
 +
 .fsrc = * + 1
     lda	#0 ; overwrite
@@ -596,7 +539,7 @@ CMOVE_BACK
     bne	+
     inc	TMP + 1
     bne	+
-    +NEXT
+    rts
 +
 
     ; back
@@ -646,7 +589,7 @@ CMOVE
     bne	+
     inc	TMP + 1
     bne	+
-    +NEXT
+    rts
 +
 .csrc
     lda	$ffff ; overwrite
@@ -689,12 +632,6 @@ HERE_LSB = * + 1
 HERE_MSB = * + 3
     +VALUE	_LATEST + 2
 
-; NEXT
-    +BACKLINK
-    !byte 4
-    !text	"next"
-    +VALUE	NEXT_IMPL
-
 ; ------------ i/o
 
 ; EMIT
@@ -704,8 +641,7 @@ HERE_MSB = * + 3
 EMIT
     lda	LSB, x
     inx
-    jsr	PUTCHR
-    +NEXT
+    jmp	PUTCHR
 
 TIB
 TIB_LENGTH
@@ -727,7 +663,7 @@ KEY
     sta	LSB, x
     lda	#0
     sta	MSB, x
-    +NEXT
+    rts
 
 .unbuffered_key
     stx	tmp_x
@@ -827,10 +763,6 @@ PULL_KEY ; wastes x!!!
     !byte	4
     !text	"word"
 WORD
-    jsr _WORD
-    +NEXT
-
-_WORD
     ; prepare text input
     lda	#0
     sta	TIB_LENGTH
@@ -871,9 +803,6 @@ _WORD
     !byte	4
     !text	"find"
 FIND
-    jsr	_FIND
-    +NEXT
-_FIND
     txa
     pha
 
@@ -963,9 +892,6 @@ _FIND
     !byte	4
     !text	">cfa"
 TCFA
-    jsr _TCFA
-    +NEXT
-_TCFA
     lda	MSB, x
     sta	TMP + 1
     lda	LSB, x
@@ -983,8 +909,7 @@ _TCFA
     sta	LSB, x
     bcc	+
     inc	MSB, x
-+
-    rts
++   rts
 
 ; EXECUTE
     +BACKLINK
@@ -1011,14 +936,14 @@ LITERAL
     sta LSB,x
     lda #>LITC
     sta MSB,x
-    jsr _COMMA ; writes LITC
+    jsr COMMA ; writes LITC
     jmp CCOMMA ; writes byte
 +
     lda #<LIT
     sta LSB, x
     lda #>LIT
     sta MSB, x
-    jsr _COMMA ; writes LIT
+    jsr COMMA ; writes LIT
     jmp COMMA ; writes number
 
 ; INTERPRET
@@ -1033,11 +958,11 @@ INTERPRET
 
     lda #0
     sta PREVENT_BASIC_GETLINE
-    jsr	_WORD ; push string to stack
+    jsr	WORD ; push string to stack
     inc PREVENT_BASIC_GETLINE
 
     +_DUP
-    jsr	_FIND ; replace string with dictionary ptr
+    jsr	FIND ; replace string with dictionary ptr
     bne	.found_word
 
     inx ; drop
@@ -1050,7 +975,7 @@ INTERPRET
 .was_number
     lda	STATE ; are we compiling?
     bne	LITERAL ; yes, compile the number
-    +NEXT
+    rts
 
 .on_stack_underflow
     lda	#$12 ; reverse on
@@ -1078,13 +1003,13 @@ INTERPRET
     beq	.execute_word ; no, execute it.
 
     ; OK, this word should be compiled...
-    jsr	_TCFA
-    jsr	_COMMA
+    jsr	TCFA
+    jsr	COMMA
     inx ; drop string
-    +NEXT
+    rts
 
 .execute_word
-    jsr	_TCFA
+    jsr	TCFA
     lda LSB,x
     sta LSB+1,x
     lda MSB,x
@@ -1122,7 +1047,7 @@ INTERPRET
     stx     COMPILE_RAM + 1
     jsr     CHKIN
     ldx     #X_INIT ; wipe stack :(
-    +NEXT
+    rts
 
     +BACKLINK
     !byte	3
@@ -1137,78 +1062,94 @@ INTERPRET
 LITC
     dex
 
+    ; load IP
+    pla
+    clc
+    adc #1
+    sta TMP
+    pla
+    adc #0
+    sta TMP + 1
+
     ; copy literal to stack
     ldy	#0
-    lda	(IP), y
+    lda	(TMP), y
     sta	LSB, x
     sty	MSB, x
 
-    inc IP
+    inc TMP
     bne +
-    inc	IP + 1
-+   +NEXT
+    inc	TMP + 1
++   lda TMP + 1
+    pha
+    lda TMP
+    pha
+
+    rts
 
 ; LIT
     +BACKLINK
     !byte	3
     !text	"lit"
 LIT
-    ; grow stack
     dex
+
+    ; load IP
+    pla
+    clc
+    adc #1
+    sta TMP
+    pla
+    adc #0
+    sta TMP + 1
 
     ; copy literal to stack
     ldy	#0
-    lda	(IP), y
+    lda	(TMP), y
     sta	LSB, x
-
     iny
-    lda	(IP), y
+    lda	(TMP), y
     sta	MSB, x
 
-    ; IP += 2
-    clc
-    lda	IP
-    adc #2	
-    bcc	+
-    inc	IP + 1
-+   sta	IP
+    inc TMP
+    bne +
+    inc	TMP + 1
++   lda TMP + 1
+    pha
+    lda TMP
+    pha
 
-    +NEXT_WITH_Y1
+    rts
 
 ; QUIT
     +BACKLINK
     !byte	4
     !text	"quit"
 QUIT
-    jsr	__DOCOL
-    !word	INTERPRET
-    !word	BRANCH
-    !word	* - 4
+    jsr	INTERPRET
+    jmp QUIT
 
 ; EXIT
     +BACKLINK
-    !byte	4
+    !byte	4 | F_IMMED
     !text	"exit"
 EXIT
-    pla
-    sta	IP + 1
-    pla
-    sta	IP
-    +NEXT
+    lda #$60 ; rts
+    jmp CCOMMA
 
     +BACKLINK
     !byte   2
     !text	"2*"
     asl LSB, x
     rol MSB, x
-    +NEXT
+    rts
 
 ; HEADER ( name -- )
     +BACKLINK
     !byte	6
     !text	"header"
 HEADER
-    jsr	_WORD
+    jsr	WORD
 
     ; store link in header. TMP = dst
     lda	HERE_LSB
@@ -1256,8 +1197,7 @@ HEADER
 +   sty HERE_MSB
 
     inx
-
-    +NEXT
+    rts
 
 ; CCOMMA - write char
     +BACKLINK
@@ -1277,18 +1217,14 @@ CCOMMA
     inc	HERE_LSB
     bne	+
     inc HERE_MSB
-+
-    inx
-    +NEXT
++   inx
+    rts
 
 ; COMMA - write word
     +BACKLINK
     !byte	1
     !text	","
 COMMA
-    jsr	_COMMA
-    +NEXT_WITH_Y1
-_COMMA
     lda	HERE_LSB
     sta	TMP
     lda	HERE_MSB
@@ -1319,7 +1255,7 @@ _COMMA
 LBRAC
     lda	#0
     sta	STATE
-    +NEXT
+    rts
 
 ; RBRAC
     +BACKLINK
@@ -1328,18 +1264,25 @@ LBRAC
 RBRAC
     lda	#1
     sta	STATE
-    +NEXT
+    rts
 
 ; SEMICOLON
     +BACKLINK
     !byte	1 | F_IMMED
     !text	";"
 SEMICOLON
-    jsr	__DOCOL
-    !word LIT, EXIT, COMMA ; append EXIT (so that the word will return).
-    !word LATEST, FETCH, HIDDEN ; unhide the word.
-    !word LBRAC ; go back to IMMEDIATE mode.
-    !word EXIT
+    ; append rts (so that the word will return).
+    jsr LITC
+    !byte $60 ; rts
+    jsr	CCOMMA
+
+    ; unhide the word.
+    jsr LATEST
+    jsr FETCH
+    jsr HIDDEN
+
+    ; go back to IMMEDIATE mode.
+    jmp LBRAC
 
 ; IMMEDIATE. Flip the immediate flag of the LATEST word.
     +BACKLINK
@@ -1354,40 +1297,46 @@ IMMED
     lda	(TMP), y
     eor	#F_IMMED
     sta	(TMP), y
-    +NEXT
+    rts
 
     !word	LINK
     !set	LINK = * - 2
     !byte	6
     !text	"dodoes"
-    pla
-    sta TMP
-    pla
-    sta TMP + 1
-    tay
 
-    ; push data pointer to param stack
-    dex
-    clc
-    lda TMP
-    adc #3
-    sta LSB,x
-    bcc +
-    iny
-+   sty MSB,x
+    ; TODO FIXME
+-   inc $d020
+    jmp -
+    rts
 
-    ; behavior pointer => IP
-    lda IP
-    pha
-    lda IP + 1
-    pha
-    ldy #2
-    lda (TMP),y
-    sta IP + 1
-    dey
-    lda (TMP),y
-    sta IP
-    +NEXT
+;    pla
+;    sta TMP
+;    pla
+;    sta TMP + 1
+;    tay
+;
+;    ; push data pointer to param stack
+;    dex
+;    clc
+;    lda TMP
+;    adc #3
+;    sta LSB,x
+;    bcc +
+;    iny
+;+   sty MSB,x
+;
+;    ; behavior pointer => IP
+;    lda IP
+;    pha
+;    lda IP + 1
+;    pha
+;    ldy #2
+;    lda (TMP),y
+;    sta IP + 1
+;    dey
+;    lda (TMP),y
+;    sta IP
+;    rts
 
     +BACKLINK
     !byte	2
@@ -1397,7 +1346,7 @@ IMMED
     sta MSB,x
     pla
     sta LSB,x
-    +NEXT
+    rts
 
     +BACKLINK
     !byte	2
@@ -1407,61 +1356,65 @@ IMMED
     lda MSB,x
     pha
     inx
-    +NEXT
+    rts
 
     +BACKLINK
     !byte	6
     !text	"branch"
 BRANCH
+    ; TODO branch is broken
+-   inc $d020
+    jmp -
+
     ; IP is now pointing to what IP should be changed to.
-    ; y = 0 after next
-    lda	(IP), y
-    sta	TMP
-    iny
-    lda	(IP), y
-    sta IP + 1
-
-    lda	TMP
-    sta	IP
-
-    +NEXT_WITH_Y1
+;     y = 0 after next
+;    lda	(IP), y
+;    sta	TMP
+;    iny
+;    lda	(IP), y
+;    sta IP + 1
+;
+;    lda	TMP
+;    sta	IP
+;    rts
 
 ; 0BRANCH
     +BACKLINK
     !byte	7
     !text	"0branch"
 ZBRANCH
-    inx
-    lda	LSB-1, x
-    ora	MSB-1, x
-    beq BRANCH
+-   inc $d020
+    jmp -
 
-    ; skip offset
-    lda	IP
-    clc
-    adc	#2
-    sta	IP
-    bcc	+
-    inc	IP + 1
-+   
-    +NEXT
+    ; TODO zbranch is broken
+;    inx
+;    lda	LSB-1, x
+;    ora	MSB-1, x
+;    beq BRANCH
+;
+;    ; skip offset
+;    lda	IP
+;    clc
+;    adc	#2
+;    sta	IP
+;    bcc	+
+;    inc	IP + 1
+;+   
+;    rts
     
 ; COLON
     +BACKLINK
     !byte	1
     !text	":"
 COLON
-    jsr	__DOCOL
-    !word HEADER ; makes the dictionary entry / header
+    jsr HEADER ; makes the dictionary entry / header
 
-    !word LITC ; compiles jsr __DOCOL
-    !byte OP_JSR
-    !word CCOMMA
-    !word LIT, __DOCOL, COMMA
+    ; hide word
+    jsr LATEST
+    jsr FETCH
+    jsr HIDDEN
 
-    !word LATEST, FETCH, HIDDEN ; hide word
-    !word RBRAC ; enter compile mode
-    !word EXIT
+    jmp RBRAC ; enter compile mode
 
 ; HIDDEN
     +BACKLINK
@@ -1478,7 +1431,7 @@ HIDDEN
     eor	#F_HIDDEN ; toggle hidden flag
     sta	(TMP), y
     inx
-    +NEXT
+    rts
 
     +BACKLINK
     !byte   4
@@ -1494,7 +1447,7 @@ HIDDEN
     ldx tmp_x
     sta LSB,x
     sty MSB,x
-    +NEXT
+    rts
 
     +BACKLINK
     !byte 5
@@ -1507,7 +1460,7 @@ HIDDEN
     sty LSB,x
     lda #0
     sta MSB,x
-    +NEXT
+    rts
 
 ; -----------
 
