@@ -4,7 +4,7 @@
 : * d* nip ;
 : loc word find ;
 : ' loc >cfa ;
-: [compile] immed ' , ;
+: [compile] immed 20 c, ' , ;
 : [char] immed key [compile] literal ;
 : if immed ['] 0branch , here 0 , ;
 : then immed here swap ! ;
