@@ -928,6 +928,8 @@ EXECUTE
     !byte 7 | F_IMMED
     !text "literal"
 LITERAL
+    lda #OP_JSR
+    jsr compile_a
     dex
     lda MSB+1,x
     bne +
@@ -1137,12 +1139,14 @@ QUIT
 
 ; --- EXIT
 
+
     +BACKLINK
     !byte	4 | F_IMMED
     !text	"exit"
 EXIT
-    dex
     lda #OP_RTS
+compile_a
+    dex
     sta LSB, x
     jmp CCOMMA
 
