@@ -118,7 +118,9 @@ reset
     ; At this point, we know that x = 0 = X_INIT, which is what we want.
     ; ldx	#X_INIT
 
-    jmp (_START)
+_START = * + 1
+    jsr 0
+    jmp QUIT
 
 print_ok
     lda	#'o'
@@ -163,9 +165,6 @@ pushya
     !byte 5
     !text	"start"
     +VALUE	_START
-_START
-    !word	0
-    !word	QUIT
 
     +BACKLINK
     !byte 3
