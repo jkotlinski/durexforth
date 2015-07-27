@@ -118,7 +118,7 @@ reset
     ; At this point, we know that x = 0 = X_INIT, which is what we want.
     ; ldx	#X_INIT
 
-    jmp _START
+    jmp (_START)
 
 print_ok
     lda	#'o'
