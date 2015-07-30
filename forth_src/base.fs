@@ -9,15 +9,15 @@
 : ['] immed ' [compile] literal ;
 : [char] immed key [compile] literal ;
 : if immed jsr, ['] 0branch , here 0 , ;
-: then immed here swap ! ;
+: then immed here 1- swap ! ;
 : else immed jsr, ['] branch , here 0 ,
-swap here swap ! ;
-: begin immed here ;
+swap here 1- swap ! ;
+: begin immed here 1- ;
 : until immed jsr, ['] 0branch , , ;
 : again immed jsr, ['] branch , , ;
 : while immed jsr, ['] 0branch , here 0 , ;
 : repeat immed jsr, ['] branch ,
-swap , here swap ! ;
+swap , here 1- swap ! ;
 : recurse immed latest @ >cfa , ;
 : ( immed begin key [char] ) = until ;
 : # immed begin key d = until ;

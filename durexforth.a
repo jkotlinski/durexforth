@@ -1372,21 +1372,18 @@ IMMED
     !byte	6
     !text	"branch"
 BRANCH
-    ; TODO branch is broken
--   inc $d020
-    jmp -
+    pla
+    sta TMP
+    pla
+    sta TMP + 1
 
-    ; IP is now pointing to what IP should be changed to.
-;     y = 0 after next
-;    lda	(IP), y
-;    sta	TMP
-;    iny
-;    lda	(IP), y
-;    sta IP + 1
-;
-;    lda	TMP
-;    sta	IP
-;    rts
+    ldy	#2
+    lda	(TMP), y
+    pha
+    dey
+    lda	(TMP), y
+    pha
+    rts
 
 ; 0BRANCH
     +BACKLINK
