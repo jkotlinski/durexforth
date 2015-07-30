@@ -5,18 +5,19 @@
 : loc word find ;
 : ' loc >cfa ;
 : jsr, 20 c, ;
+: jmp, 4c c, ;
 : [compile] immed jsr, ' , ;
 : ['] immed ' [compile] literal ;
 : [char] immed key [compile] literal ;
 : if immed jsr, ['] 0branch , here 0 , ;
 : then immed here swap ! ;
-: else immed jsr, ['] branch , here 0 ,
+: else immed jmp, here 0 ,
 swap here swap ! ;
 : begin immed here ;
 : until immed jsr, ['] 0branch , , ;
-: again immed jsr, ['] branch , , ;
+: again immed jmp, , ;
 : while immed jsr, ['] 0branch , here 0 , ;
-: repeat immed jsr, ['] branch ,
+: repeat immed jmp,
 swap , here swap ! ;
 : recurse immed latest @ >cfa , ;
 : ( immed begin key [char] ) = until ;
