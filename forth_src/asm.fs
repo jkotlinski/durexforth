@@ -1,6 +1,3 @@
-: :asm header ;
-: ;asm 60 c, ; # rts
-
 : 1mi create c, does> c@ c, ;
 : 2mi create c, does> c@ c, c, ;
 : 3mi create c, does> c@ c, , ;
@@ -156,6 +153,9 @@ ba 1mi tsx,
 
 # illegal opcodes
 cb 2mi sbx,#
+
+: :asm header ;
+: ;asm rts, ;
 
 ( usage:
 foo lda,
