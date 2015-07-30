@@ -72,14 +72,11 @@ while emit repeat drop ;
 : hide
 loc ?dup if hidden else ." err" then ;
 
-here [compile] exit
+here exit
 : create
 # default behavior = exit
-header jsr, ['] dodoes , literal , ;
-: does> 
-# FIXME
-begin d020 c@ 1+ d020 c! again 
-r> latest @ >dfa ! ;
+header jsr, ['] dodoes , literal ;
+: does> r> latest @ >dfa ! ;
 
 .( asm..)
 s" asm" load
