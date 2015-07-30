@@ -1,5 +1,5 @@
 : :asm header ;
-: ;asm 4c c, next , ; # jmp next
+: ;asm 60 c, ; # rts
 
 : 1mi create c, does> c@ c, ;
 : 2mi create c, does> c@ c, c, ;
