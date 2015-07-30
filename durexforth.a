@@ -1116,14 +1116,12 @@ LIT
 
     lda TMP
     clc
-    adc #2
-    tay
+    adc #3
+    sta + + 1
     lda TMP + 1
     adc #0
-    pha
-    tya
-    pha
-    rts
+    sta + + 2
++   jmp $1234
 
 ; --- QUIT
 
