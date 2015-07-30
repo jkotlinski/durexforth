@@ -1371,11 +1371,11 @@ BRANCH
 
     ldy	#2
     lda	(TMP), y
-    pha
+    sta + + 2
     dey
     lda	(TMP), y
-    pha
-    rts
+    sta + + 1
++   jmp $1234
 
 ; 0BRANCH
     +BACKLINK
@@ -1390,14 +1390,12 @@ ZBRANCH
     ; skip offset
     pla
     clc
-    adc #2
-    tay
+    adc #3
+    sta + + 1
     pla
     adc #0
-    pha
-    tya
-    pha
-    rts
+    sta + + 2
++   jmp $1234
     
 ; COLON
     +BACKLINK
