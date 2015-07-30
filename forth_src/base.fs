@@ -75,7 +75,10 @@ here [compile] exit
 : create
 # default behavior = exit
 header jsr, ['] dodoes , literal , ;
-: does> r> latest @ >dfa ! ;
+: does> 
+# FIXME
+begin d020 c@ 1+ d020 c! again 
+r> latest @ >dfa ! ;
 
 .( asm..)
 s" asm" load
