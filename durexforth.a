@@ -1106,25 +1106,22 @@ LIT
     pla
     sta TMP + 1
 
-    inc TMP
-    bne +
-    inc TMP + 1
-+
     ; copy literal to stack
-    ldy	#0
+    ldy	#1
     lda	(TMP), y
     sta	LSB, x
     iny
     lda	(TMP), y
     sta	MSB, x
 
-    inc TMP
-    bne +
-    inc	TMP + 1
-+   
-    lda TMP + 1
-    pha
     lda TMP
+    clc
+    adc #2
+    tay
+    lda TMP + 1
+    adc #0
+    pha
+    tya
     pha
     rts
 
