@@ -1079,19 +1079,16 @@ LITC
     bne +
     inc TMP + 1
 +
-
     ; copy literal to stack
     ldy	#0
     lda	(TMP), y
     sta	LSB, x
     sty	MSB, x
 
-    lda TMP + 1
-    pha
-    lda TMP
-    pha
-
-    rts
+    inc TMP
+    bne +
+    inc TMP + 1
++   jmp (TMP)
 
 ; LIT
     +BACKLINK
