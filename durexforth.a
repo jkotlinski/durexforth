@@ -1343,21 +1343,48 @@ IMMED
     +BACKLINK
     !byte	2
     !text	"r>"
+    ; save return adress
+    pla
+    sta TMP
+    pla
+    sta TMP+1
+
+    ; move from return stack to param stack
     dex
     pla
-    sta MSB,x
-    pla
     sta LSB,x
+    pla
+    sta MSB,x
+    
+    ; restore return address
+    lda TMP+1
+    pha
+    lda TMP
+    pha
+
     rts
 
     +BACKLINK
     !byte	2
     !text	">r"
+    ; save return address
+    pla
+    sta TMP
+    pla
+    sta TMP+1
+
+    ; move from param stack to return stack
     lda LSB,x
     pha
     lda MSB,x
     pha
     inx
+
+    ; restore return address
+    lda TMP+1
+    pha
+    lda TMP
+    pha
     rts
 
     +BACKLINK
