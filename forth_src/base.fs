@@ -66,17 +66,21 @@ while emit repeat drop ;
 : endof immed [compile] else ;
 : endcase immed ['] drop , begin ?dup while [compile] then repeat ;
 
-( get pointer to first data field - skip jsr DOCOL )
+( gets pointer to first data field, i.e., skips
+the first jsr )
 : >dfa >cfa 1+ 2+ ;
 
 : hide
 loc ?dup if hidden else ." err" then ;
 
+( dodoes words contain:
+ 1. jsr dodoes
+ 2. two-byte code pointer. default: point to exit
+ 3. variable length data )
 here exit
 : create
-# default behavior = exit
-header jsr, ['] dodoes , literal ;
-: does> r> latest @ >dfa ! ;
+header jsr, ['] dodoes , literal , ;
+: does> r> 1+ latest @ >dfa ! ;
 
 .( asm..)
 s" asm" load
