@@ -1369,9 +1369,9 @@ IMMED
     sta TMP+1
 
     ; move from param stack to return stack
-    lda LSB,x
-    pha
     lda MSB,x
+    pha
+    lda LSB,x
     pha
     inx
 

@@ -37,11 +37,11 @@ swap , here swap ! ;
 2dup > if swap then drop ;
 
 : litstring ( -- addr len )
-r> dup 2+ swap @ 2dup + >r ;
+r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 
 : s" immed ( -- addr len )
 state if ( compile mode )
-['] litstring , here 0 , 0
+jsr, ['] litstring , here 0 , 0
 begin key dup [char] " <>
 while c, 1+ repeat
 drop swap !
