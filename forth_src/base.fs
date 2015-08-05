@@ -127,7 +127,8 @@ fb value ip
 # "0 to foo" sets value foo to 0
 : (to) over 100/ over 2+ c! c! ;
 : to immed ' 1+
-state if ['] ['] , , ['] (to) ,
+state if
+[compile] literal ['] (to) jsr,
 else (to) then ;
 
 : hex 10 to base ;
