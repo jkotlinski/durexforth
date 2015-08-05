@@ -56,7 +56,7 @@ begin ?dup while
 swap dup c@ emit 1+ swap 1-
 repeat drop ;
 
-: ." immed [compile] s" ['] tell , ;
+: ." immed [compile] s" jsr, ['] tell , ;
 : .( begin key dup [char] ) <>
 while emit repeat drop ;
 .( compile base..)
