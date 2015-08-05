@@ -1306,39 +1306,34 @@ IMMED
     !byte	6
     !text	"dodoes"
 
-    ; TODO FIXME
--   inc $d020
-    jmp -
-    rts
+    ; behavior pointer address => TMP
+    pla
+    sta TMP
+    pla
+    sta TMP + 1
 
-;    pla
-;    sta TMP
-;    pla
-;    sta TMP + 1
-;    tay
-;
-;    ; push data pointer to param stack
-;    dex
-;    clc
-;    lda TMP
-;    adc #3
-;    sta LSB,x
-;    bcc +
-;    iny
-;+   sty MSB,x
-;
-;    ; behavior pointer => IP
-;    lda IP
-;    pha
-;    lda IP + 1
-;    pha
-;    ldy #2
-;    lda (TMP),y
-;    sta IP + 1
-;    dey
-;    lda (TMP),y
-;    sta IP
-;    rts
+    inc TMP
+    bne +
+    inc TMP + 1
++
+
+    ; push data pointer to param stack
+    dex
+    lda TMP
+    clc
+    adc #2
+    sta LSB,x
+    lda TMP + 1
+    adc #0
+    sta MSB,x
+
+    ldy #0
+    lda (TMP),y
+    sta TMP2
+    iny
+    lda (TMP),y
+    sta TMP2 + 1
+    jmp (TMP2)
 
     +BACKLINK
     !byte	2
