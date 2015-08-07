@@ -19,7 +19,7 @@ swap here swap ! ;
 : while immed jsr, ['] 0branch , here 0 , ;
 : repeat immed jmp,
 swap , here swap ! ;
-: recurse immed latest @ >cfa , ;
+: recurse immed jsr, latest @ >cfa , ;
 : ( immed begin key [char] ) = until ;
 : # immed begin key d = until ;
 : tuck ( x y -- y x y ) swap over ;
