@@ -91,7 +91,7 @@ hide mask
 
 : doplot ( x y -- )
 blitloc tuck c@
-[ here loc blitop >cfa ! ] or
+[ here 1+ loc blitop >cfa ! ] or
 swap c! ;
 
 : chkplot ( x y -- )
