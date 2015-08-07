@@ -122,7 +122,6 @@ lda,# 100/ ldy,#
 8b value zptmp
 8d value zptmp2
 9e value zptmp3
-fb value ip
 
 # "0 to foo" sets value foo to 0
 : (to) over 100/ over 2+ c! c! ;
@@ -186,11 +185,6 @@ here tuck + to here ;
 : abs dup 0< if negate then ;
 : s< - 0< ;
 : s> swap s< ;
-
-# return stack
-:asm r@ dex,
-pla, sp1 sta,x pla, sp0 sta,x
-pha, sp1 lda,x pha, ;asm
 
 : . 0 >r begin base /mod swap
 dup a < if 7 - then 37 + >r
