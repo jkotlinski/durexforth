@@ -4,9 +4,9 @@ Modern, lean C64 Forth inspired by colorForth, JONESFORTH and Blazin' Forth. Pro
 
 Goals:
 
-* Fun. The system should be nice to work with on the real machine.
+* Fun. The system should be nice to work with on the real machine. Mixing Forth code with assembly is easy.
 * Simplicity. The core should be small, leaving a lot of space for user code and data.
-* Speed. durexForth should be at least as fast as Blazin' Forth.
+* Speed. Starting with v1.4, durexForth is subroutine threaded. This makes it a lot faster than any 6502 Forth with traditional threading.
 
 
 <img src=http://noname.c64.org/csdb/gfx/releases/75000/75456.png>
