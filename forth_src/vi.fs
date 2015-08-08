@@ -616,34 +616,34 @@ cur-down
 then ;
 
 header maintable
-key i c, [compile] insert-start
-key a c, [compile] append-start
-key / c, [compile] find-handler
+key i c, ' insert-start ,
+key a c, ' append-start ,
+key / c, ' find-handler ,
 ( ctrl+u )
-15 c, [compile] half-page-back
+15 c, ' half-page-back ,
 ( ctrl+d )
-4 c, [compile] half-page-fwd
-key J c, [compile] join-lines
-key g c, [compile] goto-start
-key G c, [compile] goto-eof
-key $ c, [compile] eol
-key 0 c, [compile] sol
-key r c, [compile] replace-char
-key O c, [compile] open-line
-key P c, [compile] paste-line
-key x c, [compile] del-char
-key X c, [compile] backspace
-key b c, [compile] word-back
-key w c, [compile] word-fwd
-key d c, [compile] del
-LEFT c, [compile] cur-left
-RIGHT c, [compile] cur-right
-UP c, [compile] cur-up
-DOWN c, [compile] cur-down
-key h c, [compile] cur-left
-key l c, [compile] cur-right
-key k c, [compile] cur-up
-key j c, [compile] cur-down
+4 c, ' half-page-fwd ,
+key J c, ' join-lines ,
+key g c, ' goto-start ,
+key G c, ' goto-eof ,
+key $ c, ' eol ,
+key 0 c, ' sol ,
+key r c, ' replace-char ,
+key O c, ' open-line ,
+key P c, ' paste-line ,
+key x c, ' del-char ,
+key X c, ' backspace ,
+key b c, ' word-back ,
+key w c, ' word-fwd ,
+key d c, ' del ,
+LEFT c, ' cur-left ,
+RIGHT c, ' cur-right ,
+UP c, ' cur-up ,
+DOWN c, ' cur-down ,
+key h c, ' cur-left ,
+key l c, ' cur-right ,
+key k c, ' cur-up ,
+key j c, ' cur-down ,
 0 c,
 
 # custom restore handler
