@@ -25,13 +25,13 @@ latest @ begin ?dup while
 	[char] : emit space dup id.
 	dup 2+ c@ 80 and if ." immed " then
 
-	>dfa ( get data addr )
+	>cfa
 
 	begin
 		2dup >
 	while
-		dup @
-
+		dup c@ 20 = if
+        1+ dup @
 		case
 		['] lit of
 			2+ dup @ .
@@ -62,16 +62,21 @@ latest @ begin ?dup while
 			." 0branch ( "
 			2+ dup @ .
 			." ) "
-		endof
-			( default )
+		endof ( default )
 			dup
 			cfa> id.
+            .s cr
 		endcase
-		2+
+        2+
+        else 0 assert
+        then
+		cr
+        .s cr
 	repeat
 	[char] ; emit cr
 	2drop
 ;
+# see see
 hide (loop)
 
 ( c a b within returns true if a <= c and c < b )
