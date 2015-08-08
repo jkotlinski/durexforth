@@ -146,7 +146,7 @@ Changelog
 
  * forth: durexForth is now subroutine threaded instead
    of direct threaded. This gives a huge speed improvement,
-   at the cost of somewhat more RAM usage.
+   at the cost of increased RAM usage.
  * forth: added "compile," word.
  * disk: improved EOF handling.
  * vi: bugfixed CTRL+u/d.
