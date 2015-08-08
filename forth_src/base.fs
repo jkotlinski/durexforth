@@ -66,10 +66,10 @@ while emit repeat drop ;
 ['] over compile, 
 ['] = compile, 
 [compile] if 
-['] drop compile, ;
+[compile] drop ;
 : endof immed [compile] else ;
 : endcase immed 
-['] drop compile, 
+[compile] drop
 begin ?dup while [compile] then 
 repeat ;
 
@@ -140,8 +140,9 @@ else (to) then ;
 : hex 10 to base ;
 : decimal a to base ;
 
-:asm 2drop ( a b -- )
-inx, inx, ;asm
+: 2drop ( a b -- ) immed 
+[compile] drop 
+[compile] drop ;
 
 : forget loc ?dup if
 dup @ latest ! to here then ;

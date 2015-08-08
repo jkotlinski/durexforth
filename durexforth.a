@@ -42,6 +42,7 @@ TMP3 = $9e ; tape error log
 
 OP_JSR = $20
 OP_RTS = $60
+OP_INX = $e8
 OP_LDA_I = $a9
 OP_STA_AX = $9d
 
@@ -178,11 +179,15 @@ pushya
 
 ; DROP
     +BACKLINK
-    !byte	4
+    !byte	4 | F_IMMED
     !text	"drop"
 DROP
+    lda STATE
+    bne +
     inx
     rts
++   lda #OP_INX
+    jmp compile_a
 
 ; SWAP
     +BACKLINK
