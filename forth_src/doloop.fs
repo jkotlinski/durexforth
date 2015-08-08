@@ -11,7 +11,7 @@ zptmp lda, pha,
 ;asm
 
 : do ( limit first -- ) immed
-['] (do) jsr, here ;
+['] (do) compile, here ;
 
 :asm (loop)
 zptmp stx, tsx, # x = stack pointer
@@ -34,14 +34,21 @@ zptmp lda, pha,
 ;asm
 
 : loop immed
-['] (loop) jsr, , ; # store branch address
+['] (loop) compile, , ; # store branch address
 
 : +loop immed
-['] r> jsr, ['] + jsr, ['] r> jsr, ['] 2dup jsr, ['] < jsr,
-[compile] while ['] >r jsr, ['] >r jsr,
-[compile] repeat ['] 2drop jsr, ;
+['] r> compile, 
+['] + compile, 
+['] r> compile, 
+['] 2dup compile, 
+['] < compile,
+[compile] while 
+['] >r compile, 
+['] >r compile,
+[compile] repeat 
+['] 2drop compile, ;
 
-: i immed ['] r@ jsr, ;
+: i immed ['] r@ compile, ;
 :asm j txa, tsx,
 107 ldy,x zptmp sty, 108 ldy,x
 tax, dex, 

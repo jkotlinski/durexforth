@@ -4,22 +4,22 @@
 : * d* nip ;
 : loc word find ;
 : ' loc >cfa ;
-: jsr, 20 c, ;
 : jmp, 4c c, ;
-: [compile] immed jsr, ' , ;
+: compile, 20 c, , ;
+: [compile] immed ' compile, ;
 : ['] immed ' [compile] literal ;
 : [char] immed key [compile] literal ;
-: if immed jsr, ['] 0branch , here 0 , ;
+: if immed ['] 0branch compile, here 0 , ;
 : then immed here swap ! ;
 : else immed jmp, here 0 ,
 swap here swap ! ;
 : begin immed here ;
-: until immed jsr, ['] 0branch , , ;
+: until immed ['] 0branch compile, , ;
 : again immed jmp, , ;
-: while immed jsr, ['] 0branch , here 0 , ;
+: while immed ['] 0branch compile, here 0 , ;
 : repeat immed jmp,
 swap , here swap ! ;
-: recurse immed jsr, latest @ >cfa , ;
+: recurse immed latest @ >cfa compile, ;
 : ( immed begin key [char] ) = until ;
 : # immed begin key d = until ;
 : tuck ( x y -- y x y ) swap over ;
@@ -41,7 +41,7 @@ r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 
 : s" immed ( -- addr len )
 state if ( compile mode )
-jsr, ['] litstring , here 0 , 0
+['] litstring compile, here 0 , 0
 begin key dup [char] " <>
 while c, 1+ repeat
 drop swap !
@@ -56,7 +56,7 @@ begin ?dup while
 swap dup c@ emit 1+ swap 1-
 repeat drop ;
 
-: ." immed [compile] s" jsr, ['] tell , ;
+: ." immed [compile] s" ['] tell compile, ;
 : .( begin key dup [char] ) <>
 while emit repeat drop ;
 .( compile base..)
@@ -79,7 +79,7 @@ loc ?dup if hidden else ." err" then ;
  3. variable length data )
 here exit
 : create
-header jsr, ['] dodoes , literal , ;
+header ['] dodoes compile, literal , ;
 : does> r> 1+ latest @ >dfa ! ;
 
 .( asm..)
@@ -127,7 +127,7 @@ lda,# 100/ ldy,#
 : (to) over 100/ over 2+ c! c! ;
 : to immed ' 1+
 state if
-[compile] literal ['] (to) jsr,
+[compile] literal ['] (to) compile,
 else (to) then ;
 
 : hex 10 to base ;
