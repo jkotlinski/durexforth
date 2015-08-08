@@ -6,7 +6,7 @@ Goals:
 
 * Fun. The system should be nice to work with on the real machine.
 * Simplicity. The core should be small, leaving a lot of space for user code and data.
-* Speed. durexForth is currently the fastest C64 Forth.
+* Speed. As it stands, durexForth is the fastest C64 Forth.
 
 <img src=http://i.imgur.com/eXsaXjo.png?1>
 
