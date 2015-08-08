@@ -780,7 +780,7 @@ show-page
 main-loop
 cleanup ;
 
-loc vi
+loc vi loc fg
 hide-to CR
-hidden
+hidden hidden
 
