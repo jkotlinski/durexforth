@@ -403,7 +403,7 @@ penx 1+ lda, sp1 1+ sta,x rts,
 :asm fillr ( x y -- newx y )
 # over 140 >= if exit then
 sp1 1+ lda,x 0 cmp,# +branch beq,
-3f lda,# sp0 1+ cmp,x 3 bcs, ;asm
+3f lda,# sp0 1+ cmp,x 1 bcs, rts,
 :+
 
 # over penx !
@@ -436,12 +436,12 @@ leave jsr, ;asm
 :asm scanl
 :-
 # x<0?
-sp1 1+ lda,x 3 bpl, ;asm
+sp1 1+ lda,x 1 bpl, rts,
 
 addr lda, zptmp sta,
 addr 1+ lda, zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
-mask and, 3 beq, ;asm
+mask and, 1 beq, rts,
 
 zptmp lda,(y)
 mask ora, zptmp sta,(y)
