@@ -141,3 +141,15 @@ Changelog
  * forth: many small optimizations
  * forth: made cmove> ANS Forth compliant
  * doc: updated memory map documentation
+
+2015-08-08: v1.4
+
+ * forth: durexForth is now subroutine threaded instead
+   of direct threaded. This gives a huge speed improvement,
+   at the cost of somewhat more RAM usage.
+ * forth: added "compile," word.
+ * disk: improved EOF handling.
+ * vi: bugfixed CTRL+u/d.
+ * vi: bugfix: "fg" was by mistake hidden.
+ * doc: added inline assembly example.
+ * doc: bugfixed turtle graphics demo.
