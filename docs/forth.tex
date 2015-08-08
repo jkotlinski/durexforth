@@ -173,16 +173,17 @@ Like \texttt{cmove}, except that the copy proceeds from higher to lower memory.
 \item[;] End compiling.
 \item[, ( n -- )] Write word on stack to \texttt{here} position and increase \texttt{here} by 2.
 \item[c, ( n -- )] Write byte on stack to \texttt{here} position and increase \texttt{here} by 1.
-\item[literal ( n -- )] Compile a value from the stack as a literal value.
+\item[literal ( n -- )] Compile a value from the stack as a literal value. Typical use: \texttt{: x ... [ a b * ] literal ... ;}
 \item[[char{]} c] Compile character \texttt{c} as a literal value.
 \item[[ ( -- )] Leave compile mode. Execute the following words immediately instead of compiling them.
 \item[{]} ( -- )] Return to compile mode.
 \item[immed] Mark the word being compiled as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
-\item[{[']} xxx] Compile the execution token of word \texttt{xxx} as a literal value instead of executing it. (This does not work if \texttt{xxx} is an immediate words.)
+\item[{[']} name ( -- xt )] Place name's execution token xt on the stack. The execution token returned by the compiled phrase \texttt{['] x} is the same value returned by \texttt{' x} outside of compilation state. Typical use: \texttt{: x ... {[}'{]} name ... ;}
+\item[compile, ( xt -- )] Append \texttt{jsr xt} to the word being compiled. Typical use: \texttt{: recurse immed latest @ >cfa compile, ;}
 \item[[compile{]} xxx] Compile the execution token of immediate word \texttt{xxx} instead of executing it.
 \item[header xxx] Create a dictionary header with name \texttt{xxx}. 
 \item[create xxx/does$>$] Create a word creating word \texttt{xxx} with custom behavior
-specified after does>. For further description, see "Starting Forth."
+specified after \texttt{does$>$}. For further description, see "Starting Forth."
 
 \end{description}
 
