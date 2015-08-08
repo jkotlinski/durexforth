@@ -5,6 +5,44 @@ latest @ begin ?dup while
 2dup > if nip exit then
 @ repeat drop 0 ;
 
+: see-jsr
+1+ dup @
+case
+['] lit of
+    2+ dup @ .
+endof
+['] litc of
+    2+ dup c@ . 1-
+endof
+['] litstring of
+    [char] s emit
+    [char] " emit space
+    2+ dup 2+ over @ tell
+    [char] " emit space
+    dup @ +
+endof
+['] ['] of
+    ." ['] "
+    2+ dup @ cfa> id.
+endof
+['] (loop) of
+    ." (loop) " 2+
+endof
+['] branch of
+    ." branch ( "
+    2+ dup @ .
+    ." ) "
+endof
+['] 0branch of
+    ." 0branch ( "
+    2+ dup @ .
+    ." ) "
+endof ( default )
+    dup
+    cfa> id.
+endcase
+2+ ;
+
 : see
 	loc
     dup 0= if exit then
@@ -30,53 +68,16 @@ latest @ begin ?dup while
 	begin
 		2dup >
 	while
-		dup c@ 20 = if
-        1+ dup @
-		case
-		['] lit of
-			2+ dup @ .
-		endof
-		['] litc of
-			2+ dup c@ . 1-
-		endof
-		['] litstring of
-			[char] s emit
-            [char] " emit space
-			2+ dup 2+ over @ tell
-			[char] " emit space
-            dup @ +
-		endof
-		['] ['] of
-            ." ['] "
-			2+ dup @ cfa> id.
-		endof
-		['] (loop) of
-			." (loop) " 2+
-		endof
-		['] branch of
-			." branch ( "
-			2+ dup @ .
-			." ) "
-		endof
-		['] 0branch of
-			." 0branch ( "
-			2+ dup @ .
-			." ) "
-		endof ( default )
-			dup
-			cfa> id.
-            .s cr
-		endcase
-        2+
-        else 0 assert
-        then
-		cr
-        .s cr
+		dup c@ case 
+        20 of see-jsr endof
+        60 of 1+ ." exit " endof
+        4c of ." jmp ( " 1+ dup @ . ." ) " 2+ endof
+        ." ? " swap 1+ swap
+        endcase
 	repeat
 	[char] ; emit cr
 	2drop
 ;
-# see see
 hide (loop)
 
 ( c a b within returns true if a <= c and c < b )
