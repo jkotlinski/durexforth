@@ -9,7 +9,7 @@ Goals:
 * Speed. Starting with v1.4, durexForth is subroutine threaded. This makes it a lot faster than any 6502 Forth with traditional threading.
 
 
-<img src=https://scontent-ams3-1.xx.fbcdn.net/hphotos-xfa1/v/t1.0-9/404171_418453698213412_1150924197_n.jpg?oh=499d0e4c346beb33c297e1ba803b7ab9&oe=564A636D>
+<img src=http://i.imgur.com/eXsaXjo.png?1>
 
 http://www.facebook.com/DurexForth
 
