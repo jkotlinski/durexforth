@@ -4,19 +4,15 @@
 
 \subsection{Why Forth?}
 
-Forth is a different language. It is old, a little weird and makes you think different.
-
-What is cool about it? It is a very low-level and minimal language that has a few rough edges. At the same time, it is easy to make it a very high-level and domain-specific language, much like Lisp. 
+Forth is a unique language. What is so special about it? It is a very low-level and minimal language with its fair share of quirks and rough edges. At the same time, it is easy to scale it up to become a very high-level and domain-specific language, much like Lisp. 
 
 Compared to C64 Basic, Forth is more attractive in almost every way. It is a lot more fast, memory effective and powerful.
 
-Compared to C, specifically cc65, the story is a little different. It's hard to make a fair comparison. Theoretically Forth code can be very memory efficient, and it's possible to make Forth code that is leaner than C code. But it is also true that cc65 code is generally faster than Forth code.
+Compared to C, the story is a little different. It's hard to make a fair comparison. Theoretically Forth code can be very memory efficient, and it's possible to make Forth code that is leaner than C code. But it is also true that cc65 code is generally faster than Forth code.
 
-The main advantage of Forth is that the environment runs on the actual machine. It would not be a
-lot of fun to use a C compiler that runs on a standard C64. But with Forth, it's possible to create an entire development suite with editor, compiler and assembler that runs entirely on the C64.
+The main advantage of Forth is that the environment runs on the actual machine. It would not be a lot of fun to use a C compiler that runs on a standard C64. But with Forth, it's possible to create an entire development suite with editor, compiler and assembler that runs entirely on the C64.
 
-Another advantage is that Forth has an interpreter. Compared to cross-compiling, it is really nice
-to make small edits and tweaks without going through the entire edit-compile-link-transfer-boot-run cycle.
+Another advantage is that Forth has an interpreter. Compared to cross-compiling, it is really nice to make small edits and tweaks without going through the entire edit-compile-link-transfer-boot-run cycle.
 
 For a Forth introduction, please refer to the excellent
 \href{http://www.forth.com/starting-forth/}{Starting Forth} by Leo Brodie. As a follow-up, I
@@ -29,7 +25,8 @@ There are other Forths for c64, most notably Blazin' Forth. Blazin' Forth is exc
 \begin{itemize}
 \item Store your Forth sources as text files - no crazy block file system.
 \item durexForth is smaller.
-\item The editor is a vi clone.
+\item durexForth is faster.
+\item The durexForth editor is a vi clone.
 \item durexForth is open source (available at \href{https://github.com/jkotlinski/durexforth}{Github}).
 \end{itemize}
 
@@ -42,7 +39,7 @@ Some demonstration files are included as appetizers.
 The gfxdemo package demonstrates the high-resolution graphics, with some examples adapted from the book "Step-By-Step Programming C64 Graphics" by Phil Cornes. 
 Show the demos by entering:
 
-\texttt{s" gfxdemo" load gfxdemo}
+\texttt{s" gfxdemo" load}
 
 When a demo has finished drawing, press any key to continue.
 

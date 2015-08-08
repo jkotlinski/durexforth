@@ -283,4 +283,5 @@ hide done
 : gfxdemo
 lineweb rndline radiant diamond
 reccirc 2reccirc erasecirc rotsqr
-seascape jungle colorchart ;
+seascape jungle colorchart ; 
+gfxdemo
