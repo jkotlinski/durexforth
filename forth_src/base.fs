@@ -62,9 +62,16 @@ while emit repeat drop ;
 .( compile base..)
 
 : case immed 0 ;
-: of immed ['] over , ['] = , [compile] if ['] drop , ;
+: of immed 
+['] over compile, 
+['] = compile, 
+[compile] if 
+['] drop compile, ;
 : endof immed [compile] else ;
-: endcase immed ['] drop , begin ?dup while [compile] then repeat ;
+: endcase immed 
+['] drop compile, 
+begin ?dup while [compile] then 
+repeat ;
 
 ( gets pointer to first data field, i.e., skips
 the first jsr )
