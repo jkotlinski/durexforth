@@ -11,39 +11,37 @@ Let us define a word and see what it gets compiled to.
 When the word is defined, you can get its start address by \texttt{loc bg}, and the contents of bg can be dumped using \texttt{loc bg dump}. Try it, and you will get output like the following:
 
 \begin{alltt}
-48e7  a0 48 02 42 47 20 86 08 .h.bg ..
-48ef  9c 10 20 d0 ae 0a ce 10 .. .....
-48f7  ff ff ff ff ff ff ff ff ........
-49ff  ...
+4c38  ed 4b 02 42 47 20 cf 0e .k.bg ..
+4c40  20 d0 20 49 0a 60 ff ff  . i....
+4c48  ff ff ff ff ff ff ff ff ........
+4c50  ...
 \end{alltt}
 
-Here, we can see that the "bg" word is 16 bytes long and starts at address \$48e7. It contains three parts: Header, code field and data field.
+Here, we can see that the "bg" word is 14 bytes long and starts at address \$4c38. It contains two parts: Header and code.
 
 \section{Header}
 
 \begin{alltt}
-48e7  \textcolor{red}{a0 48 02 42 47} 20 86 08 \textcolor{red}{.h.bg} ..
-48ef  9c 10 20 d0 ae 0a ce 10 .. .....
+4c38  \textcolor{red}{ed 4b 02 42 47} 20 cf 0e \textcolor{red}{.k.bg} ..
+4c40  20 d0 20 49 0a 60 ff ff  . i....
 \end{alltt}
 
-The first two bytes contain a back-pointer to the previous word, starting at \$48a0. The next byte, "02", is the length of "bg" name string. After that, the string "bg" follows. (42 = 'b', 47 = 'g')
+The first two bytes contain a back-pointer to the previous word, starting at \$4bed. The next byte, "02", is the length of "bg" name string. After that, the string "bg" follows. (42 = 'b', 47 = 'g')
 
 The name length byte is also used to store special attributes of the word. Bit 7 is "immediate" flag, which means that the word should execute immediately instead of being compiled into word definitions. ("(" is such an example of an immediate word that does not get compiled.) Bit 6 is "hidden" flag, which makes a word unfindable. Since bg is neither immediate nor hidden, bits 7-6 are both clear.
 
-\section{Code Field}
+\section{Code}
 
 \begin{alltt}
-48e7  a0 48 02 42 47 \textcolor{red}{20 86 08} .h.bg \textcolor{red}{..}
-48ef  9c 10 20 d0 ae 0a ce 10 .. .....
+4c38  ed 4b 02 42 47 \textcolor{red}{20 cf 0e} .k.bg\textcolor{red}{ ..}
+4c40  \textcolor{red}{20 d0 20 49 0a 60 ff ff  . i..}..
 \end{alltt}
 
-The code field contains the 6502 instruction "jsr \$886". \$886 is the place of the DOCOL word, which is responsible for pushing the Forth instruction pointer (IP) to the return stack, and then redirecting IP to the data field of bg.
+The code section contain pure 6502 machine code.
 
-\section{Data Field}
-
-\begin{alltt}
-48e7  a0 48 02 42 47 20 86 08 .h.bg ..
-48ef  \textcolor{red}{9c 10 20 d0 ae 0a ce 10 .. .....}
-\end{alltt}
-
-The data field contains a list of pointers to code fields to be executed by DurexForth. The first two bytes contain \$109c, the code field adress (CFA) of the \texttt{lit} word. \texttt{lit} is responsible for pushing the two following bytes (\$d020) to the parameter stack. After that, we find \$aae, the CFA of \texttt{c!}. Finally, \$10ce is the CFA of \texttt{exit}, which restores the instruction pointer that DOCOL previously pushed to the return stack.
+\begin{description}
+\item[20 cf 0e ( jsr \$ecf )] \$ecf is the adress of the \texttt{lit} code. \texttt{lit} copies the two following bytes to parameter stack.
+\item[20 d0 ( \$d020 )] The parameter to the \texttt{lit} word. When executed, \texttt{lit} will add \$d020 to the parameter stack.
+\item[20 49 0a ( jsr \$a49 )] \$a49 is the address of the \texttt{c!} code.
+\item[60 ( rts )] Returns to the caller.
+\end{description}
