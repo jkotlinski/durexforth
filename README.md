@@ -4,9 +4,9 @@ Modern, lean C64 Forth inspired by colorForth, JONESFORTH and Blazin' Forth. Pro
 
 Goals:
 
-* Fun. The system should be nice to work with on the real machine. Mixing with assembly code is easy.
+* Fun. The system should be nice to work with on the real machine.
 * Simplicity. The core should be small, leaving a lot of space for user code and data.
-* Speed. While not being the main goal, durexForth happens to be the fastest C64 Forth ever.
+* Speed. durexForth is currently the fastest C64 Forth.
 
 <img src=http://i.imgur.com/eXsaXjo.png?1>
 
