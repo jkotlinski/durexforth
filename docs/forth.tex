@@ -180,7 +180,11 @@ Like \texttt{cmove}, except that the copy proceeds from higher to lower memory.
 \item[immediate] Mark the word being compiled as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
 \item[{[']} name ( -- xt )] Place name's execution token xt on the stack. The execution token returned by the compiled phrase \texttt{['] x} is the same value returned by \texttt{' x} outside of compilation state. Typical use: \texttt{: x ... {[}'{]} name ... ;}
 \item[compile, ( xt -- )] Append \texttt{jsr xt} to the word being compiled. Typical use: \texttt{: recurse immed latest @ >cfa compile, ;}
-\item[[compile{]} xxx] Compile the execution token of immediate word \texttt{xxx} instead of executing it.
+\item[postpone xxx] Compile the compilation semantics (instead of interpretation semantics) of xxx. Typical use: 
+\begin{verbatim}
+: endif postpone then ; immediate
+: x ... if ... endif ... ;
+\end{verbatim}
 \item[header xxx] Create a dictionary header with name \texttt{xxx}. 
 \item[create xxx/does$>$] Create a word creating word \texttt{xxx} with custom behavior
 specified after \texttt{does$>$}. For further description, see "Starting Forth."

@@ -5,16 +5,18 @@
 : loc word find ;
 : ' loc >cfa ;
 : jmp, 4c c, ;
-: [compile] immediate ' compile, ;
-: ['] immediate ' [compile] literal ;
-: [char] immediate key [compile] literal ;
-: if immediate ['] 0branch compile, here 0 , ;
+: ['] immediate ' 
+[ ' literal compile, ] ;
+: [char] immediate key 
+[ ' literal compile, ] ;
+: if immediate ['] 0branch compile, 
+here 0 , ;
 : then immediate here swap ! ;
 : else immediate jmp, here 0 ,
 swap here swap ! ;
 : postpone immediate
 loc dup >cfa swap 2 + c@ 80 and 0= if
-[compile] literal ['] compile, then
+[ ' literal compile, ] ['] compile, then
 compile, ;
 : begin immediate here ;
 : until immediate postpone 0branch , ;
