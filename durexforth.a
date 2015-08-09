@@ -1011,7 +1011,7 @@ INTERPRET
     ; OK, this word should be compiled...
     ; insert jsr
     dex
-    lda #$20 ;jsr
+    lda #OP_JSR
     sta LSB,x
     jsr CCOMMA
     ; insert pointer
