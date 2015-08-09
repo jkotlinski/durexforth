@@ -1,4 +1,5 @@
 : 2dup over over ;
+: 2+ 1+ 1+ ;
 : cr d emit ;
 : nip swap drop ;
 : * d* nip ;
@@ -15,7 +16,7 @@ here 0 , ;
 : else immediate jmp, here 0 ,
 swap here swap ! ;
 : postpone immediate
-loc dup >cfa swap 2 + c@ 80 and 0= if
+loc dup >cfa swap 2+ c@ 80 and 0= if
 [ ' literal compile, ] ['] compile, then
 compile, ;
 : begin immediate here ;
@@ -35,7 +36,6 @@ swap , here swap ! ;
 
 : <= > 0= ;
 : >= < 0= ;
-: 2+ 1+ 1+ ;
 : max ( a b - c )
 2dup < if swap then drop ;
 : min ( a b - c )
