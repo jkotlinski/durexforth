@@ -5,22 +5,22 @@
 : loc word find ;
 : ' loc >cfa ;
 : jmp, 4c c, ;
-: [compile] immed ' compile, ;
-: ['] immed ' [compile] literal ;
-: [char] immed key [compile] literal ;
-: if immed ['] 0branch compile, here 0 , ;
-: then immed here swap ! ;
-: else immed jmp, here 0 ,
+: [compile] immediate ' compile, ;
+: ['] immediate ' [compile] literal ;
+: [char] immediate key [compile] literal ;
+: if immediate ['] 0branch compile, here 0 , ;
+: then immediate here swap ! ;
+: else immediate jmp, here 0 ,
 swap here swap ! ;
-: begin immed here ;
-: until immed ['] 0branch compile, , ;
-: again immed jmp, , ;
-: while immed ['] 0branch compile, here 0 , ;
-: repeat immed jmp,
+: begin immediate here ;
+: until immediate ['] 0branch compile, , ;
+: again immediate jmp, , ;
+: while immediate ['] 0branch compile, here 0 , ;
+: repeat immediate jmp,
 swap , here swap ! ;
-: recurse immed latest @ >cfa compile, ;
-: ( immed begin key [char] ) = until ;
-: # immed begin key d = until ;
+: recurse immediate latest @ >cfa compile, ;
+: ( immediate begin key [char] ) = until ;
+: # immediate begin key d = until ;
 : tuck ( x y -- y x y ) swap over ;
 : ?dup dup if dup then ;
 : <> ( a b -- c ) = 0= ;
@@ -38,13 +38,13 @@ swap , here swap ! ;
 : litstring ( -- addr len )
 r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 
-: s" immed ( -- addr len )
+: s" immediate ( -- addr len )
 state if ( compile mode )
 ['] litstring compile, here 0 , 0
 begin key dup [char] " <>
 while c, 1+ repeat
 drop swap !
-else ( immediate mode )
+else ( immediateiate mode )
 here here
 begin key dup [char] " <>
 while over c! 1+ repeat
@@ -55,19 +55,19 @@ begin ?dup while
 swap dup c@ emit 1+ swap 1-
 repeat drop ;
 
-: ." immed [compile] s" ['] tell compile, ;
+: ." immediate [compile] s" ['] tell compile, ;
 : .( begin key dup [char] ) <>
 while emit repeat drop ;
 .( compile base..)
 
-: case immed 0 ;
-: of immed 
+: case immediate 0 ;
+: of immediate 
 ['] over compile, 
 ['] = compile, 
 [compile] if 
 [compile] drop ;
-: endof immed [compile] else ;
-: endcase immed 
+: endof immediate [compile] else ;
+: endcase immediate 
 [compile] drop
 begin ?dup while [compile] then 
 repeat ;
@@ -131,7 +131,7 @@ lda,# 100/ ldy,#
 
 # "0 to foo" sets value foo to 0
 : (to) over 100/ over 2+ c! c! ;
-: to immed ' 1+
+: to immediate ' 1+
 state if
 [compile] literal ['] (to) compile,
 else (to) then ;
@@ -139,7 +139,7 @@ else (to) then ;
 : hex 10 to base ;
 : decimal a to base ;
 
-: 2drop ( a b -- ) immed 
+: 2drop ( a b -- ) immediate 
 [compile] drop 
 [compile] drop ;
 

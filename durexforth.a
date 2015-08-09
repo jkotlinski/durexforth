@@ -1293,8 +1293,8 @@ SEMICOLON
 
 ; IMMEDIATE. Flip the immediate flag of the LATEST word.
     +BACKLINK
-    !byte	5 | F_IMMED
-    !text	"immed"
+    !byte	9 | F_IMMED
+    !text	"immediate"
 IMMED
     lda	_LATEST
     sta	TMP

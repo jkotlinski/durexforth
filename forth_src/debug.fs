@@ -61,7 +61,7 @@ endcase
 	swap ( end-of-word start-of-word )
 
 	[char] : emit space dup id.
-	dup 2+ c@ 80 and if ." immed " then
+	dup 2+ c@ 80 and if ." immediate " then
 
 	>cfa
 

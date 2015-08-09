@@ -10,7 +10,7 @@ tya, pha,
 zptmp lda, pha,
 ;asm
 
-: do ( limit first -- ) immed
+: do ( limit first -- ) immediate
 ['] (do) compile, here ;
 
 :asm (loop)
@@ -33,10 +33,10 @@ zptmp 1+ lda, pha,
 zptmp lda, pha,
 ;asm
 
-: loop immed
+: loop immediate
 ['] (loop) compile, , ; # store branch address
 
-: +loop immed
+: +loop immediate
 ['] r> compile, 
 ['] + compile, 
 ['] r> compile, 
@@ -48,7 +48,7 @@ zptmp lda, pha,
 [compile] repeat 
 ['] 2drop compile, ;
 
-: i immed ['] r@ compile, ;
+: i immediate ['] r@ compile, ;
 :asm j txa, tsx,
 107 ldy,x zptmp sty, 108 ldy,x
 tax, dex, 
