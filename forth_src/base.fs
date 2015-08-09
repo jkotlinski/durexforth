@@ -216,8 +216,8 @@ header modules
 s" labels" load
 .( doloop..)
 s" doloop" load
-.( jsr..)
-s" jsr" load
+.( sys..)
+s" sys" load
 .( debug..)
 s" debug" load
 .( ls..)

@@ -1,5 +1,5 @@
 d value CR
-: clrscr e544 jsr ;
+: clrscr e544 sys ;
 
 6001 value bufstart
 
@@ -229,7 +229,7 @@ editpos c@ space= 0= and ;
 ;
 
 : setcur ( x y -- )
-xr ! yr ! e50c jsr ;
+xr ! yr ! e50c sys ;
 
 : refresh-line
 20 cury @ 28 * 400 + 28 fill
