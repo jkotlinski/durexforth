@@ -5,7 +5,6 @@
 : loc word find ;
 : ' loc >cfa ;
 : jmp, 4c c, ;
-: compile, 20 c, , ;
 : [compile] immed ' compile, ;
 : ['] immed ' [compile] literal ;
 : [char] immed key [compile] literal ;

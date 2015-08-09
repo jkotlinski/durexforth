@@ -952,6 +952,16 @@ LITERAL
     jsr COMMA ; writes LIT
     jmp COMMA ; writes number
 
+    +BACKLINK
+    !byte	8
+    !text	"compile,"
+COMPILE_COMMA
+    dex
+    lda #OP_JSR
+    sta	LSB, x
+    jsr CCOMMA
+    jmp COMMA
+
 ; INTERPRET
     +BACKLINK
     !byte	9
@@ -1009,14 +1019,8 @@ INTERPRET
     beq	.execute_word ; no, execute it.
 
     ; OK, this word should be compiled...
-    ; insert jsr
-    dex
-    lda #OP_JSR
-    sta LSB,x
-    jsr CCOMMA
-    ; insert pointer
     jsr	TCFA
-    jsr	COMMA
+    jsr COMPILE_COMMA
     inx ; drop string
     rts
 
