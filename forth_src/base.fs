@@ -12,10 +12,14 @@
 : then immediate here swap ! ;
 : else immediate jmp, here 0 ,
 swap here swap ! ;
+: postpone immediate
+loc dup >cfa swap 2 + c@ 80 and 0= if
+[compile] literal ['] compile, then
+compile, ;
 : begin immediate here ;
-: until immediate ['] 0branch compile, , ;
+: until immediate postpone 0branch , ;
 : again immediate jmp, , ;
-: while immediate ['] 0branch compile, here 0 , ;
+: while immediate postpone 0branch here 0 , ;
 : repeat immediate jmp,
 swap , here swap ! ;
 : recurse immediate latest @ >cfa compile, ;
@@ -40,11 +44,11 @@ r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 
 : s" immediate ( -- addr len )
 state if ( compile mode )
-['] litstring compile, here 0 , 0
+postpone litstring here 0 , 0
 begin key dup [char] " <>
 while c, 1+ repeat
 drop swap !
-else ( immediateiate mode )
+else ( immediate mode )
 here here
 begin key dup [char] " <>
 while over c! 1+ repeat
@@ -55,21 +59,21 @@ begin ?dup while
 swap dup c@ emit 1+ swap 1-
 repeat drop ;
 
-: ." immediate [compile] s" ['] tell compile, ;
+: ." immediate postpone s" postpone tell ;
 : .( begin key dup [char] ) <>
 while emit repeat drop ;
 .( compile base..)
 
 : case immediate 0 ;
 : of immediate 
-['] over compile, 
-['] = compile, 
-[compile] if 
-[compile] drop ;
-: endof immediate [compile] else ;
+postpone over
+postpone =
+postpone if 
+postpone drop ;
+: endof immediate postpone else ;
 : endcase immediate 
-[compile] drop
-begin ?dup while [compile] then 
+postpone drop
+begin ?dup while postpone then 
 repeat ;
 
 ( gets pointer to first data field, i.e., skips
@@ -85,7 +89,7 @@ loc ?dup if hidden else ." err" then ;
  3. variable length data )
 here exit
 : create
-header ['] dodoes compile, literal , ;
+header postpone dodoes literal , ;
 : does> r> 1+ latest @ >dfa ! ;
 
 .( asm..)
@@ -133,15 +137,14 @@ lda,# 100/ ldy,#
 : (to) over 100/ over 2+ c! c! ;
 : to immediate ' 1+
 state if
-[compile] literal ['] (to) compile,
+postpone literal postpone (to)
 else (to) then ;
 
 : hex 10 to base ;
 : decimal a to base ;
 
 : 2drop ( a b -- ) immediate 
-[compile] drop 
-[compile] drop ;
+postpone drop postpone drop ;
 
 : forget loc ?dup if
 dup @ latest ! to here then ;

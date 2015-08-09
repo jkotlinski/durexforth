@@ -11,7 +11,7 @@ zptmp lda, pha,
 ;asm
 
 : do ( limit first -- ) immediate
-['] (do) compile, here ;
+postpone (do) here ;
 
 :asm (loop)
 zptmp stx, tsx, # x = stack pointer
@@ -34,21 +34,21 @@ zptmp lda, pha,
 ;asm
 
 : loop immediate
-['] (loop) compile, , ; # store branch address
+postpone (loop) , ; # store branch address
 
 : +loop immediate
-['] r> compile, 
-['] + compile, 
-['] r> compile, 
-['] 2dup compile, 
-['] < compile,
-[compile] while 
-['] >r compile, 
-['] >r compile,
-[compile] repeat 
-['] 2drop compile, ;
+postpone r>
+postpone +
+postpone r>
+postpone 2dup
+postpone <
+postpone while 
+postpone >r
+postpone >r
+postpone repeat 
+postpone 2drop ;
 
-: i immediate ['] r@ compile, ;
+: i immediate postpone r@ ;
 :asm j txa, tsx,
 107 ldy,x zptmp sty, 108 ldy,x
 tax, dex, 
