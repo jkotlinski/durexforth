@@ -933,8 +933,6 @@ EXECUTE
     !byte 7 | F_IMMED
     !text "literal"
 LITERAL
-    lda #OP_JSR
-    jsr compile_a
     dex
     lda MSB+1,x
     bne +
@@ -942,14 +940,14 @@ LITERAL
     sta LSB,x
     lda #>LITC
     sta MSB,x
-    jsr COMMA ; writes LITC
+    jsr COMPILE_COMMA
     jmp CCOMMA ; writes byte
 +
     lda #<LIT
     sta LSB, x
     lda #>LIT
     sta MSB, x
-    jsr COMMA ; writes LIT
+    jsr COMPILE_COMMA
     jmp COMMA ; writes number
 
     +BACKLINK
