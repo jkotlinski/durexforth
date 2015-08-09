@@ -956,10 +956,8 @@ LITERAL
     !byte	8
     !text	"compile,"
 COMPILE_COMMA
-    dex
     lda #OP_JSR
-    sta	LSB, x
-    jsr CCOMMA
+    jsr compile_a
     jmp COMMA
 
 ; INTERPRET
