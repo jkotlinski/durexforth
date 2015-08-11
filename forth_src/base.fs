@@ -75,7 +75,7 @@ postpone =
 postpone if 
 postpone drop ;
 : endof immediate postpone else ;
-: endcase immediate 
+: endcase immediate keep-tailcalls
 postpone drop
 begin ?dup while postpone then 
 repeat ;

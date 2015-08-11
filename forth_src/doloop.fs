@@ -33,7 +33,7 @@ zptmp 1+ lda, pha,
 zptmp lda, pha,
 ;asm
 
-: loop immediate
+: loop immediate keep-tailcalls
 postpone (loop) , ; # store branch address
 
 : +loop immediate
