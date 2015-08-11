@@ -70,9 +70,9 @@ endcase
 	while
 		dup c@ case 
         20 of see-jsr endof
-        4c of ." jmp( " see-jsr ." )" endof
         e8 of 1+ ." inx " endof
         60 of 1+ ." rts " endof
+        4c of ." jmp ( " 1+ dup @ . ." ) " 2+ endof
         ." ? " swap 1+ swap
         endcase
 	repeat
