@@ -10,7 +10,8 @@
 [ ' literal compile, ] ;
 : [char] immediate key 
 [ ' literal compile, ] ;
-: if immediate ['] 0branch compile, 
+: if immediate keep-tailcalls
+['] 0branch compile, 
 here 0 , ;
 : then immediate keep-tailcalls
 here swap ! ;
