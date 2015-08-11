@@ -27,7 +27,8 @@
 
 F_IMMED = $80
 F_HIDDEN = $40
-STRLEN_MASK = $3f
+F_KEEP_TAILCALLS = $20 ; when set, skips tailcall elimination
+STRLEN_MASK = $1f
 
 BASIC_INPUT_BUFFER = $200
 
@@ -40,6 +41,7 @@ TMP = $8b ; rnd seed
 TMP2 = $8d ; rnd seed
 TMP3 = $9e ; tape error log
 
+OP_JMP = $4c
 OP_JSR = $20
 OP_RTS = $60
 OP_INX = $e8
@@ -179,7 +181,7 @@ pushya
 
 ; DROP
     +BACKLINK
-    !byte	4 | F_IMMED
+    !byte	4 | F_IMMED | F_KEEP_TAILCALLS
     !text	"drop"
 DROP
     lda STATE
@@ -958,6 +960,11 @@ COMPILE_COMMA
     jsr compile_a
     jmp COMMA
 
+curr_word_keep_tail_calls
+    !byte 1
+last_word_keep_tail_calls
+    !byte 1
+
 ; INTERPRET
     +BACKLINK
     !byte	9
@@ -986,8 +993,12 @@ INTERPRET
     ; yep, it's a number...
 .was_number
     lda	STATE ; are we compiling?
-    bne	LITERAL ; yes, compile the number
+    bne	+ 
     rts
++   ; yes, compile the number
+    lda #1
+    sta curr_word_keep_tail_calls
+    jmp LITERAL
 
 .on_stack_underflow
     lda	#$12 ; reverse on
@@ -1007,6 +1018,13 @@ INTERPRET
     lda	MSB, x
     sta	TMP + 1
     ldy	#2 ; skip link ptr, look at flags
+
+    lda curr_word_keep_tail_calls
+    sta last_word_keep_tail_calls
+    lda (TMP), y
+    and #F_KEEP_TAILCALLS
+    sta curr_word_keep_tail_calls
+
     lda	(TMP), y
     and	#F_IMMED
     bne	.execute_word ; yes... execute it.
@@ -1141,6 +1159,20 @@ QUIT
     !byte	4 | F_IMMED
     !text	"exit"
 EXIT
+    lda last_word_keep_tail_calls
+    bne +
+    lda HERE_LSB
+    sec
+    sbc #3
+    sta .instr_ptr
+    lda HERE_MSB
+    sbc #0
+    sta .instr_ptr + 1
+    lda #OP_JMP
+.instr_ptr = * + 1    
+    sta $1234
+    rts
++
     lda #OP_RTS
 compile_a
     dex
@@ -1291,6 +1323,19 @@ SEMICOLON
     ; go back to IMMEDIATE mode.
     jmp LBRAC
 
+    +BACKLINK
+    !byte	14 | F_IMMED
+    !text	"keep-tailcalls"
+    lda	_LATEST
+    sta	TMP
+    lda	_LATEST + 1
+    sta	TMP + 1
+    ldy	#2
+    lda	(TMP), y
+    eor	#F_KEEP_TAILCALLS
+    sta	(TMP), y
+    rts
+
 ; IMMEDIATE. Flip the immediate flag of the LATEST word.
     +BACKLINK
     !byte	9 | F_IMMED
@@ -1341,7 +1386,7 @@ IMMED
     jmp (TMP2)
 
     +BACKLINK
-    !byte	2
+    !byte	2 | F_KEEP_TAILCALLS
     !text	"r@"
     ; save return adress
     pla
@@ -1368,7 +1413,7 @@ IMMED
     rts
 
     +BACKLINK
-    !byte	2
+    !byte	2 | F_KEEP_TAILCALLS
     !text	"r>"
     ; save return adress
     pla
@@ -1392,7 +1437,7 @@ IMMED
     rts
 
     +BACKLINK
-    !byte	2
+    !byte	2 | F_KEEP_TAILCALLS
     !text	">r"
     ; save return address
     pla
@@ -1415,7 +1460,7 @@ IMMED
     rts
 
     +BACKLINK
-    !byte	6
+    !byte	6 | F_KEEP_TAILCALLS
     !text	"branch"
 BRANCH
     pla
@@ -1433,7 +1478,7 @@ BRANCH
 
 ; 0BRANCH
     +BACKLINK
-    !byte	7
+    !byte	7 | F_KEEP_TAILCALLS
     !text	"0branch"
 ZBRANCH
     inx

@@ -12,7 +12,8 @@
 [ ' literal compile, ] ;
 : if immediate ['] 0branch compile, 
 here 0 , ;
-: then immediate here swap ! ;
+: then immediate keep-tailcalls
+here swap ! ;
 : else immediate jmp, here 0 ,
 swap here swap ! ;
 : postpone immediate
@@ -20,11 +21,12 @@ loc dup >cfa swap 2+ c@ 80 and 0= if
 [ ' literal compile, ] ['] compile, then
 compile, ;
 : begin immediate here ;
-: until immediate postpone 0branch , ;
+: until immediate keep-tailcalls 
+postpone 0branch , ;
 : again immediate jmp, , ;
 : while immediate postpone 0branch here 0 , ;
-: repeat immediate jmp,
-swap , here swap ! ;
+: repeat immediate keep-tailcalls
+jmp, swap , here swap ! ;
 : recurse immediate latest @ >cfa compile, ;
 : ( immediate begin key [char] ) = until ;
 : # immediate begin key d = until ;
@@ -89,7 +91,7 @@ loc ?dup if hidden else ." err" then ;
  1. jsr dodoes
  2. two-byte code pointer. default: point to exit
  3. variable length data )
-here exit
+here 60 c, # rts
 : create
 header postpone dodoes literal , ;
 : does> r> 1+ latest @ >dfa ! ;
@@ -145,7 +147,7 @@ else (to) then ;
 : hex 10 to base ;
 : decimal a to base ;
 
-: 2drop ( a b -- ) immediate 
+: 2drop ( a b -- ) immediate keep-tailcalls
 postpone drop postpone drop ;
 
 : forget loc ?dup if
