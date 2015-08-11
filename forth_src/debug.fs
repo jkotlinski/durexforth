@@ -1,5 +1,5 @@
 : id. ( header -- )
-2+ dup 1+ swap c@ 3f and tell space ;
+2+ dup 1+ swap c@ 1f and tell space ;
 : cfa> ( codepointer -- word )
 latest @ begin ?dup while
 2dup > if nip exit then
