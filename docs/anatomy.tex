@@ -28,7 +28,7 @@ Here, we can see that the "bg" word is 14 bytes long and starts at address \$4c3
 
 The first two bytes contain a back-pointer to the previous word, starting at \$4bed. The next byte, "02", is the length of "bg" name string. After that, the string "bg" follows. (42 = 'b', 47 = 'g')
 
-The name length byte is also used to store special attributes of the word. Bit 7 is "immediate" flag, which means that the word should execute immediately instead of being compiled into word definitions. ("(" is such an example of an immediate word that does not get compiled.) Bit 6 is "hidden" flag, which makes a word unfindable. Since bg is neither immediate nor hidden, bits 7-6 are both clear.
+The name length byte is also used to store special attributes of the word. Bit 7 is "immediate" flag, which means that the word should execute immediately instead of being compiled into word definitions. ("(" is such an example of an immediate word that does not get compiled.) Bit 6 is "hidden" flag, which makes a word unfindable. Bit 5 is the "no-tail-call-elimination" flag, which makes sure that tail call elimination (the practice of replacing jsr/rts with jmp) is not performed if this word is the jsr target. Since bg does not have these flags set, bits 7-5 are all clear.
 
 \section{Code}
 
