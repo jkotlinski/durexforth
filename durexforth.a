@@ -1324,8 +1324,8 @@ SEMICOLON
     jmp LBRAC
 
     +BACKLINK
-    !byte	14 | F_IMMED
-    !text	"keep-tailcalls"
+    !byte	6 | F_IMMED
+    !text	"no-tce" ; no tail call elimination
     lda	_LATEST
     sta	TMP
     lda	_LATEST + 1

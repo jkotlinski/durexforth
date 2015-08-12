@@ -10,10 +10,10 @@
 [ ' literal compile, ] ;
 : [char] immediate key 
 [ ' literal compile, ] ;
-: if immediate keep-tailcalls
+: if immediate no-tce
 ['] 0branch compile, 
 here 0 , ;
-: then immediate keep-tailcalls
+: then immediate no-tce
 here swap ! ;
 : else immediate jmp, here 0 ,
 swap here swap ! ;
@@ -22,11 +22,11 @@ loc dup >cfa swap 2+ c@ 80 and 0= if
 [ ' literal compile, ] ['] compile, then
 compile, ;
 : begin immediate here ;
-: until immediate keep-tailcalls 
+: until immediate no-tce 
 postpone 0branch , ;
 : again immediate jmp, , ;
 : while immediate postpone 0branch here 0 , ;
-: repeat immediate keep-tailcalls
+: repeat immediate no-tce
 jmp, swap , here swap ! ;
 : recurse immediate latest @ >cfa compile, ;
 : ( immediate begin key [char] ) = until ;
@@ -76,7 +76,7 @@ postpone =
 postpone if 
 postpone drop ;
 : endof immediate postpone else ;
-: endcase immediate keep-tailcalls
+: endcase immediate no-tce
 postpone drop
 begin ?dup while postpone then 
 repeat ;
@@ -148,7 +148,7 @@ else (to) then ;
 : hex 10 to base ;
 : decimal a to base ;
 
-: 2drop ( a b -- ) immediate keep-tailcalls
+: 2drop ( a b -- ) immediate no-tce
 postpone drop postpone drop ;
 
 : forget loc ?dup if
