@@ -36,7 +36,7 @@ zptmp lda, pha,
 : loop immediate no-tce
 postpone (loop) , ; # store branch address
 
-: +loop immediate
+: +loop immediate no-tce
 postpone r>
 postpone +
 postpone r>
