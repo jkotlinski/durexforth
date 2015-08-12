@@ -153,3 +153,14 @@ Changelog
  * vi: bugfix: "fg" was by mistake hidden.
  * doc: added inline assembly example.
  * doc: bugfixed turtle graphics demo.
+
+2015-08-13: v1.4.1
+
+ * forth: added tail call elimination, i.e., the practice of replacing
+   jsr/rts with jmp. words that should not be subject to tail call
+   elimination must be tagged with "no-tce".
+ * forth: renamed jsr => sys
+ * forth: renamed immed => immediate
+ * forth: added postpone
+ * forth: removed [compile]
+ * forth: inline drop, 2drop
