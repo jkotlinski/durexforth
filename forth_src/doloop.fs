@@ -20,7 +20,7 @@ zptmp stx, tsx, # x = stack pointer
 2 @:
 # not done, branch back
 zptmp ldx,
-loc branch >cfa jmp,
+loc branch dup assert >cfa jmp,
 1 @:
 103 lda,x 105 cmp,x 2 @@ bne, # msb
 # loop done
