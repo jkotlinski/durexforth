@@ -971,8 +971,7 @@ last_word_keep_tail_calls
     !text	"interpret"
 INTERPRET
     ; Checks for stack underflow.
-    txa
-    cmp #X_INIT+1
+    cpx #X_INIT+1
     bpl .on_stack_underflow
 
     lda #0
