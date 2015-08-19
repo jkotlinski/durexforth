@@ -471,6 +471,15 @@ FETCHBYTE
     sta MSB,x
     rts
 
+!macro inc_tmp_and_rts_z {
+    inc	TMP
+    bne	+
+    inc	TMP + 1
+    bne	+
+    rts
++
+}
+
 ; FILL ( val start len -- )
     +BACKLINK
     !byte	4
@@ -482,14 +491,10 @@ FILL
     sta	.fdst
     lda	MSB + 1, x
     sta	.fdst + 1
-    jsr copy_negated_len_to_tmp_and_pop_3
+    jsr copy_xored_len_to_tmp_and_pop_3
 -
-    inc	TMP
-    bne	+
-    inc	TMP + 1
-    bne	+
-    rts
-+
+    +inc_tmp_and_rts_z
+
 .fsrc = * + 1
     lda	#0 ; overwrite
 .fdst = * + 1
@@ -521,14 +526,9 @@ CMOVE_BACK
     adc MSB + 1, x
     sta .bdst + 2
 
-    jsr copy_negated_len_to_tmp_and_pop_3
+    jsr copy_xored_len_to_tmp_and_pop_3
 -
-    inc	TMP
-    bne	+
-    inc	TMP + 1
-    bne	+
-    rts
-+
+    +inc_tmp_and_rts_z
 
     ; back
     dec	.bsrc + 1
@@ -549,7 +549,7 @@ CMOVE_BACK
     sta	$ffff ; overwrite
     jmp	-
 
-copy_negated_len_to_tmp_and_pop_3
+copy_xored_len_to_tmp_and_pop_3
     lda	LSB, x
     eor	#$ff
     sta	TMP
@@ -575,14 +575,10 @@ CMOVE
     lda	MSB+1, x
     sta	.cdst + 2
 
-    jsr copy_negated_len_to_tmp_and_pop_3
+    jsr copy_xored_len_to_tmp_and_pop_3
 -
-    inc	TMP
-    bne	+
-    inc	TMP + 1
-    bne	+
-    rts
-+
+    +inc_tmp_and_rts_z
+
 .csrc
     lda	$ffff ; overwrite
 .cdst
