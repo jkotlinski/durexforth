@@ -482,16 +482,7 @@ FILL
     sta	.fdst
     lda	MSB + 1, x
     sta	.fdst + 1
-    lda	LSB, x
-    eor	#$ff
-    sta	TMP
-    lda	MSB, x
-    eor	#$ff
-    sta	TMP + 1
-
-    inx
-    inx
-    inx
+    jsr copy_negated_len_to_tmp_and_pop_3
 -
     inc	TMP
     bne	+
@@ -530,16 +521,7 @@ CMOVE_BACK
     adc MSB + 1, x
     sta .bdst + 2
 
-    lda	LSB, x
-    eor	#$ff
-    sta	TMP
-    lda	MSB, x
-    eor	#$ff
-    sta	TMP + 1
-
-    inx
-    inx
-    inx
+    jsr copy_negated_len_to_tmp_and_pop_3
 -
     inc	TMP
     bne	+
@@ -567,6 +549,18 @@ CMOVE_BACK
     sta	$ffff ; overwrite
     jmp	-
 
+copy_negated_len_to_tmp_and_pop_3
+    lda	LSB, x
+    eor	#$ff
+    sta	TMP
+    lda	MSB, x
+    eor	#$ff
+    sta	TMP + 1
+    inx
+    inx
+    inx
+    rts
+
 ; CMOVE ( src dst len -- ) forward move
     +BACKLINK
     !byte	5
@@ -580,16 +574,8 @@ CMOVE
     sta	.cdst + 1
     lda	MSB+1, x
     sta	.cdst + 2
-    lda	LSB, x
-    eor	#$ff
-    sta	TMP
-    lda	MSB, x
-    eor	#$ff
-    sta	TMP + 1
 
-    inx
-    inx
-    inx
+    jsr copy_negated_len_to_tmp_and_pop_3
 -
     inc	TMP
     bne	+
