@@ -27,7 +27,7 @@
 
 F_IMMED = $80
 F_HIDDEN = $40
-F_KEEP_TAILCALLS = $20 ; when set, skips tailcall elimination
+F_NO_TAIL_CALL_ELIMINATION = $20 ; when set, skips tailcall elimination
 STRLEN_MASK = $1f
 
 BASIC_INPUT_BUFFER = $200
@@ -181,7 +181,7 @@ pushya
 
 ; DROP
     +BACKLINK
-    !byte	4 | F_IMMED | F_KEEP_TAILCALLS
+    !byte	4 | F_IMMED | F_NO_TAIL_CALL_ELIMINATION
     !text	"drop"
 DROP
     lda STATE
@@ -942,9 +942,9 @@ COMPILE_COMMA
     jsr compile_a
     jmp COMMA
 
-curr_word_keep_tail_calls
+curr_word_no_tail_call_elimination
     !byte 1
-last_word_keep_tail_calls
+last_word_no_tail_call_elimination
     !byte 1
 
 ; INTERPRET
@@ -978,7 +978,7 @@ INTERPRET
     rts
 +   ; yes, compile the number
     lda #1
-    sta curr_word_keep_tail_calls
+    sta curr_word_no_tail_call_elimination
     jmp LITERAL
 
 .on_stack_underflow
@@ -1000,11 +1000,11 @@ INTERPRET
     sta	TMP + 1
     ldy	#2 ; skip link ptr, look at flags
 
-    lda curr_word_keep_tail_calls
-    sta last_word_keep_tail_calls
+    lda curr_word_no_tail_call_elimination
+    sta last_word_no_tail_call_elimination
     lda (TMP), y
-    and #F_KEEP_TAILCALLS
-    sta curr_word_keep_tail_calls
+    and #F_NO_TAIL_CALL_ELIMINATION
+    sta curr_word_no_tail_call_elimination
 
     lda	(TMP), y
     and	#F_IMMED
@@ -1140,7 +1140,7 @@ QUIT
     !byte	4 | F_IMMED
     !text	"exit"
 EXIT
-    lda last_word_keep_tail_calls
+    lda last_word_no_tail_call_elimination
     bne +
     lda HERE_LSB
     sec
@@ -1282,7 +1282,8 @@ LBRAC
 
 ; RBRAC
     +BACKLINK
-    !byte	1
+    ; disable tail call elimination in case of inline assembly
+    !byte	1 | F_NO_TAIL_CALL_ELIMINATION
     !text	"]"
 RBRAC
     lda	#1
@@ -1313,7 +1314,7 @@ SEMICOLON
     sta	TMP + 1
     ldy	#2
     lda	(TMP), y
-    eor	#F_KEEP_TAILCALLS
+    eor	#F_NO_TAIL_CALL_ELIMINATION
     sta	(TMP), y
     rts
 
@@ -1367,7 +1368,7 @@ IMMED
     jmp (TMP2)
 
     +BACKLINK
-    !byte	2 | F_KEEP_TAILCALLS
+    !byte	2 | F_NO_TAIL_CALL_ELIMINATION
     !text	"r@"
     ; save return adress
     pla
@@ -1393,7 +1394,7 @@ restore_return_address
     rts
 
     +BACKLINK
-    !byte	2 | F_KEEP_TAILCALLS
+    !byte	2 | F_NO_TAIL_CALL_ELIMINATION
     !text	"r>"
     ; save return adress
     pla
@@ -1411,7 +1412,7 @@ restore_return_address
     jmp restore_return_address
 
     +BACKLINK
-    !byte	2 | F_KEEP_TAILCALLS
+    !byte	2 | F_NO_TAIL_CALL_ELIMINATION
     !text	">r"
     ; save return address
     pla
@@ -1429,7 +1430,7 @@ restore_return_address
     jmp restore_return_address
 
     +BACKLINK
-    !byte	6 | F_KEEP_TAILCALLS
+    !byte	6 | F_NO_TAIL_CALL_ELIMINATION
     !text	"branch"
 BRANCH
     pla
@@ -1447,7 +1448,7 @@ BRANCH
 
 ; 0BRANCH
     +BACKLINK
-    !byte	7 | F_KEEP_TAILCALLS
+    !byte	7 | F_NO_TAIL_CALL_ELIMINATION
     !text	"0branch"
 ZBRANCH
     inx
@@ -1467,7 +1468,7 @@ ZBRANCH
     
 ; COLON
     +BACKLINK
-    !byte	1
+    !byte	1 | F_NO_TAIL_CALL_ELIMINATION
     !text	":"
 COLON
     jsr HEADER ; makes the dictionary entry / header
