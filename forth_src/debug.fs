@@ -108,10 +108,10 @@ key drop 93 emit then ;
 more dup ?hidden 0= if dup id.
 then @ repeat cr ;
 
-# size foo prints size of foo
+\ size foo prints size of foo
 : size ( -- )
 loc >r
-here latest @ # prev curr
+here latest @ \ prev curr
 begin dup while
 dup r@ = if
 - . r> drop exit then

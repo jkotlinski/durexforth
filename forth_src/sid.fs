@@ -1,4 +1,4 @@
-# low-level sid commands
+\ low-level sid commands
 
 0 value voice
 
@@ -15,7 +15,7 @@
 ( write adsr )
 : srad! ( SR AD -- ) d405 voice + ! ;
 
-here # 95 notes from c0, pal
+here \ 95 notes from c0, pal
 116 , 127 , 138 , 14b , 15e , 173 ,
 189 , 1a1 , 1ba , 1d4 , 1f0 , 20d , 
 22c , 24e , 271 , 296 , 2bd , 2e7 , 

@@ -95,9 +95,9 @@ cf4 , df3 , efb , 100c ,
 : sin 168 mod 2* ['] sintab + @ ;
 : cos 5a + sin ;
 
-# a = amplitude
-# r = degree [0..ff]
-# todo: lerp?
+\ a = amplitude
+\ r = degree [0..ff]
+\ todo: lerp?
 : *cos ( a r -- b )
 cos over 2* 1+ d* drop swap - ;
 : *sin ( a r -- b )

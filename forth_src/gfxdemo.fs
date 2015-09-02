@@ -1,5 +1,5 @@
-# examples from c64 step by step
-# programming, gfx book 3, phil cornes
+\ examples from c64 step by step
+\ programming, gfx book 3, phil cornes
 
 s" rnd" load
 s" sin" load
@@ -135,7 +135,7 @@ c4 88 do j i 6 blkcol 8 +loop
 j i 7e blkcol
 8 +loop 8 +loop done ;
 
-# --- jungle
+\ --- jungle
 
 header jungledata
 c , a8 , ffff , 1 , e , 5f ,
@@ -196,10 +196,10 @@ data @ @ 2 data +!
 data @ @ 2 data +!
 data @ @ 2 data +!
 data @ @ 2 data +!
-data @ @ 2 data +! # lx ux ly uy c
-4 pick # lx ux ly uy c x
+data @ @ 2 data +! \ lx ux ly uy c
+4 pick \ lx ux ly uy c x
 begin dup 5 pick <= while
-3 pick # lx ux ly uy c x y
+3 pick \ lx ux ly uy c x y
 begin dup 4 pick <= while
 2dup 4 pick blkcol
 8 + repeat drop 8 + repeat
@@ -210,7 +210,7 @@ hires 10 clrcol 0 d020 c!
 0 line? ! ['] jungledata data !
 begin
 data @ @ 2 data +!
-data @ @ 2 data +! # x y
+data @ @ 2 data +! \ x y
 over ffff = if line? ! drop
 else over fffe = if
 2drop a0 50 paint a0 b4 paint
@@ -223,7 +223,7 @@ then again ;
 hide jcol hide line? hide data
 hide jungledata
 
-# --- colorchart
+\ --- colorchart
 
 defchar sqr
 00000000
@@ -247,7 +247,7 @@ c8 c8 line c4 a8 line
 dc a8 line e0 c7 line
 78 b4 paint d0 b4 paint a0 1 paint
 
-# black board
+\ black board
 f9 40 do a1 18 do
 j i 10 blkcol
 8 +loop 8 +loop

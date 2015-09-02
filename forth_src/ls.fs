@@ -1,4 +1,4 @@
-# submitted by kevin reno
+\ submitted by kevin reno
 
 : ls base decimal
 s" $" here loadb drop

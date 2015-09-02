@@ -9,7 +9,7 @@ swap 80lsr invert over c@ and swap c! ;
 hide 80lsr
 
 : sp-x! ( x n -- )
-2dup 2* d000 + c! # lsb
+2dup 2* d000 + c! \ lsb
 swap 100 and if d010 setbit
 else d010 clrbit then ;
 

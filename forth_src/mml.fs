@@ -1,11 +1,11 @@
 15 allot value sid
 variable voice
 
-# creates array of 4 bytes.
-# first: current byte
-# 2nd. voice 0
-# 3rd. voice 1
-# 4th. voice 2
+\ creates array of 4 bytes.
+\ first: current byte
+\ 2nd. voice 0
+\ 3rd. voice 1
+\ 4th. voice 2
 : voicedata here 0 , 0 , value ;
 voicedata octave
 voicedata tie
@@ -19,7 +19,7 @@ voice lda,
 7 lda,# rts,
 :+ 7 2* lda,# rts,
 
-:asm voice7+ # voice c@ 7 * +
+:asm voice7+ \ voice c@ 7 * +
 .voice7* jsr,
 clc, sp0 adc,x sp0 sta,x +branch bcc,
 sp1 inc,x :+ ;asm
@@ -44,7 +44,7 @@ zptmp 1+ lda, sp1 sta,x
 : srad! ( SR AD -- ) 
 [ sid 5 + literal ] voice7+ ! ;
 
-here # 95 notes from c0, pal
+here \ 95 notes from c0, pal
 116 , 127 , 138 , 14b , 15e , 173 ,
 189 , 1a1 , 1ba , 1d4 , 1f0 , 20d , 
 22c , 24e , 271 , 296 , 2bd , 2e7 , 
@@ -182,9 +182,9 @@ read-pause pause c! then ;
 
 :asm o
 .str-pop jsr,
-.strget jsr, # new character in a
+.strget jsr, \ new character in a
 sec, key 0 sbc,#
-# multiply by c
+\ multiply by c
 asl,a asl,a zptmp sta,
 asl,a clc, zptmp adc,
 octave sta,
@@ -272,8 +272,8 @@ default-pause 3 + sta,
 ;asm
 
 :asm wait 
-# visualize lag
-# a2 lda, sec, sp0 sbc,x d020 sta,
+\ visualize lag
+\ a2 lda, sec, sp0 sbc,x d020 sta,
 sp0 lda,x
 :- a2 cmp, -branch beq,
 sp0 inc,x ;asm
@@ -312,7 +312,7 @@ f sid-vol!
 10 ctl c! 891a srad! loop ;
 
 : play-mml ( str1 str2 str3 -- )
-# init sentinels
+\ init sentinels
 over + dup >r dup c@ >r 0 swap c! .str
 !
 over + dup >r dup c@ >r 0 swap c! .str
@@ -324,7 +324,7 @@ init-voices play
 3 0 do i voice c! gate-off loop
 apply-sid
 
-# restore sentinels
+\ restore sentinels
 r> r> c! r> r> c! r> r> c! ;
 
 loc play-mml

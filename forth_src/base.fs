@@ -30,7 +30,7 @@ postpone 0branch , ;
 jmp, swap , here swap ! ;
 : recurse immediate latest @ >cfa compile, ;
 : ( immediate begin key [char] ) = until ;
-: # immediate begin key d = until ;
+: \ immediate begin key d = until ;
 : tuck ( x y -- y x y ) swap over ;
 : ?dup dup if dup then ;
 : <> ( a b -- c ) = 0= ;
@@ -92,7 +92,7 @@ loc ?dup if hidden else ." err" then ;
  1. jsr dodoes
  2. two-byte code pointer. default: point to exit
  3. variable length data )
-here 60 c, # rts
+here 60 c, \ rts
 : create
 header postpone dodoes literal , ;
 : does> r> 1+ latest @ >dfa ! ;
@@ -119,12 +119,12 @@ sp0 1+ sta,x sp0    sty,x ;asm
 sp1 lda,x sp0 sta,x 
 0 lda,#   sp1 sta,x ;asm
 
-# creates value that is fast to read
-# but can only be rewritten by "to".
-#  0 value foo
-#  foo . # prints 0
-#  1 to foo
-#  foo . # prints 1
+\ creates value that is fast to read
+\ but can only be rewritten by "to".
+\  0 value foo
+\  foo . \ prints 0
+\  1 to foo
+\  foo . \ prints 1
 : value ( n -- )
 dup :asm
 lda,# 100/ ldy,# 
@@ -138,7 +138,7 @@ lda,# 100/ ldy,#
 8d value zptmp2
 9e value zptmp3
 
-# "0 to foo" sets value foo to 0
+\ "0 to foo" sets value foo to 0
 : (to) over 100/ over 2+ c! c! ;
 : to immediate ' 1+
 state if
@@ -195,7 +195,7 @@ here tuck + to here ;
 
 : variable 2 allot value ;
 
-# signedness
+\ signedness
 : 0< 7fff > ;
 : abs dup 0< if negate then ;
 : s< - 0< ;
@@ -227,11 +227,11 @@ s" debug" load
 s" ls" load
 .( gfx..)
 s" gfx" load
-# s" sprite" load
-# ." gfxdemo.."
-# s" gfxdemo" load
-# ." turtle.."
-# s" turtle" load
+\ s" sprite" load
+\ ." gfxdemo.."
+\ s" gfxdemo" load
+\ ." turtle.."
+\ s" turtle" load
 .( vi..)
 s" vi" load
 

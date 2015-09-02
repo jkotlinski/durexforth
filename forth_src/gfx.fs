@@ -2,10 +2,10 @@ a000 value bmpbase
 8c00 value colbase
 
 :asm hires 
-bb lda,# d011 sta, # enable
-15 lda,# dd00 sta, # vic bank 2
+bb lda,# d011 sta, \ enable
+15 lda,# dd00 sta, \ vic bank 2
 38 lda,# d018 sta,
-56 lda,# 1 sta, # no basic
+56 lda,# 1 sta, \ no basic
 ;asm
 
 :asm lores
@@ -28,10 +28,10 @@ header mask
 variable penx variable peny
 0 penx ! 0 peny !
 
-# blit operations for plot, line
+\ blit operations for plot, line
 header blitop
-0 , # doplot
-0 , # lineplot
+0 , \ doplot
+0 , \ lineplot
 
 create .blitloc
 sp0 lda,x zptmp sta,
@@ -40,7 +40,7 @@ sp1 lda,x zptmp 1+ sta,
 
 zptmp lda, f8 and,# zptmp sta,
 
-# * 8
+\ * 8
 zptmp asl, zptmp 1+ rol,
 zptmp asl, zptmp 1+ rol,
 zptmp asl, zptmp 1+ rol,
@@ -48,7 +48,7 @@ zptmp asl, zptmp 1+ rol,
 zptmp lda, zptmp2 sta,
 zptmp 1+ lda, zptmp2 1+ sta,
 
-# * 20
+\ * 20
 zptmp asl, zptmp 1+ rol,
 zptmp asl, zptmp 1+ rol,
 
@@ -63,7 +63,7 @@ zptmp lda, zptmp3 adc, zptmp sta,
 zptmp lda, sp0 sta,x
 zptmp 1+ lda, sp1 sta,x
 
-# ...
+\ ...
 
 loc mask >cfa 100/
 lda,# zptmp 1+ sta,
@@ -73,7 +73,7 @@ sp0 1+ lda,x 7 and,# loc mask >cfa adc,#
 zptmp sta,
 2 bcc, zptmp 1+ inc,
 
-# zptmp = mask
+\ zptmp = mask
 0 ldy,#
 zptmp lda,(y) zptmp3 sta,
 
@@ -112,7 +112,7 @@ variable mask variable addr
 
 create lineplot ( -- )
 
-# penx @ 140 <
+\ penx @ 140 <
 penx lda,# zptmp sta,
 penx 100/ lda,# zptmp 1+ sta,
 1 ldy,# zptmp lda,(y)
@@ -123,7 +123,7 @@ sec, 40 sbc,#
 1 bcc, rts,
 :+
 
-# peny @ c8 <
+\ peny @ c8 <
 peny lda,# zptmp sta,
 peny 100/ lda,# zptmp 1+ sta,
 1 ldy,# zptmp lda,(y)
@@ -132,49 +132,49 @@ dey, zptmp lda,(y)
 sec, c8 sbc,#
 1 bcc, rts,
 
-# addr
+\ addr
 addr 100/
 lda,# zptmp 1+ sta,
 addr lda,# zptmp sta,
 
-# @
+\ @
 0 ldy,#
 zptmp lda,(y) zptmp2 sta, iny,
 zptmp lda,(y) zptmp2 1+ sta, dey,
 
-# c@ mask c@ or
+\ c@ mask c@ or
 zptmp2 lda,(y)
 here loc blitop >cfa 2+ !
 mask ora,
 
-# addr @ c!
+\ addr @ c!
 zptmp2 sta,(y) rts,
 
 variable dx2 variable dy2
 
 create stepx
-# 2err @ dx2 @ s< if
+\ 2err @ dx2 @ s< if
 sec, 2err lda, dx2 sbc,
 2err 1+ lda, dx2 1+ sbc,
 3 bmi, lineplot jmp,
 
-# dx2 @ err +!
+\ dx2 @ err +!
 clc, dx2 lda, err adc, err sta,
 dx2 1+ lda, err 1+ adc, err 1+ sta,
-# sy @ peny +!
+\ sy @ peny +!
 clc, sy lda, peny adc, peny sta,
 sy 1+ lda, peny 1+ adc, peny 1+ sta,
 
-# sy @ 1 = if down else up then
+\ sy @ 1 = if down else up then
 sy lda, 1 cmp,# +branch beq,
-# up
+\ up
 addr lda, 7 and,# +branch bne,
 sec, addr lda, 38 sbc,# addr sta,
 addr 1+ lda, 1 sbc,# addr 1+ sta,
 :+ 
 addr lda, 3 bne, addr 1+ dec, addr dec,
 lineplot jmp,
-:+ # down
+:+ \ down
 addr inc, 3 bne, addr 1+ inc,
 addr lda, 7 and,# 3 beq, lineplot jmp,
 clc, addr lda, 38 adc,# addr sta,
@@ -184,35 +184,35 @@ lineplot jmp,
 hide lineplot
 
 create step ( 2err -- 2err )
-# err @ 2* 2err !
+\ err @ 2* 2err !
 err lda, 2err sta,
 err 1+ lda, 2err 1+ sta,
 2err asl, 2err 1+ rol,
 
-# step up/down
+\ step up/down
 
-# 2err @ dy2 @ s> if 
+\ 2err @ dy2 @ s> if 
 sec, dy2 lda, 2err sbc,
 dy2 1+ lda, 2err 1+ sbc,
 3 bmi, stepx jmp,
 
-# dy2 @ err +!
+\ dy2 @ err +!
 clc, dy2 lda, err adc, err sta,
 dy2 1+ lda, err 1+ adc, err 1+ sta,
-# sx @ penx +! 
+\ sx @ penx +! 
 clc, sx lda, penx adc, penx sta,
 sx 1+ lda, penx 1+ adc, penx 1+ sta,
 
-# sx @ 1 = if maskror else maskrol then
+\ sx @ 1 = if maskror else maskrol then
 sx lda, 1 cmp,# +branch bne,
-# right
-# maskror.mask>>1,addr+8?
+\ right
+\ maskror.mask>>1,addr+8?
 mask lsr, 3 bcs, stepx jmp,
 80 lda,# mask sta,
 clc, addr lda, 8 adc,# addr sta,
 3 bcc, addr 1+ inc, stepx jmp,
-:+ # left
-# mask<<1,addr-8?
+:+ \ left
+\ mask<<1,addr-8?
 mask asl, 3 bcs, stepx jmp,
 1 lda,# mask sta,
 sec, addr lda, 8 sbc,# addr sta,
@@ -241,16 +241,16 @@ doline ;
 
 hide doline
 
-# --- circle
+\ --- circle
 
 0 value cx 0 value cy
 
 : plot4 ( x y -- x y )
 over cx + over cy + chkplot
-over if # x?
+over if \ x?
 over cx swap - over cy + chkplot
 then
-dup if # y?
+dup if \ y?
 over cx + over cy swap - chkplot
 then
 over 0<> over 0<> and if
@@ -267,7 +267,7 @@ then ;
 dup negate err !
 swap to cy
 swap to cx
-0 # x y
+0 \ x y
 begin 2dup s< 0= while
 plot8
 dup err +!
@@ -287,31 +287,31 @@ hide cx hide cy
 d ['] or then ['] blitop @ ! 
 ['] blitop 2+ @ c! ;
 
-# --------------------------
+\ --------------------------
 
-# paul heckbert seed fill
-# from graphics gems
+\ paul heckbert seed fill
+\ from graphics gems
 variable stk
 create dopush
 stk lda, zptmp sta,
 stk 1+ lda, zptmp 1+ sta,
 
-# dy
+\ dy
 0 ldy,# sp0 lda,x zptmp sta,(y)
-# xr
+\ xr
 iny, sp0 1+ lda,x zptmp sta,(y)
 iny, sp1 1+ lda,x zptmp sta,(y)
-# xl
+\ xl
 iny, sp0 2 + lda,x zptmp sta,(y)
 iny, sp1 2 + lda,x zptmp sta,(y)
-# y
+\ y
 iny, sp0 3 + lda,x zptmp sta,(y)
 
 clc, stk lda, 6 adc,# stk sta,
 3 bcc, stk 1+ inc, rts,
 
 :asm spush ( y xl xr dy -- )
-# y out of bounds?
+\ y out of bounds?
 clc, sp0 lda,x sp0 3 + adc,x tay,
 sp1 lda,x sp1 3 + adc,x +branch bne,
 tya, sec, c8 cmp,# 3 bcs, dopush jsr,
@@ -326,13 +326,13 @@ sec, 6 sbc,# zptmp sta, stk sta,
 3 bcs, stk 1+ dec,
 stk 1+ lda, zptmp 1+ sta,
 
-# ff = if ffff else 1 then dy !
+\ ff = if ffff else 1 then dy !
 0 ldy,# zptmp lda,(y)
 dy sta, dy 1+ sta,
 1 cmp,# 3 bne, dy 1+ sty,
 
 dex,
-sp1 sty,x # msb y=0
+sp1 sty,x \ msb y=0
 iny, zptmp lda,(y) x2 sta,
 iny, zptmp lda,(y) x2 1+ sta,
 iny, zptmp lda,(y) x1 sta,
@@ -342,7 +342,7 @@ iny, zptmp lda,(y) sp0 sta,x
 
 variable l
 
-# ---
+\ ---
 
 create .bitblt ( mask addr --
                   mask addr )
@@ -350,12 +350,12 @@ sp0 lda,x zptmp sta,
 sp1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
 sp0 1+ ora,x zptmp sta,(y)
-# 1 penx +! swap 2/ swap 
+\ 1 penx +! swap 2/ swap 
 penx inc, 3 bne, penx 1+ inc,
 sp0 1+ lsr,x rts,
 
 create rightend
-# nip 80 swap # mask
+\ nip 80 swap \ mask
 80 lda,# sp0 1+ sta,x 
 0 lda,# sp1 1+ sta,x
 
@@ -365,18 +365,18 @@ sp0 lda,x zptmp sta,
 sp1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
 sp0 1+ and,x 1 beq, rts,
-.bitblt jsr, jmp, # recurse
+.bitblt jsr, jmp, \ recurse
 
 create bytewise
-# penx @ 140 < if 
+\ penx @ 140 < if 
 penx 1+ lda, 0 cmp,# +branch beq,
 3f lda,# penx cmp, 1 bcs, rts,
 :+
 
-:- # 8 +
+:- \ 8 +
 clc, sp0 lda,x 8 adc,# sp0 sta,x
 2 bcc, sp1 inc,x
-# penx=140?
+\ penx=140?
 penx lda, 40 cmp,# +branch bne,
 penx 1+ lda, 1 cmp,# +branch bne,
 rts,
@@ -386,30 +386,30 @@ sp1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
 rightend -branch bne,
 
-# ff over c!
+\ ff over c!
 ff lda,# zptmp sta,(y)
-# 8 penx +!
+\ 8 penx +!
 clc, penx lda, 8 adc,# penx sta,
 3 bcc, penx 1+ inc,
-jmp, # recurse
+jmp, \ recurse
 
 create leave
-# 2drop nip penx @ swap 
+\ 2drop nip penx @ swap 
 inx, inx,
 penx lda, sp0 1+ sta,x
 penx 1+ lda, sp1 1+ sta,x rts,
 
-# this one must be fast
+\ this one must be fast
 :asm fillr ( x y -- newx y )
-# over 140 >= if exit then
+\ over 140 >= if exit then
 sp1 1+ lda,x 0 cmp,# +branch beq,
 3f lda,# sp0 1+ cmp,x 1 bcs, rts,
 :+
 
-# over penx !
+\ over penx !
 sp0 1+ lda,x penx sta,
 sp1 1+ lda,x penx 1+ sta,
-# 2dup blitloc # x y mask addr
+\ 2dup blitloc \ x y mask addr
 dex, dex,
 sp0 2 + lda,x sp0 sta,x
 sp1 2 + lda,x sp1 sta,x
@@ -417,25 +417,25 @@ sp0 3 + lda,x sp0 1+ sta,x
 sp1 3 + lda,x sp1 1+ sta,x 
 .blitloc jsr,
 
-# leftend ( x y mask addr --
-#           x y mask addr more? )
+\ leftend ( x y mask addr --
+\           x y mask addr more? )
 :-
 sp0 1+ lda,x +branch bne,
-# continue bytewise
+\ continue bytewise
 bytewise jsr, leave jsr, ;asm
 :+
 sp0 lda,x zptmp sta,
 sp1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
 sp0 1+ and,x +branch beq,
-# done
+\ done
 leave jsr, ;asm
 :+
-.bitblt jsr, jmp, # recurse
+.bitblt jsr, jmp, \ recurse
 
 :asm scanl
 :-
-# x<0?
+\ x<0?
 sp1 1+ lda,x 1 bpl, rts,
 
 addr lda, zptmp sta,
@@ -451,13 +451,13 @@ mask asl, +branch bcc,
 addr lda, sec, 8 sbc,# addr sta, 
 3 bcs, addr 1+ dec,
 
-:+ # 1-
+:+ \ 1-
 sp0 1+ lda,x 2 bne, sp1 1+ dec,x 
 sp0 1+ dec,x
-jmp, # recurse
+jmp, \ recurse
 
 create .scanr
-# over l ! # l=x
+\ over l ! \ l=x
 sp0 1+ lda,x l sta, 
 sp1 1+ lda,x l 1+ sta,
 ;asm
@@ -469,13 +469,13 @@ sp0 1+ lda,x mask sta,
 inx, inx,
 
 :-
-# addr @ c@ mask c@ and
+\ addr @ c@ mask c@ and
 addr lda, zptmp sta,
 addr 1+ lda, zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
 mask and, .scanr -branch beq,
 
-# x<=x2?
+\ x<=x2?
 x2 1+ lda, sp1 1+ cmp,x .scanr -branch bcc,
 +branch bne,
 x2 lda, sp0 1+ cmp,x .scanr -branch bcc,
@@ -486,9 +486,9 @@ mask lsr, +branch bne,
 clc, addr lda, 8 adc,# addr sta,
 3 bcc, addr 1+ inc,
 
-:+ # x++
+:+ \ x++
 sp0 1+ inc,x 2 bne, sp1 1+ inc,x
-jmp, # recurse
+jmp, \ recurse
 
 : paint ( x y -- )
 2dup c8 >= swap 140 >= or
@@ -496,50 +496,50 @@ if 2drop exit then
 2dup peek if 2drop exit then
 
 here stk !
-# push y x x 1
+\ push y x x 1
 2dup swap dup 1 spush
-# push y+1 x x -1
+\ push y+1 x x -1
 1+ swap dup ffff spush
 
 begin here stk @ < while
-spop dy @ + # y
+spop dy @ + \ y
 
-# left line
-x1 @ over # y x y
+\ left line
+x1 @ over \ y x y
 2dup blitloc addr ! mask !
 scanl
-over x1 @ # y x y x x1
+over x1 @ \ y x y x x1
 s< 0= if
-branch [ here >r 0 , ] # goto skip
+branch [ here >r 0 , ] \ goto skip
 then
-# y x y ...
+\ y x y ...
 over 1+ dup l ! 
-# y x y l
-x1 @ < if # l < x1?
-# push y,l,x1-1,-dy
+\ y x y l
+x1 @ < if \ l < x1?
+\ push y,l,x1-1,-dy
 dup l @ x1 @ 1- dy @ negate spush
 then
-# y x y
-nip x1 @ 1+ swap # x=x1+1
+\ y x y
+nip x1 @ 1+ swap \ x=x1+1
 
 begin
 fillr
-# push y,l,x-1,dy
+\ push y,l,x-1,dy
 dup l @ 3 pick 1- dy @ spush
 
-# leak on right?
+\ leak on right?
 over x2 @ 1+ > if
-# push y,x2+1,x-1,-dy
+\ push y,x2+1,x-1,-dy
 dup x2 @ 1+ 3 pick 1- dy @ negate spush
 then
 
-# skip: y x y
+\ skip: y x y
 [ r> here swap ! ]
 
 swap 1+ swap
 2dup blitloc scanr 
 
-# y x y
+\ y x y
 over x2 @ > until
 
 2drop drop repeat ; 
@@ -574,13 +574,13 @@ hide .blitloc
 hide mask
 
 : text ( col row str strlen -- )
-# addr=dst
+\ addr=dst
 rot 140 * addr !
 rot 8 * bmpbase + addr +!
-# disable interrupt,enable char rom
+\ disable interrupt,enable char rom
 1 c@ dup >r fb and 1 sei c!
 begin ?dup while
-swap dup c@ 8 * d800 + # strlen str ch
+swap dup c@ 8 * d800 + \ strlen str ch
 addr @ 8 cmove
 1+ swap 8 addr +! 1- repeat
 r> 1 c! cli drop ;
@@ -592,7 +592,7 @@ hide addr
 : getrow ( dst -- dst )
 0 getbit getbit getbit getbit
 getbit getbit getbit getbit over c! 1+
-key drop ; # skip cr
+key drop ; \ skip cr
 : defchar 8 allot dup value
 getrow getrow getrow getrow
 getrow getrow getrow getrow drop ;

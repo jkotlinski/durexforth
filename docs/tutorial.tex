@@ -59,9 +59,9 @@ If you need to flash as fast as possible, it is possible to use the durexForth a
 
 \begin{verbatim}
 :asm flash
-here # push current addr
+here ( push current addr )
 d020 inc,
-jmp, # jump to pushed addr
+jmp, ( jump to pushed addr )
 ;asm
 flash
 \end{verbatim}
@@ -97,21 +97,21 @@ stack with care.
 One helpful technique to avoid stack crashes is to add comments about stack usage.
 In this example, we imagine a graphics word "drawbox" that draws a black box.
 \texttt{( color -- )} indicates that it takes one argument on stack, and on exit it should
-leave nothing on the stack. The comments inside the word indicate what the stack
+leave nothing on the stack. The comments inside the word (starting with \pounds) indicate what the stack
 looks like after the line has executed.
 
-\begin{verbatim}
+\begin{alltt}
 : drawbox ( color -- )
-10 begin dup 20 < while # color x
-10 begin dup 20 < while # color x y
-2dup # color x y x y
-4 pick # color x y x y color
-blkcol # color x y
-1+ repeat drop # color x
+10 begin dup 20 < while \pounds color x
+10 begin dup 20 < while \pounds color x y
+2dup \pounds color x y x y
+4 pick \pounds color x y x y color
+blkcol \pounds color x y
+1+ repeat drop \pounds color x
 1+ repeat 2drop ;
-\end{verbatim}
+\end{alltt}
 
-Once the word is working, it may be nice to again remove the \texttt{\#} comments as
+Once the word is working as supposed, it may be nice to again remove the comments, as
 they are no longer very interesting to read.
 
 \subsection{Stack Checks}
@@ -122,7 +122,7 @@ and overflows.
 
 \begin{verbatim}
 : mainloop begin
-# do stuff here...
+( do stuff here... )
 depth if ." err" exit then
 again ;
 \end{verbatim}

@@ -41,7 +41,7 @@ here
 zptmp lda,(y)
 0 cmp,#
 foundeol -branch beq,
-e716 jsr, # putchar
+e716 jsr, \ putchar
 iny,
 d cmp,#
 foundeol -branch beq,
@@ -89,7 +89,7 @@ swap c! ;
 0 bufstart 400 fill
 bufstart loadb
 
-if # file error?
+if \ file error?
 bufstart 1+ eof !
 0 dup dup eof @ c! curx ! cury !
 CR bufstart c!
@@ -118,9 +118,9 @@ bl status-pos 18 fill ;
 clear-status status-pos c! ;
 
 : init
-0 bufstart 1- c! # sentinel
-0 compile-ram ! # to enable editor start from base.src
-80 28a c! # key repeat on
+0 bufstart 1- c! \ sentinel
+0 compile-ram ! \ to enable editor start from base.src
+80 28a c! \ key repeat on
 clear-status ;
 
 : push-colors
@@ -134,8 +134,8 @@ a d020 c!
 1 d800 400 fill ;
 
 : cleanup ( bordercolor bgcolor cursorcolor -- )
-40 28a c! # key repeat off
-286 c! # cursor col
+40 28a c! \ key repeat off
+286 c! \ cursor col
 d021 c! d020 c!
 clrscr ;
 
@@ -208,7 +208,7 @@ editpos c@ space= 0= and ;
 	repeat
 ;
 
-# right, or down + sol if we're at EOL. ret 1 if we cant advance
+\ right, or down + sol if we're at EOL. ret 1 if we cant advance
 : advance-cur
 	editpos
 	curx @ linelen 1- = linelen 0= or if
@@ -319,7 +319,7 @@ cur-down
 editpos = if 2drop drop exit then
 sol
 linelen if
-20 editpos 1- c! # cr => space
+20 editpos 1- c! \ cr => space
 else nipchar then
 
 curlinestart ! curx ! cury ! ;
@@ -361,18 +361,18 @@ curx @ linelen 1- = if
 force-cur-right else cur-right then ;
 
 : insert-handler
-	dup a0 = if drop 20 then # shift space => space
+	dup a0 = if drop 20 then \ shift space => space
 
 	dup
 	case
-    3 of drop endof # run/stop
-	5f of insert-stop drop endof # leftarrow
+    3 of drop endof \ run/stop
+	5f of insert-stop drop endof \ leftarrow
 	LEFT of cur-left drop endof
 	DOWN of cur-down drop endof
 	UP of cur-up drop endof
 	RIGHT of insert-right drop endof
-	14 of backspace drop endof # inst
-	94 of del-char drop endof # del
+	14 of backspace drop endof \ inst
+	94 of del-char drop endof \ del
 	CR of insert-char cur-down sol show-page endof
 	insert-char
 	endcase
@@ -476,7 +476,7 @@ endcase clear-status ;
 18 allot value drivebuf
 
 : do-backup
-	# scratch old backup
+	\ scratch old backup
 	drivebuf
 	[char] s over c! 1+
 	[char] : over c! 1+
@@ -489,16 +489,16 @@ endcase clear-status ;
 	drivebuf filename-len c@ 4 +
     f openw f closew
 
-	# rename to new backup
+	\ rename to new backup
 	drivebuf
 	[char] r over c! 1+
-	1+ # colon already in place...
+	1+ \ colon already in place...
 	[char] . over c! 1+
-	filename-len c@ + # filename ok
+	filename-len c@ + \ filename ok
 	[char] = over c! 1+
 	dup
 	filename swap filename-len c@ cmove
-	filename-len c@ + # filename ok
+	filename-len c@ + \ filename ok
 	CR swap c!
 
 	drivebuf filename-len c@ 2 * 5 +
@@ -521,7 +521,7 @@ saveb
 	begin
 		key
 
-		dup 5f = if # leftarrow
+		dup 5f = if \ leftarrow
 			2drop
 			drop
 			exit
@@ -646,18 +646,18 @@ key k c, ' cur-up ,
 key j c, ' cur-down ,
 0 c,
 
-# custom restore handler
-# "vi"
+\ custom restore handler
+\ "vi"
 here key v c, key i c, d c, 0 c,
-here cli, # entry
-swap dup # asm vi vi 
-# compile-ram="vi"
+here cli, \ entry
+swap dup \ asm vi vi 
+\ compile-ram="vi"
 lda,# compile-ram sta,
 100/ lda,# compile-ram 1+ sta,
-# lores
+\ lores
 9b lda,# d011 sta, 17 lda,# dd00 sta,
 17 lda,# d018 sta,
-318 @ jmp, # jump to normal restore
+318 @ jmp, \ jump to normal restore
 : compile-run sei literal 318 ! cli
 bufstart compile-ram ! ;
 
@@ -682,7 +682,7 @@ bufstart compile-ram ! ;
 
 	case ( key )
 
-    [char] y of # yy
+    [char] y of \ yy
      key [char] y = if
      yank-line
     then endof
@@ -710,10 +710,10 @@ bufstart compile-ram ! ;
 	endof
 
 	( cursor )
-    # eof should be 0 terminated!
+    \ eof should be 0 terminated!
     eof @ c@ 0= assert
-    # eof @ ae ! 
-	88 of compile-run ffff exit endof # f7
+    \ eof @ ae ! 
+	88 of compile-run ffff exit endof \ f7
 
 	endcase
 	0
@@ -724,7 +724,7 @@ bufstart compile-ram ! ;
 		0 to need-refresh
 		0 line-dirty c!
 
-		depth # stack check...
+		depth \ stack check...
 
 		show-cursor
 		key
@@ -747,13 +747,13 @@ bufstart compile-ram ! ;
 			then
 		then
 
-		depth 1- = assert # warn if stack changed
+		depth 1- = assert \ warn if stack changed
 	again
 ;
 
-# bring back editor
+\ bring back editor
 : fg
-# check sentinel
+\ check sentinel
 bufstart 1- c@ if ." err" exit then
 init
 push-colors
@@ -762,14 +762,14 @@ main-loop
 cleanup ;
 
 : vi
-depth 0= if # in case no param
+depth 0= if \ in case no param
 eof @ if fg exit else
 s" untitled" then then
 
 init
 go-to-file-start
 
-# store away filename
+\ store away filename
 2dup ( str len str len )	
 filename-len c!
 filename f cmove

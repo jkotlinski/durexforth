@@ -1,6 +1,6 @@
 s" sin" load
 
-variable tx variable ty # 10.6 fixedpoint
+variable tx variable ty \ 10.6 fixedpoint
 variable ta 0 value tp
 
 : s2/ ( signed 2/ )
@@ -35,7 +35,7 @@ tx @ ty @ ta @ ;
 ta ! ty ! tx ! pendown ;
 
 (
-# --- demo
+\ --- demo
 
 : polyspiral
 ." init distance? " interpret 

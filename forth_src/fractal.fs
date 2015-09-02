@@ -1,9 +1,9 @@
-# lindenmayer systems
+\ lindenmayer systems
 
 s" turtle" load
 
-0 value Da # delta angle
-0 value Dd # delta distance
+0 value Da \ delta angle
+0 value Dd \ delta distance
 
 variable rule variable rulel variable scale
 
@@ -28,7 +28,7 @@ scale @ 100 <> if r> to Dd then ;
 : fractal ( ax axl depth scale Dd Da
 rule rulel -- )
 to rulel to rule to Da to Dd scale !
-0 # axiom axioml depth i
+0 \ axiom axioml depth i
 begin 2 pick over > while
 3 pick over + c@ case
 [char] f of over if

@@ -19,18 +19,18 @@ dey, 1 @@ bne, ;asm )
 
 ( refs and locs are arrays of
 2-byte address + 1-byte index )
-18 allot value refs # 8 refs
-f allot value locs # 5 locs
+18 allot value refs \ 8 refs
+f allot value locs \ 5 locs
 variable locp variable refp
 
-locs locp ! refs refp ! # init
+locs locp ! refs refp ! \ init
 
-# reference
+\ reference
 : @@ ( index -- dummy )
 refp @ [ refs 18 + ] literal < assert
 here refp @ !
 2 refp +! refp @ c! 1 refp +! 0 ;
-# label
+\ label
 : @: ( index -- )
 locp @ [ locs f + ] literal < assert
 here locp @ !
@@ -41,7 +41,7 @@ refs begin dup refp @ < while
 over 2+ c@ over 2+ c@ = if
 over @ over @ 2+ - over @ 1+ c!
 then 3 + repeat drop 3 + repeat drop
-# reset
+\ reset
 locs locp ! refs refp ! ;
 
 hide locs hide refs hide locp hide refp

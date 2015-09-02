@@ -5,5 +5,5 @@
 :asm sys ( addr -- )
 sp0 lda,x 14 sta, sp1 lda,x 15 sta,
 txa, pha,
-e130 jsr, # perform [sys]
+e130 jsr, \ perform [sys]
 pla, tax, inx, ;asm
