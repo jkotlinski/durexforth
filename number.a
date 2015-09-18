@@ -68,19 +68,16 @@ READ_NUMBER
     clc
     adc #-$30 ; petscii 0-9 -> 0-9
 
-    sec ; within 0-9?
-    cmp	#10
+    cmp	#10 ; within 0-9?
     bcc	+
 
     clc
     adc	#-$7 ; a-f..?
 
-    sec
     cmp	#10
     bcc	.parse_failed
 
-+   sec
-    cmp _BASE
++   cmp _BASE
     bcs .parse_failed
 
     adc LSB,x
