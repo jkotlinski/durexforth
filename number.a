@@ -38,7 +38,8 @@ READ_NUMBER
     lda LSB, x
     sta TMP3
     ; TMP3 now points to string length
-    ; followed by string.
+    ; followed by string. (Using TMP3
+    ; because DMUL trashes TMP, TMP2)
 
     dex
     dex
