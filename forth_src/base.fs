@@ -47,7 +47,7 @@ jmp, swap , here swap ! ;
 : litstring ( -- addr len )
 r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 
-: s" immediate ( -- addr len )
+: s" immediate no-tce ( -- addr len )
 state if ( compile mode )
 postpone litstring here 0 , 0
 begin key dup [char] " <>
