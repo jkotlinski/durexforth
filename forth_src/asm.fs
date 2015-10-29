@@ -154,8 +154,8 @@ ba 1mi tsx,
 \ illegal opcodes
 cb 2mi sbx,#
 
-: :asm header ;
-: ;asm rts, ;
+: code header ;
+: ;code rts, ;
 
 ( usage:
 foo lda,

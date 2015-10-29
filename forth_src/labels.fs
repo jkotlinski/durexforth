@@ -5,17 +5,17 @@ n @@ = branch to label n
 
 ...where n is in range[0, ff]
 
-relative branches are resolved by ;asm
+relative branches are resolved by ;code
 - this allows for mixed forward and
 backward references, but it is not
-possible to branch over ;asm
+possible to branch over ;code
 
 -- example --
-:asm checkers
+code checkers
 7f lda,# 0 ldy,# 1 @:
 400 sta,y 500 sta,y
 600 sta,y 700 sta,y
-dey, 1 @@ bne, ;asm )
+dey, 1 @@ bne, ;code )
 
 ( refs and locs are arrays of
 2-byte address + 1-byte index )
@@ -35,7 +35,7 @@ here refp @ !
 locp @ [ locs f + ] literal < assert
 here locp @ !
 2 locp +! locp @ c! 1 locp +! ;
-: ;asm ;asm
+: ;code ;code
 locs begin dup locp @ < while
 refs begin dup refp @ < while
 over 2+ c@ over 2+ c@ = if

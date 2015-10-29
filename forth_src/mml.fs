@@ -19,22 +19,22 @@ voice lda,
 7 lda,# rts,
 :+ 7 2* lda,# rts,
 
-:asm voice7+ \ voice c@ 7 * +
+code voice7+ \ voice c@ 7 * +
 .voice7* jsr,
 clc, sp0 adc,x sp0 sta,x +branch bcc,
-sp1 inc,x :+ ;asm
+sp1 inc,x :+ ;code
 
 create .ctl
 sid 4 + 100/ lda,# zptmp 1+ sta,
 .voice7* jsr,
 clc, sid 4 + ff and adc,# zptmp sta,
 +branch bcc, zptmp 1+ inc, :+ rts,
-:asm ctl 
+code ctl 
 dex,
 .ctl jsr, 
 zptmp lda, sp0 sta,x
 zptmp 1+ lda, sp1 sta,x
-;asm
+;code
 
 : sid-cutoff d415 ! ;
 : sid-flt d417 c! ;
@@ -66,14 +66,14 @@ ea24 , f810 ,
 : note! ( i -- )
 2* literal + @ sid voice7+ ! ;
 
-:asm gate-on 
+code gate-on 
 .ctl jsr, 0 ldy,#
 zptmp lda,(y) 1 eor,#
-zptmp sta,(y) ;asm
-:asm gate-off
+zptmp sta,(y) ;code
+code gate-off
 .ctl jsr, 0 ldy,#
 zptmp lda,(y) fe and,#
-zptmp sta,(y) ;asm
+zptmp sta,(y) ;code
 
 2b value .str
 create .str-pop
@@ -82,14 +82,14 @@ voice lda, asl,a tax,
 .str inc,x +branch bne,
 .str 1+ inc,x :+
 tya, tax, rts,
-:asm str-pop .str-pop jsr, ;asm
+code str-pop .str-pop jsr, ;code
 
 create .strget
 zptmp stx, voice lda, asl,a tax,
 .str lda,(x) zptmp ldx, rts,
-:asm strget 
+code strget 
 dex, 0 lda,# sp1 sta,x
-.strget jsr, sp0 sta,x ;asm
+.strget jsr, sp0 sta,x ;code
 
 create notetab ( char -- notediff )
 sp0 lda,x
@@ -111,10 +111,10 @@ b lda,# sp0 sta,x rts,
 
 create notrest
 sp0 lda,x 7f cmp,# +branch beq,
-dex, 1 lda,# sp0 sta,x ;asm
-:+ 0 lda,# sp0 sta,x sp1 sta,x ;asm
+dex, 1 lda,# sp0 sta,x ;code
+:+ 0 lda,# sp0 sta,x sp1 sta,x ;code
 
-:asm str2note
+code str2note
 notetab jsr,
 .str-pop jsr,
 .strget jsr,
@@ -156,7 +156,7 @@ rts,
 rts,
 :+ 0 lda,# sp0 sta,x rts,
 
-:asm read-pause
+code read-pause
 .read-pause jsr,
 sp0 lda,x +branch bne,
 default-pause lda, sp0 sta,x
@@ -167,12 +167,12 @@ key . cmp,# +branch bne,
 sp0 lda,x lsr,a clc, 
 sp0 adc,x sp0 sta,x
 :+ 
-sp0 dec,x ;asm
+sp0 dec,x ;code
 
-:asm read-default-pause
+code read-default-pause
 .read-pause jsr,
 sp0 lda,x default-pause sta, 
-inx, ;asm
+inx, ;code
 
 : play-note ( -- )
 strget ?dup if
@@ -180,7 +180,7 @@ str2note if
 octave c@ + note! gate-on then
 read-pause pause c! then ;
 
-:asm o
+code o
 .str-pop jsr,
 .strget jsr, \ new character in a
 sec, key 0 sbc,#
@@ -188,7 +188,7 @@ sec, key 0 sbc,#
 asl,a asl,a zptmp sta,
 asl,a clc, zptmp adc,
 octave sta,
-.str-pop jsr, ;asm
+.str-pop jsr, ;code
 
 : do-commands ( -- done )
 strget case
@@ -205,37 +205,37 @@ d of str-pop recurse endof
 bl of str-pop recurse endof
 endcase ;
 
-:asm stop-note
+code stop-note
 tie lda, +branch beq,
-0 lda,# tie sta, ;asm
+0 lda,# tie sta, ;code
 :+ loc gate-off >cfa jmp,
 
-:asm pause>0
+code pause>0
 dex,
 pause lda,
-sp0 sta,x sp1 sta,x ;asm
+sp0 sta,x sp1 sta,x ;code
 
-:asm decpause1=
+code decpause1=
 dex, 0 ldy,#
 pause dec, +branch beq,
-sp0 sty,x sp1 sty,x ;asm
-:+ iny, sp0 sty,x ;asm
+sp0 sty,x sp1 sty,x ;code
+:+ iny, sp0 sty,x ;code
 
 : voicetick
 pause>0 if decpause1= if 
 do-commands stop-note then 
 else play-note then ;
 
-:asm voice0 
+code voice0 
 0 lda,# voice sta, 
 octave 1+ lda, octave sta,
 tie 1+ lda, tie sta,
 pause 1+ lda, pause sta,
 default-pause 1+ lda, 
 default-pause sta,
-;asm
+;code
 
-:asm voice1 
+code voice1 
 octave lda, octave 1+ sta,
 tie lda, tie 1+ sta,
 pause lda, pause 1+ sta,
@@ -247,9 +247,9 @@ tie 2+ lda, tie sta,
 pause 2+ lda, pause sta,
 default-pause 2+ lda, 
 default-pause sta,
-;asm
+;code
 
-:asm voice2 
+code voice2 
 octave lda, octave 2+ sta,
 tie lda, tie 2+ sta,
 pause lda, pause 2+ sta,
@@ -261,29 +261,29 @@ tie 3 + lda, tie sta,
 pause 3 + lda, pause sta,
 default-pause 3 + lda, 
 default-pause sta,
-;asm
+;code
 
-:asm voicedone
+code voicedone
 octave lda, octave 3 + sta,
 tie lda, tie 3 + sta,
 pause lda, pause 3 + sta,
 default-pause lda, 
 default-pause 3 + sta,
-;asm
+;code
 
-:asm wait 
+code wait 
 \ visualize lag
 \ a2 lda, sec, sp0 sbc,x d020 sta,
 sp0 lda,x
 :- a2 cmp, -branch beq,
-sp0 inc,x ;asm
+sp0 inc,x ;code
 
-:asm apply-sid
+code apply-sid
 14 ldy,#
 :- sid lda,y d400 sta,y
-dey, -branch bpl, ;asm
+dey, -branch bpl, ;code
 
-:asm notdone
+code notdone
 dex,
 0 lda,# voice sta,
 .strget jsr, pause 1+ ora, +branch bne,
@@ -291,9 +291,9 @@ voice inc,
 .strget jsr, pause 2+ ora, +branch bne,
 voice inc,
 .strget jsr, pause 3 + ora, +branch bne,
-0 lda,# sp0 sta,x sp1 sta,x ;asm
+0 lda,# sp0 sta,x sp1 sta,x ;code
 :+ :+ :+
-sp0 sta,x ;asm
+sp0 sta,x ;code
 
 : play 
 voice0 do-commands

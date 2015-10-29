@@ -1,18 +1,18 @@
 a000 value bmpbase
 8c00 value colbase
 
-:asm hires 
+code hires 
 bb lda,# d011 sta, \ enable
 15 lda,# dd00 sta, \ vic bank 2
 38 lda,# d018 sta,
 56 lda,# 1 sta, \ no basic
-;asm
+;code
 
-:asm lores
+code lores
 9b lda,# d011 sta,
 17 lda,# dd00 sta,
 17 lda,# d018 sta,
-;asm
+;code
 
 : clrcol ( fgbgcol -- )
 colbase 3e8 fill
@@ -86,8 +86,8 @@ rts,
 
 hide mask
 
-:asm blitloc ( x y -- mask addr )
-.blitloc jsr, ;asm
+code blitloc ( x y -- mask addr )
+.blitloc jsr, ;code
 
 : doplot ( x y -- )
 blitloc tuck c@
@@ -218,13 +218,13 @@ mask asl, 3 bcs, stepx jmp,
 sec, addr lda, 8 sbc,# addr sta,
 3 bcs, addr 1+ dec, stepx jmp,
 
-:asm doline
+code doline
 1 @: step jsr,
 peny lda, sp0 cmp,x 1 @@ bne,
 penx lda, sp0 1+ cmp,x 1 @@ bne,
 peny 1+ lda, sp1 cmp,x 1 @@ bne,
 penx 1+ lda, sp1 1+ cmp,x 1 @@ bne,
-inx, inx, ;asm
+inx, inx, ;code
 
 : line ( x y -- )
 2dup peny @ - abs dy2 !
@@ -310,17 +310,17 @@ iny, sp0 3 + lda,x zptmp sta,(y)
 clc, stk lda, 6 adc,# stk sta,
 3 bcc, stk 1+ inc, rts,
 
-:asm spush ( y xl xr dy -- )
+code spush ( y xl xr dy -- )
 \ y out of bounds?
 clc, sp0 lda,x sp0 3 + adc,x tay,
 sp1 lda,x sp1 3 + adc,x +branch bne,
 tya, sec, c8 cmp,# 3 bcs, dopush jsr,
 :+
-inx, inx, inx, inx, ;asm
+inx, inx, inx, inx, ;code
 
 variable x1 variable x2
 
-:asm spop ( -- y )
+code spop ( -- y )
 stk lda,
 sec, 6 sbc,# zptmp sta, stk sta,
 3 bcs, stk 1+ dec,
@@ -338,7 +338,7 @@ iny, zptmp lda,(y) x2 1+ sta,
 iny, zptmp lda,(y) x1 sta,
 iny, zptmp lda,(y) x1 1+ sta,
 iny, zptmp lda,(y) sp0 sta,x
-;asm
+;code
 
 variable l
 
@@ -400,7 +400,7 @@ penx lda, sp0 1+ sta,x
 penx 1+ lda, sp1 1+ sta,x rts,
 
 \ this one must be fast
-:asm fillr ( x y -- newx y )
+code fillr ( x y -- newx y )
 \ over 140 >= if exit then
 sp1 1+ lda,x 0 cmp,# +branch beq,
 3f lda,# sp0 1+ cmp,x 1 bcs, rts,
@@ -422,18 +422,18 @@ sp1 3 + lda,x sp1 1+ sta,x
 :-
 sp0 1+ lda,x +branch bne,
 \ continue bytewise
-bytewise jsr, leave jsr, ;asm
+bytewise jsr, leave jsr, ;code
 :+
 sp0 lda,x zptmp sta,
 sp1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
 sp0 1+ and,x +branch beq,
 \ done
-leave jsr, ;asm
+leave jsr, ;code
 :+
 .bitblt jsr, jmp, \ recurse
 
-:asm scanl
+code scanl
 :-
 \ x<0?
 sp1 1+ lda,x 1 bpl, rts,
@@ -460,9 +460,9 @@ create .scanr
 \ over l ! \ l=x
 sp0 1+ lda,x l sta, 
 sp1 1+ lda,x l 1+ sta,
-;asm
+;code
 
-:asm scanr ( x y mask addr -- newx y )
+code scanr ( x y mask addr -- newx y )
 sp0 lda,x addr sta,
 sp1 lda,x addr 1+ sta,
 sp0 1+ lda,x mask sta,

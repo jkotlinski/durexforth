@@ -55,14 +55,14 @@ To get back into the editor, press Restore key.
 
 \section{Assembler}
 
-If you need to flash as fast as possible, it is possible to use the durexForth assembler to generate machine code. \texttt{:asm} and \texttt{;asm} define a code word, just like \texttt{:} and \texttt{;} define Forth words. Within a code word, you can use assembler mnemonics. 
+If you need to flash as fast as possible, it is possible to use the durexForth assembler to generate machine code. \texttt{code} and \texttt{;code} define a code word, just like \texttt{:} and \texttt{;} define Forth words. Within a code word, you can use assembler mnemonics. 
 
 \begin{verbatim}
-:asm flash
+code flash
 here ( push current addr )
 d020 inc,
 jmp, ( jump to pushed addr )
-;asm
+;code
 flash
 \end{verbatim}
 

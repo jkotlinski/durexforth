@@ -30,9 +30,9 @@ clc,
 tya, zptmp adc, sp0 sta,x
 2 bcc,
 sp1 inc,x
-;asm
+;code
 
-:asm print-line ( addr -- addr )
+code print-line ( addr -- addr )
 sp0 ldy,x zptmp sty,
 sp1 ldy,x zptmp 1+ sty,
 0 ldy,#
@@ -47,7 +47,7 @@ d cmp,#
 foundeol -branch beq,
 jmp,
 
-:asm find-next-line ( addr -- addr )
+code find-next-line ( addr -- addr )
 sp0 ldy,x zptmp sty,
 sp1 ldy,x zptmp 1+ sty,
 0 ldy,#

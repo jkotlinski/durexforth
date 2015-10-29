@@ -100,13 +100,13 @@ header postpone dodoes literal , ;
 .( asm..)
 s" asm" load
 
-:asm rot ( a b c -- b c a )
+code rot ( a b c -- b c a )
 sp1 2+ ldy,x sp1 1+ lda,x 
 sp1 2+ sta,x sp1    lda,x
 sp1 1+ sta,x sp1    sty,x
 sp0 2+ ldy,x sp0 1+ lda,x 
 sp0 2+ sta,x sp0    lda,x
-sp0 1+ sta,x sp0    sty,x ;asm
+sp0 1+ sta,x sp0    sty,x ;code
 : -rot rot rot ;
 
 : /mod 0 -rot um/mod ;
@@ -115,9 +115,9 @@ sp0 1+ sta,x sp0    sty,x ;asm
 : */mod -rot d* rot um/mod ;
 : */ */mod nip ;
 
-:asm 100/
+code 100/
 sp1 lda,x sp0 sta,x 
-0 lda,#   sp1 sta,x ;asm
+0 lda,#   sp1 sta,x ;code
 
 \ creates value that is fast to read
 \ but can only be rewritten by "to".
@@ -126,7 +126,7 @@ sp1 lda,x sp0 sta,x
 \  1 to foo
 \  foo . \ prints 1
 : value ( n -- )
-dup :asm
+dup code
 lda,# 100/ ldy,# 
 ['] pushya jmp, ;
 
@@ -164,18 +164,18 @@ compile-ram @ -rot 0 compile-ram !
 801 -rot here -rot saveb
 compile-ram ! ;
 
-:asm 2/ sp1 lsr,x sp0 ror,x ;asm
-:asm or
+code 2/ sp1 lsr,x sp0 ror,x ;code
+code or
 sp1 lda,x sp1 1+ ora,x sp1 1+ sta,x
 sp0 lda,x sp0 1+ ora,x sp0 1+ sta,x
-inx, ;asm
-:asm xor
+inx, ;code
+code xor
 sp1 lda,x sp1 1+ eor,x sp1 1+ sta,x
 sp0 lda,x sp0 1+ eor,x sp0 1+ sta,x
-inx, ;asm
+inx, ;code
 : invert ffff xor ;
 : negate invert 1+ ;
-:asm +! ( num addr -- ) 
+code +! ( num addr -- ) 
 sp0 lda,x zptmp sta,
 sp1 lda,x zptmp 1+ sta,
 0 ldy,# clc,
@@ -183,7 +183,7 @@ zptmp lda,(y) sp0 1+ adc,x
 zptmp sta,(y) iny,
 zptmp lda,(y) sp1 1+ adc,x 
 zptmp sta,(y)
-inx, inx, ;asm
+inx, inx, ;code
 
 : lshift ( x1 u -- x2 )
 begin ?dup while swap 2* swap 1- repeat ;
@@ -208,8 +208,8 @@ begin r> ?dup while emit repeat space ;
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
-:asm sei sei, ;asm
-:asm cli cli, ;asm
+code sei sei, ;code
+code cli cli, ;code
 
 : assert 0= if
 begin 1 d020 +! again then ;

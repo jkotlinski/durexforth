@@ -1,4 +1,4 @@
-:asm (do)
+code (do)
 pla, zptmp sta,
 pla, tay,
 
@@ -8,12 +8,12 @@ inx, inx,
 
 tya, pha,
 zptmp lda, pha,
-;asm
+;code
 
 : do ( limit first -- ) immediate
 postpone (do) here ;
 
-:asm (loop)
+code (loop)
 zptmp stx, tsx, \ x = stack pointer
 103 inc,x 3 bne, 104 inc,x \ i++
 104 lda,x 106 cmp,x 1 @@ beq, \ lsb
@@ -31,7 +31,7 @@ pla, 0 adc,# zptmp 1+ sta,
 pla, pla, pla, pla,
 zptmp 1+ lda, pha,
 zptmp lda, pha,
-;asm
+;code
 
 : loop immediate no-tce
 postpone (loop) , ; \ store branch address
@@ -49,7 +49,7 @@ postpone repeat
 postpone 2drop ;
 
 : i immediate postpone r@ ;
-:asm j txa, tsx,
+code j txa, tsx,
 107 ldy,x zptmp sty, 108 ldy,x
 tax, dex, 
-sp1 sty,x zptmp lda, sp0 sta,x ;asm
+sp1 sty,x zptmp lda, sp0 sta,x ;code
