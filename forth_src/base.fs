@@ -59,12 +59,12 @@ begin key dup [char] " <>
 while over c! 1+ repeat
 drop here - then ;
 
-: tell ( addr len -- )
+: type ( caddr u -- )
 begin ?dup while
 swap dup c@ emit 1+ swap 1-
 repeat drop ;
 
-: ." immediate postpone s" postpone tell ;
+: ." immediate postpone s" postpone type ;
 : .( begin key dup [char] ) <>
 while emit repeat drop ;
 .( compile base..)

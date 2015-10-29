@@ -1,5 +1,5 @@
 : id. ( header -- )
-2+ dup 1+ swap c@ 1f and tell space ;
+2+ dup 1+ swap c@ 1f and type space ;
 : cfa> ( codepointer -- word )
 latest @ begin ?dup while
 2dup > if nip exit then
@@ -17,7 +17,7 @@ endof
 ['] litstring of
     [char] s emit
     [char] " emit space
-    2+ dup 2+ over @ tell
+    2+ dup 2+ over @ type
     [char] " emit space
     dup @ +
 endof
