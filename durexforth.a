@@ -294,11 +294,10 @@ SUB
 product = TMP
 
     +BACKLINK
-    !byte	2
-    !text	"d*"
-    jmp DMUL
+    !byte	3
+    !text	"um*"
 ; wastes TMP, TMP2, y
-DMUL
+U_M_STAR
     lda #$00
     sta product+2 ; clear upper bits of product
     sta product+3 

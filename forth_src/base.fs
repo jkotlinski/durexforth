@@ -2,7 +2,7 @@
 : 2+ 1+ 1+ ;
 : cr d emit ;
 : nip swap drop ;
-: * d* nip ;
+: * um* nip ;
 : loc word find ;
 : ' loc >cfa ;
 : jmp, 4c c, ;
@@ -112,7 +112,7 @@ sp0 1+ sta,x sp0    sty,x ;code
 : /mod 0 -rot um/mod ;
 : / /mod nip ;
 : mod /mod drop ;
-: */mod -rot d* rot um/mod ;
+: */mod -rot um* rot um/mod ;
 : */ */mod nip ;
 
 code 100/

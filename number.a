@@ -39,7 +39,7 @@ READ_NUMBER
     sta TMP3
     ; TMP3 now points to string length
     ; followed by string. (Using TMP3
-    ; because DMUL trashes TMP, TMP2)
+    ; because U_M_STAR trashes TMP, TMP2)
 
     dex
     dex
@@ -56,7 +56,7 @@ READ_NUMBER
     ; number *= _BASE
     lda _BASE
     sta LSB+1,x
-    jsr DMUL
+    jsr U_M_STAR
     lda LSB+1,x
     bne .parse_failed ; overflow!
 
