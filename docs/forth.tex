@@ -170,9 +170,9 @@ Like \texttt{cmove}, except that the copy proceeds from higher to lower memory.
 \section{Compiling}
 
 \begin{description}
-\item[:] Start compiling Forth word at \texttt{here} position.
-\item[;] End compiling.
-\item[code] Start assembling word at \texttt{here} position.
+\item[: ("<spaces>name")] Start compiling a new Forth word.
+\item[;] End compiling Forth word.
+\item[code ( "<spaces>name" -- )] Start assembling a new word.
 \item[;code] End assembler.
 \item[, ( n -- )] Write word on stack to \texttt{here} position and increase \texttt{here} by 2.
 \item[c, ( n -- )] Write byte on stack to \texttt{here} position and increase \texttt{here} by 1.
