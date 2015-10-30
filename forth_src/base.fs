@@ -29,8 +29,10 @@ postpone 0branch , ;
 : repeat immediate no-tce
 jmp, swap , here swap ! ;
 : recurse immediate latest @ >cfa compile, ;
-: ( immediate begin key [char] ) = until ;
-: \ immediate begin key d = until ;
+: ( immediate no-tce 
+begin key [char] ) = until ;
+: \ immediate no-tce 
+begin key d = until ;
 : tuck ( x y -- y x y ) swap over ;
 : ?dup dup if dup then ;
 : <> ( a b -- c ) = 0= ;
