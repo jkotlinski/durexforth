@@ -19,17 +19,17 @@ zptmp stx, tsx, \ x = stack pointer
 104 lda,x 106 cmp,x 1 @@ beq, \ lsb
 2 @:
 \ not done, branch back
-zptmp ldx,
+zptmp ldx, \ restore x
 loc branch dup assert >cfa jmp,
 1 @:
 103 lda,x 105 cmp,x 2 @@ bne, \ msb
 \ loop done
-zptmp ldx,
 \ skip branch addr
-pla, clc, 3 adc,# zptmp sta,
-pla, 0 adc,# zptmp 1+ sta,
-pla, pla, pla, pla,
-zptmp (jmp),
+pla, clc, 3 adc,# zptmp2 sta,
+pla, 0 adc,# zptmp2 1+ sta,
+txa, clc, 6 adc,# tax, txs, \ sp += 6
+zptmp ldx, \ restore x
+zptmp2 (jmp),
 
 : loop immediate no-tce
 postpone (loop) , ; \ store branch address
