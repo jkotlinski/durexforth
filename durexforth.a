@@ -928,7 +928,7 @@ INTERPRET
 
     lda	(TMP), y
     and	#F_IMMED
-    bne	.execute_word ; yes... execute it.
+    bne	.execute_word
 
     lda	STATE ; are we compiling?
     beq	.execute_word ; no, execute it.
