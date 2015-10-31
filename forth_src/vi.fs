@@ -248,10 +248,10 @@ xr ! yr ! e50c sys ;
 curlinestart @ print-line drop ;
 
 : half-page-back
-c begin cur-up refresh-line 1- ?dup 0= until ;
+c 0 do cur-up refresh-line loop ;
 
 : half-page-fwd
-c begin cur-down refresh-line 1- ?dup 0= until ;
+c 0 do cur-down refresh-line loop ;
 
 : goto-eof ( can be much optimized... )
 bufstart eof @ = if exit then
