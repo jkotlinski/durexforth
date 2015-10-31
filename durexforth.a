@@ -1384,43 +1384,38 @@ IMMED
     +BACKLINK
     !byte	2 | F_NO_TAIL_CALL_ELIMINATION
     !text	"r>"
-    ; save return adress
     pla
     sta TMP
     pla
     sta TMP+1
-
-    ; move from return stack to param stack
+    inc TMP
+    bne +
+    inc TMP+1
++   
     dex
     pla
     sta LSB,x
     pla
     sta MSB,x
-    
-restore_return_address
-    lda TMP+1
-    pha
-    lda TMP
-    pha
-    rts
+    jmp (TMP)
 
     +BACKLINK
     !byte	2 | F_NO_TAIL_CALL_ELIMINATION
     !text	">r"
-    ; save return address
     pla
     sta TMP
     pla
     sta TMP+1
-
-    ; move from param stack to return stack
+    inc TMP
+    bne +
+    inc TMP+1
++   
     lda MSB,x
     pha
     lda LSB,x
     pha
     inx
-
-    jmp restore_return_address
+    jmp (TMP)
 
     +BACKLINK
     !byte	6 | F_NO_TAIL_CALL_ELIMINATION
