@@ -16,13 +16,13 @@ postpone (do) here ;
 code (loop)
 zptmp stx, tsx, \ x = stack pointer
 103 inc,x 3 bne, 104 inc,x \ i++
-104 lda,x 106 cmp,x 1 @@ beq, \ lsb
+103 lda,x 105 cmp,x 1 @@ beq, \ lsb
 2 @:
 \ not done, branch back
 zptmp ldx, \ restore x
 loc branch dup assert >cfa jmp,
 1 @:
-103 lda,x 105 cmp,x 2 @@ bne, \ msb
+104 lda,x 106 cmp,x 2 @@ bne, \ msb
 \ loop done
 \ skip branch addr
 pla, clc, 3 adc,# zptmp2 sta,
