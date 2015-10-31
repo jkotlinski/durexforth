@@ -5,7 +5,7 @@ AS = acme
 
 all:	durexforth.d64
 
-durexforth.prg: durexforth.a number.a ummod.a
+durexforth.prg: durexforth.a number.a math.a
 	@$(AS) durexforth.a
 
 FORTHLIST=base debug vi asm gfx gfxdemo rnd sin ls turtle fractal purge-hidden sprite doloop sys float labels mml mmldemo sid spritedemo

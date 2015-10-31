@@ -1,3 +1,82 @@
+; <
+    +BACKLINK
+    !byte	1
+    !text	"<"
+LT
+    ldy #0
+    lda	MSB, x
+    cmp	MSB + 1, x
+    bcc .false
+    bne	.true
+    ; ok, msb are equal...
+    lda	LSB + 1, x
+    cmp	LSB, x
+    bcs	.false
+.true
+    dey
+.false
+    inx
+    sty	MSB, x
+    sty	LSB, x
+    rts
+
+; -
+    +BACKLINK
+    !byte	1
+    !text	"-"
+SUB
+    lda	LSB + 1, x
+    sec
+    sbc LSB, x
+    sta	LSB + 1, x
+
+    lda MSB + 1, x
+    sbc MSB, x
+    sta MSB + 1, x
+
+    inx
+    rts
+
+product = TMP
+
+    +BACKLINK
+    !byte	3
+    !text	"um*"
+; wastes TMP, TMP2, y
+U_M_STAR
+    lda #$00
+    sta product+2 ; clear upper bits of product
+    sta product+3 
+    ldy #$10 ; set binary count to 16 
+.shift_r
+    lsr MSB + 1, x ; multiplier+1 ; divide multiplier by 2 
+    ror LSB + 1, x ; multiplier
+    bcc rotate_r 
+    lda product+2 ; get upper half of product and add multiplicand
+    clc
+    adc LSB, x ; multiplicand
+    sta product+2
+    lda product+3 
+    adc MSB, x ; multiplicand+1
+rotate_r 
+    ror ; rotate partial product 
+    sta product+3 
+    ror product+2
+    ror product+1 
+    ror product 
+    dey
+    bne .shift_r 
+
+    lda	product
+    sta	LSB, x
+    lda	product + 1
+    sta	MSB, x
+    lda	product + 2
+    sta	LSB + 1, x
+    lda	product + 3
+    sta	MSB + 1, x
+    rts
+
 ; UM/MOD by Garth Wilson
 ; http://6502.org/source/integers/ummodfix/ummodfix.htm
     +BACKLINK
