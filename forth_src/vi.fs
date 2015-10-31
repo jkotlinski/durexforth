@@ -117,10 +117,21 @@ bl status-pos 18 fill ;
 : set-status ( c -- )
 clear-status status-pos c! ;
 
+: rom-kernal 37 1 c! ;
+: ram-kernal 35 1 c! ;
+: init-key
+\ modifies kernal to change kbd prefs
+e000 e000 2000 cmove \ copy rom => ram
+\ hopefully basic is not used...
+80 28a c! \ key repeat on
+7 eaea c! \ repeat delay
+2 eb1d c! \ repeat speed
+;
+
 : init
+init-key
 0 bufstart 1- c! \ sentinel
 0 compile-ram ! \ to enable editor start from base.src
-80 28a c! \ key repeat on
 clear-status ;
 
 : push-colors
@@ -506,6 +517,7 @@ endcase clear-status ;
 ;
 
 : write-file
+rom-kernal
 do-backup
 
 bufstart
@@ -721,13 +733,14 @@ bufstart compile-ram ! ;
 
 : main-loop
 	begin
+        ram-kernal
 		0 to need-refresh
 		0 line-dirty c!
 
 		depth \ stack check...
 
 		show-cursor
-		key
+        key
 		hide-cursor
 
 		insert-active if
@@ -735,6 +748,7 @@ bufstart compile-ram ! ;
 		else
 			main-handler if 
 				drop
+                rom-kernal
 				exit
 			then
 		then
