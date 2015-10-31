@@ -26,12 +26,10 @@ loc branch dup assert >cfa jmp,
 \ loop done
 zptmp ldx,
 \ skip branch addr
-pla, clc, 2 adc,# zptmp sta,
+pla, clc, 3 adc,# zptmp sta,
 pla, 0 adc,# zptmp 1+ sta,
 pla, pla, pla, pla,
-zptmp 1+ lda, pha,
-zptmp lda, pha,
-;code
+zptmp (jmp),
 
 : loop immediate no-tce
 postpone (loop) , ; \ store branch address
