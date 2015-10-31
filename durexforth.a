@@ -1369,27 +1369,16 @@ IMMED
     +BACKLINK
     !byte	2 | F_NO_TAIL_CALL_ELIMINATION
     !text	"r@"
-    ; save return adress
-    pla
-    sta TMP
-    pla
-    sta TMP+1
-
-    ; copy from return stack to param stack
+    txa
+    tsx
+    ldy $103,x
+    sty TMP
+    ldy $104,x
+    tax
     dex
-    pla
-    sta LSB,x
-    pla
-    sta MSB,x
-    pha
-    lda LSB,x
-    pha
-    
-restore_return_address
-    lda TMP+1
-    pha
+    sty MSB,x
     lda TMP
-    pha
+    sta LSB,x
     rts
 
     +BACKLINK
@@ -1408,7 +1397,12 @@ restore_return_address
     pla
     sta MSB,x
     
-    jmp restore_return_address
+restore_return_address
+    lda TMP+1
+    pha
+    lda TMP
+    pha
+    rts
 
     +BACKLINK
     !byte	2 | F_NO_TAIL_CALL_ELIMINATION
