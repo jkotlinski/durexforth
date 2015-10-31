@@ -510,9 +510,8 @@ CMOVE
     inc	.csrc + 2
 +
     inc	.cdst + 1
-    bne	+
+    bne	-
     inc	.cdst + 2
-+
     jmp	-
 
 ; ---------- variables
