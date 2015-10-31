@@ -424,7 +424,7 @@ FILL
     inc	.fdst
     bne	-
     inc	.fdst + 1
-    bne	-
+    jmp	-
 
 ; CMOVE> ( src dst len -- )
     +BACKLINK
@@ -513,7 +513,7 @@ CMOVE
     bne	+
     inc	.cdst + 2
 +
-    bne	-
+    jmp	-
 
 ; ---------- variables
 
