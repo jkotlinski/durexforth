@@ -279,7 +279,7 @@ clear-status ;
 : show-location
 	dup ( loc loc )
 	begin
-		dup c@ dup cr= swap 0= or if
+		dup c@ eol= if
 			1+ ( loc sol )
 			tuck ( sol loc sol )
 			- curx !
