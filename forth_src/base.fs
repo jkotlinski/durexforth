@@ -202,6 +202,8 @@ here tuck + to here ;
 : abs dup 0< if negate then ;
 : s< - 0< ;
 : s> swap s< ;
+: s<= s> 0= ;
+: s>= s< 0= ;
 
 : . 0 >r begin base /mod swap
 dup a < if 7 - then 37 + >r
