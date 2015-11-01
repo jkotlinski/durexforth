@@ -42,13 +42,12 @@ variable limit
 new !
 r>
 r> dup old ! new +!
-r> limit !
-limit @ 1-
+r@ 1-
 old @ new @ min
 old @ new @ max
 within 0= if 
-limit @ >r new @ >r 
->r [ ' branch jmp, ] then 2+ >r ;
+new @ >r >r [ ' branch jmp, ] then
+r> drop 2+ >r ;
 
 hide old
 hide new
@@ -63,3 +62,9 @@ code j txa, tsx,
 107 ldy,x zptmp sty, 108 ldy,x
 tax, dex, 
 sp1 sty,x zptmp lda, sp0 sta,x ;code
+
+( test
+: x 10 0 do i . 1 +loop ; cr x
+: x 0 10 do i . ffff +loop ; cr x
+)
+
