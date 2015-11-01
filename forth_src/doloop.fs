@@ -35,8 +35,9 @@ zptmp2 (jmp),
 postpone (loop) , ; \ store branch address
 
 : (+loop) ( inc -- )
-r> swap r> tuck + tuck 2dup min 
--rot max r@ 1- -rot within 0= if 
+r> swap r> tuck + tuck 
+2dup > if swap then
+r@ 1- -rot within 0= if 
 >r >r [ ' branch jmp, ] then
 r> 2drop 2+ >r ;
 
