@@ -1,6 +1,6 @@
 # durexforth
 
-Modern, lean C64 Forth inspired by colorForth, JONESFORTH and Blazin' Forth. Project includes a vi clone written in Forth, a high-resolution graphics library, plus MML music support (new in 1.3!).
+Modern C64 Forth inspired by colorForth, JONESFORTH and Blazin' Forth. Project includes a vi clone written in Forth, a high-resolution graphics library, plus MML music support (new in 1.3!).
 
 Goals:
 
