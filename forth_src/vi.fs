@@ -86,7 +86,22 @@ cursor-scr-pos
 dup @ 80 or
 swap c! ;
 
+: rom-kernal 37 1 c! ;
+: ram-kernal 35 1 c! ;
+: init-kernal
+ram-kernal
+eaea c@ a <> if
+rom-kernal
+\ modifies kernal to change kbd prefs
+e000 e000 2000 cmove \ copy rom => ram
+\ hopefully basic is not used...
+80 28a c! \ key repeat on
+a eaea c! \ repeat delay
+2 eb1d c! \ repeat speed
+then ;
+
 : do-load
+rom-kernal
 0 bufstart 400 fill
 bufstart loadb
 
@@ -118,22 +133,8 @@ bl status-pos 18 fill ;
 : set-status ( c -- )
 clear-status status-pos c! ;
 
-: rom-kernal 37 1 c! ;
-: ram-kernal 35 1 c! ;
-: init-key
-ram-kernal
-eaea c@ a <> if
-rom-kernal
-\ modifies kernal to change kbd prefs
-e000 e000 2000 cmove \ copy rom => ram
-\ hopefully basic is not used...
-80 28a c! \ key repeat on
-a eaea c! \ repeat delay
-2 eb1d c! \ repeat speed
-then ;
-
 : init
-init-key
+init-kernal
 0 bufstart 1- c! \ sentinel
 0 compile-ram ! \ to enable editor start from base.src
 clear-status ;
@@ -782,7 +783,7 @@ cleanup ;
 : vi
 depth 0= if \ in case no param
 eof @ if fg exit else
-s" untitled" then then
+s" noname" then then
 
 init
 go-to-file-start
