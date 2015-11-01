@@ -45,9 +45,8 @@ r> dup old ! new +!
 r> limit !
 old @ limit @ < new @ limit @ < 0= and
 new @ limit @ < old @ limit @ < 0= and
-or if 2+ >r exit then
-limit @ >r new @ >r
->r [ ' branch jmp, ] ;
+or 0= if limit @ >r new @ >r
+>r [ ' branch jmp, ] then 2+ >r ;
 
 hide old
 hide new
