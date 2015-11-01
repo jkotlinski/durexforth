@@ -117,6 +117,9 @@ These words assume that the lowest number is 0 and highest is FFFF.
 \item[0$<$ ( a -- b )] Is a negative?
 \item[negate ( a -- b )] Negates a.
 \item[abs ( a -- b )] Gives absolute value of a.
+\item[min ( a b -- c )] Gives the lesser of a and b.
+\item[max ( a b -- c )] Gives the greater of a and b.
+\item[within ( n lo hi -- flag )] Returns true if lo $<=$ n $<$ hi.
 \item[$<$ ( n1 n2 -- flag )] Is n1 less than n2? (Signed.)
 \item[$>$ ( n1 n2 -- flag )] Is n1 greater than n2? (Signed.)
 \item[$u<$ ( u1 u2 -- flag )] Is u1 less than u2? (Unsigned.)
