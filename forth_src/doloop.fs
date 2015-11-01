@@ -35,13 +35,8 @@ zptmp2 (jmp),
 postpone (loop) , ; \ store branch address
 
 : (+loop) ( inc -- )
-r> swap \ ret inc
-r> \ ret inc it
-tuck + tuck \ ret it2 it it2
-2dup min \ ret it2 it it2 low
--rot max \ ret it2 low high
-r@ 1- -rot
-within 0= if 
+r> swap r> tuck + tuck 2dup min 
+-rot max r@ 1- -rot within 0= if 
 >r >r [ ' branch jmp, ] then
 r> 2drop 2+ >r ;
 
@@ -54,8 +49,3 @@ code j txa, tsx,
 107 ldy,x zptmp sty, 108 ldy,x
 tax, dex, 
 sp1 sty,x zptmp lda, sp0 sta,x ;code
-
-( test
-: x 10 0 do i . 1 +loop ; cr x
-: x 0 10 do i . ffff +loop ; cr x
-)
