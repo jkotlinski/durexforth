@@ -34,20 +34,22 @@ zptmp2 (jmp),
 : loop immediate no-tce
 postpone (loop) , ; \ store branch address
 
+: (+loop) ( inc )
+r> swap r> + r> 2dup < if
+\ continue
+>r >r >r [ ' branch jmp, ]
+then
+\ done
+2drop 2+ >r ;
+
 : +loop immediate no-tce
-postpone r>
-postpone +
-postpone r>
-postpone 2dup
-postpone <
-postpone while 
-postpone >r
-postpone >r
-postpone repeat 
-postpone 2drop ;
+postpone (+loop) , ;
 
 : i immediate postpone r@ ;
 code j txa, tsx,
 107 ldy,x zptmp sty, 108 ldy,x
 tax, dex, 
 sp1 sty,x zptmp lda, sp0 sta,x ;code
+
+( : test 10 0 do cr i . cr 2 +loop ;
+test )
