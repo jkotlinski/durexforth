@@ -36,15 +36,8 @@ begin key d = until ;
 : tuck ( x y -- y x y ) swap over ;
 : ?dup dup if dup then ;
 : <> ( a b -- c ) = 0= ;
-: > ( n -- b ) swap < ;
+: u> ( n -- b ) swap u< ;
 : 0<> ( x -- flag ) 0= 0= ;
-
-: <= > 0= ;
-: >= < 0= ;
-: max ( a b - c )
-2dup < if swap then drop ;
-: min ( a b - c )
-2dup > if swap then drop ;
 
 : litstring ( -- addr len )
 r> 1+ dup 2+ swap @ 2dup + 1- >r ;
@@ -198,12 +191,15 @@ here tuck + to here ;
 : variable 2 allot value ;
 
 \ signedness
-: 0< 7fff > ;
+: 0< 8000 and 0<> ;
 : abs dup 0< if negate then ;
-: s< - 0< ;
-: s> swap s< ;
-: s<= s> 0= ;
-: s>= s< 0= ;
+: < - 0< ;
+: > swap < ;
+
+: max ( a b - c )
+2dup < if swap then drop ;
+: min ( a b - c )
+2dup > if swap then drop ;
 
 : . 0 >r begin base /mod swap
 dup a < if 7 - then 37 + >r

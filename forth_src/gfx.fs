@@ -153,7 +153,7 @@ zptmp2 sta,(y) rts,
 variable dx2 variable dy2
 
 create stepx
-\ 2err @ dx2 @ s< if
+\ 2err @ dx2 @ < if
 sec, 2err lda, dx2 sbc,
 2err 1+ lda, dx2 1+ sbc,
 3 bmi, lineplot jmp,
@@ -191,7 +191,7 @@ err 1+ lda, 2err 1+ sta,
 
 \ step up/down
 
-\ 2err @ dy2 @ s> if 
+\ 2err @ dy2 @ > if 
 sec, dy2 lda, 2err sbc,
 dy2 1+ lda, 2err 1+ sbc,
 3 bmi, stepx jmp,
@@ -230,8 +230,8 @@ inx, inx, ;code
 2dup peny @ - abs dy2 !
 penx @ - abs dx2 !
 2dup
-peny @ swap s< if 1 else ffff then sy !
-penx @ swap s< if 1 else ffff then sx !
+peny @ swap < if 1 else ffff then sy !
+penx @ swap < if 1 else ffff then sx !
 dx2 @ dy2 @ - err !
 dy2 @ negate dy2 !
 
@@ -268,7 +268,7 @@ dup negate err !
 swap to cy
 swap to cx
 0 \ x y
-begin 2dup s< 0= while
+begin 2dup < 0= while
 plot8
 dup err +!
 1+
@@ -491,7 +491,7 @@ sp0 1+ inc,x 2 bne, sp1 1+ inc,x
 jmp, \ recurse
 
 : paint ( x y -- )
-2dup c8 >= swap 140 >= or
+2dup c8 < 0= swap 140 < 0= or
 if 2drop exit then
 2dup peek if 2drop exit then
 
@@ -509,7 +509,7 @@ x1 @ over \ y x y
 2dup blitloc addr ! mask !
 scanl
 over x1 @ \ y x y x x1
-s< 0= if
+< 0= if
 branch [ here >r 0 , ] \ goto skip
 then
 \ y x y ...

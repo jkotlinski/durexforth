@@ -1,8 +1,6 @@
-; <
     +BACKLINK
-    !byte	1
-    !text	"<"
-LT
+    !byte	2
+    !text	"u<"
     ldy #0
     lda	MSB, x
     cmp	MSB + 1, x

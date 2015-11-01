@@ -156,7 +156,7 @@ linelen curx @ min curx ! ;
 : cur-down
 curlinestart @ ( curline )
 find-next-line dup ( 2xnextline )
-eof @ >= if drop exit then
+eof @ < 0= if drop exit then
 curlinestart !
 cury @ 17 < if 1 cury +! else
 homepos @ find-next-line homepos !

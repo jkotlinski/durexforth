@@ -42,8 +42,8 @@ new !
 r>
 r> dup old ! new +!
 r> limit !
-old @ limit @ s< new @ limit @ s>= and
-new @ limit @ s< old @ limit @ s>= and 
+old @ limit @ < new @ limit @ < 0= and
+new @ limit @ < old @ limit @ < 0= and
 or if 2+ >r exit then
 limit @ >r new @ >r
 >r [ ' branch jmp, ] ;

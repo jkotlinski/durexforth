@@ -198,9 +198,9 @@ data @ @ 2 data +!
 data @ @ 2 data +!
 data @ @ 2 data +! \ lx ux ly uy c
 4 pick \ lx ux ly uy c x
-begin dup 5 pick <= while
+begin dup 5 pick > 0= while
 3 pick \ lx ux ly uy c x y
-begin dup 4 pick <= while
+begin dup 4 pick > 0= while
 2dup 4 pick blkcol
 8 + repeat drop 8 + repeat
 2drop 2drop 2drop ;

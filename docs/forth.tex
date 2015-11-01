@@ -114,31 +114,19 @@ These words assume that the lowest number is 0 and highest is FFFF.
 \item[mod ( a b -- r )] Remainder of a divided by b.
 \item[*/ ( a b c -- q )] Multiply a with b, then divide by c, using a 32-bit intermediary.
 \item[*/mod ( a b c -- r q )] Like */, but also keeping remainder r.
-\item[$<$ ( a b -- c )] Is a less than b?  
-\item[$>$ ( a b -- c )] Is a greater than b?  
-\item[$>=$ ( a b -- c )] Is a greater than or equal to b?
-\item[$<=$ ( a b -- c )] Is a less than or equal to b?
+\item[0$<$ ( a -- b )] Is a negative?
+\item[negate ( a -- b )] Negates a.
+\item[abs ( a -- b )] Gives absolute value of a.
+\item[$<$ ( n1 n2 -- flag )] Is n1 less than n2? (Signed.)
+\item[$>$ ( n1 n2 -- flag )] Is n1 greater than n2? (Signed.)
+\item[$u<$ ( u1 u2 -- flag )] Is u1 less than u2? (Unsigned.)
+\item[$u>$ ( u1 u2 -- flag )] Is u1 greater than u2? (Unsigned.)
 \item[lshift ( a b -- c )] Binary shift a left by b.
 \item[rshift ( a b -- c )] Binary shift a right by b.
 \item[base (value)] Numerical base.
 \item[decimal] Sets base to 10.
 \item[hex] Sets base to 16.
 
-\end{description}
-
-\section{Signed Mathematics}
-
-These words treat numbers like they are signed, meaning that numbers 8000 - FFFF are negative
-and 0 - 7FFF are positive. (E.g., FFFF means -1.)
-
-\begin{description}
-\item[0$<$ ( a -- b )] Is a negative?
-\item[negate ( a -- b )] Negates a.
-\item[abs ( a -- b )] Gives absolute value of a.
-\item[s$<$ ( a b -- c )] Is a less than b? (Signed comparison.)
-\item[s$>$ ( a b -- c )] Is a greater than b? (Signed comparison.)
-\item[s$<$= ( a b -- c )] Is a not greater than b? (Signed comparison.)
-\item[s$>$= ( a b -- c )] Is a not less than b? (Signed comparison.)
 \end{description}
 
 \section{Logic}

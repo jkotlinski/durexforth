@@ -83,7 +83,7 @@ hide (loop)
 
 ( c a b within returns true if a <= c and c < b )
 : within -rot over
-<= if > else 2drop 0 then ;
+> 0= if > else 2drop 0 then ;
 
 variable last-dump
 
