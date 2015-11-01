@@ -81,16 +81,16 @@ The bottom address of the MSB section of the parameter stack.
 \section{Utility}
 
 \begin{description}
-\item[. ( n -- )] Print top value of stack as signed number.
-\item[u. ( u -- )] Print top value of stack as unsigned number.
+\item[. ( n -- )] Prints top value of stack as signed number.
+\item[u. ( u -- )] Prints top value of stack as unsigned number.
 \item[.s] See stack contents.
-\item[emit ( a -- )] Print top byte of stack as a PETSCII character.
+\item[emit ( a -- )] Prints top value of stack as a PETSCII character.
 \item[\pounds] Comment to end of line. (Used on C64/PETSCII.)
 \item[\textbackslash] Comment to end of line. (Used when cross-compiling from PC/ASCII.)
-\item[(] Start multi-line comment.
-\item[)] End multi-line comment.
-\item[bl] Space character (value).
-\item[space] Prints a space (\texttt{bl emit}).
+\item[(] Multiline comment. Ignores everything until a ).
+\item[bl ( -- char )] Gives the PETSCII character for a space.
+\item[space] Prints a space.
+\item[page] Clears the screen.
 \end{description}
 
 \section{Mathematics}

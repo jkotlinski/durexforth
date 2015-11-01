@@ -89,7 +89,7 @@ variable last-dump
 8 0 do dup . space
 dup 8 0 do dup c@ c. 1+ loop drop
 8 0 do dup c@
-dup 20 5e within 0= if
+dup bl [char] ] within 0= if
 drop [char] .
 then emit 1+ loop cr loop
 last-dump ! ;
@@ -98,9 +98,9 @@ last-dump ! ;
 
 : ?hidden 2+ c@ 40 and ;
 : more d6 c@ 18 = if ." <more>"
-key drop 93 emit then ;
+key drop page then ;
 : words
-93 emit latest @ begin ?dup while
+page latest @ begin ?dup while
 more dup ?hidden 0= if dup id.
 then @ repeat cr ;
 
