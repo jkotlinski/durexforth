@@ -37,6 +37,7 @@ postpone (loop) , ; \ store branch address
 variable old
 variable new
 variable limit
+
 : (+loop) ( inc -- )
 new !
 r>
@@ -47,6 +48,7 @@ new @ limit @ < old @ limit @ < 0= and
 or if 2+ >r exit then
 limit @ >r new @ >r
 >r [ ' branch jmp, ] ;
+
 hide old
 hide new
 hide limit
