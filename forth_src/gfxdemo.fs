@@ -281,7 +281,8 @@ hide sqr
 hide done
 
 : gfxdemo
+d020 c@
 lineweb rndline radiant diamond
 reccirc 2reccirc erasecirc rotsqr
-seascape jungle colorchart ; 
+seascape jungle colorchart d020 c! ; 
 gfxdemo
