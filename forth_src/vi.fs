@@ -124,7 +124,7 @@ clear-status status-pos c! ;
 e000 e000 2000 cmove \ copy rom => ram
 \ hopefully basic is not used...
 80 28a c! \ key repeat on
-7 eaea c! \ repeat delay
+a eaea c! \ repeat delay
 2 eb1d c! \ repeat speed
 ;
 
