@@ -190,7 +190,8 @@ here tuck + to here ;
 
 : variable 2 allot value ;
 
-: 0< 8000 and 0<> ;
+code 0< sp1 lda,x 80 and,# +branch beq,
+ff lda,# :+ sp0 sta,x sp1 sta,x ;code
 : abs dup 0< if negate then ;
 : < - 0< ;
 : > swap < ;
