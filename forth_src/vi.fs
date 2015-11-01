@@ -121,15 +121,19 @@ clear-status status-pos c! ;
 : rom-kernal 37 1 c! ;
 : ram-kernal 35 1 c! ;
 : init-key
+ram-kernal
+eaea c@ a <> if
+rom-kernal
 \ modifies kernal to change kbd prefs
 e000 e000 2000 cmove \ copy rom => ram
 \ hopefully basic is not used...
 80 28a c! \ key repeat on
 a eaea c! \ repeat delay
 2 eb1d c! \ repeat speed
-;
+then ;
 
 : init
+init-key
 0 bufstart 1- c! \ sentinel
 0 compile-ram ! \ to enable editor start from base.src
 clear-status ;
@@ -780,7 +784,7 @@ depth 0= if \ in case no param
 eof @ if fg exit else
 s" untitled" then then
 
-init init-key
+init
 go-to-file-start
 
 \ store away filename
@@ -794,6 +798,6 @@ show-page
 main-loop
 cleanup ;
 
-loc vi loc fg
+loc vi
 hide-to CR
-hidden hidden
+hidden
