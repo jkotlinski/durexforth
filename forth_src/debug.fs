@@ -81,10 +81,6 @@ endcase
 ;
 hide (loop)
 
-( c a b within returns true if a <= c and c < b )
-: within -rot over
-> 0= if > else 2drop 0 then ;
-
 variable last-dump
 
 : c. dup fff0 and 0= if
