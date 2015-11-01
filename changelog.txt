@@ -173,3 +173,17 @@ Changelog
  * renamed tell => type
  * disabled tail call elimination for s" : ]
  * minor optimizations
+
+2015-11-01: v1.4.3
+
+ * forth: made +loop work like it should
+ * forth: removed <=, >= 
+ * forth: renamed <, > to u<, u>
+ * forth: renamed s<, s> to <, >
+ * forth: renamed d* to um*
+ * forth: optimized loop, r>, >r, r@, i
+ * forth: disabled tail call elimination for (
+ * vi: faster key delay+repeat
+ * vi: hid fg
+ * vi: various bugfixes
+ * doc: documented min, max, within
