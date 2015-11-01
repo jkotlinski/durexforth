@@ -79,7 +79,8 @@ swap c! ;
 
 : show-cursor
 insert-active 0= if
-curx @ linelen 1- min curx c!
+curx @ linelen dup if 1- then min 
+curx c!
 then
 cursor-scr-pos
 dup @ 80 or
