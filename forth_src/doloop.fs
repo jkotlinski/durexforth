@@ -34,24 +34,16 @@ zptmp2 (jmp),
 : loop immediate no-tce
 postpone (loop) , ; \ store branch address
 
-variable old
-variable new
-variable limit
-
 : (+loop) ( inc -- )
-new !
-r>
-r> dup old ! new +!
-r@ 1-
-old @ new @ min
-old @ new @ max
+r> swap \ ret inc
+r> \ ret inc it
+tuck + tuck \ ret it2 it it2
+2dup min \ ret it2 it it2 low
+-rot max \ ret it2 low high
+r@ 1- -rot
 within 0= if 
-new @ >r >r [ ' branch jmp, ] then
-r> drop 2+ >r ;
-
-hide old
-hide new
-hide limit
+>r >r [ ' branch jmp, ] then
+r> 2drop 2+ >r ;
 
 : +loop immediate no-tce
 postpone (+loop) , ;
@@ -67,4 +59,3 @@ sp1 sty,x zptmp lda, sp0 sta,x ;code
 : x 10 0 do i . 1 +loop ; cr x
 : x 0 10 do i . ffff +loop ; cr x
 )
-
