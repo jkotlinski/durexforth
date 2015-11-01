@@ -168,8 +168,6 @@ code xor
 sp1 lda,x sp1 1+ eor,x sp1 1+ sta,x
 sp0 lda,x sp0 1+ eor,x sp0 1+ sta,x
 inx, ;code
-: invert ffff xor ;
-: negate invert 1+ ;
 code +! ( num addr -- ) 
 sp0 lda,x zptmp sta,
 sp1 lda,x zptmp 1+ sta,
@@ -198,10 +196,11 @@ ff lda,# :+ sp0 sta,x sp1 sta,x ;code
 : within ( test low high -- flag )
 over - >r - r> u< ;
 
-: . 0 >r begin base /mod swap
+: u. 0 >r begin base /mod swap
 dup a < if 7 - then 37 + >r
 ?dup 0= until
 begin r> ?dup while emit repeat space ;
+: . dup 0< if ." -" negate then u. ;
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
