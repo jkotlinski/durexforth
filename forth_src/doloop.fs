@@ -43,9 +43,11 @@ new !
 r>
 r> dup old ! new +!
 r> limit !
-old @ limit @ < new @ limit @ < 0= and
-new @ limit @ < old @ limit @ < 0= and
-or 0= if limit @ >r new @ >r
+limit @ 1-
+old @ new @ min
+old @ new @ max
+within 0= if 
+limit @ >r new @ >r 
 >r [ ' branch jmp, ] then 2+ >r ;
 
 hide old
