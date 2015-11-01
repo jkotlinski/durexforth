@@ -190,7 +190,6 @@ here tuck + to here ;
 
 : variable 2 allot value ;
 
-\ signedness
 : 0< 8000 and 0<> ;
 : abs dup 0< if negate then ;
 : < - 0< ;
