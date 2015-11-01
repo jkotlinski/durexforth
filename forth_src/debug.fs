@@ -44,8 +44,7 @@ endcase
 2+ ;
 
 : see
-	loc
-    dup 0= if exit then
+	loc ?dup 0= if exit then
 	here
 	latest @
 	begin
