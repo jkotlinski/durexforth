@@ -130,7 +130,6 @@ a eaea c! \ repeat delay
 ;
 
 : init
-init-key
 0 bufstart 1- c! \ sentinel
 0 compile-ram ! \ to enable editor start from base.src
 clear-status ;
@@ -781,7 +780,7 @@ depth 0= if \ in case no param
 eof @ if fg exit else
 s" untitled" then then
 
-init
+init init-key
 go-to-file-start
 
 \ store away filename
