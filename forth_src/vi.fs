@@ -93,7 +93,7 @@ ram-kernal
 eaea c@ a <> if
 rom-kernal
 \ modifies kernal to change kbd prefs
-e000 e000 2000 cmove \ copy rom => ram
+e000 dup 2000 cmove \ rom => ram
 \ hopefully basic is not used...
 80 28a c! \ key repeat on
 a eaea c! \ repeat delay
