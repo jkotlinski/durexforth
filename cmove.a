@@ -38,7 +38,7 @@ CMOVE_BACK
     adc LEN + 1
     sta DST + 1
     
-    ldy TMP3
+    ldy LEN
     bne .entry
     beq .pagesizecopy
 .copybyte
