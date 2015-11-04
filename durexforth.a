@@ -389,85 +389,17 @@ FETCHBYTE
     sta MSB,x
     rts
 
-!macro inc_tmp_and_rts_z {
-    inc	TMP
-    bne	+
-    inc	TMP + 1
-    bne	+
-    rts
-+
-}
-
 ; FILL ( val start len -- )
     +BACKLINK
     !byte	4
     !text	"fill"
 FILL
     lda	LSB + 2, x
-    sta	.fsrc
+    tay
     lda	LSB + 1, x
     sta	.fdst
     lda	MSB + 1, x
     sta	.fdst + 1
-    jsr copy_xored_len_to_tmp_and_pop_3
--
-    +inc_tmp_and_rts_z
-
-.fsrc = * + 1
-    lda	#0 ; overwrite
-.fdst = * + 1
-    sta	$ffff ; overwrite
-
-    ; advance
-    inc	.fdst
-    bne	-
-    inc	.fdst + 1
-    jmp	-
-
-; CMOVE> ( src dst len -- )
-    +BACKLINK
-    !byte	6
-    !text	"cmove>"
-CMOVE_BACK
-    clc
-    lda LSB, x
-    adc LSB + 2, x
-    sta .bsrc + 1
-    lda MSB, x
-    adc MSB + 2, x
-    sta .bsrc + 2
-    clc
-    lda LSB, x
-    adc LSB + 1, x
-    sta .bdst + 1
-    lda MSB, x
-    adc MSB + 1, x
-    sta .bdst + 2
-
-    jsr copy_xored_len_to_tmp_and_pop_3
--
-    +inc_tmp_and_rts_z
-
-    ; back
-    dec	.bsrc + 1
-    lda	.bsrc + 1
-    cmp	#$ff
-    bne	+
-    dec	.bsrc + 2
-+
-    dec	.bdst + 1
-    lda	.bdst + 1
-    cmp	#$ff
-    bne	+
-    dec	.bdst + 2
-+
-.bsrc
-    lda	$ffff ; overwrite
-.bdst
-    sta	$ffff ; overwrite
-    jmp	-
-
-copy_xored_len_to_tmp_and_pop_3
     lda	LSB, x
     eor	#$ff
     sta	TMP
@@ -477,40 +409,23 @@ copy_xored_len_to_tmp_and_pop_3
     inx
     inx
     inx
-    rts
-
-; CMOVE ( src dst len -- ) forward move
-    +BACKLINK
-    !byte	5
-    !text	"cmove"
-CMOVE
-    lda	LSB+2, x
-    sta	.csrc + 1
-    lda	MSB+2, x
-    sta	.csrc + 2
-    lda	LSB+1, x
-    sta	.cdst + 1
-    lda	MSB+1, x
-    sta	.cdst + 2
-
-    jsr copy_xored_len_to_tmp_and_pop_3
 -
-    +inc_tmp_and_rts_z
-
-.csrc
-    lda	$ffff ; overwrite
-.cdst
-    sta	$ffff ; overwrite
+    inc	TMP
+    bne	+
+    inc	TMP + 1
+    bne	+
+    rts
++
+.fdst = * + 1
+    sty	$ffff ; overwrite
 
     ; advance
-    inc	.csrc + 1
-    bne	+
-    inc	.csrc + 2
-+
-    inc	.cdst + 1
+    inc	.fdst
     bne	-
-    inc	.cdst + 2
+    inc	.fdst + 1
     jmp	-
+
+!src "cmove.a"
 
 ; ---------- variables
 
