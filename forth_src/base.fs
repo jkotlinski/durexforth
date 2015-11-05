@@ -178,6 +178,11 @@ zptmp lda,(y) sp1 1+ adc,x
 zptmp sta,(y)
 inx, inx, ;code
 
+: lshift ( x1 u -- x2 )
+begin ?dup while swap 2* swap 1- repeat ;
+: rshift ( x1 u -- x2 )
+begin ?dup while swap 2/ swap 1- repeat ;
+
 : allot ( n -- prev-here )
 here tuck + to here ;
 
@@ -215,10 +220,6 @@ header modules
 s" labels" load
 .( doloop..)
 s" doloop" load
-
-: lshift ( x1 u -- x2 ) 0 do 2* loop ;
-: rshift ( x1 u -- x2 ) 0 do 2/ loop ;
-
 .( sys..)
 s" sys" load
 .( debug..)
