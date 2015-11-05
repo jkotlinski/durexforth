@@ -205,7 +205,8 @@ over - >r - r> u< ;
 dup a < if 7 - then 37 + >r
 ?dup 0= until
 begin r> ?dup while emit repeat space ;
-: . dup 0< if ." -" negate then u. ;
+: . dup 0< if [char] - emit negate
+then u. ;
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
