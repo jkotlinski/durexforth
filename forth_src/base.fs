@@ -186,6 +186,8 @@ begin ?dup while swap 2/ swap 1- repeat ;
 : allot ( n -- prev-here )
 here tuck + to here ;
 
+: cells 2* ;
+: cell+ 2+ ;
 : variable 2 allot value ;
 
 code 0< sp1 lda,x 80 and,# +branch beq,

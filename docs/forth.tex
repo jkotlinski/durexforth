@@ -153,6 +153,8 @@ These words assume that the lowest number is 0 and highest is FFFF.
 \item[@ ( address -- value )] Fetch 16-bit value from address.  
 \item[c! ( value address -- )] Store 8-bit value at address.  
 \item[c@ ( address -- value )] Fetch 8-bit value from address.
+\item[cell+ ( n -- n+2 )] Adds the cell size (which is 2).
+\item[cells ( n -- n*2 )] Multiplies with the cell size (which is 2).
 \item[fill ( byte addr len -- )] Fill range [addr, len + addr) with byte value.
 \item[cmove ( src dst len -- )]
 Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to emory beginning at \texttt{dst}. The copy begins at src and continues towards high memory.
