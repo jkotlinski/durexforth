@@ -13,6 +13,8 @@ zptmp lda, pha,
 : do ( limit first -- ) immediate
 postpone (do) here ;
 
+: unloop r> r> r> -rot 2drop >r ;
+
 code (loop)
 zptmp stx, tsx, \ x = stack pointer
 103 inc,x 3 bne, 104 inc,x \ i++
@@ -20,7 +22,7 @@ zptmp stx, tsx, \ x = stack pointer
 2 @:
 \ not done, branch back
 zptmp ldx, \ restore x
-loc branch dup assert >cfa jmp,
+' branch jmp,
 1 @:
 104 lda,x 106 cmp,x 2 @@ bne, \ msb
 \ loop done

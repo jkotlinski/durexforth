@@ -258,6 +258,12 @@ condition IF true-part ELSE false-part THEN rest
 \item[i, j] Variables are to be used inside \texttt{do} .. \texttt{loop} constructs.
 \texttt{i} gives inner loop index, \texttt{j} gives outer loop index.
 
+\item[unloop] Discards the loop-control parameters. Allows clean \texttt{exit} from within a loop.
+
+\begin{verbatim}
+: xx 0 0 do unloop exit loop ;
+\end{verbatim}
+
 \item[begin ... again]
 
 Infinite loop.
