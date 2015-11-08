@@ -307,6 +307,7 @@ endcase
 \begin{description}
 
 \item[key ( -- n )] Reads a character from current input (can be keyboard, disk or RAM).
+\item[key? ( -- flag )] If a character is available for \texttt{key}, return true. Otherwise, return false.
 
 \item[word ( -- addr )] Reads a word from input and put the string address on the stack.
 

@@ -38,6 +38,7 @@ begin key d = until ;
 : <> ( a b -- c ) = 0= ;
 : u> ( n -- b ) swap u< ;
 : 0<> ( x -- flag ) 0= 0= ;
+: key? c6 c@ 0<> ;
 
 : litstring ( -- addr len )
 r> 1+ dup 2+ swap @ 2dup + 1- >r ;
