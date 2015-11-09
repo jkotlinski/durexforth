@@ -480,28 +480,47 @@ TIB_DATA
 tmp_x
     !byte	0
 
-; KEY... read a key from disk (if open) or keyboard.
+; KEY?
+    +BACKLINK
+    !byte	4
+    !text	"key?"
+    lda keybuf
+    beq .pollkey
+.pushtrue
+    lda #$ff
+    tay
+    jmp pushya
+.pollkey
+    jsr GET_KEY_NONBLOCKING
+    ora #0
+    bne .pushtrue
+    tay
+    jmp pushya
+
+; read a key from disk (if open) or keyboard.
     +BACKLINK
     !byte	3
     !text	"key"
-KEY
-    jsr	_KEY
-    dex
-    sta	LSB, x
-    lda	#0
-    sta	MSB, x
-    rts
+keybuf = * + 1
+    lda #0
+    beq +
+    ldy #0
+    sty keybuf
+    jmp pushya
++
+-   jsr	GET_KEY_NONBLOCKING
+    ora #0
+    beq -
+    ldy	#0
+    jmp pushya
 
 .unbuffered_key
     stx	tmp_x
     jsr	PULL_KEY ; read from disk/ram/console
     ldx tmp_x
-
-    ora	#0
-    beq	_KEY
     rts
 
-_KEY
+GET_KEY_NONBLOCKING
     ; buffered key input
 KEY_BUF_READ_POS = * + 1
 -
@@ -595,7 +614,9 @@ WORD
     sta	TIB_LENGTH
     
 .get_key
-    jsr	_KEY
+-   jsr	GET_KEY_NONBLOCKING
+    ora #0
+    beq -
 
     cmp #K_RETURN
     beq .word_end
