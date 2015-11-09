@@ -36,5 +36,6 @@ begin
 rnd rnd rnds sp-xy!
 rnds sp-1h rnds sp-2h
 rnds sp-1w rnds sp-2w
-again ;
+key? until key drop
+8 0 do i sp-off loop ;
 demo

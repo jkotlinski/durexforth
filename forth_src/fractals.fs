@@ -37,7 +37,7 @@ else Dd forward then endof
 [char] + of Da right endof
 [char] - of Da left endof
 endcase
-1+ repeat 2drop drop ;
+1+ repeat 2drop 2drop ;
 
 : done key drop lores ;
 : koch init 10 clrcol
@@ -46,7 +46,7 @@ s" f" 3 100 9 3c s" f-f++f-f" fractal
 20 88 0 moveto
 s" f" 4 100 3 3c s" f-f++f-f" fractal
 20 c4 0 moveto
-s" f" 5 100 1 3c s" f-f++f-f" fractal 
+s" f" 5 100 1 3c s" f-f++f-f" fractal
 done ;
 : weed1 init d clrcol
 a0 c4 10e moveto
@@ -61,3 +61,7 @@ a0 c8 10e moveto
 s" f" 6 80 64 14
 s" @[+f]@[-f]+f" fractal done ;
 hide done
+
+: demo d020 @ 
+koch weed1 bush1 bush2 d020 ! ;
+demo
