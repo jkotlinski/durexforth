@@ -45,8 +45,7 @@ again. Entering \texttt{bg!} should now give you the error \colorbox{yellow}{\te
 Beneath \texttt{forget bg!}, add the following lines:
 
 \begin{verbatim}
-: flash begin d020 c@ 1+ d020 c! again
-; flash
+: flash begin 1 d020 +! again ; flash
 \end{verbatim}
 
 \texttt{flash} will cycle the border color infinitely. Before trying it out, go up and change \texttt{forget bg!} to \texttt{forget flash}. This makes sure you won't run out of RAM, no matter how many times you recompile the program. Now press \texttt{F7} to compile and run. If everything is entered right, you will be facing a wonderful color cycle.
