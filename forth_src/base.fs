@@ -124,6 +124,7 @@ sp1 lda,x sp0 sta,x
 dup code
 lda,# 100/ ldy,# 
 ['] pushya jmp, ;
+: constant value ;
 
 20 value bl
 : space bl emit ;
