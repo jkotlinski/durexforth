@@ -18,7 +18,7 @@ variable lsp lstk lsp !
 : do ( limit first -- ) immediate
 postpone (do) here dup >l ;
 
-: unloop r> r> r> 2drop >r ;
+: unloop no-tce r> r> r> 2drop >r ;
 
 : leave immediate
 postpone unloop 
