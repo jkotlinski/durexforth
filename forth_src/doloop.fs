@@ -10,10 +10,27 @@ tya, pha,
 zptmp lda, pha,
 ;code
 
-: do ( limit first -- ) immediate
-postpone (do) here ;
+\ leave stack
+10 cells allot value lstk
+variable lsp lstk lsp !
+: >l ( n -- ) lsp @ ! 1 cells lsp +! ;
+: ldrop -1 cells lsp +! ;
 
-: unloop r> r> r> -rot 2drop >r ;
+: do ( limit first -- ) immediate
+postpone (do) here dup >l ;
+
+: unloop r> r> r> 2drop >r ;
+
+: leave immediate
+postpone unloop 
+postpone branch here >l 0 , ;
+
+: resolve-leaves ( dopos -- )
+begin 
+lsp @ lstk = if drop exit then
+ldrop
+dup lsp @ @ = if drop exit then
+here lsp @ @ ! again ;
 
 code (loop)
 zptmp stx, tsx, \ x = stack pointer
@@ -34,7 +51,7 @@ zptmp ldx, \ restore x
 zptmp2 (jmp),
 
 : loop immediate no-tce
-postpone (loop) , ; \ store branch address
+postpone (loop) dup , resolve-leaves ;
 
 : (+loop) ( inc -- )
 r> swap r> tuck + tuck 
@@ -44,11 +61,17 @@ r@ 1- -rot within 0= if
 r> 2drop 2+ >r ;
 
 : +loop immediate no-tce
-postpone (+loop) , ;
-hide (+loop)
+postpone (+loop) dup , resolve-leaves ;
 
 : i immediate postpone r@ ;
 code j txa, tsx,
 107 ldy,x zptmp sty, 108 ldy,x
 tax, dex, 
 sp1 sty,x zptmp lda, sp0 sta,x ;code
+
+hide >l 
+hide ldrop
+hide lstk 
+hide lsp
+hide resolve-leaves
+
