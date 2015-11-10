@@ -255,4 +255,5 @@ s" durexforth" scratch
 .( save new durexforth..)
 s" durexforth" save-forth
 
+depth 0= assert
 .( done!) cr
