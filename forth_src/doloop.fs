@@ -11,9 +11,9 @@ zptmp lda, pha,
 ;code
 
 \ leave stack
-10 cells allot value lstk
+16 allot value lstk
 variable lsp lstk lsp !
-: >l ( n -- ) lsp @ ! 1 cells lsp +! ;
+: >l ( n -- ) lsp @ ! 2 lsp +! ;
 
 : do ( limit first -- ) immediate
 postpone (do) here dup >l ;
@@ -25,11 +25,9 @@ postpone unloop
 postpone branch here >l 0 , ;
 
 : resolve-leaves ( dopos -- )
-begin 
-lsp @ lstk = if drop exit then
--1 cells lsp +!
-dup lsp @ @ = if drop exit then
-here lsp @ @ ! again ;
+begin -2 lsp +!
+dup lsp @ @ < while
+here lsp @ @ ! repeat drop ;
 
 code (loop)
 zptmp stx, tsx, \ x = stack pointer
