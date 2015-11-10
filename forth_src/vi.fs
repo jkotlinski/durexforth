@@ -150,7 +150,7 @@ a d020 c!
 1 d800 400 fill ;
 
 : cleanup ( bordercolor bgcolor cursorcolor -- )
-40 28a c! \ key repeat off
+0 28a c! \ default key repeat
 286 c! \ cursor col
 d021 c! d020 c!
 clrscr ;
