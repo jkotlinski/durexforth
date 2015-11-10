@@ -14,7 +14,6 @@ zptmp lda, pha,
 10 cells allot value lstk
 variable lsp lstk lsp !
 : >l ( n -- ) lsp @ ! 1 cells lsp +! ;
-: ldrop -1 cells lsp +! ;
 
 : do ( limit first -- ) immediate
 postpone (do) here dup >l ;
@@ -28,7 +27,7 @@ postpone branch here >l 0 , ;
 : resolve-leaves ( dopos -- )
 begin 
 lsp @ lstk = if drop exit then
-ldrop
+-1 cells lsp +!
 dup lsp @ @ = if drop exit then
 here lsp @ @ ! again ;
 
@@ -70,7 +69,6 @@ tax, dex,
 sp1 sty,x zptmp lda, sp0 sta,x ;code
 
 hide >l 
-hide ldrop
 hide lstk 
 hide lsp
 hide resolve-leaves
