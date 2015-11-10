@@ -20,7 +20,7 @@ postpone (do) here dup >l ;
 
 : unloop no-tce r> r> r> 2drop >r ;
 
-: leave immediate
+: leave immediate no-tce
 postpone unloop 
 postpone branch here >l 0 , ;
 
