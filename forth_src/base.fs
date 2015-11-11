@@ -59,6 +59,10 @@ begin ?dup while
 swap dup c@ emit 1+ swap 1-
 repeat drop ;
 
+: source ( -- caddr u ) 200 dup
+begin dup c@ while 1+ repeat
+over - ;
+
 : ." immediate postpone s" postpone type ;
 : .( begin key dup [char] ) <>
 while emit repeat drop ;

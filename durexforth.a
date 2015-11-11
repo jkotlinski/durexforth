@@ -522,16 +522,27 @@ keybuf = * + 1
 
 GET_KEY_NONBLOCKING
     ; buffered key input
-KEY_BUF_READ_POS = * + 1
 -
+BASIC_INPUT_BUFFER_HAS_CONTENT = * + 1
+    lda #0
+    beq .get_new_line
+TO_IN = * + 1
     lda BASIC_INPUT_BUFFER
     beq +
-    inc KEY_BUF_READ_POS ; found buffered char, return it
+    ; found buffered char, return it
+    inc TO_IN ; advance >IN
     rts
-+
-    lda KEY_BUF_READ_POS
-    bne +
++   
+    lda BASIC_INPUT_BUFFER
+    beq .get_new_line
 
+    lda #0
+    sta BASIC_INPUT_BUFFER_HAS_CONTENT
+    sta TO_IN
+    lda #K_RETURN
+    rts
+
+.get_new_line
     lda COMPILE_FILENO
     ora COMPILE_RAM + 1
 PREVENT_BASIC_GETLINE = * + 1
@@ -550,13 +561,9 @@ PREVENT_BASIC_GETLINE = * + 1
     sta 1
     pla
     tax
+
+    inc BASIC_INPUT_BUFFER_HAS_CONTENT
     jmp -
-+
-    lda #0 ; finish reading line, setup next line
-    sta KEY_BUF_READ_POS
-    sta BASIC_INPUT_BUFFER
-    lda #K_RETURN
-    rts
 
 ; Reads a key, sources are prioritized as follows:
 ;  1. Streaming file from disk (COMPILE_FILENO)
@@ -913,7 +920,7 @@ INTERPRET
     ldx     #0
     stx     STATE
     stx     BASIC_INPUT_BUFFER
-    stx     KEY_BUF_READ_POS
+    stx     TO_IN
     stx     COMPILE_FILENO
     stx     COMPILE_RAM + 1
     jsr     CHKIN
