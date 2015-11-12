@@ -187,3 +187,13 @@ Changelog
  * vi: hid fg
  * vi: various bugfixes
  * doc: documented min, max, within
+
+2015-11-12: v1.4.4
+
+ * forth: added u. unloop leave cell+ cells page key?
+ * forth: allow input of negative numbers
+ * forth: optimized cmove, cmove>
+ * forth: made . print signed numbers
+ * forth: various bugfixes
+ * doc: simplified & improved intro + tutorial
+ * vi: bugfix, exiting editor disabled key repeat
