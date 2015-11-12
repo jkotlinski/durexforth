@@ -340,16 +340,9 @@ else nipchar then
 
 curlinestart ! curx ! cury ! ;
 
-: backspace-sol
-cury @ 0= if exit then
-linelen cur-up eol linelen join-lines
-( from-linelen to-linelen )
-swap if if cur-right nipchar then 
-else drop force-cur-right then ;
-
 : backspace
 curx @ if cur-left nipchar line-dirty!
-else backspace-sol then ;
+then ;
 
 : del-char force-cur-right backspace ;
 
