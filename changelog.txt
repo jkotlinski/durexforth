@@ -197,3 +197,5 @@ Changelog
  * forth: various bugfixes
  * doc: simplified & improved intro + tutorial
  * vi: bugfix, exiting editor disabled key repeat
+
+Thanks to Christian Johansson and polluks for bug reports!
