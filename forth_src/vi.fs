@@ -95,7 +95,6 @@ rom-kernal
 \ modifies kernal to change kbd prefs
 e000 dup 2000 cmove \ rom => ram
 \ hopefully basic is not used...
-80 28a c! \ key repeat on
 a eaea c! \ repeat delay
 2 eb1d c! \ repeat speed
 then ;
@@ -135,6 +134,7 @@ clear-status status-pos c! ;
 
 : init
 init-kernal
+80 28a c! \ key repeat on
 0 bufstart 1- c! \ sentinel
 0 compile-ram ! \ to enable editor start from base.src
 clear-status ;
