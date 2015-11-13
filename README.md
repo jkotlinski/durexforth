@@ -1,6 +1,6 @@
 # durexforth
 
-Modern C64 Forth. Project includes a vi clone written in Forth, a high-resolution graphics library, plus MML music support (new in 1.3!).
+Modern C64 Forth. Includes a vi clone written in Forth, a high-resolution graphics library, plus MML music support (new in 1.3!).
 
 Goals:
 
