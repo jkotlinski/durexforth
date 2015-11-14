@@ -202,7 +202,8 @@ Thanks to Christian Johansson and polluks for bug reports!
 
 ?-?-?: v1.4.5
 
- * forth: Added spaces.
+ * forth: Added spaces source
+ * vi: Backspace on start of line now doesn't join lines.
  * doc: Mention in tutorial that default is hexadecimal.
 
 Thanks to Christian Johansson for suggestions!
