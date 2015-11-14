@@ -526,8 +526,8 @@ GET_KEY_NONBLOCKING
 BASIC_INPUT_BUFFER_HAS_CONTENT = * + 1
     lda #0
     beq .get_new_line
-TO_IN = * + 1
-    lda BASIC_INPUT_BUFFER
+    ldy TO_IN
+    lda BASIC_INPUT_BUFFER, y
     beq +
     ; found buffered char, return it
     inc TO_IN ; advance >IN
@@ -610,6 +610,13 @@ PULL_KEY ; wastes x!!!
 +   pla
     dec $d020
     rts
+
+    +BACKLINK
+    !byte	3
+    !text	">in"
+    +VALUE TO_IN
+TO_IN
+    !word 0
     
 ; WORD ( -- strptr )
     +BACKLINK

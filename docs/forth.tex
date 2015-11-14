@@ -313,6 +313,10 @@ endcase
 \item[key ( -- n )] Reads a character from current input (can be keyboard, disk or RAM).
 \item[key? ( -- flag )] If a character is available for \texttt{key}, return true. Otherwise, return false.
 
+\item[>in ( -- addr)] Gives the address of a cell containing the offset in characters from the start of the input buffer to the start of the parse area.
+
+\item[source ( -- caddr u)] Gives the address of, and number of characters in, the input buffer.
+
 \item[word ( -- addr )] Reads a word from input and put the string address on the stack.
 
 \item[interpret ( -- value )] Interprets a word from input and puts it on the stack.
