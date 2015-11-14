@@ -199,3 +199,10 @@ Changelog
  * vi: bugfix, exiting editor disabled key repeat
 
 Thanks to Christian Johansson and polluks for bug reports!
+
+?-?-?: v1.4.5
+
+ * forth: Added spaces.
+ * doc: Mention in tutorial that default is hexadecimal.
+
+Thanks to Christian Johansson for suggestions!
