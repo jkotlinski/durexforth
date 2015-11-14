@@ -36,10 +36,6 @@ SAVE = $ffd8
 
 ; -----
 
-; Active file stream to compile from.
-COMPILE_FILENO
-    !byte	0
-
 ; CLOSEW ( file# -- )
     +BACKLINK
     !byte 6
@@ -294,19 +290,19 @@ LOAD_AND_COMPILE
     ; y = basename hi
     ; x = basename lo
     jsr	SETNAM
-    inc	COMPILE_FILENO
-    lda	COMPILE_FILENO ; file number
+    inc	SOURCE_ID
+    lda	SOURCE_ID ; file number
     ldx	$ba ; last used device#
     tay
     iny ; secondary address
     jsr	SETLFS
     jsr	OPEN
     bcc	+
-    dec COMPILE_FILENO
+    dec SOURCE_ID
     jsr .close
     jmp ++
 +
-    ldx	COMPILE_FILENO ; file number
+    ldx	SOURCE_ID ; file number
     jsr	CHKIN
 
     ; Skips load address. It is tempting to keep the source

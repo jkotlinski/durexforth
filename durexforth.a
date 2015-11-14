@@ -436,6 +436,12 @@ FILL
 STATE = * + 1
     +VALUE	0
 
+    +BACKLINK
+    !byte 9
+    !text	"source-id"
+SOURCE_ID = * + 1
+    +VALUE	0
+
 ; COMPILE_RAM - points to RAM source code to be interpreted.
     +BACKLINK
     !byte 11
@@ -543,7 +549,7 @@ BASIC_INPUT_BUFFER_HAS_CONTENT = * + 1
     rts
 
 .get_new_line
-    lda COMPILE_FILENO
+    lda SOURCE_ID
     ora COMPILE_RAM + 1
 PREVENT_BASIC_GETLINE = * + 1
     ora	#1
@@ -566,11 +572,11 @@ PREVENT_BASIC_GETLINE = * + 1
     jmp -
 
 ; Reads a key, sources are prioritized as follows:
-;  1. Streaming file from disk (COMPILE_FILENO)
+;  1. Streaming file from disk
 ;  2. Compile RAM area (COMPILE_RAM)
 ;  3. Console input
 PULL_KEY ; wastes x!!!
-    lda	COMPILE_FILENO
+    lda	SOURCE_ID
     bne	.get_char_from_disk
 
     ; Compiling from RAM?
@@ -602,10 +608,10 @@ PULL_KEY ; wastes x!!!
     jsr	READST
     beq +
     ; handle EOF
-    lda	COMPILE_FILENO
+    lda	SOURCE_ID
     jsr	CLOSE
-    dec	COMPILE_FILENO
-    ldx COMPILE_FILENO
+    dec	SOURCE_ID
+    ldx SOURCE_ID
     jsr CHKIN
 +   pla
     dec $d020
@@ -928,7 +934,7 @@ INTERPRET
     stx     STATE
     stx     BASIC_INPUT_BUFFER
     stx     TO_IN
-    stx     COMPILE_FILENO
+    stx     SOURCE_ID
     stx     COMPILE_RAM + 1
     jsr     CHKIN
     ldx     #X_INIT ; wipe stack :(
