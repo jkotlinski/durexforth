@@ -530,56 +530,55 @@ keybuf = * + 1
     ldy	#0
     jmp pushya
 
-.unbuffered_key
+GET_KEY_NONBLOCKING
     stx	tmp_x
     jsr	PULL_KEY ; read from disk/ram/console
     ldx tmp_x
     rts
 
-GET_KEY_NONBLOCKING
-    ; buffered key input
--
-BASIC_INPUT_BUFFER_HAS_CONTENT = * + 1
-    lda #0
-    beq .get_new_line
-    ldy TO_IN
-    lda BASIC_INPUT_BUFFER, y
-    beq +
-    ; found buffered char, return it
-    inc TO_IN ; advance >IN
-    rts
-+   
-    lda BASIC_INPUT_BUFFER
-    beq .get_new_line
-
-    lda #0
-    sta BASIC_INPUT_BUFFER_HAS_CONTENT
-    sta TO_IN
-    lda #K_RETURN
-    rts
-
-.get_new_line
-    lda SOURCE_ID
-    ora COMPILE_RAM + 1
-PREVENT_BASIC_GETLINE = * + 1
-    ora	#1
-    bne	.unbuffered_key
-
-    ; Buffered line input.
-    txa
-    pha
-    lda 1
-    pha
-    ora #3 ; Makes sure basic is switched in.
-    sta 1
-    jsr $a560 ; Input line into BASIC_INPUT_BUFFER.
-    pla
-    sta 1
-    pla
-    tax
-
-    inc BASIC_INPUT_BUFFER_HAS_CONTENT
-    jmp -
+;    ; buffered key input
+;-
+;BASIC_INPUT_BUFFER_HAS_CONTENT = * + 1
+;    lda #0
+;    beq .get_new_line
+;    ldy TO_IN
+;    lda BASIC_INPUT_BUFFER, y
+;    beq +
+;    ; found buffered char, return it
+;    inc TO_IN ; advance >IN
+;    rts
+;+   
+;    lda BASIC_INPUT_BUFFER
+;    beq .get_new_line
+;
+;    lda #0
+;    sta BASIC_INPUT_BUFFER_HAS_CONTENT
+;    sta TO_IN
+;    lda #K_RETURN
+;    rts
+;
+;.get_new_line
+;    lda SOURCE_ID
+;    ora COMPILE_RAM + 1
+;PREVENT_BASIC_GETLINE = * + 1
+;    ora	#1
+;    bne	.unbuffered_key
+;
+;    ; Buffered line input.
+;    txa
+;    pha
+;    lda 1
+;    pha
+;    ora #3 ; Makes sure basic is switched in.
+;    sta 1
+;    jsr $a560 ; Input line into BASIC_INPUT_BUFFER.
+;    pla
+;    sta 1
+;    pla
+;    tax
+;
+;    inc BASIC_INPUT_BUFFER_HAS_CONTENT
+;    jmp -
 
 ; Reads a key, sources are prioritized as follows:
 ;  1. Streaming file from disk
@@ -856,9 +855,9 @@ INTERPRET
     bpl .on_stack_underflow
 
     lda #0
-    sta PREVENT_BASIC_GETLINE
+    ; sta PREVENT_BASIC_GETLINE
     jsr	WORD ; push string to stack
-    inc PREVENT_BASIC_GETLINE
+    ; inc PREVENT_BASIC_GETLINE
 
     +_DUP
     jsr	FIND ; replace string with dictionary ptr
