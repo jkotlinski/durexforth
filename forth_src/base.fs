@@ -152,6 +152,22 @@ else (to) then ;
 
 : 2drop ( a b -- ) immediate no-tce
 postpone drop postpone drop ;
+code 2over ( a b c d -- a b c d a b )
+dex,
+sp1 4 + lda,x sp1 sta,x
+sp0 4 + lda,x sp0 sta,x
+dex,
+sp1 4 + lda,x sp1 sta,x
+sp0 4 + lda,x sp0 sta,x ;code
+code 2swap ( a b c d -- c d a b )
+sp0 lda,x sp0 2+ ldy,x
+sp0 sty,x sp0 2+ sta,x
+sp1 lda,x sp1 2+ ldy,x
+sp1 sty,x sp1 2+ sta,x
+sp0 1+ lda,x sp0 3 + ldy,x
+sp0 1+ sty,x sp0 3 + sta,x
+sp1 1+ lda,x sp1 3 + ldy,x
+sp1 1+ sty,x sp1 3 + sta,x ;code
 
 : forget loc ?dup if
 dup @ latest ! to here then ;
