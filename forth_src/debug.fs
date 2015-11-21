@@ -85,7 +85,7 @@ variable last-dump
 : c. dup fff0 and 0= if
 [char] 0 emit then . ;
 : dump ( addr -- )
-8 0 do dup . space
+8 0 do dup u. space
 dup 8 0 do dup c@ c. 1+ loop drop
 8 0 do dup c@
 dup bl [char] ] within 0= if
