@@ -30,7 +30,7 @@ F_HIDDEN = $40
 F_NO_TAIL_CALL_ELIMINATION = $20 ; when set, skips tailcall elimination
 STRLEN_MASK = $1f
 
-BASIC_INPUT_BUFFER = $200
+TIB = $200
 
 ; zeropage
 X_INIT = 0
@@ -104,7 +104,7 @@ reset
     sta	CURSOR_COLOR
 
     ldx	#0
-    stx BASIC_INPUT_BUFFER
+    stx TIB
     stx	$d020
     stx	$d021
 
@@ -520,13 +520,13 @@ tmp_x
     +BACKLINK
     !byte	4
     !text	"char"
--   jsr GET_KEY_NONBLOCKING
+-   jsr GET_CHAR_NONBLOCKING
     ora #0
     beq -
     ldy #0
     jmp pushya
 
-GET_KEY_NONBLOCKING
+GET_CHAR_NONBLOCKING
     stx	tmp_x
     jsr	PULL_KEY ; read from disk/ram/console
 
@@ -543,13 +543,13 @@ GET_KEY_NONBLOCKING
 ;    lda #0
 ;    beq .get_new_line
 ;    ldy TO_IN
-;    lda BASIC_INPUT_BUFFER, y
+;    lda TIB, y
 ;    beq +
 ;    ; found buffered char, return it
 ;    inc TO_IN ; advance >IN
 ;    rts
 ;+   
-;    lda BASIC_INPUT_BUFFER
+;    lda TIB
 ;    beq .get_new_line
 ;
 ;    lda #0
@@ -572,7 +572,7 @@ GET_KEY_NONBLOCKING
 ;    pha
 ;    ora #3 ; Makes sure basic is switched in.
 ;    sta 1
-;    jsr $a560 ; Input line into BASIC_INPUT_BUFFER.
+;    jsr $a560 ; Input line into TIB.
 ;    pla
 ;    sta 1
 ;    pla
@@ -643,8 +643,8 @@ WORD
     lda	#0
     sta	WORD_BUFFER_LENGTH
     
-.get_key
--   jsr	GET_KEY_NONBLOCKING
+.get_char
+-   jsr	GET_CHAR_NONBLOCKING
     ora #0
     beq -
 
@@ -661,11 +661,11 @@ WORD
     sty WORD_BUFFER_LENGTH
     tya
     cmp #MAX_WORD_LENGTH
-    bne .get_key
+    bne .get_char
 
 .word_end
     lda	WORD_BUFFER_LENGTH
-    beq .get_key ; Nothing entered yet, try again.
+    beq .get_char ; Nothing entered yet, try again.
 
     dex
 
@@ -951,7 +951,7 @@ INTERPRET
     ; Resets some sensitive things, as part of error handling.
     ldx     #0
     stx     STATE
-    stx     BASIC_INPUT_BUFFER
+    stx     TIB
     stx     TO_IN
     stx     SOURCE_ID
     stx     COMPILE_RAM + 1
