@@ -486,12 +486,12 @@ PAGE
     lda #K_CLRSCR
     jmp PUTCHR
 
-TIB
-TIB_LENGTH
+WORD_BUFFER
+WORD_BUFFER_LENGTH
     !byte 0
-MAX_TIB_LENGTH = 20
-TIB_DATA
-    !fill MAX_TIB_LENGTH
+MAX_WORD_LENGTH = 20
+WORD_BUFFER_DATA
+    !fill MAX_WORD_LENGTH
 
 tmp_x
     !byte	0
@@ -640,7 +640,7 @@ TO_IN
 WORD
     ; prepare text input
     lda	#0
-    sta	TIB_LENGTH
+    sta	WORD_BUFFER_LENGTH
     
 .get_key
 -   jsr	GET_KEY_NONBLOCKING
@@ -654,23 +654,23 @@ WORD
     cmp #(K_SPACE|$80)
     beq .word_end
 
-    ldy TIB_LENGTH
-    sta TIB_DATA,y
+    ldy WORD_BUFFER_LENGTH
+    sta WORD_BUFFER_DATA,y
     iny
-    sty TIB_LENGTH
+    sty WORD_BUFFER_LENGTH
     tya
-    cmp #MAX_TIB_LENGTH
+    cmp #MAX_WORD_LENGTH
     bne .get_key
 
 .word_end
-    lda	TIB_LENGTH
+    lda	WORD_BUFFER_LENGTH
     beq .get_key ; Nothing entered yet, try again.
 
     dex
 
-    lda	#<TIB
+    lda	#<WORD_BUFFER
     sta	LSB, x
-    lda	#>TIB
+    lda	#>WORD_BUFFER
     sta	MSB, x
 
     rts
@@ -931,10 +931,10 @@ INTERPRET
     jsr	PUTCHR
 
     ldy	#0
--   lda	TIB_DATA, y
+-   lda	WORD_BUFFER_DATA, y
     jsr	PUTCHR
     iny
-    dec TIB_LENGTH
+    dec WORD_BUFFER_LENGTH
     bne -
 
     lda	#'?'
@@ -1096,10 +1096,10 @@ HEADER
 +
 
     ; copy length byte + string
--   lda	TIB, y
+-   lda	WORD_BUFFER, y
     sta	(TMP), y
     iny
-    dec TIB_LENGTH
+    dec WORD_BUFFER_LENGTH
     bpl	-
 
     ; update _LATEST
