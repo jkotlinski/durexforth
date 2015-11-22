@@ -626,39 +626,39 @@ cur-down
 then ;
 
 header maintable
-key i c, ' insert-start ,
-key a c, ' append-start ,
-key / c, ' find-handler ,
+char i c, ' insert-start ,
+char a c, ' append-start ,
+char / c, ' find-handler ,
 ( ctrl+u )
 15 c, ' half-page-back ,
 ( ctrl+d )
 4 c, ' half-page-fwd ,
-key J c, ' join-lines ,
-key g c, ' goto-start ,
-key G c, ' goto-eof ,
-key $ c, ' eol ,
-key 0 c, ' sol ,
-key r c, ' replace-char ,
-key O c, ' open-line ,
-key P c, ' paste-line ,
-key x c, ' del-char ,
-key X c, ' backspace ,
-key b c, ' word-back ,
-key w c, ' word-fwd ,
-key d c, ' del ,
+char J c, ' join-lines ,
+char g c, ' goto-start ,
+char G c, ' goto-eof ,
+char $ c, ' eol ,
+char 0 c, ' sol ,
+char r c, ' replace-char ,
+char O c, ' open-line ,
+char P c, ' paste-line ,
+char x c, ' del-char ,
+char X c, ' backspace ,
+char b c, ' word-back ,
+char w c, ' word-fwd ,
+char d c, ' del ,
 left c, ' cur-left ,
 right c, ' cur-right ,
 up c, ' cur-up ,
 down c, ' cur-down ,
-key h c, ' cur-left ,
-key l c, ' cur-right ,
-key k c, ' cur-up ,
-key j c, ' cur-down ,
+char h c, ' cur-left ,
+char l c, ' cur-right ,
+char k c, ' cur-up ,
+char j c, ' cur-down ,
 0 c,
 
 \ custom restore handler
 \ "vi"
-here key v c, key i c, d c, 0 c,
+here char v c, char i c, d c, 0 c,
 here cli, \ entry
 swap dup \ asm vi vi 
 \ compile-ram="vi"

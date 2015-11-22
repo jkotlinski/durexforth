@@ -496,43 +496,44 @@ WORD_BUFFER_DATA
 tmp_x
     !byte	0
 
-; KEY?
     +BACKLINK
     !byte	4
     !text	"key?"
-    lda keybuf
-    beq .pollkey
+    lda $c6 ; number of characters in keyboard buffer
+    beq +
 .pushtrue
     lda #$ff
-    tay
-    jmp pushya
-.pollkey
-    jsr GET_KEY_NONBLOCKING
-    ora #0
-    bne .pushtrue
-    tay
++   tay
     jmp pushya
 
-; read a key from disk (if open) or keyboard.
     +BACKLINK
     !byte	3
     !text	"key"
-keybuf = * + 1
-    lda #0
-    beq +
+-   lda $c6
+    beq -
+    stx TMP
+    jsr $e5b4
+    ldx TMP
     ldy #0
-    sty keybuf
     jmp pushya
-+
--   jsr	GET_KEY_NONBLOCKING
+
+    +BACKLINK
+    !byte	4
+    !text	"char"
+-   jsr GET_KEY_NONBLOCKING
     ora #0
     beq -
-    ldy	#0
+    ldy #0
     jmp pushya
 
 GET_KEY_NONBLOCKING
     stx	tmp_x
     jsr	PULL_KEY ; read from disk/ram/console
+
+    ; pha ; debug
+    ; jsr PUTCHR
+    ; pla
+
     ldx tmp_x
     rts
 

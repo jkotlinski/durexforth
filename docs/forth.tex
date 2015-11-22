@@ -332,8 +332,9 @@ endcase
 
 \begin{description}
 
-\item[key ( -- n )] Reads a character from current input (can be keyboard, disk or RAM).
-\item[key? ( -- flag )] If a character is available for \texttt{key}, return true. Otherwise, return false.
+\item[key ( -- c )] Gets one character from the keyboard.
+\item[key? ( -- flag )] Returns true if a character is available for \texttt{key}.
+\item[char ( -- c )] Gets one character from the current input stream.
 
 \item[$>$in ( -- addr)] Gives the address of a cell containing the offset in characters from the start of the input buffer to the start of the parse area.
 

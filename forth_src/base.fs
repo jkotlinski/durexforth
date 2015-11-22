@@ -8,7 +8,7 @@
 : jmp, 4c c, ;
 : ['] immediate ' 
 [ ' literal compile, ] ;
-: [char] immediate key 
+: [char] immediate char 
 [ ' literal compile, ] ;
 : else immediate jmp, here 0 ,
 swap here swap ! ;
@@ -24,9 +24,9 @@ postpone 0branch , ;
 jmp, swap , here swap ! ;
 : recurse immediate latest @ >cfa compile, ;
 : ( immediate no-tce 
-begin key [char] ) = until ;
+begin char [char] ) = until ;
 : \ immediate no-tce 
-begin key d = until ;
+begin char d = until ;
 : tuck ( x y -- y x y ) swap over ;
 : ?dup dup if dup then ;
 : <> ( a b -- c ) = 0= ;
@@ -39,12 +39,12 @@ r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 : s" immediate no-tce ( -- addr len )
 state if ( compile mode )
 postpone litstring here 0 , 0
-begin key dup [char] " <>
+begin char dup [char] " <>
 while c, 1+ repeat
 drop swap !
 else ( immediate mode )
 here here
-begin key dup [char] " <>
+begin char dup [char] " <>
 while over c! 1+ repeat
 drop here - then ;
 
@@ -58,7 +58,7 @@ begin dup c@ while 1+ repeat
 over - ;
 
 : ." immediate postpone s" postpone type ;
-: .( begin key dup [char] ) <>
+: .( begin char dup [char] ) <>
 while emit repeat drop ;
 .( compile base..)
 
