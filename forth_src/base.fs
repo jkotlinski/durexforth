@@ -99,6 +99,15 @@ header postpone dodoes literal , ;
 .( asm..)
 s" asm" load
 
+code m+ ( d1 u -- d2 )
+0 ldy,# sp1 lda,x +branch bpl, dey, 
+:+ clc,
+sp0 lda,x sp0 2+ adc,x sp0 2+ sta,x
+sp1 lda,x sp1 2+ adc,x sp1 2+ sta,x
+tya, sp0 1+ adc,x sp0 1+ sta,x
+tya, sp1 1+ adc,x sp1 1+ sta,x
+inx, ;code
+
 code rot ( a b c -- b c a )
 sp1 2+ ldy,x sp1 1+ lda,x 
 sp1 2+ sta,x sp1    lda,x
