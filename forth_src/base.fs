@@ -182,7 +182,9 @@ compile-ram @ -rot 0 compile-ram !
 801 -rot here -rot saveb
 compile-ram ! ;
 
-code 2/ sp1 lsr,x sp0 ror,x ;code
+code 2/ 
+sp1 lda,x 80 cmp,# sp1 ror,x sp0 ror,x
+;code
 code or
 sp1 lda,x sp1 1+ ora,x sp1 1+ sta,x
 sp0 lda,x sp0 1+ ora,x sp0 1+ sta,x
