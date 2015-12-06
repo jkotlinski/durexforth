@@ -70,7 +70,15 @@ READ_NUMBER
     sty MSB+1,x
     lda (TMP3), y
     sta .chars_to_process
-    jmp .read_digit
+
+    inc TMP3
+    bne +
+    inc TMP3+1
++   lda (TMP3), y
+    cmp #"-"
+    bne .loop_entry
+    inc .negate
+    jmp .prepare_next_char
 
 .next_digit
     ; number *= _BASE
@@ -80,17 +88,12 @@ READ_NUMBER
     lda LSB+1,x
     bne .parse_failed ; overflow!
 
-.read_digit
-    ; add *(++TMP3)
     inc TMP3
     bne +
     inc TMP3+1
 +   lda (TMP3), y
-    cmp #"-"
-    bne +
-    inc .negate
-    jmp .prepare_next_char
-+
+
+.loop_entry
     clc
     adc #-$30 ; petscii 0-9 -> 0-9
 
