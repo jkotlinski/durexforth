@@ -66,13 +66,13 @@ rotate_r
     bne .shift_r 
 
     lda	product
-    sta	LSB, x
-    lda	product + 1
-    sta	MSB, x
-    lda	product + 2
     sta	LSB + 1, x
-    lda	product + 3
+    lda	product + 1
     sta	MSB + 1, x
+    lda	product + 2
+    sta	LSB, x
+    lda	product + 3
+    sta	MSB, x
     rts
 
 ; UM/MOD by Garth Wilson

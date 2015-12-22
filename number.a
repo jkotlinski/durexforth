@@ -65,9 +65,9 @@ READ_NUMBER
 
     ldy #0
     sty .negate
-    sty LSB,x ; build number at top of stack
-    sty MSB,x
+    sty LSB+1,x
     sty MSB+1,x
+    sty MSB,x
     lda (TMP3), y
     sta .chars_to_process
 
@@ -83,9 +83,9 @@ READ_NUMBER
 .next_digit
     ; number *= _BASE
     lda _BASE
-    sta LSB+1,x
+    sta LSB,x
     jsr U_M_STAR
-    lda LSB+1,x
+    lda LSB,x
     bne .parse_failed ; overflow!
 
     inc TMP3
@@ -109,18 +109,18 @@ READ_NUMBER
 +   cmp _BASE
     bcs .parse_failed
 
-    adc LSB,x
-    sta LSB,x
+    adc LSB+1,x
+    sta LSB+1,x
     bcc .prepare_next_char
-    inc MSB,x
+    inc MSB+1,x
     beq .parse_failed
 .prepare_next_char
     dec .chars_to_process
     bne .next_digit
 
-    lda LSB,x
+    lda LSB+1,x
     sta LSB+2,x
-    lda MSB,x
+    lda MSB+1,x
     sta MSB+2,x
     inx
     inx
