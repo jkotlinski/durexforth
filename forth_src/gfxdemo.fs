@@ -20,8 +20,8 @@ a + repeat drop done ;
 : rndline
 hires 10 clrcol
 80 begin ?dup while
-rnd ab / 20 -
-rnd f8 / 20 - line
+rnd 0 ab um/mod nip 20 -
+rnd 0 f8 um/mod nip 20 - line
 1- repeat done ;
 
 : radiant
