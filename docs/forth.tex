@@ -142,12 +142,12 @@ These words assume that the lowest number is 0 and highest is FFFF.
 
 \section{Double}
 
-The following words use double-cell integers.
+The following words use double-cell integers. On the stack, the cell containing the most significant part of a double-cell integer is above the cell containing the least significant part. 
 
 \begin{description}
 \item[dabs ( d -- ud )] Produces the absolute value of d.
 \item[dnegate ( d -- d )] Negates the double-cell integer d.
-\item[s>d ( n -- d ) Converts the number n to the double-cell number d.
+\item[s$>$d ( n -- d )] Converts the number n to the double-cell number d.
 \item[m+ ( d n -- d )] Add n to double-cell number d.
 \item[m* ( a b -- d )] Multiply a with b, producing a double-cell value.
 \item[um* ( a b -- ud )] Multiply a with b, giving the unsigned double-cell number ud.
