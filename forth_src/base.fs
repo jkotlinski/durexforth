@@ -117,10 +117,10 @@ sp0 2+ sta,x sp0    lda,x
 sp0 1+ sta,x sp0    sty,x ;code
 : -rot rot rot ;
 
-: /mod 0 -rot um/mod ;
+: /mod 0 swap um/mod ;
 : / /mod nip ;
 : mod /mod drop ;
-: */mod -rot um* swap rot um/mod ;
+: */mod -rot um* rot um/mod ;
 : */ */mod nip ;
 
 code 100/
