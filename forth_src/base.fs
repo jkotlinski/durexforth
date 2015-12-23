@@ -226,6 +226,7 @@ here tuck + to here ;
 
 code 0< sp1 lda,x 80 and,# +branch beq,
 ff lda,# :+ sp0 sta,x sp1 sta,x ;code
+: s>d dup 0< ;
 : abs dup 0< if negate then ;
 : < - 0< ;
 : > swap < ;
