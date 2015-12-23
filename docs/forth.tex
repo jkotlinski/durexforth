@@ -117,11 +117,14 @@ These words assume that the lowest number is 0 and highest is FFFF.
 \item[+ ( a b -- c )] Add a and b.
 \item[- ( a b -- c )] Subtract b from a.
 \item[* ( a b -- c )] Multiply a with b.
-\item[um* ( a b -- lsw msw )] 32-bit multiply a with b.
-\item[um/mod ( lsw msw d -- r q )] Divide 32-bit number by d, giving remainder r and quotient q.
 \item[s>d ( n -- d ) Converts the number n to the double-cell number d.
+\item[m* ( a b -- d )] Multiply a with b, producing a double-cell value.
+\item[um* ( a b -- ud )] Multiply a with b, giving the unsigned double-cell number ud.
+\item[um/mod ( ud d -- r q )] Divide double-cell number ud by d, giving remainder r and quotient q. Values are unsigned.
+\item[sm/rem ( d n -- r q )] Divide double-cell number d with n, giving the symmetric quotient q and the remainder r. Values are signed.
+\item[fm/mod ( d n -- r q )] Divide double-cell number d with n, giving the floored quotient q and the remainder r. Values are signed.
+\item[/ ( a b -- q )] Divide a with b, using floored division.
 \item[/mod ( a b -- r q )] Divide a with b, giving remainder r and quotient q.
-\item[/ ( a b -- q )] Divide a with b.
 \item[mod ( a b -- r )] Remainder of a divided by b.
 \item[*/ ( a b c -- q )] Multiply a with b, then divide by c, using a 32-bit intermediary.
 \item[*/mod ( a b c -- r q )] Like */, but also keeping remainder r.
@@ -143,6 +146,13 @@ These words assume that the lowest number is 0 and highest is FFFF.
 \item[hex] Sets base to 16.
 
 \end{description}
+
+\section{Double}
+
+Words for double numbers.
+
+\item[dabs ( d -- ud )] Produces the absolute value of d.
+\item[dnegate ( d -- d )] Negates the double-cell number d.
 
 \section{Logic}
 
