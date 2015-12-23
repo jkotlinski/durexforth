@@ -117,12 +117,6 @@ sp0 2+ sta,x sp0    lda,x
 sp0 1+ sta,x sp0    sty,x ;code
 : -rot rot rot ;
 
-: /mod 0 swap um/mod ;
-: / /mod nip ;
-: mod /mod drop ;
-: */mod -rot um* rot um/mod ;
-: */ */mod nip ;
-
 code 100/
 sp1 lda,x sp0 sta,x 
 0 lda,#   sp1 sta,x ;code
@@ -227,7 +221,35 @@ here tuck + to here ;
 code 0< sp1 lda,x 80 and,# +branch beq,
 ff lda,# :+ sp0 sta,x sp1 sta,x ;code
 : s>d dup 0< ;
-: abs dup 0< if negate then ;
+: ?negate 0< if negate then ;
+: abs dup ?negate ;
+: dnegate invert >r invert r> 1 m+ ;
+: ?dnegate 0< if dnegate then ;
+: dabs dup ?dnegate ;
+: m* 2dup xor >r >r abs r> 
+abs um* r> ?dnegate ;
+: * m* drop ;
+
+: sm/rem 
+2dup xor >r
+over >r
+abs >r dabs
+r> um/mod swap
+r> ?negate
+swap r> ?negate ;
+
+: fm/mod
+dup >r
+dup 0< if negate >r dnegate r> then
+over 0< if tuck + swap then
+um/mod
+r> 0< if swap negate swap then ;
+
+: /mod >r s>d r> fm/mod ;
+: / /mod nip ;
+: mod /mod drop ;
+: */mod >r m* r> fm/mod ;
+: */ */mod nip ;
 : < - 0< ;
 : > swap < ;
 
