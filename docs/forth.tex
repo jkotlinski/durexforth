@@ -117,12 +117,6 @@ These words assume that the lowest number is 0 and highest is FFFF.
 \item[+ ( a b -- c )] Add a and b.
 \item[- ( a b -- c )] Subtract b from a.
 \item[* ( a b -- c )] Multiply a with b.
-\item[s>d ( n -- d ) Converts the number n to the double-cell number d.
-\item[m* ( a b -- d )] Multiply a with b, producing a double-cell value.
-\item[um* ( a b -- ud )] Multiply a with b, giving the unsigned double-cell number ud.
-\item[um/mod ( ud d -- r q )] Divide double-cell number ud by d, giving remainder r and quotient q. Values are unsigned.
-\item[sm/rem ( d n -- r q )] Divide double-cell number d with n, giving the symmetric quotient q and the remainder r. Values are signed.
-\item[fm/mod ( d n -- r q )] Divide double-cell number d with n, giving the floored quotient q and the remainder r. Values are signed.
 \item[/ ( a b -- q )] Divide a with b, using floored division.
 \item[/mod ( a b -- r q )] Divide a with b, giving remainder r and quotient q.
 \item[mod ( a b -- r )] Remainder of a divided by b.
@@ -140,7 +134,6 @@ These words assume that the lowest number is 0 and highest is FFFF.
 \item[u$>$ ( u1 u2 -- flag )] Is u1 greater than u2? (Unsigned.)
 \item[lshift ( a b -- c )] Binary shift a left by b.
 \item[rshift ( a b -- c )] Binary shift a right by b.
-\item[m+ ( d n -- d )] Add n to double-cell number d.
 \item[base (value)] Numerical base.
 \item[decimal] Sets base to 10.
 \item[hex] Sets base to 16.
@@ -149,10 +142,17 @@ These words assume that the lowest number is 0 and highest is FFFF.
 
 \section{Double}
 
-Words for double numbers.
+The following words use double-cell integers.
 
 \item[dabs ( d -- ud )] Produces the absolute value of d.
-\item[dnegate ( d -- d )] Negates the double-cell number d.
+\item[dnegate ( d -- d )] Negates the double-cell integer d.
+\item[s>d ( n -- d ) Converts the number n to the double-cell number d.
+\item[m+ ( d n -- d )] Add n to double-cell number d.
+\item[m* ( a b -- d )] Multiply a with b, producing a double-cell value.
+\item[um* ( a b -- ud )] Multiply a with b, giving the unsigned double-cell number ud.
+\item[um/mod ( ud n -- r q )] Divide double-cell number ud by n, giving remainder r and quotient q. Values are unsigned.
+\item[sm/rem ( d n -- r q )] Divide double-cell number d by n, giving the symmetric quotient q and the remainder r. Values are signed.
+\item[fm/mod ( d n -- r q )] Divide double-cell number d by n, giving the floored quotient q and the remainder r. Values are signed.
 
 \section{Logic}
 
