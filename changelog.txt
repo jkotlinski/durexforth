@@ -200,14 +200,16 @@ Changelog
 
 Thanks to Christian Johansson and polluks for bug reports!
 
-?-?-?: v1.4.5
+2015-12-23: v1.4.5
 
- * forth: added m+ (adds number to a double-cell number)
- * forth: made 2/ sign-extend negative numbers
+ * forth: / now uses floored signed division
  * forth: bugfix for negative number parsing (2- was 
    interpreted as -20)
- * forth: Added spaces source >in 2over 2swap
- * vi: Backspace on start of line now doesn't join lines.
- * doc: Mention in tutorial that default is hexadecimal.
+ * forth: made 2/ sign-extend negative numbers
+ * forth: added spaces source >in 2over 2swap m+ m*
+   sm/rem fm/mod dabs dnegate s>d
+ * forth: changed word order of double-cell integers
+ * vi: backspace on start of line now doesn't join lines
+ * doc: mention in tutorial that default is hexadecimal
 
-Thanks to Christian Johansson for suggestions!
+Thanks to Christian Johansson and polluks for suggestions!
