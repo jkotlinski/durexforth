@@ -216,6 +216,7 @@ Thanks to Christian Johansson and polluks for suggestions!
 
 ?-?-?: v1.4.6
 
+ * forth: added abort
  * forth: use standard fill parameter order
 
 Thanks to Christian Johansson for suggestions!

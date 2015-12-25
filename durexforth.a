@@ -827,6 +827,13 @@ curr_word_no_tail_call_elimination
 last_word_no_tail_call_elimination
     !byte 1
 
+    +BACKLINK
+    !byte	5
+    !text	"abort"
+ABORT
+    ldx #X_INIT ; reset stack
+    jmp QUIT
+
 ; INTERPRET
     +BACKLINK
     !byte	9
