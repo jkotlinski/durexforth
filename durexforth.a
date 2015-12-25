@@ -389,21 +389,21 @@ FETCHBYTE
     sta MSB,x
     rts
 
-; FILL ( val start len -- )
+; FILL ( start len char -- )
     +BACKLINK
     !byte	4
     !text	"fill"
 FILL
-    lda	LSB + 2, x
-    tay
-    lda	LSB + 1, x
-    sta	.fdst
-    lda	MSB + 1, x
-    sta	.fdst + 1
     lda	LSB, x
+    tay
+    lda	LSB + 2, x
+    sta	.fdst
+    lda	MSB + 2, x
+    sta	.fdst + 1
+    lda	LSB + 1, x
     eor	#$ff
     sta	TMP
-    lda	MSB, x
+    lda	MSB + 1, x
     eor	#$ff
     sta	TMP + 1
     inx

@@ -178,7 +178,7 @@ The following words use double-cell integers. On the stack, the cell containing 
 \item[c@ ( address -- value )] Fetch 8-bit value from address.
 \item[cell+ ( n -- n+2 )] Adds the cell size (which is 2).
 \item[cells ( n -- n*2 )] Multiplies with the cell size (which is 2).
-\item[fill ( byte addr len -- )] Fill range [addr, len + addr) with byte value.
+\item[fill ( addr len char -- )] Fill range [addr, len + addr) with char.
 \item[cmove ( src dst len -- )]
 Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to emory beginning at \texttt{dst}. The copy begins at src and continues towards high memory.
 \item[cmove$>$ ( src dst len -- )]

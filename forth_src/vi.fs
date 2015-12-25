@@ -101,7 +101,7 @@ then ;
 
 : do-load
 rom-kernal
-0 bufstart 400 fill
+bufstart 400 0 fill
 bufstart loadb
 
 if \ file error?
@@ -127,7 +127,7 @@ homepos @
 drop ;
 
 : clear-status ( -- )
-bl status-pos 18 fill ;
+status-pos 18 bl fill ;
 
 : set-status ( c -- )
 clear-status status-pos c! ;
@@ -147,7 +147,7 @@ d021 c@
 2 d021 c!
 a d020 c!
 1 286 c!
-1 d800 400 fill ;
+d800 400 1 fill ;
 
 : cleanup ( bordercolor bgcolor cursorcolor -- )
 0 28a c! \ default key repeat
@@ -248,7 +248,7 @@ editpos c@ space= 0= and ;
 xr ! yr ! e50c sys ;
 
 : refresh-line
-20 cury @ 28 * 400 + 28 fill
+cury @ 28 * 400 + 28 bl fill
 0 cury @ setcur
 curlinestart @ print-line drop ;
 
@@ -335,7 +335,7 @@ cur-down
 editpos = if 2drop drop exit then
 sol
 linelen if
-20 editpos 1- c! \ cr => space
+bl editpos 1- c! \ cr => space
 else nipchar then
 
 curlinestart ! curx ! cury ! ;
@@ -370,7 +370,7 @@ curx @ linelen 1- = if
 force-cur-right else cur-right then ;
 
 : insert-handler
-	dup a0 = if drop 20 then \ shift space => space
+	dup a0 = if drop bl then \ shift space => space
 
 	dup
 	case

@@ -15,8 +15,8 @@ code lores
 ;code
 
 : clrcol ( fgbgcol -- )
-colbase 3e8 fill
-0 bmpbase 1f40 fill ;
+colbase 3e8 rot fill
+bmpbase 1f40 0 fill ;
 
 : blkcol ( col row c -- )
 -rot 28 * + colbase + c! ;
