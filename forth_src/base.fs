@@ -10,9 +10,6 @@
 [ ' literal compile, ] ;
 : [char] immediate key 
 [ ' literal compile, ] ;
-: if immediate no-tce
-['] 0branch compile, 
-here 0 , ;
 : then immediate no-tce
 here swap ! ;
 : else immediate jmp, here 0 ,
@@ -138,7 +135,7 @@ lda,# 100/ ldy,#
 : spaces ( n -- )
 begin ?dup while space 1- repeat ;
 
-0 value 0 1 value 1
+1 value 1
 8b value zptmp
 8d value zptmp2
 9e value zptmp3

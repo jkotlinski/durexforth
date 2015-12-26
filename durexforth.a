@@ -454,9 +454,18 @@ COMPILE_RAM
     +BACKLINK
     !byte 4
     !text	"here"
+HERE
 HERE_LSB = * + 1
 HERE_MSB = * + 3
     +VALUE	_LATEST + 2
+
+    +BACKLINK
+    !byte 1
+    !text	"0"
+ZERO
+    lda	#0
+    tay
+    jmp pushya
 
 ; ------------ i/o
 
@@ -1401,6 +1410,16 @@ HIDDEN
     lda #0
     sta MSB,x
     rts
+
+    +BACKLINK
+    !byte 2 | F_IMMED | F_NO_TAIL_CALL_ELIMINATION
+    !text	"if"
+    jsr LIT
+    !word ZBRANCH
+    jsr COMPILE_COMMA
+    jsr HERE
+    jsr ZERO
+    jmp COMMA
 
 ; -----------
 
