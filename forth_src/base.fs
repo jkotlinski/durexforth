@@ -144,8 +144,8 @@ state if
 postpone literal postpone (to)
 else (to) then ;
 
-: hex 10 to base ;
-: decimal a to base ;
+: hex 10 base ! ;
+: decimal a base ! ;
 
 : 2drop ( a b -- ) immediate no-tce
 postpone drop postpone drop ;
@@ -254,7 +254,7 @@ r> 0< if swap negate swap then ;
 : within ( test low high -- flag )
 over - >r - r> u< ;
 
-: u. 0 >r begin base /mod swap
+: u. 0 >r begin base @ /mod swap
 dup a < if 7 - then 37 + >r
 ?dup 0= until
 begin r> ?dup while emit repeat space ;
