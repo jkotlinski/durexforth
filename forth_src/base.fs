@@ -269,6 +269,12 @@ then u. ;
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
+: abort" immediate no-tce
+postpone if
+postpone ."
+postpone abort
+postpone then ;
+
 code sei sei, ;code
 code cli cli, ;code
 

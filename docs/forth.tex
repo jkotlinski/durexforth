@@ -335,7 +335,7 @@ endcase
 \item[key ( -- n )] Reads a character from current input (can be keyboard, disk or RAM).
 \item[key? ( -- flag )] If a character is available for \texttt{key}, return true. Otherwise, return false.
 
-\item[>in ( -- addr)] Gives the address of a cell containing the offset in characters from the start of the input buffer to the start of the parse area.
+\item[$>$in ( -- addr)] Gives the address of a cell containing the offset in characters from the start of the input buffer to the start of the parse area.
 
 \item[source ( -- caddr u)] Gives the address of, and number of characters in, the input buffer.
 
@@ -349,6 +349,10 @@ interpret from \texttt{c000}. The string to interpret
 must be terminated with the bytes \texttt{20 00}.
 
 \item[abort] Empties the data stack and performs \texttt{quit}.
+
+\item[abort" ccc" ( f -- ) ] If \texttt{f} is true, print \texttt{ccc} and abort.
+
+    Typical use: \texttt{: x ... test abort" error" ... ;}
 
 \item[quit] Enters an endless loop where DurexForth interprets Forth commands. It is named "quit" since it can be used to quit a program.
 
