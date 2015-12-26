@@ -10,8 +10,6 @@
 [ ' literal compile, ] ;
 : [char] immediate key 
 [ ' literal compile, ] ;
-: then immediate no-tce
-here swap ! ;
 : else immediate jmp, here 0 ,
 swap here swap ! ;
 : postpone immediate

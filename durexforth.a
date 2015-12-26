@@ -1421,6 +1421,13 @@ HIDDEN
     jsr ZERO
     jmp COMMA
 
+    +BACKLINK
+    !byte 4 | F_IMMED | F_NO_TAIL_CALL_ELIMINATION
+    !text	"then"
+    jsr HERE
+    jsr SWAP
+    jmp STORE
+
 ; -----------
 
 !src "disk.a"
