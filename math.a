@@ -1,6 +1,7 @@
     +BACKLINK
     !byte	2
     !text	"u<"
+U_LESS
     ldy #0
     lda	MSB, x
     cmp	MSB + 1, x
@@ -18,11 +19,10 @@
     sty	LSB, x
     rts
 
-; -
     +BACKLINK
     !byte	1
     !text	"-"
-SUB
+MINUS
     lda	LSB + 1, x
     sec
     sbc LSB, x

@@ -251,8 +251,6 @@ r> 0< if swap negate swap then ;
 2dup < if swap then drop ;
 : min ( a b - c )
 2dup > if swap then drop ;
-: within ( test low high -- flag )
-over - >r - r> u< ;
 
 : u. 0 >r begin base @ /mod swap
 dup a < if 7 - then 37 + >r

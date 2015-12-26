@@ -1281,6 +1281,7 @@ IMMED
     +BACKLINK
     !byte	2 | F_NO_TAIL_CALL_ELIMINATION
     !text	"r>"
+R_TO
     pla
     sta TMP
     pla
@@ -1299,6 +1300,7 @@ IMMED
     +BACKLINK
     !byte	2 | F_NO_TAIL_CALL_ELIMINATION
     !text	">r"
+TO_R
     pla
     sta TMP
     pla
@@ -1432,6 +1434,17 @@ HIDDEN
     !byte 5 | F_IMMED
     !text	"begin"
     jmp HERE
+
+    +BACKLINK
+    !byte 6
+    !text	"within"
+WITHIN ; ( test low high -- flag )
+    jsr OVER
+    jsr MINUS
+    jsr TO_R
+    jsr MINUS
+    jsr R_TO
+    jmp U_LESS
 
 ; -----------
 
