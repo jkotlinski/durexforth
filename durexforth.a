@@ -1428,6 +1428,11 @@ HIDDEN
     jsr SWAP
     jmp STORE
 
+    +BACKLINK
+    !byte 5 | F_IMMED
+    !text	"begin"
+    jmp HERE
+
 ; -----------
 
 !src "disk.a"

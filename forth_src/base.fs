@@ -16,7 +16,6 @@ swap here swap ! ;
 loc dup >cfa swap 2+ c@ 80 and 0= if
 [ ' literal compile, ] ['] compile, then
 compile, ;
-: begin immediate here ;
 : until immediate no-tce 
 postpone 0branch , ;
 : again immediate jmp, , ;
