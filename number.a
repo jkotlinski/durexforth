@@ -39,7 +39,7 @@ INVERT
     !text "negate"
 NEGATE
     jsr INVERT
-    jmp INCR
+    jmp ONEPLUS
 
     +BACKLINK
     !byte 4

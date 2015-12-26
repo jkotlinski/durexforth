@@ -22,3 +22,26 @@ CHAR_TO_LOWERCASE ; ( char -- char )
     !byte 32
     jmp MINUS
 +   rts
+
+STRING_TO_LOWERCASE ; ( str -- str )
+    jsr DUP ; str addr
+    jsr DUP
+    jsr FETCHBYTE ; str addr len
+.loopstart
+    jsr DUP
+    jsr ZBRANCH
+    !word .loopend
+    jsr SWAP
+    jsr ONEPLUS
+    jsr DUP
+    jsr FETCHBYTE
+    jsr CHAR_TO_LOWERCASE
+    jsr OVER
+    jsr STOREBYTE
+    jsr SWAP
+    jsr ONEMINUS
+    jmp .loopstart
+.loopend
+    inx
+    inx
+    rts

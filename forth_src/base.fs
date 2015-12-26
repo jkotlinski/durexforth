@@ -283,12 +283,6 @@ s" sys" load
 .( debug..)
 s" debug" load
 
-: lower ( str -- str )
-dup dup c@ begin ( str addr len )
-?dup while swap 1+ 
-dup c@ dup emit tolower over c!
-swap 1- repeat drop ;
-
 .( ls..)
 s" ls" load
 .( gfx..)

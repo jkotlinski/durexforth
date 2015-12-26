@@ -239,7 +239,7 @@ OVER
     +BACKLINK
     !byte	2
     !text	"1+"
-INCR
+ONEPLUS
     inc LSB, x
     bne +
     inc MSB, x
@@ -249,7 +249,7 @@ INCR
     +BACKLINK
     !byte	2
     !text	"1-"
-DECR
+ONEMINUS
     lda LSB, x
     bne +
     dec MSB, x
@@ -681,6 +681,8 @@ WORD
     !byte	4
     !text	"find"
 FIND
+    jsr STRING_TO_LOWERCASE
+
     txa
     pha
 
