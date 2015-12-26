@@ -214,6 +214,8 @@ here tuck + to here ;
 
 code 0< sp1 lda,x 80 and,# +branch beq,
 ff lda,# :+ sp0 sta,x sp1 sta,x ;code
+
+\ from FIG UK...
 : s>d dup 0< ;
 : ?negate 0< if negate then ;
 : abs dup ?negate ;
@@ -223,27 +225,27 @@ ff lda,# :+ sp0 sta,x sp1 sta,x ;code
 : m* 2dup xor >r >r abs r> 
 abs um* r> ?dnegate ;
 : * m* drop ;
+\ ...from FIG UK
 
-: sm/rem 
-2dup xor >r
-over >r
-abs >r dabs
-r> um/mod swap
-r> ?negate
-swap r> ?negate ;
-
-: fm/mod
+: fm/mod \ from Gforth
 dup >r
 dup 0< if negate >r dnegate r> then
 over 0< if tuck + swap then
 um/mod
 r> 0< if swap negate swap then ;
 
+\ from FIG UK...
+: sm/rem 
+2dup xor >r over >r abs >r dabs
+r> um/mod swap r> ?negate
+swap r> ?negate ;
 : /mod >r s>d r> fm/mod ;
 : / /mod nip ;
 : mod /mod drop ;
 : */mod >r m* r> fm/mod ;
 : */ */mod nip ;
+\ ...from FIG UK
+
 : < - 0< ;
 : > swap < ;
 
