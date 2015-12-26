@@ -211,6 +211,7 @@ here tuck + to here ;
 : cells 2* ;
 : cell+ 2+ ;
 : variable 2 allot value ;
+: environment? 2drop 0 ;
 
 code 0< sp1 lda,x 80 and,# +branch beq,
 ff lda,# :+ sp0 sta,x sp1 sta,x ;code
