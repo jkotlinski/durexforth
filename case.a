@@ -1,0 +1,27 @@
+    +BACKLINK
+    !byte 7
+    !text	"tolower"
+TOLOWER ; ( char -- char )
+    jsr DUP
+    jsr LITC
+    !byte 'a' + $80
+    jsr LITC
+    !byte 'z' + $81
+    jsr WITHIN
+    jsr ZBRANCH
+    !word +
+    jsr LITC
+    !byte $80
+    jmp MINUS
++   jsr DUP
+    jsr LITC
+    !byte 'A'
+    jsr LITC
+    !byte 'Z' + 1
+    jsr WITHIN
+    jsr ZBRANCH
+    !word +
+    jsr LITC
+    !byte 32
+    jmp MINUS
++   rts

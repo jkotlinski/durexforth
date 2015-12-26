@@ -260,6 +260,7 @@ DECR
     +BACKLINK
     !byte	1
     !text	"+"
+PLUS
     lda	LSB, x
     clc
     adc LSB + 1, x
@@ -1448,6 +1449,7 @@ WITHIN ; ( test low high -- flag )
 
 ; -----------
 
+!src "case.a"
 !src "disk.a"
 
 ; LATEST - points to the most recently defined dictionary word.
