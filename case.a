@@ -1,7 +1,4 @@
-    +BACKLINK
-    !byte 7
-    !text	"tolower"
-TOLOWER ; ( char -- char )
+CHAR_TO_LOWERCASE ; ( char -- char )
     jsr DUP
     jsr LITC
     !byte 'a' + $80
