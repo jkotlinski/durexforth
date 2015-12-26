@@ -1072,6 +1072,7 @@ compile_a
     !text	"header"
 HEADER
     jsr	WORD
+    jsr STRING_TO_LOWERCASE
 
     ; store link in header. TMP = dst
     lda	HERE_LSB
