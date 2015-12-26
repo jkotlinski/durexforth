@@ -218,5 +218,6 @@ Thanks to Christian Johansson and polluks for suggestions!
 
  * forth: added abort abort"
  * forth: use standard fill parameter order
+ * forth: made base a variable instead of a value
 
 Thanks to Christian Johansson for suggestions!
