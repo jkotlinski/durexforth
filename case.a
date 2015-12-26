@@ -20,30 +20,6 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-CHAR_TO_LOWERCASE ; ( char -- char )
-    jsr DUP
-    jsr LITC
-    !byte 'a' + $80
-    jsr LITC
-    !byte 'z' + $81
-    jsr WITHIN
-    jsr ZBRANCH
-    !word +
-    jsr LITC
-    !byte $80
-    jmp MINUS
-+   jsr DUP
-    jsr LITC
-    !byte 'A'
-    jsr LITC
-    !byte 'Z' + 1
-    jsr WITHIN
-    jsr ZBRANCH
-    !word +
-    jsr LITC
-    !byte 32
-    jmp MINUS
-+   rts
 
 STRING_TO_LOWERCASE ; ( str -- str )
     jsr DUP ; str addr
@@ -57,7 +33,30 @@ STRING_TO_LOWERCASE ; ( str -- str )
     jsr ONEPLUS
     jsr DUP
     jsr FETCHBYTE
-    jsr CHAR_TO_LOWERCASE
+
+    jsr DUP
+    jsr LITC
+    !byte 'a' + $80
+    jsr LITC
+    !byte 'z' + $81
+    jsr WITHIN
+    jsr ZBRANCH
+    !word +
+    jsr LITC
+    !byte $80
+    jsr MINUS
++   jsr DUP
+    jsr LITC
+    !byte 'A'
+    jsr LITC
+    !byte 'Z' + 1
+    jsr WITHIN
+    jsr ZBRANCH
+    !word +
+    jsr LITC
+    !byte 32
+    jsr MINUS
++
     jsr OVER
     jsr STOREBYTE
     jsr SWAP
