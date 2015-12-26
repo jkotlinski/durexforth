@@ -1,4 +1,4 @@
-d value CR
+d value lf
 : clrscr e544 sys ;
 
 6001 value bufstart
@@ -107,7 +107,7 @@ bufstart loadb
 if \ file error?
 bufstart 1+ eof !
 0 dup dup eof @ c! curx ! cury !
-CR bufstart c!
+lf bufstart c!
 exit then
 
 ae @ eof !
@@ -170,7 +170,7 @@ line-dirty!
 then
 fit-curx-in-linelen ;
 
-: cr= CR = ;
+: cr= lf = ;
 : eol= dup 0= swap cr= or ;
 : space= dup cr= swap bl = or ;
 
@@ -347,7 +347,7 @@ then ;
 : del-char force-cur-right backspace ;
 
 : insert-char
-	dup CR <> linelen 26 > and if drop exit then
+	dup lf <> linelen 26 > and if drop exit then
 
 	editpos
 	editpos 1+
@@ -360,10 +360,10 @@ then ;
     line-dirty!
 ;
 
-9d value LEFT
-11 value DOWN
-91 value UP
-1d value RIGHT
+9d value left
+11 value down
+91 value up
+1d value right
 
 : insert-right
 curx @ linelen 1- = if
@@ -376,13 +376,13 @@ force-cur-right else cur-right then ;
 	case
     3 of drop endof \ run/stop
 	5f of insert-stop drop endof \ leftarrow
-	LEFT of cur-left drop endof
-	DOWN of cur-down drop endof
-	UP of cur-up drop endof
-	RIGHT of insert-right drop endof
+	left of cur-left drop endof
+	down of cur-down drop endof
+	up of cur-up drop endof
+	right of insert-right drop endof
 	14 of backspace drop endof \ inst
 	94 of del-char drop endof \ del
-	CR of insert-char cur-down sol show-page endof
+	lf of insert-char cur-down sol show-page endof
 	insert-char
 	endcase
 ;
@@ -493,7 +493,7 @@ endcase clear-status ;
 	dup
 	filename swap filename-len c@ cmove
 	filename-len c@ +
-	CR swap c!
+	lf swap c!
 
 	drivebuf filename-len c@ 4 +
     f openw f closew
@@ -508,7 +508,7 @@ endcase clear-status ;
 	dup
 	filename swap filename-len c@ cmove
 	filename-len c@ + \ filename ok
-	CR swap c!
+	lf swap c!
 
 	drivebuf filename-len c@ 2 * 5 +
     f openw f closew
@@ -560,7 +560,7 @@ saveb
 	[char] w emit
 	key
 	case
-	CR of write-file endof
+	lf of write-file endof
 	[char] ! of save-as endof
 	endcase
 ;
@@ -572,7 +572,7 @@ saveb
 	0 ( count )
 	begin
 		key dup
-		CR <> if
+		lf <> if
 			( count key )
 			dup emit
 			over search-buf + ( count key dst )
@@ -592,7 +592,7 @@ saveb
 ;
 
 : open-line
-sol CR insert-char sol
+sol lf insert-char sol
 insert-start
 1 to need-refresh ;
 
@@ -621,7 +621,7 @@ cur-down
 editpos = if
 eol
 force-cur-right
-CR insert-char
+lf insert-char
 cur-down
 then ;
 
@@ -646,10 +646,10 @@ key X c, ' backspace ,
 key b c, ' word-back ,
 key w c, ' word-fwd ,
 key d c, ' del ,
-LEFT c, ' cur-left ,
-RIGHT c, ' cur-right ,
-UP c, ' cur-up ,
-DOWN c, ' cur-down ,
+left c, ' cur-left ,
+right c, ' cur-right ,
+up c, ' cur-up ,
+down c, ' cur-down ,
 key h c, ' cur-left ,
 key l c, ' cur-right ,
 key k c, ' cur-up ,
@@ -793,5 +793,5 @@ main-loop
 cleanup ;
 
 loc vi
-hide-to CR
+hide-to lf
 hidden
