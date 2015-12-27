@@ -129,8 +129,6 @@ lda,# 100/ ldy,#
 
 20 value bl
 : space bl emit ;
-: spaces ( n -- )
-begin ?dup while space 1- repeat ;
 
 1 value 1
 8b value zptmp
@@ -297,6 +295,8 @@ s" gfx" load
 \ s" turtle" load
 .( vi..)
 s" vi" load
+
+: spaces ( n -- ) 0 do space loop ;
 
 : scratch ( strptr strlen -- )
 2dup here 2+ swap cmove>
