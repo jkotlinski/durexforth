@@ -1443,6 +1443,16 @@ HIDDEN
     jmp HERE
 
     +BACKLINK
+    !byte 5 | F_IMMED
+    !text	"while"
+    jsr LIT
+    !word ZBRANCH
+    jsr COMPILE_COMMA
+    jsr HERE
+    jsr ZERO
+    jmp COMMA
+
+    +BACKLINK
     !byte 6
     !text	"within"
 WITHIN ; ( test low high -- flag )
@@ -1452,6 +1462,21 @@ WITHIN ; ( test low high -- flag )
     jsr MINUS
     jsr R_TO
     jmp U_LESS
+
+COMPILE_JMP
+    jsr LITC
+    !byte OP_JMP
+    jmp CCOMMA
+
+    +BACKLINK
+    !byte 6 | F_IMMED | F_NO_TAIL_CALL_ELIMINATION
+    !text	"repeat"
+    jsr COMPILE_JMP
+    jsr SWAP
+    jsr COMMA
+    jsr HERE
+    jsr SWAP
+    jmp STORE
 
 ; -----------
 
