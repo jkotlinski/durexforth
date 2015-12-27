@@ -1,6 +1,6 @@
 C1541   = c1541
 AS = acme
-TAG = `git describe --abbrev=0`
+TAG = `git describe --tags --abbrev=0`
 
 # generic rules
 
