@@ -20,49 +20,35 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; TODO: optimize
 STRING_TO_LOWERCASE ; ( str -- str )
-    jsr DUP ; str addr
-    jsr DUP
-    jsr FETCHBYTE ; str addr len
+    lda LSB,x
+    sta TMP
+    lda MSB,x
+    sta TMP+1
+    ldy #0
+    lda (TMP),y
+    tay
 .loopstart
-    jsr DUP
-    jsr ZBRANCH
-    !word .loopend
-    jsr SWAP
-    jsr ONEPLUS
-    jsr DUP
-    jsr FETCHBYTE
+    beq .loopend 
 
-    jsr DUP
-    jsr LITC
-    !byte 'a' + $80
-    jsr LITC
-    !byte 'z' + $81
-    jsr WITHIN
-    jsr ZBRANCH
-    !word +
-    jsr LITC
-    !byte $80
-    jsr MINUS
-+   jsr DUP
-    jsr LITC
-    !byte 'A'
-    jsr LITC
-    !byte 'Z' + 1
-    jsr WITHIN
-    jsr ZBRANCH
-    !word +
-    jsr LITC
-    !byte 32
-    jsr MINUS
+    lda (TMP),y
+    sec
+    sbc #'a' + $80 
+    cmp #'z' - 'a'
+    bcs +
+    adc #'a'
+    sta (TMP),y
 +
-    jsr OVER
-    jsr STOREBYTE
-    jsr SWAP
-    jsr ONEMINUS
+    lda (TMP),y
+    sec
+    sbc #'A'
+    cmp #'z' - 'a'
+    bcs +
+    adc #'a'
+    sta (TMP),y
++   
+    dey
     jmp .loopstart
+
 .loopend
-    inx
-    inx
     rts
