@@ -140,6 +140,8 @@ restore_handler
 !set LINK = 0
 
 !macro BACKLINK {
+    ; it's tempting to add the string as a macro parameter,
+    ; but this does not seem to be supported by ACME.
     !word	LINK
     !set	LINK = * - 2
 }
