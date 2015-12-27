@@ -179,6 +179,20 @@ pushya
     !text	"sp0"
     +VALUE	LSB
 
+    +BACKLINK
+    !byte 3
+    !text	"tib" ; variable, tib address
+    +VALUE	_TIB
+_TIB
+    !word TIB
+
+    +BACKLINK
+    !byte 4
+    !text	"#tib"
+    +VALUE	TIB_SIZE ; variable, number of chars in tib
+TIB_SIZE
+    !word 0
+
 ; DROP
     +BACKLINK
     !byte	4 | F_IMMED | F_NO_TAIL_CALL_ELIMINATION

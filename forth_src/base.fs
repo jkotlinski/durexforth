@@ -50,9 +50,7 @@ begin ?dup while
 swap dup c@ emit 1+ swap 1-
 repeat drop ;
 
-: source ( -- caddr u ) 200 dup
-begin dup c@ while 1+ repeat
-over - ;
+: source ( -- caddr u ) tib @ #tib @ ;
 
 : ." immediate postpone s" postpone type ;
 : .( begin char dup [char] ) <>
