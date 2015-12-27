@@ -1462,6 +1462,21 @@ WITHIN ; ( test low high -- flag )
     jsr R_TO
     jmp U_LESS
 
+COMPILE_JMP
+    jsr LITC
+    !byte OP_JMP
+    jmp CCOMMA
+
+    +BACKLINK
+    !byte 6 | F_IMMED | F_NO_TAIL_CALL_ELIMINATION
+    !text	"repeat"
+    jsr COMPILE_JMP
+    jsr SWAP
+    jsr COMMA
+    jsr HERE
+    jsr SWAP
+    jmp STORE
+
 ; -----------
 
 !src "lowercase.a"

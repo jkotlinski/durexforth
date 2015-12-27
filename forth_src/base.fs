@@ -19,8 +19,6 @@ compile, ;
 : until immediate no-tce 
 postpone 0branch , ;
 : again immediate jmp, , ;
-: repeat immediate no-tce
-jmp, swap , here swap ! ;
 : recurse immediate latest @ >cfa compile, ;
 : ( immediate no-tce 
 begin key [char] ) = until ;
