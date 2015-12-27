@@ -520,15 +520,15 @@ tmp_x
     +BACKLINK
     !byte	4
     !text	"char"
--   jsr GET_CHAR_NONBLOCKING
-    ora #0
-    beq -
+    jsr GET_CHAR_BLOCKING
     ldy #0
     jmp pushya
 
-GET_CHAR_NONBLOCKING
+GET_CHAR_BLOCKING
     stx	tmp_x
-    jsr	PULL_KEY ; read from disk/ram/console
+-   jsr	PULL_KEY ; read from disk/ram/console
+    ora #0
+    beq -
 
     ; pha ; debug
     ; jsr PUTCHR
@@ -644,9 +644,7 @@ WORD
     sta	WORD_BUFFER_LENGTH
     
 .get_char
--   jsr	GET_CHAR_NONBLOCKING
-    ora #0
-    beq -
+    jsr	GET_CHAR_BLOCKING
 
     cmp #K_RETURN
     beq .word_end
