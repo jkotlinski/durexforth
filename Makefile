@@ -6,7 +6,7 @@ TAG = `git describe --tags --abbrev=0`
 
 all:	durexforth.d64
 
-durexforth.prg: durexforth.a number.a math.a cmove.a disk.a case.a
+durexforth.prg: durexforth.a number.a math.a cmove.a disk.a lowercase.a
 	@$(AS) durexforth.a
 
 FORTHLIST=base debug vi asm gfx gfxdemo rnd sin ls turtle fractals purge-hidden sprite doloop sys float labels mml mmldemo sid spritedemo test core ttester

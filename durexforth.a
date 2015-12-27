@@ -1452,7 +1452,7 @@ WITHIN ; ( test low high -- flag )
 
 ; -----------
 
-!src "case.a"
+!src "lowercase.a"
 !src "disk.a"
 
 ; LATEST - points to the most recently defined dictionary word.
