@@ -216,7 +216,7 @@ Thanks to Christian Johansson and polluks for suggestions!
 
 ?-?-?: v1.4.6
 
- * forth: made words case insensitive
+ * forth: made word finding + numbers case insensitive
  * forth: added abort abort"
  * forth: use standard fill parameter order
  * forth: made base a variable instead of a value
