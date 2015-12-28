@@ -252,7 +252,7 @@ swap r> ?negate ;
 : min ( a b - c )
 2dup > if swap then drop ;
 
-: u. 0 >r begin base @ /mod swap
+: u. 0 >r begin 0 base @ um/mod swap
 dup a < if 7 - then 37 + >r
 ?dup 0= until
 begin r> ?dup while emit repeat space ;
