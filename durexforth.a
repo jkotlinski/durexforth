@@ -566,16 +566,13 @@ GET_CHAR_BLOCKING
 ; Reads a key, sources are prioritized as follows:
 ;  1. Streaming file from disk
 ;  2. Compile RAM area (COMPILE_RAM)
-;  3. Console input
 PULL_KEY ; wastes x!!!
     lda	SOURCE_ID
     bne	.get_char_from_disk
 
-    ; Compiling from RAM?
-    lda	COMPILE_RAM + 1
-    beq	.read_from_console
-    ; yes - get char from RAM area
+    ; Compiling from RAM.
     inc $d020
+    lda	COMPILE_RAM + 1
     sta	TMP + 1
     lda	COMPILE_RAM
     sta	TMP
@@ -590,8 +587,7 @@ PULL_KEY ; wastes x!!!
 +   rts
 .ram_compile_done
     sta	COMPILE_RAM + 1  ; Turns off RAM compilation.
-.read_from_console
-    jmp	GETCHR
+    jmp	REFILL
 
 .get_char_from_disk
     inc $d020
