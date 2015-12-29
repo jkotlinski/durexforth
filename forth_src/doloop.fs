@@ -11,7 +11,7 @@ zptmp lda, pha,
 ;code
 
 \ leave stack
-16 allot value lstk
+variable lstk 14 allot 
 variable lsp lstk lsp !
 : >l ( n -- ) lsp @ ! 2 lsp +! ;
 

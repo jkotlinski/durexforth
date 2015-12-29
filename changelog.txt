@@ -218,10 +218,11 @@ Thanks to Christian Johansson and polluks for suggestions!
 
  * bugfix: v1.4.5 broke u. for negative numbers
  * forth: made word finding + numbers case insensitive
- * forth: added char abort abort"
- * forth: made key and key? work only with keyboard
- * forth: made quit reset input to keyboard
- * forth: fill now has standard parameter order
+ * forth: added char, abort, abort"
+ * forth: key, key? now work only with keyboard
+ * forth: made quit reset all inputs and fall back to keyboard
+ * forth: fill, allot now have standard parameter order
  * forth: made base a variable instead of a value
+ * forth: changed variable; data field is now after code field
 
 Thanks to Christian Johansson for suggestions!

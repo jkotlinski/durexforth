@@ -18,9 +18,9 @@ variable line-dirty
 
 : line-dirty! 1 line-dirty c! ;
 
-10 allot dup
-value filename-len
-1+ value filename
+variable filename-len e allot
+variable filename
+filename-len 1+ filename !
 
 : editpos
 curlinestart @ curx @ + ;
@@ -394,7 +394,7 @@ editpos c@ eol= if exit then
 editpos c@ del-char space= if exit then
 again ;
 
-28 allot value clipboard
+variable clipboard 26 allot
 variable clipboard-count
 0 clipboard-count !
 
@@ -420,7 +420,7 @@ key case
 [char] d of del-line endof
 endcase clear-status ;
 
-10 allot value search-buf
+variable search-buf e allot 
 
 : are-equal ( len a1 a2 -- equal? )
 	rot ( a1 a2 len )
@@ -482,7 +482,7 @@ endcase clear-status ;
 	again
 ;
 
-18 allot value drivebuf
+variable drivebuf 16 allot 
 
 : do-backup
 	\ scratch old backup

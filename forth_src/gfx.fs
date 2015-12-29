@@ -593,7 +593,8 @@ hide addr
 0 getbit getbit getbit getbit
 getbit getbit getbit getbit over c! 1+
 char drop ; \ skip cr
-: defchar 8 allot dup value
+: defchar variable 6 allot
+latest @ >cfa execute
 getrow getrow getrow getrow
 getrow getrow getrow getrow drop ;
 : drawchar ( col row srcaddr -- )

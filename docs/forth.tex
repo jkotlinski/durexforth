@@ -195,6 +195,7 @@ Like \texttt{cmove}, except that the copy proceeds from higher to lower memory.
 \item[;code] End assembler.
 \item[, ( n -- )] Write word on stack to \texttt{here} position and increase \texttt{here} by 2.
 \item[c, ( n -- )] Write byte on stack to \texttt{here} position and increase \texttt{here} by 1.
+\item[allot ( n -- )] Add n bytes to the body of the most recently defined word.
 \item[literal ( n -- )] Compile a value from the stack as a literal value. Typical use: \texttt{: x ... [ a b * ] literal ... ;}
 \item[[char{]} c] Compile character \texttt{c} as a literal value.
 \item[[ ( -- )] Leave compile mode. Execute the following words immediately instead of compiling them.
@@ -237,23 +238,6 @@ Variables are faster to write to than values.
 \item[bar @] Fetch value of bar.
 \item[1 bar !] Set bar to 1.
 \end{description}
-
-\subsection{Arrays}
-
-\begin{description}
-\item[10 allot value foo] Allocate 10 bytes to array foo.
-\item[1 foo 2 + !] Store 1 in position 2 of foo.
-\item[foo dump] See contents of foo.
-\end{description}
-
-It is also possible to build arrays using \texttt{create}. The initialization is easier, but access is slightly different:
-
-\begin{verbatim}
-create 2powtable
-1 c, 2 c, 4 c, 8 c,
-10 c, 20 c, 40 c, 80 c,
-: 2pow ( n -- 2**n ) ['] 2powtable + c@ ;
-\end{verbatim}
 
 \section{Control Flow}
 

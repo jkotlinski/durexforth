@@ -1,4 +1,4 @@
-15 allot value sid
+variable sid 13 allot
 variable voice
 
 \ creates array of 4 bytes.

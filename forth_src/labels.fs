@@ -19,8 +19,8 @@ dey, 1 @@ bne, ;code )
 
 ( refs and locs are arrays of
 2-byte address + 1-byte index )
-18 allot value refs \ 8 refs
-f allot value locs \ 5 locs
+variable refs 16 allot \ 8 refs
+variable locs d allot \ 5 locs
 variable locp variable refp
 
 locs locp ! refs refp ! \ init

@@ -198,12 +198,14 @@ begin ?dup while swap 2* swap 1- repeat ;
 : rshift ( x1 u -- x2 )
 begin ?dup while swap 2/ swap 1- repeat ;
 
-: allot ( n -- prev-here )
-here tuck + to here ;
+: allot ( n -- ) here + to here ;
 
 : cells 2* ;
 : cell+ 2+ ;
-: variable 2 allot value ;
+: variable 
+0 value
+here latest @ >cfa 1+ (to)
+2 allot ;
 : environment? 2drop 0 ;
 
 code 0< sp1 lda,x 80 and,# +branch beq,
