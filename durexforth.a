@@ -884,10 +884,7 @@ INTERPRET
     cpx #X_INIT+1
     bpl .on_stack_underflow
 
-    lda #0
-    ; sta PREVENT_BASIC_GETLINE
     jsr	WORD ; push string to stack
-    ; inc PREVENT_BASIC_GETLINE
 
     +_DUP
     jsr	FIND ; replace string with dictionary ptr
