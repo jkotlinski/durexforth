@@ -6,9 +6,9 @@
 : loc word find ;
 : ' loc >cfa ;
 : jmp, 4c c, ;
-: ['] immediate ' 
+: ['] immediate no-tce ' 
 [ ' literal compile, ] ;
-: [char] immediate char 
+: [char] immediate no-tce char 
 [ ' literal compile, ] ;
 : else immediate jmp, here 0 ,
 swap here swap ! ;

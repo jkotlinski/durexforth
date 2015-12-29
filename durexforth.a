@@ -844,7 +844,7 @@ EXECUTE
 !src "number.a"
 
     +BACKLINK
-    !byte 7 | F_IMMED
+    !byte 7 | F_IMMED | F_NO_TAIL_CALL_ELIMINATION
     !text "literal"
 LITERAL
     dex

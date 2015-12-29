@@ -216,6 +216,8 @@ Thanks to Christian Johansson and polluks for suggestions!
 
 ?-?-?: v1.4.6
 
+ * bugfix: disabled tail call elimination for literal ['] [char]
+           to avoid some crashes
  * bugfix: <, rshift, u. did not support negative numbers
  * forth: made word finding + numbers case insensitive
  * forth: renamed char to getc, and added a new char that works
