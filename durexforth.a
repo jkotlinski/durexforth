@@ -583,17 +583,21 @@ PULL_KEY ; wastes x!!!
     sta	TMP + 1
     lda	COMPILE_RAM
     sta	TMP
-    ldy #0
-    lda	(TMP), y
-    beq	.ram_compile_done
 
-    inc	COMPILE_RAM
-    bne	+
-    inc	COMPILE_RAM + 1
-+   rts
-.ram_compile_done
-    sta	COMPILE_RAM + 1  ; Turns off RAM compilation.
-    jmp	REFILL
+    inc COMPILE_RAM
+    bne +
+    inc COMPILE_RAM + 1
++
+    ; next char null terminator?
+    ldy #1
+    lda	(TMP), y
+    bne +
+    ; yes, stop reading from RAM.
+    sta COMPILE_RAM + 1
++   dey
+    ; return current char.
+    lda (TMP),y
+    rts
 
 .get_char_from_disk
     jsr	CHRIN
