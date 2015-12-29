@@ -244,7 +244,13 @@ swap r> ?negate ;
 : */ */mod nip ;
 \ ...from FIG UK
 
-: < - 0< ;
+code <
+0 ldy,# sec,
+sp0 1+ lda,x sp0 sbc,x 
+sp1 1+ lda,x sp1 sbc,x
++branch bvc, 80 eor,# :+ 
++branch bpl, dey, :+
+inx, sp0 sty,x sp1 sty,x ;code
 : > swap < ;
 
 : max ( a b - c )
