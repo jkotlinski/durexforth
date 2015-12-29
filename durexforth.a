@@ -539,7 +539,13 @@ tmp_x
     +BACKLINK
     !byte	4
     !text	"char"
-    jsr GET_CHAR_BLOCKING
+    lda TO_IN
+    cmp TIB_SIZE
+    bne +
+    jsr REFILL
++   ldy TO_IN
+    lda TIB,y
+    inc TO_IN
     ldy #0
     jmp pushya
 
