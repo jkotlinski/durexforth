@@ -652,6 +652,30 @@ PULL_KEY ; wastes x!!!
     +VALUE TO_IN
 TO_IN
     !word 0
+
+REFILL
+    ldy #0
+    sty TO_IN
+    sty TIB_SIZE
+.start
+    jsr GET_CHAR_BLOCKING
+    ldy TIB_SIZE
+    sta TIB,y
+    inc TIB_SIZE
+    cmp #K_RETURN
+    bne .start
+    rts
+
+GET_CHAR_FROM_TIB
+    lda TO_IN
+    cmp TIB_SIZE
+    bne +
+    jsr REFILL
++
+    ldy TO_IN
+    lda TIB,y
+    inc TO_IN
+    rts
     
 ; WORD ( -- strptr )
     +BACKLINK
@@ -663,7 +687,7 @@ WORD
     sta	WORD_BUFFER_LENGTH
     
 .get_char
-    jsr	GET_CHAR_BLOCKING
+    jsr GET_CHAR_FROM_TIB
 
     cmp #K_RETURN
     beq .word_end
