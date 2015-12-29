@@ -614,18 +614,21 @@ T{ -1 1ST +! 1ST @ -> 0 }T
 \ ------------------------------------------------------------------------
 TESTING CHAR [CHAR] [ ] BL S"
 
+d8 value X \ petscii
+c8 value H \ petscii
+
 T{ BL -> 20 }T
-T{ CHAR X -> 58 }T
-T{ CHAR HELLO -> 48 }T
+T{ CHAR X -> X }T
+T{ CHAR HELLO -> H }T
 T{ : GC1 [CHAR] X ; -> }T
 T{ : GC2 [CHAR] HELLO ; -> }T
-T{ GC1 -> 58 }T
-T{ GC2 -> 48 }T
+T{ GC1 -> X }T
+T{ GC2 -> H }T
 T{ : GC3 [ GC1 ] LITERAL ; -> }T
-T{ GC3 -> 58 }T
+T{ GC3 -> X }T
 T{ : GC4 S" XY" ; -> }T
 T{ GC4 SWAP DROP -> 2 }T
-T{ GC4 DROP DUP C@ SWAP CHAR+ C@ -> 58 59 }T
+T{ GC4 DROP DUP C@ SWAP CHAR+ C@ -> X X 1+ }T
 
 \ ------------------------------------------------------------------------
 TESTING ' ['] FIND EXECUTE IMMEDIATE COUNT LITERAL POSTPONE STATE
