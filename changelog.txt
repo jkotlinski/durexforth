@@ -218,7 +218,7 @@ Thanks to Christian Johansson and polluks for suggestions!
 
  * bugfix: <, rshift, u. did not support negative numbers
  * forth: made word finding + numbers case insensitive
- * forth: added char, abort, abort", 2@
+ * forth: added char, abort, abort", 2@, 2!
  * forth: key, key? now work only with keyboard
  * forth: made quit reset all inputs and fall back to keyboard
  * forth: fill, allot now have standard parameter order

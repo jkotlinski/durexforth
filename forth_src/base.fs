@@ -267,7 +267,10 @@ then u. ;
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
-: 2@ dup 2+ @ swap @ ;
+: 2@ ( addr -- x1 x2 )
+dup 2+ @ swap @ ;
+: 2! ( x1 x2 addr -- )
+swap over ! 2+ ! ;
 
 : abort" immediate no-tce
 postpone if
