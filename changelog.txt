@@ -217,6 +217,7 @@ Thanks to Christian Johansson and polluks for suggestions!
 ?-?-?: v1.4.6
 
  * bugfix: v1.4.5 broke u. for negative numbers
+ * bugfix: rshift didn't put a zero in MSB
  * forth: made word finding + numbers case insensitive
  * forth: added char, abort, abort"
  * forth: key, key? now work only with keyboard

@@ -196,7 +196,9 @@ inx, inx, ;code
 : lshift ( x1 u -- x2 )
 begin ?dup while swap 2* swap 1- repeat ;
 : rshift ( x1 u -- x2 )
-begin ?dup while swap 2/ swap 1- repeat ;
+begin ?dup while swap 
+0 2 um/mod nip 
+swap 1- repeat ;
 
 : allot ( n -- ) here + to here ;
 
