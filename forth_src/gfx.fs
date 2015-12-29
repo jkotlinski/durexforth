@@ -588,11 +588,11 @@ r> 1 c! cli drop ;
 hide addr
 
 : getbit
-2* key [char] 1 = if 1+ then ;
+2* char [char] 1 = if 1+ then ;
 : getrow ( dst -- dst )
 0 getbit getbit getbit getbit
 getbit getbit getbit getbit over c! 1+
-key drop ; \ skip cr
+char drop ; \ skip cr
 : defchar 8 allot dup value
 getrow getrow getrow getrow
 getrow getrow getrow getrow drop ;
