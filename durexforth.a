@@ -983,7 +983,7 @@ INTERPRET
     ; Resets some sensitive things, as part of error handling.
     ldx     #0
     stx     STATE
-    stx     TIB
+    stx     TIB_SIZE
     stx     TO_IN
     stx     SOURCE_ID
     stx     COMPILE_RAM + 1
