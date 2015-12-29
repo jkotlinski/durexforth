@@ -180,18 +180,19 @@ pushya
     +VALUE	LSB
 
     +BACKLINK
-    !byte 3
-    !text	"tib" ; variable, tib address
-    +VALUE	_TIB
-_TIB
-    !word TIB
-
-    +BACKLINK
-    !byte 4
-    !text	"#tib"
-    +VALUE	TIB_SIZE ; variable, number of chars in tib
-TIB_SIZE
-    !word 0
+    !byte 6
+    !text	"source"
+    dex
+    dex
+    lda #<TIB
+    sta LSB+1,x
+    sta MSB,x
+    lda #>TIB
+    sta MSB+1,x
+TIB_SIZE = * + 1
+    lda #0
+    sta LSB,x
+    rts
 
 ; DROP
     +BACKLINK
