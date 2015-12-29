@@ -180,6 +180,10 @@ The following words use double-cell integers. On the stack, the cell containing 
 \item[c@ ( address -- value )] Fetch 8-bit value from address.
 \item[cell+ ( n -- n+2 )] Adds the cell size (which is 2).
 \item[cells ( n -- n*2 )] Multiplies with the cell size (which is 2).
+\item[char+ ( n -- n+1 )] Adds the char size (which is 1).
+\item[align ( -- )] No-op, required by Forth 2012 standard.
+\item[aligned ( -- )] No-op, required by Forth 2012 standard.
+\item[chars ( -- )] No-op, required by Forth 2012 standard.
 \item[fill ( addr len char -- )] Fill range [addr, len + addr) with char.
 \item[cmove ( src dst len -- )]
 Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to emory beginning at \texttt{dst}. The copy begins at src and continues towards high memory.
