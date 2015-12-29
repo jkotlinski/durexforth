@@ -18,9 +18,9 @@ variable line-dirty
 
 : line-dirty! 1 line-dirty c! ;
 
-variable filename-len e allot
-variable filename
-filename-len 1+ filename !
+here dup 10 allot
+value filename-len
+1+ value filename
 
 : editpos
 curlinestart @ curx @ + ;
