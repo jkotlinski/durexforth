@@ -570,13 +570,11 @@ PULL_KEY ; wastes x!!!
     bne	.get_char_from_disk
 
     ; Compiling from RAM.
-    inc $d020
     lda	COMPILE_RAM + 1
     sta	TMP + 1
     lda	COMPILE_RAM
     sta	TMP
     ldy #0
-    dec $d020
     lda	(TMP), y
     beq	.ram_compile_done
 
@@ -589,7 +587,6 @@ PULL_KEY ; wastes x!!!
     jmp	REFILL
 
 .get_char_from_disk
-    inc $d020
     jsr	CHRIN
     pha
     jsr	READST
@@ -601,7 +598,6 @@ PULL_KEY ; wastes x!!!
     ldx SOURCE_ID
     jsr CHKIN
 +   pla
-    dec $d020
     rts
 
     +BACKLINK
@@ -648,12 +644,14 @@ REFILL
     rts
 
 .get_from_ram_or_disk
-    jsr GET_CHAR_BLOCKING
+    inc $d020
+-   jsr GET_CHAR_BLOCKING
     ldy TIB_SIZE
     sta TIB,y
     inc TIB_SIZE
     cmp #K_RETURN
-    bne .get_from_ram_or_disk
+    bne -
+    dec $d020
     rts
 
 GET_CHAR_FROM_TIB
