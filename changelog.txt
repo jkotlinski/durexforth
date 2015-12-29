@@ -216,6 +216,7 @@ Thanks to Christian Johansson and polluks for suggestions!
 
 ?-?-?: v1.4.6
 
+ * bugfix: v1.4.5 broke u. for negative numbers
  * forth: made word finding + numbers case insensitive
  * forth: added abort abort"
  * forth: use standard fill parameter order
