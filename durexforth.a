@@ -563,50 +563,6 @@ GET_CHAR_BLOCKING
     ldx tmp_x
     rts
 
-;    ; buffered key input
-;-
-;BASIC_INPUT_BUFFER_HAS_CONTENT = * + 1
-;    lda #0
-;    beq .get_new_line
-;    ldy TO_IN
-;    lda TIB, y
-;    beq +
-;    ; found buffered char, return it
-;    inc TO_IN ; advance >IN
-;    rts
-;+   
-;    lda TIB
-;    beq .get_new_line
-;
-;    lda #0
-;    sta BASIC_INPUT_BUFFER_HAS_CONTENT
-;    sta TO_IN
-;    lda #K_RETURN
-;    rts
-;
-;.get_new_line
-;    lda SOURCE_ID
-;    ora COMPILE_RAM + 1
-;PREVENT_BASIC_GETLINE = * + 1
-;    ora	#1
-;    bne	.unbuffered_key
-;
-;    ; Buffered line input.
-;    txa
-;    pha
-;    lda 1
-;    pha
-;    ora #3 ; Makes sure basic is switched in.
-;    sta 1
-;    jsr $a560 ; Input line into TIB.
-;    pla
-;    sta 1
-;    pla
-;    tax
-;
-;    inc BASIC_INPUT_BUFFER_HAS_CONTENT
-;    jmp -
-
 ; Reads a key, sources are prioritized as follows:
 ;  1. Streaming file from disk
 ;  2. Compile RAM area (COMPILE_RAM)
@@ -664,13 +620,45 @@ REFILL
     ldy #0
     sty TO_IN
     sty TIB_SIZE
-.start
+
+    lda SOURCE_ID
+    ora COMPILE_RAM + 1
+    bne	.get_from_ram_or_disk
+
+    ; BASIC getline.
+    txa
+    pha
+    lda 1
+    pha
+    ora #3 ; Makes sure basic is switched in.
+    sta 1
+    jsr $a560 ; Input line into TIB.
+    pla
+    sta 1
+    pla
+    tax
+
+    ; Set TIB_SIZE to number of chars fetched.
+    ldy #0
+-   lda TIB,y
+    beq +
+    iny
+    jmp -
++   
+    ; Append return.
+    lda #K_RETURN
+    sta TIB,y
+    iny
+    sty TIB_SIZE
+    rts
+
+.get_from_ram_or_disk
     jsr GET_CHAR_BLOCKING
     ldy TIB_SIZE
     sta TIB,y
     inc TIB_SIZE
     cmp #K_RETURN
-    bne .start
+    bne .get_from_ram_or_disk
     rts
 
 GET_CHAR_FROM_TIB
