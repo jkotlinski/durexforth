@@ -8,22 +8,25 @@ x 0= assert
 i 5 = if 0 unloop exit then loop ;
 x 0= assert
 
+: fakekeys ( n -- )
+c6 c! ;
+
 depth 0= assert
 
 ( sample tests )
+a fakekeys \ skips demos
 s" gfxdemo" load
-xxxxxxxxxx \ skips demos
 depth 0= assert
 
+4 fakekeys \ skips demos
 s" fractals" load
-xxxx \ skips demos
 depth 0= assert
 
 s" mmldemo" load
 depth 0= assert
 
+1 fakekeys \ exits demo 
 s" spritedemo" load
-x \ exits demo 
 depth 0= assert
 
 .( ok)
