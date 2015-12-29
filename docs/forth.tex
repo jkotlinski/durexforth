@@ -324,7 +324,9 @@ endcase
 
 \item[key ( -- c )] Gets one character from the keyboard.
 \item[key? ( -- flag )] Returns true if a character is available for \texttt{key}.
-\item[char ( -- c )] Gets one character from the current input stream.
+\item[getc ( -- c )] Consumes the next character from the input buffer and increases \texttt{$>$in} by one. If no characters are available, the input buffer is refilled as needed.
+
+\item[char ( -- c )] Parses the next word, delimited by a space, and puts its first character on the stack.
 
 \item[$>$in ( -- addr)] Gives the address of a cell containing the offset in characters from the start of the input buffer to the start of the parse area.
 

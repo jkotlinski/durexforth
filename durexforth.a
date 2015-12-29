@@ -538,7 +538,7 @@ tmp_x
 
     +BACKLINK
     !byte	4
-    !text	"char"
+    !text	"getc"
     lda TO_IN
     cmp TIB_SIZE
     bne +
@@ -546,6 +546,15 @@ tmp_x
 +   ldy TO_IN
     lda TIB,y
     inc TO_IN
+    ldy #0
+    jmp pushya
+
+    +BACKLINK
+    !byte	4
+    !text	"char"
+    jsr WORD
+    inx
+    lda WORD_BUFFER_DATA
     ldy #0
     jmp pushya
 

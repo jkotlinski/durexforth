@@ -21,9 +21,9 @@ postpone 0branch , ;
 : again immediate jmp, , ;
 : recurse immediate latest @ >cfa compile, ;
 : ( immediate no-tce 
-begin char [char] ) = until ;
+begin getc [char] ) = until ;
 : \ immediate no-tce 
-begin char d = until ;
+begin getc d = until ;
 : tuck ( x y -- y x y ) swap over ;
 : ?dup dup if dup then ;
 : <> ( a b -- c ) = 0= ;
@@ -36,12 +36,12 @@ r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 : s" immediate no-tce ( -- addr len )
 state if ( compile mode )
 postpone litstring here 0 , 0
-begin char dup [char] " <>
+begin getc dup [char] " <>
 while c, 1+ repeat
 drop swap !
 else ( immediate mode )
 here here
-begin char dup [char] " <>
+begin getc dup [char] " <>
 while over c! 1+ repeat
 drop here - then ;
 
@@ -51,7 +51,7 @@ swap dup c@ emit 1+ swap 1-
 repeat drop ;
 
 : ." immediate postpone s" postpone type ;
-: .( begin char dup [char] ) <>
+: .( begin getc dup [char] ) <>
 while emit repeat drop ;
 .( compile base..)
 
