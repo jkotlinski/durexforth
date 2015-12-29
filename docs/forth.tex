@@ -174,6 +174,7 @@ The following words use double-cell integers. On the stack, the cell containing 
 \begin{description}
 \item[! ( value address -- )] Store 16-bit value at address.  
 \item[@ ( address -- value )] Fetch 16-bit value from address.  
+\item[2@ ( address -- x1 x2 )] Fetch 32-bit value from address. x2 is stored at address, and x1 is stored at address + 2.
 \item[c! ( value address -- )] Store 8-bit value at address.  
 \item[c@ ( address -- value )] Fetch 8-bit value from address.
 \item[cell+ ( n -- n+2 )] Adds the cell size (which is 2).

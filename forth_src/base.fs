@@ -267,6 +267,8 @@ then u. ;
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
+: 2@ dup 2+ @ swap @ ;
+
 : abort" immediate no-tce
 postpone if
 postpone ."
