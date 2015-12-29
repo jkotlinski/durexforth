@@ -207,13 +207,13 @@ swap 1- repeat ;
 here latest @ >cfa 1+ (to)
 2 allot ;
 
-\ fairly pointless ans compability..
+\ fairly pointless ANS compat..
 : environment? 2drop 0 ;
 : cells 2* ;
 : cell+ 2+ ;
 : char+ 1+ ;
 : chars ; : align ; : aligned ;
-\ ..fairly pointless ans compability
+\ ..fairly pointless ANS compat
 
 code 0< sp1 lda,x 80 and,# +branch beq,
 ff lda,# :+ sp0 sta,x sp1 sta,x ;code
