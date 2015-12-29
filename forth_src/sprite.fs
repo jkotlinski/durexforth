@@ -30,14 +30,14 @@ tuck sp-y! sp-x! ;
 : sp-col! ( c n -- ) d027 + c! ;
 
 ( read sprite byte )
-: ks key bl <> and or ;
+: ks char bl <> and or ;
 : rdb ( addr -- addr )
 0 80 ks 40 ks 20 ks 10 ks
 8 ks 4 ks 2 ks 1 ks
 over c! 1+ ;
 
 ( read sprite line )
-: rdl rdb rdb rdb key drop ;
+: rdl rdb rdb rdb char drop ;
 
 ( read sprite to address )
 : sp-data ( addr -- )
