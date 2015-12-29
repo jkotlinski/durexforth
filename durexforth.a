@@ -978,20 +978,7 @@ INTERPRET
 
     lda	#$d ; cr
     jsr	PUTCHR
-
-reset_on_quit
-    txa
-    pha
-    ldx     #0
-    stx     STATE
-    stx     TIB_SIZE
-    stx     TO_IN
-    stx     SOURCE_ID
-    stx     COMPILE_RAM + 1
-    jsr     CHKIN
-    pla
-    tax
-    rts
+    jmp ABORT
 
     +BACKLINK
     !byte	3
@@ -1063,7 +1050,18 @@ LIT
     !byte	4
     !text	"quit"
 QUIT
-    jsr reset_on_quit
+    txa
+    pha
+    ldx     #0
+    stx     STATE
+    stx     TIB_SIZE
+    stx     TO_IN
+    stx     SOURCE_ID
+    stx     COMPILE_RAM + 1
+    jsr     CHKIN
+    pla
+    tax
+
 interpret_loop
 -   jsr	INTERPRET
     jmp -
