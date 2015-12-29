@@ -89,7 +89,7 @@ C_YELLOW = 7
     sta	$d018
 
     lda	_START + 1
-    bne	reset
+    bne	reset_screen
     ; first time ever app is started...
     jsr	load_base
 
@@ -99,12 +99,11 @@ reset_print_ok
     lda	#>print_ok
     sta	_START + 1
 
-reset
+reset_screen
     lda	#C_YELLOW
     sta	CURSOR_COLOR
 
     ldx	#0
-    stx TIB
     stx	$d020
     stx	$d021
 
@@ -121,7 +120,7 @@ reset
 
 _START = * + 1
     jsr 0
-    jmp QUIT
+    jmp interpret_loop
 
 print_ok
     lda	#'o'
@@ -980,7 +979,9 @@ INTERPRET
     lda	#$d ; cr
     jsr	PUTCHR
 
-    ; Resets some sensitive things, as part of error handling.
+reset_on_quit
+    txa
+    pha
     ldx     #0
     stx     STATE
     stx     TIB_SIZE
@@ -988,7 +989,8 @@ INTERPRET
     stx     SOURCE_ID
     stx     COMPILE_RAM + 1
     jsr     CHKIN
-    ldx     #X_INIT ; wipe stack :(
+    pla
+    tax
     rts
 
     +BACKLINK
@@ -1061,8 +1063,10 @@ LIT
     !byte	4
     !text	"quit"
 QUIT
-    jsr	INTERPRET
-    jmp QUIT
+    jsr reset_on_quit
+interpret_loop
+-   jsr	INTERPRET
+    jmp -
 
 ; --- EXIT
 
