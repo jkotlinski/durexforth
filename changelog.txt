@@ -231,3 +231,7 @@ Thanks to Christian Johansson and polluks for suggestions!
  * forth: changed variable; data field is now after code field
 
 Thanks to Christian Johansson for suggestions!
+
+?-?-?: v1.4.7
+
+ * made "type" disable quote mode (fixes words)
