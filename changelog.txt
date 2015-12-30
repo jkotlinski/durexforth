@@ -214,7 +214,7 @@ Thanks to Christian Johansson and polluks for bug reports!
 
 Thanks to Christian Johansson and polluks for suggestions!
 
-?-?-?: v1.4.6
+2015-12-30: v1.4.6
 
  * bugfix: disabled tail call elimination for literal ['] [char]
            to avoid some crashes
@@ -224,9 +224,14 @@ Thanks to Christian Johansson and polluks for suggestions!
           according to the Forth 2012 standard.
  * forth: added abort, abort", 2@, 2!, char+, chars, align, aligned
  * forth: key, key? now work only with keyboard
- * forth: made quit reset all inputs and fall back to keyboard
- * forth: fill, allot now have standard parameter order
+ * forth: made quit reset input and fall back to keyboard
+ * forth: fill ( ch addr len ) changed to fill ( addr len ch )
+ * forth: allot ( -- n ) changed to allot ( -- )
  * forth: made base a variable instead of a value
  * forth: changed variable; data field is now after code field
 
 Thanks to Christian Johansson for suggestions!
+
+?-?-?: v1.4.7
+
+ * made "type" disable quote mode (fixes words)

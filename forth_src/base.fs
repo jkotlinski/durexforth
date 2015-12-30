@@ -46,6 +46,7 @@ while over c! 1+ repeat
 drop here - then ;
 
 : type ( caddr u -- )
+0 d4 c! \ quote mode off
 begin ?dup while
 swap dup c@ emit 1+ swap 1-
 repeat drop ;
