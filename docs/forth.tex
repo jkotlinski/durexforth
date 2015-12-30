@@ -378,13 +378,11 @@ Print a string. Example: \texttt{.( foo)}
 
 Compile-time version of "\texttt{.(}". Example: \texttt{: foo ." bar" ;}
 
-\item[s"] ( -- strptr strlen )
+\item[s" ( -- strptr strlen )] Define a string. Example: \texttt{s" foo"}. 
 
-Define a string. Example: \texttt{s" foo"}. 
+\item[count ( str -- caddr u )] Returns data address and length of the counted string str.
 
-\item[type] ( caddr u -- )
-
-Prints a string.
+\item[type ( caddr u -- )] Prints a string.
 
 \end{description}
 

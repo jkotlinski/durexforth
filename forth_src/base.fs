@@ -32,6 +32,7 @@ begin getc d = until ;
 : litstring ( -- addr len )
 r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 
+: count dup 1+ swap c@ ;
 : s" immediate no-tce ( -- addr len )
 state if ( compile mode )
 postpone litstring here 0 , 0
