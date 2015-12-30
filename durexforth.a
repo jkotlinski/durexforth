@@ -811,6 +811,10 @@ FIND ; ( str -- str 0 | str 1 | str -1 )
     dex
 
     ldy	#2
+    lda (TMP), y
+    and #F_NO_TAIL_CALL_ELIMINATION
+    sta FOUND_WORD_WITH_NO_TCE
+
     lda	(TMP), y ; a contains string length + mask
     and	#F_IMMED
     beq .not_immed
@@ -961,8 +965,8 @@ INTERPRET
 
     lda curr_word_no_tail_call_elimination
     sta last_word_no_tail_call_elimination
-    lda (TMP), y
-    and #F_NO_TAIL_CALL_ELIMINATION
+FOUND_WORD_WITH_NO_TCE = * + 1
+    lda #0
     sta curr_word_no_tail_call_elimination
 
     lda	(TMP), y
