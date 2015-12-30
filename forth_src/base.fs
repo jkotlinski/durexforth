@@ -3,7 +3,7 @@
 : cr d emit ;
 : nip swap drop ;
 : * um* drop ;
-: loc word find ;
+: loc word find drop ;
 : ' loc >cfa ;
 : jmp, 4c c, ;
 : ['] immediate no-tce ' 

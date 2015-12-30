@@ -718,11 +718,10 @@ WORD
 
     rts
 
-; FIND
     +BACKLINK
     !byte	4
     !text	"find"
-FIND
+FIND ; ( str -- str 0 | str 1 | str -1 )
     jsr STRING_TO_LOWERCASE
 
     txa
@@ -779,6 +778,7 @@ FIND
     ; It is null - give up.
     pla
     tax
+    dex
     lda #0
     sta	LSB, x
     sta	MSB, x
@@ -807,7 +807,24 @@ FIND
     sta	LSB, x
     lda	TMP + 1
     sta	MSB, x
-    rts ; a should be non-zero now
+
+    dex
+
+    ldy	#2
+    lda	(TMP), y ; a contains string length + mask
+    and	#F_IMMED
+    beq .not_immed
+    dey
+    sty LSB, x ; 1
+    dey
+    sty MSB, x ; 0
+    rts
+    
+.not_immed
+    lda #$ff
+    sta LSB, x
+    sta MSB, x
+    rts
 
 ; >CFA
     +BACKLINK
@@ -901,8 +918,10 @@ INTERPRET
 
     +_DUP
     jsr	FIND ; replace string with dictionary ptr
+    lda LSB, x
     bne	.found_word
 
+    inx ; drop
     inx ; drop
     jsr READ_NUMBER
     beq .was_number
@@ -930,6 +949,8 @@ INTERPRET
 
 .found_word
     ; OK, we found a word...
+
+    inx ; drop
 
     ; is it immediate?
     lda	LSB, x
