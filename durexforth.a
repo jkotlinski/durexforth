@@ -221,20 +221,15 @@ SWAP
     sty	LSB + 1, x
     rts
 
-!macro _DUP {
+    +BACKLINK
+    !byte	3
+    !text	"dup"
+DUP
     dex
     lda	MSB + 1, x
     sta	MSB, x
     lda	LSB + 1, x
     sta	LSB, x
-}
-
-; DUP
-    +BACKLINK
-    !byte	3
-    !text	"dup"
-DUP
-    +_DUP
     rts
 
 ; OVER
@@ -919,8 +914,7 @@ INTERPRET
     bpl .on_stack_underflow
 
     jsr	WORD ; push string to stack
-
-    +_DUP
+    jsr DUP
     jsr	FIND ; replace string with dictionary ptr
     lda LSB, x
     bne	.found_word
