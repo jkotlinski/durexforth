@@ -278,7 +278,8 @@ code cli cli, ;code
 : assert 0= if
 begin 1 d020 +! again then ;
 
-header modules
+\ header modules
+
 .( labels..)
 s" labels" load
 .( doloop..)

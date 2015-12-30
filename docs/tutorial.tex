@@ -110,6 +110,9 @@ again ;
 
 \section{Configuring durexForth}
 
+\iffalse
+-- forget does not exist anymore! rework with marker
+
 \subsection{Stripping Modules}
 
 By default, durexForth boots up with all modules pre-compiled in RAM:
@@ -131,6 +134,8 @@ To reduce RAM usage, you may make a stripped-down version of durexForth. Do this
 \item One by one, load the modules you want included with your new Forth. (E.g. \texttt{s" debug" load})
 \item Save the new system with e.g. \texttt{s" acmeforth" save-forth}.
 \end{enumerate}
+
+\fi
 
 \subsection{Custom Start-Up}
 
