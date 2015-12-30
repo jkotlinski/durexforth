@@ -60,7 +60,6 @@ s" ff+[+f-f-f]-[-f+f+f]" fractal done ;
 a0 c8 10e moveto
 s" f" 6 80 64 14
 s" @[+f]@[-f]+f" fractal done ;
-hide done
 
 : demo d020 @ 
 koch weed1 bush1 bush2 d020 ! ;

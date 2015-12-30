@@ -78,7 +78,6 @@ endcase
 	[char] ; emit cr
 	2drop
 ;
-hide (loop)
 
 variable last-dump
 
@@ -95,13 +94,11 @@ last-dump ! ;
 
 : n last-dump @ dump ;
 
-: ?hidden 2+ c@ 40 and ;
 : more d6 c@ 18 = if ." <more>"
 key drop page then ;
 : words
 page latest @ begin ?dup while
-more dup ?hidden 0= if dup id.
-then @ repeat cr ;
+more dup id. @ repeat cr ;
 
 \ size foo prints size of foo
 : size ( -- )

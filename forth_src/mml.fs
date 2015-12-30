@@ -326,7 +326,3 @@ apply-sid
 
 \ restore sentinels
 r> r> c! r> r> c! r> r> c! ;
-
-loc play-mml
-hide-to sid
-hidden

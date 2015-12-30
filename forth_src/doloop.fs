@@ -65,9 +65,3 @@ code j txa, tsx,
 107 ldy,x zptmp sty, 108 ldy,x
 tax, dex, 
 sp1 sty,x zptmp lda, sp0 sta,x ;code
-
-hide >l 
-hide lstk 
-hide lsp
-hide resolve-leaves
-

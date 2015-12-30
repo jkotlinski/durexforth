@@ -791,7 +791,3 @@ push-colors
 show-page
 main-loop
 cleanup ;
-
-loc vi
-hide-to lf
-hidden

@@ -58,6 +58,3 @@ begin 2 pick forward
 over right
 tuck + 168 mod swap again ;
 )
-
-hide tx hide ty hide ta hide tp
-hide ls hide rs

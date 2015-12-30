@@ -6,7 +6,6 @@ here
 swap 80lsr over c@ or swap c! ;
 : clrbit ( n addr -- )
 swap 80lsr invert over c@ and swap c! ;
-hide 80lsr
 
 : sp-x! ( x n -- )
 2dup 2* d000 + c! \ lsb
@@ -44,6 +43,3 @@ over c! 1+ ;
 rdl rdl rdl rdl rdl rdl rdl
 rdl rdl rdl rdl rdl rdl rdl
 rdl rdl rdl rdl rdl rdl rdl drop ;
-
-hide rdl hide rdb hide ks
-hide setbit hide clrbit

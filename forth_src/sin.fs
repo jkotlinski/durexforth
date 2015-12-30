@@ -102,5 +102,3 @@ cf4 , df3 , efb , 100c ,
 cos over 2* 1+ um* nip swap - ;
 : *sin ( a r -- b )
 sin over 2* 1+ um* nip swap - ;
-
-hide sintab

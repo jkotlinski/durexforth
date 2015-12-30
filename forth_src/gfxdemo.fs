@@ -57,8 +57,6 @@ then 2drop ;
 hires 7 clrcol
 a0 50 reccircgo done ;
 
-hide reccircgo
-
 variable yd
 
 : 2reccircgo ( x r -- )
@@ -75,9 +73,6 @@ then 2drop ;
 hires 7 clrcol
 64 yd !
 a0 50 2reccircgo done ;
-
-hide yd
-hide 2reccircgo
 
 : erasecirc
 hires 7 clrcol
@@ -220,9 +215,6 @@ done exit then
 line? @ if line else plot then
 then again ;
 
-hide jcol hide line? hide data
-hide jungledata
-
 \ --- colorchart
 
 defchar sqr
@@ -276,9 +268,6 @@ rot d + 8 * rot 4 + 8 * rot blkcol
 2dup swap d + swap 4 + sqr drawchar
 1+ repeat drop
 1+ repeat drop done ;
-
-hide sqr
-hide done
 
 : gfxdemo
 d020 c@

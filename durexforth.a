@@ -1434,10 +1434,6 @@ COLON
 
     jmp RBRAC ; enter compile mode
 
-; HIDDEN
-    +BACKLINK
-    !byte	6
-    !text	"hidden"
 HIDDEN
     lda	LSB, x
     sta	TMP

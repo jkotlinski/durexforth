@@ -72,9 +72,6 @@ repeat ;
 the first jsr )
 : >dfa >cfa 1+ 2+ ;
 
-: hide
-loc ?dup if hidden else ." err" then ;
-
 ( dodoes words contain:
  1. jsr dodoes
  2. two-byte code pointer. default: point to exit
@@ -162,11 +159,6 @@ sp1 1+ sty,x sp1 3 + sta,x ;code
 
 : forget loc ?dup if
 dup @ latest ! to here then ;
-
-: hide-to  ( -- )
-loc latest
-begin @ dup hidden 2dup = until
-2drop ;
 
 : save-forth ( strptr strlen -- )
 compile-ram @ -rot 0 compile-ram !
@@ -318,10 +310,6 @@ s" vi" load
 [char] : here 1+ c!
 nip 2+ here swap f openw f closew ;
 
-hide pushya
-
-s" purge-hidden" load
-
 .( scratch old durexforth..)
 s" durexforth" scratch
 
@@ -330,3 +318,4 @@ s" durexforth" save-forth
 
 depth 0= assert
 .( done!) cr
+s" test" load

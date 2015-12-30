@@ -84,8 +84,6 @@ zptmp3 lda, sp0 1+ sta,x
 0 lda,# sp1 1+ sta,x
 rts,
 
-hide mask
-
 code blitloc ( x y -- mask addr )
 .blitloc jsr, ;code
 
@@ -181,8 +179,6 @@ clc, addr lda, 38 adc,# addr sta,
 addr 1+ lda, 1 adc,# addr 1+ sta,
 lineplot jmp,
 
-hide lineplot
-
 create step ( 2err -- 2err )
 \ err @ 2* 2err !
 err lda, 2err sta,
@@ -239,8 +235,6 @@ penx @ peny @ blitloc addr ! mask !
 
 doline ;
 
-hide doline
-
 \ --- circle
 
 0 value cx 0 value cy
@@ -279,8 +273,6 @@ swap 1- swap
 over negate err +!
 then
 repeat 2drop ;
-
-hide cx hide cy
 
 : erase if
 4d ['] xor else
@@ -393,7 +385,7 @@ clc, penx lda, 8 adc,# penx sta,
 3 bcc, penx 1+ inc,
 jmp, \ recurse
 
-create leave
+create leavel
 \ 2drop nip penx @ swap 
 inx, inx,
 penx lda, sp0 1+ sta,x
@@ -422,14 +414,14 @@ sp1 3 + lda,x sp1 1+ sta,x
 :-
 sp0 1+ lda,x +branch bne,
 \ continue bytewise
-bytewise jsr, leave jsr, ;code
+bytewise jsr, leavel jsr, ;code
 :+
 sp0 lda,x zptmp sta,
 sp1 lda,x zptmp 1+ sta,
 0 ldy,# zptmp lda,(y)
 sp0 1+ and,x +branch beq,
 \ done
-leave jsr, ;code
+leavel jsr, ;code
 :+
 .bitblt jsr, jmp, \ recurse
 
@@ -544,35 +536,6 @@ over x2 @ > until
 
 2drop drop repeat ; 
 
-hide dy
-hide sx hide sy
-hide err
-hide x1 hide x2 hide l
-hide plot4 hide plot8
-hide blitop
-hide colbase
-hide fillr
-hide dy2
-hide dx2
-hide step hide stepx
-hide 2err
-hide rightend
-hide bytewise
-hide leave
-hide scanl
-hide .scanr
-hide scanr
-hide .bitblt
-hide spop
-hide spush
-hide dopush
-hide stk
-hide chkplot
-hide doplot
-hide blitloc
-hide .blitloc
-hide mask
-
 : text ( col row str strlen -- )
 \ addr=dst
 rot 140 * addr !
@@ -584,8 +547,6 @@ swap dup c@ 8 * d800 + \ strlen str ch
 addr @ 8 cmove
 1+ swap 8 addr +! 1- repeat
 r> 1 c! cli drop ;
-
-hide addr
 
 : getbit
 2* getc [char] 1 = if 1+ then ;
@@ -600,6 +561,3 @@ getrow getrow getrow getrow drop ;
 : drawchar ( col row srcaddr -- )
 swap 140 * rot 8 * + bmpbase +
 8 cmove ;
-
-hide bmpbase
-hide getbit hide getrow
