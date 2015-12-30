@@ -236,4 +236,5 @@ Thanks to Christian Johansson for suggestions!
 
  * forth: made "type" disable c64 quote mode (fixes "words")
  * forth: removed hide, hide-to, hidden, forget
+ * forth: state ( -- flag ) changed to state ( -- addr )
  * forth: added count

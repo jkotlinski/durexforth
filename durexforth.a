@@ -445,8 +445,9 @@ FILL
     +BACKLINK
     !byte 5
     !text	"state"
-STATE = * + 1
-    +VALUE	0
+    +VALUE	STATE
+STATE
+    !word 0
 
     +BACKLINK
     !byte 9

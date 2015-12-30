@@ -34,7 +34,7 @@ r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 
 : count dup 1+ swap c@ ;
 : s" immediate no-tce ( -- addr len )
-state if ( compile mode )
+state c@ if ( compile mode )
 postpone litstring here 0 , 0
 begin getc dup [char] " <>
 while c, 1+ repeat
@@ -131,7 +131,7 @@ begin ?dup while space 1- repeat ;
 \ "0 to foo" sets value foo to 0
 : (to) over 100/ over 2+ c! c! ;
 : to immediate ' 1+
-state if
+state c@ if
 postpone literal postpone (to)
 else (to) then ;
 
