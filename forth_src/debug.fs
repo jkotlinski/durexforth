@@ -43,20 +43,23 @@ endof ( default )
 endcase
 2+ ;
 
+variable prev
 : see
-	loc ?dup 0= if exit then
+	word find 0= if drop exit then
 	here
 	latest @
 	begin
 		2 pick
 		over
-		<>
+		<
 	while
+        dup prev !
 		nip
 		dup @
 	repeat
 	
-	drop
+    nip nip
+    prev @
 	swap ( end-of-word start-of-word )
 
 	[char] : emit space dup id.
@@ -102,10 +105,10 @@ more dup id. @ repeat cr ;
 
 \ size foo prints size of foo
 : size ( -- )
-loc >r
+word find drop >r
 here latest @ \ prev curr
 begin dup while
-dup r@ = if
+dup r@ < if
 - . r> drop exit then
 nip dup @ repeat
 . drop r> drop ;

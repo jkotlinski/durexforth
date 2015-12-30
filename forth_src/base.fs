@@ -3,8 +3,7 @@
 : cr d emit ;
 : nip swap drop ;
 : * um* drop ;
-: loc word find drop ;
-: ' loc >cfa ;
+: ' word find drop ;
 : jmp, 4c c, ;
 : ['] immediate no-tce ' 
 [ ' literal compile, ] ;
@@ -13,7 +12,7 @@
 : else immediate jmp, here 0 ,
 swap here swap ! ;
 : postpone immediate
-loc dup >cfa swap 2+ c@ 80 and 0= if
+word find -1 = if
 [ ' literal compile, ] ['] compile, then
 compile, ;
 : until immediate no-tce 
@@ -156,9 +155,6 @@ sp0 1+ lda,x sp0 3 + ldy,x
 sp0 1+ sty,x sp0 3 + sta,x
 sp1 1+ lda,x sp1 3 + ldy,x
 sp1 1+ sty,x sp1 3 + sta,x ;code
-
-: forget loc ?dup if
-dup @ latest ! to here then ;
 
 : save-forth ( strptr strlen -- )
 compile-ram @ -rot 0 compile-ram !
@@ -318,4 +314,3 @@ s" durexforth" save-forth
 
 depth 0= assert
 .( done!) cr
-s" test" load

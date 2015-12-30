@@ -208,7 +208,7 @@ endcase ;
 code stop-note
 tie lda, +branch beq,
 0 lda,# tie sta, ;code
-:+ loc gate-off >cfa jmp,
+:+ ' gate-off jmp,
 
 code pause>0
 dex,

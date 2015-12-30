@@ -716,7 +716,7 @@ WORD
     +BACKLINK
     !byte	4
     !text	"find"
-FIND ; ( str -- str 0 | str 1 | str -1 )
+FIND ; ( str -- str 0 | xt 1 | xt -1 )
     jsr STRING_TO_LOWERCASE
 
     txa
@@ -802,6 +802,8 @@ FIND ; ( str -- str 0 | str 1 | str -1 )
     sta	LSB, x
     lda	TMP + 1
     sta	MSB, x
+
+    jsr TCFA
 
     dex
 
@@ -946,35 +948,25 @@ INTERPRET
 .found_word
     ; OK, we found a word...
 
-    inx ; drop
-
-    ; is it immediate?
-    lda	LSB, x
-    sta	TMP
-    lda	MSB, x
-    sta	TMP + 1
-    ldy	#2 ; skip link ptr, look at flags
-
     lda curr_word_no_tail_call_elimination
     sta last_word_no_tail_call_elimination
 FOUND_WORD_WITH_NO_TCE = * + 1
     lda #0
     sta curr_word_no_tail_call_elimination
 
-    lda	(TMP), y
-    and	#F_IMMED
-    bne	.execute_word
+    lda MSB, x
+    beq	.execute_word ; immediate
 
     lda	STATE ; are we compiling?
     beq	.execute_word ; no, execute it.
 
     ; OK, this word should be compiled...
-    jsr	TCFA
+    inx
     jsr COMPILE_COMMA
     rts
 
 .execute_word
-    jsr	TCFA
+    inx
     jmp EXECUTE
 
 .on_word_not_found_error

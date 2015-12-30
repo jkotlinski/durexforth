@@ -235,4 +235,4 @@ Thanks to Christian Johansson for suggestions!
 ?-?-?: v1.4.7
 
  * forth: made "type" disable c64 quote mode (fixes "words")
- * forth: removed hide, hide-to, hidden
+ * forth: removed hide, hide-to, hidden, forget

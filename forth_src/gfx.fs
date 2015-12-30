@@ -65,11 +65,11 @@ zptmp 1+ lda, sp1 sta,x
 
 \ ...
 
-loc mask >cfa 100/
+' mask 100/
 lda,# zptmp 1+ sta,
 
 clc,
-sp0 1+ lda,x 7 and,# loc mask >cfa adc,#
+sp0 1+ lda,x 7 and,# ' mask adc,#
 zptmp sta,
 2 bcc, zptmp 1+ inc,
 
@@ -89,7 +89,7 @@ code blitloc ( x y -- mask addr )
 
 : doplot ( x y -- )
 blitloc tuck c@
-[ here 1+ loc blitop >cfa ! ] or
+[ here 1+ ' blitop ! ] or
 swap c! ;
 
 : chkplot ( x y -- )
@@ -142,7 +142,7 @@ zptmp lda,(y) zptmp2 1+ sta, dey,
 
 \ c@ mask c@ or
 zptmp2 lda,(y)
-here loc blitop >cfa 2+ !
+here ' blitop 2+ !
 mask ora,
 
 \ addr @ c!
