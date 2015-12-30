@@ -392,7 +392,7 @@ Prints a string.
 
 \begin{description}
 \item[' xxx ( -- addr )] Find execution token of word \texttt{xxx}.
-\item[lit xxx ( -- addr )] Equal to \texttt{'} but used for clarity. Use \texttt{' lit , ,} to compile the (run-time) value on top of stack.
+\item[find ( cstr -- cstr 0 $\vert$ xt -1 $\vert$ xt 1 )] Find the definition named in the counted string cstr. If the definition is not found, return cstr and 0, otherwise return the execution token. If the definition is immediate, also return 1, otherwise also return -1.
 \item[execute ( xt -- )] Execute the execution token on top of stack.
 \item[$>$cfa ( addr -- xt )] Get execution token (a.k.a. code field adress) of word at adress \texttt{addr}.
 
