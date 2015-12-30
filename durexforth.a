@@ -1261,9 +1261,7 @@ SEMICOLON
     jsr EXIT
 
     ; unhide the word.
-    jsr LATEST
-    jsr FETCH
-    jsr HIDDEN
+    jsr TOGGLE_LATEST_HIDDEN
 
     ; go back to IMMEDIATE mode.
     jmp LBRAC
@@ -1428,23 +1426,20 @@ COLON
     jsr HEADER ; makes the dictionary entry / header
 
     ; hide word
-    jsr LATEST
-    jsr FETCH
-    jsr HIDDEN
+    jsr TOGGLE_LATEST_HIDDEN
 
     jmp RBRAC ; enter compile mode
 
-HIDDEN
-    lda	LSB, x
+TOGGLE_LATEST_HIDDEN
+    lda	_LATEST
     sta	TMP
-    lda	MSB, x
+    lda	_LATEST + 1
     sta TMP + 1
 
     ldy	#2 ; skip link, point to flags
     lda	(TMP), y
     eor	#F_HIDDEN ; toggle hidden flag
     sta	(TMP), y
-    inx
     rts
 
     +BACKLINK
