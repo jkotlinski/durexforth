@@ -21,40 +21,22 @@ Then, try changing it back again with \texttt{0 bg!}.
 
 The editor (fully described in chapter \ref{editor}) is convenient for editing larger pieces of code. With it, you keep an entire source file loaded in RAM, and you can recompile and test it easily.
 
-Start the editor by typing \texttt{vi}. You will enter the pink editor screen.
+Start the editor by typing \texttt{vi}. You will enter the red editor screen. To enter text, first press \texttt{i} to enter insert mode. This mode allows you to insert text into the buffer. You can see that it's active on the \texttt{I} that appears in the lower left corner. This is a good start for creating a program!
 
-To enter text, first press \texttt{i} to enter insert mode. This mode allows you to insert text into the buffer. You can see that it's active on the \texttt{I} that appears in the lower left corner.
-
-This is a good start for making a program. 
-But first, let's get rid of the "bg!" word we created previously. Enter:
-
-\begin{verbatim}
-forget bg!
-\end{verbatim}
-
-\ldots and press $\leftarrow$ to leave insert mode. The line you entered forgets the \texttt{bg!} word that you defined in the last section, and everything defined after it. Let's try out if it works.
-
-First, quit the editor by pressing \texttt{:q}. You should now be back in the interpreter screen.
-Verify that the word \texttt{bg!} still exists by  entering \texttt{0 bg!}, \texttt{1 bg!} like you did
-before. Then, jump back to the editor using the command \texttt{vi}. You should return to your edit buffer with the lonely \texttt{forget bg!} line.
-
-Now, compile and run the buffer by pressing \texttt{F7}. You will be thrown out to the interpreter
-again. Entering \texttt{bg!} should now give you the error \colorbox{yellow}{\texttt{bg!?}}. Success
---- we have forgotten the \texttt{bg!} word. Now, get back into the editor by entering \texttt{vi}.
-
-Beneath \texttt{forget bg!}, add the following lines:
+Now, enter the following lines\ldots
 
 \begin{verbatim}
 : flash begin 1 d020 +! again ; flash
 \end{verbatim}
 
-\texttt{flash} will cycle the border color infinitely. Before trying it out, go up and change \texttt{forget bg!} to \texttt{forget flash}. This makes sure you won't run out of RAM, no matter how many times you recompile the program. Now press \texttt{F7} to compile and run. If everything is entered right, you will be facing a wonderful color cycle.
+\ldots and then press $\leftarrow$ to leave insert mode.
+Press \textsc{F7} to compile and run. If everything is entered right, you will be facing a wonderful color cycle.
 
-To get back into the editor, press Restore key. 
+To get back into the editor, press \textsc{RESTORE}. 
 
 \section{Assembler}
 
-If you need to flash as fast as possible, it is possible to use the durexForth assembler to generate machine code. \texttt{code} and \texttt{;code} define a code word, just like \texttt{:} and \texttt{;} define Forth words. Within a code word, you can use assembler mnemonics. 
+If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. \texttt{code} and \texttt{;code} define a code word, just like \texttt{:} and \texttt{;} define Forth words. Within a code word, you can use assembler mnemonics. 
 
 \begin{verbatim}
 code flash
