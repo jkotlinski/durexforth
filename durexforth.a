@@ -914,12 +914,10 @@ INTERPRET
     bpl .on_stack_underflow
 
     jsr	WORD ; push string to stack
-    jsr DUP
     jsr	FIND ; replace string with dictionary ptr
     lda LSB, x
     bne	.found_word
 
-    inx ; drop
     inx ; drop
     jsr READ_NUMBER
     beq .was_number
@@ -973,16 +971,10 @@ FOUND_WORD_WITH_NO_TCE = * + 1
     ; OK, this word should be compiled...
     jsr	TCFA
     jsr COMPILE_COMMA
-    inx ; drop string
     rts
 
 .execute_word
     jsr	TCFA
-    lda LSB,x
-    sta LSB+1,x
-    lda MSB,x
-    sta MSB+1,x
-    inx
     jmp EXECUTE
 
 .on_word_not_found_error
