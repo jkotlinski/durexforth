@@ -238,3 +238,4 @@ Thanks to Christian Johansson for suggestions!
  * forth: removed hide, hide-to, hidden, forget
  * forth: state ( -- flag ) changed to state ( -- addr )
  * forth: added count
+ * forth: made while/repeat implementation conform to standard
