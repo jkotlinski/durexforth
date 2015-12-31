@@ -240,3 +240,4 @@ Thanks to Christian Johansson for suggestions!
  * forth: state ( -- flag ) changed to state ( -- addr )
  * forth: added count
  * forth: made while/repeat implementation conform to standard
+ * forth: removed within
