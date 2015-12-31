@@ -1,4 +1,4 @@
-code (do)
+code (do) ( limit first -- )
 pla, zptmp sta,
 pla, tay,
 
@@ -15,7 +15,7 @@ variable lstk 14 allot
 variable lsp lstk lsp !
 : >l ( n -- ) lsp @ ! 2 lsp +! ;
 
-: do ( limit first -- ) immediate
+: do immediate
 postpone (do) here dup >l ;
 
 : unloop no-tce r> r> r> 2drop >r ;
@@ -51,10 +51,14 @@ zptmp2 (jmp),
 postpone (loop) dup , resolve-leaves ;
 
 : (+loop) ( inc -- )
-r> swap r> tuck + tuck 
-2dup > if swap then
-r@ 1- -rot within 0= if 
->r >r [ ' branch jmp, ] then
+r> swap r> 2dup + rot
+0< if \ negative inc
+tuck r@ < swap r@ 1- <
+else \ positive inc
+tuck r@ 1- > swap r@ >
+then
+0= and 0= if 
+>r >r [ ' branch jmp, ] then 
 r> 2drop 2+ >r ;
 
 : +loop immediate no-tce
