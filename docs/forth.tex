@@ -217,6 +217,7 @@ Like \texttt{cmove}, except that the copy proceeds from higher to lower memory.
 \item[header xxx] Create a dictionary header with name \texttt{xxx}. 
 \item[create xxx/does$>$] Create a word creating word \texttt{xxx} with custom behavior
 specified after \texttt{does$>$}. For further description, see "Starting Forth."
+\item[$>$body ( xt -- addr )] Returns the data field address that belongs to the execution token. Example use: \texttt{' foo >body}
 \item[state ( -- addr)] addr is the address of a cell containing the compilation-state flag. It is 1 when compiling, otherwise 0.
 
 \end{description}

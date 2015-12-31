@@ -76,6 +76,7 @@ the first jsr )
  1. jsr dodoes
  2. two-byte code pointer. default: point to exit
  3. variable length data )
+: >body ( xt -- dataaddr ) 5 + ;
 here 60 c, \ rts
 : create
 header postpone dodoes literal , ;

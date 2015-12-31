@@ -236,8 +236,8 @@ Thanks to Christian Johansson for suggestions!
 
  * forth: made +loop work according to standard
  * forth: made "type" disable c64 quote mode (fixes "words")
- * forth: removed hide, hide-to, hidden, forget
+ * forth: removed hide, hide-to, hidden, forget, within
  * forth: state ( -- flag ) changed to state ( -- addr )
- * forth: added count
+ * forth: added count, >body
+ * forth: fixed yet another tail call elimination crash
  * forth: made while/repeat implementation conform to standard
- * forth: removed within
