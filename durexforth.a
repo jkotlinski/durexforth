@@ -933,7 +933,6 @@ INTERPRET
     bne	+ 
     rts
 +   ; yes, compile the number
-    lda #1
     sta curr_word_no_tail_call_elimination
     jmp LITERAL
 
@@ -1117,6 +1116,8 @@ compile_a
     !byte	6
     !text	"header"
 HEADER
+    inc last_word_no_tail_call_elimination
+
     jsr	WORD
     jsr STRING_TO_LOWERCASE
 
