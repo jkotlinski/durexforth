@@ -1487,16 +1487,16 @@ TOGGLE_LATEST_HIDDEN
     jsr COMMA
     jmp SWAP
 
-    +BACKLINK
-    !byte 6
-    !text	"within"
-WITHIN ; ( test low high -- flag )
-    jsr OVER
-    jsr MINUS
-    jsr TO_R
-    jsr MINUS
-    jsr R_TO
-    jmp U_LESS
+;    +BACKLINK
+;    !byte 6
+;    !text	"within"
+;WITHIN ; ( test low high -- flag )
+;    jsr OVER
+;    jsr MINUS
+;    jsr TO_R
+;    jsr MINUS
+;    jsr R_TO
+;    jmp U_LESS
 
 COMPILE_JMP
     jsr LITC

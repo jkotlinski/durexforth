@@ -90,9 +90,8 @@ variable last-dump
 8 0 do dup u. space
 dup 8 0 do dup c@ c. 1+ loop drop
 8 0 do dup c@
-dup bl [char] ] within 0= if
-drop [char] .
-then emit 1+ loop cr loop
+dup 20 < if drop [char] . then 
+emit 1+ loop cr loop
 last-dump ! ;
 
 : n last-dump @ dump ;
