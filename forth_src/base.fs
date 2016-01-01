@@ -159,9 +159,7 @@ sp1 1+ lda,x sp1 3 + ldy,x
 sp1 1+ sty,x sp1 3 + sta,x ;code
 
 : save-forth ( strptr strlen -- )
-compile-ram @ -rot 0 compile-ram !
-801 -rot here -rot saveb
-compile-ram ! ;
+801 -rot here -rot saveb ;
 
 code 2/ 
 sp1 lda,x 80 cmp,# sp1 ror,x sp0 ror,x

@@ -136,7 +136,6 @@ clear-status status-pos c! ;
 init-kernal
 80 28a c! \ key repeat on
 0 bufstart 1- c! \ sentinel
-0 compile-ram ! \ to enable editor start from base.src
 clear-status ;
 
 : push-colors
@@ -658,18 +657,23 @@ char j c, ' cur-down ,
 
 \ custom restore handler
 \ "vi"
-here char v c, char i c, d c, 0 c,
+here char v c, char i c, d c,
 here cli, \ entry
 swap dup \ asm vi vi 
-\ compile-ram="vi"
-lda,# compile-ram sta,
-100/ lda,# compile-ram 1+ sta,
+\ evaluate "vi"
+dex,
+lda,# sp0 sta,x
+100/ lda,# sp1 sta,x
+dex,
+3 lda,# sp0 sta,x
+0 lda,# sp1 sta,x
+' evaluate jsr,
 \ lores
 9b lda,# d011 sta, 17 lda,# dd00 sta,
 17 lda,# d018 sta,
 318 @ jmp, \ jump to normal restore
 : compile-run sei literal 318 ! cli
-bufstart compile-ram ! ;
+bufstart eof @ bufstart - evaluate ;
 
 : main-handler ( key -- quit? )
 	['] maintable ( key tableptr )

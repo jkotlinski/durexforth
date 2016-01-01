@@ -83,6 +83,8 @@ C_YELLOW = 7
     sta $319
     cli
 
+    jsr quit_reset
+
     jsr PAGE
 
     lda	#%00010110 ; lowercase
@@ -458,13 +460,23 @@ SOURCE_ID = * + 1
     ; 1+ : file id
     +VALUE	0
 
-; COMPILE_RAM - points to RAM source code to be interpreted.
     +BACKLINK
-    !byte 11
-    !text	"compile-ram"
-    +VALUE	COMPILE_RAM
-COMPILE_RAM
-    !word	0
+    !byte 8
+    !text	"evaluate" ; ( addr size -- )
+    lda LSB, x
+    sta EVALUATE_LEFT
+    lda MSB, x
+    sta EVALUATE_LEFT + 1
+    lda LSB + 1, x
+    sta EVALUATE_PTR
+    lda MSB + 1, x
+    sta EVALUATE_PTR + 1
+    inx
+    inx
+    rts
+
+EVALUATE_LEFT
+    !word   0
 
 ; HERE - points to the next free byte of memory. When compiling, compiled words go here.
     +BACKLINK
@@ -569,31 +581,25 @@ GET_CHAR_BLOCKING
 
 ; Reads a key, sources are prioritized as follows:
 ;  1. Streaming file from disk
-;  2. Compile RAM area (COMPILE_RAM)
+;  2. Evaluate
 PULL_KEY ; wastes x!!!
     lda	SOURCE_ID
     bne	.get_char_from_disk
 
     ; Compiling from RAM.
-    lda	COMPILE_RAM + 1
-    sta	TMP + 1
-    lda	COMPILE_RAM
-    sta	TMP
+    lda EVALUATE_LEFT
+    bne +
+    dec EVALUATE_LEFT + 1
++   dec EVALUATE_LEFT
 
-    inc COMPILE_RAM
-    bne +
-    inc COMPILE_RAM + 1
-+
-    ; next char null terminator?
-    ldy #1
-    lda	(TMP), y
-    bne +
-    ; yes, stop reading from RAM.
-    sta COMPILE_RAM + 1
-+   dey
     ; return current char.
-    lda (TMP),y
-    rts
+EVALUATE_PTR = * + 1
+    lda $1234
+
+    inc EVALUATE_PTR
+    bne +
+    inc EVALUATE_PTR + 1
++   rts
 
 .get_char_from_disk
     jsr	CHRIN
@@ -622,7 +628,8 @@ REFILL
     sty TIB_SIZE
 
     lda SOURCE_ID
-    ora COMPILE_RAM + 1
+    ora EVALUATE_LEFT
+    ora EVALUATE_LEFT + 1
     bne	.get_from_ram_or_disk
 
     ; BASIC getline.
@@ -1057,10 +1064,7 @@ LIT
 
 ; --- QUIT
 
-    +BACKLINK
-    !byte	4
-    !text	"quit"
-QUIT
+quit_reset
     txa
     pha
     ldx     #0
@@ -1068,11 +1072,18 @@ QUIT
     stx     TIB_SIZE
     stx     TO_IN
     stx     SOURCE_ID
-    stx     COMPILE_RAM + 1
+    stx     EVALUATE_LEFT
+    stx     EVALUATE_LEFT + 1
     jsr     CHKIN
     pla
     tax
+    rts
 
+    +BACKLINK
+    !byte	4
+    !text	"quit"
+QUIT
+    jsr quit_reset
 interpret_loop
 -   jsr	INTERPRET
     jmp -
@@ -1533,18 +1544,22 @@ load_base
     ; loads base.fs to $5000
     lda #0
     sta load_binary_laddr_lo
-    sta COMPILE_RAM
+    sta EVALUATE_PTR
     lda #$50
     sta load_binary_laddr_hi
-    sta COMPILE_RAM + 1
+    sta EVALUATE_PTR + 1
     ldx	#<basename
     ldy	#>basename
     lda	#basename_end - basename
     jsr load_binary
-    ; Null terminates source code.
-    lda #0
-    tay
-    sta ($ae),y
+
+    sec
+    lda $ae
+    sbc EVALUATE_PTR
+    sta EVALUATE_LEFT
+    lda $af
+    sbc EVALUATE_PTR + 1 
+    sta EVALUATE_LEFT + 1
     rts
 
 basename
