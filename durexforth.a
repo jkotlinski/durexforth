@@ -30,7 +30,7 @@ F_HIDDEN = $40
 F_NO_TAIL_CALL_ELIMINATION = $20 ; when set, skips tailcall elimination
 STRLEN_MASK = $1f
 
-TIB = $200
+TIB_BASIC_GETLINE = $200
 
 ; zeropage
 X_INIT = 0
@@ -185,10 +185,10 @@ pushya
     !text	"source"
     dex
     dex
-    lda #<TIB
+    lda #<TIB_BASIC_GETLINE
     sta LSB+1,x
     sta MSB,x
-    lda #>TIB
+    lda #>TIB_BASIC_GETLINE
     sta MSB+1,x
 TIB_SIZE = * + 1
     lda #0
@@ -552,7 +552,7 @@ tmp_x
     bne +
     jsr REFILL
 +   ldy TO_IN
-    lda TIB,y
+    lda TIB_BASIC_GETLINE,y
     inc TO_IN
     ldy #0
     jmp pushya
@@ -639,7 +639,7 @@ REFILL
     pha
     ora #3 ; Makes sure basic is switched in.
     sta 1
-    jsr $a560 ; Input line into TIB.
+    jsr $a560 ; Input line into TIB_BASIC_GETLINE.
     pla
     sta 1
     pla
@@ -647,14 +647,14 @@ REFILL
 
     ; Set TIB_SIZE to number of chars fetched.
     ldy #0
--   lda TIB,y
+-   lda TIB_BASIC_GETLINE,y
     beq +
     iny
     jmp -
 +   
     ; Append return.
     lda #K_RETURN
-    sta TIB,y
+    sta TIB_BASIC_GETLINE,y
     iny
     sty TIB_SIZE
     rts
@@ -663,7 +663,7 @@ REFILL
     inc $d020
 -   jsr GET_CHAR_BLOCKING
     ldy TIB_SIZE
-    sta TIB,y
+    sta TIB_BASIC_GETLINE,y
     inc TIB_SIZE
     cmp #K_RETURN
     bne -
@@ -677,7 +677,7 @@ GET_CHAR_FROM_TIB
     jsr REFILL
 +
     ldy TO_IN
-    lda TIB,y
+    lda TIB_BASIC_GETLINE,y
     inc TO_IN
     rts
     
