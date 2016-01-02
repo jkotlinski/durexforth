@@ -185,15 +185,20 @@ pushya
     !text	"source"
     dex
     dex
-    lda #<TIB_BASIC_GETLINE
-    sta LSB+1,x
-    sta MSB,x
-    lda #>TIB_BASIC_GETLINE
-    sta MSB+1,x
-TIB_SIZE = * + 1
-    lda #0
-    sta LSB,x
+    lda TIB_PTR
+    sta LSB+1, x
+    lda TIB_PTR + 1
+    sta MSB+1, x
+    lda TIB_SIZE
+    sta LSB, x
+    lda TIB_SIZE + 1
+    sta MSB, x
     rts
+
+TIB_PTR
+    !word 0
+TIB_SIZE
+    !word 0
 
 ; DROP
     +BACKLINK
@@ -463,20 +468,18 @@ SOURCE_ID = * + 1
     +BACKLINK
     !byte 8
     !text	"evaluate" ; ( addr size -- )
+    ; todo: save-input
     lda LSB, x
-    sta EVALUATE_LEFT
+    sta TIB_SIZE
     lda MSB, x
-    sta EVALUATE_LEFT + 1
+    sta TIB_SIZE + 1
     lda LSB + 1, x
-    sta EVALUATE_PTR
+    sta TIB_PTR
     lda MSB + 1, x
-    sta EVALUATE_PTR + 1
+    sta TIB_PTR + 1
     inx
     inx
     rts
-
-EVALUATE_LEFT
-    !word   0
 
 ; HERE - points to the next free byte of memory. When compiling, compiled words go here.
     +BACKLINK
@@ -547,14 +550,8 @@ tmp_x
     +BACKLINK
     !byte	4
     !text	"getc"
-    lda TO_IN
-    cmp TIB_SIZE
-    bne +
-    jsr REFILL
-+   ldy TO_IN
-    lda TIB_BASIC_GETLINE,y
-    inc TO_IN
-    ldy #0
+    jsr GET_CHAR_FROM_TIB
+    ; ldy #0
     jmp pushya
 
     +BACKLINK
@@ -568,41 +565,8 @@ tmp_x
 
 GET_CHAR_BLOCKING
     stx	tmp_x
--   jsr	PULL_KEY ; read from disk/ram/console
-    ora #0
-    beq -
-
-    ; pha ; debug
-    ; jsr PUTCHR
-    ; pla
-
-    ldx tmp_x
-    rts
-
-; Reads a key, sources are prioritized as follows:
-;  1. Streaming file from disk
-;  2. Evaluate
-PULL_KEY ; wastes x!!!
-    lda	SOURCE_ID
-    bne	.get_char_from_disk
-
-    ; Compiling from RAM.
-    lda EVALUATE_LEFT
-    bne +
-    dec EVALUATE_LEFT + 1
-+   dec EVALUATE_LEFT
-
-    ; return current char.
-EVALUATE_PTR = * + 1
-    lda $1234
-
-    inc EVALUATE_PTR
-    bne +
-    inc EVALUATE_PTR + 1
-+   rts
-
-.get_char_from_disk
-    jsr	CHRIN
+-   
+    jsr	CHRIN ; wastes x
     pha
     jsr	READST
     beq +
@@ -612,7 +576,16 @@ EVALUATE_PTR = * + 1
     dec	SOURCE_ID
     ldx SOURCE_ID
     jsr CHKIN
-+   pla
++   
+    pla
+    ora #0
+    beq -
+
+    ; pha ; debug
+    ; jsr PUTCHR
+    ; pla
+
+    ldx tmp_x
     rts
 
     +BACKLINK
@@ -625,13 +598,16 @@ TO_IN
 REFILL
     ldy #0
     sty TO_IN
+    sty TO_IN + 1
     sty TIB_SIZE
+    sty TIB_SIZE + 1
 
     lda SOURCE_ID
-    ora EVALUATE_LEFT
-    ora EVALUATE_LEFT + 1
-    bne	.get_from_ram_or_disk
+    beq .basic_getline
+    lda SOURCE_ID + 1
+    beq	.get_from_disk
 
+.basic_getline
     ; BASIC getline.
     txa
     pha
@@ -659,7 +635,7 @@ REFILL
     sty TIB_SIZE
     rts
 
-.get_from_ram_or_disk
+.get_from_disk
     inc $d020
 -   jsr GET_CHAR_BLOCKING
     ldy TIB_SIZE
@@ -674,12 +650,27 @@ GET_CHAR_FROM_TIB
     lda TO_IN
     cmp TIB_SIZE
     bne +
+    lda TO_IN + 1
+    cmp TIB_SIZE + 1
+    bne +
     jsr REFILL
 +
-    ldy TO_IN
-    lda TIB_BASIC_GETLINE,y
+    clc
+    lda TIB_PTR
+    adc TO_IN
+    sta TMP
+    lda TIB_PTR + 1
+    adc TO_IN + 1
+    sta TMP + 1
+    ldy #0
+    lda (TMP),y
+    pha
+    jsr PUTCHR
+    pla
     inc TO_IN
-    rts
+    bne +
+    inc TO_IN + 1
++   rts
     
 ; WORD ( -- strptr )
     +BACKLINK
@@ -1070,10 +1061,10 @@ quit_reset
     ldx     #0
     stx     STATE
     stx     TIB_SIZE
+    stx     TIB_SIZE + 1
     stx     TO_IN
+    stx     TO_IN + 1
     stx     SOURCE_ID
-    stx     EVALUATE_LEFT
-    stx     EVALUATE_LEFT + 1
     jsr     CHKIN
     pla
     tax
@@ -1544,10 +1535,10 @@ load_base
     ; loads base.fs to $5000
     lda #0
     sta load_binary_laddr_lo
-    sta EVALUATE_PTR
+    sta TIB_PTR
     lda #$50
     sta load_binary_laddr_hi
-    sta EVALUATE_PTR + 1
+    sta TIB_PTR + 1
     ldx	#<basename
     ldy	#>basename
     lda	#basename_end - basename
@@ -1555,11 +1546,11 @@ load_base
 
     sec
     lda $ae
-    sbc EVALUATE_PTR
-    sta EVALUATE_LEFT
+    sbc TIB_PTR
+    sta TIB_SIZE
     lda $af
-    sbc EVALUATE_PTR + 1 
-    sta EVALUATE_LEFT + 1
+    sbc TIB_PTR + 1 
+    sta TIB_SIZE + 1
     rts
 
 basename
