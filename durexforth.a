@@ -487,56 +487,64 @@ EVALUATE
     inx
     rts
 
+SAVE_INPUT_STACK
+    !fill 32
+SAVE_INPUT_STACK_DEPTH
+    !byte 0
+
+push_input_stack
+    ldy SAVE_INPUT_STACK_DEPTH
+    sta SAVE_INPUT_STACK, y
+    inc SAVE_INPUT_STACK_DEPTH
+    rts
+
+pop_input_stack
+    dec SAVE_INPUT_STACK_DEPTH
+    ldy SAVE_INPUT_STACK_DEPTH
+    lda SAVE_INPUT_STACK, y
+    rts
+
     +BACKLINK
     !byte 10
     !text	"save-input"
 SAVE_INPUT
-    dex
-    dex
-    dex
-    dex
     lda TO_IN
-    sta LSB+3,x
+    jsr push_input_stack
     lda TO_IN+1
-    sta MSB+3,x
+    jsr push_input_stack
     lda SOURCE_ID
-    sta LSB+2,x
+    jsr push_input_stack
     lda SOURCE_ID+1
-    sta MSB+2,x
+    jsr push_input_stack
     lda TIB_PTR
-    sta LSB+1,x
+    jsr push_input_stack
     lda TIB_PTR+1
-    sta MSB+1,x
+    jsr push_input_stack
     lda TIB_SIZE
-    sta LSB,x
+    jsr push_input_stack
     lda TIB_SIZE+1
-    sta MSB,x
-    rts
+    jmp push_input_stack
 
     +BACKLINK
     !byte 13
     !text	"restore-input"
 RESTORE_INPUT
-    lda LSB+3,x
-    sta TO_IN
-    lda MSB+3,x
-    sta TO_IN+1
-    lda LSB+2,x
-    sta SOURCE_ID
-    lda MSB+2,x
-    sta SOURCE_ID+1
-    lda LSB+1,x
-    sta TIB_PTR
-    lda MSB+1,x
-    sta TIB_PTR+1
-    lda LSB,x
-    sta TIB_SIZE
-    lda MSB,x
+    jsr pop_input_stack
     sta TIB_SIZE+1
-    inx
-    inx
-    inx
-    inx
+    jsr pop_input_stack
+    sta TIB_SIZE
+    jsr pop_input_stack
+    sta TIB_PTR+1
+    jsr pop_input_stack
+    sta TIB_PTR
+    jsr pop_input_stack
+    sta SOURCE_ID+1
+    jsr pop_input_stack
+    sta SOURCE_ID
+    jsr pop_input_stack
+    sta TO_IN+1
+    jsr pop_input_stack
+    sta TO_IN
     rts
 
 ; HERE - points to the next free byte of memory. When compiling, compiled words go here.
