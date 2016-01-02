@@ -477,9 +477,12 @@ EVALUATE
     sta TIB_PTR
     lda MSB + 1, x
     sta TIB_PTR + 1
-    lda #$ff
-    sta SOURCE_ID
-    sta SOURCE_ID + 1
+    ldy #$ff
+    sty SOURCE_ID
+    sty SOURCE_ID + 1
+    iny
+    sty TO_IN
+    sty TO_IN + 1
     inx
     inx
     rts
@@ -731,9 +734,11 @@ GET_CHAR_FROM_TIB
     adc TO_IN + 1
     sta TMP + 1
     ldy #0
-    inc $d020 ; flash
     lda (TMP),y
-    dec $d020 ; flash
+
+    ; pha
+    ; jsr PUTCHR ; debug
+    ; pla
 
     inc TO_IN
     bne +
