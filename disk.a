@@ -291,7 +291,14 @@ LOAD_AND_COMPILE
     ; x = basename lo
     jsr	SETNAM
     inc	SOURCE_ID
+    bne +
+    ; transition -1 => 1
+    inc SOURCE_ID
++
+    lda #0
+    sta SOURCE_ID + 1
     lda	SOURCE_ID ; file number
+
     ldx	$ba ; last used device#
     tay
     iny ; secondary address
@@ -317,4 +324,4 @@ LOAD_AND_COMPILE
     tax
     inx
     inx
-    rts
+    jmp REFILL

@@ -468,6 +468,7 @@ SOURCE_ID = * + 1
     +BACKLINK
     !byte 8
     !text	"evaluate" ; ( addr size -- )
+EVALUATE
     ; todo: save-input
     lda LSB, x
     sta TIB_SIZE
@@ -477,6 +478,9 @@ SOURCE_ID = * + 1
     sta TIB_PTR
     lda MSB + 1, x
     sta TIB_PTR + 1
+    lda #$ff
+    sta SOURCE_ID
+    sta SOURCE_ID + 1
     inx
     inx
     rts
@@ -602,6 +606,11 @@ REFILL
     sty TIB_SIZE
     sty TIB_SIZE + 1
 
+    lda #<TIB_BASIC_GETLINE
+    sta TIB_PTR
+    lda #>TIB_BASIC_GETLINE
+    sta TIB_PTR + 1
+
     lda SOURCE_ID
     beq .basic_getline
     lda SOURCE_ID + 1
@@ -664,9 +673,11 @@ GET_CHAR_FROM_TIB
     sta TMP + 1
     ldy #0
     lda (TMP),y
+
     pha
-    jsr PUTCHR
+    jsr PUTCHR ; debug
     pla
+
     inc TO_IN
     bne +
     inc TO_IN + 1
@@ -1535,23 +1546,27 @@ load_base
     ; loads base.fs to $5000
     lda #0
     sta load_binary_laddr_lo
-    sta TIB_PTR
     lda #$50
     sta load_binary_laddr_hi
-    sta TIB_PTR + 1
     ldx	#<basename
     ldy	#>basename
     lda	#basename_end - basename
     jsr load_binary
 
+    dex
+    dex
+    lda load_binary_laddr_lo
+    sta LSB+1, x
+    lda load_binary_laddr_hi
+    sta MSB+1, x
     sec
     lda $ae
     sbc TIB_PTR
-    sta TIB_SIZE
+    sta LSB,x
     lda $af
     sbc TIB_PTR + 1 
-    sta TIB_SIZE + 1
-    rts
+    sta MSB,x
+    jmp EVALUATE
 
 basename
 !text	"base"
