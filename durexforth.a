@@ -472,7 +472,11 @@ SOURCE_ID_MSB = * + 3
 EVALUATE
     jsr EVALUATE_SETUP
 -   jsr INTERPRET
-    lda SOURCE_ID_MSB
+    lda TO_IN
+    cmp TIB_SIZE
+    bne -
+    lda TO_IN + 1
+    cmp TIB_SIZE + 1
     bne -
     jmp RESTORE_INPUT
 
@@ -486,6 +490,7 @@ EVALUATE_SETUP
     sta TIB_PTR
     lda MSB + 1, x
     sta TIB_PTR + 1
+    ; ---
     ldy #$ff
     sty SOURCE_ID_LSB
     sty SOURCE_ID_MSB
@@ -740,14 +745,22 @@ READ_EOF = * + 1
 GET_CHAR_FROM_TIB
     lda TO_IN
     cmp TIB_SIZE
-    bne +
+    bne ++
     lda TO_IN + 1
     cmp TIB_SIZE + 1
-    bne +
+    bne ++
+pending_refill = * + 1
+    lda #0
+    beq +
     jsr REFILL
++
+    inc pending_refill
     lda #K_RETURN
     rts
-+
+++
+    lda #0
+    sta pending_refill
+
     clc
     lda TIB_PTR
     adc TO_IN
