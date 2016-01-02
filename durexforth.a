@@ -706,14 +706,12 @@ READ_EOF = * + 1
     rts
 
 .get_from_disk
-    inc $d020
 -   jsr GET_CHAR_BLOCKING
     ldy TIB_SIZE
     sta TIB_BASIC_GETLINE,y
     inc TIB_SIZE
     cmp #K_RETURN
     bne -
-    dec $d020
     rts
 
 GET_CHAR_FROM_TIB
@@ -733,11 +731,9 @@ GET_CHAR_FROM_TIB
     adc TO_IN + 1
     sta TMP + 1
     ldy #0
+    inc $d020 ; flash
     lda (TMP),y
-
-    ; pha
-    ; jsr PUTCHR ; debug
-    ; pla
+    dec $d020 ; flash
 
     inc TO_IN
     bne +
@@ -1620,12 +1616,13 @@ load_base
     sta LSB+1, x
     lda load_binary_laddr_hi
     sta MSB+1, x
+
     sec
     lda $ae
-    sbc TIB_PTR
+    sbc load_binary_laddr_lo
     sta LSB,x
     lda $af
-    sbc TIB_PTR + 1 
+    sbc load_binary_laddr_hi
     sta MSB,x
     jmp EVALUATE
 
