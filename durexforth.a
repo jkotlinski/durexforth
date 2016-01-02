@@ -470,6 +470,13 @@ SOURCE_ID_MSB = * + 3
     !byte 8
     !text	"evaluate" ; ( addr size -- )
 EVALUATE
+    jsr EVALUATE_SETUP
+-   jsr INTERPRET
+    lda SOURCE_ID_MSB
+    bne -
+    jmp RESTORE_INPUT
+
+EVALUATE_SETUP
     jsr SAVE_INPUT
     lda LSB, x
     sta TIB_SIZE
@@ -672,7 +679,10 @@ READ_EOF = * + 1
 +   
     lda SOURCE_ID_MSB
     beq +
-    jmp RESTORE_INPUT
+    lda #0
+    sta SOURCE_ID_LSB
+    sta SOURCE_ID_MSB
+    rts
 +
     ldy #0
     sty TO_IN
@@ -1642,7 +1652,7 @@ load_base
     lda $af
     sbc load_binary_laddr_hi
     sta MSB,x
-    jmp EVALUATE
+    jmp EVALUATE_SETUP
 
 basename
 !text	"base"
