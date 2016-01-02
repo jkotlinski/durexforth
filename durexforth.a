@@ -470,6 +470,7 @@ SOURCE_ID_MSB = * + 3
     !byte 8
     !text	"evaluate" ; ( addr size -- )
 EVALUATE
+    jsr SAVE_INPUT
     lda LSB, x
     sta TIB_SIZE
     lda MSB, x
@@ -669,6 +670,10 @@ READ_EOF = * + 1
     sta READ_EOF
     rts
 +   
+    lda SOURCE_ID_MSB
+    beq +
+    jmp RESTORE_INPUT
++
     ldy #0
     sty TO_IN
     sty TO_IN + 1
