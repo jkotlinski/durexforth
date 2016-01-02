@@ -275,20 +275,28 @@ OPENW
     !byte 4
     !text	"load"
 LOAD_AND_COMPILE
+    lda	LSB, x
+    sta .filelen
+    lda MSB+1, x
+    sta .namehi
+    lda LSB+1, x
+    sta .namelo
+    inx
+    inx
+
+    jsr SAVE_INPUT
+
     txa
     pha
 
-    lda	LSB, x
-    ldy	MSB+1, x
-    pha
-    lda	LSB+1, x
-    tax
-    pla
+.filelen = * + 1
+    lda #0
+.namehi = * + 1
+    ldy #0
+.namelo = * + 1
+    ldx #0
 
     ; open file
-    ; a = filename length
-    ; y = basename hi
-    ; x = basename lo
     jsr	SETNAM
     inc	SOURCE_ID
     bne +
@@ -322,6 +330,4 @@ LOAD_AND_COMPILE
 ++
     pla
     tax
-    inx
-    inx
     jmp REFILL

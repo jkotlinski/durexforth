@@ -469,7 +469,6 @@ SOURCE_ID = * + 1
     !byte 8
     !text	"evaluate" ; ( addr size -- )
 EVALUATE
-    ; todo: save-input
     lda LSB, x
     sta TIB_SIZE
     lda MSB, x
@@ -481,6 +480,58 @@ EVALUATE
     lda #$ff
     sta SOURCE_ID
     sta SOURCE_ID + 1
+    inx
+    inx
+    rts
+
+    +BACKLINK
+    !byte 10
+    !text	"save-input"
+SAVE_INPUT
+    dex
+    dex
+    dex
+    dex
+    lda TO_IN
+    sta LSB+3,x
+    lda TO_IN+1
+    sta MSB+3,x
+    lda SOURCE_ID
+    sta LSB+2,x
+    lda SOURCE_ID+1
+    sta MSB+2,x
+    lda TIB_PTR
+    sta LSB+1,x
+    lda TIB_PTR+1
+    sta MSB+1,x
+    lda TIB_SIZE
+    sta LSB,x
+    lda TIB_SIZE+1
+    sta MSB,x
+    rts
+
+    +BACKLINK
+    !byte 13
+    !text	"restore-input"
+RESTORE_INPUT
+    lda LSB+3,x
+    sta TO_IN
+    lda MSB+3,x
+    sta TO_IN+1
+    lda LSB+2,x
+    sta SOURCE_ID
+    lda MSB+2,x
+    sta SOURCE_ID+1
+    lda LSB+1,x
+    sta TIB_PTR
+    lda MSB+1,x
+    sta TIB_PTR+1
+    lda LSB,x
+    sta TIB_SIZE
+    lda MSB,x
+    sta TIB_SIZE+1
+    inx
+    inx
     inx
     inx
     rts
@@ -567,20 +618,16 @@ tmp_x
     ldy #0
     jmp pushya
 
+READ_EOF
+    !byte 0
+
 GET_CHAR_BLOCKING
     stx	tmp_x
 -   
     jsr	CHRIN ; wastes x
     pha
     jsr	READST
-    beq +
-    ; handle EOF
-    lda	SOURCE_ID
-    jsr	CLOSE
-    dec	SOURCE_ID
-    ldx SOURCE_ID
-    jsr CHKIN
-+   
+    sta READ_EOF
     pla
     ora #0
     beq -
@@ -600,6 +647,21 @@ TO_IN
     !word 0
 
 REFILL
+    lda READ_EOF
+    beq +
+    stx tmp_x
+    ; handle EOF
+    lda	SOURCE_ID
+    jsr	CLOSE
+    dec	SOURCE_ID
+    ldx SOURCE_ID
+    jsr CHKIN
+    ldx tmp_x
+    jsr RESTORE_INPUT
+    lda #0
+    sta READ_EOF
+    rts
++   
     ldy #0
     sty TO_IN
     sty TO_IN + 1
@@ -674,9 +736,9 @@ GET_CHAR_FROM_TIB
     ldy #0
     lda (TMP),y
 
-    pha
-    jsr PUTCHR ; debug
-    pla
+    ; pha
+    ; jsr PUTCHR ; debug
+    ; pla
 
     inc TO_IN
     bne +
