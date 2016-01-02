@@ -298,14 +298,14 @@ LOAD_AND_COMPILE
 
     ; open file
     jsr	SETNAM
-    inc	SOURCE_ID
+    inc	SOURCE_ID_LSB
     bne +
     ; transition -1 => 1
-    inc SOURCE_ID
+    inc SOURCE_ID_LSB
 +
     lda #0
-    sta SOURCE_ID + 1
-    lda	SOURCE_ID ; file number
+    sta SOURCE_ID_MSB
+    lda	SOURCE_ID_LSB ; file number
 
     ldx	$ba ; last used device#
     tay
@@ -313,11 +313,11 @@ LOAD_AND_COMPILE
     jsr	SETLFS
     jsr	OPEN
     bcc	+
-    dec SOURCE_ID
+    dec SOURCE_ID_LSB
     jsr .close
     jmp ++
 +
-    ldx	SOURCE_ID ; file number
+    ldx	SOURCE_ID_LSB ; file number
     jsr	CHKIN
 
     ; Skips load address. It is tempting to keep the source

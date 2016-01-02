@@ -459,7 +459,8 @@ STATE
     +BACKLINK
     !byte 9
     !text	"source-id"
-SOURCE_ID = * + 1
+SOURCE_ID_LSB = * + 1
+SOURCE_ID_MSB = * + 3
     ; -1 : string (via evaluate)
     ; 0 : keyboard
     ; 1+ : file id
@@ -478,8 +479,8 @@ EVALUATE
     lda MSB + 1, x
     sta TIB_PTR + 1
     ldy #$ff
-    sty SOURCE_ID
-    sty SOURCE_ID + 1
+    sty SOURCE_ID_LSB
+    sty SOURCE_ID_MSB
     iny
     sty TO_IN
     sty TO_IN + 1
@@ -512,9 +513,9 @@ SAVE_INPUT
     jsr push_input_stack
     lda TO_IN+1
     jsr push_input_stack
-    lda SOURCE_ID
+    lda SOURCE_ID_LSB
     jsr push_input_stack
-    lda SOURCE_ID+1
+    lda SOURCE_ID_MSB
     jsr push_input_stack
     lda TIB_PTR
     jsr push_input_stack
@@ -538,9 +539,9 @@ RESTORE_INPUT
     jsr pop_input_stack
     sta TIB_PTR
     jsr pop_input_stack
-    sta SOURCE_ID+1
+    sta SOURCE_ID_MSB
     jsr pop_input_stack
-    sta SOURCE_ID
+    sta SOURCE_ID_LSB
     jsr pop_input_stack
     sta TO_IN+1
     jsr pop_input_stack
@@ -640,10 +641,6 @@ GET_CHAR_BLOCKING
     ora #0
     beq -
 
-    ; pha ; debug
-    ; jsr PUTCHR
-    ; pla
-
     ldx tmp_x
     rts
 
@@ -661,10 +658,10 @@ READ_EOF = * + 1
     beq +
     ; handle EOF
     stx tmp_x
-    lda	SOURCE_ID
+    lda	SOURCE_ID_LSB
     jsr	CLOSE
-    dec	SOURCE_ID
-    ldx SOURCE_ID
+    dec	SOURCE_ID_LSB
+    ldx SOURCE_ID_LSB
     jsr CHKIN
     ldx tmp_x
     jsr RESTORE_INPUT
@@ -683,9 +680,9 @@ READ_EOF = * + 1
     lda #>TIB_BASIC_GETLINE
     sta TIB_PTR + 1
 
-    lda SOURCE_ID
+    lda SOURCE_ID_LSB
     beq .basic_getline
-    lda SOURCE_ID + 1
+    lda SOURCE_ID_MSB
     beq	.get_from_disk
 
 .basic_getline
@@ -733,7 +730,8 @@ GET_CHAR_FROM_TIB
     cmp TIB_SIZE + 1
     bne +
     jsr REFILL
-    jmp GET_CHAR_FROM_TIB
+    lda #K_RETURN
+    rts
 +
     clc
     lda TIB_PTR
@@ -1146,7 +1144,8 @@ quit_reset
     stx     TIB_SIZE + 1
     stx     TO_IN
     stx     TO_IN + 1
-    stx     SOURCE_ID
+    stx     SOURCE_ID_LSB
+    stx     SOURCE_ID_MSB
     jsr     CHKIN
     pla
     tax
