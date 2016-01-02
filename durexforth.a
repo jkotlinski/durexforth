@@ -618,9 +618,6 @@ tmp_x
     ldy #0
     jmp pushya
 
-READ_EOF
-    !byte 0
-
 GET_CHAR_BLOCKING
     stx	tmp_x
 -   
@@ -647,7 +644,9 @@ TO_IN
     !word 0
 
 REFILL
-    lda READ_EOF
+
+READ_EOF = * + 1
+    lda #0
     beq +
     stx tmp_x
     ; handle EOF
