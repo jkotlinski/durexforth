@@ -651,8 +651,8 @@ REFILL
 READ_EOF = * + 1
     lda #0
     beq +
-    stx tmp_x
     ; handle EOF
+    stx tmp_x
     lda	SOURCE_ID
     jsr	CLOSE
     dec	SOURCE_ID
@@ -725,6 +725,7 @@ GET_CHAR_FROM_TIB
     cmp TIB_SIZE + 1
     bne +
     jsr REFILL
+    jmp GET_CHAR_FROM_TIB
 +
     clc
     lda TIB_PTR
