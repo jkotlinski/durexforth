@@ -296,6 +296,7 @@ PLUS
     +BACKLINK
     !byte	1
     !text	"="
+EQUAL
     ldy #0
     lda	LSB, x
     cmp	LSB + 1, x
@@ -631,14 +632,20 @@ tmp_x
     !byte	4
     !text	"getc"
     jsr GET_CHAR_FROM_TIB
-    ; ldy #0
+    ldy #0
     jmp pushya
 
     +BACKLINK
     !byte	4
     !text	"char"
-    jsr WORD
+-
+    jsr	WORD ; push string to stack
     inx
+    lda WORD_BUFFER_LENGTH
+    bne +
+    jsr REFILL
+    jmp -
++
     lda WORD_BUFFER_DATA
     ldy #0
     jmp pushya
@@ -664,6 +671,9 @@ GET_CHAR_BLOCKING
 TO_IN
     !word 0
 
+    +BACKLINK
+    !byte	6
+    !text	"refill"
 REFILL
 
 READ_EOF = * + 1
@@ -745,22 +755,13 @@ READ_EOF = * + 1
 GET_CHAR_FROM_TIB
     lda TO_IN
     cmp TIB_SIZE
-    bne ++
+    bne +
     lda TO_IN + 1
     cmp TIB_SIZE + 1
-    bne ++
-pending_refill = * + 1
+    bne +
     lda #0
-    beq +
-    jsr REFILL
-+
-    inc pending_refill
-    lda #K_RETURN
     rts
-++
-    lda #0
-    sta pending_refill
-
++
     clc
     lda TIB_PTR
     adc TO_IN
@@ -779,19 +780,29 @@ pending_refill = * + 1
     bne +
     inc TO_IN + 1
 +   rts
-    
+
 ; WORD ( -- strptr )
     +BACKLINK
-    !byte	4
-    !text	"word"
+    !byte      4
+    !text      "word"
 WORD
-    ; prepare text input
     lda	#0
     sta	WORD_BUFFER_LENGTH
+
+    ; skips initial delimiters.
+-
+    jsr GET_CHAR_FROM_TIB
+    beq .word_end
+    cmp #K_SPACE
+    beq -
+    cmp #K_RETURN
+    beq -
+    jmp .append
     
 .get_char
     jsr GET_CHAR_FROM_TIB
 
+    beq .word_end
     cmp #K_RETURN
     beq .word_end
     cmp #K_SPACE
@@ -799,6 +810,7 @@ WORD
     cmp #(K_SPACE|$80)
     beq .word_end
 
+.append
     ldy WORD_BUFFER_LENGTH
     sta WORD_BUFFER_DATA,y
     iny
@@ -808,16 +820,11 @@ WORD
     bne .get_char
 
 .word_end
-    lda	WORD_BUFFER_LENGTH
-    beq .get_char ; Nothing entered yet, try again.
-
     dex
-
     lda	#<WORD_BUFFER
     sta	LSB, x
     lda	#>WORD_BUFFER
     sta	MSB, x
-
     rts
 
     +BACKLINK
@@ -1022,7 +1029,14 @@ INTERPRET
     cpx #X_INIT+1
     bpl .on_stack_underflow
 
+-
     jsr	WORD ; push string to stack
+    lda WORD_BUFFER_LENGTH
+    bne +
+    inx
+    jsr REFILL
+    jmp -
++
     jsr	FIND ; replace string with dictionary ptr
     lda LSB, x
     bne	.found_word

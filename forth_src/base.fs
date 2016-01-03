@@ -20,7 +20,10 @@ postpone 0branch , ;
 : again immediate jmp, , ;
 : recurse immediate latest @ >cfa compile, ;
 : ( immediate no-tce 
-begin getc [char] ) = until ;
+begin getc dup
+0= if refill then
+[char] ) = if exit then
+again ;
 : \ immediate no-tce 
 begin getc d = until ;
 : tuck ( x y -- y x y ) swap over ;
