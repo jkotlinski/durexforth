@@ -736,10 +736,6 @@ READ_EOF = * + 1
     iny
     jmp -
 +   
-    ; Append return.
-    lda #K_RETURN
-    sta TIB_BASIC_GETLINE,y
-    iny
     sty TIB_SIZE
     rts
 
