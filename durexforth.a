@@ -636,8 +636,12 @@ tmp_x
     +BACKLINK
     !byte	4
     !text	"getc"
+GETC
     jsr GET_CHAR_FROM_TIB
-    ldy #0
+    bne +
+    jsr REFILL
+    jmp GETC
++   ldy #0
     jmp pushya
 
     +BACKLINK
