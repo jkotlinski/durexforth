@@ -34,3 +34,8 @@ rot base @ um* d+ r> ;
 begin over c@ digit? over and while
 >r dup c@ pet# accumulate
 1+ r> 1- repeat ;
+
+: accept ( addr u -- u )
+tuck 0 do key dup emit
+dup d = if 2drop i swap leave then
+over c! 1+ loop drop ;

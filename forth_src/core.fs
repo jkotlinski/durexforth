@@ -983,11 +983,11 @@ T{ OUTPUT-TEST -> }T
 \ ------------------------------------------------------------------------
 TESTING INPUT: ACCEPT
 
-CREATE ABUF 80 CHARS ALLOT
+CREATE ABUF 50 CHARS ALLOT
 
 : ACCEPT-TEST
    CR ." PLEASE TYPE UP TO 80 CHARACTERS:" CR
-   ABUF 80 ACCEPT
+   ABUF 50 ACCEPT
    CR ." RECEIVED: " [CHAR] " EMIT
    ABUF SWAP TYPE [CHAR] " EMIT CR
 ;
