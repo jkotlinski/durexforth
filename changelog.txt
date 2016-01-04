@@ -244,3 +244,4 @@ Thanks to Christian Johansson for suggestions!
  * forth: made while/repeat implementation conform to standard
  * forth: made word conform to standard
  * forth: made "immediate", "no-tce" non-immediate
+ * forth: made sure immediate does not toggle

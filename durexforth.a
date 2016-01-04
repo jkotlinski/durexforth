@@ -1402,18 +1402,17 @@ SEMICOLON
     sta	(TMP), y
     rts
 
-; IMMEDIATE. Flip the immediate flag of the LATEST word.
+; IMMEDIATE. Set the immediate flag of the LATEST word.
     +BACKLINK
     !byte	9
     !text	"immediate"
-IMMED
     lda	_LATEST
     sta	TMP
     lda	_LATEST + 1
     sta	TMP + 1
     ldy	#2
     lda	(TMP), y
-    eor	#F_IMMED
+    ora	#F_IMMED
     sta	(TMP), y
     rts
 
