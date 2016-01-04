@@ -1,17 +1,5 @@
-depth 0= assert
-
-( loop tests )
-: x 10 0 do i .
-i 5 = if 0 leave then loop ;
-x 0= assert
-: x 10 0 do i .
-i 5 = if 0 unloop exit then loop ;
-x 0= assert
-
 : fakekeys ( n -- )
 c6 c! ;
-
-depth 0= assert
 
 .( gfxdemo )
 a fakekeys \ skips demos
@@ -36,4 +24,14 @@ s" tester" load
 s" core" load
 s" coreplus" load
 
-.( ok)
+: push ( ch -- )
+c6 c@ 277 + c!
+1 c6 +! ;
+
+.( vi )
+'i' push 
+'.' push '(' push bl push
+'o' push 'k' push ')' push
+5f push \ leftarrow
+88 push \ f7
+vi
