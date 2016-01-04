@@ -1198,6 +1198,7 @@ quit_reset
     stx     TO_IN + 1
     stx     SOURCE_ID_LSB
     stx     SOURCE_ID_MSB
+    stx     SAVE_INPUT_STACK_DEPTH
     jsr     CHKIN
     pla
     tax
