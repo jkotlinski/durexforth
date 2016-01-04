@@ -232,7 +232,7 @@ Thanks to Christian Johansson and polluks for suggestions!
 
 Thanks to Christian Johansson for suggestions!
 
-2016-01-04: v1.5.0 - Forth 2012 core standard compliance!
+2016-01-04: v1.5.0 - Forth 2012 core standard compliant!
 
  * forth: made +loop work according to standard
  * forth: added support for #, $, %, char parsing.
