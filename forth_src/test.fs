@@ -24,6 +24,7 @@ s" tester" load
 s" core" load
 s" coreplus" load
 
+hex
 : push ( ch -- )
 c6 c@ 277 + c!
 1 c6 +! ;
