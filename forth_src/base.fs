@@ -3,7 +3,6 @@
 : cr d emit ;
 : nip swap drop ;
 : * um* drop ;
-: ' bl word find drop ;
 : jmp, 4c c, ;
 : ['] ' 
 [ ' literal compile, ] ; immediate no-tce

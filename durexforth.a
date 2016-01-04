@@ -173,6 +173,7 @@ pushya
     +BACKLINK
     !byte 2
     !text	"bl"
+BL
     +VALUE	K_SPACE
 
     +BACKLINK
@@ -1021,6 +1022,17 @@ last_word_no_tail_call_elimination
     !byte 1
 
     +BACKLINK
+    !byte	1
+    !text	"'"
+    jsr BL
+    jsr WORD
+    jsr FIND
+    lda LSB,x
+    beq print_word_not_found_error
+    inx
+    rts
+
+    +BACKLINK
     !byte	5
     !text	"abort"
 ABORT
@@ -1055,7 +1067,7 @@ INTERPRET
     jsr READ_NUMBER
     beq .was_number
 
-    jmp .on_word_not_found_error
+    jmp print_word_not_found_error
 
     ; yep, it's a number...
 .was_number
@@ -1099,7 +1111,7 @@ FOUND_WORD_WITH_NO_TCE = * + 1
     inx
     jmp EXECUTE
 
-.on_word_not_found_error
+print_word_not_found_error
     lda	#$12 ; reverse on
     jsr	PUTCHR
 

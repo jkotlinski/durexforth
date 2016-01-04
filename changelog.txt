@@ -247,3 +247,6 @@ Thanks to Christian Johansson for suggestions!
  * forth: made sure immediate does not toggle
  * forth: added support for #, $, %, char parsing.
 	      e.g. #123, $d020, %1001001, 'z'
+ * forth: ' now aborts if it does not find a word
+
+Thanks to polluks for suggestions!
