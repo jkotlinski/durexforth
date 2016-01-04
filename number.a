@@ -48,6 +48,15 @@ NEGATE
 BASE
     !word 16
 
+apply_base
+    sta BASE
+    dec .chars_to_process
+    inc TMP3
+    bne +
+    inc TMP3+1
++   lda (TMP3),y
+    rts
+
 ; Z = success, NZ = fail
 ; success: ( string ptr -- number )
 ; fail: ( string ptr -- string ptr )
@@ -77,16 +86,29 @@ READ_NUMBER
     inc TMP3
     bne +
     inc TMP3+1
+
 +   lda (TMP3), y
-    cmp #"-"
-    bne +
-    inc .negate
-    jmp .prepare_next_char
-+
     cmp #"#"
-    bne .loop_entry
+    bne .check_decimal
     lda #10
-    sta BASE
+    jsr apply_base
+
+.check_decimal
+    cmp #"$"
+    bne .check_binary
+    lda #16
+    jsr apply_base
+
+.check_binary
+    cmp #"%"
+    bne .check_negate
+    lda #2
+    jsr apply_base
+
+.check_negate
+    cmp #"-"
+    bne .loop_entry
+    inc .negate
     jmp .prepare_next_char
 
 .next_digit

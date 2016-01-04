@@ -204,17 +204,17 @@ TESTING number prefixes # $ % and 'c' character input
 VARIABLE OLD-BASE
 DECIMAL BASE @ OLD-BASE !
 T{ #1289 -> 1289 }T
-T{ #12346789. -> 12346789. }T
+\ T{ #12346789. -> 12346789. }T
 T{ #-1289 -> -1289 }T
-T{ #-12346789. -> -12346789. }T
+\ T{ #-12346789. -> -12346789. }T
 T{ $12eF -> 4847 }T
-T{ $12aBcDeF. -> 313249263. }T
+\ T{ $12aBcDeF. -> 313249263. }T
 T{ $-12eF -> -4847 }T
-T{ $-12AbCdEf. -> -313249263. }T
+\ T{ $-12AbCdEf. -> -313249263. }T
 T{ %10010110 -> 150 }T
-T{ %10010110. -> 150. }T
+\ T{ %10010110. -> 150. }T
 T{ %-10010110 -> -150 }T
-T{ %-10010110. -> -150. }T
+\ T{ %-10010110. -> -150. }T
 T{ 'z' -> 122 }T
 \ Check BASE is unchanged
 T{ BASE @ OLD-BASE @ = -> <TRUE> }T
@@ -222,24 +222,24 @@ T{ BASE @ OLD-BASE @ = -> <TRUE> }T
 \ Repeat in Hex mode
 16 OLD-BASE ! 16 BASE !
 T{ #1289 -> 509 }T
-T{ #12346789. -> BC65A5. }T
+T\ { #12346789. -> BC65A5. }T
 T{ #-1289 -> -509 }T
-T{ #-12346789. -> -BC65A5. }T
+\ T{ #-12346789. -> -BC65A5. }T
 T{ $12eF -> 12EF }T
-T{ $12aBcDeF. -> 12AbCdeF. }T
+\ T{ $12aBcDeF. -> 12AbCdeF. }T
 T{ $-12eF -> -12EF }T
-T{ $-12AbCdEf. -> -12ABCDef. }T
+\ T{ $-12AbCdEf. -> -12ABCDef. }T
 T{ %10010110 -> 96 }T
-T{ %10010110. -> 96. }T
+\ T{ %10010110. -> 96. }T
 T{ %-10010110 -> -96 }T
-T{ %-10010110. -> -96. }T
+\ T{ %-10010110. -> -96. }T
 T{ 'z' -> 7a }T
 \ Check BASE is unchanged
 T{ BASE @ OLD-BASE @ = -> <TRUE> }T   \ 2
 
 DECIMAL
 \ Check number prefixes in compile mode
-T{ : nmp  #8327. $-2cbe %011010111 ''' ; nmp -> 8327. -11454 215 39 }T
+T{ : nmp  #8327 $-2cbe %011010111 ''' ; nmp -> 8327 -11454 215 39 }T
 
 
 \ ------------------------------------------------------------------------------
