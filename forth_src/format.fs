@@ -7,3 +7,4 @@ here dup 1+ end @ here - cmove>
 : hold ins here c! ;
 : sign 0< if [char] - hold then ;
 : # base @ um/mod swap #pet hold 0 ;
+: #s begin 2dup or while # repeat ;
