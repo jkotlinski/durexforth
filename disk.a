@@ -285,6 +285,8 @@ LOAD_AND_COMPILE
     inx
 
     jsr SAVE_INPUT
+    lda #0
+    sta READ_EOF
 
     txa
     pha
