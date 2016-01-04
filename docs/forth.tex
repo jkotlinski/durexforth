@@ -385,6 +385,23 @@ Compile-time version of "\texttt{.(}". Example: \texttt{: foo ." bar" ;}
 
 \end{description}
 
+\section{Number Formatting}
+
+\begin{description}
+
+For more info about number formatting, read Starting Forth!
+
+\item[>number ( ud addr u -- ud2 addr2 u2)] Converts the string in \texttt{addr u} to digits, using \texttt{BASE}, and adds each digit into ud after multiplying it with \texttt{BASE}. \texttt{addr2 u2} contains the part of the string that was not converted.
+
+\item[$<$\#] Begins the number conversion process.
+\item[\# ( ud -- ud )] Converts one digit and puts it in the start of the output string.
+\item[s\# ( ud -- ud )] Calls \# once, and repeats until the number is zero.
+\item[hold ( ch -- )] Inserts the char at the start of the output string.
+\item[sign ( a -- )] If \texttt{a} is negative, inserts a minus sign at the start of the output string.
+\item[\#$>$ ( xd -- addr u )] Drops xd and returns the output string.
+
+\end{description}
+
 \section{Vectored Execution}
 
 \begin{description}
