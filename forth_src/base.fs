@@ -303,4 +303,4 @@ s" gfx" load
 s" vi" load
 
 .( save new durexforth..)
-s" @:durexforth" save-forth
+s" @:durexforth" save-forth .( ok!) cr
