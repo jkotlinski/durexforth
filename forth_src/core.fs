@@ -829,7 +829,7 @@ TESTING <# # #S #> HOLD SIGN BASE >NUMBER HEX DECIMAL
       R> DROP 2DROP <FALSE>      \ LENGTHS MISMATCH
    THEN ;
 
-: GP1  <# 41 HOLD 42 HOLD 0 0 #> S" BA" S= ;
+: GP1  <# [char] A HOLD [char] B HOLD 0 0 #> S" BA" S= ;
 T{ GP1 -> <TRUE> }T
 
 : GP2  <# -1 SIGN 0 SIGN -1 SIGN 0 0 #> S" --" S= ;

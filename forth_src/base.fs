@@ -281,26 +281,24 @@ begin 1 d020 +! again then ;
 
 ( header modules )
 
-.( labels..)
-s" labels" load
-.( doloop..)
-s" doloop" load
-.( sys..)
-s" sys" load
-.( debug..)
-s" debug" load
+.( labels..) s" labels" load
+.( doloop..) s" doloop" load
+.( format..) s" format" load
 
-.( ls..)
-s" ls" load
-.( gfx..)
-s" gfx" load
+s" tester" load
+s" core" load
+
+.( sys..) s" sys" load
+.( debug..) s" debug" load
+
+.( ls..) s" ls" load
+.( gfx..) s" gfx" load
 ( s" sprite" load
   ." gfxdemo.."
   s" gfxdemo" load
   ." turtle.."
   s" turtle" load )
-.( vi..)
-s" vi" load
+.( vi..) s" vi" load
 
 .( save new durexforth..)
 s" @:durexforth" save-forth .( ok!) cr

@@ -238,7 +238,7 @@ Thanks to Christian Johansson for suggestions!
  * forth: made "type" disable c64 quote mode (fixes "words")
  * forth: removed hide, hide-to, hidden, forget, within, scratch
  * forth: state ( -- flag ) changed to state ( -- addr )
- * forth: added count, >body
+ * forth: added count, >body, <#, #>, hold
  * forth: fixed yet another tail call elimination crash
  * forth: made while/repeat implementation conform to standard
  * forth: made word conform to standard
