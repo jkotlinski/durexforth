@@ -70,6 +70,10 @@ postpone drop
 begin ?dup while postpone then 
 repeat ;
 
+: move ( src dst u -- )
+>r 2dup u< r> swap
+if cmove> else cmove then ;
+
 ( gets pointer to first data field, i.e., skips
 the first jsr )
 : >dfa >cfa 1+ 2+ ;
