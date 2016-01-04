@@ -1,7 +1,7 @@
 d value lf
 : clrscr e544 sys ;
 
-6001 value bufstart
+7001 value bufstart
 
 variable eof ( ram eof )
 0 eof !

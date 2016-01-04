@@ -1,23 +1,24 @@
 : fakekeys ( n -- )
 c6 c! ;
 
+here latest @
+
 .( gfxdemo )
 a fakekeys \ skips demos
 s" gfxdemo" load
-depth 0= assert
 
 .( fractals )
 4 fakekeys \ skips demos
 s" fractals" load
-depth 0= assert
 
 .( mmldemo )
 s" mmldemo" load
-depth 0= assert
 
 .( spritedemo )
 1 fakekeys \ exits demo 
 s" spritedemo" load
+
+latest ! to here
 depth 0= assert
 
 s" tester" load
