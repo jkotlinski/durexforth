@@ -92,7 +92,7 @@ The bottom address of the MSB section of the parameter stack.
 \item[. ( n -- )] Prints top value of stack as signed number.
 \item[u. ( u -- )] Prints top value of stack as unsigned number.
 \item[.s] See stack contents.
-\item[emit ( a -- )] Prints top value of stack as a PETSCII character.
+\item[emit ( a -- )] Prints top value of stack as a PETSCII character. Example: \texttt{'q' emit}
 \item[\pounds] Comment to end of line. (Used on C64/PETSCII.)
 \item[\textbackslash] Comment to end of line. (Used when cross-compiling from PC/ASCII.)
 \item[(] Multiline comment. Ignores everything until a ).
@@ -345,7 +345,7 @@ endcase
 
     Typical use: \texttt{: x ... test abort" error" ... ;}
 
-\item[quit] Enters an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program.
+\item[quit] Enters an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting input.
 
 \end{description}
 

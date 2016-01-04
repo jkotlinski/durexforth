@@ -6,7 +6,7 @@ Start up durexForth. If loaded successfully, it will greet you with a friendly \
 
 Let's warm it up a little. Enter \texttt{1} (followed by return). You have now put a digit on the stack. This can be verified by the command \texttt{.s}, which will print out the stack. Now enter \texttt{.} to pop the digit and print it to screen, followed by \texttt{.s} to verify that the stack is empty.
 
-Now some arithmetics. The default input mode in DurexForth is hexadecimal. As an example, \texttt{1000 a * u.} will calculate $\mathtt{a \times 1000}$ and print the result $\mathtt{a000}$. If you wish, it is possible to switch numerical base using \texttt{decimal} and \texttt{hex}.
+Now something about numbers. The default input mode in DurexForth is hexadecimal. As an example, \texttt{1000 a * u.} will calculate $\mathtt{a \times 1000}$ and print the result $\mathtt{a000}$. If you wish, it is possible to switch numerical base using \texttt{decimal} and \texttt{hex}. Or, you can prefix \texttt{\$}, \texttt{\#} or \texttt{\%} to your number to set a base for it: like \texttt{\$d020}, \texttt{\#1234} or \texttt{\%11010101}. 
 
 Let's define a word \texttt{bg!} for setting the border color\ldots 
 
