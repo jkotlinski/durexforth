@@ -673,7 +673,7 @@ dex,
 17 lda,# d018 sta,
 318 @ jmp, \ jump to normal restore
 : compile-run sei literal 318 ! cli
-bufstart eof @ bufstart - evaluate ;
+bufstart eof @ bufstart - 1- evaluate ;
 
 : main-handler ( key -- quit? )
 	['] maintable ( key tableptr )
@@ -727,7 +727,7 @@ bufstart eof @ bufstart - evaluate ;
     \ eof should be 0 terminated!
     eof @ c@ 0= assert
     \ eof @ ae ! 
-	88 of compile-run ffff exit endof \ f7
+	88 of drop cleanup compile-run quit endof \ f7
 
 	endcase
 	0
