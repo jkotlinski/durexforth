@@ -13,18 +13,21 @@ c6 c! ;
 
 depth 0= assert
 
-( sample tests )
+.( gfxdemo )
 a fakekeys \ skips demos
 s" gfxdemo" load
 depth 0= assert
 
+.( fractals )
 4 fakekeys \ skips demos
 s" fractals" load
 depth 0= assert
 
+.( mmldemo )
 s" mmldemo" load
 depth 0= assert
 
+.( spritedemo )
 1 fakekeys \ exits demo 
 s" spritedemo" load
 depth 0= assert

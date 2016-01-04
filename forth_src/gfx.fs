@@ -549,11 +549,14 @@ addr @ 8 cmove
 r> 1 c! cli drop ;
 
 : getbit
-2* getc [char] 1 = if 1+ then ;
+2* source drop >in @ + c@
+[char] 1 = if 1+ then 
+1 >in +! ;
 : getrow ( dst -- dst )
+refill
 0 getbit getbit getbit getbit
 getbit getbit getbit getbit over c! 1+
-getc drop ; \ skip cr
+;
 : defchar variable 6 allot
 latest @ >cfa execute
 getrow getrow getrow getrow
