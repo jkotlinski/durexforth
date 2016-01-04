@@ -10,4 +10,4 @@ here dup 1+ end @ here - cmove>
 >r 0 r@ um/mod r> swap >r
 um/mod r> ;
 : # base @ ud/mod rot #pet hold ;
-: #s begin 2dup or while # repeat ;
+: #s # begin 2dup or while # repeat ;
