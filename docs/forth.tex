@@ -337,6 +337,8 @@ endcase
 
 \item[interpret ( -- value )] Interprets a word from input and puts it on the stack.
 
+\item[accept ( addr u -- u )] Receive a string of at most u characters into the buffer that starts at addr. Returns how many characters were received.
+
 \item[evaluate ( addr len -- )] Makes DurexForth evaluate the given string.
 
 \item[abort] Empties the data stack and performs \texttt{quit}.
