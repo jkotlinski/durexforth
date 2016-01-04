@@ -291,6 +291,7 @@ begin 1 d020 +! again then ;
 
 s" tester" load
 s" core" load
+s" coreplus" load
 
 .( sys..) s" sys" load
 .( debug..) s" debug" load
