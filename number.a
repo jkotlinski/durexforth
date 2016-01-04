@@ -63,6 +63,9 @@ READ_NUMBER
     dex
     dex
 
+    lda BASE
+    sta OLD_BASE
+
     ldy #0
     sty .negate
     sty LSB+1,x
@@ -76,8 +79,14 @@ READ_NUMBER
     inc TMP3+1
 +   lda (TMP3), y
     cmp #"-"
-    bne .loop_entry
+    bne +
     inc .negate
+    jmp .prepare_next_char
++
+    cmp #"#"
+    bne .loop_entry
+    lda #10
+    sta BASE
     jmp .prepare_next_char
 
 .next_digit
@@ -117,6 +126,11 @@ READ_NUMBER
 .prepare_next_char
     dec .chars_to_process
     bne .next_digit
+
+; done!
+OLD_BASE = * + 1
+    lda #0
+    sta BASE
 
     lda LSB+1,x
     sta LSB+2,x

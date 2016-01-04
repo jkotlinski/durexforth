@@ -245,3 +245,4 @@ Thanks to Christian Johansson for suggestions!
  * forth: made word conform to standard
  * forth: made "immediate", "no-tce" non-immediate
  * forth: made sure immediate does not toggle
+ * forth: added support for # prefix
