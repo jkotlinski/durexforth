@@ -15,14 +15,14 @@ variable lstk 14 allot
 variable lsp lstk lsp !
 : >l ( n -- ) lsp @ ! 2 lsp +! ;
 
-: do immediate
-postpone (do) here dup >l ;
+: do
+postpone (do) here dup >l ; immediate
 
-: unloop no-tce r> r> r> 2drop >r ;
+: unloop r> r> r> 2drop >r ; no-tce
 
-: leave immediate no-tce
+: leave
 postpone unloop 
-postpone branch here >l 0 , ;
+postpone branch here >l 0 , ; immediate no-tce
 
 : resolve-leaves ( dopos -- )
 begin -2 lsp +!
@@ -47,8 +47,8 @@ txa, clc, 6 adc,# tax, txs, \ sp += 6
 zptmp ldx, \ restore x
 zptmp2 (jmp),
 
-: loop immediate no-tce
-postpone (loop) dup , resolve-leaves ;
+: loop
+postpone (loop) dup , resolve-leaves ; immediate no-tce
 
 : (+loop) ( inc -- )
 r> swap \ ret inc
@@ -59,10 +59,10 @@ r@ 1- -rot within 0= if
 >r >r [ ' branch jmp, ] then
 r> 2drop 2+ >r ;
 
-: +loop immediate no-tce
-postpone (+loop) dup , resolve-leaves ;
+: +loop
+postpone (+loop) dup , resolve-leaves ; immediate no-tce
 
-: i immediate postpone r@ ;
+: i postpone r@ ; immediate
 code j txa, tsx,
 107 ldy,x zptmp sty, 108 ldy,x
 tax, dex, 

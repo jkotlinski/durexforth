@@ -205,8 +205,8 @@ Like \texttt{cmove}, except that the copy proceeds from higher to lower memory.
 \item[[char{]} c] Compile character \texttt{c} as a literal value.
 \item[[ ( -- )] Leave compile mode. Execute the following words immediately instead of compiling them.
 \item[{]} ( -- )] Return to compile mode.
-\item[immediate] Mark the word being compiled as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
-\item[no-tce] Do not perform tail call elimination (the practice of substituting jsr/rts with jmp) if this word is the jsr target.
+\item[immediate] Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
+\item[no-tce] Do not perform tail call elimination (the practice of substituting jsr/rts with jmp) if the last compiled word is the jsr target.
 \item[{[']} name ( -- xt )] Place name's execution token xt on the stack. The execution token returned by the compiled phrase \texttt{['] x} is the same value returned by \texttt{' x} outside of compilation state. Typical use: \texttt{: x ... {[}'{]} name ... ;}
 \item[compile, ( xt -- )] Append \texttt{jsr xt} to the word being compiled. Typical use: \texttt{: recurse immed latest @ >cfa compile, ;}
 \item[postpone xxx] Compile the compilation semantics (instead of interpretation semantics) of xxx. Typical use: 

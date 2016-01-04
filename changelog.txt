@@ -243,4 +243,4 @@ Thanks to Christian Johansson for suggestions!
  * forth: fixed yet another tail call elimination crash
  * forth: made while/repeat implementation conform to standard
  * forth: made word conform to standard
- * forth: made +loop conform to standard
+ * forth: made "immediate", "no-tce" non-immediate

@@ -1390,7 +1390,7 @@ SEMICOLON
     jmp LBRAC
 
     +BACKLINK
-    !byte	6 | F_IMMED
+    !byte	6
     !text	"no-tce" ; no tail call elimination
     lda	_LATEST
     sta	TMP
@@ -1404,7 +1404,7 @@ SEMICOLON
 
 ; IMMEDIATE. Flip the immediate flag of the LATEST word.
     +BACKLINK
-    !byte	9 | F_IMMED
+    !byte	9
     !text	"immediate"
 IMMED
     lda	_LATEST

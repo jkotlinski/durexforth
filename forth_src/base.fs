@@ -5,26 +5,26 @@
 : * um* drop ;
 : ' bl word find drop ;
 : jmp, 4c c, ;
-: ['] immediate no-tce ' 
-[ ' literal compile, ] ;
-: [char] immediate no-tce char 
-[ ' literal compile, ] ;
-: else immediate jmp, here 0 ,
-swap here swap ! ;
-: postpone immediate
+: ['] ' 
+[ ' literal compile, ] ; immediate no-tce
+: [char] char 
+[ ' literal compile, ] ; immediate no-tce
+: else jmp, here 0 ,
+swap here swap ! ; immediate
+: postpone
 bl word find -1 = if
 [ ' literal compile, ] ['] compile, then
-compile, ;
-: until immediate no-tce 
-postpone 0branch , ;
-: again immediate jmp, , ;
-: recurse immediate latest @ >cfa compile, ;
-: ( immediate no-tce 
+compile, ; immediate
+: until
+postpone 0branch , ; immediate no-tce
+: again jmp, , ; immediate
+: recurse latest @ >cfa compile, ; immediate
+: (
 begin getc dup
 0= if refill then
 [char] ) = if exit then
-again ;
-: \ immediate no-tce refill ;
+again ; immediate no-tce
+: \ refill ; immediate no-tce
 : tuck ( x y -- y x y ) swap over ;
 : ?dup dup if dup then ;
 : <> ( a b -- c ) = 0= ;
@@ -35,7 +35,7 @@ again ;
 r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 
 : count dup 1+ swap c@ ;
-: s" immediate no-tce ( -- addr len )
+: s" ( -- addr len )
 state c@ if ( compile mode )
 postpone litstring here 0 , 0
 begin getc dup [char] " <>
@@ -45,7 +45,7 @@ else ( immediate mode )
 here here
 begin getc dup [char] " <>
 while over c! 1+ repeat
-drop here - then ;
+drop here - then ; immediate no-tce
 
 : type ( caddr u -- )
 0 d4 c! ( quote mode off )
@@ -53,22 +53,22 @@ begin ?dup while
 swap dup c@ emit 1+ swap 1-
 repeat drop ;
 
-: ." immediate postpone s" postpone type ;
+: ." postpone s" postpone type ; immediate
 : .( begin getc dup [char] ) <>
 while emit repeat drop ;
 .( compile base..)
 
-: case immediate 0 ;
-: of immediate 
+: case 0 ; immediate
+: of
 postpone over
 postpone =
 postpone if 
-postpone drop ;
-: endof immediate postpone else ;
-: endcase immediate no-tce
+postpone drop ; immediate
+: endof postpone else ; immediate
+: endcase 
 postpone drop
 begin ?dup while postpone then 
-repeat ;
+repeat ; immediate no-tce
 
 : move ( src dst u -- )
 >r 2dup u< r> swap
@@ -136,16 +136,16 @@ begin ?dup while space 1- repeat ;
 
 ( "0 to foo" sets value foo to 0 )
 : (to) over 100/ over 2+ c! c! ;
-: to immediate ' 1+
+: to ' 1+
 state c@ if
 postpone literal postpone (to)
-else (to) then ;
+else (to) then ; immediate
 
 : hex 10 base ! ;
 : decimal a base ! ;
 
-: 2drop ( a b -- ) immediate no-tce
-postpone drop postpone drop ;
+: 2drop ( a b -- ) 
+postpone drop postpone drop ; immediate no-tce
 code 2over ( a b c d -- a b c d a b )
 dex,
 sp1 4 + lda,x sp1 sta,x
@@ -271,11 +271,11 @@ dup 2+ @ swap @ ;
 : 2! ( x1 x2 addr -- )
 swap over ! 2+ ! ;
 
-: abort" immediate no-tce
+: abort" 
 postpone if
 postpone ."
 postpone abort
-postpone then ;
+postpone then ; immediate no-tce
 
 code sei sei, ;code
 code cli cli, ;code
