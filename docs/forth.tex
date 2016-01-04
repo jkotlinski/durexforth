@@ -388,11 +388,11 @@ Compile-time version of "\texttt{.(}". Example: \texttt{: foo ." bar" ;}
 
 \section{Number Formatting}
 
-\begin{description}
-
 For more info about number formatting, read Starting Forth!
 
-\item[>number ( ud addr u -- ud2 addr2 u2)] Converts the string in \texttt{addr u} to digits, using \texttt{BASE}, and adds each digit into ud after multiplying it with \texttt{BASE}. \texttt{addr2 u2} contains the part of the string that was not converted.
+\begin{description}
+
+\item[$>$number ( ud addr u -- ud addr2 u2 )] Converts the string in \texttt{addr u} to digits, using \texttt{BASE}, and adds each digit into ud after multiplying it with \texttt{BASE}. \texttt{addr2 u2} contains the part of the string that was not converted.
 
 \item[$<$\#] Begins the number conversion process.
 \item[\# ( ud -- ud )] Converts one digit and puts it in the start of the output string.
