@@ -6,7 +6,7 @@ Goals:
 
 * Fun. The system should be nice to work with on the real machine.
 * Fast. DurexForth compiles to machine code and is the fastest C64 Forth.
-* Easy to learn. Aims to follow <a href=http://forth-standard.org/standard/words>Forth 2012</a> core standard. (Not there yet!)
+* Easy to use. Follows the <a href=http://forth-standard.org/standard/words>Forth 2012</a> core standard.
 
 <img src=http://i.imgur.com/eXsaXjo.png?1>
 
