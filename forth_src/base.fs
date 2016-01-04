@@ -253,9 +253,9 @@ inx, sp0 sty,x sp1 sty,x ;code
 : min ( a b - c )
 2dup > if swap then drop ;
 
+: #pet dup a < if 7 - then 37 + ;
 : u. 0 >r begin 0 base @ um/mod swap
-dup a < if 7 - then 37 + >r
-?dup 0= until
+#pet >r ?dup 0= until
 begin r> ?dup while emit repeat space ;
 : . dup 0< if [char] - emit negate
 then u. ;
