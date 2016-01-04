@@ -24,8 +24,7 @@ begin getc dup
 0= if refill then
 [char] ) = if exit then
 again ;
-: \ immediate no-tce 
-begin getc d = until ;
+: \ immediate no-tce refill ;
 : tuck ( x y -- y x y ) swap over ;
 : ?dup dup if dup then ;
 : <> ( a b -- c ) = 0= ;
@@ -49,7 +48,7 @@ while over c! 1+ repeat
 drop here - then ;
 
 : type ( caddr u -- )
-0 d4 c! \ quote mode off
+0 d4 c! ( quote mode off )
 begin ?dup while
 swap dup c@ emit 1+ swap 1-
 repeat drop ;
@@ -80,7 +79,7 @@ the first jsr )
  2. two-byte code pointer. default: point to exit
  3. variable length data )
 : >body ( xt -- dataaddr ) 5 + ;
-here 60 c, \ rts
+here 60 c, ( rts )
 : create
 header postpone dodoes literal , ;
 : does> r> 1+ latest @ >dfa ! ;
@@ -110,12 +109,12 @@ code 100/
 sp1 lda,x sp0 sta,x 
 0 lda,#   sp1 sta,x ;code
 
-\ creates value that is fast to read
-\ but can only be rewritten by "to".
-\  0 value foo
-\  foo . \ prints 0
-\  1 to foo
-\  foo . \ prints 1
+( creates value that is fast to read
+  but can only be rewritten by "to".
+   0 value foo
+   foo . \ prints 0
+   1 to foo
+   foo . \ prints 1 )
 : value ( n -- )
 dup code
 lda,# 100/ ldy,# 
@@ -132,7 +131,7 @@ begin ?dup while space 1- repeat ;
 8d value zptmp2
 9e value zptmp3
 
-\ "0 to foo" sets value foo to 0
+( "0 to foo" sets value foo to 0 )
 : (to) over 100/ over 2+ c! c! ;
 : to immediate ' 1+
 state c@ if
@@ -199,18 +198,18 @@ swap 1- repeat ;
 here latest @ >cfa 1+ (to)
 2 allot ;
 
-\ fairly pointless ANS compat..
+( fairly pointless ANS compat.. )
 : environment? 2drop 0 ;
 : cells 2* ;
 : cell+ 2+ ;
 : char+ 1+ ;
 : chars ; : align ; : aligned ;
-\ ..fairly pointless ANS compat
+( ..fairly pointless ANS compat )
 
 code 0< sp1 lda,x 80 and,# +branch beq,
 ff lda,# :+ sp0 sta,x sp1 sta,x ;code
 
-\ from FIG UK...
+( from FIG UK... )
 : s>d dup 0< ;
 : ?negate 0< if negate then ;
 : abs dup ?negate ;
@@ -220,16 +219,16 @@ ff lda,# :+ sp0 sta,x sp1 sta,x ;code
 : m* 2dup xor >r >r abs r> 
 abs um* r> ?dnegate ;
 : * m* drop ;
-\ ...from FIG UK
+( ...from FIG UK )
 
-: fm/mod \ from Gforth
+: fm/mod ( from Gforth )
 dup >r
 dup 0< if negate >r dnegate r> then
 over 0< if tuck + swap then
 um/mod
 r> 0< if swap negate swap then ;
 
-\ from FIG UK...
+( from FIG UK... )
 : sm/rem 
 2dup xor >r over >r abs >r dabs
 r> um/mod swap r> ?negate
@@ -239,7 +238,7 @@ swap r> ?negate ;
 : mod /mod drop ;
 : */mod >r m* r> fm/mod ;
 : */ */mod nip ;
-\ ...from FIG UK
+( ...from FIG UK )
 
 code <
 0 ldy,# sec,
@@ -281,7 +280,7 @@ code cli cli, ;code
 : assert 0= if
 begin 1 d020 +! again then ;
 
-\ header modules
+( header modules )
 
 .( labels..)
 s" labels" load
@@ -296,11 +295,11 @@ s" debug" load
 s" ls" load
 .( gfx..)
 s" gfx" load
-\ s" sprite" load
-\ ." gfxdemo.."
-\ s" gfxdemo" load
-\ ." turtle.."
-\ s" turtle" load
+( s" sprite" load
+  ." gfxdemo.."
+  s" gfxdemo" load
+  ." turtle.."
+  s" turtle" load )
 .( vi..)
 s" vi" load
 

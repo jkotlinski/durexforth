@@ -741,11 +741,13 @@ READ_EOF = * + 1
 
 .get_from_disk
 -   jsr GET_CHAR_BLOCKING
+    cmp #K_RETURN
+    beq +
     ldy TIB_SIZE
     sta TIB_BASIC_GETLINE,y
     inc TIB_SIZE
-    cmp #K_RETURN
-    bne -
+    jmp .get_from_disk
++
     rts
 
 GET_CHAR_FROM_TIB
@@ -792,6 +794,8 @@ WORD
     cmp #K_SPACE
     beq -
     cmp #K_RETURN
+    beq -
+    cmp #(K_SPACE|$80)
     beq -
     jmp .append
     
@@ -1026,7 +1030,7 @@ INTERPRET
     bpl .on_stack_underflow
 
 -
-    jsr	WORD ; push string to stack
+    jsr	WORD
     lda WORD_BUFFER_LENGTH
     bne +
     inx
