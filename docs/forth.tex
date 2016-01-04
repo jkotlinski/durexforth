@@ -330,6 +330,7 @@ endcase
 \item[$>$in ( -- addr)] Gives the address of a cell containing the offset in characters from the start of the input buffer to the start of the parse area.
 
 \item[source ( -- caddr u)] Gives the address of, and number of characters in, the input buffer.
+\item[source-id ( -- n )] Returns 0 if current input is keyboard, -1 if it is a string from \texttt{evaluate}, or the current file id.
 
 \item[word ( delim -- addr )] Reads a word from input, using delimiter \texttt{delim}, and puts the string address on the stack.
 
