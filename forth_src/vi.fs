@@ -93,7 +93,7 @@ ram-kernal
 eaea c@ a <> if
 rom-kernal
 \ modifies kernal to change kbd prefs
-e000 dup 2000 cmove \ rom => ram
+e000 dup 2000 move \ rom => ram
 \ hopefully basic is not used...
 a eaea c! \ repeat delay
 2 eb1d c! \ repeat speed
@@ -164,7 +164,7 @@ eof @ < 0= if drop exit then
 curlinestart !
 cury @ 17 < if 1 cury +! else
 homepos @ find-next-line homepos !
-428 400 398 cmove
+428 400 398 move
 line-dirty!
 then
 fit-curx-in-linelen ;
@@ -185,7 +185,7 @@ curlinestart !
 fit-curx-in-linelen
 cury @ 0= if
 curlinestart @ homepos !
-400 428 398 cmove>
+400 428 398 move
 line-dirty!
 else
 ffff cury +!
@@ -315,7 +315,7 @@ key editpos c! line-dirty! ;
 : nipchar
 editpos 1+ eof @ = if exit then
 editpos 1+ editpos
-eof @ editpos - cmove 
+eof @ editpos - move 
 ffff eof +! ;
 
 : too-long-to-join
@@ -351,7 +351,7 @@ then ;
 	editpos
 	editpos 1+
 	eof @ editpos -
-	cmove>
+	move
 	editpos c!
 	1 curx +!
 	1 eof +!
@@ -400,7 +400,7 @@ variable clipboard-count
 : yank-line
 linelen clipboard-count !
 curlinestart @ clipboard linelen 
-cmove ;
+move ;
 
 : del-line
 sol 1 to need-refresh 
@@ -409,7 +409,7 @@ yank-line
 curlinestart @ find-next-line
 curlinestart @
 2dup swap - -rot
-eof @ curlinestart @ - cmove
+eof @ curlinestart @ - move
 eof +! ;
 
 : del
@@ -490,7 +490,7 @@ variable drivebuf 16 allot
 	[char] : over c! 1+
 	[char] . over c! 1+
 	dup
-	filename swap filename-len c@ cmove
+	filename swap filename-len c@ move
 	filename-len c@ +
 	lf swap c!
 
@@ -505,7 +505,7 @@ variable drivebuf 16 allot
 	filename-len c@ + \ filename ok
 	[char] = over c! 1+
 	dup
-	filename swap filename-len c@ cmove
+	filename swap filename-len c@ move
 	filename-len c@ + \ filename ok
 	lf swap c!
 
@@ -600,11 +600,11 @@ open-line insert-stop
 ( make room for clipboard contents )
 curlinestart @
 dup clipboard-count @ +
-eof @ 1+ curlinestart @ - cmove>
+eof @ 1+ curlinestart @ - move
 ( copy from clipboard )
 clipboard
 curlinestart @
-clipboard-count @ cmove
+clipboard-count @ move
 ( update eof )
 clipboard-count @ eof +! ;
 
@@ -788,7 +788,7 @@ go-to-file-start
 \ store away filename
 2dup ( str len str len )	
 filename-len c!
-filename f cmove
+filename f move
 
 do-load
 push-colors

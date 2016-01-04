@@ -1,4 +1,3 @@
-: 2dup over over ;
 : 2+ 1+ 1+ ;
 : cr d emit ;
 : nip swap drop ;
@@ -68,10 +67,6 @@ postpone drop ; immediate
 postpone drop
 begin ?dup while postpone then 
 repeat ; immediate no-tce
-
-: move ( src dst u -- )
->r 2dup u< r> swap
-if cmove> else cmove then ;
 
 ( gets pointer to first data field, i.e., skips
 the first jsr )

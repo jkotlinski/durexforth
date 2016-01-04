@@ -1,5 +1,5 @@
 : fac, bbca sys
-57 here 5 cmove here 5 + to here ;
+57 here 5 move here 5 + to here ;
 \ 5-byte float word from string
 : strf ( str strlen -- )
 ar ! 22 ! b7b5 sys create fac, ;

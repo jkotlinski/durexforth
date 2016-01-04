@@ -251,13 +251,18 @@ DUP
     !text	"over"
 OVER
     dex
-
     lda	MSB + 2, x
     sta	MSB, x
     lda	LSB + 2, x
     sta	LSB, x
-
     rts
+
+    +BACKLINK
+    !byte	4
+    !text	"2dup"
+TWODUP
+    jsr OVER
+    jmp OVER
 
 ; 1+
     +BACKLINK

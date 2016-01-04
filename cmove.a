@@ -20,10 +20,6 @@ cmove_getparams:
 	sta	SRC + 1
 	rts
 
-; CMOVE> ( src dst len -- )
-    +BACKLINK
-    !byte	6
-    !text	"cmove>"
 CMOVE_BACK
 	txa
 	pha
@@ -73,10 +69,6 @@ CMOVE_BACK
     bne .initbase
 	jmp cmove_done
 
-; CMOVE ( SRC DST LEN -- ) forward move
-    +BACKLINK
-    !byte	5
-    !text	"cmove"
 CMOVE
     txa
     pha
@@ -111,3 +103,17 @@ cmove_done
 	adc #3
 	tax
 	rts
+
+    +BACKLINK
+    !byte	4
+    !text	"move" ; ( src dst u -- )
+    jsr TO_R
+    jsr TWODUP
+    jsr U_LESS
+    jsr R_TO
+    jsr SWAP
+    jsr ZBRANCH
+    !word .br
+    jmp CMOVE_BACK
+.br = *
+    jmp CMOVE

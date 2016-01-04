@@ -185,10 +185,8 @@ The following words use double-cell integers. On the stack, the cell containing 
 \item[aligned ( -- )] No-op, required by Forth 2012 standard.
 \item[chars ( -- )] No-op, required by Forth 2012 standard.
 \item[fill ( addr len char -- )] Fill range [addr, len + addr) with char.
-\item[cmove ( src dst len -- )]
-Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to emory beginning at \texttt{dst}. The copy begins at src and continues towards high memory.
-\item[cmove$>$ ( src dst len -- )]
-Like \texttt{cmove}, except that the copy proceeds from higher to lower memory.
+\item[move ( src dst len -- )]
+Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to emory beginning at \texttt{dst}. 
 
 \end{description}
 \section{Compiling}

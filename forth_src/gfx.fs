@@ -544,7 +544,7 @@ rot 8 * bmpbase + addr +!
 1 c@ dup >r fb and 1 sei c!
 begin ?dup while
 swap dup c@ 8 * d800 + \ strlen str ch
-addr @ 8 cmove
+addr @ 8 move
 1+ swap 8 addr +! 1- repeat
 r> 1 c! cli drop ;
 
@@ -563,4 +563,4 @@ getrow getrow getrow getrow
 getrow getrow getrow getrow drop ;
 : drawchar ( col row srcaddr -- )
 swap 140 * rot 8 * + bmpbase +
-8 cmove ;
+8 move ;
