@@ -27,9 +27,8 @@ sp0 lda,x sp0 2+ adc,x sp0 2+ sta,x
 sp1 lda,x sp1 2+ adc,x sp1 2+ sta,x
 inx, inx, ;code
 : accumulate ( +d0 digit - +d1 )
-rot base @ um* drop
-rot base @ um* -rot
-d+ ;
+swap base @ um* drop
+rot base @ um* d+ ;
 
 variable addr
 variable u
