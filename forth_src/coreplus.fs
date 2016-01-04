@@ -215,14 +215,14 @@ T{ %10010110 -> 150 }T
 \ T{ %10010110. -> 150. }T
 T{ %-10010110 -> -150 }T
 \ T{ %-10010110. -> -150. }T
-T{ 'z' -> 122 }T
+T{ 'z' -> char z }T
 \ Check BASE is unchanged
 T{ BASE @ OLD-BASE @ = -> <TRUE> }T
 
 \ Repeat in Hex mode
 16 OLD-BASE ! 16 BASE !
 T{ #1289 -> 509 }T
-T\ { #12346789. -> BC65A5. }T
+\ { #12346789. -> BC65A5. }T
 T{ #-1289 -> -509 }T
 \ T{ #-12346789. -> -BC65A5. }T
 T{ $12eF -> 12EF }T
@@ -233,7 +233,7 @@ T{ %10010110 -> 96 }T
 \ T{ %10010110. -> 96. }T
 T{ %-10010110 -> -96 }T
 \ T{ %-10010110. -> -96. }T
-T{ 'z' -> 7a }T
+T{ 'z' -> char z }T
 \ Check BASE is unchanged
 T{ BASE @ OLD-BASE @ = -> <TRUE> }T   \ 2
 

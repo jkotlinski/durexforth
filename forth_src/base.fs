@@ -288,11 +288,6 @@ begin 1 d020 +! again then ;
 .( labels..) s" labels" load
 .( doloop..) s" doloop" load
 .( format..) s" format" load
-
-s" tester" load
-s" core" load
-s" coreplus" load
-
 .( sys..) s" sys" load
 .( debug..) s" debug" load
 

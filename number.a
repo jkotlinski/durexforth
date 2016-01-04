@@ -86,8 +86,12 @@ READ_NUMBER
     inc TMP3
     bne +
     inc TMP3+1
++
 
-+   lda (TMP3), y
+    lda (TMP3), y
+    cmp #"'"
+    beq .parse_char
+
     cmp #"#"
     bne .check_decimal
     lda #10
@@ -149,7 +153,7 @@ READ_NUMBER
     dec .chars_to_process
     bne .next_digit
 
-; done!
+.parse_done
 OLD_BASE = * + 1
     lda #0
     sta BASE
@@ -166,6 +170,21 @@ OLD_BASE = * + 1
     jsr NEGATE
     tya ; clear Z flag
 +   rts
+
+.parse_char
+    lda .chars_to_process
+    cmp #3
+    bne .parse_failed
+    ldy #2
+    lda (TMP3),y
+    cmp #"'"
+    bne .parse_failed
+    dey
+    lda (TMP3),y
+    sta LSB+1,x
+    lda #0
+    sta MSB+1,x
+    jmp .parse_done
 
 .parse_failed
     inx
