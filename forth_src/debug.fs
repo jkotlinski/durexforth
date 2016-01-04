@@ -45,7 +45,7 @@ endcase
 
 variable prev
 : see
-	word find 0= if drop exit then
+	bl word find 0= if drop exit then
 	here
 	latest @
 	begin
@@ -104,7 +104,7 @@ more dup id. @ repeat cr ;
 
 \ size foo prints size of foo
 : size ( -- )
-word find drop >r
+bl word find drop >r
 here latest @ \ prev curr
 begin dup while
 dup r@ < if

@@ -3,7 +3,7 @@
 : cr d emit ;
 : nip swap drop ;
 : * um* drop ;
-: ' word find drop ;
+: ' bl word find drop ;
 : jmp, 4c c, ;
 : ['] immediate no-tce ' 
 [ ' literal compile, ] ;
@@ -12,7 +12,7 @@
 : else immediate jmp, here 0 ,
 swap here swap ! ;
 : postpone immediate
-word find -1 = if
+bl word find -1 = if
 [ ' literal compile, ] ['] compile, then
 compile, ;
 : until immediate no-tce 
@@ -121,7 +121,6 @@ lda,# 100/ ldy,#
 ['] pushya jmp, ;
 : constant value ;
 
-20 value bl
 : space bl emit ;
 : spaces ( n -- )
 begin ?dup while space 1- repeat ;
@@ -303,17 +302,5 @@ s" gfx" load
 .( vi..)
 s" vi" load
 
-: scratch ( strptr strlen -- )
-2dup here 2+ swap cmove>
-[char] s here c!
-[char] : here 1+ c!
-nip 2+ here swap f openw f closew ;
-
-.( scratch old durexforth..)
-s" durexforth" scratch
-
 .( save new durexforth..)
-s" durexforth" save-forth
-
-depth 0= assert
-.( done!) cr
+s" @:durexforth" save-forth

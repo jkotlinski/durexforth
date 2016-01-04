@@ -333,7 +333,7 @@ endcase
 
 \item[source ( -- caddr u)] Gives the address of, and number of characters in, the input buffer.
 
-\item[word ( -- addr )] Reads a word from input and put the string address on the stack.
+\item[word ( delim -- addr )] Reads a word from input, using delimiter \texttt{delim}, and puts the string address on the stack.
 
 \item[interpret ( -- value )] Interprets a word from input and puts it on the stack.
 
@@ -425,7 +425,6 @@ Debugging words are loaded with \texttt{s" debug" load}.
 \item[load ( filenameptr filenamelength -- )] Load and execute/compile file.
 \item[loadb ( filenameptr filenamelength dst -- )] Load binary block to dst.
 \item[saveb ( start end filenameptr filenamelength -- )] Save binary block.
-\item[scratch ( filenameptr filenamelength -- )] Scratch file.
 \end{description}
 
 \section{Kernel Calls}

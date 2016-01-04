@@ -171,6 +171,11 @@ pushya
     +VALUE	_START
 
     +BACKLINK
+    !byte 2
+    !text	"bl"
+    +VALUE	K_SPACE
+
+    +BACKLINK
     !byte 3
     !text	"sp1"
     +VALUE	MSB
@@ -639,7 +644,10 @@ tmp_x
     !byte	4
     !text	"char"
 -
-    jsr	WORD ; push string to stack
+    dex
+    lda #K_SPACE
+    sta LSB,x
+    jsr	WORD
     inx
     lda WORD_BUFFER_LENGTH
     bne +
@@ -732,10 +740,15 @@ READ_EOF = * + 1
     ; Set TIB_SIZE to number of chars fetched.
     ldy #0
 -   lda TIB_BASIC_GETLINE,y
-    beq +
+    beq .done
+    cmp #(K_SPACE+$80)
+    bne +
+    lda #K_SPACE
+    sta TIB_BASIC_GETLINE,y
++
     iny
     jmp -
-+   
+.done
     sty TIB_SIZE
     rts
 
@@ -779,7 +792,7 @@ GET_CHAR_FROM_TIB
     inc TO_IN + 1
 +   rts
 
-; WORD ( -- strptr )
+; WORD ( delim -- strptr )
     +BACKLINK
     !byte      4
     !text      "word"
@@ -791,23 +804,14 @@ WORD
 -
     jsr GET_CHAR_FROM_TIB
     beq .word_end
-    cmp #K_SPACE
-    beq -
-    cmp #K_RETURN
-    beq -
-    cmp #(K_SPACE|$80)
+    cmp LSB, x
     beq -
     jmp .append
     
 .get_char
     jsr GET_CHAR_FROM_TIB
-
     beq .word_end
-    cmp #K_RETURN
-    beq .word_end
-    cmp #K_SPACE
-    beq .word_end
-    cmp #(K_SPACE|$80)
+    cmp LSB,x
     beq .word_end
 
 .append
@@ -820,7 +824,6 @@ WORD
     bne .get_char
 
 .word_end
-    dex
     lda	#<WORD_BUFFER
     sta	LSB, x
     lda	#>WORD_BUFFER
@@ -1030,6 +1033,9 @@ INTERPRET
     bpl .on_stack_underflow
 
 -
+    dex
+    lda #K_SPACE
+    sta LSB,x
     jsr	WORD
     lda WORD_BUFFER_LENGTH
     bne +
@@ -1243,6 +1249,9 @@ compile_a
 HEADER
     inc last_word_no_tail_call_elimination
 
+    dex
+    lda #K_SPACE
+    sta LSB,x
     jsr	WORD
     jsr STRING_TO_LOWERCASE
 
@@ -1655,31 +1664,15 @@ _LATEST
 ; ALL CONTENTS BELOW LATEST WILL BE OVERWRITTEN!!!
 
 load_base
-    ; loads base.fs to $5000
-    lda #0
-    sta load_binary_laddr_lo
-    lda #$50
-    sta load_binary_laddr_hi
-    ldx	#<basename
-    ldy	#>basename
-    lda	#basename_end - basename
-    jsr load_binary
-
     dex
     dex
-    lda load_binary_laddr_lo
+    lda #<basename
     sta LSB+1, x
-    lda load_binary_laddr_hi
+    lda #>basename
     sta MSB+1, x
-
-    sec
-    lda $ae
-    sbc load_binary_laddr_lo
+    lda #4
     sta LSB,x
-    lda $af
-    sbc load_binary_laddr_hi
-    sta MSB,x
-    jmp EVALUATE_SETUP
+    jmp LOAD_AND_COMPILE
 
 basename
 !text	"base"
