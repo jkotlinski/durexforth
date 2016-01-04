@@ -8,11 +8,11 @@ Let us define a word and see what it gets compiled to.
 : bg d020 c! ;
 \end{verbatim}
 
-When the word is defined, you can get its start address by \texttt{loc bg}, and the contents of bg can be dumped using \texttt{loc bg dump}. Try it, and you will get output like the following:
+After the word is defined, you can get its start address by \texttt{latest @}, and the contents of bg can be dumped using \texttt{latest @ dump}. Try it, and you will get output like the following:
 
 \begin{alltt}
 4c38  ed 4b 02 42 47 20 cf 0e .k.bg ..
-4c40  20 d0 20 49 0a 60 ff ff  . i....
+4c40  20 d0 4c 49 0a ff ff ff  .li....
 4c48  ff ff ff ff ff ff ff ff ........
 4c50  ...
 \end{alltt}
@@ -23,7 +23,7 @@ Here, we can see that the "bg" word is 14 bytes long and starts at address \$4c3
 
 \begin{alltt}
 4c38  \textcolor{red}{ed 4b 02 42 47} 20 cf 0e \textcolor{red}{.k.bg} ..
-4c40  20 d0 20 49 0a 60 ff ff  . i....
+4c40  20 d0 4c 49 0a ff ff ff  .li....
 \end{alltt}
 
 The first two bytes contain a back-pointer to the previous word, starting at \$4bed. The next byte, "02", is the length of "bg" name string. After that, the string "bg" follows. (42 = 'b', 47 = 'g')
@@ -34,7 +34,7 @@ The name length byte is also used to store special attributes of the word. Bit 7
 
 \begin{alltt}
 4c38  ed 4b 02 42 47 \textcolor{red}{20 cf 0e} .k.bg\textcolor{red}{ ..}
-4c40  \textcolor{red}{20 d0 20 49 0a 60 ff ff  . i..}..
+4c40  \textcolor{red}{20 d0 4c 49 0a ff ff ff  .li..}..
 \end{alltt}
 
 The code section contain pure 6502 machine code.
@@ -42,6 +42,5 @@ The code section contain pure 6502 machine code.
 \begin{description}
 \item[20 cf 0e ( jsr \$ecf )] \$ecf is the adress of the \texttt{lit} code. \texttt{lit} copies the two following bytes to parameter stack.
 \item[20 d0 ( \$d020 )] The parameter to the \texttt{lit} word. When executed, \texttt{lit} will add \$d020 to the parameter stack.
-\item[20 49 0a ( jsr \$a49 )] \$a49 is the address of the \texttt{c!} code.
-\item[60 ( rts )] Returns to the caller.
+\item[4c 49 0a ( jmp \$a49 )] \$a49 is the address of the \texttt{c!} code.
 \end{description}
