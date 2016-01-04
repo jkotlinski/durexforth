@@ -26,18 +26,11 @@ sp1 1+ lda,x sp1 3 + adc,x sp1 3 + sta,x
 sp0 lda,x sp0 2+ adc,x sp0 2+ sta,x
 sp1 lda,x sp1 2+ adc,x sp1 2+ sta,x
 inx, inx, ;code
-: accumulate ( +d0 digit - +d1 )
-swap base @ um* drop
-rot base @ um* d+ ;
+: accumulate ( +d0 addr digit - +d1 addr )
+swap >r swap base @ um* drop
+rot base @ um* d+ r> ;
 
-variable addr
-variable u
 : >number ( ud addr u -- ud addr u )
-u ! addr !
-begin
-addr @ c@ digit? u @ and
-while
-addr @ c@ pet# accumulate
-1 addr +! -1 u +!
-repeat 
-addr @ u @ ;
+begin over c@ digit? over and while
+>r dup c@ pet# accumulate
+1+ r> 1- repeat ;
