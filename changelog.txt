@@ -232,9 +232,12 @@ Thanks to Christian Johansson and polluks for suggestions!
 
 Thanks to Christian Johansson for suggestions!
 
-?-?-?: v1.4.7
+2016-01-04: v1.5.0 - Forth 2012 core standard compliance!
 
  * forth: made +loop work according to standard
+ * forth: added support for #, $, %, char parsing.
+	      e.g. #123, $d020, %1001001, 'z'
+ * forth: ' now aborts if it does not find a word
  * forth: made "type" disable c64 quote mode (fixes "words")
  * forth: state ( -- flag ) changed to state ( -- addr )
  * forth: added count, >body, <#, #>, hold, sign, #, #s, >number, move,
@@ -245,8 +248,5 @@ Thanks to Christian Johansson for suggestions!
  * forth: made word conform to standard
  * forth: made "immediate", "no-tce" non-immediate
  * forth: made sure immediate does not toggle
- * forth: added support for #, $, %, char parsing.
-	      e.g. #123, $d020, %1001001, 'z'
- * forth: ' now aborts if it does not find a word
 
 Thanks to polluks for suggestions!
