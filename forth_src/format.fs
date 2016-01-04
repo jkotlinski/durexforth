@@ -36,6 +36,6 @@ begin over c@ digit? over and while
 1+ r> 1- repeat ;
 
 : accept ( addr u -- u )
-tuck 0 do key dup emit
-dup d = if 2drop i swap leave then
-over c! 1+ loop drop ;
+refill source dup >in !
+rot min -rot swap rot
+dup >r move r> ;
