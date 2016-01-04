@@ -32,7 +32,8 @@ depth 0= assert
 s" spritedemo" load
 depth 0= assert
 
-.( ok)
-
 s" tester" load
 s" core" load
+s" coreplus" load
+
+.( ok)
