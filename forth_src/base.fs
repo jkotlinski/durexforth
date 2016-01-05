@@ -180,12 +180,15 @@ zptmp lda,(y) sp1 1+ adc,x
 zptmp sta,(y)
 inx, inx, ;code
 
-: lshift ( x1 u -- x2 )
-begin ?dup while swap 2* swap 1- repeat ;
-: rshift ( x1 u -- x2 )
-begin ?dup while swap 
-0 2 um/mod nip 
-swap 1- repeat ;
+:- dup inx, ;code
+code lshift ( x1 u -- x2 )
+sp0 dec,x -branch bmi,
+sp0 1+ asl,x sp1 1+ rol,x
+latest @ >cfa jmp, 
+code rshift ( x1 u -- x2 )
+sp0 dec,x -branch bmi,
+sp1 1+ lsr,x sp0 1+ ror,x
+latest @ >cfa jmp, 
 
 : allot ( n -- ) here + to here ;
 
