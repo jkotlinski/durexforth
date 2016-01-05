@@ -30,19 +30,12 @@ tuck sp-y! sp-x! ;
 
 ( read sprite byte )
 : ks 
-source drop >in @ + c@
-1 >in +!
-bl <> and or ;
+2* source drop >in @ + c@
+1 >in +! bl <> 1 and or ;
 : rdb ( addr -- addr )
-0 80 ks 40 ks 20 ks 10 ks
-8 ks 4 ks 2 ks 1 ks
+0 ks ks ks ks ks ks ks ks
 over c! 1+ ;
-
-( read sprite line )
-: rdl refill rdb rdb rdb ;
 
 ( read sprite to address )
 : sp-data ( addr -- )
-rdl rdl rdl rdl rdl rdl rdl
-rdl rdl rdl rdl rdl rdl rdl
-rdl rdl rdl rdl rdl rdl rdl drop ;
+#21 0 do refill rdb rdb rdb loop drop ;
