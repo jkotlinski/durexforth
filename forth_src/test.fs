@@ -22,8 +22,8 @@ latest ! to here
 depth 0= assert
 
 s" tester" load
-s" core" load
-s" coreplus" load
+s" testcore" load
+s" testcoreplus" load
 
 hex
 : push ( ch -- )
