@@ -53,7 +53,7 @@ repeat drop ;
 
 : ." postpone s" postpone type ; immediate
 : .( begin getc dup [char] ) <>
-while emit repeat drop ;
+while emit repeat drop ; immediate
 .( compile base..)
 
 : case 0 ; immediate

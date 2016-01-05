@@ -250,3 +250,7 @@ Thanks to Christian Johansson for suggestions!
  * forth: made sure immediate does not toggle
 
 Thanks to polluks for suggestions!
+
+v1.5.1
+
+ * forth: made .( immediate
