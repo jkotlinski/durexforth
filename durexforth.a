@@ -530,9 +530,6 @@ pop_input_stack
     lda SAVE_INPUT_STACK, y
     rts
 
-    +BACKLINK
-    !byte 10
-    !text	"save-input"
 SAVE_INPUT
     lda TO_IN
     jsr push_input_stack
@@ -551,9 +548,6 @@ SAVE_INPUT
     lda TIB_SIZE+1
     jmp push_input_stack
 
-    +BACKLINK
-    !byte 13
-    !text	"restore-input"
 RESTORE_INPUT
     jsr pop_input_stack
     sta TIB_SIZE+1
