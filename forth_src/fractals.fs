@@ -1,6 +1,6 @@
 \ lindenmayer systems
 
-s" turtle" load
+s" turtle" included
 
 0 value Da \ delta angle
 0 value Dd \ delta distance

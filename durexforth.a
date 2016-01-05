@@ -602,6 +602,15 @@ EMIT
     jmp	PUTCHR
 
     +BACKLINK
+    !byte   5
+    !text   "count"
+COUNT
+    jsr DUP
+    jsr ONEPLUS
+    jsr SWAP
+    jmp FETCHBYTE
+
+    +BACKLINK
     !byte   4
     !text   "page"
 PAGE
@@ -1705,7 +1714,7 @@ load_base
     sta MSB+1, x
     lda #4
     sta LSB,x
-    jmp LOAD_AND_COMPILE
+    jmp INCLUDED
 
 basename
 !text	"base"

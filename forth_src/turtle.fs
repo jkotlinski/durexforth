@@ -1,4 +1,4 @@
-s" sin" load
+s" sin" included
 
 variable tx variable ty \ 10.6 fixedpoint
 variable ta 0 value tp

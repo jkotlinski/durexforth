@@ -270,11 +270,21 @@ OPENW
     jsr CLOSE
     jmp CLRCHN
 
-; LOAD_AND_COMPILE (load and compile source file)
     +BACKLINK
-    !byte 4
-    !text	"load"
-LOAD_AND_COMPILE
+    !byte 7
+    !text	"include"
+INCLUDE
+    dex
+    lda #' '
+    sta LSB,x
+    jsr WORD
+    jsr COUNT
+    jmp INCLUDED
+
+    +BACKLINK
+    !byte 8
+    !text	"included"
+INCLUDED
     lda	LSB, x
     sta .filelen
     lda MSB+1, x

@@ -32,7 +32,6 @@ again ; immediate no-tce
 : litstring ( -- addr len )
 r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 
-: count dup 1+ swap c@ ;
 : s" ( -- addr len )
 state c@ if ( compile mode )
 postpone litstring here 0 , 0
@@ -83,7 +82,7 @@ header postpone dodoes literal , ;
 : does> r> 1+ latest @ >dfa ! ;
 
 .( asm..)
-s" asm" load
+include asm
 
 code m+ ( d1 u -- d2 )
 0 ldy,# sp1 lda,x +branch bpl, dey, 
@@ -279,20 +278,14 @@ begin 1 d020 +! again then ;
 
 ( header modules )
 
-.( labels..) s" labels" load
-.( doloop..) s" doloop" load
-.( format..) s" format" load
-.( sys..) s" sys" load
-.( debug..) s" debug" load
-
-.( ls..) s" ls" load
-.( gfx..) s" gfx" load
-( s" sprite" load
-  ." gfxdemo.."
-  s" gfxdemo" load
-  ." turtle.."
-  s" turtle" load )
-.( vi..) s" vi" load
+.( labels..) include labels
+.( doloop..) include doloop
+.( format..) include format
+.( sys..) include sys
+.( debug..) include debug
+.( ls..) include ls
+.( gfx..) include gfx
+.( vi..) include vi
 
 .( save new durexforth..)
 s" @:durexforth" save-forth .( ok!) cr

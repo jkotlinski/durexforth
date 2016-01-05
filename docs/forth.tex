@@ -415,8 +415,6 @@ For more info about number formatting, read Starting Forth!
 
 \section{Debugging}
 
-Debugging words are loaded with \texttt{s" debug" load}.
-
 \begin{description}
 \item[words] List all defined words.
 \item[size] \texttt{size foo} prints size of \texttt{foo}.
@@ -440,7 +438,8 @@ Debugging words are loaded with \texttt{s" debug" load}.
 \section{Disk I/O}
 
 \begin{description}
-\item[load ( filenameptr filenamelength -- )] Load and execute/compile file.
+\item[include filename ( -- )] Load and parse file. Example: \texttt{include test}
+\item[included ( filenameptr filenamelength -- )] Load and parse file.
 \item[loadb ( filenameptr filenamelength dst -- )] Load binary block to dst.
 \item[saveb ( start end filenameptr filenamelength -- )] Save binary block.
 \end{description}

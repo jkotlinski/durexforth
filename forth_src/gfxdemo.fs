@@ -1,8 +1,8 @@
 \ examples from c64 step by step
 \ programming, gfx book 3, phil cornes
 
-s" rnd" load
-s" sin" load
+s" rnd" included
+s" sin" included
 
 : done key drop lores ;
 

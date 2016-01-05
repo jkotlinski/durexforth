@@ -5,25 +5,25 @@ here latest @
 
 .( gfxdemo )
 a fakekeys \ skips demos
-s" gfxdemo" load
+s" gfxdemo" included
 
 .( fractals )
 4 fakekeys \ skips demos
-s" fractals" load
+s" fractals" included
 
 .( mmldemo )
-s" mmldemo" load
+s" mmldemo" included
 
 .( spritedemo )
 1 fakekeys \ exits demo 
-s" spritedemo" load
+s" spritedemo" included
 
 latest ! to here
 depth 0= assert
 
-s" tester" load
-s" testcore" load
-s" testcoreplus" load
+s" tester" included
+s" testcore" included
+s" testcoreplus" included
 
 hex
 : push ( ch -- )

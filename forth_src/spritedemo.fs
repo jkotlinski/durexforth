@@ -1,4 +1,4 @@
-s" sprite" load
+s" sprite" included
 
 340 sp-data
 DDD  UU U RRR  EEEEX   X
@@ -23,7 +23,7 @@ FF   O  O R RR  TT  H  H
 FF    OO  R RR  TT  H  H
 FF    OO  R RR  TT  H  H
 
-s" rnd" load
+s" rnd" included
 : rnds rnd 100/ 7 and ;
 : demo
 7 begin 
