@@ -39,21 +39,5 @@ for line drawing, \texttt{0 erase} switches back to \texttt{or}.
 \item[paint ( x y -- )] Paints the area at x, y.
 \item[text ( column row str strlen -- )] Draws a text string at the given position. E.g. \texttt{10
 8 s" hallo" text} draws the message "hallo" at column 16, row 8.
-\item[drawchar ( column row char -- )] Draws a custom character at given column and row.
-\item[defchar] Defines an 8x8 character to use with the \texttt{drawchar} word. Example:
-
-\begin{verbatim}
-defchar sqr
-00000000
-00000000
-00111100
-00111100
-00111100
-00111100
-00000000
-00000000
-2 2 sqr drawchar
-\end{verbatim}
-
-...draws a square at column 2, row 2.
+\item[drawchar ( column row addr -- )] Draws a custom character at given column and row, using the 8 bytes long data starting at addr.
 \end{description}

@@ -548,19 +548,6 @@ addr @ 8 move
 1+ swap 8 addr +! 1- repeat
 r> 1 c! cli drop ;
 
-: getbit
-2* source drop >in @ + c@
-[char] 1 = if 1+ then 
-1 >in +! ;
-: getrow ( dst -- dst )
-refill
-0 getbit getbit getbit getbit
-getbit getbit getbit getbit over c! 1+
-;
-: defchar variable 6 allot
-latest @ >cfa execute
-getrow getrow getrow getrow
-getrow getrow getrow getrow drop ;
 : drawchar ( col row srcaddr -- )
 swap 140 * rot 8 * + bmpbase +
 8 move ;
