@@ -456,7 +456,7 @@ FILL
     inc	.fdst + 1
     jmp	-
 
-!src "cmove.a"
+!src "move.a"
 
 ; ---------- variables
 

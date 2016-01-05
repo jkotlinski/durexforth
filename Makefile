@@ -6,7 +6,7 @@ TAG = `git describe --tags --abbrev=0 || svnversion --no-newline`
 
 all:	durexforth.d64
 
-durexforth.prg: durexforth.a number.a math.a cmove.a disk.a lowercase.a
+durexforth.prg: durexforth.a number.a math.a move.a disk.a lowercase.a
 	@$(AS) durexforth.a
 
 FORTHLIST=base debug vi asm gfx gfxdemo rnd sin ls turtle fractals sprite doloop sys float labels mml mmldemo sid spritedemo test testcore testcoreplus tester format
