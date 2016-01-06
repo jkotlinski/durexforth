@@ -37,12 +37,12 @@ state c@ if ( compile mode )
 postpone litstring here 0 , 0
 begin getc dup '"' <>
 while c, 1+ repeat
-drop swap !
-else ( immediate mode )
+drop swap ! exit
+then ( immediate mode )
 here here
 begin getc dup '"' <>
 while over c! 1+ repeat
-drop here - then ; immediate
+drop here - ; immediate
 
 : type ( caddr u -- )
 0 d4 c! ( quote mode off )
@@ -131,8 +131,8 @@ begin ?dup while space 1- repeat ;
 : (to) over 100/ over 2+ c! c! ;
 : to ' 1+
 state c@ if
-postpone literal postpone (to)
-else (to) then ; immediate
+postpone literal postpone (to) exit
+then (to) ; immediate
 
 : hex 10 base ! ;
 : decimal a base ! ;
