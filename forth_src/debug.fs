@@ -55,8 +55,7 @@ endcase
 		dup @
 	repeat
 	
-    -rot nip
-	swap ( end-of-word start-of-word )
+    rot drop \ eow sow
 
 	':' emit space dup id.
 	dup 2+ c@ 80 and if ." immediate " then
