@@ -4,9 +4,9 @@
 : * um* drop ;
 : jmp, 4c c, ;
 : ['] ' 
-[ ' literal compile, ] ; immediate no-tce
+[ ' literal compile, ] ; immediate
 : [char] char 
-[ ' literal compile, ] ; immediate no-tce
+[ ' literal compile, ] ; immediate
 : else jmp, here 0 ,
 swap here swap ! ; immediate
 : postpone
@@ -14,15 +14,15 @@ bl word find -1 = if
 [ ' literal compile, ] ['] compile, then
 compile, ; immediate
 : until
-postpone 0branch , ; immediate no-tce
+postpone 0branch , ; immediate
 : again jmp, , ; immediate
 : recurse latest @ >cfa compile, ; immediate
 : (
 begin getc dup
 0= if refill then
 ')' = if exit then
-again ; immediate no-tce
-: \ refill ; immediate no-tce
+again ; immediate
+: \ refill ; immediate
 : tuck ( x y -- y x y ) swap over ;
 : ?dup dup if dup then ;
 : <> ( a b -- c ) = 0= ;
@@ -42,7 +42,7 @@ else ( immediate mode )
 here here
 begin getc dup '"' <>
 while over c! 1+ repeat
-drop here - then ; immediate no-tce
+drop here - then ; immediate
 
 : type ( caddr u -- )
 0 d4 c! ( quote mode off )
@@ -65,7 +65,7 @@ postpone drop ; immediate
 : endcase 
 postpone drop
 begin ?dup while postpone then 
-repeat ; immediate no-tce
+repeat ; immediate
 
 ( gets pointer to first data field, i.e., skips
 the first jsr )
@@ -138,7 +138,7 @@ else (to) then ; immediate
 : decimal a base ! ;
 
 : 2drop ( a b -- ) 
-postpone drop postpone drop ; immediate no-tce
+postpone drop postpone drop ; immediate
 code 2over ( a b c d -- a b c d a b )
 dex,
 sp1 4 + lda,x sp1 sta,x
@@ -267,7 +267,7 @@ swap over ! 2+ ! ;
 postpone if
 postpone ."
 postpone abort
-postpone then ; immediate no-tce
+postpone then ; immediate
 
 code sei sei, ;code
 code cli cli, ;code

@@ -208,7 +208,7 @@ TIB_SIZE
 
 ; DROP
     +BACKLINK
-    !byte	4 | F_IMMED | F_NO_TAIL_CALL_ELIMINATION
+    !byte	4 | F_IMMED
     !text	"drop"
 DROP
     lda STATE
@@ -939,7 +939,7 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
 
     ldy	#2
     lda (TMP), y
-    and #F_NO_TAIL_CALL_ELIMINATION
+    and #F_NO_TAIL_CALL_ELIMINATION | F_IMMED
     sta FOUND_WORD_WITH_NO_TCE
 
     lda	(TMP), y ; a contains string length + mask
@@ -996,7 +996,7 @@ EXECUTE
 !src "number.a"
 
     +BACKLINK
-    !byte 7 | F_IMMED | F_NO_TAIL_CALL_ELIMINATION
+    !byte 7 | F_IMMED
     !text "literal"
 LITERAL
     dex
@@ -1395,7 +1395,7 @@ LBRAC
 ; RBRAC
     +BACKLINK
     ; disable tail call elimination in case of inline assembly
-    !byte	1 | F_NO_TAIL_CALL_ELIMINATION
+    !byte      1 | F_NO_TAIL_CALL_ELIMINATION
     !text	"]"
 RBRAC
     lda	#1
@@ -1416,16 +1416,16 @@ SEMICOLON
     jmp LBRAC
 
     +BACKLINK
-    !byte	6
-    !text	"no-tce" ; no tail call elimination
-    lda	_LATEST
-    sta	TMP
-    lda	_LATEST + 1
-    sta	TMP + 1
-    ldy	#2
-    lda	(TMP), y
-    eor	#F_NO_TAIL_CALL_ELIMINATION
-    sta	(TMP), y
+    !byte      6
+    !text      "no-tce" ; no tail call elimination
+    lda        _LATEST
+    sta        TMP
+    lda        _LATEST + 1
+    sta        TMP + 1
+    ldy        #2
+    lda        (TMP), y
+    eor        #F_NO_TAIL_CALL_ELIMINATION
+    sta        (TMP), y
     rts
 
 ; IMMEDIATE. Set the immediate flag of the LATEST word.
@@ -1631,7 +1631,7 @@ TOGGLE_LATEST_HIDDEN
     rts
 
     +BACKLINK
-    !byte 2 | F_IMMED | F_NO_TAIL_CALL_ELIMINATION
+    !byte 2 | F_IMMED
     !text	"if"
     jsr LIT
     !word ZBRANCH
@@ -1641,7 +1641,7 @@ TOGGLE_LATEST_HIDDEN
     jmp COMMA
 
     +BACKLINK
-    !byte 4 | F_IMMED | F_NO_TAIL_CALL_ELIMINATION
+    !byte 4 | F_IMMED
     !text	"then"
     jsr HERE
     jsr SWAP
@@ -1680,7 +1680,7 @@ COMPILE_JMP
     jmp CCOMMA
 
     +BACKLINK
-    !byte 6 | F_IMMED | F_NO_TAIL_CALL_ELIMINATION
+    !byte 6 | F_IMMED
     !text	"repeat"
     jsr COMPILE_JMP
     jsr COMMA

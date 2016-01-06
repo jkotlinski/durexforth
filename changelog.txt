@@ -258,3 +258,4 @@ v1.5.1
  * forth: added include (e.g. "include gfx" loads gfx module)
  * forth: added marker
  * forth: made dump work in decimal mode (thx kevin reno)
+ * forth: disabled tail call elimination for all immediate words

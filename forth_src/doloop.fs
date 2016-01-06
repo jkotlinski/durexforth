@@ -22,7 +22,7 @@ postpone (do) here dup >l ; immediate
 
 : leave
 postpone unloop 
-postpone branch here >l 0 , ; immediate no-tce
+postpone branch here >l 0 , ; immediate
 
 : resolve-leaves ( dopos -- )
 begin -2 lsp +!
@@ -48,7 +48,7 @@ zptmp ldx, \ restore x
 zptmp2 (jmp),
 
 : loop
-postpone (loop) dup , resolve-leaves ; immediate no-tce
+postpone (loop) dup , resolve-leaves ; immediate
 
 : (+loop) ( inc -- )
 r> swap \ ret inc
@@ -60,7 +60,7 @@ r@ 1- -rot within 0= if
 r> 2drop 2+ >r ;
 
 : +loop
-postpone (+loop) dup , resolve-leaves ; immediate no-tce
+postpone (+loop) dup , resolve-leaves ; immediate
 
 : i postpone r@ ; immediate
 code j txa, tsx,
