@@ -278,8 +278,10 @@ code cli cli, ;code
 
 : assert 0= if
 begin 1 d020 +! again then ;
+: marker create latest @ ,
+does> @ dup to here @ latest ! ;
 
-( header modules )
+marker modules
 
 .( labels..) include labels
 .( doloop..) include doloop

@@ -110,32 +110,30 @@ again ;
 
 \section{Configuring durexForth}
 
-\iffalse
--- forget does not exist anymore! rework with marker
-
 \subsection{Stripping Modules}
 
-By default, durexForth boots up with all modules pre-compiled in RAM:
+By default, durexForth boots up with these modules pre-compiled in RAM:
 
 \begin{description}
-\item[doloop] Do-loop words.
-\item[debug] Words for debugging.
-\item[asm] The assembler.
-\item[vi] The text editor.
-\item[ls] List disk contents.
-\item[gfx] Graphics module.
+    \item[asm] The assembler. (Required and not forgettable.)
+    \item[labels] Assembler labels.
+    \item[doloop] Do-loop words.
+    \item[format] Numerical formatting words.
+    \item[sys] System calls.
+    \item[debug] Words for debugging.
+    \item[ls] List disk contents.
+    \item[gfx] Graphics module.
+    \item[vi] The text editor.
 \end{description}
 
 To reduce RAM usage, you may make a stripped-down version of durexForth. Do this by following these steps:
 
 \begin{enumerate}
-\item Issue \texttt{forget modules} to forget all modules.
-\item Optionally re-add the \texttt{modules} marker with \texttt{header modules}.
+\item Issue \texttt{modules} to forget all modules.
+\item Optionally re-add the \texttt{modules} marker with \texttt{marker modules}.
 \item One by one, load the modules you want included with your new Forth. (E.g. \texttt{include debug})
 \item Save the new system with e.g. \texttt{s" acmeforth" save-forth}.
 \end{enumerate}
-
-\fi
 
 \subsection{Custom Start-Up}
 

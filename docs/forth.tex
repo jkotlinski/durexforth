@@ -431,7 +431,13 @@ For more info about number formatting, read Starting Forth!
 
 \item[here (variable)] Write position of the Forth compiler (usually first unused byte of memory). Many C64 assemblers refer to this as program counter or \texttt{*}.
 
+\item[marker name ( -- )] Creates a word that when called, forgets itself and all words that were defined after it. Example:
 
+\begin{verbatim}
+marker forget
+: x ;
+forget
+\end{verbatim}
 \end{description}
 
 

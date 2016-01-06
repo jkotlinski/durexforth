@@ -256,3 +256,4 @@ v1.5.1
  * forth: made .( immediate
  * forth: renamed load => included
  * forth: added include (e.g. "include gfx" loads gfx module)
+ * forth: added marker
