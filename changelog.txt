@@ -254,10 +254,9 @@ Thanks to polluks for suggestions!
 v1.5.1
 
  * bugfix: see did not work on the latest word
- * forth: made .( immediate
- * forth: renamed load => included
  * forth: added include (e.g. "include gfx" loads gfx module)
+ * forth: renamed load => included
  * forth: added marker
  * forth: made dump work in decimal mode
- * forth: disabled tail call elimination for all immediate words
+ * forth: made .( immediate
  * forth: removed no-tce
