@@ -657,7 +657,7 @@ down c, ' cur-down ,
 
 \ custom restore handler
 \ "vi"
-here 'v' c, 'i' c, d c,
+here 'v' c, 'i' c,
 here cli, \ entry
 swap dup \ asm vi vi 
 \ evaluate "vi"
@@ -665,7 +665,7 @@ dex,
 lda,# sp0 sta,x
 100/ lda,# sp1 sta,x
 dex,
-3 lda,# sp0 sta,x
+2 lda,# sp0 sta,x
 0 lda,# sp1 sta,x
 ' evaluate jsr,
 \ lores
