@@ -84,15 +84,15 @@ variable prev
 
 variable last-dump
 
-: c. dup fff0 and 0= if
-'0' emit then . ;
 : dump ( addr -- )
-8 0 do dup u. space
-dup 8 0 do dup c@ c. 1+ loop drop
+base @ swap hex
+8 0 do dup u.
+dup 8 0 do dup c@ 0 <# # # #> type
+space 1+ loop drop
 8 0 do dup c@
 dup 7f and 20 < if drop '.' then 
 emit 1+ loop cr loop
-last-dump ! ;
+last-dump ! base ! ;
 
 : n last-dump @ dump ;
 
