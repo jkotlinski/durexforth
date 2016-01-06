@@ -43,23 +43,19 @@ endof ( default )
 endcase
 2+ ;
 
-variable prev
 : see
 	bl word find 0= if drop exit then
-	here
-	latest @
+	here latest @
 	begin
 		2 pick
 		over
 		<
 	while
-        dup prev !
 		nip
 		dup @
 	repeat
 	
-    nip nip
-    prev @
+    -rot nip
 	swap ( end-of-word start-of-word )
 
 	':' emit space dup id.

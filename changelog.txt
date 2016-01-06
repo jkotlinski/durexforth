@@ -253,6 +253,7 @@ Thanks to polluks for suggestions!
 
 v1.5.1
 
+ * bugfix: see did not work on the latest word
  * forth: made .( immediate
  * forth: renamed load => included
  * forth: added include (e.g. "include gfx" loads gfx module)
