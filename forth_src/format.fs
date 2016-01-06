@@ -12,7 +12,7 @@ um/mod r> ;
 : # base @ ud/mod rot #pet hold ;
 : #s # begin 2dup or while # repeat ;
 : pet# ( char -- num )
-7f and dup 
+7f and dup \ lowercase
 [char] : < if 
 [char] 0 else 
 [char] 7 then - ;
