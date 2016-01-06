@@ -1415,19 +1415,6 @@ SEMICOLON
     ; go back to IMMEDIATE mode.
     jmp LBRAC
 
-    +BACKLINK
-    !byte      6
-    !text      "no-tce" ; no tail call elimination
-    lda        _LATEST
-    sta        TMP
-    lda        _LATEST + 1
-    sta        TMP + 1
-    ldy        #2
-    lda        (TMP), y
-    eor        #F_NO_TAIL_CALL_ELIMINATION
-    sta        (TMP), y
-    rts
-
 ; IMMEDIATE. Set the immediate flag of the LATEST word.
     +BACKLINK
     !byte	9
@@ -1509,6 +1496,17 @@ R_TO
     pla
     sta MSB,x
     jmp (TMP)
+
+    +BACKLINK
+    !byte	6 | F_NO_TAIL_CALL_ELIMINATION
+    !text	"unloop"
+    jsr R_TO
+    jsr R_TO
+    jsr R_TO
+    inx
+    inx
+    jsr TO_R
+    rts
 
     +BACKLINK
     !byte 6

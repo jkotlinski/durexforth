@@ -18,8 +18,6 @@ variable lsp lstk lsp !
 : do
 postpone (do) here dup >l ; immediate
 
-: unloop r> r> r> 2drop >r ; no-tce
-
 : leave
 postpone unloop 
 postpone branch here >l 0 , ; immediate
