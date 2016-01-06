@@ -29,12 +29,12 @@ endof
     ." (loop) " 2+
 endof
 ['] branch of
-    ." branch ( "
+    ." branch( "
     2+ dup @ .
     ." ) "
 endof
 ['] 0branch of
-    ." 0branch ( "
+    ." 0branch( "
     2+ dup @ .
     ." ) "
 endof ( default )
@@ -44,7 +44,7 @@ endcase
 2+ ;
 
 : see
-	bl word find 0= if drop exit then
+	bl word find 0= abort" err"
 	here latest @
 	begin
 		2 pick
@@ -67,9 +67,9 @@ endcase
 	while
 		dup c@ case 
         20 of see-jsr endof
-        4c of ." jmp( " see-jsr ." ) " endof
-        e8 of 1+ ." inx " endof
-        60 of 1+ ." rts " endof
+        4c of ." jp( " see-jsr ." ) " endof
+        e8 of 1+ ." drop " endof \ inx
+        60 of 1+ ." exit " endof \ rts
         ." ? " swap 1+ swap
         endcase
 	repeat
