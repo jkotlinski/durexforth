@@ -257,6 +257,6 @@ v1.5.1
  * forth: renamed load => included
  * forth: added include (e.g. "include gfx" loads gfx module)
  * forth: added marker
- * forth: made dump work in decimal mode (thx kevin reno)
+ * forth: made dump work in decimal mode
  * forth: disabled tail call elimination for all immediate words
  * forth: removed no-tce
