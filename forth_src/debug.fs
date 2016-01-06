@@ -15,10 +15,10 @@ endof
     2+ dup c@ . 1-
 endof
 ['] litstring of
-    [char] s emit
-    [char] " emit space
+    's' emit
+    '"' emit space
     2+ dup 2+ over @ type
-    [char] " emit space
+    '"' emit space
     dup @ +
 endof
 ['] ['] of
@@ -62,7 +62,7 @@ variable prev
     prev @
 	swap ( end-of-word start-of-word )
 
-	[char] : emit space dup id.
+	':' emit space dup id.
 	dup 2+ c@ 80 and if ." immediate " then
 
 	>cfa
@@ -78,19 +78,19 @@ variable prev
         ." ? " swap 1+ swap
         endcase
 	repeat
-	[char] ; emit cr
+	';' emit cr
 	2drop
 ;
 
 variable last-dump
 
 : c. dup fff0 and 0= if
-[char] 0 emit then . ;
+'0' emit then . ;
 : dump ( addr -- )
 8 0 do dup u. space
 dup 8 0 do dup c@ c. 1+ loop drop
 8 0 do dup c@
-dup 7f and 20 < if drop [char] . then 
+dup 7f and 20 < if drop '.' then 
 emit 1+ loop cr loop
 last-dump ! ;
 

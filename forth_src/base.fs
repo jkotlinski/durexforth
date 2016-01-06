@@ -20,7 +20,7 @@ postpone 0branch , ; immediate no-tce
 : (
 begin getc dup
 0= if refill then
-[char] ) = if exit then
+')' = if exit then
 again ; immediate no-tce
 : \ refill ; immediate no-tce
 : tuck ( x y -- y x y ) swap over ;
@@ -35,12 +35,12 @@ r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 : s" ( -- addr len )
 state c@ if ( compile mode )
 postpone litstring here 0 , 0
-begin getc dup [char] " <>
+begin getc dup '"' <>
 while c, 1+ repeat
 drop swap !
 else ( immediate mode )
 here here
-begin getc dup [char] " <>
+begin getc dup '"' <>
 while over c! 1+ repeat
 drop here - then ; immediate no-tce
 
@@ -51,7 +51,7 @@ swap dup c@ emit 1+ swap 1-
 repeat drop ;
 
 : ." postpone s" postpone type ; immediate
-: .( begin getc dup [char] ) <>
+: .( begin getc dup ')' <>
 while emit repeat drop ; immediate
 .( compile base..)
 
@@ -257,7 +257,7 @@ inx, sp0 sty,x sp1 sty,x ;code
 : u. 0 >r begin 0 base @ um/mod swap
 #pet >r ?dup 0= until
 begin r> ?dup while emit repeat space ;
-: . dup 0< if [char] - emit negate
+: . dup 0< if '-' emit negate
 then u. ;
 : .s depth begin ?dup while
 dup pick . 1- repeat ;

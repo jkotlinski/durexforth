@@ -12,16 +12,16 @@ scale @ 100 <> if
 Dd dup >r scale @ * 100/ to Dd then
 0 begin dup rulel < while
 dup rule + c@ case
-[char] f of over if
+'f' of over if
 swap 1- recurse 1+ swap
 else Dd forward then
 endof
-[char] @ of Dd forward endof
-[char] + of Da right endof
-[char] - of Da left endof
-[char] [ of turtle@ >r >r >r
+'@' of Dd forward endof
+'+' of Da right endof
+'-' of Da left endof
+'[' of turtle@ >r >r >r
 endof
-[char] ] of r> r> r> turtle!
+']' of r> r> r> turtle!
 endof endcase 1+ repeat drop
 scale @ 100 <> if r> to Dd then ;
 
@@ -31,11 +31,11 @@ to rulel to rule to Da to Dd scale !
 0 \ axiom axioml depth i
 begin 2 pick over > while
 3 pick over + c@ case
-[char] f of over if
+'f' of over if
 swap 1- dofract 1+ swap
 else Dd forward then endof
-[char] + of Da right endof
-[char] - of Da left endof
+'+' of Da right endof
+'-' of Da left endof
 endcase
 1+ repeat 2drop 2drop ;
 

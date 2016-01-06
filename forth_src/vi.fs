@@ -277,7 +277,7 @@ bufstart dup homepos ! curlinestart !
 
 : insert-start
 1 to insert-active
-[char] i set-status ;
+'i' set-status ;
 
 : force-cur-right
 linelen if 1 curx +! then ;
@@ -413,10 +413,10 @@ eof @ curlinestart @ - move
 eof +! ;
 
 : del
-[char] d set-status
+'d' set-status
 key case
-[char] w of del-word endof
-[char] d of del-line endof
+'w' of del-word endof
+'d' of del-line endof
 endcase clear-status ;
 
 variable search-buf e allot 
@@ -486,9 +486,9 @@ variable drivebuf 16 allot
 : do-backup
 	\ scratch old backup
 	drivebuf
-	[char] s over c! 1+
-	[char] : over c! 1+
-	[char] . over c! 1+
+	's' over c! 1+
+	':' over c! 1+
+	'.' over c! 1+
 	dup
 	filename swap filename-len c@ move
 	filename-len c@ +
@@ -499,11 +499,11 @@ variable drivebuf 16 allot
 
 	\ rename to new backup
 	drivebuf
-	[char] r over c! 1+
+	'r' over c! 1+
 	1+ \ colon already in place...
-	[char] . over c! 1+
+	'.' over c! 1+
 	filename-len c@ + \ filename ok
-	[char] = over c! 1+
+	'=' over c! 1+
 	dup
 	filename swap filename-len c@ move
 	filename-len c@ + \ filename ok
@@ -524,7 +524,7 @@ saveb
 1 to need-refresh ;
 
 : save-as
-	[char] ! emit
+	'!' emit
 	0 ( len )
 	filename ( len filename )
 	begin
@@ -556,18 +556,18 @@ saveb
 
 : colon-w
 	1 18 setcur
-	[char] w emit
+	'w' emit
 	key
 	case
 	lf of write-file endof
-	[char] ! of save-as endof
+	'!' of save-as endof
 	endcase
 ;
 
 : find-handler
 	0 18 setcur
 	clear-status
-	[char] / emit
+	'/' emit
 	0 ( count )
 	begin
 		key dup
@@ -625,39 +625,39 @@ cur-down
 then ;
 
 header maintable
-char i c, ' insert-start ,
-char a c, ' append-start ,
-char / c, ' find-handler ,
+'i' c, ' insert-start ,
+'a' c, ' append-start ,
+'/' c, ' find-handler ,
 ( ctrl+u )
 15 c, ' half-page-back ,
 ( ctrl+d )
 4 c, ' half-page-fwd ,
-char J c, ' join-lines ,
-char g c, ' goto-start ,
-char G c, ' goto-eof ,
-char $ c, ' eol ,
-char 0 c, ' sol ,
-char r c, ' replace-char ,
-char O c, ' open-line ,
-char P c, ' paste-line ,
-char x c, ' del-char ,
-char X c, ' backspace ,
-char b c, ' word-back ,
-char w c, ' word-fwd ,
-char d c, ' del ,
+'J' c, ' join-lines ,
+'g' c, ' goto-start ,
+'G' c, ' goto-eof ,
+'$' c, ' eol ,
+'0' c, ' sol ,
+'r' c, ' replace-char ,
+'O' c, ' open-line ,
+'P' c, ' paste-line ,
+'x' c, ' del-char ,
+'X' c, ' backspace ,
+'b' c, ' word-back ,
+'w' c, ' word-fwd ,
+'d' c, ' del ,
 left c, ' cur-left ,
 right c, ' cur-right ,
 up c, ' cur-up ,
 down c, ' cur-down ,
-char h c, ' cur-left ,
-char l c, ' cur-right ,
-char k c, ' cur-up ,
-char j c, ' cur-down ,
+'h' c, ' cur-left ,
+'l' c, ' cur-right ,
+'k' c, ' cur-up ,
+'j' c, ' cur-down ,
 0 c,
 
 \ custom restore handler
 \ "vi"
-here char v c, char i c, d c,
+here 'v' c, 'i' c, d c,
 here cli, \ entry
 swap dup \ asm vi vi 
 \ evaluate "vi"
@@ -696,31 +696,31 @@ bufstart eof @ bufstart - 1- evaluate ;
 
 	case ( key )
 
-    [char] y of \ yy
-     key [char] y = if
+    'y' of \ yy
+     key 'y' = if
      yank-line
     then endof
-	[char] o of force-cur-down open-line endof
-	[char] p of force-cur-down paste-line endof
-	[char] Z of
+	'o' of force-cur-down open-line endof
+	'p' of force-cur-down paste-line endof
+	'Z' of
 		key
 		case
-		[char] Z of write-file ffff exit endof
+		'Z' of write-file ffff exit endof
 		endcase
 	endof
-	[char] : of 
-		[char] : set-status
+	':' of 
+		':' set-status
 		key 
 		case
-		[char] w of colon-w endof
-		[char] q of ffff exit endof
+		'w' of colon-w endof
+		'q' of ffff exit endof
 		endcase
 		clear-status
 	endof
 
-	[char] c of
+	'c' of
 		key
-		[char] w = if change-word then
+		'w' = if change-word then
 	endof
 
 	( cursor )

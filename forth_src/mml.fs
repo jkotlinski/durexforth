@@ -93,19 +93,19 @@ dex, 0 lda,# sp1 sta,x
 
 create notetab ( char -- notediff )
 sp0 lda,x
-char c cmp,# +branch bne,
+'c' cmp,# +branch bne,
 0 lda,# sp0 sta,x rts,
-:+ char d cmp,# +branch bne,
+:+ 'd' cmp,# +branch bne,
 2 lda,# sp0 sta,x rts,
-:+ char e cmp,# +branch bne,
+:+ 'e' cmp,# +branch bne,
 4 lda,# sp0 sta,x rts,
-:+ char f cmp,# +branch bne,
+:+ 'f' cmp,# +branch bne,
 5 lda,# sp0 sta,x rts,
-:+ char g cmp,# +branch bne,
+:+ 'g' cmp,# +branch bne,
 7 lda,# sp0 sta,x rts,
-:+ char a cmp,# +branch bne,
+:+ 'a' cmp,# +branch bne,
 9 lda,# sp0 sta,x rts,
-:+ char b cmp,# +branch bne,
+:+ 'b' cmp,# +branch bne,
 b lda,# sp0 sta,x rts,
 :+ 7f lda,# sp0 sta,x rts,
 
@@ -118,40 +118,40 @@ code str2note
 notetab jsr,
 .str-pop jsr,
 .strget jsr,
-char + cmp,# +branch bne,
+'+' cmp,# +branch bne,
 sp0 inc,x .str-pop jsr, notrest jmp,
-:+ char - cmp,# +branch bne,
+:+ '-' cmp,# +branch bne,
 sp0 dec,x .str-pop jsr, notrest jmp,
 :+ notrest jmp,
 
 create .read-pause
 dex, 0 lda,# sp1 sta,x
 .strget jsr,
-char 1 cmp,# +branch bne,
+'1' cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
-char 6 cmp,# +branch bne,
+'6' cmp,# +branch bne,
 .str-pop jsr, 60 10 / lda,# sp0 sta,x 
 rts,
 :+ 60 lda,# sp0 sta,x rts,
-:+ char 2 cmp,# +branch bne,
+:+ '2' cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
-char 4 cmp,# +branch bne,
+'4' cmp,# +branch bne,
 .str-pop jsr, 60 18 / lda,# sp0 sta,x 
 rts,
 :+ 60 2 / lda,# sp0 sta,x rts,
-:+ char 3 cmp,# +branch bne,
+:+ '3' cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
-char 2 cmp,# +branch bne,
+'2' cmp,# +branch bne,
 .str-pop jsr, 60 20 / lda,# sp0 sta,x 
 rts,
 :+ 60 3 / lda,# sp0 sta,x rts,
-:+ char 4 cmp,# +branch bne,
+:+ '4' cmp,# +branch bne,
 .str-pop jsr, 60 4 / lda,# sp0 sta,x 
 rts,
-:+ char 6 cmp,# +branch bne,
+:+ '6' cmp,# +branch bne,
 .str-pop jsr, 60 6 / lda,# sp0 sta,x 
 rts,
-:+ char 8 cmp,# +branch bne,
+:+ '8' cmp,# +branch bne,
 .str-pop jsr, 60 8 / lda,# sp0 sta,x 
 rts,
 :+ 0 lda,# sp0 sta,x rts,
@@ -162,7 +162,7 @@ sp0 lda,x +branch bne,
 default-pause lda, sp0 sta,x
 :+ 
 .strget jsr,
-char . cmp,# +branch bne,
+'.' cmp,# +branch bne,
 .str-pop jsr,
 sp0 lda,x lsr,a clc, 
 sp0 adc,x sp0 sta,x
@@ -183,7 +183,7 @@ read-pause pause c! then ;
 code o
 .str-pop jsr,
 .strget jsr, \ new character in a
-sec, char 0 sbc,#
+sec, '0' sbc,#
 \ multiply by c
 asl,a asl,a zptmp sta,
 asl,a clc, zptmp adc,
@@ -192,14 +192,14 @@ octave sta,
 
 : do-commands ( -- done )
 strget case
-[char] l of str-pop 
+'l' of str-pop 
 read-default-pause recurse endof
-[char] o of o recurse endof
-[char] < of str-pop fff4 octave +!
+'o' of o recurse endof
+'<' of str-pop fff4 octave +!
 recurse endof
-[char] > of str-pop c octave +! 
+'>' of str-pop c octave +! 
 recurse endof
-[char] & of str-pop 1 tie c! 
+'&' of str-pop 1 tie c! 
 recurse endof
 d of str-pop recurse endof
 bl of str-pop recurse endof

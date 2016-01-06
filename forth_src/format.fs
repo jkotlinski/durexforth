@@ -5,7 +5,7 @@ variable end
 here dup 1+ end @ here - move
 1 end +! ;
 : hold ins here c! ;
-: sign 0< if [char] - hold then ;
+: sign 0< if '-' hold then ;
 : ud/mod \ from Gforth
 >r 0 r@ um/mod r> swap >r
 um/mod r> ;
@@ -13,9 +13,7 @@ um/mod r> ;
 : #s # begin 2dup or while # repeat ;
 : pet# ( char -- num )
 7f and dup \ lowercase
-[char] : < if 
-[char] 0 else 
-[char] 7 then - ;
+':' < if '0' else '7' then - ;
 : digit? ( char -- flag )
 pet# dup 0< 0= swap base @ < and ;
 
