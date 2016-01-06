@@ -9,13 +9,18 @@ here dup 1+ end @ here - move
 : ud/mod \ from Gforth
 >r 0 r@ um/mod r> swap >r
 um/mod r> ;
-: # base @ ud/mod rot #pet hold ;
+: # base @ ud/mod rot 
+dup a < if 7 - then 37 + hold ;
 : #s # begin 2dup or while # repeat ;
 : pet# ( char -- num )
 7f and dup \ lowercase
 ':' < if '0' else '7' then - ;
 : digit? ( char -- flag )
 pet# dup 0< 0= swap base @ < and ;
+
+: u. 0 <# #s #> type space ;
+: . dup abs 0 <# #s rot sign #> 
+type space ;
 
 code d+ ( d1 d2 -- d3 )
 clc,

@@ -253,12 +253,8 @@ inx, sp0 sty,x sp1 sty,x ;code
 : min ( a b - c )
 2dup > if swap then drop ;
 
-: #pet dup a < if 7 - then 37 + ;
-: u. 0 >r begin 0 base @ um/mod swap
-#pet >r ?dup 0= until
-begin r> ?dup while emit repeat space ;
-: . dup 0< if '-' emit negate
-then u. ;
+.( format..) include format
+
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
@@ -285,7 +281,6 @@ marker modules
 
 .( labels..) include labels
 .( doloop..) include doloop
-.( format..) include format
 .( sys..) include sys
 .( debug..) include debug
 .( ls..) include ls
