@@ -1541,7 +1541,7 @@ TO_R
     jmp (TMP)
 
     +BACKLINK
-    !byte	6 | F_NO_TAIL_CALL_ELIMINATION
+    !byte	6
     !text	"branch"
 BRANCH
     pla
@@ -1559,7 +1559,7 @@ BRANCH
 
 ; 0BRANCH
     +BACKLINK
-    !byte	7 | F_NO_TAIL_CALL_ELIMINATION
+    !byte	7
     !text	"0branch"
 ZBRANCH
     inx
