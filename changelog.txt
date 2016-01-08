@@ -251,7 +251,7 @@ Thanks to Christian Johansson for suggestions!
 
 Thanks to polluks for suggestions!
 
-v1.5.1
+2016-01-08: v1.5.1
 
  * bugfix: see did not work on the latest word
  * forth: added include (e.g. "include gfx" loads gfx module)
