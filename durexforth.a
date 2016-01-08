@@ -847,8 +847,6 @@ WORD
     !byte	4
     !text	"find"
 FIND ; ( str -- str 0 | xt 1 | xt -1 )
-    jsr STRING_TO_LOWERCASE
-
     txa
     pha
 
@@ -915,8 +913,9 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     lda #0
     sta .strlen
 -   iny
-    lda	(TMP), y ; get char of dictionary string
-    cmp	(TMP2), y ; compare with find string
+    lda	(TMP2), y ; find string
+    jsr CHAR_TO_LOWERCASE  ; this is quite slow!
+    cmp	(TMP), y ; dictionary string
     bne	.word_not_equal
     dec	.strlen
     beq	.word_is_equal
@@ -1284,7 +1283,6 @@ HEADER
     lda #K_SPACE
     sta LSB,x
     jsr	WORD
-    jsr STRING_TO_LOWERCASE
 
     ; store link in header. TMP = dst
     lda	HERE_LSB
@@ -1310,6 +1308,7 @@ HEADER
 
     ; copy length byte + string
 -   lda	WORD_BUFFER, y
+    jsr CHAR_TO_LOWERCASE
     sta	(TMP), y
     iny
     dec WORD_BUFFER_LENGTH

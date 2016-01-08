@@ -129,6 +129,8 @@ READ_NUMBER
 +   lda (TMP3), y
 
 .loop_entry
+    jsr CHAR_TO_LOWERCASE
+
     clc
     adc #-$30 ; petscii 0-9 -> 0-9
 

@@ -20,35 +20,25 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-STRING_TO_LOWERCASE ; ( str -- str )
-    lda LSB,x
-    sta TMP
-    lda MSB,x
-    sta TMP+1
-    ldy #0
-    lda (TMP),y
-    tay
-.loopstart
-    beq .loopend 
-
-    lda (TMP),y
+CHAR_TO_LOWERCASE ; ( a -- a )
+    sta .save
     sec
     sbc #'a' + $80 
     cmp #1 + 'z' - 'a'
     bcs +
     adc #'a'
-    sta (TMP),y
+    rts
 +
-    lda (TMP),y
+    lda .save
     sec
     sbc #'A'
     cmp #1 + 'z' - 'a'
     bcs +
     adc #'a'
-    sta (TMP),y
-+   
-    dey
-    jmp .loopstart
-
-.loopend
     rts
++   
+    lda .save
+    rts
+
+.save
+    !byte 0
