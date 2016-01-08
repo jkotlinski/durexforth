@@ -34,7 +34,7 @@ STRING_TO_LOWERCASE ; ( str -- str )
     lda (TMP),y
     sec
     sbc #'a' + $80 
-    cmp #'z' - 'a'
+    cmp #1 + 'z' - 'a'
     bcs +
     adc #'a'
     sta (TMP),y
@@ -42,7 +42,7 @@ STRING_TO_LOWERCASE ; ( str -- str )
     lda (TMP),y
     sec
     sbc #'A'
-    cmp #'z' - 'a'
+    cmp #1 + 'z' - 'a'
     bcs +
     adc #'a'
     sta (TMP),y
