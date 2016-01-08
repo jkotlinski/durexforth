@@ -9,6 +9,7 @@ deploy: durexforth.d64
 	mkdir deploy
 	cp durexforth.d64 deploy/durexforth-$(TAG_DEPLOY).d64
 	cp docs/durexforth.pdf deploy/durexforth-$(TAG_DEPLOY).pdf
+	x64 deploy/durexforth-$(TAG_DEPLOY).d64
 
 all:	durexforth.d64
 
