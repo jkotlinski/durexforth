@@ -29,7 +29,8 @@ CHAR_TO_LOWERCASE ; ( a -- a )
     adc #'a'
     rts
 +
-    lda .save
+.save = * + 1
+    lda #0
     sec
     sbc #'A'
     cmp #1 + 'z' - 'a'
@@ -39,6 +40,3 @@ CHAR_TO_LOWERCASE ; ( a -- a )
 +   
     lda .save
     rts
-
-.save
-    !byte 0
