@@ -1,8 +1,14 @@
 C1541   = c1541
 AS = acme
 TAG = `git describe --tags --abbrev=0 || svnversion --no-newline`
+TAG_DEPLOY = `git describe --tags --abbrev=0 | tr . _`
 
-# generic rules
+deploy: durexforth.d64
+	$(MAKE) -C docs
+	rm -rf deploy
+	mkdir deploy
+	cp durexforth.d64 deploy/durexforth-$(TAG_DEPLOY).d64
+	cp docs/durexforth.pdf deploy/durexforth-$(TAG_DEPLOY).pdf
 
 all:	durexforth.d64
 
@@ -23,5 +29,6 @@ durexforth.d64: durexforth.prg forth_src/base.fs forth_src/debug.fs forth_src/vi
     done;
 
 clean:
+	$(MAKE) -C docs clean
 	rm -f *.lbl *.prg *.d64 
 	rm -rf build
