@@ -31,7 +31,7 @@ c6 c@ 277 + c!
 1 c6 +! ;
 
 .( vi )
-'i' push 
+'i' push d push
 '.' push '(' push bl push
 'o' push 'k' push ')' push
 5f push \ leftarrow
