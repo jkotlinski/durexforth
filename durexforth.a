@@ -869,10 +869,6 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     lda	(TMP2), y ; get length of find string
     ; store findlen
     sta	.findlen + 1
-    cmp #FIND_BUFFER_SIZE
-    bcc +
-    lda #FIND_BUFFER_SIZE
-+
     sta	.findlen2 + 1
 
     tay
