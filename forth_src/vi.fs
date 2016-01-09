@@ -14,7 +14,7 @@ variable curx
 variable cury
 0 value need-refresh
 variable line-dirty
-0 value insert-active
+0 value ins-active
 
 : line-dirty! 1 line-dirty c! ;
 
@@ -78,7 +78,7 @@ dup @ 7f and
 swap c! ;
 
 : show-cursor
-insert-active 0= if
+ins-active 0= if
 curx @ linelen dup if 1- then min 
 curx c!
 then
@@ -275,8 +275,8 @@ until
 bufstart dup homepos ! curlinestart !
 1 to need-refresh ;
 
-: insert-start
-1 to insert-active
+: ins-start
+1 to ins-active
 'i' set-status ;
 
 : force-cur-right
@@ -284,11 +284,11 @@ linelen if 1 curx +! then ;
 
 : append-start
 force-cur-right
-insert-start ;
+ins-start ;
 
-: insert-stop
+: ins-stop
 cur-left
-0 to insert-active
+0 to ins-active
 clear-status ;
 
 : show-location
@@ -345,7 +345,7 @@ then ;
 
 : del-char force-cur-right backspace ;
 
-: insert-char
+: ins-char
 	dup lf <> linelen 26 > and if drop exit then
 
 	editpos
@@ -364,25 +364,25 @@ then ;
 91 value up
 1d value right
 
-: insert-right
+: ins-right
 curx @ linelen 1- = if
 force-cur-right else cur-right then ;
 
-: insert-handler
+: ins-handler
 	dup a0 = if drop bl then \ shift space => space
 
 	dup
 	case
     3 of drop endof \ run/stop
-	5f of insert-stop drop endof \ leftarrow
+	5f of ins-stop drop endof \ leftarrow
 	left of cur-left drop endof
 	down of cur-down drop endof
 	up of cur-up drop endof
-	right of insert-right drop endof
+	right of ins-right drop endof
 	14 of backspace drop endof \ inst
 	94 of del-char drop endof \ del
-	lf of insert-char cur-down sol show-page endof
-	insert-char
+	lf of ins-char cur-down sol show-page endof
+	ins-char
 	endcase
 ;
 
@@ -393,13 +393,13 @@ editpos c@ eol= if exit then
 editpos c@ del-char space= if exit then
 again ;
 
-variable clipboard 26 allot
-variable clipboard-count
-0 clipboard-count !
+variable clip 26 allot
+variable clip-count
+0 clip-count !
 
 : yank-line
-linelen clipboard-count !
-curlinestart @ clipboard linelen 
+linelen clip-count !
+curlinestart @ clip linelen 
 move ;
 
 : del-line
@@ -591,28 +591,28 @@ saveb
 ;
 
 : open-line
-sol lf insert-char sol
-insert-start
+sol lf ins-char sol
+ins-start
 1 to need-refresh ;
 
 : paste-line
-open-line insert-stop
-( make room for clipboard contents )
+open-line ins-stop
+( make room for clip contents )
 curlinestart @
-dup clipboard-count @ +
+dup clip-count @ +
 eof @ 1+ curlinestart @ - move
-( copy from clipboard )
-clipboard
+( copy from clip )
+clip
 curlinestart @
-clipboard-count @ move
+clip-count @ move
 ( update eof )
-clipboard-count @ eof +! ;
+clip-count @ eof +! ;
 
 : change-word
 del-word
-bl insert-char
+bl ins-char
 cur-left
-insert-start ;
+ins-start ;
 
 : force-cur-down
 editpos
@@ -620,12 +620,12 @@ cur-down
 editpos = if
 eol
 force-cur-right
-lf insert-char
+lf ins-char
 cur-down
 then ;
 
 header maintable
-'i' c, ' insert-start ,
+'i' c, ' ins-start ,
 'a' c, ' append-start ,
 '/' c, ' find-handler ,
 ( ctrl+u )
@@ -745,8 +745,8 @@ bufstart eof @ bufstart - 1- evaluate ;
         key
 		hide-cursor
 
-		insert-active if
-			insert-handler
+		ins-active if
+			ins-handler
 		else
 			main-handler if 
 				drop

@@ -843,6 +843,10 @@ WORD
     sta	MSB, x
     rts
 
+FIND_BUFFER_SIZE = 6
+FIND_BUFFER
+    !fill FIND_BUFFER_SIZE
+
     +BACKLINK
     !byte	4
     !text	"find"
@@ -865,17 +869,20 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     lda	(TMP2), y ; get length of find string
     ; store findlen
     sta	.findlen + 1
+    cmp #FIND_BUFFER_SIZE
+    bcc +
+    lda #FIND_BUFFER_SIZE
++
     sta	.findlen2 + 1
 
-    ; TMP2 -= 2. This prepares for .string_compare.
-    lda TMP2
-    bne +
-    dec TMP2 + 1
-+   dec TMP2
-    lda TMP2
-    bne +
-    dec TMP2 + 1
-+   dec TMP2
+    tay
+-   lda (TMP2), y
+    jsr CHAR_TO_LOWERCASE
+    sta FIND_BUFFER-1, y
+    dey
+    beq +
+    jmp -
++
 
 .examine_word
     ldy	#2
@@ -907,14 +914,13 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     sta	MSB, x
     rts
     
-.string_compare
+.string_compare ; y = 2
     ; equal strlen, now compare strings...
 .findlen2
     lda #0
     sta .strlen
 -   iny
-    lda	(TMP2), y ; find string
-    jsr CHAR_TO_LOWERCASE  ; this is quite slow!
+    lda	FIND_BUFFER-3, y ; find string
     cmp	(TMP), y ; dictionary string
     bne	.word_not_equal
     dec	.strlen
