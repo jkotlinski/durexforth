@@ -843,7 +843,7 @@ WORD
     sta	MSB, x
     rts
 
-FIND_BUFFER_SIZE = 6
+FIND_BUFFER_SIZE = 31
 FIND_BUFFER
     !fill FIND_BUFFER_SIZE
 
