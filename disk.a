@@ -36,6 +36,14 @@ SAVE = $ffd8
 
 ; -----
 
+    +BACKLINK
+    !byte 6
+    !text	"device" ; ( deviceno -- )
+    lda LSB,x
+    sta $ba
+    inx
+    rts
+
 ; CLOSEW ( file# -- )
     +BACKLINK
     !byte 6

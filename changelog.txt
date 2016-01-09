@@ -257,8 +257,9 @@ v1.5.1
  * bugfix: see did not work on the latest word
  * bugfix: e.g. 'A' was parsed as 'a'
  * bugfix: case insensitivity did not work for z/Z
- * forth: added include (e.g. "include gfx" loads gfx module)
- * forth: renamed load => included
+ * disk: added include (e.g. "include gfx" loads gfx module)
+ * disk: added device ( device# -- ) to switch active device
+ * disk: renamed load => included
  * forth: added marker
  * forth: made dump work in decimal mode
  * forth: made .( immediate
