@@ -502,7 +502,7 @@ x1 @ over \ y x y
 scanl
 over x1 @ \ y x y x x1
 < 0= if
-branch [ here >r 0 , ] \ goto skip
+branch [ here dy ! 0 , ] \ goto skip
 then
 \ y x y ...
 over 1+ dup l ! 
@@ -526,7 +526,7 @@ dup x2 @ 1+ 3 pick 1- dy @ negate spush
 then
 
 \ skip: y x y
-[ r> here swap ! ]
+[ here dy @ ! ]
 
 swap 1+ swap
 2dup blitloc scanr 

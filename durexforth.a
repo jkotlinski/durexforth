@@ -543,15 +543,7 @@ EVALUATE
     sbc TIB_PTR + 1
     sta TIB_SIZE + 1
 
-.interpret
-    jsr INTERPRET
-
-    lda TO_IN
-    cmp TIB_SIZE
-    bne .interpret
-    lda TO_IN + 1
-    cmp TIB_SIZE + 1
-    bne .interpret
+    jsr interpret_tib
 
     lda TIB_PTR
     clc
@@ -561,11 +553,10 @@ EVALUATE
     adc TIB_SIZE + 1
     sta TIB_PTR + 1
 
-    inc TIB_PTR ; skip
+    inc TIB_PTR ; skip cr
     bne +
     inc TIB_PTR + 1
 +
-
     jmp .eval_loop
 
 .bufend
@@ -1287,15 +1278,19 @@ QUIT
     txs     
     tax
 interpret_loop
--   jsr	INTERPRET
+    jsr interpret_tib
+    jsr REFILL
+    jmp interpret_loop
+
+interpret_tib
+    jsr	INTERPRET
     lda TO_IN
     cmp TIB_SIZE
-    bne -
+    bne interpret_tib
     lda TO_IN + 1
     cmp TIB_SIZE + 1
-    bne -
-    jsr REFILL
-    jmp -
+    bne interpret_tib
+    rts
 
 ; --- EXIT
 
