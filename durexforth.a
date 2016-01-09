@@ -483,33 +483,93 @@ SOURCE_ID_MSB = * + 3
     !text	"evaluate" ; ( addr size -- )
 EVALUATE
     jsr SAVE_INPUT
-    lda LSB, x
-    sta TIB_SIZE
-    lda MSB, x
-    sta TIB_SIZE + 1
     lda LSB + 1, x
     sta TIB_PTR
     lda MSB + 1, x
     sta TIB_PTR + 1
-    ; ---
+    jsr PLUS
+    lda LSB, x
+    sta .bufend
+    lda MSB, x
+    sta .bufend + 1
+    inx
+
+.eval_loop   
+    lda TIB_PTR + 1
+    cmp .bufend + 1
+    bcc +
+    lda TIB_PTR
+    cmp .bufend
+    bcc +
+    jmp RESTORE_INPUT ; exit
++
     ldy #$ff
     sty SOURCE_ID_LSB
     sty SOURCE_ID_MSB
     iny
     sty TO_IN
     sty TO_IN + 1
-    inx
-    inx
 
-    ; ---- eval
--   jsr INTERPRET
+    ; Determines TIB_SIZE.
+    lda TIB_PTR
+    sta TMP
+    lda TIB_PTR + 1
+    sta TMP + 1
+.findtibsizeloop
+    lda TMP
+    cmp .bufend
+    bne +
+    lda TMP + 1
+    cmp .bufend + 1
+    beq .foundeol
++ 
+    ldy #0
+    lda (TMP),y
+    cmp #K_RETURN
+    beq .foundeol
+
+    inc TMP
+    bne +
+    inc TMP + 1
++
+    jmp .findtibsizeloop
+
+.foundeol
+    lda TMP
+    sec
+    sbc TIB_PTR
+    sta TIB_SIZE
+    lda TMP + 1
+    sbc TIB_PTR + 1
+    sta TIB_SIZE + 1
+
+.interpret
+    jsr INTERPRET
+
     lda TO_IN
     cmp TIB_SIZE
-    bne -
+    bne .interpret
     lda TO_IN + 1
     cmp TIB_SIZE + 1
-    bne -
-    jmp RESTORE_INPUT
+    bne .interpret
+
+    lda TIB_PTR
+    clc
+    adc TIB_SIZE
+    sta TIB_PTR
+    lda TIB_PTR + 1
+    adc TIB_SIZE + 1
+    sta TIB_PTR + 1
+
+    inc TIB_PTR ; skip
+    bne +
+    inc TIB_PTR + 1
++
+
+    jmp .eval_loop
+
+.bufend
+    !word 0
 
 SAVE_INPUT_STACK
     !fill 32
@@ -647,7 +707,7 @@ GETC
     jsr GET_CHAR_FROM_TIB
     bne +
     jsr REFILL
-    jmp GETC
+    lda #K_RETURN
 +   ldy #0
     jmp pushya
 
@@ -713,9 +773,7 @@ READ_EOF = * + 1
 +   
     lda SOURCE_ID_MSB
     beq +
-    lda #0
-    sta SOURCE_ID_LSB
-    sta SOURCE_ID_MSB
+    ; evaluate
     rts
 +
     ldy #0

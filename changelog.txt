@@ -253,6 +253,7 @@ Thanks to polluks for suggestions!
 
 v1.5.1
 
+ * bugfix: evaluate and vi F7 didn't work for multi-line buffers
  * bugfix: see did not work on the latest word
  * bugfix: e.g. 'A' was parsed as 'a'
  * bugfix: case insensitivity did not work for z/Z

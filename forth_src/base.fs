@@ -50,6 +50,9 @@ begin ?dup while
 swap dup c@ emit 1+ swap 1-
 repeat drop ;
 
+\ s" 'a' emit  " evaluate
+
+
 : ." postpone s" postpone type ; immediate
 : .( begin getc dup ')' <>
 while emit repeat drop ; immediate
