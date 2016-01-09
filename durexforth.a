@@ -854,12 +854,6 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     txa
     pha
 
-    lda	_LATEST
-    sta	TMP
-    lda	_LATEST + 1
-    sta	TMP + 1
-    ; TMP now contains pointer to the most recently defined dictionary word.
-
     lda	MSB, x
     sta	TMP2 + 1
     lda	LSB, x
@@ -879,8 +873,13 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     beq +
     jmp -
 +
-
+    ldx	_LATEST
+    lda	_LATEST + 1
 .examine_word
+    sta	TMP + 1
+    stx	TMP
+    ; TMP now contains new dictionary word.
+
     ldy	#2
     lda	(TMP), y ; get string length of dictionary word
     and	#STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
@@ -894,10 +893,6 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     lax	(TMP), y
     iny
     lda	(TMP), y
-    sta	TMP + 1
-    stx	TMP
-    ; TMP now contains new dictionary word.
-
     ; Is word null? If not, examine it.
     bne .examine_word
 
