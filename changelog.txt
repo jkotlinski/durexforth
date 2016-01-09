@@ -251,9 +251,11 @@ Thanks to Christian Johansson for suggestions!
 
 Thanks to polluks for suggestions!
 
-2016-01-08: v1.5.1
+v1.5.1
 
  * bugfix: see did not work on the latest word
+ * bugfix: e.g. 'A' was parsed as 'a'
+ * bugfix: case insensitivity did not work for z/Z
  * forth: added include (e.g. "include gfx" loads gfx module)
  * forth: renamed load => included
  * forth: added marker
