@@ -1024,6 +1024,13 @@ last_word_no_tail_call_elimination
     !byte 1
 
     +BACKLINK
+    !byte	5
+    !text	"abort"
+ABORT
+    ldx #X_INIT ; reset stack
+    jmp QUIT
+
+    +BACKLINK
     !byte	1
     !text	"'"
     jsr BL
@@ -1033,13 +1040,6 @@ last_word_no_tail_call_elimination
     beq print_word_not_found_error
     inx
     rts
-
-    +BACKLINK
-    !byte	5
-    !text	"abort"
-ABORT
-    ldx #X_INIT ; reset stack
-    jmp QUIT
 
 ; INTERPRET
     +BACKLINK
@@ -1058,8 +1058,7 @@ INTERPRET
     lda WORD_BUFFER_LENGTH
     bne +
     inx
-    jsr REFILL
-    jmp -
+    rts
 +
     jsr	FIND ; replace string with dictionary ptr
     lda LSB, x
@@ -1231,6 +1230,13 @@ QUIT
     tax
 interpret_loop
 -   jsr	INTERPRET
+    lda TO_IN
+    cmp TIB_SIZE
+    bne -
+    lda TO_IN + 1
+    cmp TIB_SIZE + 1
+    bne -
+    jsr REFILL
     jmp -
 
 ; --- EXIT
