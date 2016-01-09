@@ -482,17 +482,6 @@ SOURCE_ID_MSB = * + 3
     !byte 8
     !text	"evaluate" ; ( addr size -- )
 EVALUATE
-    jsr EVALUATE_SETUP
--   jsr INTERPRET
-    lda TO_IN
-    cmp TIB_SIZE
-    bne -
-    lda TO_IN + 1
-    cmp TIB_SIZE + 1
-    bne -
-    jmp RESTORE_INPUT
-
-EVALUATE_SETUP
     jsr SAVE_INPUT
     lda LSB, x
     sta TIB_SIZE
@@ -511,7 +500,16 @@ EVALUATE_SETUP
     sty TO_IN + 1
     inx
     inx
-    rts
+
+    ; ---- eval
+-   jsr INTERPRET
+    lda TO_IN
+    cmp TIB_SIZE
+    bne -
+    lda TO_IN + 1
+    cmp TIB_SIZE + 1
+    bne -
+    jmp RESTORE_INPUT
 
 SAVE_INPUT_STACK
     !fill 32
