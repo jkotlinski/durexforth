@@ -85,7 +85,7 @@ C_YELLOW = 7
 
 _START = * + 1
     jsr load_base
-    jmp interpret_loop ; don't reset io
+    ; fall through.
 
 restore_handler
     cli
@@ -109,7 +109,6 @@ pushya
     dex
     sta	LSB, x
     sty	MSB, x
-start_dummy    
     rts
 
 !macro VALUE .word {
@@ -1206,10 +1205,12 @@ LIT
 ; --- QUIT
 
 quit_reset
+    sei
     lda	#<restore_handler
     sta $318
     lda	#>restore_handler
     sta $319
+    cli
 
     txa
     pha
@@ -1738,6 +1739,10 @@ _LATEST
 ; ALL CONTENTS BELOW LATEST WILL BE OVERWRITTEN!!!
 
 load_base
+    lda #<QUIT
+    sta _START
+    lda #>QUIT
+    sta _START+1
     dex
     dex
     lda #<basename
@@ -1746,7 +1751,8 @@ load_base
     sta MSB+1, x
     lda #4
     sta LSB,x
-    jmp INCLUDED
+    jsr INCLUDED
+    jmp interpret_loop
 
 basename
 !text	"base"
