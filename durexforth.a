@@ -41,6 +41,7 @@ TMP = $8b ; rnd seed
 TMP2 = $8d ; rnd seed
 TMP3 = $9e ; tape error log
 
+OP_NOP = $ea
 OP_JMP = $4c
 OP_JSR = $20
 OP_RTS = $60
@@ -90,18 +91,10 @@ C_YELLOW = 7
     lda	#%00010110 ; lowercase
     sta	$d018
 
-    lda	_START + 1
-    bne	reset_screen
-    ; first time ever app is started...
+    ; only done first time ever app is started...
+load_base_call = *
     jsr	load_base
 
-reset_print_ok
-    lda	#<print_ok
-    sta	_START
-    lda	#>print_ok
-    sta	_START + 1
-
-reset_screen
     lda	#C_YELLOW
     sta	CURSOR_COLOR
 
@@ -121,7 +114,7 @@ reset_screen
     ; ldx	#X_INIT
 
 _START = * + 1
-    jsr 0
+    jsr print_ok
     jmp interpret_loop
 
 print_ok
@@ -134,7 +127,7 @@ print_ok
 
 restore_handler
     cli
-    jmp reset_print_ok
+    jmp QUIT
 
 ; ----------- macros
 
@@ -1756,6 +1749,10 @@ _LATEST
 ; ALL CONTENTS BELOW LATEST WILL BE OVERWRITTEN!!!
 
 load_base
+    lda #OP_NOP
+    sta load_base_call
+    sta load_base_call + 1
+    sta load_base_call + 2
     dex
     dex
     lda #<basename
