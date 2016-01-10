@@ -655,16 +655,7 @@ down c, ' cur-down ,
 'j' c, ' cur-down ,
 0 c,
 
-variable viloc
-\ custom restore handler
-here
-ff ldx,# txs, inx,
-\ lores
-9b lda,# d011 sta, 17 lda,# dd00 sta,
-17 lda,# d018 sta,
-here 1+ viloc !
-1234 jsr, ' quit jmp,
-: compile-run literal 318 sei ! cli
+: compile-run
 bufstart eof @ bufstart - 1- evaluate ;
 
 : main-handler ( key -- quit? )
@@ -787,4 +778,3 @@ push-colors
 show-page
 main-loop
 cleanup ;
-' vi viloc @ !

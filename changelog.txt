@@ -257,6 +257,7 @@ v1.5.1
  * bugfix: see did not work on the latest word
  * bugfix: e.g. 'A' was parsed as 'a'
  * bugfix: case insensitivity did not work for z/Z
+ * editor: type "fg" to return to the editor after running with F7
  * disk: added include (e.g. "include gfx" loads gfx module)
  * disk: added device ( device# -- ) to switch active device
  * disk: renamed load => included
