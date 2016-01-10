@@ -655,24 +655,18 @@ down c, ' cur-down ,
 'j' c, ' cur-down ,
 0 c,
 
+variable viloc
 \ custom restore handler
-\ "vi"
-here 'v' c, 'i' c,
-here cli, \ entry
-swap dup \ asm vi vi 
-\ evaluate "vi"
-dex,
-lda,# sp0 sta,x
-100/ lda,# sp1 sta,x
-dex,
-2 lda,# sp0 sta,x
-0 lda,# sp1 sta,x
-' evaluate jsr,
+here cli,
+ff ldx,# txs, inx,
+318 c@ lda,# 318 sta, \ restore irq
+319 c@ lda,# 319 sta,
 \ lores
 9b lda,# d011 sta, 17 lda,# dd00 sta,
 17 lda,# d018 sta,
-318 @ jmp, \ jump to normal restore
-: compile-run sei literal 318 ! cli
+here 1+ viloc !
+1234 jsr, ' quit jmp,
+: compile-run literal 318 !
 bufstart eof @ bufstart - 1- evaluate ;
 
 : main-handler ( key -- quit? )
@@ -795,3 +789,4 @@ push-colors
 show-page
 main-loop
 cleanup ;
+' vi viloc @ !

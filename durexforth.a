@@ -76,14 +76,6 @@ C_YELLOW = 7
 
 !byte $b, $08, $a, 0, $9E, $32, $30, $36, $31, 0, 0, 0 ; basic header
 
-    ; set up restore key
-    sei
-    lda	#<restore_handler
-    sta $318
-    lda	#>restore_handler
-    sta $319
-    cli
-
     jsr quit_reset
 
     jsr PAGE
@@ -93,19 +85,10 @@ C_YELLOW = 7
 
 _START = * + 1
     jsr load_base
-    jmp interpret_loop
-
-print_ok
-    lda	#'o'
-    jsr	PUTCHR
-    lda	#'k'
-    jsr	PUTCHR
-    lda	#$d
-    jmp	PUTCHR
+    jmp interpret_loop ; don't reset io
 
 restore_handler
     cli
-    jsr print_ok
     jmp QUIT
 
 ; ----------- macros
@@ -126,6 +109,7 @@ pushya
     dex
     sta	LSB, x
     sty	MSB, x
+start_dummy    
     rts
 
 !macro VALUE .word {
@@ -1222,10 +1206,15 @@ LIT
 ; --- QUIT
 
 quit_reset
+    lda	#<restore_handler
+    sta $318
+    lda	#>restore_handler
+    sta $319
+
     txa
     pha
 
-    ldx     #0
+    ldx #0
     stx	$d020
     stx	$d021
 
@@ -1252,7 +1241,13 @@ quit_reset
     jsr     CHKIN
     pla
     tax
-    rts
+
+    lda	#'o'
+    jsr	PUTCHR
+    lda	#'k'
+    jsr	PUTCHR
+    lda	#$d
+    jmp	PUTCHR
 
     +BACKLINK
     !byte	4
@@ -1743,10 +1738,6 @@ _LATEST
 ; ALL CONTENTS BELOW LATEST WILL BE OVERWRITTEN!!!
 
 load_base
-    lda #<print_ok
-    sta _START
-    lda #>print_ok
-    sta _START + 1
     dex
     dex
     lda #<basename
