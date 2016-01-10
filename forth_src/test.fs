@@ -31,6 +31,8 @@ c6 c@ 277 + c!
 1 c6 +! ;
 
 .( vi )
+\ The FIFO is only 10 bytes.
+\ Don't add more.
 'i' push d push
 '.' push '(' push bl push
 'o' push 'k' push ')' push
