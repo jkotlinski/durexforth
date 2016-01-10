@@ -91,9 +91,6 @@ C_YELLOW = 7
     lda	#%00010110 ; lowercase
     sta	$d018
 
-    ; At this point, we know that x = 0 = X_INIT, which is what we want.
-    ; ldx	#X_INIT
-
 _START = * + 1
     jsr load_base
     jmp interpret_loop
