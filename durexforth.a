@@ -1210,7 +1210,14 @@ quit_reset
     sta $318
     lda	#>restore_handler
     sta $319
-    cli
+    cli 
+
+    ; lores
+    lda #$9b
+    sta $d011
+    lda #$17
+    sta $dd00
+    sta $d018
 
     txa
     pha
