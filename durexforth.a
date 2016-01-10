@@ -1219,13 +1219,6 @@ quit_reset
     sta $dd00
     sta $d018
 
-    ; lores
-    lda #$9b
-    sta $d011
-    lda #$17
-    sta $dd00
-    sta $d018
-
     txa
     pha
 
