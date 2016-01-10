@@ -266,3 +266,8 @@ Thanks to polluks for suggestions!
  * forth: made .( immediate
  * forth: removed no-tce
  * forth: bring back modules
+
+v1.5.2
+
+ * editor: no longer possible to join lines by shift+backspace
+   in insert mode

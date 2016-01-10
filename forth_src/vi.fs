@@ -343,7 +343,9 @@ curlinestart ! curx ! cury ! ;
 curx @ if cur-left nipchar line-dirty!
 then ;
 
-: del-char force-cur-right backspace ;
+: del-char 
+editpos c@ eol= if exit then
+force-cur-right backspace ;
 
 : ins-char
 	dup lf <> linelen 26 > and if drop exit then
