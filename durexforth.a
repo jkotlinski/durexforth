@@ -95,21 +95,6 @@ C_YELLOW = 7
 load_base_call = *
     jsr	load_base
 
-    lda	#C_YELLOW
-    sta	CURSOR_COLOR
-
-    ldx	#0
-    stx	$d020
-    stx	$d021
-
-    ; Clears color area.
--	sta $d800, x
-    sta $d900, x
-    sta $da00, x
-    sta $db00, x
-    dex
-    bne	-
-
     ; At this point, we know that x = 0 = X_INIT, which is what we want.
     ; ldx	#X_INIT
 
@@ -127,6 +112,7 @@ print_ok
 
 restore_handler
     cli
+    jsr print_ok
     jmp QUIT
 
 ; ----------- macros
@@ -1245,7 +1231,22 @@ LIT
 quit_reset
     txa
     pha
+
     ldx     #0
+    stx	$d020
+    stx	$d021
+
+    lda	#C_YELLOW
+    sta	CURSOR_COLOR
+
+    ; Clears color area.
+-	sta $d800, x
+    sta $d900, x
+    sta $da00, x
+    sta $db00, x
+    dex
+    bne	-
+
     stx     STATE
     stx     TIB_SIZE
     stx     TIB_SIZE + 1
