@@ -91,15 +91,11 @@ C_YELLOW = 7
     lda	#%00010110 ; lowercase
     sta	$d018
 
-    ; only done first time ever app is started...
-load_base_call = *
-    jsr	load_base
-
     ; At this point, we know that x = 0 = X_INIT, which is what we want.
     ; ldx	#X_INIT
 
 _START = * + 1
-    jsr print_ok
+    jsr load_base
     jmp interpret_loop
 
 print_ok
@@ -1750,10 +1746,10 @@ _LATEST
 ; ALL CONTENTS BELOW LATEST WILL BE OVERWRITTEN!!!
 
 load_base
-    lda #OP_NOP
-    sta load_base_call
-    sta load_base_call + 1
-    sta load_base_call + 2
+    lda #<print_ok
+    sta _START
+    lda #>print_ok
+    sta _START + 1
     dex
     dex
     lda #<basename
