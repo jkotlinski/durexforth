@@ -265,3 +265,4 @@ v1.5.1
  * forth: made dump work in decimal mode
  * forth: made .( immediate
  * forth: removed no-tce
+ * forth: bring back modules
