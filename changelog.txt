@@ -251,7 +251,7 @@ Thanks to Christian Johansson for suggestions!
 
 Thanks to polluks for suggestions!
 
-v1.5.1
+2016-01-10: v1.5.1 - bugfix & improvements
 
  * bugfix: evaluate and vi F7 didn't work for multi-line buffers
  * bugfix: see did not work on the latest word
