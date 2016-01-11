@@ -1262,8 +1262,8 @@ QUIT
     txs     
     tax
 interpret_loop
-    jsr interpret_tib
     jsr REFILL
+    jsr interpret_tib
     jmp interpret_loop
 
 interpret_tib
