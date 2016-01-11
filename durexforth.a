@@ -48,6 +48,7 @@ OP_RTS = $60
 OP_INX = $e8
 OP_LDA_I = $a9
 OP_STA_AX = $9d
+OP_BEQ = $f0
 
 GETCHR = $ffe4 ; get char from kbd
 PUTCHR = $ffd2 ; put char
@@ -228,6 +229,13 @@ ONEPLUS
     bne +
     inc MSB, x
 +   rts
+
+    +BACKLINK
+    !byte	2
+    !text	"2+"
+TWOPLUS
+    jsr ONEPLUS
+    jmp ONEPLUS
 
 ; 1-
     +BACKLINK
@@ -1674,21 +1682,57 @@ TOGGLE_LATEST_HIDDEN
     rts
 
     +BACKLINK
+    !byte	5
+    !text	"ztest"
+ZTEST
+    inx
+    lda	LSB-1, x
+    ora	MSB-1, x
+    rts
+
+    +BACKLINK
     !byte 2 | F_IMMED
     !text	"if"
+IF
     jsr LIT
-    !word ZBRANCH
+    !word ZTEST
     jsr COMPILE_COMMA
     jsr HERE
-    jsr ZERO
+    jsr LIT
+    !word OP_BEQ
     jmp COMMA
 
     +BACKLINK
     !byte 4 | F_IMMED
     !text	"then"
-    jsr HERE
+THEN
+    jsr HERE ; prev here
+    jsr OVER ; prev here prev
+    jsr FETCHBYTE
+    inx
+    lda LSB-1,x
+    cmp #OP_BEQ
+    beq .resolved_branch
+.resolved_jmp
     jsr SWAP
     jmp STORE
+.resolved_branch
+    jsr OVER
+    jsr TWOPLUS
+    jsr MINUS ; prev diff
+    jsr SWAP
+    jsr ONEPLUS
+    jmp STOREBYTE
+
+    +BACKLINK
+    !byte 4 | F_IMMED
+    !text	"else"
+    jsr COMPILE_JMP
+    jsr HERE
+    jsr ZERO
+    jsr COMMA
+    jsr SWAP
+    jmp THEN
 
     +BACKLINK
     !byte 5 | F_IMMED
@@ -1698,6 +1742,7 @@ TOGGLE_LATEST_HIDDEN
     +BACKLINK
     !byte 5 | F_IMMED
     !text	"while"
+WHILE
     jsr LIT
     !word ZBRANCH
     jsr COMPILE_COMMA

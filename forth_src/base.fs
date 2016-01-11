@@ -1,4 +1,3 @@
-: 2+ 1+ 1+ ;
 : cr d emit ;
 : nip swap drop ;
 : * um* drop ;
@@ -7,8 +6,6 @@
 [ ' literal compile, ] ; immediate
 : [char] char 
 [ ' literal compile, ] ; immediate
-: else jmp, here 0 ,
-swap here swap ! ; immediate
 : postpone
 bl word find -1 = if
 [ ' literal compile, ] ['] compile, then
