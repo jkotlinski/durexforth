@@ -271,5 +271,6 @@ v1.5.2
 
  * bugfix: find now handles the empty string correctly
  * forth: the interpreter now prints "ok" after interpreting
+ * forth: abort" now inverts the text
  * editor: no longer possible to join lines by shift+backspace
    in insert mode
