@@ -44,7 +44,7 @@ endcase
 2+ ;
 
 : see
-	bl word find 0= abort" err"
+	bl word find 0= abort" ?"
 	here latest @
 	begin
 		2 pick
