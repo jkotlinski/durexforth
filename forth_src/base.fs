@@ -268,7 +268,9 @@ swap over ! 2+ ! ;
 
 : abort" 
 postpone if
+12 lda,# ffd2 jsr, \ reverse on
 postpone ."
+postpone cr
 postpone abort
 postpone then ; immediate
 
