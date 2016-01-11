@@ -112,8 +112,6 @@ cmove_done
     jsr U_LESS
     jsr R_TO
     jsr SWAP
-    jsr ZBRANCH
-    !word .br
+    jsr ZTEST
+    beq CMOVE
     jmp CMOVE_BACK
-.br = *
-    jmp CMOVE
