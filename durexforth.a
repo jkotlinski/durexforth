@@ -1249,13 +1249,7 @@ quit_reset
     jsr     CHKIN
     pla
     tax
-
-    lda	#'o'
-    jsr	PUTCHR
-    lda	#'k'
-    jsr	PUTCHR
-    lda	#$d
-    jmp	PUTCHR
+    rts
 
     +BACKLINK
     !byte	4
@@ -1280,7 +1274,16 @@ interpret_tib
     lda TO_IN + 1
     cmp TIB_SIZE + 1
     bne interpret_tib
+
+    lda SOURCE_ID_LSB
+    beq +
     rts
++   lda	#'o'
+    jsr	PUTCHR
+    lda	#'k'
+    jsr	PUTCHR
+    lda	#$d
+    jmp	PUTCHR
 
 ; --- EXIT
 
