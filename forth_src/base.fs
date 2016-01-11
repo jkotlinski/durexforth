@@ -10,8 +10,6 @@
 bl word find -1 = if
 [ ' literal compile, ] ['] compile, then
 compile, ; immediate
-: until
-postpone 0branch , ; immediate
 : again jmp, , ; immediate
 : recurse latest @ >cfa compile, ; immediate
 : (

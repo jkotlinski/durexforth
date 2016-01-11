@@ -1703,6 +1703,20 @@ IF
     jmp COMMA
 
     +BACKLINK
+    !byte 5 | F_IMMED
+    !text	"until"
+    jsr LIT
+    !word ZTEST
+    jsr COMPILE_COMMA
+    jsr HERE
+    jsr LITC
+    !byte OP_BEQ
+    jsr CCOMMA
+    jsr TWOPLUS
+    jsr MINUS
+    jmp CCOMMA
+
+    +BACKLINK
     !byte 4 | F_IMMED
     !text	"then"
 THEN
