@@ -269,5 +269,6 @@ Thanks to polluks for suggestions!
 
 v1.5.2
 
+ * forth: the interpreter now prints "ok" after interpreting
  * editor: no longer possible to join lines by shift+backspace
    in insert mode
