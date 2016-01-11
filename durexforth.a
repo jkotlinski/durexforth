@@ -863,6 +863,7 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
 
     ldy	#0
     lda	(TMP2), y ; get length of find string
+    beq .find_failed
     ; store findlen
     sta	.findlen + 1
     sta	.findlen2 + 1
@@ -899,6 +900,7 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     bne .examine_word
 
     ; It is null - give up.
+.find_failed
     pla
     tax
     dex
