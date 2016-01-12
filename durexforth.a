@@ -1758,11 +1758,14 @@ THEN
     !text	"while"
 WHILE
     jsr LIT
-    !word ZBRANCH
+    !word ZTEST
     jsr COMPILE_COMMA
     jsr HERE
+    jsr LITC
+    !byte OP_BEQ
+    jsr CCOMMA
     jsr ZERO
-    jsr COMMA
+    jsr CCOMMA
     jmp SWAP
 
 COMPILE_JMP
@@ -1776,8 +1779,12 @@ COMPILE_JMP
     jsr COMPILE_JMP
     jsr COMMA
     jsr HERE
+    jsr OVER
+    jsr TWOPLUS
+    jsr MINUS
     jsr SWAP
-    jmp STORE
+    jsr ONEPLUS
+    jmp STOREBYTE
 
 ; -----------
 
