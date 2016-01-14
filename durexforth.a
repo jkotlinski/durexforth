@@ -1062,7 +1062,7 @@ ABORT
 INTERPRET
     ; Checks for stack underflow.
     cpx #X_INIT+1
-    bpl .on_stack_underflow
+    bpl print_err
 
 -
     dex
@@ -1093,7 +1093,7 @@ INTERPRET
     sta curr_word_no_tail_call_elimination
     jmp LITERAL
 
-.on_stack_underflow
+print_err
     lda	#$12 ; reverse on
     jsr	PUTCHR
     lda #'e'
@@ -1778,11 +1778,20 @@ COMPILE_JMP
     !text	"repeat"
     jsr COMPILE_JMP
     jsr COMMA
+
+    ; write forward branch
     jsr HERE
     jsr OVER
     jsr TWOPLUS
     jsr MINUS
-    jsr SWAP
+
+    ; test if branch distance is ok
+    lda LSB,x
+    and #$80
+    ora MSB,x
+    beq +
+    jmp print_err
++   jsr SWAP
     jsr ONEPLUS
     jmp STOREBYTE
 

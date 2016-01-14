@@ -43,6 +43,15 @@ endof ( default )
 endcase
 2+ ;
 
+: print-word
+c@ case 
+20 of see-jsr endof
+4c of ." jp( " see-jsr ." ) " endof
+e8 of 1+ ." drop " endof \ inx
+60 of 1+ ." exit " endof \ rts
+." ? " swap 1+ swap
+endcase ;
+
 : see
 	bl word find 0= abort" ?"
 	here latest @
@@ -62,20 +71,8 @@ endcase
 
 	>cfa
 
-	begin
-		2dup >
-	while
-		dup c@ case 
-        20 of see-jsr endof
-        4c of ." jp( " see-jsr ." ) " endof
-        e8 of 1+ ." drop " endof \ inx
-        60 of 1+ ." exit " endof \ rts
-        ." ? " swap 1+ swap
-        endcase
-	repeat
-	';' emit cr
-	2drop
-;
+begin 2dup > while dup print-word repeat
+';' emit cr 2drop ;
 
 variable last-dump
 
