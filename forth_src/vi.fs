@@ -60,7 +60,7 @@ d cmp,#
 foundeol -branch beq,
 jmp,
 : find-next-line ( addr -- addr )
-dup eof @ < if find-next-line then ;
+dup eof @ u< if find-next-line then ;
 
 : linelen
 curlinestart @ find-next-line 
@@ -160,7 +160,7 @@ linelen curx @ min curx ! ;
 : cur-down
 curlinestart @ ( curline )
 find-next-line dup ( 2xnextline )
-eof @ < 0= if drop exit then
+eof @ u< 0= if drop exit then
 curlinestart !
 cury @ 17 < if 1 cury +! else
 homepos @ find-next-line homepos !
