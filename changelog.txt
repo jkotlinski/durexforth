@@ -267,7 +267,7 @@ Thanks to polluks for suggestions!
  * forth: removed no-tce
  * forth: bring back modules
 
-v1.5.2
+2016-01-16: v1.5.2
 
  * bugfix: find now handles the empty string correctly
  * bugfix: editor didn't work correctly with big files (over $1000 bytes)
