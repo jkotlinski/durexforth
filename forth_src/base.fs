@@ -3,20 +3,21 @@
 : nip swap drop ;
 : * um* drop ;
 : jmp, 4c c, ;
-: ['] ' 
-[ ' literal compile, ] ; immediate
-: [char] char 
-[ ' literal compile, ] ; immediate
+: ['] ' [ ' literal compile, ]
+; immediate
+: [char] char [ ' literal compile, ] 
+; immediate
 : else jmp, here 0 ,
 swap here swap ! ; immediate
 : postpone
 bl word find -1 = if
-[ ' literal compile, ] ['] compile, then
-compile, ; immediate
+[ ' literal compile, ] ['] compile, 
+then compile, ; immediate
 : until
 postpone 0branch , ; immediate
 : again jmp, , ; immediate
-: recurse latest @ >cfa compile, ; immediate
+: recurse latest @ >cfa compile, 
+; immediate
 : (
 begin getc dup
 0= if refill then
@@ -53,7 +54,8 @@ repeat drop ;
 \ s" 'a' emit  " evaluate
 
 
-: ." postpone s" postpone type ; immediate
+: ." postpone s" postpone type 
+; immediate
 : .( begin getc dup ')' <>
 while emit repeat drop ; immediate
 .( compile base..)
@@ -70,13 +72,13 @@ postpone drop
 begin ?dup while postpone then 
 repeat ; immediate
 
-( gets pointer to first data field, i.e., skips
-the first jsr )
+( gets pointer to first data field, 
+i.e., skips the first jsr )
 : >dfa >cfa 1+ 2+ ;
 
 ( dodoes words contain:
  1. jsr dodoes
- 2. two-byte code pointer. default: point to exit
+ 2. two-byte code pointer. default: rts
  3. variable length data )
 : >body ( xt -- dataaddr ) 5 + ;
 here 60 c, ( rts )
