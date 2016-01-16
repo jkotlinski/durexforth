@@ -276,3 +276,7 @@ Thanks to polluks for suggestions!
  * editor: open files with 'vi file' instead of 's" file" vi'
  * editor: no longer possible to join lines by shift+backspace
    in insert mode
+
+v1.5.3
+
+ * bugfix: refill didn't work correctly during evalute
