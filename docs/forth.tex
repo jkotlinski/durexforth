@@ -448,4 +448,4 @@ forget
 
 Safe kernel calls may be done from Forth words using \texttt{sys} ( addr -- ). The helper variables \texttt{ar}, \texttt{xr}, \texttt{yr} and \texttt{sr} can be used to set arguments and get results through the a, x, y and status registers.
 
-Example: \texttt{key 0 ar ! ffd2 sys} prints \texttt{0} on screen.
+Example: \texttt{'0' ar ! ffd2 sys} calls the CHROUT routine, which prints \texttt{0} on screen.
