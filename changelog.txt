@@ -272,5 +272,6 @@ v1.5.2
  * bugfix: find now handles the empty string correctly
  * forth: the interpreter now prints "ok" after interpreting
  * forth: abort" now inverts the text
+ * editor: open files with 'vi file' instead of 's" file" vi'
  * editor: no longer possible to join lines by shift+backspace
    in insert mode

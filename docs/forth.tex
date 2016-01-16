@@ -352,17 +352,11 @@ endcase
 \section{Editing}
 
 \begin{description}
-\item[vi ( -- )]
+\item[vi filename]
 
-Enter editor. If a buffer is already open, editor will pick up where it left.
+Opens text editor and starts editing the file named "filename".
+If filename is empty and a buffer is already open, editor will pick up where it left.
 Otherwise, an untitled buffer will be created.
-
-\end{description}
-
-\begin{description}
-\item[vi ( filenameptr filenamelen -- )]
-
-Edit a file. Try \texttt{s" ls" vi}.
 
 \end{description}
 

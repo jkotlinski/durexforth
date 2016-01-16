@@ -763,8 +763,8 @@ main-loop
 cleanup ;
 
 : vi
-depth 0= if \ in case no param
-eof @ if fg exit else
+lf word count dup 0= if \ no param?
+2drop eof @ if fg exit else
 s" noname" then then
 
 init
