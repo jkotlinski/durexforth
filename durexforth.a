@@ -720,6 +720,10 @@ READ_EOF = * + 1
     lda SOURCE_ID_MSB
     beq +
     ; evaluate
+    lda TIB_SIZE
+    sta TO_IN
+    lda TIB_SIZE + 1
+    sta TO_IN + 1
     rts
 +
     ldy #0
