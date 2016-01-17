@@ -458,6 +458,12 @@ EVALUATE
     bcc +
     jmp RESTORE_INPUT ; exit
 +
+    jsr evaluate_get_new_line
+    jsr interpret_tib
+    jsr evaluate_consume_tib
+    jmp .eval_loop
+
+evaluate_get_new_line
     ldy #$ff
     sty SOURCE_ID_LSB
     sty SOURCE_ID_MSB
@@ -497,9 +503,9 @@ EVALUATE
     lda TMP + 1
     sbc TIB_PTR + 1
     sta TIB_SIZE + 1
+    rts
 
-    jsr interpret_tib
-
+evaluate_consume_tib
     lda TIB_PTR
     clc
     adc TIB_SIZE
@@ -511,8 +517,7 @@ EVALUATE
     inc TIB_PTR ; skip cr
     bne +
     inc TIB_PTR + 1
-+
-    jmp .eval_loop
++   rts
 
 .bufend
     !word 0
@@ -719,12 +724,8 @@ READ_EOF = * + 1
 +   
     lda SOURCE_ID_MSB
     beq +
-    ; evaluate
-    lda TIB_SIZE
-    sta TO_IN
-    lda TIB_SIZE + 1
-    sta TO_IN + 1
-    rts
+    jsr evaluate_consume_tib
+    jmp evaluate_get_new_line
 +
     ldy #0
     sty TO_IN
