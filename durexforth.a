@@ -481,7 +481,7 @@ evaluate_get_new_line
     sta TMP + 1
 .findtibsizeloop
     lda TMP + 1
-    cmp .bufend
+    cmp .bufend + 1
     bcc +
     lda TMP
     cmp .bufend
