@@ -724,8 +724,7 @@ READ_EOF = * + 1
     ldx SOURCE_ID_LSB
     jsr CHKIN
     ldx tmp_x
-    jsr RESTORE_INPUT
-    rts
+    jmp RESTORE_INPUT ; exit
 +   
     lda SOURCE_ID_MSB
     beq +
