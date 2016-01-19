@@ -656,9 +656,6 @@ down c, ' cur-down ,
 'j' c, ' cur-down ,
 0 c,
 
-: compile-run
-bufstart eof @ bufstart - 1- evaluate ;
-
 : main-handler ( key -- quit? )
 	['] maintable ( key tableptr )
 
@@ -707,13 +704,9 @@ bufstart eof @ bufstart - 1- evaluate ;
 		'w' = if change-word then
 	endof
 
-	( cursor )
-    \ eof should be 0 terminated!
-    eof @ c@ 0= assert
-    \ eof @ ae ! 
-	88 of drop cleanup compile-run quit endof \ f7
-
-	endcase
+	88 of drop cleanup rom-kernal \ f7
+        bufstart eof @ bufstart - 1-
+        evaluate quit endof endcase
 	0
 ;
 
@@ -747,9 +740,8 @@ bufstart eof @ bufstart - 1- evaluate ;
 			then
 		then
 
-		depth 1- = assert \ warn if stack changed
-	again
-;
+depth 1- <> abort" stk"
+eof @ c@ abort" eof" again ;
 
 \ bring back editor
 : fg
