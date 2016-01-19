@@ -453,8 +453,6 @@ EVALUATE
     ldy #$ff
     sty SOURCE_ID_LSB
     sty SOURCE_ID_MSB
-    iny
-    sta READ_EOF
 
 .eval_loop   
     lda TIB_PTR + 1
@@ -545,6 +543,8 @@ pop_input_stack
 SAVE_INPUT
     lda READ_EOF
     jsr push_input_stack
+    lda #0
+    sta READ_EOF
     lda TO_IN
     jsr push_input_stack
     lda TO_IN+1
@@ -725,8 +725,6 @@ READ_EOF = * + 1
     jsr CHKIN
     ldx tmp_x
     jsr RESTORE_INPUT
-    lda #0
-    sta READ_EOF
     rts
 +   
     lda SOURCE_ID_MSB
