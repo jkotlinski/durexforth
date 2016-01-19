@@ -279,4 +279,4 @@ Thanks to polluks for suggestions!
 
 v1.5.3
 
- * bugfix: refill didn't work correctly during evalute
+ * bugfix: various fixes for evaluate/vi F7
