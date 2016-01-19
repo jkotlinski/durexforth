@@ -4,26 +4,26 @@ c6 c! ;
 here latest @
 
 .( gfxdemo )
-\ a fakekeys \ skips demos
-\ s" gfxdemo" included
+a fakekeys \ skips demos
+s" gfxdemo" included
 
 .( fractals )
-\ 4 fakekeys \ skips demos
-\ s" fractals" included
+4 fakekeys \ skips demos
+s" fractals" included
 
 .( mmldemo )
-\ s" mmldemo" included
+s" mmldemo" included
 
 .( spritedemo )
-\ 1 fakekeys \ exits demo 
-\ s" spritedemo" included
+1 fakekeys \ exits demo 
+s" spritedemo" included
 
 latest ! to here
 depth 0= assert
 
-\ s" tester" included
-\ s" testcore" included
-\ s" testcoreplus" included
+s" tester" included
+s" testcore" included
+s" testcoreplus" included
 
 hex
 : push ( ch -- )
