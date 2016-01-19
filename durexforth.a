@@ -463,7 +463,6 @@ EVALUATE
     lda TIB_PTR
     cmp .bufend
     bcc +
--
     jmp RESTORE_INPUT ; exit
 +
     jsr interpret_tib
@@ -481,12 +480,12 @@ evaluate_get_new_line
     lda TIB_PTR + 1
     sta TMP + 1
 .findtibsizeloop
+    lda TMP + 1
+    cmp .bufend
+    bcc +
     lda TMP
     cmp .bufend
-    bne +
-    lda TMP + 1
-    cmp .bufend + 1
-    beq .foundeol
+    bcs .foundeol
 + 
     ldy #0
     lda (TMP),y
