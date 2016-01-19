@@ -331,8 +331,8 @@ INCLUDED
     jsr	SETLFS
     jsr	OPEN
     bcc	+
-    dec SOURCE_ID_LSB
     jsr .close
+    jsr RESTORE_INPUT
     jmp ++
 +
     ldx	SOURCE_ID_LSB ; file number
