@@ -35,7 +35,7 @@ c6 c@ 277 + c!
 \ Don't add more.
 'i' push d push
 '.' push '(' push bl push
-'o' push 'k' push ')' push
+'O' push 'K' push ')' push
 5f push \ leftarrow
 88 push \ f7
 vi
