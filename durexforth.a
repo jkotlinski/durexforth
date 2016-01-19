@@ -453,6 +453,8 @@ EVALUATE
     ldy #$ff
     sty SOURCE_ID_LSB
     sty SOURCE_ID_MSB
+    iny
+    sta READ_EOF
 
 .eval_loop   
     lda TIB_PTR + 1
