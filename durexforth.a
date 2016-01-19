@@ -449,6 +449,11 @@ EVALUATE
     sta .bufend + 1
     inx
 
+    jsr evaluate_get_new_line
+    ldy #$ff
+    sty SOURCE_ID_LSB
+    sty SOURCE_ID_MSB
+
 .eval_loop   
     lda TIB_PTR + 1
     cmp .bufend + 1
@@ -456,18 +461,15 @@ EVALUATE
     lda TIB_PTR
     cmp .bufend
     bcc +
+-
     jmp RESTORE_INPUT ; exit
 +
-    jsr evaluate_get_new_line
     jsr interpret_tib
-    jsr evaluate_consume_tib
+    jsr REFILL
     jmp .eval_loop
 
 evaluate_get_new_line
-    ldy #$ff
-    sty SOURCE_ID_LSB
-    sty SOURCE_ID_MSB
-    iny
+    ldy #0
     sty TO_IN
     sty TO_IN + 1
 
@@ -523,7 +525,7 @@ evaluate_consume_tib
     !word 0
 
 SAVE_INPUT_STACK
-    !fill 32
+    !fill 9*4
 SAVE_INPUT_STACK_DEPTH
     !byte 0
 
@@ -540,6 +542,8 @@ pop_input_stack
     rts
 
 SAVE_INPUT
+    lda READ_EOF
+    jsr push_input_stack
     lda TO_IN
     jsr push_input_stack
     lda TO_IN+1
@@ -574,6 +578,8 @@ RESTORE_INPUT
     sta TO_IN+1
     jsr pop_input_stack
     sta TO_IN
+    jsr pop_input_stack
+    sta READ_EOF
     rts
 
 ; HERE - points to the next free byte of memory. When compiling, compiled words go here.
