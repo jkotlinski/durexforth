@@ -1,5 +1,4 @@
 d value lf
-: clrscr e544 sys ;
 
 7001 value bufstart
 
@@ -121,7 +120,7 @@ bufstart curlinestart ! ;
 7c0 value status-pos
 
 : show-page
-status-pos c@ clrscr status-pos c!
+status-pos c@ page status-pos c!
 homepos @
 18 0 do print-line loop
 drop ;
@@ -152,7 +151,7 @@ d800 400 1 fill ;
 0 28a c! \ default key repeat
 286 c! \ cursor col
 d021 c! d020 c!
-clrscr ;
+page ;
 
 : fit-curx-in-linelen
 linelen curx @ min curx ! ;
