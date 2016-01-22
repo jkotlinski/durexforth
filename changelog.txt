@@ -284,4 +284,6 @@ Thanks to polluks for suggestions!
 v1.5.4
 
  * bugfix: vi w! captured control characters in filename
+ * bugfix: vi save didn't work with filenames longer than 6 characters
+ * bugfix: avoided 1541 save-with-replace bug for vi save
  * forth: added require, required

@@ -482,11 +482,9 @@ variable search-buf e allot
 	again
 ;
 
-variable drivebuf 16 allot 
-
 : do-backup
 	\ scratch old backup
-	drivebuf
+	here
 	's' over c! 1+
 	'0' over c! 1+
 	':' over c! 1+
@@ -496,11 +494,11 @@ variable drivebuf 16 allot
 	filename-len c@ +
 	lf swap c!
 
-	drivebuf filename-len c@ 5 +
+	here filename-len c@ 5 +
     f openw f closew
 
 	\ rename to new backup
-	drivebuf
+	here
 	'r' over c! 1+
 	2+ \ 0: already in place...
 	'.' over c! 1+
@@ -511,7 +509,7 @@ variable drivebuf 16 allot
 	filename-len c@ + \ filename ok
 	lf swap c!
 
-	drivebuf filename-len c@ 2 * 6 +
+	here filename-len c@ 2 * 6 +
     f openw f closew
 ;
 
