@@ -482,36 +482,27 @@ variable search-buf e allot
 	again
 ;
 
+: bkcr ( addr -- )
+dup filename swap filename-len c@ move
+filename-len c@ + lf swap c! ;
+
 : do-backup
-	\ scratch old backup
-	here
-	's' over c! 1+
-	'0' over c! 1+
-	':' over c! 1+
-	'.' over c! 1+
-	dup
-	filename swap filename-len c@ move
-	filename-len c@ +
-	lf swap c!
+\ scratch old backup
+here
+'s' over c! 1+ '0' over c! 1+
+':' over c! 1+ '.' over c! 1+
+bkcr here filename-len c@ 5 +
+f openw f closew
 
-	here filename-len c@ 5 +
-    f openw f closew
-
-	\ rename to new backup
-	here
-	'r' over c! 1+
-	2+ \ 0: already in place...
-	'.' over c! 1+
-	filename-len c@ + \ filename ok
-	'=' over c! 1+
-	dup
-	filename swap filename-len c@ move
-	filename-len c@ + \ filename ok
-	lf swap c!
-
-	here filename-len c@ 2* 6 +
-    f openw f closew
-;
+\ rename to new backup
+here
+'r' over c! 1+
+2+ \ 0: already in place...
+'.' over c! 1+
+filename-len c@ + \ filename ok
+'=' over c! 1+
+bkcr here filename-len c@ 2* 6 +
+f openw f closew ;
 
 : write-file
 rom-kernal
