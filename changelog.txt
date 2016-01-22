@@ -283,4 +283,5 @@ Thanks to polluks for suggestions!
 
 v1.5.4
 
- * added require, required
+ * bugfix: vi w! captured control characters in filename
+ * forth: added require, required

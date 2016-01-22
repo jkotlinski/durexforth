@@ -525,35 +525,9 @@ saveb
 1 to need-refresh ;
 
 : save-as
-	'!' emit
-	0 ( len )
-	filename ( len filename )
-	begin
-		key
-
-		dup 5f = if \ leftarrow
-			2drop
-			drop
-			exit
-		then
-		dup cr= if
-			2drop ( len )
-			filename-len c!
-			write-file
-			exit
-		then
-
-		dup emit
-
-		( len filename key )
-		over c!
-
-		( len filename )
-		1+
-		swap 1+
-		swap
-	again
-;
+'!' emit filename f accept
+?dup 0= if exit then
+filename-len c! write-file ;
 
 : colon-w
 	1 18 setcur
