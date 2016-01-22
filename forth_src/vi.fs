@@ -509,7 +509,7 @@ variable search-buf e allot
 	filename-len c@ + \ filename ok
 	lf swap c!
 
-	here filename-len c@ 2 * 6 +
+	here filename-len c@ 2* 6 +
     f openw f closew
 ;
 
