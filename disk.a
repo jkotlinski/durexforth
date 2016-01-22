@@ -316,18 +316,16 @@ INCLUDED
 
     ; open file
     jsr	SETNAM
-    inc	SOURCE_ID_LSB
-    bne +
-    ; transition -1 => 1
-    inc SOURCE_ID_LSB
-+
     lda #0
     sta SOURCE_ID_MSB
-    lda	SOURCE_ID_LSB ; file number
+    ldy SOURCE_ID_LSB
+    iny
+    tya
+    ora #8
+    tay
+    sty SOURCE_ID_LSB
 
     ldx	$ba ; last used device#
-    tay
-    iny ; secondary address
     jsr	SETLFS
     jsr	OPEN
     bcc	+
