@@ -488,6 +488,7 @@ variable drivebuf 16 allot
 	\ scratch old backup
 	drivebuf
 	's' over c! 1+
+	'0' over c! 1+
 	':' over c! 1+
 	'.' over c! 1+
 	dup
@@ -495,13 +496,13 @@ variable drivebuf 16 allot
 	filename-len c@ +
 	lf swap c!
 
-	drivebuf filename-len c@ 4 +
+	drivebuf filename-len c@ 5 +
     f openw f closew
 
 	\ rename to new backup
 	drivebuf
 	'r' over c! 1+
-	1+ \ colon already in place...
+	2+ \ 0: already in place...
 	'.' over c! 1+
 	filename-len c@ + \ filename ok
 	'=' over c! 1+
@@ -510,7 +511,7 @@ variable drivebuf 16 allot
 	filename-len c@ + \ filename ok
 	lf swap c!
 
-	drivebuf filename-len c@ 2 * 5 +
+	drivebuf filename-len c@ 2 * 6 +
     f openw f closew
 ;
 

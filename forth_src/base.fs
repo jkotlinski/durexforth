@@ -296,4 +296,4 @@ marker modules
 .( require..) s" require" included
 
 .( save new durexforth..)
-s" @:durexforth" save-forth .( ok!) cr
+s" @0:durexforth" save-forth .( ok!) cr
