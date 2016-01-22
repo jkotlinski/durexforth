@@ -1,4 +1,4 @@
-s" sin" included
+require sin
 
 variable tx variable ty \ 10.6 fixedpoint
 variable ta 0 value tp

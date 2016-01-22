@@ -279,17 +279,6 @@ OPENW
     jmp CLRCHN
 
     +BACKLINK
-    !byte 7
-    !text	"include"
-INCLUDE
-    dex
-    lda #' '
-    sta LSB,x
-    jsr WORD
-    jsr COUNT
-    jmp INCLUDED
-
-    +BACKLINK
     !byte 8
     !text	"included"
 INCLUDED

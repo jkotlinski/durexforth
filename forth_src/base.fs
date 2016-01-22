@@ -87,7 +87,7 @@ header postpone dodoes literal , ;
 : does> r> 1+ latest @ >dfa ! ;
 
 .( asm..)
-include asm
+s" asm" included
 
 code m+ ( d1 u -- d2 )
 0 ldy,# sp1 lda,x +branch bpl, dey, 
@@ -258,7 +258,7 @@ inx, sp0 sty,x sp1 sty,x ;code
 : min ( a b - c )
 2dup > if swap then drop ;
 
-.( format..) include format
+.( format..) s" format" included
 
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
@@ -286,13 +286,14 @@ does> @ dup to here @ latest ! ;
 
 marker modules
 
-.( labels..) include labels
-.( doloop..) include doloop
-.( sys..) include sys
-.( debug..) include debug
-.( ls..) include ls
-.( gfx..) include gfx
-.( vi..) include vi
+.( labels..) s" labels" included
+.( doloop..) s" doloop" included
+.( sys..) s" sys" included
+.( debug..) s" debug" included
+.( ls..) s" ls" included
+.( gfx..) s" gfx" included
+.( vi..) s" vi" included
+.( require..) s" require" included
 
 .( save new durexforth..)
 s" @:durexforth" save-forth .( ok!) cr
