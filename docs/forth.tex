@@ -439,6 +439,8 @@ forget
 \begin{description}
 \item[include filename ( -- )] Load and parse file. Example: \texttt{include test}
 \item[included ( filenameptr filenamelength -- )] Load and parse file.
+\item[require filename ( -- )] Like include, except that load is skipped if the file is already loaded.
+\item[required ( filenameptr filenamelength -- )] Like included, except that load is skipped if the file is already loaded.
 \item[loadb ( filenameptr filenamelength dst -- )] Load binary block to dst.
 \item[saveb ( start end filenameptr filenamelength -- )] Save binary block.
 \item[device ( device\# -- )] Switches the active device. 8 to 11 are valid device\#'s.

@@ -277,6 +277,10 @@ Thanks to polluks for suggestions!
  * editor: no longer possible to join lines by shift+backspace
    in insert mode
 
-v1.5.3
+2016-01-20: v1.5.3
 
  * bugfix: various fixes for evaluate/vi F7
+
+v1.5.4
+
+ * added require, required
