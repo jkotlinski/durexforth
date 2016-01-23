@@ -504,13 +504,8 @@ filename-len c@ + \ filename ok
 bkcr here filename-len c@ 2* 6 + cmd ;
 
 : write-file
-rom-kernal
-do-backup
-
-bufstart
-eof @
-filename filename-len c@
-saveb
+rom-kernal do-backup bufstart eof @
+filename filename-len c@ saveb 
 1 to need-refresh ;
 
 : save-as
