@@ -482,29 +482,21 @@ variable search-buf e allot
 	again
 ;
 
-: c!+ ( addr -- addr ) over c! 1+ ;
-: cmd ( addr u -- ) f openw f closew ;
-: bkcr ( addr -- )
+: write-file rom-kernal 
+page ." saving "
+filename filename-len c@ type ." .."
+
+\ scratch old file
+here
+'s' over c! 1+
+'0' over c! 1+
+':' over c! 1+
 dup filename swap filename-len c@ move
-filename-len c@ + lf swap c! ;
+filename-len c@ + lf swap c!
+here filename-len c@ 4 +
+f openw f closew
 
-: do-backup
-\ scratch old backup
-here
-'s' c!+ '0' c!+ ':' c!+ '.' c!+
-bkcr here filename-len c@ 5 + cmd
-
-\ rename to new backup
-here
-'r' c!+
-2+ \ 0: already in place...
-'.' c!+
-filename-len c@ + \ filename ok
-'=' c!+
-bkcr here filename-len c@ 2* 6 + cmd ;
-
-: write-file
-rom-kernal do-backup bufstart eof @
+bufstart eof @
 filename filename-len c@ saveb
 key drop 1 to need-refresh ;
 
