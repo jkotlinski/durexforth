@@ -286,4 +286,5 @@ v1.5.4
  * bugfix: vi :w didn't work with filenames longer than 6 characters
  * bugfix: vi :w! captured control characters in filename
  * bugfix: changed vi :w to avoid 1541 bugs
+ * vi: after saving, press key to dismiss drive status message
  * forth: added require, required
