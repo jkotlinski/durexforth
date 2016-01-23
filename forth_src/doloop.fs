@@ -49,9 +49,7 @@ zptmp2 (jmp),
 postpone (loop) dup , resolve-leaves ; immediate
 
 : (+loop) ( inc -- )
-r> swap \ ret inc
-r> \ ret inc i 
-2dup + \ ret inc i i2
+r> swap r> 2dup +
 rot 0< if tuck swap else tuck then
 r@ 1- -rot within 0= if
 >r >r [ ' branch jmp, ] then
