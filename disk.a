@@ -55,7 +55,6 @@ CLOSEW
     jsr	CLOSE 
     ldx	TMP
     jsr	CHKOUT
-    jsr	_errorchread
     ldx TMP2
     inx
     rts
@@ -224,7 +223,7 @@ save_binary_srange_end_hi = *+1
     ldy #$ff	;load_address hi
     lda #$c1	;tell routine that start address is located in $c1/$c2
     jsr SAVE
-    bcs .disk_io_error
+    jsr _errorchread
 
     pla
     sta	$af
