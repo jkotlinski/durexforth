@@ -693,23 +693,17 @@ down c, ' cur-down ,
 depth 1- <> abort" stk"
 eof @ c@ abort" eof" again ;
 
-\ bring back editor
-: fg
-\ check sentinel
-bufstart 1- c@ if ." err" exit then
-init
-push-colors
-show-page
-main-loop
-cleanup ;
+: fg \ bring back editor
+bufstart 1- c@ abort" err" \ sentinel
+init push-colors show-page
+main-loop cleanup ;
 
 : vi
 lf word count dup 0= if \ no param?
 2drop eof @ if fg exit else
 s" noname" then then
 
-init
-go-to-file-start
+init go-to-file-start
 
 \ store away filename
 2dup ( str len str len )	
