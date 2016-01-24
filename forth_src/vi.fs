@@ -138,20 +138,13 @@ init-kernal
 clear-status ;
 
 : push-colors
-d020 c@
-d021 c@
-286 c@
-
-2 d021 c!
-a d020 c!
-1 286 c!
+d020 c@ d021 c@ 286 c@
+2 d021 c! a d020 c! 1 286 c!
 d800 400 1 fill ;
 
 : cleanup ( bordercolor bgcolor cursorcolor -- )
 0 28a c! \ default key repeat
-286 c! \ cursor col
-d021 c! d020 c!
-page ;
+286 c! d021 c! d020 c! page ;
 
 : fit-curx-in-linelen
 linelen curx @ min curx ! ;
