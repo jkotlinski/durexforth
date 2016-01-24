@@ -498,7 +498,7 @@ f openw f closew
 
 bufstart eof @
 filename filename-len c@ saveb
-key drop 1 to need-refresh ;
+key to need-refresh ;
 
 : save-as
 '!' emit filename f accept
