@@ -491,7 +491,7 @@ here
 's' over c! 1+
 '0' over c! 1+
 ':' over c! 1+
-dup filename swap filename-len c@ move
+filename over filename-len c@ move
 filename-len c@ + lf swap c!
 here filename-len c@ 4 +
 f openw f closew
