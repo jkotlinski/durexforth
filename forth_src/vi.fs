@@ -493,7 +493,7 @@ bufstart eof @
 filename filename-len c@ saveb
 key to need-refresh ;
 
-: save-as
+: save-as 1 to need-refresh
 '!' emit filename f accept
 ?dup 0= if exit then
 filename-len c! write-file ;
