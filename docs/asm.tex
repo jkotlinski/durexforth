@@ -1,5 +1,69 @@
-\chapter{Assembler Mnemonics}
+\chapter{Assembler}
 
+\section{Introduction}
+
+DurexForth features a simple but capable 6502 assembler, with support for branches and labels. Assembly code is typically used within a \texttt{code} word, as in the tutorial example:
+
+\begin{verbatim}
+code flash
+here ( push current addr )
+d020 inc, ( inc $d020 )
+jmp, ( jump to pushed addr )
+;code
+\end{verbatim}
+
+It is also possible to inline assembly code into a regular Forth word, as seen in the tutorial:
+
+\begin{verbatim}
+: flash begin [ d020 inc, ] again ;
+\end{verbatim}
+
+\section{Branches}
+
+The assembler supports forward and backward branches. Branches cannot overlap each other, so their usage is limited to simple control flows.
+
+\begin{description}
+\item[:+] Target for a forward branch.
+\item[:-] Target for a backward branch.
+\item[+branch] Compiles a forward branch.
+\item[-branch] Compiles a backward branch.
+\end{description}
+
+Example for a forward branch:
+
+\begin{verbatim}
+foo lda,
++branch beq,
+bar inc, :+
+\end{verbatim}
+
+Example for a backward branch:
+
+\begin{verbatim}
+:- d014 lda, f4 cmp,#
+-branch bne,
+\end{verbatim}
+
+\section{Labels}
+
+The \texttt{labels} module adds support for more complicated flows, where branches can overlap freely. These branches are resolved by the \texttt{;code} word, so it is not possible to branch past it.
+
+\begin{description}
+    \item[@: ( n -- )] Creates the assembly label n, where n is a number in range [0, 255].
+    \item[@@ ( n -- )] Compiles a branch to the label n.
+\end{description}
+
+Example:
+
+\begin{verbatim}
+code checkers
+7f lda,# 0 ldy,# 1 @:
+400 sta,y 500 sta,y
+600 sta,y 700 sta,y
+dey, 1 @@ bne, ;code
+\end{verbatim}
+
+\section{Assembler Mnemonics}
 \begin{multicols}{5}{
 \begin{verbatim}
 adc,#
