@@ -289,3 +289,4 @@ v1.5.4
  * vi: improved feedback when saving
  * vi: stop using backup files
  * forth: added require, required
+ * doc: documented assembler
