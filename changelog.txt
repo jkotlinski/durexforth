@@ -281,7 +281,7 @@ Thanks to polluks for suggestions!
 
  * bugfix: various fixes for evaluate/vi F7
 
-v1.5.4
+2016-01-30: v1.5.4
 
  * bugfix: vi :w didn't work with filenames longer than 6 characters
  * bugfix: vi :w! captured control characters in filename
@@ -289,4 +289,4 @@ v1.5.4
  * vi: improved feedback when saving
  * vi: stop using backup files
  * forth: added require, required
- * doc: documented assembler
+ * doc: documented assembler, sid
