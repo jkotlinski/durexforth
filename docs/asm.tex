@@ -2,7 +2,7 @@
 
 \section{Introduction}
 
-DurexForth features a simple but capable 6502 assembler, with support for branches and labels. Assembly code is typically used within a \texttt{code} word, as in the tutorial example:
+DurexForth features a simple but useful 6510 assembler with support for branches and labels. Assembly code is typically used within a \texttt{code} word, as in the tutorial example:
 
 \begin{verbatim}
 code flash
@@ -20,16 +20,16 @@ It is also possible to inline assembly code into a regular Forth word, as seen i
 
 \section{Branches}
 
-The assembler supports forward and backward branches. Branches cannot overlap each other, so their usage is limited to simple control flows.
+The assembler supports forward and backward branches. These branches cannot overlap each other, so their usage is limited to simple cases.
 
 \begin{description}
-\item[:+] Target for a forward branch.
-\item[:-] Target for a backward branch.
-\item[+branch] Compiles a forward branch.
-\item[-branch] Compiles a backward branch.
+    \item[+branch ( -- addr )] Forward branch.
+    \item[:+ ( addr -- )] Forward branch target.
+    \item[:- ( -- addr )] Backward branch target.
+    \item[-branch ( addr -- )] Backward branch.
 \end{description}
 
-Example for a forward branch:
+Example of a forward branch:
 
 \begin{verbatim}
 foo lda,
@@ -37,7 +37,7 @@ foo lda,
 bar inc, :+
 \end{verbatim}
 
-Example for a backward branch:
+Example of a backward branch:
 
 \begin{verbatim}
 :- d014 lda, f4 cmp,#
@@ -46,7 +46,7 @@ Example for a backward branch:
 
 \section{Labels}
 
-The \texttt{labels} module adds support for more complicated flows, where branches can overlap freely. These branches are resolved by the \texttt{;code} word, so it is not possible to branch past it.
+The \texttt{labels} module adds support for more complicated flows where branches can overlap freely. These branches are resolved by the \texttt{;code} word, so it is not possible to branch past it.
 
 \begin{description}
     \item[@: ( n -- )] Creates the assembly label n, where n is a number in range [0, 255].
@@ -57,10 +57,10 @@ Example:
 
 \begin{verbatim}
 code checkers
-7f lda,# 0 ldy,# 1 @:
+7f lda,# 0 ldy,# 'l' @:
 400 sta,y 500 sta,y
 600 sta,y 700 sta,y
-dey, 1 @@ bne, ;code
+dey, 'l' @@ bne, ;code
 \end{verbatim}
 
 \section{Assembler Mnemonics}
@@ -87,15 +87,14 @@ asl,x
 bcc,
 bcs,
 beq,
-
-bit,
-
 bmi,
 bne,
 bpl,
-brk,
 bvc,
 bvs,
+
+bit,
+brk,
 clc,
 cld,
 cli,
