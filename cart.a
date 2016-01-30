@@ -1,0 +1,51 @@
+!cpu 6510
+!ct raw
+!to "cart.bin", plain	; set output file and format
+	
+* = $8000
+     !word coldstart            ; coldstart vector
+     !word warmstart            ; warmstart vector
+     !byte $C3,$C2,$CD,$38,$30  ; "CBM80". Autostart string
+ 
+coldstart
+     sei
+     stx $d016
+     jsr $fda3 ;Prepare IRQ
+     jsr $fd50 ;Init memory. Rewrite this routine to speed up boot process.
+     jsr $fd15 ;Init I/O
+     jsr $ff5b ;Init video
+     cli
+ 
+warmstart
+    lda #<durexforth_bin
+    sta $8b
+    lda #>durexforth_bin
+    sta $8c
+    lda #$d
+    sta $8d
+    lda #8
+    sta $8e
+    ldy #0
+loop
+    lda ($8b),y
+    sta ($8d),y
+    inc $8b
+    bne x
+    inc $8c
+    lda $8c
+    cmp #$c0
+    beq done
+x
+    inc $8d
+    bne loop
+    inc $8e
+    jmp loop
+
+done
+    jmp $80d
+
+durexforth_bin
+     !bin "durexforth",,$e
+ 
+* = $bfff                     ; fill up to -$9fff (or $bfff if 16K)
+     !byte 0
