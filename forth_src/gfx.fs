@@ -34,9 +34,9 @@ header blitop
 0 , \ lineplot
 
 create .blitloc
-sp0 lda,x w sta,
+lsb lda,x w sta,
 7 and,# w3 sta,
-sp1 lda,x w 1+ sta,
+msb lda,x w 1+ sta,
 
 w lda, f8 and,# w sta,
 
@@ -60,8 +60,8 @@ clc,
 w lda, w3 adc, w sta,
 2 bcc, w 1+ inc,
 
-w lda, sp0 sta,x
-w 1+ lda, sp1 sta,x
+w lda, lsb sta,x
+w 1+ lda, msb sta,x
 
 \ ...
 
@@ -69,7 +69,7 @@ w 1+ lda, sp1 sta,x
 lda,# w 1+ sta,
 
 clc,
-sp0 1+ lda,x 7 and,# ' mask adc,#
+lsb 1+ lda,x 7 and,# ' mask adc,#
 w sta,
 2 bcc, w 1+ inc,
 
@@ -78,10 +78,10 @@ w sta,
 w lda,(y) w3 sta,
 
 clc,
-sp0 1+ lda,x f8 and,# sp0 adc,x sp0 sta,x
-sp1 1+ lda,x sp1 adc,x clc, a0 adc,# sp1 sta,x
-w3 lda, sp0 1+ sta,x
-0 lda,# sp1 1+ sta,x
+lsb 1+ lda,x f8 and,# lsb adc,x lsb sta,x
+msb 1+ lda,x msb adc,x clc, a0 adc,# msb sta,x
+w3 lda, lsb 1+ sta,x
+0 lda,# msb 1+ sta,x
 rts,
 
 code blitloc ( x y -- mask addr )
@@ -216,10 +216,10 @@ sec, addr lda, 8 sbc,# addr sta,
 
 code doline
 1 @: step jsr,
-peny lda, sp0 cmp,x 1 @@ bne,
-penx lda, sp0 1+ cmp,x 1 @@ bne,
-peny 1+ lda, sp1 cmp,x 1 @@ bne,
-penx 1+ lda, sp1 1+ cmp,x 1 @@ bne,
+peny lda, lsb cmp,x 1 @@ bne,
+penx lda, lsb 1+ cmp,x 1 @@ bne,
+peny 1+ lda, msb cmp,x 1 @@ bne,
+penx 1+ lda, msb 1+ cmp,x 1 @@ bne,
 inx, inx, ;code
 
 : line ( x y -- )
@@ -289,23 +289,23 @@ stk lda, w sta,
 stk 1+ lda, w 1+ sta,
 
 \ dy
-0 ldy,# sp0 lda,x w sta,(y)
+0 ldy,# lsb lda,x w sta,(y)
 \ xr
-iny, sp0 1+ lda,x w sta,(y)
-iny, sp1 1+ lda,x w sta,(y)
+iny, lsb 1+ lda,x w sta,(y)
+iny, msb 1+ lda,x w sta,(y)
 \ xl
-iny, sp0 2 + lda,x w sta,(y)
-iny, sp1 2 + lda,x w sta,(y)
+iny, lsb 2 + lda,x w sta,(y)
+iny, msb 2 + lda,x w sta,(y)
 \ y
-iny, sp0 3 + lda,x w sta,(y)
+iny, lsb 3 + lda,x w sta,(y)
 
 clc, stk lda, 6 adc,# stk sta,
 3 bcc, stk 1+ inc, rts,
 
 code spush ( y xl xr dy -- )
 \ y out of bounds?
-clc, sp0 lda,x sp0 3 + adc,x tay,
-sp1 lda,x sp1 3 + adc,x +branch bne,
+clc, lsb lda,x lsb 3 + adc,x tay,
+msb lda,x msb 3 + adc,x +branch bne,
 tya, sec, c8 cmp,# 3 bcs, dopush jsr,
 :+
 inx, inx, inx, inx, ;code
@@ -324,12 +324,12 @@ dy sta, dy 1+ sta,
 1 cmp,# 3 bne, dy 1+ sty,
 
 dex,
-sp1 sty,x \ msb y=0
+msb sty,x \ msb y=0
 iny, w lda,(y) x2 sta,
 iny, w lda,(y) x2 1+ sta,
 iny, w lda,(y) x1 sta,
 iny, w lda,(y) x1 1+ sta,
-iny, w lda,(y) sp0 sta,x
+iny, w lda,(y) lsb sta,x
 ;code
 
 variable l
@@ -338,25 +338,25 @@ variable l
 
 create .bitblt ( mask addr --
                   mask addr )
-sp0 lda,x w sta,
-sp1 lda,x w 1+ sta,
+lsb lda,x w sta,
+msb lda,x w 1+ sta,
 0 ldy,# w lda,(y)
-sp0 1+ ora,x w sta,(y)
+lsb 1+ ora,x w sta,(y)
 \ 1 penx +! swap 2/ swap 
 penx inc, 3 bne, penx 1+ inc,
-sp0 1+ lsr,x rts,
+lsb 1+ lsr,x rts,
 
 create rightend
 \ nip 80 swap \ mask
-80 lda,# sp0 1+ sta,x 
-0 lda,# sp1 1+ sta,x
+80 lda,# lsb 1+ sta,x 
+0 lda,# msb 1+ sta,x
 
 :-
-sp0 1+ lda,x 1 bne, rts,
-sp0 lda,x w sta,
-sp1 lda,x w 1+ sta,
+lsb 1+ lda,x 1 bne, rts,
+lsb lda,x w sta,
+msb lda,x w 1+ sta,
 0 ldy,# w lda,(y)
-sp0 1+ and,x 1 beq, rts,
+lsb 1+ and,x 1 beq, rts,
 .bitblt jsr, jmp, \ recurse
 
 create bytewise
@@ -366,15 +366,15 @@ penx 1+ lda, 0 cmp,# +branch beq,
 :+
 
 :- \ 8 +
-clc, sp0 lda,x 8 adc,# sp0 sta,x
-2 bcc, sp1 inc,x
+clc, lsb lda,x 8 adc,# lsb sta,x
+2 bcc, msb inc,x
 \ penx=140?
 penx lda, 40 cmp,# +branch bne,
 penx 1+ lda, 1 cmp,# +branch bne,
 rts,
 :+ :+
-sp0 lda,x w sta,
-sp1 lda,x w 1+ sta,
+lsb lda,x w sta,
+msb lda,x w 1+ sta,
 0 ldy,# w lda,(y)
 rightend -branch bne,
 
@@ -388,38 +388,38 @@ jmp, \ recurse
 create leavel
 \ 2drop nip penx @ swap 
 inx, inx,
-penx lda, sp0 1+ sta,x
-penx 1+ lda, sp1 1+ sta,x rts,
+penx lda, lsb 1+ sta,x
+penx 1+ lda, msb 1+ sta,x rts,
 
 \ this one must be fast
 code fillr ( x y -- newx y )
 \ over 140 >= if exit then
-sp1 1+ lda,x 0 cmp,# +branch beq,
-3f lda,# sp0 1+ cmp,x 1 bcs, rts,
+msb 1+ lda,x 0 cmp,# +branch beq,
+3f lda,# lsb 1+ cmp,x 1 bcs, rts,
 :+
 
 \ over penx !
-sp0 1+ lda,x penx sta,
-sp1 1+ lda,x penx 1+ sta,
+lsb 1+ lda,x penx sta,
+msb 1+ lda,x penx 1+ sta,
 \ 2dup blitloc \ x y mask addr
 dex, dex,
-sp0 2 + lda,x sp0 sta,x
-sp1 2 + lda,x sp1 sta,x
-sp0 3 + lda,x sp0 1+ sta,x
-sp1 3 + lda,x sp1 1+ sta,x 
+lsb 2 + lda,x lsb sta,x
+msb 2 + lda,x msb sta,x
+lsb 3 + lda,x lsb 1+ sta,x
+msb 3 + lda,x msb 1+ sta,x 
 .blitloc jsr,
 
 \ leftend ( x y mask addr --
 \           x y mask addr more? )
 :-
-sp0 1+ lda,x +branch bne,
+lsb 1+ lda,x +branch bne,
 \ continue bytewise
 bytewise jsr, leavel jsr, ;code
 :+
-sp0 lda,x w sta,
-sp1 lda,x w 1+ sta,
+lsb lda,x w sta,
+msb lda,x w 1+ sta,
 0 ldy,# w lda,(y)
-sp0 1+ and,x +branch beq,
+lsb 1+ and,x +branch beq,
 \ done
 leavel jsr, ;code
 :+
@@ -428,7 +428,7 @@ leavel jsr, ;code
 code scanl
 :-
 \ x<0?
-sp1 1+ lda,x 1 bpl, rts,
+msb 1+ lda,x 1 bpl, rts,
 
 addr lda, w sta,
 addr 1+ lda, w 1+ sta,
@@ -444,20 +444,20 @@ addr lda, sec, 8 sbc,# addr sta,
 3 bcs, addr 1+ dec,
 
 :+ \ 1-
-sp0 1+ lda,x 2 bne, sp1 1+ dec,x 
-sp0 1+ dec,x
+lsb 1+ lda,x 2 bne, msb 1+ dec,x 
+lsb 1+ dec,x
 jmp, \ recurse
 
 create .scanr
 \ over l ! \ l=x
-sp0 1+ lda,x l sta, 
-sp1 1+ lda,x l 1+ sta,
+lsb 1+ lda,x l sta, 
+msb 1+ lda,x l 1+ sta,
 ;code
 
 code scanr ( x y mask addr -- newx y )
-sp0 lda,x addr sta,
-sp1 lda,x addr 1+ sta,
-sp0 1+ lda,x mask sta,
+lsb lda,x addr sta,
+msb lda,x addr 1+ sta,
+lsb 1+ lda,x mask sta,
 inx, inx,
 
 :-
@@ -468,9 +468,9 @@ addr 1+ lda, w 1+ sta,
 mask and, .scanr -branch beq,
 
 \ x<=x2?
-x2 1+ lda, sp1 1+ cmp,x .scanr -branch bcc,
+x2 1+ lda, msb 1+ cmp,x .scanr -branch bcc,
 +branch bne,
-x2 lda, sp0 1+ cmp,x .scanr -branch bcc,
+x2 lda, lsb 1+ cmp,x .scanr -branch bcc,
 :+
 
 mask lsr, +branch bne,
@@ -479,7 +479,7 @@ clc, addr lda, 8 adc,# addr sta,
 3 bcc, addr 1+ inc,
 
 :+ \ x++
-sp0 1+ inc,x 2 bne, sp1 1+ inc,x
+lsb 1+ inc,x 2 bne, msb 1+ inc,x
 jmp, \ recurse
 
 : paint ( x y -- )

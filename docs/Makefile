@@ -6,9 +6,8 @@ TAG = `git describe --tags --abbrev=0 || svnversion --no-newline`
 
 all:	durexforth.pdf
 
-durexforth.pdf: anatomy.tex  editor.tex  gfx.tex    manual.tex  mml.tex asm.tex      forth.tex   intro.tex  memmap.tex  tutorial.tex sid.tex
-	pdflatex manual.tex
-	mv manual.pdf durexforth.pdf
+durexforth.pdf: anatomy.tex  editor.tex  gfx.tex    manual.tex  mml.tex asm.tex      forth.tex   intro.tex  memmap.tex  tutorial.tex sid.tex mnemonics.tex
+	pdflatex -jobname=durexforth manual.tex
 
 clean:
 	rm -f *.pdf

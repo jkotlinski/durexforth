@@ -2,8 +2,8 @@ code (do) ( limit first -- )
 pla, w sta,
 pla, tay,
 
-sp1 1+ lda,x pha, sp0 1+ lda,x pha,
-sp1 lda,x pha, sp0 lda,x pha,
+msb 1+ lda,x pha, lsb 1+ lda,x pha,
+msb lda,x pha, lsb lda,x pha,
 inx, inx, 
 
 tya, pha,
@@ -62,4 +62,4 @@ postpone (+loop) dup , resolve-leaves ; immediate
 code j txa, tsx,
 107 ldy,x w sty, 108 ldy,x
 tax, dex, 
-sp1 sty,x w lda, sp0 sta,x ;code
+msb sty,x w lda, lsb sta,x ;code

@@ -21,8 +21,8 @@ voice lda,
 
 code voice7+ \ voice c@ 7 * +
 .voice7* jsr,
-clc, sp0 adc,x sp0 sta,x +branch bcc,
-sp1 inc,x :+ ;code
+clc, lsb adc,x lsb sta,x +branch bcc,
+msb inc,x :+ ;code
 
 create .ctl
 sid 4 + 100/ lda,# w 1+ sta,
@@ -32,8 +32,8 @@ clc, sid 4 + ff and adc,# w sta,
 code ctl 
 dex,
 .ctl jsr, 
-w lda, sp0 sta,x
-w 1+ lda, sp1 sta,x
+w lda, lsb sta,x
+w 1+ lda, msb sta,x
 ;code
 
 : sid-cutoff d415 ! ;
@@ -88,90 +88,90 @@ create .strget
 w stx, voice lda, asl,a tax,
 .str lda,(x) w ldx, rts,
 code strget 
-dex, 0 lda,# sp1 sta,x
-.strget jsr, sp0 sta,x ;code
+dex, 0 lda,# msb sta,x
+.strget jsr, lsb sta,x ;code
 
 create notetab ( char -- notediff )
-sp0 lda,x
+lsb lda,x
 'c' cmp,# +branch bne,
-0 lda,# sp0 sta,x rts,
+0 lda,# lsb sta,x rts,
 :+ 'd' cmp,# +branch bne,
-2 lda,# sp0 sta,x rts,
+2 lda,# lsb sta,x rts,
 :+ 'e' cmp,# +branch bne,
-4 lda,# sp0 sta,x rts,
+4 lda,# lsb sta,x rts,
 :+ 'f' cmp,# +branch bne,
-5 lda,# sp0 sta,x rts,
+5 lda,# lsb sta,x rts,
 :+ 'g' cmp,# +branch bne,
-7 lda,# sp0 sta,x rts,
+7 lda,# lsb sta,x rts,
 :+ 'a' cmp,# +branch bne,
-9 lda,# sp0 sta,x rts,
+9 lda,# lsb sta,x rts,
 :+ 'b' cmp,# +branch bne,
-b lda,# sp0 sta,x rts,
-:+ 7f lda,# sp0 sta,x rts,
+b lda,# lsb sta,x rts,
+:+ 7f lda,# lsb sta,x rts,
 
 create notrest
-sp0 lda,x 7f cmp,# +branch beq,
-dex, 1 lda,# sp0 sta,x ;code
-:+ 0 lda,# sp0 sta,x sp1 sta,x ;code
+lsb lda,x 7f cmp,# +branch beq,
+dex, 1 lda,# lsb sta,x ;code
+:+ 0 lda,# lsb sta,x msb sta,x ;code
 
 code str2note
 notetab jsr,
 .str-pop jsr,
 .strget jsr,
 '+' cmp,# +branch bne,
-sp0 inc,x .str-pop jsr, notrest jmp,
+lsb inc,x .str-pop jsr, notrest jmp,
 :+ '-' cmp,# +branch bne,
-sp0 dec,x .str-pop jsr, notrest jmp,
+lsb dec,x .str-pop jsr, notrest jmp,
 :+ notrest jmp,
 
 create .read-pause
-dex, 0 lda,# sp1 sta,x
+dex, 0 lda,# msb sta,x
 .strget jsr,
 '1' cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 '6' cmp,# +branch bne,
-.str-pop jsr, 60 10 / lda,# sp0 sta,x 
+.str-pop jsr, 60 10 / lda,# lsb sta,x 
 rts,
-:+ 60 lda,# sp0 sta,x rts,
+:+ 60 lda,# lsb sta,x rts,
 :+ '2' cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 '4' cmp,# +branch bne,
-.str-pop jsr, 60 18 / lda,# sp0 sta,x 
+.str-pop jsr, 60 18 / lda,# lsb sta,x 
 rts,
-:+ 60 2 / lda,# sp0 sta,x rts,
+:+ 60 2 / lda,# lsb sta,x rts,
 :+ '3' cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 '2' cmp,# +branch bne,
-.str-pop jsr, 60 20 / lda,# sp0 sta,x 
+.str-pop jsr, 60 20 / lda,# lsb sta,x 
 rts,
-:+ 60 3 / lda,# sp0 sta,x rts,
+:+ 60 3 / lda,# lsb sta,x rts,
 :+ '4' cmp,# +branch bne,
-.str-pop jsr, 60 4 / lda,# sp0 sta,x 
+.str-pop jsr, 60 4 / lda,# lsb sta,x 
 rts,
 :+ '6' cmp,# +branch bne,
-.str-pop jsr, 60 6 / lda,# sp0 sta,x 
+.str-pop jsr, 60 6 / lda,# lsb sta,x 
 rts,
 :+ '8' cmp,# +branch bne,
-.str-pop jsr, 60 8 / lda,# sp0 sta,x 
+.str-pop jsr, 60 8 / lda,# lsb sta,x 
 rts,
-:+ 0 lda,# sp0 sta,x rts,
+:+ 0 lda,# lsb sta,x rts,
 
 code read-pause
 .read-pause jsr,
-sp0 lda,x +branch bne,
-default-pause lda, sp0 sta,x
+lsb lda,x +branch bne,
+default-pause lda, lsb sta,x
 :+ 
 .strget jsr,
 '.' cmp,# +branch bne,
 .str-pop jsr,
-sp0 lda,x lsr,a clc, 
-sp0 adc,x sp0 sta,x
+lsb lda,x lsr,a clc, 
+lsb adc,x lsb sta,x
 :+ 
-sp0 dec,x ;code
+lsb dec,x ;code
 
 code read-default-pause
 .read-pause jsr,
-sp0 lda,x default-pause sta, 
+lsb lda,x default-pause sta, 
 inx, ;code
 
 : play-note ( -- )
@@ -213,13 +213,13 @@ tie lda, +branch beq,
 code pause>0
 dex,
 pause lda,
-sp0 sta,x sp1 sta,x ;code
+lsb sta,x msb sta,x ;code
 
 code decpause1=
 dex, 0 ldy,#
 pause dec, +branch beq,
-sp0 sty,x sp1 sty,x ;code
-:+ iny, sp0 sty,x ;code
+lsb sty,x msb sty,x ;code
+:+ iny, lsb sty,x ;code
 
 : voicetick
 pause>0 if decpause1= if 
@@ -273,10 +273,10 @@ default-pause 3 + sta,
 
 code wait 
 \ visualize lag
-\ a2 lda, sec, sp0 sbc,x d020 sta,
-sp0 lda,x
+\ a2 lda, sec, lsb sbc,x d020 sta,
+lsb lda,x
 :- a2 cmp, -branch beq,
-sp0 inc,x ;code
+lsb inc,x ;code
 
 code apply-sid
 14 ldy,#
@@ -291,9 +291,9 @@ voice inc,
 .strget jsr, pause 2+ ora, +branch bne,
 voice inc,
 .strget jsr, pause 3 + ora, +branch bne,
-0 lda,# sp0 sta,x sp1 sta,x ;code
+0 lda,# lsb sta,x msb sta,x ;code
 :+ :+ :+
-sp0 sta,x ;code
+lsb sta,x ;code
 
 : play 
 voice0 do-commands

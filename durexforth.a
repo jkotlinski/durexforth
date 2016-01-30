@@ -133,12 +133,12 @@ BL
 
     +BACKLINK
     !byte 3
-    !text	"sp1"
+    !text	"msb"
     +VALUE	MSB
 
     +BACKLINK
     !byte 3
-    !text	"sp0"
+    !text	"lsb"
     +VALUE	LSB
 
     +BACKLINK

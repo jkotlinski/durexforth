@@ -90,26 +90,26 @@ header postpone dodoes literal , ;
 s" asm" included
 
 code m+ ( d1 u -- d2 )
-0 ldy,# sp1 lda,x +branch bpl, dey, 
+0 ldy,# msb lda,x +branch bpl, dey, 
 :+ clc,
-sp0 lda,x sp0 2+ adc,x sp0 2+ sta,x
-sp1 lda,x sp1 2+ adc,x sp1 2+ sta,x
-tya, sp0 1+ adc,x sp0 1+ sta,x
-tya, sp1 1+ adc,x sp1 1+ sta,x
+lsb lda,x lsb 2+ adc,x lsb 2+ sta,x
+msb lda,x msb 2+ adc,x msb 2+ sta,x
+tya, lsb 1+ adc,x lsb 1+ sta,x
+tya, msb 1+ adc,x msb 1+ sta,x
 inx, ;code
 
 code rot ( a b c -- b c a )
-sp1 2+ ldy,x sp1 1+ lda,x 
-sp1 2+ sta,x sp1    lda,x
-sp1 1+ sta,x sp1    sty,x
-sp0 2+ ldy,x sp0 1+ lda,x 
-sp0 2+ sta,x sp0    lda,x
-sp0 1+ sta,x sp0    sty,x ;code
+msb 2+ ldy,x msb 1+ lda,x 
+msb 2+ sta,x msb    lda,x
+msb 1+ sta,x msb    sty,x
+lsb 2+ ldy,x lsb 1+ lda,x 
+lsb 2+ sta,x lsb    lda,x
+lsb 1+ sta,x lsb    sty,x ;code
 : -rot rot rot ;
 
 code 100/
-sp1 lda,x sp0 sta,x 
-0 lda,#   sp1 sta,x ;code
+msb lda,x lsb sta,x 
+0 lda,#   msb sta,x ;code
 
 ( creates value that is fast to read
   but can only be rewritten by "to".
@@ -146,53 +146,53 @@ then (to) ; immediate
 postpone drop postpone drop ; immediate
 code 2over ( a b c d -- a b c d a b )
 dex,
-sp1 4 + lda,x sp1 sta,x
-sp0 4 + lda,x sp0 sta,x
+msb 4 + lda,x msb sta,x
+lsb 4 + lda,x lsb sta,x
 dex,
-sp1 4 + lda,x sp1 sta,x
-sp0 4 + lda,x sp0 sta,x ;code
+msb 4 + lda,x msb sta,x
+lsb 4 + lda,x lsb sta,x ;code
 code 2swap ( a b c d -- c d a b )
-sp0 lda,x sp0 2+ ldy,x
-sp0 sty,x sp0 2+ sta,x
-sp1 lda,x sp1 2+ ldy,x
-sp1 sty,x sp1 2+ sta,x
-sp0 1+ lda,x sp0 3 + ldy,x
-sp0 1+ sty,x sp0 3 + sta,x
-sp1 1+ lda,x sp1 3 + ldy,x
-sp1 1+ sty,x sp1 3 + sta,x ;code
+lsb lda,x lsb 2+ ldy,x
+lsb sty,x lsb 2+ sta,x
+msb lda,x msb 2+ ldy,x
+msb sty,x msb 2+ sta,x
+lsb 1+ lda,x lsb 3 + ldy,x
+lsb 1+ sty,x lsb 3 + sta,x
+msb 1+ lda,x msb 3 + ldy,x
+msb 1+ sty,x msb 3 + sta,x ;code
 
 : save-forth ( strptr strlen -- )
 801 -rot here -rot saveb ;
 
 code 2/ 
-sp1 lda,x 80 cmp,# sp1 ror,x sp0 ror,x
+msb lda,x 80 cmp,# msb ror,x lsb ror,x
 ;code
 code or
-sp1 lda,x sp1 1+ ora,x sp1 1+ sta,x
-sp0 lda,x sp0 1+ ora,x sp0 1+ sta,x
+msb lda,x msb 1+ ora,x msb 1+ sta,x
+lsb lda,x lsb 1+ ora,x lsb 1+ sta,x
 inx, ;code
 code xor
-sp1 lda,x sp1 1+ eor,x sp1 1+ sta,x
-sp0 lda,x sp0 1+ eor,x sp0 1+ sta,x
+msb lda,x msb 1+ eor,x msb 1+ sta,x
+lsb lda,x lsb 1+ eor,x lsb 1+ sta,x
 inx, ;code
 code +! ( num addr -- ) 
-sp0 lda,x w sta,
-sp1 lda,x w 1+ sta,
+lsb lda,x w sta,
+msb lda,x w 1+ sta,
 0 ldy,# clc,
-w lda,(y) sp0 1+ adc,x 
+w lda,(y) lsb 1+ adc,x 
 w sta,(y) iny,
-w lda,(y) sp1 1+ adc,x 
+w lda,(y) msb 1+ adc,x 
 w sta,(y)
 inx, inx, ;code
 
 :- dup inx, ;code
 code lshift ( x1 u -- x2 )
-sp0 dec,x -branch bmi,
-sp0 1+ asl,x sp1 1+ rol,x
+lsb dec,x -branch bmi,
+lsb 1+ asl,x msb 1+ rol,x
 latest @ >cfa jmp, 
 code rshift ( x1 u -- x2 )
-sp0 dec,x -branch bmi,
-sp1 1+ lsr,x sp0 1+ ror,x
+lsb dec,x -branch bmi,
+msb 1+ lsr,x lsb 1+ ror,x
 latest @ >cfa jmp, 
 
 : allot ( n -- ) here + to here ;
@@ -210,8 +210,8 @@ here latest @ >cfa 1+ (to)
 : chars ; : align ; : aligned ;
 ( ..fairly pointless ANS compat )
 
-code 0< sp1 lda,x 80 and,# +branch beq,
-ff lda,# :+ sp0 sta,x sp1 sta,x ;code
+code 0< msb lda,x 80 and,# +branch beq,
+ff lda,# :+ lsb sta,x msb sta,x ;code
 
 ( from FIG UK... )
 : s>d dup 0< ;
@@ -246,11 +246,11 @@ swap r> ?negate ;
 
 code <
 0 ldy,# sec,
-sp0 1+ lda,x sp0 sbc,x 
-sp1 1+ lda,x sp1 sbc,x
+lsb 1+ lda,x lsb sbc,x 
+msb 1+ lda,x msb sbc,x
 +branch bvc, 80 eor,# :+ 
 +branch bpl, dey, :+
-inx, sp0 sty,x sp1 sty,x ;code
+inx, lsb sty,x msb sty,x ;code
 : > swap < ;
 
 : max ( a b - c )

@@ -24,10 +24,10 @@ type space ;
 
 code d+ ( d1 d2 -- d3 )
 clc,
-sp0 1+ lda,x sp0 3 + adc,x sp0 3 + sta,x
-sp1 1+ lda,x sp1 3 + adc,x sp1 3 + sta,x
-sp0 lda,x sp0 2+ adc,x sp0 2+ sta,x
-sp1 lda,x sp1 2+ adc,x sp1 2+ sta,x
+lsb 1+ lda,x lsb 3 + adc,x lsb 3 + sta,x
+msb 1+ lda,x msb 3 + adc,x msb 3 + sta,x
+lsb lda,x lsb 2+ adc,x lsb 2+ sta,x
+msb lda,x msb 2+ adc,x msb 2+ sta,x
 inx, inx, ;code
 : accumulate ( +d0 addr digit - +d1 addr )
 swap >r swap base @ um* drop
