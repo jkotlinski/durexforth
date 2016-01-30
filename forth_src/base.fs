@@ -292,7 +292,7 @@ marker modules
 .( debug..) s" debug" included
 .( ls..) s" ls" included
 .( gfx..) s" gfx" included
-.( vi..) s" vi" included
+.( v..) s" v" included
 .( require..) s" require" included
 
 .( save new durexforth..)
