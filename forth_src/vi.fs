@@ -654,6 +654,7 @@ down c, ' cur-down ,
 ;
 
 : main-loop
+push-colors show-page
 	begin
         ram-kernal
 		0 to need-refresh
@@ -671,6 +672,7 @@ down c, ' cur-down ,
 			main-handler if 
 				drop
                 rom-kernal
+                cleanup
 				exit
 			then
 		then
@@ -686,15 +688,12 @@ down c, ' cur-down ,
 depth 1- <> abort" stk"
 eof @ c@ abort" eof" again ;
 
-: fg \ bring back editor
-bufstart 1- c@ abort" err" \ sentinel
-init push-colors show-page
-main-loop cleanup ;
-
 : vi
 lf word count dup 0= if \ no param?
-2drop eof @ if fg exit else
-s" noname" then then
+2drop eof @ if \ bring back editor
+bufstart 1- c@ abort" err" \ sentinel
+init main-loop exit 
+else s" noname" then then
 
 init go-to-file-start
 
@@ -703,8 +702,4 @@ init go-to-file-start
 filename-len c!
 filename f move
 
-do-load
-push-colors
-show-page
-main-loop
-cleanup ;
+do-load main-loop ;
