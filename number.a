@@ -51,10 +51,10 @@ BASE
 apply_base
     sta BASE
     dec .chars_to_process
-    inc TMP3
+    inc W3
     bne +
-    inc TMP3+1
-+   lda (TMP3),y
+    inc W3+1
++   lda (W3),y
     rts
 
 ; Z = success, NZ = fail
@@ -62,12 +62,12 @@ apply_base
 ; fail: ( string ptr -- string ptr )
 READ_NUMBER
     lda MSB, x
-    sta TMP3 + 1
+    sta W3 + 1
     lda LSB, x
-    sta TMP3
-    ; TMP3 now points to string length
-    ; followed by string. (Using TMP3
-    ; because U_M_STAR trashes TMP, TMP2)
+    sta W3
+    ; W3 now points to string length
+    ; followed by string. (Using W3
+    ; because U_M_STAR trashes W, W2)
 
     dex
     dex
@@ -80,15 +80,15 @@ READ_NUMBER
     sty LSB+1,x
     sty MSB+1,x
     sty MSB,x
-    lda (TMP3), y
+    lda (W3), y
     sta .chars_to_process
 
-    inc TMP3
+    inc W3
     bne +
-    inc TMP3+1
+    inc W3+1
 +
 
-    lda (TMP3), y
+    lda (W3), y
     cmp #"'"
     beq .parse_char
 
@@ -123,10 +123,10 @@ READ_NUMBER
     lda LSB,x
     bne .parse_failed ; overflow!
 
-    inc TMP3
+    inc W3
     bne +
-    inc TMP3+1
-+   lda (TMP3), y
+    inc W3+1
++   lda (W3), y
 
 .loop_entry
     jsr CHAR_TO_LOWERCASE
@@ -178,11 +178,11 @@ OLD_BASE = * + 1
     cmp #3
     bne .parse_failed
     ldy #2
-    lda (TMP3),y
+    lda (W3),y
     cmp #"'"
     bne .parse_failed
     dey
-    lda (TMP3),y
+    lda (W3),y
     sta LSB+1,x
     lda #0
     sta MSB+1,x

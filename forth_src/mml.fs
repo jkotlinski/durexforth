@@ -25,15 +25,15 @@ clc, sp0 adc,x sp0 sta,x +branch bcc,
 sp1 inc,x :+ ;code
 
 create .ctl
-sid 4 + 100/ lda,# zptmp 1+ sta,
+sid 4 + 100/ lda,# w 1+ sta,
 .voice7* jsr,
-clc, sid 4 + ff and adc,# zptmp sta,
-+branch bcc, zptmp 1+ inc, :+ rts,
+clc, sid 4 + ff and adc,# w sta,
++branch bcc, w 1+ inc, :+ rts,
 code ctl 
 dex,
 .ctl jsr, 
-zptmp lda, sp0 sta,x
-zptmp 1+ lda, sp1 sta,x
+w lda, sp0 sta,x
+w 1+ lda, sp1 sta,x
 ;code
 
 : sid-cutoff d415 ! ;
@@ -68,12 +68,12 @@ ea24 , f810 ,
 
 code gate-on 
 .ctl jsr, 0 ldy,#
-zptmp lda,(y) 1 eor,#
-zptmp sta,(y) ;code
+w lda,(y) 1 eor,#
+w sta,(y) ;code
 code gate-off
 .ctl jsr, 0 ldy,#
-zptmp lda,(y) fe and,#
-zptmp sta,(y) ;code
+w lda,(y) fe and,#
+w sta,(y) ;code
 
 2b value .str
 create .str-pop
@@ -85,8 +85,8 @@ tya, tax, rts,
 code str-pop .str-pop jsr, ;code
 
 create .strget
-zptmp stx, voice lda, asl,a tax,
-.str lda,(x) zptmp ldx, rts,
+w stx, voice lda, asl,a tax,
+.str lda,(x) w ldx, rts,
 code strget 
 dex, 0 lda,# sp1 sta,x
 .strget jsr, sp0 sta,x ;code
@@ -185,8 +185,8 @@ code o
 .strget jsr, \ new character in a
 sec, '0' sbc,#
 \ multiply by c
-asl,a asl,a zptmp sta,
-asl,a clc, zptmp adc,
+asl,a asl,a w sta,
+asl,a clc, w adc,
 octave sta,
 .str-pop jsr, ;code
 

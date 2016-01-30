@@ -35,12 +35,12 @@ MINUS
     inx
     rts
 
-product = TMP
+product = W
 
     +BACKLINK
     !byte	3
     !text	"um*"
-; wastes TMP, TMP2, y
+; wastes W, W2, y
 U_M_STAR
     lda #$00
     sta product+2 ; clear upper bits of product
@@ -81,7 +81,7 @@ rotate_r
 	!byte	6
 	!text	"um/mod"
 ; ( lsw msw divisor -- rem quot )
-        N = TMP
+        N = W
         SEC
         LDA     LSB+1,X     ; Subtract hi cell of dividend by
         SBC     LSB,X     ; divisor to see if there's an overflow condition.

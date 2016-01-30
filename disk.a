@@ -50,12 +50,12 @@ SAVE = $ffd8
     !text	"closew"
 CLOSEW
     lda LSB,x
-    sta TMP
-    stx	TMP2
+    sta W
+    stx	W2
     jsr	CLOSE 
-    ldx	TMP
+    ldx	W
     jsr	CHKOUT
-    ldx TMP2
+    ldx W2
     inx
     rts
 
@@ -243,8 +243,8 @@ save_binary_srange_end_hi = *+1
     !text	"openw"
 OPENW
     lda LSB,x
-    sta TMP ; fileno
-    stx	TMP2
+    sta W ; fileno
+    stx	W2
 
     lda	LSB+1, x
     ldy	MSB+2, x
@@ -254,7 +254,7 @@ OPENW
     pla
     
     jsr	SETNAM
-    lda	TMP ; file number
+    lda	W ; file number
     ldx	$ba ; last used device#
     tay ; secondary address
     jsr	SETLFS
@@ -263,10 +263,10 @@ OPENW
     jsr .close
     jmp ++
 +
-    ldx	TMP ; file number
+    ldx	W ; file number
     jsr	CHKOUT
 ++
-    ldx	TMP2
+    ldx	W2
     inx
     inx
     inx

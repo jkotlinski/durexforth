@@ -37,9 +37,9 @@ X_INIT = 0
 MSB = $73 ; msb stack is [$3b, $72]
 LSB = $3b ; lsb stack is [3, $3a]
 
-TMP = $8b ; rnd seed
-TMP2 = $8d ; rnd seed
-TMP3 = $9e ; tape error log
+W = $8b ; rnd seed
+W2 = $8d ; rnd seed
+W3 = $9e ; tape error log
 
 OP_NOP = $ea
 OP_JMP = $4c
@@ -312,16 +312,16 @@ ZEQU
     !text	"!"
 STORE
     lda LSB, x
-    sta TMP
+    sta W
     lda MSB, x
-    sta TMP + 1
+    sta W + 1
 
     ldy #0
     lda	LSB+1, x
-    sta (TMP), y
+    sta (W), y
     iny
     lda	MSB+1, x
-    sta	(TMP), y
+    sta	(W), y
 
     inx
     inx
@@ -333,15 +333,15 @@ STORE
     !text	"@"
 FETCH
     lda LSB,x
-    sta TMP
+    sta W
     lda MSB,x
-    sta TMP+1
+    sta W+1
 
     ldy #0
-    lda	(TMP),y
+    lda	(W),y
     sta LSB,x
     iny
-    lda	(TMP),y
+    lda	(W),y
     sta MSB,x
     rts
 
@@ -388,17 +388,17 @@ FILL
     sta	.fdst + 1
     lda	LSB + 1, x
     eor	#$ff
-    sta	TMP
+    sta	W
     lda	MSB + 1, x
     eor	#$ff
-    sta	TMP + 1
+    sta	W + 1
     inx
     inx
     inx
 -
-    inc	TMP
+    inc	W
     bne	+
-    inc	TMP + 1
+    inc	W + 1
     bne	+
     rts
 +
@@ -474,34 +474,34 @@ evaluate_get_new_line
 
     ; Determines TIB_SIZE.
     lda TIB_PTR
-    sta TMP
+    sta W
     lda TIB_PTR + 1
-    sta TMP + 1
+    sta W + 1
 .findtibsizeloop
-    lda TMP + 1
+    lda W + 1
     cmp .bufend + 1
     bcc +
-    lda TMP
+    lda W
     cmp .bufend
     bcs .foundeol
 + 
     ldy #0
-    lda (TMP),y
+    lda (W),y
     cmp #K_RETURN
     beq .foundeol
 
-    inc TMP
+    inc W
     bne +
-    inc TMP + 1
+    inc W + 1
 +
     jmp .findtibsizeloop
 
 .foundeol
-    lda TMP
+    lda W
     sec
     sbc TIB_PTR
     sta TIB_SIZE
-    lda TMP + 1
+    lda W + 1
     sbc TIB_PTR + 1
     sta TIB_SIZE + 1
     rts
@@ -652,9 +652,9 @@ tmp_x
     !text	"key"
 -   lda $c6
     beq -
-    stx TMP
+    stx W
     jsr $e5b4
-    ldx TMP
+    ldx W
     ldy #0
     jmp pushya
 
@@ -800,12 +800,12 @@ GET_CHAR_FROM_TIB
     clc
     lda TIB_PTR
     adc TO_IN
-    sta TMP
+    sta W
     lda TIB_PTR + 1
     adc TO_IN + 1
-    sta TMP + 1
+    sta W + 1
     ldy #0
-    lda (TMP),y
+    lda (W),y
 
     ; pha
     ; jsr PUTCHR ; debug
@@ -866,19 +866,19 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     pha
 
     lda	MSB, x
-    sta	TMP2 + 1
+    sta	W2 + 1
     lda	LSB, x
-    sta	TMP2 ; TMP2 contains pointer to find string
+    sta	W2 ; TMP2 contains pointer to find string
 
     ldy	#0
-    lda	(TMP2), y ; get length of find string
+    lda	(W2), y ; get length of find string
     beq .find_failed
     ; store findlen
     sta	.findlen + 1
     sta	.findlen2 + 1
 
     tay
--   lda (TMP2), y
+-   lda (W2), y
     jsr CHAR_TO_LOWERCASE
     sta FIND_BUFFER-1, y
     dey
@@ -888,12 +888,12 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     ldx	_LATEST
     lda	_LATEST + 1
 .examine_word
-    sta	TMP + 1
-    stx	TMP
-    ; TMP now contains new dictionary word.
+    sta	W + 1
+    stx	W
+    ; W now contains new dictionary word.
 
     ldy	#2
-    lda	(TMP), y ; get string length of dictionary word
+    lda	(W), y ; get string length of dictionary word
     and	#STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
 .findlen
     cmp	#0
@@ -902,9 +902,9 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
 .word_not_equal
     ; no match, advance the linked list.
     ldy	#0
-    lax	(TMP), y
+    lax	(W), y
     iny
-    lda	(TMP), y
+    lda	(W), y
     ; Is word null? If not, examine it.
     bne .examine_word
 
@@ -925,7 +925,7 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     sta .strlen
 -   iny
     lda	FIND_BUFFER-3, y ; find string
-    cmp	(TMP), y ; dictionary string
+    cmp	(W), y ; dictionary string
     bne	.word_not_equal
     dec	.strlen
     beq	.word_is_equal
@@ -937,9 +937,9 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     ; return address to dictionary word
     pla
     tax
-    lda	TMP
+    lda	W
     sta	LSB, x
-    lda	TMP + 1
+    lda	W + 1
     sta	MSB, x
 
     jsr TCFA
@@ -947,11 +947,11 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     dex
 
     ldy	#2
-    lda (TMP), y
+    lda (W), y
     and #F_NO_TAIL_CALL_ELIMINATION | F_IMMED
     sta FOUND_WORD_WITH_NO_TCE
 
-    lda	(TMP), y ; a contains string length + mask
+    lda	(W), y ; a contains string length + mask
     and	#F_IMMED
     beq .not_immed
     dey
@@ -972,12 +972,12 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     !text	">cfa"
 TCFA
     lda	MSB, x
-    sta	TMP + 1
+    sta	W + 1
     lda	LSB, x
-    sta TMP
-    ; TMP contains pointer to word
+    sta W
+    ; W contains pointer to word
     ldy	#2
-    lda	(TMP), y ; a contains string length + mask
+    lda	(W), y ; a contains string length + mask
     and	#STRLEN_MASK
     clc
     adc	#3 ; offset for link + string length
@@ -996,11 +996,11 @@ TCFA
     !text	"execute"
 EXECUTE
     lda	LSB, x
-    sta TMP
+    sta W
     lda	MSB, x
-    sta	TMP + 1
+    sta	W + 1
     inx
-    jmp	(TMP)
+    jmp	(W)
 
 !src "number.a"
 
@@ -1161,24 +1161,24 @@ LITC
 
     ; load IP
     pla
-    sta TMP
+    sta W
     pla
-    sta TMP + 1
+    sta W + 1
 
-    inc TMP
+    inc W
     bne +
-    inc TMP + 1
+    inc W + 1
 +
     ; copy literal to stack
     ldy	#0
-    lda	(TMP), y
+    lda	(W), y
     sta	LSB, x
     sty	MSB, x
 
-    inc TMP
+    inc W
     bne +
-    inc TMP + 1
-+   jmp (TMP)
+    inc W + 1
++   jmp (W)
 
 ; LIT
     +BACKLINK
@@ -1189,23 +1189,23 @@ LIT
 
     ; load IP
     pla
-    sta TMP
+    sta W
     pla
-    sta TMP + 1
+    sta W + 1
 
     ; copy literal to stack
     ldy	#1
-    lda	(TMP), y
+    lda	(W), y
     sta	LSB, x
     iny
-    lda	(TMP), y
+    lda	(W), y
     sta	MSB, x
 
-    lda TMP
+    lda W
     clc
     adc #3
     sta + + 1
-    lda TMP + 1
+    lda W + 1
     adc #0
     sta + + 2
 +   jmp $1234
@@ -1339,32 +1339,32 @@ HEADER
     sta LSB,x
     jsr	WORD
 
-    ; store link in header. TMP = dst
+    ; store link in header. W = dst
     lda	HERE_LSB
-    sta	TMP
+    sta	W
     lda	HERE_MSB
-    sta	TMP + 1
+    sta	W + 1
 
     ldy	#0
     lda	_LATEST
-    sta	(TMP), y
+    sta	(W), y
 
-    inc	TMP
+    inc	W
     bne	+
-    inc	TMP + 1
+    inc	W + 1
 +
     lda	_LATEST + 1
-    sta	(TMP), y
+    sta	(W), y
 
-    inc	TMP
+    inc	W
     bne	+
-    inc	TMP + 1
+    inc	W + 1
 +
 
     ; copy length byte + string
 -   lda	WORD_BUFFER, y
     jsr CHAR_TO_LOWERCASE
-    sta	(TMP), y
+    sta	(W), y
     iny
     dec WORD_BUFFER_LENGTH
     bpl	-
@@ -1377,9 +1377,9 @@ HEADER
     
     ; update HERE
     tya
-    ldy	TMP + 1
+    ldy	W + 1
     clc
-    adc	TMP
+    adc	W
     sta	HERE_LSB
     bcc	+
     iny
@@ -1394,13 +1394,13 @@ HEADER
     !text	"c,"
 CCOMMA
     lda	HERE_LSB
-    sta	TMP
+    sta	W
     lda	HERE_MSB
-    sta	TMP + 1
+    sta	W + 1
 
     ldy	#0
     lda	LSB, x
-    sta	(TMP), y
+    sta	(W), y
 
     ; update HERE
     inc	HERE_LSB
@@ -1415,16 +1415,16 @@ CCOMMA
     !text	","
 COMMA
     lda	HERE_LSB
-    sta	TMP
+    sta	W
     lda	HERE_MSB
-    sta	TMP + 1
+    sta	W + 1
 
     ldy	#0
     lda	LSB, x
-    sta	(TMP), y
+    sta	(W), y
     iny
     lda	MSB, x
-    sta	(TMP), y
+    sta	(W), y
 
     ; update HERE
     lda	HERE_LSB
@@ -1474,13 +1474,13 @@ SEMICOLON
     !byte	9
     !text	"immediate"
     lda	_LATEST
-    sta	TMP
+    sta	W
     lda	_LATEST + 1
-    sta	TMP + 1
+    sta	W + 1
     ldy	#2
-    lda	(TMP), y
+    lda	(W), y
     ora	#F_IMMED
-    sta	(TMP), y
+    sta	(W), y
     rts
 
     !word	LINK
@@ -1488,34 +1488,34 @@ SEMICOLON
     !byte	6
     !text	"dodoes"
 
-    ; behavior pointer address => TMP
+    ; behavior pointer address => W
     pla
-    sta TMP
+    sta W
     pla
-    sta TMP + 1
+    sta W + 1
 
-    inc TMP
+    inc W
     bne +
-    inc TMP + 1
+    inc W + 1
 +
 
     ; push data pointer to param stack
     dex
-    lda TMP
+    lda W
     clc
     adc #2
     sta LSB,x
-    lda TMP + 1
+    lda W + 1
     adc #0
     sta MSB,x
 
     ldy #0
-    lda (TMP),y
-    sta TMP2
+    lda (W),y
+    sta W2
     iny
-    lda (TMP),y
-    sta TMP2 + 1
-    jmp (TMP2)
+    lda (W),y
+    sta W2 + 1
+    jmp (W2)
 
     +BACKLINK
     !byte	2 | F_NO_TAIL_CALL_ELIMINATION
@@ -1523,12 +1523,12 @@ SEMICOLON
     txa
     tsx
     ldy $103,x
-    sty TMP
+    sty W
     ldy $104,x
     tax
     dex
     sty MSB,x
-    lda TMP
+    lda W
     sta LSB,x
     rts
 
@@ -1537,19 +1537,19 @@ SEMICOLON
     !text	"r>"
 R_TO
     pla
-    sta TMP
+    sta W
     pla
-    sta TMP+1
-    inc TMP
+    sta W+1
+    inc W
     bne +
-    inc TMP+1
+    inc W+1
 +   
     dex
     pla
     sta LSB,x
     pla
     sta MSB,x
-    jmp (TMP)
+    jmp (W)
 
     +BACKLINK
     !byte	6 | F_NO_TAIL_CALL_ELIMINATION
@@ -1578,34 +1578,34 @@ WITHIN ; ( test low high -- flag )
     !text	">r"
 TO_R
     pla
-    sta TMP
+    sta W
     pla
-    sta TMP+1
-    inc TMP
+    sta W+1
+    inc W
     bne +
-    inc TMP+1
+    inc W+1
 +   
     lda MSB,x
     pha
     lda LSB,x
     pha
     inx
-    jmp (TMP)
+    jmp (W)
 
     +BACKLINK
     !byte	6
     !text	"branch"
 BRANCH
     pla
-    sta TMP
+    sta W
     pla
-    sta TMP + 1
+    sta W + 1
 
     ldy	#2
-    lda	(TMP), y
+    lda	(W), y
     sta + + 2
     dey
-    lda	(TMP), y
+    lda	(W), y
     sta + + 1
 +   jmp $1234
 
@@ -1643,14 +1643,14 @@ COLON
 
 TOGGLE_LATEST_HIDDEN
     lda	_LATEST
-    sta	TMP
+    sta	W
     lda	_LATEST + 1
-    sta TMP + 1
+    sta W + 1
 
     ldy	#2 ; skip link, point to flags
-    lda	(TMP), y
+    lda	(W), y
     eor	#F_HIDDEN ; toggle hidden flag
-    sta	(TMP), y
+    sta	(W), y
     rts
 
     +BACKLINK

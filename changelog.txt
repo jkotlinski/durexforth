@@ -290,3 +290,7 @@ Thanks to polluks for suggestions!
  * vi: stop using backup files
  * forth: added require, required
  * doc: documented assembler, sid
+
+v1.5.5
+
+ * renamed zptmp zptmp2 zptmp3 => w w2 w3

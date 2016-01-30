@@ -26,18 +26,18 @@ curlinestart @ curx @ + ;
 
 create foundeol
 clc,
-tya, zptmp adc, sp0 sta,x
+tya, w adc, sp0 sta,x
 2 bcc,
 sp1 inc,x
 ;code
 
 code print-line ( addr -- addr )
-sp0 ldy,x zptmp sty,
-sp1 ldy,x zptmp 1+ sty,
+sp0 ldy,x w sty,
+sp1 ldy,x w 1+ sty,
 0 ldy,#
 
 here
-zptmp lda,(y)
+w lda,(y)
 0 cmp,#
 foundeol -branch beq,
 e716 jsr, \ putchar
@@ -47,11 +47,11 @@ foundeol -branch beq,
 jmp,
 
 code find-next-line ( addr -- addr )
-sp0 ldy,x zptmp sty,
-sp1 ldy,x zptmp 1+ sty,
+sp0 ldy,x w sty,
+sp1 ldy,x w 1+ sty,
 0 ldy,#
 here
-zptmp lda,(y)
+w lda,(y)
 iny,
 0 cmp,#
 foundeol -branch beq,

@@ -34,53 +34,53 @@ header blitop
 0 , \ lineplot
 
 create .blitloc
-sp0 lda,x zptmp sta,
-7 and,# zptmp3 sta,
-sp1 lda,x zptmp 1+ sta,
+sp0 lda,x w sta,
+7 and,# w3 sta,
+sp1 lda,x w 1+ sta,
 
-zptmp lda, f8 and,# zptmp sta,
+w lda, f8 and,# w sta,
 
 \ * 8
-zptmp asl, zptmp 1+ rol,
-zptmp asl, zptmp 1+ rol,
-zptmp asl, zptmp 1+ rol,
+w asl, w 1+ rol,
+w asl, w 1+ rol,
+w asl, w 1+ rol,
 
-zptmp lda, zptmp2 sta,
-zptmp 1+ lda, zptmp2 1+ sta,
+w lda, w2 sta,
+w 1+ lda, w2 1+ sta,
 
 \ * 20
-zptmp asl, zptmp 1+ rol,
-zptmp asl, zptmp 1+ rol,
+w asl, w 1+ rol,
+w asl, w 1+ rol,
 
 clc,
-zptmp lda, zptmp2 adc, zptmp sta,
-zptmp 1+ lda, zptmp2 1+ adc,
-zptmp 1+ sta,
+w lda, w2 adc, w sta,
+w 1+ lda, w2 1+ adc,
+w 1+ sta,
 clc,
-zptmp lda, zptmp3 adc, zptmp sta,
-2 bcc, zptmp 1+ inc,
+w lda, w3 adc, w sta,
+2 bcc, w 1+ inc,
 
-zptmp lda, sp0 sta,x
-zptmp 1+ lda, sp1 sta,x
+w lda, sp0 sta,x
+w 1+ lda, sp1 sta,x
 
 \ ...
 
 ' mask 100/
-lda,# zptmp 1+ sta,
+lda,# w 1+ sta,
 
 clc,
 sp0 1+ lda,x 7 and,# ' mask adc,#
-zptmp sta,
-2 bcc, zptmp 1+ inc,
+w sta,
+2 bcc, w 1+ inc,
 
-\ zptmp = mask
+\ w = mask
 0 ldy,#
-zptmp lda,(y) zptmp3 sta,
+w lda,(y) w3 sta,
 
 clc,
 sp0 1+ lda,x f8 and,# sp0 adc,x sp0 sta,x
 sp1 1+ lda,x sp1 adc,x clc, a0 adc,# sp1 sta,x
-zptmp3 lda, sp0 1+ sta,x
+w3 lda, sp0 1+ sta,x
 0 lda,# sp1 1+ sta,x
 rts,
 
@@ -111,42 +111,42 @@ variable mask variable addr
 create lineplot ( -- )
 
 \ penx @ 140 <
-penx lda,# zptmp sta,
-penx 100/ lda,# zptmp 1+ sta,
-1 ldy,# zptmp lda,(y)
+penx lda,# w sta,
+penx 100/ lda,# w 1+ sta,
+1 ldy,# w lda,(y)
 +branch beq,
 1 cmp,# 1 beq, rts,
-dey, zptmp lda,(y)
+dey, w lda,(y)
 sec, 40 sbc,#
 1 bcc, rts,
 :+
 
 \ peny @ c8 <
-peny lda,# zptmp sta,
-peny 100/ lda,# zptmp 1+ sta,
-1 ldy,# zptmp lda,(y)
+peny lda,# w sta,
+peny 100/ lda,# w 1+ sta,
+1 ldy,# w lda,(y)
 1 beq, rts,
-dey, zptmp lda,(y)
+dey, w lda,(y)
 sec, c8 sbc,#
 1 bcc, rts,
 
 \ addr
 addr 100/
-lda,# zptmp 1+ sta,
-addr lda,# zptmp sta,
+lda,# w 1+ sta,
+addr lda,# w sta,
 
 \ @
 0 ldy,#
-zptmp lda,(y) zptmp2 sta, iny,
-zptmp lda,(y) zptmp2 1+ sta, dey,
+w lda,(y) w2 sta, iny,
+w lda,(y) w2 1+ sta, dey,
 
 \ c@ mask c@ or
-zptmp2 lda,(y)
+w2 lda,(y)
 here ' blitop 2+ !
 mask ora,
 
 \ addr @ c!
-zptmp2 sta,(y) rts,
+w2 sta,(y) rts,
 
 variable dx2 variable dy2
 
@@ -285,19 +285,19 @@ d ['] or then ['] blitop @ !
 \ from graphics gems
 variable stk
 create dopush
-stk lda, zptmp sta,
-stk 1+ lda, zptmp 1+ sta,
+stk lda, w sta,
+stk 1+ lda, w 1+ sta,
 
 \ dy
-0 ldy,# sp0 lda,x zptmp sta,(y)
+0 ldy,# sp0 lda,x w sta,(y)
 \ xr
-iny, sp0 1+ lda,x zptmp sta,(y)
-iny, sp1 1+ lda,x zptmp sta,(y)
+iny, sp0 1+ lda,x w sta,(y)
+iny, sp1 1+ lda,x w sta,(y)
 \ xl
-iny, sp0 2 + lda,x zptmp sta,(y)
-iny, sp1 2 + lda,x zptmp sta,(y)
+iny, sp0 2 + lda,x w sta,(y)
+iny, sp1 2 + lda,x w sta,(y)
 \ y
-iny, sp0 3 + lda,x zptmp sta,(y)
+iny, sp0 3 + lda,x w sta,(y)
 
 clc, stk lda, 6 adc,# stk sta,
 3 bcc, stk 1+ inc, rts,
@@ -314,22 +314,22 @@ variable x1 variable x2
 
 code spop ( -- y )
 stk lda,
-sec, 6 sbc,# zptmp sta, stk sta,
+sec, 6 sbc,# w sta, stk sta,
 3 bcs, stk 1+ dec,
-stk 1+ lda, zptmp 1+ sta,
+stk 1+ lda, w 1+ sta,
 
 \ ff = if ffff else 1 then dy !
-0 ldy,# zptmp lda,(y)
+0 ldy,# w lda,(y)
 dy sta, dy 1+ sta,
 1 cmp,# 3 bne, dy 1+ sty,
 
 dex,
 sp1 sty,x \ msb y=0
-iny, zptmp lda,(y) x2 sta,
-iny, zptmp lda,(y) x2 1+ sta,
-iny, zptmp lda,(y) x1 sta,
-iny, zptmp lda,(y) x1 1+ sta,
-iny, zptmp lda,(y) sp0 sta,x
+iny, w lda,(y) x2 sta,
+iny, w lda,(y) x2 1+ sta,
+iny, w lda,(y) x1 sta,
+iny, w lda,(y) x1 1+ sta,
+iny, w lda,(y) sp0 sta,x
 ;code
 
 variable l
@@ -338,10 +338,10 @@ variable l
 
 create .bitblt ( mask addr --
                   mask addr )
-sp0 lda,x zptmp sta,
-sp1 lda,x zptmp 1+ sta,
-0 ldy,# zptmp lda,(y)
-sp0 1+ ora,x zptmp sta,(y)
+sp0 lda,x w sta,
+sp1 lda,x w 1+ sta,
+0 ldy,# w lda,(y)
+sp0 1+ ora,x w sta,(y)
 \ 1 penx +! swap 2/ swap 
 penx inc, 3 bne, penx 1+ inc,
 sp0 1+ lsr,x rts,
@@ -353,9 +353,9 @@ create rightend
 
 :-
 sp0 1+ lda,x 1 bne, rts,
-sp0 lda,x zptmp sta,
-sp1 lda,x zptmp 1+ sta,
-0 ldy,# zptmp lda,(y)
+sp0 lda,x w sta,
+sp1 lda,x w 1+ sta,
+0 ldy,# w lda,(y)
 sp0 1+ and,x 1 beq, rts,
 .bitblt jsr, jmp, \ recurse
 
@@ -373,13 +373,13 @@ penx lda, 40 cmp,# +branch bne,
 penx 1+ lda, 1 cmp,# +branch bne,
 rts,
 :+ :+
-sp0 lda,x zptmp sta,
-sp1 lda,x zptmp 1+ sta,
-0 ldy,# zptmp lda,(y)
+sp0 lda,x w sta,
+sp1 lda,x w 1+ sta,
+0 ldy,# w lda,(y)
 rightend -branch bne,
 
 \ ff over c!
-ff lda,# zptmp sta,(y)
+ff lda,# w sta,(y)
 \ 8 penx +!
 clc, penx lda, 8 adc,# penx sta,
 3 bcc, penx 1+ inc,
@@ -416,9 +416,9 @@ sp0 1+ lda,x +branch bne,
 \ continue bytewise
 bytewise jsr, leavel jsr, ;code
 :+
-sp0 lda,x zptmp sta,
-sp1 lda,x zptmp 1+ sta,
-0 ldy,# zptmp lda,(y)
+sp0 lda,x w sta,
+sp1 lda,x w 1+ sta,
+0 ldy,# w lda,(y)
 sp0 1+ and,x +branch beq,
 \ done
 leavel jsr, ;code
@@ -430,13 +430,13 @@ code scanl
 \ x<0?
 sp1 1+ lda,x 1 bpl, rts,
 
-addr lda, zptmp sta,
-addr 1+ lda, zptmp 1+ sta,
-0 ldy,# zptmp lda,(y)
+addr lda, w sta,
+addr 1+ lda, w 1+ sta,
+0 ldy,# w lda,(y)
 mask and, 1 beq, rts,
 
-zptmp lda,(y)
-mask ora, zptmp sta,(y)
+w lda,(y)
+mask ora, w sta,(y)
 
 mask asl, +branch bcc,
 1 lda,# mask sta,
@@ -462,9 +462,9 @@ inx, inx,
 
 :-
 \ addr @ c@ mask c@ and
-addr lda, zptmp sta,
-addr 1+ lda, zptmp 1+ sta,
-0 ldy,# zptmp lda,(y)
+addr lda, w sta,
+addr 1+ lda, w 1+ sta,
+0 ldy,# w lda,(y)
 mask and, .scanr -branch beq,
 
 \ x<=x2?

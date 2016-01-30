@@ -128,9 +128,9 @@ lda,# 100/ ldy,#
 begin ?dup while space 1- repeat ;
 
 1 value 1
-8b value zptmp
-8d value zptmp2
-9e value zptmp3
+8b value w
+8d value w2
+9e value w3
 
 ( "0 to foo" sets value foo to 0 )
 : (to) over 100/ over 2+ c! c! ;
@@ -176,13 +176,13 @@ sp1 lda,x sp1 1+ eor,x sp1 1+ sta,x
 sp0 lda,x sp0 1+ eor,x sp0 1+ sta,x
 inx, ;code
 code +! ( num addr -- ) 
-sp0 lda,x zptmp sta,
-sp1 lda,x zptmp 1+ sta,
+sp0 lda,x w sta,
+sp1 lda,x w 1+ sta,
 0 ldy,# clc,
-zptmp lda,(y) sp0 1+ adc,x 
-zptmp sta,(y) iny,
-zptmp lda,(y) sp1 1+ adc,x 
-zptmp sta,(y)
+w lda,(y) sp0 1+ adc,x 
+w sta,(y) iny,
+w lda,(y) sp1 1+ adc,x 
+w sta,(y)
 inx, inx, ;code
 
 :- dup inx, ;code

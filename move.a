@@ -1,9 +1,9 @@
 ; routines adapted from cc65
 ; original by Ullrich von Bassewitz, Christian Krueger, Greg King
 
-SRC = TMP
-DST = TMP2
-LEN = TMP3
+SRC = W
+DST = W2
+LEN = W3
 
 cmove_getparams:
 	lda	LSB, x
