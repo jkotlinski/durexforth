@@ -293,6 +293,7 @@ Thanks to polluks for suggestions!
 
 v1.5.5
 
+ * editor: renamed vi => v , removed fg
  * asm: renamed zptmp zptmp2 zptmp3 => w w2 w3
  * asm: renamed sp0 sp1 => lsb msb
  * doc: expanded assembler documentation
