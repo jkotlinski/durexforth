@@ -17,7 +17,7 @@ durexforth.crt: durexforth.prg cart.a core.a
 	@$(AS) cart.a
 	cartconv -t normal -i build/cart.bin -o durexforth.crt -n "DUREXFORTH $(TAG_DEPLOY)"
 
-durexforth.prg: durexforth.a number.a math.a move.a disk.a lowercase.a
+durexforth.prg: durexforth.a core.a number.a math.a move.a disk.a lowercase.a
 	@$(AS) durexforth.a
 
 FORTHLIST=base debug v asm gfx gfxdemo rnd sin ls turtle fractals sprite doloop sys float labels mml mmldemo sid spritedemo test testcore testcoreplus tester format require
