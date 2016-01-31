@@ -202,14 +202,6 @@ latest @ >cfa jmp,
 here latest @ >cfa 1+ (to)
 2 allot ;
 
-( fairly pointless ANS compat.. )
-: environment? 2drop 0 ;
-: cells 2* ;
-: cell+ 2+ ;
-: char+ 1+ ;
-: chars ; : align ; : aligned ;
-( ..fairly pointless ANS compat )
-
 code 0< msb lda,x 80 and,# +branch beq,
 ff lda,# :+ lsb sta,x msb sta,x ;code
 
@@ -233,10 +225,6 @@ um/mod
 r> 0< if swap negate swap then ;
 
 ( from FIG UK... )
-: sm/rem 
-2dup xor >r over >r abs >r dabs
-r> um/mod swap r> ?negate
-swap r> ?negate ;
 : /mod >r s>d r> fm/mod ;
 : / /mod nip ;
 : mod /mod drop ;

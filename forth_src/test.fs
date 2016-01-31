@@ -21,6 +21,7 @@ s" spritedemo" included
 latest ! to here
 depth 0= assert
 
+s" compat" included
 s" tester" included
 s" testcore" included
 s" testcoreplus" included
