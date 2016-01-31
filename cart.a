@@ -17,37 +17,8 @@ coldstart
      cli
  
 warmstart
-    lda #<durexforth_bin
-    sta $8b
-    lda #>durexforth_bin
-    sta $8c
-    lda #8
-    sta $8e
-    ldy #0
-    sty $8d
-.startcpy
-    lda ($8b),y
-    sta ($8d),y
-    inc $8b
-    bne x
-    inc $8c
-    lda $8c
-    cmp #$c0
-    beq done
-x
-    inc $8d
-    bne .startcpy
-    inc $8e
-    jmp .startcpy
-
-done
-    jmp $800
-
-durexforth_bin
-    !pseudopc $800 {
 CART_MODE = 1
     !src "core.a"
-    }
  
 * = $9fff                     ; fill up to -$9fff (or $bfff if 16K)
      !byte 0
