@@ -21,12 +21,11 @@ warmstart
     sta $8b
     lda #>durexforth_bin
     sta $8c
-    lda #$d
-    sta $8d
     lda #8
     sta $8e
     ldy #0
-loop
+    sty $8d
+.startcpy
     lda ($8b),y
     sta ($8d),y
     inc $8b
@@ -37,15 +36,18 @@ loop
     beq done
 x
     inc $8d
-    bne loop
+    bne .startcpy
     inc $8e
-    jmp loop
+    jmp .startcpy
 
 done
-    jmp $80d
+    jmp $800
 
 durexforth_bin
-     !bin "durexforth.prg",,$e
+    !pseudopc $800 {
+CART_MODE = 1
+    !src "core.a"
+    }
  
 * = $9fff                     ; fill up to -$9fff (or $bfff if 16K)
      !byte 0

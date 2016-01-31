@@ -13,7 +13,7 @@ deploy: durexforth.d64 durexforth.crt
 	cp durexforth.crt deploy/durexforth-$(TAG_DEPLOY).crt
 	cp docs/durexforth.pdf deploy/durexforth-$(TAG_DEPLOY).pdf
 
-durexforth.crt: durexforth.prg
+durexforth.crt: durexforth.prg cart.a
 	@$(AS) cart.a
 	cartconv -t normal -i build/cart.bin -o durexforth.crt -n "DUREXFORTH $(TAG_DEPLOY)"
 
