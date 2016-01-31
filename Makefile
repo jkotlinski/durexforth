@@ -3,15 +3,19 @@ AS = acme
 TAG = `git describe --tags --abbrev=0 || svnversion --no-newline`
 TAG_DEPLOY = `git describe --tags --abbrev=0 | tr . _`
 
-all:	durexforth.d64
+all:	durexforth.d64 durexforth.crt
 
-deploy: durexforth.d64
+deploy: durexforth.d64 durexforth.crt
 	$(MAKE) -C docs
 	rm -rf deploy
 	mkdir deploy
 	cp durexforth.d64 deploy/durexforth-$(TAG_DEPLOY).d64
+	cp durexforth.crt deploy/durexforth-$(TAG_DEPLOY).crt
 	cp docs/durexforth.pdf deploy/durexforth-$(TAG_DEPLOY).pdf
-	x64 deploy/durexforth-$(TAG_DEPLOY).d64
+
+durexforth.crt: durexforth.prg
+	@$(AS) cart.a
+	cartconv -t normal -i build/cart.bin -o durexforth.crt -n "DUREXFORTH $(TAG_DEPLOY)"
 
 durexforth.prg: durexforth.a number.a math.a move.a disk.a lowercase.a
 	@$(AS) durexforth.a

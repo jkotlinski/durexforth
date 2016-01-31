@@ -1,6 +1,6 @@
 !cpu 6510
 !ct raw
-!to "cart.bin", plain	; set output file and format
+!to "build/cart.bin", plain	; set output file and format
 	
 * = $8000
      !word coldstart            ; coldstart vector
@@ -45,7 +45,7 @@ done
     jmp $80d
 
 durexforth_bin
-     !bin "durexforth",,$e
+     !bin "durexforth.prg",,$e
  
-* = $bfff                     ; fill up to -$9fff (or $bfff if 16K)
+* = $9fff                     ; fill up to -$9fff (or $bfff if 16K)
      !byte 0
