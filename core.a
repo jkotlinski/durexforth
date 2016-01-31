@@ -20,12 +20,14 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
+; ACME assembler
+
 F_IMMED = $80
 F_HIDDEN = $40
 F_NO_TAIL_CALL_ELIMINATION = $20 ; when set, skips tailcall elimination
 STRLEN_MASK = $1f
 
-TIB_BASIC_GETLINE = $200
+TIB = $200
 
 ; zeropage
 X_INIT = 0
@@ -75,11 +77,7 @@ C_YELLOW = 7
     sta	$d018
 
 _START = * + 1
-!if CART_MODE = 0 {
     jsr load_base
-} else {
-    jsr ABORT
-}
     ; fall through.
 
 restore_handler
@@ -732,43 +730,32 @@ READ_EOF = * + 1
     sty TIB_SIZE
     sty TIB_SIZE + 1
 
-    lda #<TIB_BASIC_GETLINE
+    lda #<TIB
     sta TIB_PTR
-    lda #>TIB_BASIC_GETLINE
+    lda #>TIB
     sta TIB_PTR + 1
 
     lda SOURCE_ID_LSB
-    beq .basic_getline
+    beq .getLineFromConsole
     lda SOURCE_ID_MSB
     beq	.get_from_disk
 
-.basic_getline
-    ; BASIC getline.
-    txa
-    pha
-    lda 1
-    pha
-    ora #3 ; Makes sure basic is switched in.
-    sta 1
-    jsr $a560 ; Input line into TIB_BASIC_GETLINE.
-    pla
-    sta 1
-    pla
-    tax
-
-    ; Set TIB_SIZE to number of chars fetched.
-    ldy #0
--   lda TIB_BASIC_GETLINE,y
-    beq .done
-    cmp #(K_SPACE+$80)
-    bne +
-    lda #K_SPACE
-    sta TIB_BASIC_GETLINE,y
-+
-    iny
+.getLineFromConsole
+    stx tmp_x
+    ldx #0
+-   jsr $e112 ; input char
+    cmp #$d
+    beq .gotReturn
+    sta TIB,x
+    cpx #$58
+    beq -
+    inx
     jmp -
-.done
-    sty TIB_SIZE
+.gotReturn
+    jsr PUTCHR
+    ; Set TIB_SIZE to number of chars fetched.
+    stx TIB_SIZE
+    ldx tmp_x
     rts
 
 .get_from_disk
@@ -776,7 +763,7 @@ READ_EOF = * + 1
     cmp #K_RETURN
     beq +
     ldy TIB_SIZE
-    sta TIB_BASIC_GETLINE,y
+    sta TIB,y
     inc TIB_SIZE
     jmp .get_from_disk
 +
