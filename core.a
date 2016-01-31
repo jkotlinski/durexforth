@@ -78,7 +78,7 @@ _START = * + 1
 !if CART_MODE = 0 {
     jsr load_base
 } else {
-    jsr QUIT
+    jsr ABORT
 }
     ; fall through.
 
