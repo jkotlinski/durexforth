@@ -77,7 +77,11 @@ C_YELLOW = 7
     sta	$d018
 
 _START = * + 1
+!if CART_MODE = 1 {
+    jsr ABORT
+} else {
     jsr load_base
+}
     ; fall through.
 
 restore_handler
@@ -1738,6 +1742,7 @@ _LATEST
 
 ; ALL CONTENTS BELOW LATEST WILL BE OVERWRITTEN!!!
 
+!if CART_MODE = 0 {
 load_base
     lda #<QUIT
     sta _START
@@ -1757,4 +1762,5 @@ load_base
 basename
 !text	"base"
 basename_end
+}
 

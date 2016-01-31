@@ -25,4 +25,9 @@
 !cpu 6510
 !to "durexforth.prg", cbm	; set output file and format
 
+* = $801
+
+!byte $b, $08, $a, 0, $9E, $32, $30, $36, $31, 0, 0, 0 ; basic header
+
+CART_MODE = 0
 !src "core.a"
