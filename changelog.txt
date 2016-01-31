@@ -297,3 +297,4 @@ v1.5.5
  * asm: renamed zptmp zptmp2 zptmp3 => w w2 w3
  * asm: renamed sp0 sp1 => lsb msb
  * doc: expanded assembler documentation
+ * forth: dropped all usage of BASIC (including float module)
