@@ -5,6 +5,7 @@ here latest @
 
 .( gfxdemo )
 a fakekeys \ skips demos
+s" gfx" included
 s" gfxdemo" included
 
 .( fractals )

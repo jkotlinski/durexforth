@@ -279,7 +279,6 @@ marker modules
 .( sys..) s" sys" included
 .( debug..) s" debug" included
 .( ls..) s" ls" included
-.( gfx..) s" gfx" included
 .( v..) s" v" included
 .( require..) s" require" included
 
