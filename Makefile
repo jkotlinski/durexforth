@@ -3,21 +3,22 @@ AS = acme
 TAG = `git describe --tags --abbrev=0 || svnversion --no-newline`
 TAG_DEPLOY = `git describe --tags --abbrev=0 | tr . _`
 
-all:	durexforth.d64 durexforth.crt
+all:	durexforth.d64
 
-deploy: durexforth.d64 durexforth.crt
-	$(MAKE) -C docs
+deploy: durexforth.d64 cart.a
 	rm -rf deploy
 	mkdir deploy
-	cp durexforth.d64 deploy/durexforth-$(TAG_DEPLOY).d64
-	cp durexforth.crt deploy/durexforth-$(TAG_DEPLOY).crt
+	$(MAKE) -C docs
 	cp docs/durexforth.pdf deploy/durexforth-$(TAG_DEPLOY).pdf
-
-durexforth.crt: durexforth.prg cart.a core.a
+	cp durexforth.d64 deploy/durexforth-$(TAG_DEPLOY).d64
+	x64 deploy/durexforth-$(TAG_DEPLOY).d64
+	# make cartridge
+	c1541 -attach deploy/durexforth-$(TAG_DEPLOY).d64 -read durexforth
+	mv durexforth build/durexforth
 	@$(AS) cart.a
-	cartconv -t normal -i build/cart.bin -o durexforth.crt -n "DUREXFORTH $(TAG_DEPLOY)"
+	cartconv -t normal -i build/cart.bin -o deploy/durexforth-$(TAG_DEPLOY).crt -n "DUREXFORTH $(TAG_DEPLOY)"
 
-durexforth.prg: durexforth.a core.a number.a math.a move.a disk.a lowercase.a
+durexforth.prg: durexforth.a number.a math.a move.a disk.a lowercase.a
 	@$(AS) durexforth.a
 
 FORTHLIST=base debug v asm gfx gfxdemo rnd sin ls turtle fractals sprite doloop sys labels mml mmldemo sid spritedemo test testcore testcoreplus tester format require compat

@@ -23,8 +23,9 @@ warmstart
     sta $8c
     lda #8
     sta $8e
+    lda #$d
+    sta $8d
     ldy #0
-    sty $8d
 .startcpy
     lda ($8b),y
     sta ($8d),y
@@ -32,7 +33,7 @@ warmstart
     bne x
     inc $8c
     lda $8c
-    cmp #$a0
+    cmp #$c0
     beq done
 x
     inc $8d
@@ -41,13 +42,11 @@ x
     jmp .startcpy
 
 done
-    jmp $800
+    ldx #0
+    jmp $80d
 
 durexforth_bin
-    !pseudopc $800 {
-CART_MODE = 1
-    !src "core.a"
-	}
+    !binary "build/durexforth",,$e
  
-* = $9fff                     ; fill up to -$9fff (or $bfff if 16K)
+* = $bfff                     ; fill up to -$9fff (or $bfff if 16K)
      !byte 0
