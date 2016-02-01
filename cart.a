@@ -29,15 +29,13 @@ warmstart
 .startcpy
     lda ($8b),y
     sta ($8d),y
-    inc $8b
-    bne x
+    iny
+    bne .startcpy
     inc $8c
     lda $8c
     cmp #$c0
     beq done
 x
-    inc $8d
-    bne .startcpy
     inc $8e
     jmp .startcpy
 
