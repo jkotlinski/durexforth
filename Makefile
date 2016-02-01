@@ -1,6 +1,7 @@
 C1541   = c1541
 AS = acme
 TAG = `git describe --tags --abbrev=0 || svnversion --no-newline`
+TAG_DEPLOY_DOT = `git describe --tags --abbrev=0`
 TAG_DEPLOY = `git describe --tags --abbrev=0 | tr . _`
 
 all:	durexforth.d64
@@ -16,7 +17,7 @@ deploy: durexforth.d64 cart.a
 	c1541 -attach deploy/durexforth-$(TAG_DEPLOY).d64 -read durexforth
 	mv durexforth build/durexforth
 	@$(AS) cart.a
-	cartconv -t normal -i build/cart.bin -o deploy/durexforth-$(TAG_DEPLOY).crt -n "DUREXFORTH $(TAG_DEPLOY)"
+	cartconv -t normal -i build/cart.bin -o deploy/durexforth-$(TAG_DEPLOY).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
 
 durexforth.prg: durexforth.a number.a math.a move.a disk.a lowercase.a
 	@$(AS) durexforth.a
