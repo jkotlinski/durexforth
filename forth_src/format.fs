@@ -1,42 +1,21 @@
 variable end
 : <# here end ! ;
 : #> 2drop here end @ over - ;
-: ins \ reserve space for char at start
+: hold 
+\ reserve space for char at start
 here dup 1+ end @ here - move
-1 end +! ;
-: hold ins here c! ;
+1 end +!  
+here c! ;
 : sign 0< if '-' hold then ;
 : ud/mod \ from Gforth
->r 0 r@ um/mod r> swap >r
-um/mod r> ;
+>r 0 r@ um/mod r> swap >r um/mod r> ;
 : # base @ ud/mod rot 
 dup a < if 7 - then 37 + hold ;
 : #s # begin 2dup or while # repeat ;
-: pet# ( char -- num )
-7f and dup \ lowercase
-':' < if '0' else '7' then - ;
-: digit? ( char -- flag )
-pet# dup 0< 0= swap base @ < and ;
 
 : u. 0 <# #s #> type space ;
 : . dup abs 0 <# #s rot sign #> 
 type space ;
-
-code d+ ( d1 d2 -- d3 )
-clc,
-lsb 1+ lda,x lsb 3 + adc,x lsb 3 + sta,x
-msb 1+ lda,x msb 3 + adc,x msb 3 + sta,x
-lsb lda,x lsb 2+ adc,x lsb 2+ sta,x
-msb lda,x msb 2+ adc,x msb 2+ sta,x
-inx, inx, ;code
-: accumulate ( +d0 addr digit - +d1 addr )
-swap >r swap base @ um* drop
-rot base @ um* d+ r> ;
-
-: >number ( ud addr u -- ud addr u )
-begin over c@ digit? over and while
->r dup c@ pet# accumulate
-1+ r> 1- repeat ;
 
 : accept ( addr u -- u )
 refill source dup >in !
