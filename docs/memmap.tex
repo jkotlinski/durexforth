@@ -7,8 +7,18 @@
 \item[\$8d - \$8e] w2 (work area for code words).
 \item[\$9e - \$9f] w3 (work area for code words).
 \item[\ldots]
+\item[\$100 - \$1ff] Return stack.
+\item[\$200 - \$258] Text input buffer.
+\item[\ldots]
 \item[\$801 - \texttt{here}] Forth Kernel followed by dictionary.
 \item[\ldots]
-\item[\texttt{bufstart} - \texttt{eof}] Editor space. Default \texttt{bufstart} is \$7000.
+\item[\texttt{bufstart} - \texttt{eof}] Editor text buffer. Grows upwards as needed. Default \texttt{bufstart} is \$7000.
+\item[\ldots]
+\item[\$a000 - \$bfff] Upper half of cartridge ROM (if inserted).
+\item[\$c000 - \$cbff] Free RAM.
+\item[\$cc00 - \$cfff] Hi-res graphics colors.
+\item[\$d000 - \$dfff] I/O area. 
+\item[\$e000 - \$ffff] Kernal / hi-res graphics bitmap.
+
 \end{description}
 
