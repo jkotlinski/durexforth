@@ -1,6 +1,11 @@
 a000 value bmpbase
 8c00 value colbase
 
+code kernal-in
+36 lda,# 1 sta, cli, ;code
+code kernal-out
+sei, 35 lda,# 1 sta, ;code
+
 code hires 
 bb lda,# d011 sta, \ enable bitmap mode
 15 lda,# dd00 sta, \ vic bank 2
@@ -95,7 +100,9 @@ over 13f > over c7 > or
 if 2drop else doplot then ;
 
 : plot ( x y -- )
-2dup peny ! penx ! chkplot ;
+kernal-out
+2dup peny ! penx ! chkplot 
+kernal-in ;
 
 : peek ( x y -- b )
 blitloc c@ and ;
@@ -221,6 +228,7 @@ penx 1+ lda, msb 1+ cmp,x 1 @@ bne,
 inx, inx, ;code
 
 : line ( x y -- )
+kernal-out
 2dup peny @ - abs dy2 !
 penx @ - abs dx2 !
 2dup
@@ -231,7 +239,7 @@ dy2 @ negate dy2 !
 
 penx @ peny @ blitloc addr ! mask !
 
-doline ;
+doline kernal-in ;
 
 \ --- circle
 
@@ -256,6 +264,7 @@ swap plot4 swap
 then ;
 
 : circle ( cx cy r -- )
+kernal-out
 dup negate err !
 swap to cy
 swap to cx
@@ -270,7 +279,7 @@ over negate err +!
 swap 1- swap
 over negate err +!
 then
-repeat 2drop ;
+repeat 2drop kernal-in ;
 
 : erase if
 4d ['] xor else
@@ -485,6 +494,7 @@ jmp, \ recurse
 if 2drop exit then
 2dup peek if 2drop exit then
 
+kernal-out
 here stk !
 \ push y x x 1
 2dup swap dup 1 spush
@@ -532,20 +542,22 @@ swap 1+ swap
 \ y x y
 over x2 @ > until
 
-2drop drop repeat ; 
+2drop drop repeat kernal-in ; 
 
 : text ( col row str strlen -- )
+kernal-out
 \ addr=dst
 rot 140 * addr !
 rot 8 * bmpbase + addr +!
 \ disable interrupt,enable char rom
-1 c@ dup >r fb and 1 sei c!
+1 c@ dup >r fb and 1 c!
 begin ?dup while
 swap dup c@ 8 * d800 + \ strlen str ch
 addr @ 8 move
 1+ swap 8 addr +! 1- repeat
-r> 1 c! cli drop ;
+r> 1 c! drop kernal-in ;
 
 : drawchar ( col row srcaddr -- )
+kernal-out
 swap 140 * rot 8 * + bmpbase +
-8 move ;
+8 move kernal-in ;
