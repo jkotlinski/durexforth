@@ -1,5 +1,5 @@
-a000 value bmpbase
-8c00 value colbase
+e000 value bmpbase
+cc00 value colbase
 
 code kernal-in
 36 lda,# 1 sta, cli, ;code
@@ -8,7 +8,7 @@ sei, 35 lda,# 1 sta, ;code
 
 code hires 
 bb lda,# d011 sta, \ enable bitmap mode
-15 lda,# dd00 sta, \ vic bank 2
+14 lda,# dd00 sta, \ vic bank 2
 38 lda,# d018 sta,
 ;code
 
@@ -82,7 +82,7 @@ w lda,(y) w3 sta,
 
 clc,
 lsb 1+ lda,x f8 and,# lsb adc,x lsb sta,x
-msb 1+ lda,x msb adc,x clc, a0 adc,# msb sta,x
+msb 1+ lda,x msb adc,x clc, e0 adc,# msb sta,x
 w3 lda, lsb 1+ sta,x
 0 lda,# msb 1+ sta,x
 rts,
@@ -492,9 +492,9 @@ jmp, \ recurse
 : paint ( x y -- )
 2dup c8 < 0= swap 140 < 0= or
 if 2drop exit then
-2dup peek if 2drop exit then
-
 kernal-out
+2dup peek if 2drop kernal-in exit then
+
 here stk !
 \ push y x x 1
 2dup swap dup 1 spush
