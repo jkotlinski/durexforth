@@ -6,6 +6,11 @@
 : char+ 1+ ;
 : chars ; : align ; : aligned ;
 
+: 2@ ( addr -- x1 x2 )
+dup 2+ @ swap @ ;
+: 2! ( x1 x2 addr -- )
+swap over ! 2+ ! ;
+
 code d+ ( d1 d2 -- d3 )
 clc,
 lsb 1+ lda,x lsb 3 + adc,x lsb 3 + sta,x

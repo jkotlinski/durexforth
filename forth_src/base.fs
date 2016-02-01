@@ -251,11 +251,6 @@ inx, lsb sty,x msb sty,x ;code
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
-: 2@ ( addr -- x1 x2 )
-dup 2+ @ swap @ ;
-: 2! ( x1 x2 addr -- )
-swap over ! 2+ ! ;
-
 : abort" 
 postpone if
 12 lda,# ffd2 jsr, \ reverse on

@@ -4,77 +4,25 @@
 
 \begin{description}
 
-\item[drop ( a -- )]
-
-Drop top of stack.
-
-\item[dup ( a -- a a )]
-
-Duplicate top of stack.
-
-\item[swap ( a b -- b a )]
-
-Swap top stack elements.
-
-\item[over ( a b -- a b a )]
-
-Make a copy of the second item and push it on top.
-
-\item[rot ( a b c -- b c a )]
-
-Rotate the third item to the top.
-
-\item[-rot ( a b c -- c a b )]
-
-rot rot
-
-\item[2drop ( a b -- )]
-
-Drop two topmost stack elements.
-
-\item[2dup ( a b -- a b a b )]
-
-Duplicate two topmost stack elements.
-
-\item[2over ( a b c d -- a b c d a b )]
-
-Copies cell pair a b to top of stack.
-
-\item[2swap ( a b c d -- c d a b )]
-
-Exchanges the top two cell pairs.
-
-\item[?dup ( a -- a a? )]
-
-Dup a if a differs from 0.
-
-\item[nip ( a b -- b )]
-
-swap drop
-
-\item[tuck ( a b -- b a b )]
-
-dup -rot
-
+\item[drop ( a -- )] Drop top of stack.
+\item[dup ( a -- a a )] Duplicate top of stack.
+\item[swap ( a b -- b a )] Swap top stack elements.
+\item[over ( a b -- a b a )] Make a copy of the second item and push it on top.
+\item[rot ( a b c -- b c a )] Rotate the third item to the top.
+\item[-rot ( a b c -- c a b )] rot rot
+\item[2drop ( a b -- )] Drop two topmost stack elements.
+\item[2dup ( a b -- a b a b )] Duplicate two topmost stack elements.
+\item[2over ( a b c d -- a b c d a b )] Copies cell pair a b to top of stack.
+\item[2swap ( a b c d -- c d a b )] Exchanges the top two cell pairs.
+\item[?dup ( a -- a a? )] Dup a if a differs from 0.
+\item[nip ( a b -- b )] swap drop
+\item[tuck ( a b -- b a b )] dup -rot
 \item[pick ( $x_u$ ... $x_1$ $x_0$ $u$ -- $x_u$ ... $x_1$ $x_0$ $x_u$ )]
-
 Pick from stack element with depth u to top of stack.
-
-\item[$>$r ( a -- )]
-
-Move value from top of parameter stack to top of return stack. 
-
-\item[r$>$ ( -- a )]
-
-Move value from top of return stack to top of parameter stack. 
-
-\item[r@ ( -- a )]
-
-Copy value from top of return stack to top of parameter stack. 
-
-\item[depth ( -- n)] 
-
-\texttt{n} is the number of single-cell values contained in the data stack before \texttt{n} was placed on the stack.
+\item[$>$r ( a -- )] Move value from top of parameter stack to top of return stack. 
+\item[r$>$ ( -- a )] Move value from top of return stack to top of parameter stack. 
+\item[r@ ( -- a )] Copy value from top of return stack to top of parameter stack. 
+\item[depth ( -- n)] \texttt{n} is the number of single-cell values contained in the data stack before \texttt{n} was placed on the stack.
 
 \item[lsb ( -- addr)] The top address of the LSB parameter stack.
 \item[msb ( -- addr)] The top address of the MSB parameter stack.
@@ -168,8 +116,6 @@ The following words use double-cell integers. On the stack, the cell containing 
 \begin{description}
 \item[! ( value address -- )] Store 16-bit value at address.  
 \item[@ ( address -- value )] Fetch 16-bit value from address.  
-\item[2@ ( address -- x1 x2 )] Fetch 32-bit value from address. x2 is stored at address, and x1 is stored at address + 2.
-\item[2! ( x1 x2 address -- )] Store 32-bit value to address. x2 is stored at address, and x1 is stored at address + 2.
 \item[c! ( value address -- )] Store 8-bit value at address.  
 \item[c@ ( address -- value )] Fetch 8-bit value from address.
 \item[fill ( addr len char -- )] Fill range [addr, len + addr) with char.
@@ -443,6 +389,8 @@ The \texttt{compat} module contains various words that are not deemed necessary 
     \item[align ( -- )] No-op
     \item[aligned ( -- )] No-op
     \item[chars ( -- )] No-op
+    \item[2@ ( address -- x1 x2 )] Fetch 32-bit value from address. x2 is stored at address, and x1 is stored at address + 2.
+    \item[2! ( x1 x2 address -- )] Store 32-bit value to address. x2 is stored at address, and x1 is stored at address + 2.
     \item[$>$number ( ud addr u -- ud addr2 u2 )] Converts the string in \texttt{addr u} to digits, using \texttt{BASE}, and adds each digit into ud after multiplying it with \texttt{BASE}. \texttt{addr2 u2} contains the part of the string that was not converted.
     \item[sm/rem ( d n -- r q )] Divide double-cell number d by n, giving the symmetric quotient q and the remainder r. Values are signed.
 
