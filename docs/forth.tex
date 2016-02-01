@@ -147,7 +147,6 @@ The following words use double-cell integers. On the stack, the cell containing 
 \item[m* ( a b -- d )] Multiply a with b, producing a double-cell value.
 \item[um* ( a b -- ud )] Multiply a with b, giving the unsigned double-cell number ud.
 \item[um/mod ( ud n -- r q )] Divide double-cell number ud by n, giving remainder r and quotient q. Values are unsigned.
-\item[sm/rem ( d n -- r q )] Divide double-cell number d by n, giving the symmetric quotient q and the remainder r. Values are signed.
 \item[fm/mod ( d n -- r q )] Divide double-cell number d by n, giving the floored quotient q and the remainder r. Values are signed.
 \end{description}
 
@@ -173,12 +172,6 @@ The following words use double-cell integers. On the stack, the cell containing 
 \item[2! ( x1 x2 address -- )] Store 32-bit value to address. x2 is stored at address, and x1 is stored at address + 2.
 \item[c! ( value address -- )] Store 8-bit value at address.  
 \item[c@ ( address -- value )] Fetch 8-bit value from address.
-\item[cell+ ( n -- n+2 )] Adds the cell size (which is 2).
-\item[cells ( n -- n*2 )] Multiplies with the cell size (which is 2).
-\item[char+ ( n -- n+1 )] Adds the char size (which is 1).
-\item[align ( -- )] No-op, required by Forth 2012 standard.
-\item[aligned ( -- )] No-op, required by Forth 2012 standard.
-\item[chars ( -- )] No-op, required by Forth 2012 standard.
 \item[fill ( addr len char -- )] Fill range [addr, len + addr) with char.
 \item[move ( src dst len -- )]
 Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to emory beginning at \texttt{dst}. 
@@ -380,8 +373,6 @@ For more info about number formatting, read Starting Forth!
 
 \begin{description}
 
-\item[$>$number ( ud addr u -- ud addr2 u2 )] Converts the string in \texttt{addr u} to digits, using \texttt{BASE}, and adds each digit into ud after multiplying it with \texttt{BASE}. \texttt{addr2 u2} contains the part of the string that was not converted.
-
 \item[$<$\#] Begins the number conversion process.
 \item[\# ( ud -- ud )] Converts one digit and puts it in the start of the output string.
 \item[s\# ( ud -- ud )] Calls \# once, and repeats until the number is zero.
@@ -428,7 +419,6 @@ forget
 \end{verbatim}
 \end{description}
 
-
 \section{Disk I/O}
 
 \begin{description}
@@ -439,6 +429,23 @@ forget
 \item[loadb ( filenameptr filenamelength dst -- )] Load binary block to dst.
 \item[saveb ( start end filenameptr filenamelength -- )] Save binary block.
 \item[device ( device\# -- )] Switches the active device. 8 to 11 are valid device\#'s.
+\end{description}
+
+\section{Compatibility}
+
+The \texttt{compat} module contains various words that are not deemed necessary for enjoyable DurexForth operation, but still must be provided to comply with the Forth 2012 core standard.
+
+\begin{description}
+    \item[environment? ( addr u -- 0 )] Environmental query.
+    \item[cell+ ( n -- n+2 )] 2+
+    \item[cells ( n -- n*2 )] 2*
+    \item[char+ ( n -- n+1 )] 1+
+    \item[align ( -- )] No-op
+    \item[aligned ( -- )] No-op
+    \item[chars ( -- )] No-op
+    \item[$>$number ( ud addr u -- ud addr2 u2 )] Converts the string in \texttt{addr u} to digits, using \texttt{BASE}, and adds each digit into ud after multiplying it with \texttt{BASE}. \texttt{addr2 u2} contains the part of the string that was not converted.
+    \item[sm/rem ( d n -- r q )] Divide double-cell number d by n, giving the symmetric quotient q and the remainder r. Values are signed.
+
 \end{description}
 
 \section{Kernel Calls}
