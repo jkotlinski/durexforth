@@ -291,7 +291,7 @@ Thanks to polluks for suggestions!
  * forth: added require, required
  * doc: documented assembler, sid
 
-v2.0.0 - cartridge support!
+v1.6.0 - cartridge support!
 
  * forth: now includes a 16 kB .crt image, for cartridge booting
  * forth: removed gfx from standard modules
