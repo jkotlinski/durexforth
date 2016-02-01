@@ -36,7 +36,7 @@ header blitop
 0 , \ doplot
 0 , \ lineplot
 
-create .blitloc
+code blitloc ( x y -- mask addr )
 lsb lda,x w sta,
 7 and,# w3 sta,
 msb lda,x w 1+ sta,
@@ -86,9 +86,6 @@ msb 1+ lda,x msb adc,x clc, e0 adc,# msb sta,x
 w3 lda, lsb 1+ sta,x
 0 lda,# msb 1+ sta,x
 rts,
-
-code blitloc ( x y -- mask addr )
-.blitloc jsr, ;code
 
 : doplot ( x y -- )
 blitloc tuck c@
@@ -414,7 +411,7 @@ lsb 2 + lda,x lsb sta,x
 msb 2 + lda,x msb sta,x
 lsb 3 + lda,x lsb 1+ sta,x
 msb 3 + lda,x msb 1+ sta,x 
-.blitloc jsr,
+' blitloc jsr,
 
 \ leftend ( x y mask addr --
 \           x y mask addr more? )
