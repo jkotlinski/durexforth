@@ -291,8 +291,9 @@ Thanks to polluks for suggestions!
  * forth: added require, required
  * doc: documented assembler, sid
 
-v1.5.5
+v2.0.0 - cartridge mode
 
+ * forth: now includes a 16 kB .crt image, for cartridge booting
  * editor: renamed vi => v , removed fg
  * asm: renamed zptmp zptmp2 zptmp3 => w w2 w3
  * asm: renamed sp0 sp1 => lsb msb
