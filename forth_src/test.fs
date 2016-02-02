@@ -32,7 +32,7 @@ hex
 c6 c@ 277 + c!
 1 c6 +! ;
 
-.( v )
+.( vi )
 \ The FIFO is only 10 bytes.
 \ Don't add more.
 'i' push d push
