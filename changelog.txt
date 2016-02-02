@@ -300,5 +300,7 @@ v1.6.0 - cartridge support!
  * forth: moved rarely used words to compat module
  * asm: renamed zptmp zptmp2 zptmp3 => w w2 w3
  * asm: renamed sp0 sp1 => lsb msb
+ * gfx: moved bitmap graphics area from $8c00-$8fff, $a000-$bfff 
+   to $cc00-$cfff, $e000-$ffff
  * doc: expanded assembler documentation
  * editor: removed fg
