@@ -14,9 +14,9 @@ coldstart
      jsr $fd50 ;Init memory. Rewrite this routine to speed up boot process.
      jsr $fd15 ;Init I/O
      jsr $ff5b ;Init video
-     cli
  
 warmstart
+    sei
     lda #<durexforth_bin
     sta $8b
     lda #>durexforth_bin
@@ -46,6 +46,7 @@ warmstart
     cmp #$c0
     bne -
 
+    cli
     ldx #0
     jmp $80d
 
