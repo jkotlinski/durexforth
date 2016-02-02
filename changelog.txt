@@ -293,8 +293,8 @@ Thanks to polluks for suggestions!
 
 v1.6.0 - cartridge support!
 
- * forth: now available a 16 kB cartridge image. the cartridge has
-   the same functionality as the disk version, but boots faster.
+ * forth: now available as a 16 kB cartridge image. the cartridge 
+   has the same functionality as the disk version, but boots faster.
  * forth: removed gfx from standard modules
  * forth: dropped all usage of BASIC (including float module)
  * forth: moved rarely used words to compat module
