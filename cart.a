@@ -26,20 +26,17 @@ warmstart
     lda #$d
     sta $8d
     ldy #0
-.startcpy
+-
     lda ($8b),y
     sta ($8d),y
     iny
-    bne .startcpy
+    bne -
     inc $8c
+    inc $8e
     lda $8c
     cmp #$c0
-    beq done
-x
-    inc $8e
-    jmp .startcpy
+    bne -
 
-done
     ldx #0
     jmp $80d
 
