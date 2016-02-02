@@ -30,6 +30,15 @@ warmstart
     lda ($8b),y
     sta ($8d),y
     iny
+    lda ($8b),y
+    sta ($8d),y
+    iny
+    lda ($8b),y
+    sta ($8d),y
+    iny
+    lda ($8b),y
+    sta ($8d),y
+    iny
     bne -
     inc $8c
     inc $8e
