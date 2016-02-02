@@ -293,11 +293,12 @@ Thanks to polluks for suggestions!
 
 v1.6.0 - cartridge support!
 
- * forth: now includes a 16 kB .crt image, for cartridge booting
+ * forth: now available a 16 kB cartridge image. the cartridge has
+   the same functionality as the disk version, but boots faster.
  * forth: removed gfx from standard modules
  * forth: dropped all usage of BASIC (including float module)
- * forth: move rarely used words to compat module
- * editor: removed fg
+ * forth: moved rarely used words to compat module
  * asm: renamed zptmp zptmp2 zptmp3 => w w2 w3
  * asm: renamed sp0 sp1 => lsb msb
  * doc: expanded assembler documentation
+ * editor: removed fg
