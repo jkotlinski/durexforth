@@ -1,7 +1,7 @@
 \chapter{Editor} \label{editor}
 
-The editor is a vi clone. Launch it by entering \texttt{v foo} in the interpreter (foo being
-the file you want to edit). You may also enter \texttt{v} with no parameters on stack - in
+The editor is a vi clone. Launch it by entering \texttt{vi foo} in the interpreter (foo being
+the file you want to edit). You may also enter \texttt{vi} with no parameters on stack - in
 that case, it will create a text file named "noname" if no buffer is already open. For more info about vi style editing, see \href{http://www.vim.org}{the Vim web site}.
 
 The position of the editor buffer is controlled by the variable \texttt{bufstart}. The default address is \$7000.
@@ -34,7 +34,7 @@ Following commands enter insert mode. Insert mode allows you to insert text. It 
 
 \subsection{Saving \& Quitting}
 
-After quitting, the editor can be re-opened by entering \texttt{v}, and it will resume operations with the edit buffer preserved.
+After quitting, the editor can be re-opened by entering \texttt{vi}, and it will resume operations with the edit buffer preserved.
 
 \begin{description}
 \item[ZZ] Save and exit.

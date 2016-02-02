@@ -297,7 +297,7 @@ v1.6.0 - cartridge support!
  * forth: removed gfx from standard modules
  * forth: dropped all usage of BASIC (including float module)
  * forth: move rarely used words to compat module
- * editor: renamed vi => v , removed fg
+ * editor: removed fg
  * asm: renamed zptmp zptmp2 zptmp3 => w w2 w3
  * asm: renamed sp0 sp1 => lsb msb
  * doc: expanded assembler documentation

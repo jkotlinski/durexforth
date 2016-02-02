@@ -688,7 +688,7 @@ push-colors show-page
 depth 1- <> abort" stk"
 eof @ c@ abort" eof" again ;
 
-: v
+: vi
 lf word count dup 0= if \ no param?
 2drop eof @ if \ bring back editor
 bufstart 1- c@ abort" err" \ sentinel
