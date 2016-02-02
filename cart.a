@@ -23,6 +23,7 @@ warmstart
     sta $8c
     lda #8
     sta $8e
+    sta $ba ; last device
     lda #$d
     sta $8d
     ldy #0
