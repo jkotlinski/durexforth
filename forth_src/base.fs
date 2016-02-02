@@ -274,7 +274,7 @@ marker modules
 .( sys..) s" sys" included
 .( debug..) s" debug" included
 .( ls..) s" ls" included
-.( vi..) s" v" included
+.( vi..) s" vi" included
 .( require..) s" require" included
 
 .( save new durexforth..)
