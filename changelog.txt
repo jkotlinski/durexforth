@@ -304,3 +304,8 @@ v1.6.0 - cartridge support!
    to $cc00-$cfff, $e000-$ffff
  * doc: expanded assembler documentation
  * editor: removed fg
+
+v1.6.1
+
+ * vi: starting editor without filename now doesn't read from disk
+ * vi: :w on unnamed buffer now prints "no filename"
