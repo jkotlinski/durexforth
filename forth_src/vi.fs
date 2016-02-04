@@ -85,6 +85,8 @@ cursor-scr-pos
 dup @ 80 or
 swap c! ;
 
+: sol 0 curx ! ;
+
 : rom-kernal 37 1 c! ;
 : ram-kernal 35 1 c! ;
 
@@ -180,8 +182,6 @@ linelen dup if 1- then curx ! ;
 : rewind-cur
 curx @ 0= if bufstart editpos <> if
 cur-up eol then else cur-left then ;
-
-: sol 0 curx ! ;
 
 : is-wordstart
 editpos 1- c@ space=
