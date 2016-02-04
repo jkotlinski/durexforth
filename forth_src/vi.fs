@@ -89,21 +89,19 @@ swap c! ;
 : ram-kernal 35 1 c! ;
 
 : reset-buffer
+0 bufstart 1- c!
 bufstart 1+ eof !
 0 eof @ c! 0 curx ! 0 cury !
 lf bufstart c! ;
 
 : do-load ( addr u -- )
-rom-kernal
-bufstart 400 0 fill
-bufstart loadb
+rom-kernal bufstart loadb
 
 if \ file error?
 reset-buffer
 exit then
 
-ae @ eof !
-0 eof @ c! ;
+ae @ eof ! 0 eof @ c! ;
 
 : go-to-file-start
 0 dup curx ! cury !
@@ -700,8 +698,8 @@ then then
 
 2dup filename-len c! filename f move
 
+reset-buffer
 go-to-file-start
-?dup if do-load else 
-drop reset-buffer then
+?dup if do-load else drop then
 
 main-loop ;
