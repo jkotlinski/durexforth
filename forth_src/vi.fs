@@ -87,26 +87,19 @@ swap c! ;
 
 : rom-kernal 37 1 c! ;
 : ram-kernal 35 1 c! ;
-: init-kernal
-ram-kernal
-eaea c@ a <> if
-rom-kernal
-\ modifies kernal to change kbd prefs
-e000 dup 2000 move \ rom => ram
-\ hopefully basic is not used...
-a eaea c! \ repeat delay
-2 eb1d c! \ repeat speed
-then ;
 
-: do-load
+: reset-buffer
+bufstart 1+ eof !
+0 eof @ c! 0 curx ! 0 cury !
+lf bufstart c! ;
+
+: do-load ( addr u -- )
 rom-kernal
 bufstart 400 0 fill
 bufstart loadb
 
 if \ file error?
-bufstart 1+ eof !
-0 dup dup eof @ c! curx ! cury !
-lf bufstart c!
+reset-buffer
 exit then
 
 ae @ eof !
@@ -130,12 +123,6 @@ status-pos 18 bl fill ;
 
 : set-status ( c -- )
 clear-status status-pos c! ;
-
-: init
-init-kernal
-80 28a c! \ key repeat on
-0 bufstart 1- c! \ sentinel
-clear-status ;
 
 : push-colors
 d020 c@ d021 c@ 286 c@
@@ -686,20 +673,30 @@ push-colors show-page
 		then
 
 depth 1- <> abort" stk"
+bufstart 1- c@ abort" sof"
 eof @ c@ abort" eof" again ;
 
 : vi
+\ modifies kernal to change kbd prefs
+ram-kernal eaea @ 8ca <> if 
+rom-kernal
+e000 dup 2000 move \ rom => ram
+a eaea c! \ repeat delay
+2 eb1d c! \ repeat speed
+then
+
+80 28a c! \ key repeat on
+clear-status
+
 lf word count dup 0= if \ no param?
-2drop eof @ if \ bring back editor
-bufstart 1- c@ abort" err" \ sentinel
-init main-loop exit 
-else s" noname" then then
+eof @ if \ something in buffer?
+2drop main-loop exit \ yes - continue edit
+then then
 
-init go-to-file-start
+2dup filename-len c! filename f move
 
-\ store away filename
-2dup ( str len str len )	
-filename-len c!
-filename f move
+go-to-file-start
+?dup if do-load else 
+drop reset-buffer then
 
-do-load main-loop ;
+main-loop ;
