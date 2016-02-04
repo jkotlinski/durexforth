@@ -91,7 +91,7 @@ swap c! ;
 : reset-buffer
 0 bufstart 1- c!
 bufstart 1+ eof !
-0 eof @ c! 0 curx ! 0 cury !
+0 eof @ c! sol 0 cury !
 lf bufstart c! 
 bufstart homepos !
 bufstart curlinestart ! ;
@@ -201,7 +201,7 @@ editpos c@ space= 0= and ;
 : advance-cur
 	editpos
 	curx @ linelen 1- = linelen 0= or if
-		0 curx ! cur-down
+		sol cur-down
 	else
 		cur-right
 	then
@@ -235,7 +235,7 @@ c 0 do cur-down refresh-line loop ;
 bufstart eof @ = if exit then
 eof @ 1- find-start-of-line
 dup curlinestart ! homepos !
-0 curx !
+sol
 17 begin
 homepos @ 1- find-start-of-line homepos !
 1- dup 0=
