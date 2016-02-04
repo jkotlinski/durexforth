@@ -462,8 +462,8 @@ variable search-buf e allot
 
 : write-file 
 filename-len c@ 0= if 
-." no filename" key 
-drop exit then
+." no filename" 
+key drop exit then
 
 rom-kernal 
 page ." saving "
