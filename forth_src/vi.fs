@@ -92,7 +92,9 @@ swap c! ;
 0 bufstart 1- c!
 bufstart 1+ eof !
 0 eof @ c! 0 curx ! 0 cury !
-lf bufstart c! ;
+lf bufstart c! 
+bufstart homepos !
+bufstart curlinestart ! ;
 
 : do-load ( addr u -- )
 rom-kernal bufstart loadb
@@ -102,11 +104,6 @@ reset-buffer
 exit then
 
 ae @ eof ! 0 eof @ c! ;
-
-: go-to-file-start
-0 dup curx ! cury !
-bufstart homepos !
-bufstart curlinestart ! ;
 
 7c0 value status-pos
 
@@ -699,7 +696,6 @@ then then
 2dup filename-len c! filename f move
 
 reset-buffer
-go-to-file-start
 ?dup if do-load else drop then
 
 main-loop ;
