@@ -84,11 +84,6 @@ lf bufstart c!
 bufstart homepos !
 bufstart curlinestart ! ;
 
-: do-load ( addr u -- )
-rom-kernal bufstart loadb
-if reset-buffer exit then \ file err
-ae @ eof ! 0 eof @ c! ;
-
 7c0 value status-pos
 
 : show-page
@@ -660,6 +655,8 @@ then then
 2dup filename-len c! filename f move
 
 reset-buffer
-?dup if do-load else drop then
-
-main-loop ;
+?dup if \ load file
+rom-kernal bufstart loadb
+if reset-buffer else \ file err
+ae @ eof ! 0 eof @ c! then
+else drop then main-loop ;
