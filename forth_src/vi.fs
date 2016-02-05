@@ -219,14 +219,12 @@ until
 17 swap - dup cury ! 0 swap setcur
 1 to need-refresh ;
 
-: goto-start
-0 dup curx ! cury !
+: goto-start sol 0 cury !
 bufstart dup homepos ! curlinestart !
 1 to need-refresh ;
 
 : ins-start
-1 to ins-active
-'i' set-status ;
+1 to ins-active 'i' set-status ;
 
 : force-cur-right
 linelen if 1 curx +! then ;
