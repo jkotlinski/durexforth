@@ -440,15 +440,9 @@ key to need-refresh ;
 ?dup 0= if exit then
 filename-len c! write-file ;
 
-: colon-w
-	1 18 setcur
-	'w' emit
-	key
-	case
-	lf of write-file endof
-	'!' of save-as endof
-	endcase
-;
+: :w 1 18 setcur 'w' emit key case
+lf of write-file endof
+'!' of save-as endof endcase ;
 
 : find-handler
 	0 18 setcur
@@ -569,7 +563,7 @@ down c, ' cur-down ,
 		':' set-status
 		key 
 		case
-		'w' of colon-w endof
+		'w' of :w endof
 		'q' of ffff exit endof
 		endcase
 		clear-status
