@@ -168,15 +168,9 @@ cur-up eol then else cur-left then ;
 editpos 1- c@ space=
 editpos c@ space= 0= and ;
 
-: word-back
-	rewind-cur
-	begin
-		editpos bufstart =
-        is-wordstart or 0=
-	while
-		rewind-cur
-	repeat
-;
+: word-back rewind-cur begin
+editpos bufstart = is-wordstart or
+0= while rewind-cur repeat ;
 
 \ right, or down + sol if we're at EOL. ret 1 if we cant advance
 : advance-cur
