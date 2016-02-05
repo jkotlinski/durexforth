@@ -121,11 +121,6 @@ status-pos 18 bl fill ;
 : set-status ( c -- )
 clear-status status-pos c! ;
 
-: push-colors
-d020 c@ d021 c@ 286 c@
-2 d021 c! a d020 c! 1 286 c!
-d800 400 1 fill ;
-
 : cleanup ( bordercolor bgcolor cursorcolor -- )
 0 28a c! \ default key repeat
 286 c! d021 c! d020 c! page ;
@@ -641,7 +636,12 @@ down c, ' cur-down ,
 ;
 
 : main-loop
-push-colors show-page
+\ init colors -- border bgcol curscol
+d020 c@ d021 c@ 286 c@
+2 d021 c! a d020 c! 1 286 c!
+d800 400 1 fill
+
+show-page
 	begin
         ram-kernal
 		0 to need-refresh
