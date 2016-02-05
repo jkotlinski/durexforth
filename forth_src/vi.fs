@@ -86,11 +86,7 @@ bufstart curlinestart ! ;
 
 : do-load ( addr u -- )
 rom-kernal bufstart loadb
-
-if \ file error?
-reset-buffer
-exit then
-
+if reset-buffer exit then \ file err
 ae @ eof ! 0 eof @ c! ;
 
 7c0 value status-pos
