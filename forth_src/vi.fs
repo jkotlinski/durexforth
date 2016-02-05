@@ -221,16 +221,12 @@ bufstart dup homepos ! curlinestart !
 : ins-start
 1 to ins-active 'i' set-status ;
 
-: force-cur-right
+: force-right
 linelen if 1 curx +! then ;
 
-: append-start
-force-cur-right
-ins-start ;
+: append-start force-right ins-start ;
 
-: ins-stop
-cur-left
-0 to ins-active
+: ins-stop cur-left 0 to ins-active
 clear-status ;
 
 : show-location
@@ -287,7 +283,7 @@ then ;
 
 : del-char 
 editpos c@ eol= if exit then
-force-cur-right backspace ;
+force-right backspace ;
 
 : ins-char
 	dup lf <> linelen 26 > and if drop exit then
@@ -310,7 +306,7 @@ force-cur-right backspace ;
 
 : ins-right
 curx @ linelen 1- = if
-force-cur-right else cur-right then ;
+force-right else cur-right then ;
 
 : ins-handler
 	dup a0 = if drop bl then \ shift space => space
@@ -507,20 +503,11 @@ clip-count @ move
 ( update eof )
 clip-count @ eof +! ;
 
-: change-word
-del-word
-bl ins-char
-cur-left
-ins-start ;
+: change-word del-word bl ins-char
+cur-left ins-start ;
 
-: force-cur-down
-editpos
-cur-down
-editpos = if
-eol
-force-cur-right
-lf ins-char
-cur-down
+: force-down editpos cur-down editpos =
+if eol force-right lf ins-char cur-down
 then ;
 
 header maintable
@@ -579,8 +566,8 @@ down c, ' cur-down ,
      key 'y' = if
      yank-line
     then endof
-	'o' of force-cur-down open-line endof
-	'p' of force-cur-down paste-line endof
+	'o' of force-down open-line endof
+	'p' of force-down paste-line endof
 	'Z' of
 		key
 		case
