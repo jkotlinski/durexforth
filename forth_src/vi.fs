@@ -71,20 +71,6 @@ cury @ 28 *
 curx @ linelen min +
 400 + ( addr ) ;
 
-: hide-cursor
-cursor-scr-pos
-dup @ 7f and
-swap c! ;
-
-: show-cursor
-ins-active 0= if
-curx @ linelen dup if 1- then min 
-curx c!
-then
-cursor-scr-pos
-dup @ 80 or
-swap c! ;
-
 : sol 0 curx ! ;
 
 : rom-kernal 37 1 c! ;
@@ -649,9 +635,17 @@ show-page
 
 		depth \ stack check...
 
-		show-cursor
+		\ show cursor
+        ins-active 0= if curx @ 
+        linelen dup if 1- then min 
+        curx c! then cursor-scr-pos
+        dup @ 80 or swap c!
+
         key
-		hide-cursor
+
+        \ hide cursor
+        cursor-scr-pos dup @ 7f and
+        swap c!
 
 		ins-active if
 			ins-handler
