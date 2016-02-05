@@ -435,14 +435,14 @@ bufstart eof @
 filename filename-len c@ saveb
 key to need-refresh ;
 
-: save-as 1 to need-refresh
+: :w! 1 to need-refresh
 '!' emit filename f accept
 ?dup 0= if exit then
 filename-len c! write-file ;
 
 : :w 1 18 setcur 'w' emit key case
 lf of write-file endof
-'!' of save-as endof endcase ;
+'!' of :w! endof endcase ;
 
 : find-handler
 	0 18 setcur
