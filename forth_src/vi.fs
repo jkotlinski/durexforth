@@ -183,14 +183,9 @@ editpos bufstart = is-wordstart or
 	editpos =
 ;
 
-: word-fwd
-	advance-cur if exit then
-	begin
-        is-wordstart 0=
-	while
-		advance-cur if exit then
-	repeat
-;
+: word-fwd advance-cur if exit then
+begin is-wordstart 0= while
+advance-cur if exit then repeat ;
 
 : setcur ( x y -- )
 xr ! yr ! e50c sys ;
