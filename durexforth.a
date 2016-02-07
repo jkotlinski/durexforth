@@ -477,9 +477,10 @@ evaluate_get_new_line
     lda TIB_PTR + 1
     sta W + 1
 .findtibsizeloop
-    lda W + 1
-    cmp .bufend + 1
-    bcc +
+    lda .bufend + 1
+    cmp W + 1
+    bcc .foundeol
+    bne +
     lda W
     cmp .bufend
     bcs .foundeol
