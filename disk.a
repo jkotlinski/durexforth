@@ -331,7 +331,12 @@ INCLUDED
     ; by fast loader cartridges such as Retro Replay.
     JSR CHRIN     ; get a byte from file
     JSR CHRIN     ; get a byte from file
+
+    jsr READST
+    beq ++
+    jsr _errorchread
 ++
+
     pla
     tax
     rts

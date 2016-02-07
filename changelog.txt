@@ -308,5 +308,6 @@ v1.6.0 - cartridge support!
 v1.6.1
 
  * forth: evaluate didn't work for strings that quit on page end 
+ * forth: print error in case include fails 
  * vi: starting editor without filename now doesn't read from disk
  * vi: :w on unnamed buffer now prints "no filename"
