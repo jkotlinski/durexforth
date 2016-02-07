@@ -143,6 +143,14 @@ BL
     +VALUE	LSB
 
     +BACKLINK
+    !byte 4
+    !text	"?dup"
+    jsr ZTEST
+    beq +
+    jmp DUP
++   rts
+
+    +BACKLINK
     !byte 6
     !text	"source"
     dex
