@@ -12,9 +12,12 @@ coldstart
     stx $d016
     jsr $fda3 ;Prepare IRQ
      
+    ; init system constants ($fd50)
     lda #0
     tay
 -   sta 2,y
+    sta $200,y
+    sta $300,y
     iny
     bne -
     lda #4
