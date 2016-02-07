@@ -310,5 +310,6 @@ v1.6.1
  * forth: evaluate failed for strings that ended at page boundary
  * forth: print error in case include fails 
  * cart: made cartridge boot faster
+ * cart: use Simons' Basic cart type to make $a000-$bfff RAM
  * vi: starting editor without filename now doesn't read from disk
  * vi: :w on unnamed buffer now prints "no filename"

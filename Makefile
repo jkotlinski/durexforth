@@ -17,7 +17,7 @@ deploy: durexforth.d64 cart.a
 	c1541 -attach deploy/durexforth-$(TAG_DEPLOY).d64 -read durexforth
 	mv durexforth build/durexforth
 	@$(AS) cart.a
-	cartconv -t normal -i build/cart.bin -o deploy/durexforth-$(TAG_DEPLOY).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
+	cartconv -t simon -i build/cart.bin -o deploy/durexforth-$(TAG_DEPLOY).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
 
 durexforth.prg: durexforth.a number.a math.a move.a disk.a lowercase.a
 	@$(AS) durexforth.a

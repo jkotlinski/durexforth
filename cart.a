@@ -60,6 +60,7 @@ warmstart
 
     cli
     ldx #0
+    lda $de00 ; $a000-$bfff = RAM (Simons' basic)
     jmp $80d
 
 durexforth_bin
