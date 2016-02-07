@@ -215,6 +215,7 @@ SWAP
     !byte 4
     !text	"?dup"
 QDUP
+    jsr DUP
     jsr ZTEST
     bne DUP
     rts
