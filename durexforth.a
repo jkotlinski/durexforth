@@ -148,6 +148,7 @@ BL
     lda #0
     sta $d4 ; quote mode off
 -
+    jsr DUP
     jsr ZTEST
     bne +
     inx
