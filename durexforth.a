@@ -146,9 +146,8 @@ BL
     !byte 4
     !text	"?dup"
     jsr ZTEST
-    beq +
-    jmp DUP
-+   rts
+    bne DUP
+    rts
 
     +BACKLINK
     !byte 6
