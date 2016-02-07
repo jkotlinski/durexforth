@@ -144,10 +144,24 @@ BL
 
     +BACKLINK
     !byte 4
-    !text	"?dup"
+    !text	"type" ; ( caddr u -- )
+    lda #0
+    sta $d4 ; quote mode off
+-
     jsr ZTEST
-    bne DUP
+    bne +
+    inx
+    inx
     rts
++
+    jsr SWAP
+    jsr DUP
+    jsr FETCHBYTE
+    jsr EMIT
+    jsr ONEPLUS
+    jsr SWAP
+    jsr ONEMINUS
+    jmp -
 
     +BACKLINK
     !byte 6
@@ -195,6 +209,14 @@ SWAP
     lda	LSB + 1, x
     sta LSB, x
     sty	LSB + 1, x
+    rts
+
+    +BACKLINK
+    !byte 4
+    !text	"?dup"
+QDUP
+    jsr ZTEST
+    bne DUP
     rts
 
     +BACKLINK
