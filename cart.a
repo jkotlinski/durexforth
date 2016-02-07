@@ -8,12 +8,20 @@
      !byte $C3,$C2,$CD,$38,$30  ; "CBM80". Autostart string
  
 coldstart
-     sei
-     stx $d016
-     jsr $fda3 ;Prepare IRQ
-     jsr $fd50 ;Init memory. Rewrite this routine to speed up boot process.
-     jsr $fd15 ;Init I/O
-     jsr $ff5b ;Init video
+    sei
+    stx $d016
+    jsr $fda3 ;Prepare IRQ
+     
+    lda #0
+    tay
+-   sta 2,y
+    iny
+    bne -
+    lda #4
+    sta $288
+    
+    jsr $fd15 ;Init I/O
+    jsr $ff5b ;Init video
  
 warmstart
     sei
