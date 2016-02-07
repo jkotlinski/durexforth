@@ -145,6 +145,7 @@ BL
     +BACKLINK
     !byte 4
     !text	"type" ; ( caddr u -- )
+TYPE
     lda #0
     sta $d4 ; quote mode off
 -
@@ -167,6 +168,7 @@ BL
     +BACKLINK
     !byte 6
     !text	"source"
+SOURCE
     dex
     dex
     lda TIB_PTR
@@ -1821,6 +1823,8 @@ COMPILE_JMP
     and #$80
     ora MSB,x
     beq +
+    jsr SOURCE
+    jsr TYPE
     jmp print_err
 +   jsr SWAP
     jsr ONEPLUS

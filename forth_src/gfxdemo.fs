@@ -89,10 +89,7 @@ over 64 swap *sin 64 + line
 1- repeat 1 erase loop done 
 0 erase ;
 
-: rotsqr
-hires 16 clrcol
-8 d020 c! 1 erase
-2 0 do fa begin ?dup while
+: it
 dup dup *cos a0 +
 over dup *sin 64 + 2dup plot plot
 dup dup *sin a0 swap -
@@ -103,7 +100,13 @@ dup dup *sin a0 +
 over dup *cos 64 swap - line
 dup dup *cos a0 +
 over dup *sin 64 + line
-5 - repeat loop 0 erase lores ;
+5 - ;
+
+: rotsqr
+hires 16 clrcol
+8 d020 c! 1 erase
+2 0 do fa begin ?dup while
+it repeat loop 0 erase lores ;
 
 : seascape
 0 d020 c!

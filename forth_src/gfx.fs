@@ -482,18 +482,7 @@ clc, addr lda, 8 adc,# addr sta,
 sp0 1+ inc,x 2 bne, sp1 1+ inc,x
 jmp, \ recurse
 
-: paint ( x y -- )
-2dup c8 < 0= swap 140 < 0= or
-if 2drop exit then
-2dup peek if 2drop exit then
-
-here stk !
-\ push y x x 1
-2dup swap dup 1 spush
-\ push y+1 x x -1
-1+ swap dup ffff spush
-
-begin here stk @ < while
+: dopaint
 spop dy @ + \ y
 
 \ left line
@@ -534,7 +523,21 @@ swap 1+ swap
 \ y x y
 over x2 @ > until
 
-2drop drop repeat ; 
+2drop drop ;
+
+: paint ( x y -- )
+2dup c8 < 0= swap 140 < 0= or
+if 2drop exit then
+2dup peek if 2drop exit then
+
+here stk !
+\ push y x x 1
+2dup swap dup 1 spush
+\ push y+1 x x -1
+1+ swap dup ffff spush
+
+begin here stk @ < while
+dopaint repeat ; 
 
 : text ( col row str strlen -- )
 \ addr=dst
