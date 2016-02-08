@@ -453,7 +453,7 @@ EVALUATE
     sty SOURCE_ID_LSB
     sty SOURCE_ID_MSB
 
-.eval_loop   
+.eval_loop
     lda TIB_PTR + 1
     cmp .bufend + 1
     bcc +
@@ -484,7 +484,7 @@ evaluate_get_new_line
     lda W
     cmp .bufend
     bcs .foundeol
-+ 
++
     ldy #0
     lda (W),y
     cmp #K_RETURN
@@ -689,7 +689,7 @@ GETC
 
 GET_CHAR_BLOCKING
     stx	tmp_x
--   
+-
     jsr	CHRIN ; wastes x
     pha
     jsr	READST
@@ -725,7 +725,7 @@ READ_EOF = * + 1
     jsr CHKIN
     ldx tmp_x
     jmp RESTORE_INPUT ; exit
-+   
++
     lda SOURCE_ID_MSB
     beq +
     jsr evaluate_consume_tib
@@ -820,7 +820,7 @@ WORD
     cmp LSB, x
     beq -
     jmp .append
-    
+
 .get_char
     jsr GET_CHAR_FROM_TIB
     beq .word_end
@@ -906,7 +906,7 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     sta	LSB, x
     sta	MSB, x
     rts
-    
+
 .string_compare ; y = 2
     ; equal strlen, now compare strings...
 .findlen2
@@ -921,7 +921,7 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     jmp	-
 
 .strlen !byte 0
-    
+
 .word_is_equal
     ; return address to dictionary word
     pla
@@ -948,7 +948,7 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     dey
     sty MSB, x ; 0
     rts
-    
+
 .not_immed
     lda #$ff
     sta LSB, x
@@ -1077,7 +1077,7 @@ INTERPRET
     ; yep, it's a number...
 .was_number
     lda	STATE ; are we compiling?
-    bne	+ 
+    bne	+
     rts
 +   ; yes, compile the number
     sta curr_word_no_tail_call_elimination
@@ -1207,7 +1207,7 @@ quit_reset
     sta $318
     lda	#>restore_handler
     sta $319
-    cli 
+    cli
 
     ; lores
     lda #$9b
@@ -1259,7 +1259,7 @@ QUIT
     ; resets the return stack
     txa
     ldx #$ff
-    txs     
+    txs
     tax
 interpret_loop
     jsr REFILL
@@ -1302,7 +1302,7 @@ EXIT
     sbc #0
     sta .instr_ptr + 1
     lda #OP_JMP
-.instr_ptr = * + 1    
+.instr_ptr = * + 1
     sta $1234
     rts
 +
@@ -1366,7 +1366,7 @@ HEADER
     sta	_LATEST
     lda	HERE_MSB
     sta	_LATEST + 1
-    
+
     ; update HERE
     tya
     ldy	W + 1
@@ -1535,7 +1535,7 @@ R_TO
     inc W
     bne +
     inc W+1
-+   
++
     dex
     pla
     sta LSB,x
@@ -1576,7 +1576,7 @@ TO_R
     inc W
     bne +
     inc W+1
-+   
++
     lda MSB,x
     pha
     lda LSB,x
@@ -1620,7 +1620,7 @@ ZBRANCH
     adc #0
     sta + + 2
 +   jmp $1234
-    
+
 ; COLON
     +BACKLINK
     !byte	1 | F_NO_TAIL_CALL_ELIMINATION
