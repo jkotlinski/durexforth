@@ -61,9 +61,9 @@ while emit repeat drop ; immediate
 .( compile base..)
 
 : case 0 ; immediate
+: (of) over = ;
 : of
-postpone over
-postpone =
+postpone (of)
 postpone if
 postpone drop ; immediate
 : endof postpone else ; immediate
