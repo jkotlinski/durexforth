@@ -16,7 +16,7 @@ rot 2/ 2/ 2/ rot blkcol ;
 dup 140 < while
 dup 0 plot 96 c8 line
 dup c7 plot 96 0 line
-a + repeat drop ; 
+a + repeat drop ;
 hires lineweb key drop lores
 
 .( rndline..)
@@ -25,7 +25,7 @@ hires 10 clrcol
 80 begin ?dup while
 rnd 0 ab um/mod nip 20 -
 rnd 0 f8 um/mod nip 20 - line
-1- repeat ; 
+1- repeat ;
 hires rndline key drop lores
 
 .( radiant..)
@@ -37,7 +37,7 @@ hires d0 clrcol
 12c over *cos 32 +
 over 12c swap *sin 64 +
 line
-1- repeat ; 
+1- repeat ;
 hires radiant key drop lores
 
 .( diamond..)
@@ -83,7 +83,7 @@ then 2drop ;
 : 2reccirc
 hires 7 clrcol
 64 yd !
-a0 50 2reccircgo ; 
+a0 50 2reccircgo ;
 hires 2reccirc key drop lores
 
 .( erasecirc..)
@@ -100,7 +100,7 @@ a0 64 plot
 dup 64 swap *cos a0 +
 over 64 swap *sin 64 + line
 1- repeat 1 erase loop
-0 erase ; 
+0 erase ;
 hires erasecirc key drop lores
 
 .( rotsqr..)
@@ -118,7 +118,7 @@ dup dup *sin a0 +
 over dup *cos 64 swap - line
 dup dup *cos a0 +
 over dup *sin 64 + line
-5 - repeat loop 0 erase ; 
+5 - repeat loop 0 erase ;
 hires rotsqr key drop lores
 
 .( seascape..)
@@ -145,7 +145,7 @@ c4 88 do j i 6 blkcol 8 +loop
 
 119 e8 do 81 50 do
 j i 7e blkcol
-8 +loop 8 +loop ; 
+8 +loop 8 +loop ;
 hires seascape key drop lores
 
 .( jungle..)
@@ -230,7 +230,7 @@ jcol jcol jcol jcol jcol
 jcol jcol jcol jcol jcol
 exit then
 line? @ if line else plot then
-then again ; 
+then again ;
 hires jungle key drop lores
 
 .( colorchart..)
@@ -285,7 +285,7 @@ a 13 s" 15" text
 rot d + 8 * rot 4 + 8 * rot blkcol
 2dup swap d + swap 4 + sqr drawchar
 1+ repeat drop
-1+ repeat drop ; 
+1+ repeat drop ;
 hires colorchart key drop lores
 
 d020 c!
