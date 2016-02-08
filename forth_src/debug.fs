@@ -28,6 +28,9 @@ endof
 ['] (loop) of
     ." (loop) " 2+
 endof
+['] (of) of
+    ." (of) " 2+
+endof
 ['] branch of
     ." branch( "
     2+ dup @ .
@@ -54,7 +57,7 @@ endcase
 		nip
 		dup @
 	repeat
-	
+
     rot drop \ eow sow
 
 	':' emit space dup id.
@@ -65,7 +68,7 @@ endcase
 	begin
 		2dup >
 	while
-		dup c@ case 
+		dup c@ case
         20 of see-jsr endof
         4c of ." jp( " see-jsr ." ) " endof
         e8 of 1+ ." drop " endof \ inx
@@ -85,7 +88,7 @@ base @ swap hex
 dup 8 0 do dup c@ 0 <# # # #> type
 space 1+ loop drop
 8 0 do dup c@
-dup 7f and 20 < if drop '.' then 
+dup 7f and 20 < if drop '.' then
 emit 1+ loop cr loop
 last-dump ! base ! ;
 
