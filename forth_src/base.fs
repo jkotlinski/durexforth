@@ -5,18 +5,18 @@
 : jmp, 4c c, ;
 : ['] ' [ ' literal compile, ]
 ; immediate
-: [char] char [ ' literal compile, ] 
+: [char] char [ ' literal compile, ]
 ; immediate
 : else jmp, here 0 ,
 swap here swap ! ; immediate
 : postpone
 bl word find -1 = if
-[ ' literal compile, ] ['] compile, 
+[ ' literal compile, ] ['] compile,
 then compile, ; immediate
 : until
 postpone 0branch , ; immediate
 : again jmp, , ; immediate
-: recurse latest @ >cfa compile, 
+: recurse latest @ >cfa compile,
 ; immediate
 : (
 begin getc dup
@@ -54,7 +54,7 @@ repeat drop ;
 \ s" 'a' emit  " evaluate
 
 
-: ." postpone s" postpone type 
+: ." postpone s" postpone type
 ; immediate
 : .( begin getc dup ')' <>
 while emit repeat drop ; immediate
@@ -64,15 +64,15 @@ while emit repeat drop ; immediate
 : of
 postpone over
 postpone =
-postpone if 
+postpone if
 postpone drop ; immediate
 : endof postpone else ; immediate
-: endcase 
+: endcase
 postpone drop
-begin ?dup while postpone then 
+begin ?dup while postpone then
 repeat ; immediate
 
-( gets pointer to first data field, 
+( gets pointer to first data field,
 i.e., skips the first jsr )
 : >dfa >cfa 1+ 2+ ;
 
@@ -90,7 +90,7 @@ header postpone dodoes literal , ;
 s" asm" included
 
 code m+ ( d1 u -- d2 )
-0 ldy,# msb lda,x +branch bpl, dey, 
+0 ldy,# msb lda,x +branch bpl, dey,
 :+ clc,
 lsb lda,x lsb 2+ adc,x lsb 2+ sta,x
 msb lda,x msb 2+ adc,x msb 2+ sta,x
@@ -99,16 +99,16 @@ tya, msb 1+ adc,x msb 1+ sta,x
 inx, ;code
 
 code rot ( a b c -- b c a )
-msb 2+ ldy,x msb 1+ lda,x 
+msb 2+ ldy,x msb 1+ lda,x
 msb 2+ sta,x msb    lda,x
 msb 1+ sta,x msb    sty,x
-lsb 2+ ldy,x lsb 1+ lda,x 
+lsb 2+ ldy,x lsb 1+ lda,x
 lsb 2+ sta,x lsb    lda,x
 lsb 1+ sta,x lsb    sty,x ;code
 : -rot rot rot ;
 
 code 100/
-msb lda,x lsb sta,x 
+msb lda,x lsb sta,x
 0 lda,#   msb sta,x ;code
 
 ( creates value that is fast to read
@@ -119,7 +119,7 @@ msb lda,x lsb sta,x
    foo . \ prints 1 )
 : value ( n -- )
 dup code
-lda,# 100/ ldy,# 
+lda,# 100/ ldy,#
 ['] pushya jmp, ;
 : constant value ;
 
@@ -142,7 +142,7 @@ then (to) ; immediate
 : hex 10 base ! ;
 : decimal a base ! ;
 
-: 2drop ( a b -- ) 
+: 2drop ( a b -- )
 postpone drop postpone drop ; immediate
 code 2over ( a b c d -- a b c d a b )
 dex,
@@ -164,7 +164,7 @@ msb 1+ sty,x msb 3 + sta,x ;code
 : save-forth ( strptr strlen -- )
 801 -rot here -rot saveb ;
 
-code 2/ 
+code 2/
 msb lda,x 80 cmp,# msb ror,x lsb ror,x
 ;code
 code or
@@ -175,13 +175,13 @@ code xor
 msb lda,x msb 1+ eor,x msb 1+ sta,x
 lsb lda,x lsb 1+ eor,x lsb 1+ sta,x
 inx, ;code
-code +! ( num addr -- ) 
+code +! ( num addr -- )
 lsb lda,x w sta,
 msb lda,x w 1+ sta,
 0 ldy,# clc,
-w lda,(y) lsb 1+ adc,x 
+w lda,(y) lsb 1+ adc,x
 w sta,(y) iny,
-w lda,(y) msb 1+ adc,x 
+w lda,(y) msb 1+ adc,x
 w sta,(y)
 inx, inx, ;code
 
@@ -189,15 +189,15 @@ inx, inx, ;code
 code lshift ( x1 u -- x2 )
 lsb dec,x -branch bmi,
 lsb 1+ asl,x msb 1+ rol,x
-latest @ >cfa jmp, 
+latest @ >cfa jmp,
 code rshift ( x1 u -- x2 )
 lsb dec,x -branch bmi,
 msb 1+ lsr,x lsb 1+ ror,x
-latest @ >cfa jmp, 
+latest @ >cfa jmp,
 
 : allot ( n -- ) here + to here ;
 
-: variable 
+: variable
 0 value
 here latest @ >cfa 1+ (to)
 2 allot ;
@@ -212,7 +212,7 @@ ff lda,# :+ lsb sta,x msb sta,x ;code
 : dnegate invert >r invert r> 1 m+ ;
 : ?dnegate 0< if dnegate then ;
 : dabs dup ?dnegate ;
-: m* 2dup xor >r >r abs r> 
+: m* 2dup xor >r >r abs r>
 abs um* r> ?dnegate ;
 : * m* drop ;
 ( ...from FIG UK )
@@ -234,9 +234,9 @@ r> 0< if swap negate swap then ;
 
 code <
 0 ldy,# sec,
-lsb 1+ lda,x lsb sbc,x 
+lsb 1+ lda,x lsb sbc,x
 msb 1+ lda,x msb sbc,x
-+branch bvc, 80 eor,# :+ 
++branch bvc, 80 eor,# :+
 +branch bpl, dey, :+
 inx, lsb sty,x msb sty,x ;code
 : > swap < ;
@@ -251,7 +251,7 @@ inx, lsb sty,x msb sty,x ;code
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
-: abort" 
+: abort"
 postpone if
 12 lda,# ffd2 jsr, \ reverse on
 postpone ."
