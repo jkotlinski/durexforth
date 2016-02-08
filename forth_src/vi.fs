@@ -62,7 +62,7 @@ jmp,
 dup eof @ u< if find-next-line then ;
 
 : linelen
-curlinestart @ find-next-line 
+curlinestart @ find-next-line
 curlinestart @ -
 dup if 1- then ;
 
@@ -80,7 +80,7 @@ curx @ linelen min +
 0 bufstart 1- c!
 bufstart 1+ eof !
 0 eof @ c! sol 0 cury !
-lf bufstart c! 
+lf bufstart c!
 bufstart homepos !
 bufstart curlinestart ! ;
 
@@ -244,7 +244,7 @@ key editpos c! line-dirty! ;
 : nipchar
 editpos 1+ eof @ = if exit then
 editpos 1+ editpos
-eof @ editpos - move 
+eof @ editpos - move
 ffff eof +! ;
 
 : too-long-to-join
@@ -272,7 +272,7 @@ curlinestart ! curx ! cury ! ;
 curx @ if cur-left nipchar line-dirty!
 then ;
 
-: del-char 
+: del-char
 editpos c@ eol= if exit then
 force-right backspace ;
 
@@ -319,7 +319,7 @@ force-right else cur-right then ;
 
 : del-word
 line-dirty!
-begin 
+begin
 editpos c@ eol= if exit then
 editpos c@ del-char space= if exit then
 again ;
@@ -330,11 +330,11 @@ variable clip-count
 
 : yank-line
 linelen clip-count !
-curlinestart @ clip linelen 
+curlinestart @ clip linelen
 move ;
 
 : del-line
-sol 1 to need-refresh 
+sol 1 to need-refresh
 yank-line
 ( contract buffer )
 curlinestart @ find-next-line
@@ -350,7 +350,7 @@ key case
 'd' of del-line endof
 endcase clear-status ;
 
-variable search-buf e allot 
+variable search-buf e allot
 
 : are-equal ( len a1 a2 -- equal? )
 	rot ( a1 a2 len )
@@ -412,12 +412,12 @@ variable search-buf e allot
 	again
 ;
 
-: write-file 
-filename-len c@ 0= if 
-." no filename" 
+: write-file
+filename-len c@ 0= if
+." no filename"
 key drop exit then
 
-rom-kernal 
+rom-kernal
 page ." saving "
 filename filename-len c@ type ." .."
 
@@ -534,7 +534,7 @@ down c, ' cur-down ,
 		2dup ( key tableptr key tableptr )
 		c@ = if
 			( key tableptr )
-			1+ @ 
+			1+ @
 			execute
 			drop 0 exit
 		then
@@ -542,7 +542,7 @@ down c, ' cur-down ,
 
 		dup c@ 0=
 	until
-	
+
 	drop
 
 	case ( key )
@@ -559,9 +559,9 @@ down c, ' cur-down ,
 		'Z' of write-file ffff exit endof
 		endcase
 	endof
-	':' of 
+	':' of
 		':' set-status
-		key 
+		key
 		case
 		'w' of :w endof
 		'q' of ffff exit endof
@@ -595,8 +595,8 @@ show-page
 		depth \ stack check...
 
 		\ show cursor
-        ins-active 0= if curx @ 
-        linelen dup if 1- then min 
+        ins-active 0= if curx @
+        linelen dup if 1- then min
         curx c! then cursor-scr-pos
         dup @ 80 or swap c!
 
@@ -609,7 +609,7 @@ show-page
 		ins-active if
 			ins-handler
 		else
-			main-handler if 
+			main-handler if
 				drop
                 rom-kernal
                 cleanup
@@ -631,7 +631,7 @@ eof @ c@ abort" eof" again ;
 
 : vi
 \ modifies kernal to change kbd prefs
-ram-kernal eaea @ 8ca <> if 
+ram-kernal eaea @ 8ca <> if
 rom-kernal
 e000 dup 2000 move \ rom => ram
 a eaea c! \ repeat delay
