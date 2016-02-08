@@ -61,14 +61,11 @@ while emit repeat drop ; immediate
 .( compile base..)
 
 : case 0 ; immediate
-: (of) over = ;
-: of
-postpone (of)
-postpone if
-postpone drop ; immediate
+: (of) over = if drop r> 2+ >r exit
+then branch ;
+: of postpone (of) here 0 , ; immediate
 : endof postpone else ; immediate
-: endcase
-postpone drop
+: endcase postpone drop
 begin ?dup while postpone then
 repeat ; immediate
 
