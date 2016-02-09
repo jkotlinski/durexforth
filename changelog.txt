@@ -136,8 +136,8 @@ Changelog
 
 2015-06-24: v1.33
 
- * vi: changed half-page scrolling from U/D to CTRL+u/d
- * vi: many bugfixes and optimizations
+ * editor: changed half-page scrolling from U/D to CTRL+u/d
+ * editor: many bugfixes and optimizations
  * forth: many small optimizations
  * forth: made cmove> ANS Forth compliant
  * doc: updated memory map documentation
@@ -149,8 +149,8 @@ Changelog
    at the cost of increased RAM usage.
  * forth: added "compile," word.
  * disk: improved EOF handling.
- * vi: bugfixed CTRL+u/d.
- * vi: bugfix: "fg" was by mistake hidden.
+ * editor: bugfixed CTRL+u/d.
+ * editor: bugfix: "fg" was by mistake hidden.
  * doc: added inline assembly example.
  * doc: bugfixed turtle graphics demo.
 
@@ -183,9 +183,9 @@ Changelog
  * forth: renamed d* to um*
  * forth: optimized loop, r>, >r, r@, i
  * forth: disabled tail call elimination for (
- * vi: faster key delay+repeat
- * vi: hid fg
- * vi: various bugfixes
+ * editor: faster key delay+repeat
+ * editor: hid fg
+ * editor: various bugfixes
  * doc: documented min, max, within
 
 2015-11-12: v1.4.4
@@ -196,7 +196,7 @@ Changelog
  * forth: made . print signed numbers
  * forth: various bugfixes
  * doc: simplified & improved intro + tutorial
- * vi: bugfix, exiting editor disabled key repeat
+ * editor: bugfix, exiting editor disabled key repeat
 
 Thanks to Christian Johansson and polluks for bug reports!
 
@@ -209,7 +209,7 @@ Thanks to Christian Johansson and polluks for bug reports!
  * forth: added spaces source >in 2over 2swap m+ m*
    sm/rem fm/mod dabs dnegate s>d
  * forth: changed word order of double-cell integers
- * vi: backspace on start of line now doesn't join lines
+ * editor: backspace on start of line now doesn't join lines
  * doc: mention in tutorial that default is hexadecimal
 
 Thanks to Christian Johansson and polluks for suggestions!
@@ -286,8 +286,8 @@ Thanks to polluks for suggestions!
  * bugfix: vi :w didn't work with filenames longer than 6 characters
  * bugfix: vi :w! captured control characters in filename
  * bugfix: changed vi :w to avoid 1541 bugs
- * vi: improved feedback when saving
- * vi: stop using backup files
+ * editor: improved feedback when saving
+ * editor: stop using backup files
  * forth: added require, required
  * doc: documented assembler, sid
 
@@ -312,5 +312,5 @@ v1.6.1
  * forth: space optimize of
  * cart: made cartridge boot faster
  * cart: use Simons' Basic cart type to make $a000-$bfff RAM
- * vi: starting editor without filename now doesn't read from disk
- * vi: :w on unnamed buffer now prints "no filename"
+ * editor: starting without filename now doesn't read from disk
+ * editor: :w on unnamed buffer now prints "no filename"
