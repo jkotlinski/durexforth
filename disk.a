@@ -318,8 +318,7 @@ INCLUDED
     jsr	OPEN
     bcc	+
     jsr .close
-    jsr RESTORE_INPUT
-    jmp ++
+    jmp ABORT
 +
     ldx	SOURCE_ID_LSB ; file number
     jsr	CHKIN
@@ -333,10 +332,11 @@ INCLUDED
     JSR CHRIN     ; get a byte from file
 
     jsr READST
-    beq ++
+    beq +
+    jsr .close
     jsr _errorchread
     jmp ABORT
-++
++
 
     pla
     tax
