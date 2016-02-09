@@ -4,7 +4,7 @@ c6 c! ;
 here latest @
 
 .( gfxdemo )
-a fakekeys \ skips demos
+b fakekeys \ skips demos
 s" gfx" included
 s" gfxdemo" included
 
@@ -16,7 +16,7 @@ s" fractals" included
 s" mmldemo" included
 
 .( spritedemo )
-1 fakekeys \ exits demo 
+1 fakekeys \ exits demo
 s" spritedemo" included
 
 latest ! to here
