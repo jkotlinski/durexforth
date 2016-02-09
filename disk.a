@@ -52,7 +52,7 @@ CLOSEW
     lda LSB,x
     sta W
     stx	W2
-    jsr	CLOSE 
+    jsr	CLOSE
     ldx	W
     jsr	CHKOUT
     ldx W2
@@ -118,12 +118,12 @@ LOADB
 
     lda LSB+1, x		; a filename length
     pha
-    ldy MSB+2, x 		; y >basename 
-    lda LSB+2, x		; x <basename 
+    ldy MSB+2, x 		; y >basename
+    lda LSB+2, x		; x <basename
     tax
     pla
     jsr	load_binary
-    
+
     pla
     tax
 
@@ -171,12 +171,12 @@ load_binary_laddr_hi = *+1
     ora #8		;Transform to 8-B
     tax
     lda #1
-    ldy #0		;if load: 0 = load to new address, if save: 0 = dunno, but okay... 
+    ldy #0		;if load: 0 = load to new address, if save: 0 = dunno, but okay...
     jmp SETLFS	;End with JMP instead of jsr/rts to save a jsr/rts pair...
 
 .disk_io_error
     ; Accumulator contains BASIC error code
-    
+
     ;... error handling ...
     ldx #$00      ; filenumber 0 = keyboard
     jsr CHKIN     ; call CHKIN (keyboard now input device again)
@@ -201,7 +201,7 @@ SAVEB
     sta $c1
     lda MSB+3, x		; range begin hi
     sta $c2
-    
+
     lda LSB+2, x		; range end lo
     sta save_binary_srange_end_lo
     lda MSB+2, x		; range end hi
@@ -215,7 +215,7 @@ SAVEB
     pla
 
     jsr .disk_io_setnamsetlfs
-    
+
     ;This should point to the byte AFTER the last byte in the file.
 save_binary_srange_end_lo = *+1
     ldx #$ff	;load_address lo
@@ -252,7 +252,7 @@ OPENW
     lda	LSB+2, x
     tax
     pla
-    
+
     jsr	SETNAM
     lda	W ; file number
     ldx	$ba ; last used device#
@@ -335,6 +335,7 @@ INCLUDED
     jsr READST
     beq ++
     jsr _errorchread
+    jmp ABORT
 ++
 
     pla
