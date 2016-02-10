@@ -291,7 +291,7 @@ Thanks to polluks for suggestions!
  * forth: added require, required
  * doc: documented assembler, sid
 
-v1.6.0 - cartridge support!
+2016-02-02: v1.6.0 - cartridge support!
 
  * forth: now available as a 16 kB cartridge image. the cartridge
    has the same functionality as the disk version, but boots faster.
@@ -305,7 +305,7 @@ v1.6.0 - cartridge support!
  * doc: expanded assembler documentation
  * editor: removed fg
 
-v1.6.1
+2016-02-10: v1.6.1
 
  * forth: evaluate failed for strings that ended at page boundary
  * forth: print error in case include fails
