@@ -42,14 +42,8 @@ endcase
 : see
 	bl word find 0= abort" ?"
 	here latest @
-	begin
-		2 pick
-		over
-		<
-	while
-		nip
-		dup @
-	repeat
+	begin 2 pick over <
+	while nip dup @ repeat
 
     rot drop \ eow sow
 
