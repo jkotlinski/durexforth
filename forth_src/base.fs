@@ -228,8 +228,6 @@ postpone cr
 postpone abort
 postpone then ; immediate
 
-: assert 0= if
-begin 1 d020 +! again then ;
 : marker create latest @ ,
 does> @ dup to here @ latest ! ;
 

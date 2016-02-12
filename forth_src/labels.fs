@@ -27,12 +27,10 @@ locs locp ! refs refp ! \ init
 
 \ reference
 : @@ ( index -- dummy )
-refp @ [ refs 18 + ] literal < assert
 here refp @ !
 2 refp +! refp @ c! 1 refp +! 0 ;
 \ label
 : @: ( index -- )
-locp @ [ locs f + ] literal < assert
 here locp @ !
 2 locp +! locp @ c! 1 locp +! ;
 : ;code ;code
