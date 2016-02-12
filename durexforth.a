@@ -745,7 +745,7 @@ READ_EOF = * + 1
     lda SOURCE_ID_LSB
     beq .getLineFromConsole
     lda SOURCE_ID_MSB
-    beq	.get_from_disk
+    beq	.getLineFromDisk
 
 .getLineFromConsole
     stx tmp_x
@@ -765,14 +765,16 @@ READ_EOF = * + 1
     ldx tmp_x
     rts
 
-.get_from_disk
--   jsr GET_CHAR_BLOCKING
+.getLineFromDisk
+    jsr GET_CHAR_BLOCKING
     cmp #K_RETURN
     beq +
+    inc $d020
     ldy TIB_SIZE
     sta TIB,y
     inc TIB_SIZE
-    jmp .get_from_disk
+    dec $d020
+    jmp .getLineFromDisk
 +
     rts
 
