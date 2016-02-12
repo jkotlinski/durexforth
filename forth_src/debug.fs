@@ -14,7 +14,7 @@ endof
 ['] litc of
     2+ dup c@ . 1-
 endof
-['] litstring of
+['] lits of
     's' emit
     '"' emit space
     2+ dup 2+ over @ type

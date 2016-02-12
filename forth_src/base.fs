@@ -30,12 +30,12 @@ again ; immediate
 : u> ( n -- b ) swap u< ;
 : 0<> ( x -- flag ) 0= 0= ;
 
-: litstring ( -- addr len )
+: lits ( -- addr len )
 r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 
 : s" ( -- addr len )
 state c@ if ( compile mode )
-postpone litstring here 0 , 0
+postpone lits here 0 , 0
 begin getc dup '"' <>
 while c, 1+ repeat
 drop swap ! exit
