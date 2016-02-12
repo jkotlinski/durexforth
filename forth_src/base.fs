@@ -9,20 +9,15 @@
 ; immediate
 : else jmp, here 0 ,
 swap here swap ! ; immediate
-: postpone
-bl word find -1 = if
+: postpone bl word find -1 = if
 [ ' literal compile, ] ['] compile,
 then compile, ; immediate
-: until
-postpone 0branch , ; immediate
+: until postpone 0branch , ; immediate
 : again jmp, , ; immediate
-: recurse latest @ >cfa compile,
-; immediate
-: (
-begin getc dup
-0= if refill then
-')' = if exit then
-again ; immediate
+: recurse
+latest @ >cfa compile, ; immediate
+: ( begin getc dup 0= if refill then
+')' = if exit then again ; immediate
 : \ refill ; immediate
 : tuck ( x y -- y x y ) swap over ;
 : ?dup dup if dup then ;
@@ -112,8 +107,7 @@ msb lda,x lsb sta,x
    1 to foo
    foo . \ prints 1 )
 : value ( n -- )
-dup code
-lda,# 100/ ldy,#
+dup code lda,# 100/ ldy,#
 ['] pushya jmp, ;
 : constant value ;
 
@@ -121,15 +115,12 @@ lda,# 100/ ldy,#
 : spaces ( n -- )
 begin ?dup while space 1- repeat ;
 
-1 value 1
-8b value w
-8d value w2
-9e value w3
+1 value 1 8b value w
+8d value w2 9e value w3
 
 ( "0 to foo" sets value foo to 0 )
 : (to) over 100/ over 2+ c! c! ;
-: to ' 1+
-state c@ if
+: to ' 1+ state c@ if
 postpone literal postpone (to) exit
 then (to) ; immediate
 
