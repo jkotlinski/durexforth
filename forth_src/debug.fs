@@ -21,10 +21,6 @@ endof
     '"' emit space
     dup @ +
 endof
-['] ['] of
-    ." ['] "
-    2+ dup @ cfa> id.
-endof
 ['] (loop) of
     ." (loop) " 2+
 endof

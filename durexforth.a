@@ -1136,13 +1136,6 @@ print_word_not_found_error
     jmp ABORT
 
     +BACKLINK
-    !byte	3
-    !text	"[']"
-    ; ['] and lit do the same thing, but ['] is used for
-    ; words, lit for numbers.
-    jmp	LIT
-
-    +BACKLINK
     !byte	4
     !text	"litc"
 LITC
