@@ -315,3 +315,7 @@ Thanks to polluks for suggestions!
  * cart: use Simons' Basic cart type to make $a000-$bfff RAM
  * editor: starting without filename now doesn't read from disk
  * editor: :w on unnamed buffer now prints "no filename"
+
+v1.6.2
+
+ * forth: various see improvements

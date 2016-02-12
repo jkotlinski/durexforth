@@ -1,5 +1,5 @@
 : id. ( header -- )
-2+ dup 1+ swap c@ 1f and type space ;
+2+ dup 1+ swap c@ 1f and type ;
 : cfa> ( codepointer -- word )
 latest @ begin ?dup while
 2dup > if nip exit then
@@ -29,11 +29,13 @@ endof
 endof
 ['] 0branch of
     ." 0branch( "
-    2+ dup @ .
+    2+ dup @ over - .
     ." ) "
 endof ( default )
-    dup
-    cfa> id.
+    dup cfa> id.
+    dup dup cfa> >cfa
+    2dup <> if '+' emit - .
+    else 2drop space then
 endcase
 2+ ;
 
@@ -51,7 +53,7 @@ endcase
 
     rot drop \ eow sow
 
-	':' emit space dup id.
+	':' emit space dup id. space
 	dup 2+ c@ 80 and if ." immediate " then
 
 	>cfa
@@ -89,7 +91,7 @@ last-dump ! base ! ;
 key drop page then ;
 : words
 page latest @ begin ?dup while
-more dup id. @ repeat cr ;
+more dup id. space @ repeat cr ;
 
 \ size foo prints size of foo
 : size ( -- )
