@@ -3,8 +3,7 @@
 ( how to modify char ROM font )
 : chardemo
 ( switch in char ROM )
-sei
-[ 2 base ! ]
+[ sei, 2 base ! ]
 1 c@ 11111000 and 11 or 1 c!
 
 ( copy char ROM to $7800 )
@@ -13,7 +12,7 @@ sei
 ( switch back I/O + kernal )
 [ 2 base ! ]
 1 c@ 11111000 and 110 or 1 c!
-cli
+[ cli, ]
 
 ( set vic bank to $4000-$7fff )
 [ hex ] dd00 c@
