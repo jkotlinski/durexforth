@@ -19,9 +19,9 @@ s" mmldemo" included
 1 fakekeys \ exits demo
 s" spritedemo" included
 
-: x depth abort" depth" ; x
-
 latest ! to here
+
+: x depth abort" depth" ; x
 
 s" compat" included
 s" tester" included
