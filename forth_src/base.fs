@@ -78,15 +78,6 @@ header postpone dodoes literal , ;
 .( asm..)
 s" asm" included
 
-code m+ ( d1 u -- d2 )
-0 ldy,# msb lda,x +branch bpl, dey,
-:+ clc,
-lsb lda,x lsb 2+ adc,x lsb 2+ sta,x
-msb lda,x msb 2+ adc,x msb 2+ sta,x
-tya, lsb 1+ adc,x lsb 1+ sta,x
-tya, msb 1+ adc,x msb 1+ sta,x
-inx, ;code
-
 code rot ( a b c -- b c a )
 msb 2+ ldy,x msb 1+ lda,x
 msb 2+ sta,x msb    lda,x

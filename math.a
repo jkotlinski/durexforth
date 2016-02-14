@@ -44,26 +44,26 @@ product = W
 U_M_STAR
     lda #$00
     sta product+2 ; clear upper bits of product
-    sta product+3 
-    ldy #$10 ; set binary count to 16 
+    sta product+3
+    ldy #$10 ; set binary count to 16
 .shift_r
-    lsr MSB + 1, x ; multiplier+1 ; divide multiplier by 2 
+    lsr MSB + 1, x ; multiplier+1 ; divide multiplier by 2
     ror LSB + 1, x ; multiplier
-    bcc rotate_r 
+    bcc rotate_r
     lda product+2 ; get upper half of product and add multiplicand
     clc
     adc LSB, x ; multiplicand
     sta product+2
-    lda product+3 
+    lda product+3
     adc MSB, x ; multiplicand+1
-rotate_r 
-    ror ; rotate partial product 
-    sta product+3 
+rotate_r
+    ror ; rotate partial product
+    sta product+3
     ror product+2
-    ror product+1 
-    ror product 
+    ror product+1
+    ror product
     dey
-    bne .shift_r 
+    bne .shift_r
 
     lda	product
     sta	LSB + 1, x
@@ -126,3 +126,25 @@ oflo:   LDA     #$FF    ; If overflow or /0 condition found,
 end:    INX
         jmp SWAP
 
+    +BACKLINK
+	!byte	2
+	!text	"m+" ; ( d1 u -- d2 )
+    ldy #0
+    lda MSB,x
+    bpl +
+    dey
++   clc
+    lda LSB,x
+    adc LSB+2,x
+    sta LSB+2,x
+    lda MSB,x
+    adc MSB+2,x
+    sta MSB+2,x
+    tya
+    adc LSB+1,x
+    sta LSB+1,x
+    tya
+    adc MSB+1,x
+    sta MSB+1,x
+    inx
+    rts
