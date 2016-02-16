@@ -40,33 +40,31 @@ endcase
 2+ ;
 
 : see
-	bl word find
-    0= if count type '?' emit abort then
-	here latest @
-	begin 2 pick over <
-	while nip dup @ repeat
+bl word find 0= if
+rvs count type '?' emit abort then
+here latest @
+begin 2 pick over <
+while nip dup @ repeat
 
-    rot drop \ eow sow
+rot drop \ eow sow
 
-	':' emit space dup id. space
-	dup 2+ c@ 80 and if ." immediate " then
+':' emit space dup id. space
+dup 2+ c@ 80 and if ." immediate " then
 
-	>cfa
+>cfa
 
-	begin
-		2dup >
-	while
-		dup c@ case
-        20 of see-jsr endof
-        4c of ." jp( " see-jsr ." ) " endof
-        e8 of 1+ ." drop " endof \ inx
-        60 of 1+ ." exit " endof \ rts
-        ." ? " swap 1+ swap
-        endcase
-	repeat
-	';' emit cr
-	2drop
-;
+begin
+    2dup >
+while
+    dup c@ case
+    20 of see-jsr endof
+    4c of ." jp( " see-jsr ." ) " endof
+    e8 of 1+ ." drop " endof \ inx
+    60 of 1+ ." exit " endof \ rts
+    ." ? " swap 1+ swap
+    endcase
+repeat
+';' emit cr 2drop ;
 
 variable last-dump
 

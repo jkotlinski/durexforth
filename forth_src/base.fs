@@ -211,9 +211,11 @@ inx, lsb sty,x msb sty,x ;code
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
+: rvs 12 lda,# ffd2 jsr, ; immediate
+
 : abort"
 postpone if
-12 lda,# ffd2 jsr, \ reverse on
+postpone rvs
 postpone ."
 postpone cr
 postpone abort
