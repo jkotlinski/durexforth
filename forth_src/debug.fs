@@ -40,7 +40,8 @@ endcase
 2+ ;
 
 : see
-	bl word find 0= abort" ?"
+	bl word find
+    0= if count type '?' emit abort then
 	here latest @
 	begin 2 pick over <
 	while nip dup @ repeat
