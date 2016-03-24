@@ -20,7 +20,6 @@ latest @ >cfa compile, ; immediate
 ')' = if exit then again ; immediate
 : \ refill ; immediate
 : tuck ( x y -- y x y ) swap over ;
-: ?dup dup if dup then ;
 : <> ( a b -- c ) = 0= ;
 : u> ( n -- b ) swap u< ;
 : 0<> ( x -- flag ) 0= 0= ;

@@ -199,6 +199,15 @@ DUP
     sta	LSB, x
     rts
 
+    +BACKLINK
+    !byte 4
+    !text "?dup"
+QDUP
+    lda MSB, x
+    ora LSB, x
+    bne DUP
+    rts
+
 ; OVER
     +BACKLINK
     !byte	4
