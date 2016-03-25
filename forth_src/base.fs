@@ -1,7 +1,6 @@
 : 2+ 1+ 1+ ;
 : cr d emit ;
 : nip swap drop ;
-: * um* drop ;
 : jmp, 4c c, ;
 : ['] ' [ ' literal compile, ]
 ; immediate
