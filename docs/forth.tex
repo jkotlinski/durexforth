@@ -146,7 +146,6 @@ Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to 
 \item[header xxx] Create a dictionary header with name \texttt{xxx}.
 \item[create xxx/does$>$] Create a word creating word \texttt{xxx} with custom behavior
 specified after \texttt{does$>$}. For further description, see "Starting Forth."
-\item[$>$body ( xt -- addr )] Returns the data field address that belongs to the execution token. Example use: \texttt{' foo >body}
 \item[state ( -- addr)] addr is the address of a cell containing the compilation-state flag. It is 1 when compiling, otherwise 0.
 
 \end{description}
@@ -392,6 +391,7 @@ The \texttt{compat} module contains various words that are not deemed necessary 
     \item[2over ( a b c d -- a b c d a b )] Copies cell pair a b to top of stack.
     \item[2swap ( a b c d -- c d a b )] Exchanges the top two cell pairs.
     \item[$>$number ( ud addr u -- ud addr2 u2 )] Converts the string in \texttt{addr u} to digits, using \texttt{BASE}, and adds each digit into ud after multiplying it with \texttt{BASE}. \texttt{addr2 u2} contains the part of the string that was not converted.
+    \item[$>$body ( xt -- addr )] Returns the data field address that belongs to the execution token. Example use: \texttt{' foo >body}
     \item[sm/rem ( d n -- r q )] Divide double-cell number d by n, giving the symmetric quotient q and the remainder r. Values are signed.
 
 \end{description}

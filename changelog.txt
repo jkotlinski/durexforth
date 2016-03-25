@@ -319,3 +319,4 @@ Thanks to polluks for suggestions!
 v1.6.2
 
  * forth: various see improvements
+ * forth: moved >body to compat
