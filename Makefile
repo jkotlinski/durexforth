@@ -6,7 +6,7 @@ TAG_DEPLOY = `git describe --tags --abbrev=0 | tr . _`
 
 all:	durexforth.d64
 
-deploy: durexforth.d64 cart.a
+deploy: durexforth.d64 cart.asm
 	rm -rf deploy
 	mkdir deploy
 	$(MAKE) -C docs
@@ -16,11 +16,11 @@ deploy: durexforth.d64 cart.a
 	# make cartridge
 	c1541 -attach deploy/durexforth-$(TAG_DEPLOY).d64 -read durexforth
 	mv durexforth build/durexforth
-	@$(AS) cart.a
+	@$(AS) cart.asm
 	cartconv -t simon -i build/cart.bin -o deploy/durexforth-$(TAG_DEPLOY).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
 
-durexforth.prg: durexforth.a number.a math.a move.a disk.a lowercase.a
-	@$(AS) durexforth.a
+durexforth.prg: durexforth.asm number.asm math.asm move.asm disk.asm lowercase.asm
+	@$(AS) durexforth.asm
 
 FORTHLIST=base debug vi asm gfx gfxdemo rnd sin ls turtle fractals sprite doloop sys labels mml mmldemo sid spritedemo test testcore testcoreplus tester format require compat
 
