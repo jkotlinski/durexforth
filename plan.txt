@@ -1,0 +1,20 @@
+plan as follows:
+
+ - add a main cursor (sprite), movable by regular cursor keys
+ - add marker cursor (also sprite)
+
+key presses
+
+M: place marker cursor
+D: plot a point
+L: draw line between marker and main cursor
+F: flood fill
+I: select color
+C: apply color to block between marker and main cursor
+G: show/hide 8x8 grid
+O: draw circle (marker cursor = centre, main cursor = circumference)
+T: write text
+P: pattern-fill
+
+R: LOAD
+W: SAVE
