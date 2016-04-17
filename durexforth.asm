@@ -265,7 +265,7 @@ PLUS
     inx
     rts
 
-!src "math.a"
+!src "math.asm"
 
     +BACKLINK
     !byte	1
@@ -419,7 +419,7 @@ FILL
     inc	.fdst + 1
     jmp	-
 
-!src "move.a"
+!src "move.asm"
 
 ; ---------- variables
 
@@ -1002,7 +1002,7 @@ EXECUTE
     inx
     jmp	(W)
 
-!src "number.a"
+!src "number.asm"
 
     +BACKLINK
     !byte 7 | F_IMMED
@@ -1727,8 +1727,8 @@ COMPILE_JMP
 
 ; -----------
 
-!src "lowercase.a"
-!src "disk.a"
+!src "lowercase.asm"
+!src "disk.asm"
 
 ; LATEST - points to the most recently defined dictionary word.
     +BACKLINK
