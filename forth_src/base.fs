@@ -226,10 +226,11 @@ marker modules
 .( labels..) s" labels" included
 .( doloop..) s" doloop" included
 .( sys..) s" sys" included
-.( debug..) s" debug" included
-.( ls..) s" ls" included
-.( vi..) s" vi" included
-.( require..) s" require" included
+\ .( debug..) s" debug" included
+\ .( ls..) s" ls" included
+\ .( vi..) s" vi" included
+\ .( require..) s" require" included
+.( paint..) s" paint" included
 
 .( save new durexforth..)
 s" @0:durexforth" save-forth .( ok!) cr
