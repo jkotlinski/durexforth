@@ -4,14 +4,14 @@ pla, tay,
 
 msb 1+ lda,x pha, lsb 1+ lda,x pha,
 msb lda,x pha, lsb lda,x pha,
-inx, inx, 
+inx, inx,
 
 tya, pha,
 w lda, pha,
 ;code
 
 \ leave stack
-variable lstk 14 allot 
+variable lstk 14 allot
 variable lsp lstk lsp !
 : >l ( n -- ) lsp @ ! 2 lsp +! ;
 
@@ -19,7 +19,7 @@ variable lsp lstk lsp !
 postpone (do) here dup >l ; immediate
 
 : leave
-postpone unloop 
+postpone unloop
 postpone branch here >l 0 , ; immediate
 
 : resolve-leaves ( dopos -- )
@@ -61,5 +61,5 @@ postpone (+loop) dup , resolve-leaves ; immediate
 : i postpone r@ ; immediate
 code j txa, tsx,
 107 ldy,x w sty, 108 ldy,x
-tax, dex, 
+tax, dex,
 msb sty,x w lda, lsb sta,x ;code
