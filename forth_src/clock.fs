@@ -1,5 +1,7 @@
 \ jiffy clock
 
+hex
+
 \ resets jiffy clock
 : clkreset ( -- )
 0 a1 [ sei, ] ! [ cli, ] ;
