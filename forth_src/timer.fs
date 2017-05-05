@@ -9,7 +9,7 @@ $a2 lda, cli, lsb sta,x ;code
 : stop ( clk -- )
 start swap - base @ swap decimal
 #60 /mod s>d <# '.' hold #s #> type
-#100 * #6 / s>d <# # # # #> type
+#1000 #60 */ s>d <# # # # #> type
 base ! ;
 
 ( : timertest ." $1000 loops..."
