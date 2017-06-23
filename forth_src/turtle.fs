@@ -1,4 +1,4 @@
-s" sin" load
+require sin
 
 variable tx variable ty \ 10.6 fixedpoint
 variable ta 0 value tp
@@ -58,6 +58,3 @@ begin 2 pick forward
 over right
 tuck + 168 mod swap again ;
 )
-
-hide tx hide ty hide ta hide tp
-hide ls hide rs

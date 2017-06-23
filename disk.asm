@@ -36,9 +36,13 @@ SAVE = $ffd8
 
 ; -----
 
-; Active file stream to compile from.
-COMPILE_FILENO
-    !byte	0
+    +BACKLINK
+    !byte 6
+    !text	"device" ; ( deviceno -- )
+    lda LSB,x
+    sta $ba
+    inx
+    rts
 
 ; CLOSEW ( file# -- )
     +BACKLINK
@@ -46,13 +50,12 @@ COMPILE_FILENO
     !text	"closew"
 CLOSEW
     lda LSB,x
-    sta TMP
-    stx	TMP2
-    jsr	CLOSE 
-    ldx	TMP
+    sta W
+    stx	W2
+    jsr	CLOSE
+    ldx	W
     jsr	CHKOUT
-    jsr	_errorchread
-    ldx TMP2
+    ldx W2
     inx
     rts
 
@@ -115,12 +118,12 @@ LOADB
 
     lda LSB+1, x		; a filename length
     pha
-    ldy MSB+2, x 		; y >basename 
-    lda LSB+2, x		; x <basename 
+    ldy MSB+2, x 		; y >basename
+    lda LSB+2, x		; x <basename
     tax
     pla
     jsr	load_binary
-    
+
     pla
     tax
 
@@ -168,12 +171,12 @@ load_binary_laddr_hi = *+1
     ora #8		;Transform to 8-B
     tax
     lda #1
-    ldy #0		;if load: 0 = load to new address, if save: 0 = dunno, but okay... 
+    ldy #0		;if load: 0 = load to new address, if save: 0 = dunno, but okay...
     jmp SETLFS	;End with JMP instead of jsr/rts to save a jsr/rts pair...
 
 .disk_io_error
     ; Accumulator contains BASIC error code
-    
+
     ;... error handling ...
     ldx #$00      ; filenumber 0 = keyboard
     jsr CHKIN     ; call CHKIN (keyboard now input device again)
@@ -198,7 +201,7 @@ SAVEB
     sta $c1
     lda MSB+3, x		; range begin hi
     sta $c2
-    
+
     lda LSB+2, x		; range end lo
     sta save_binary_srange_end_lo
     lda MSB+2, x		; range end hi
@@ -212,7 +215,7 @@ SAVEB
     pla
 
     jsr .disk_io_setnamsetlfs
-    
+
     ;This should point to the byte AFTER the last byte in the file.
 save_binary_srange_end_lo = *+1
     ldx #$ff	;load_address lo
@@ -220,7 +223,7 @@ save_binary_srange_end_hi = *+1
     ldy #$ff	;load_address hi
     lda #$c1	;tell routine that start address is located in $c1/$c2
     jsr SAVE
-    bcs .disk_io_error
+    jsr _errorchread
 
     pla
     sta	$af
@@ -240,8 +243,8 @@ save_binary_srange_end_hi = *+1
     !text	"openw"
 OPENW
     lda LSB,x
-    sta TMP ; fileno
-    stx	TMP2
+    sta W ; fileno
+    stx	W2
 
     lda	LSB+1, x
     ldy	MSB+2, x
@@ -249,9 +252,9 @@ OPENW
     lda	LSB+2, x
     tax
     pla
-    
+
     jsr	SETNAM
-    lda	TMP ; file number
+    lda	W ; file number
     ldx	$ba ; last used device#
     tay ; secondary address
     jsr	SETLFS
@@ -260,10 +263,10 @@ OPENW
     jsr .close
     jmp ++
 +
-    ldx	TMP ; file number
+    ldx	W ; file number
     jsr	CHKOUT
 ++
-    ldx	TMP2
+    ldx	W2
     inx
     inx
     inx
@@ -274,39 +277,50 @@ OPENW
     jsr CLOSE
     jmp CLRCHN
 
-; LOAD_AND_COMPILE (load and compile source file)
     +BACKLINK
-    !byte 4
-    !text	"load"
-LOAD_AND_COMPILE
+    !byte 8
+    !text	"included"
+INCLUDED
+    lda	LSB, x
+    sta .filelen
+    lda MSB+1, x
+    sta .namehi
+    lda LSB+1, x
+    sta .namelo
+    inx
+    inx
+
+    jsr SAVE_INPUT
+
     txa
     pha
 
-    lda	LSB, x
-    ldy	MSB+1, x
-    pha
-    lda	LSB+1, x
-    tax
-    pla
+.filelen = * + 1
+    lda #0
+.namehi = * + 1
+    ldy #0
+.namelo = * + 1
+    ldx #0
 
     ; open file
-    ; a = filename length
-    ; y = basename hi
-    ; x = basename lo
     jsr	SETNAM
-    inc	COMPILE_FILENO
-    lda	COMPILE_FILENO ; file number
-    ldx	$ba ; last used device#
+    lda #0
+    sta SOURCE_ID_MSB
+    ldy SOURCE_ID_LSB
+    iny
+    tya
+    ora #8
     tay
-    iny ; secondary address
+    sty SOURCE_ID_LSB
+
+    ldx	$ba ; last used device#
     jsr	SETLFS
     jsr	OPEN
     bcc	+
-    dec COMPILE_FILENO
     jsr .close
-    jmp ++
+    jmp ABORT
 +
-    ldx	COMPILE_FILENO ; file number
+    ldx	SOURCE_ID_LSB ; file number
     jsr	CHKIN
 
     ; Skips load address. It is tempting to keep the source
@@ -316,9 +330,14 @@ LOAD_AND_COMPILE
     ; by fast loader cartridges such as Retro Replay.
     JSR CHRIN     ; get a byte from file
     JSR CHRIN     ; get a byte from file
-++
+
+    jsr READST
+    beq +
+    jsr .close
+    jsr _errorchread
+    jmp ABORT
++
+
     pla
     tax
-    inx
-    inx
     rts

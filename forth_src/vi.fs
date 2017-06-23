@@ -1,7 +1,6 @@
-d value CR
-: clrscr e544 sys ;
+d value lf
 
-6001 value bufstart
+7001 value bufstart
 
 variable eof ( ram eof )
 0 eof !
@@ -14,11 +13,11 @@ variable curx
 variable cury
 0 value need-refresh
 variable line-dirty
-0 value insert-active
+0 value ins-active
 
 : line-dirty! 1 line-dirty c! ;
 
-10 allot dup
+here dup 10 allot
 value filename-len
 1+ value filename
 
@@ -27,18 +26,18 @@ curlinestart @ curx @ + ;
 
 create foundeol
 clc,
-tya, zptmp adc, sp0 sta,x
+tya, w adc, lsb sta,x
 2 bcc,
-sp1 inc,x
+msb inc,x
 ;code
 
 code print-line ( addr -- addr )
-sp0 ldy,x zptmp sty,
-sp1 ldy,x zptmp 1+ sty,
+lsb ldy,x w sty,
+msb ldy,x w 1+ sty,
 0 ldy,#
 
 here
-zptmp lda,(y)
+w lda,(y)
 0 cmp,#
 foundeol -branch beq,
 e716 jsr, \ putchar
@@ -48,11 +47,11 @@ foundeol -branch beq,
 jmp,
 
 code find-next-line ( addr -- addr )
-sp0 ldy,x zptmp sty,
-sp1 ldy,x zptmp 1+ sty,
+lsb ldy,x w sty,
+msb ldy,x w 1+ sty,
 0 ldy,#
 here
-zptmp lda,(y)
+w lda,(y)
 iny,
 0 cmp,#
 foundeol -branch beq,
@@ -60,10 +59,10 @@ d cmp,#
 foundeol -branch beq,
 jmp,
 : find-next-line ( addr -- addr )
-dup eof @ < if find-next-line then ;
+dup eof @ u< if find-next-line then ;
 
 : linelen
-curlinestart @ find-next-line 
+curlinestart @ find-next-line
 curlinestart @ -
 dup if 1- then ;
 
@@ -72,88 +71,36 @@ cury @ 28 *
 curx @ linelen min +
 400 + ( addr ) ;
 
-: hide-cursor
-cursor-scr-pos
-dup @ 7f and
-swap c! ;
-
-: show-cursor
-insert-active 0= if
-curx @ linelen dup if 1- then min 
-curx c!
-then
-cursor-scr-pos
-dup @ 80 or
-swap c! ;
+: sol 0 curx ! ;
 
 : rom-kernal 37 1 c! ;
 : ram-kernal 35 1 c! ;
-: init-kernal
-ram-kernal
-eaea c@ a <> if
-rom-kernal
-\ modifies kernal to change kbd prefs
-e000 e000 2000 cmove \ copy rom => ram
-\ hopefully basic is not used...
-80 28a c! \ key repeat on
-a eaea c! \ repeat delay
-2 eb1d c! \ repeat speed
-then ;
 
-: do-load
-rom-kernal
-0 bufstart 400 fill
-bufstart loadb
-
-if \ file error?
+: reset-buffer
+0 bufstart 1- c!
 bufstart 1+ eof !
-0 dup dup eof @ c! curx ! cury !
-CR bufstart c!
-exit then
-
-ae @ eof !
-0 eof @ c! ;
-
-: go-to-file-start
-0 dup curx ! cury !
+0 eof @ c! sol 0 cury !
+lf bufstart c!
 bufstart homepos !
 bufstart curlinestart ! ;
 
 7c0 value status-pos
 
 : show-page
-status-pos c@ clrscr status-pos c!
+status-pos c@ page status-pos c!
 homepos @
 18 0 do print-line loop
 drop ;
 
 : clear-status ( -- )
-bl status-pos 18 fill ;
+status-pos 18 bl fill ;
 
 : set-status ( c -- )
 clear-status status-pos c! ;
 
-: init
-init-kernal
-0 bufstart 1- c! \ sentinel
-0 compile-ram ! \ to enable editor start from base.src
-clear-status ;
-
-: push-colors
-d020 c@
-d021 c@
-286 c@
-
-2 d021 c!
-a d020 c!
-1 286 c!
-1 d800 400 fill ;
-
 : cleanup ( bordercolor bgcolor cursorcolor -- )
-40 28a c! \ key repeat off
-286 c! \ cursor col
-d021 c! d020 c!
-clrscr ;
+0 28a c! \ default key repeat
+286 c! d021 c! d020 c! page ;
 
 : fit-curx-in-linelen
 linelen curx @ min curx ! ;
@@ -161,16 +108,16 @@ linelen curx @ min curx ! ;
 : cur-down
 curlinestart @ ( curline )
 find-next-line dup ( 2xnextline )
-eof @ < 0= if drop exit then
+eof @ u< 0= if drop exit then
 curlinestart !
 cury @ 17 < if 1 cury +! else
 homepos @ find-next-line homepos !
-428 400 398 cmove
+428 400 398 move
 line-dirty!
 then
 fit-curx-in-linelen ;
 
-: cr= CR = ;
+: cr= lf = ;
 : eol= dup 0= swap cr= or ;
 : space= dup cr= swap bl = or ;
 
@@ -186,7 +133,7 @@ curlinestart !
 fit-curx-in-linelen
 cury @ 0= if
 curlinestart @ homepos !
-400 428 398 cmove>
+400 428 398 move
 line-dirty!
 else
 ffff cury +!
@@ -208,47 +155,34 @@ linelen dup if 1- then curx ! ;
 curx @ 0= if bufstart editpos <> if
 cur-up eol then else cur-left then ;
 
-: sol 0 curx ! ;
-
 : is-wordstart
 editpos 1- c@ space=
 editpos c@ space= 0= and ;
 
-: word-back
-	rewind-cur
-	begin
-		editpos bufstart =
-        is-wordstart or 0=
-	while
-		rewind-cur
-	repeat
-;
+: word-back rewind-cur begin
+editpos bufstart = is-wordstart or
+0= while rewind-cur repeat ;
 
 \ right, or down + sol if we're at EOL. ret 1 if we cant advance
 : advance-cur
 	editpos
 	curx @ linelen 1- = linelen 0= or if
-		0 curx ! cur-down
+		sol cur-down
 	else
 		cur-right
 	then
 	editpos =
 ;
 
-: word-fwd
-	advance-cur if exit then
-	begin
-        is-wordstart 0=
-	while
-		advance-cur if exit then
-	repeat
-;
+: word-fwd advance-cur if exit then
+begin is-wordstart 0= while
+advance-cur if exit then repeat ;
 
 : setcur ( x y -- )
 xr ! yr ! e50c sys ;
 
 : refresh-line
-20 cury @ 28 * 400 + 28 fill
+cury @ 28 * 400 + 28 bl fill
 0 cury @ setcur
 curlinestart @ print-line drop ;
 
@@ -262,7 +196,7 @@ c 0 do cur-down refresh-line loop ;
 bufstart eof @ = if exit then
 eof @ 1- find-start-of-line
 dup curlinestart ! homepos !
-0 curx !
+sol
 17 begin
 homepos @ 1- find-start-of-line homepos !
 1- dup 0=
@@ -271,25 +205,19 @@ until
 17 swap - dup cury ! 0 swap setcur
 1 to need-refresh ;
 
-: goto-start
-0 dup curx ! cury !
+: goto-start sol 0 cury !
 bufstart dup homepos ! curlinestart !
 1 to need-refresh ;
 
-: insert-start
-1 to insert-active
-[char] i set-status ;
+: ins-start
+1 to ins-active 'i' set-status ;
 
-: force-cur-right
+: force-right
 linelen if 1 curx +! then ;
 
-: append-start
-force-cur-right
-insert-start ;
+: append-start force-right ins-start ;
 
-: insert-stop
-cur-left
-0 to insert-active
+: ins-stop cur-left 0 to ins-active
 clear-status ;
 
 : show-location
@@ -316,7 +244,7 @@ key editpos c! line-dirty! ;
 : nipchar
 editpos 1+ eof @ = if exit then
 editpos 1+ editpos
-eof @ editpos - cmove 
+eof @ editpos - move
 ffff eof +! ;
 
 : too-long-to-join
@@ -335,31 +263,26 @@ cur-down
 editpos = if 2drop drop exit then
 sol
 linelen if
-20 editpos 1- c! \ cr => space
+bl editpos 1- c! \ cr => space
 else nipchar then
 
 curlinestart ! curx ! cury ! ;
 
-: backspace-sol
-cury @ 0= if exit then
-linelen cur-up eol linelen join-lines
-( from-linelen to-linelen )
-swap if if cur-right nipchar then 
-else drop force-cur-right then ;
-
 : backspace
 curx @ if cur-left nipchar line-dirty!
-else backspace-sol then ;
+then ;
 
-: del-char force-cur-right backspace ;
+: del-char
+editpos c@ eol= if exit then
+force-right backspace ;
 
-: insert-char
-	dup CR <> linelen 26 > and if drop exit then
+: ins-char
+	dup lf <> linelen 26 > and if drop exit then
 
 	editpos
 	editpos 1+
 	eof @ editpos -
-	cmove>
+	move
 	editpos c!
 	1 curx +!
 	1 eof +!
@@ -367,67 +290,67 @@ else backspace-sol then ;
     line-dirty!
 ;
 
-9d value LEFT
-11 value DOWN
-91 value UP
-1d value RIGHT
+9d value left
+11 value down
+91 value up
+1d value right
 
-: insert-right
+: ins-right
 curx @ linelen 1- = if
-force-cur-right else cur-right then ;
+force-right else cur-right then ;
 
-: insert-handler
-	dup a0 = if drop 20 then \ shift space => space
+: ins-handler
+	dup a0 = if drop bl then \ shift space => space
 
 	dup
 	case
     3 of drop endof \ run/stop
-	5f of insert-stop drop endof \ leftarrow
-	LEFT of cur-left drop endof
-	DOWN of cur-down drop endof
-	UP of cur-up drop endof
-	RIGHT of insert-right drop endof
+	5f of ins-stop drop endof \ leftarrow
+	left of cur-left drop endof
+	down of cur-down drop endof
+	up of cur-up drop endof
+	right of ins-right drop endof
 	14 of backspace drop endof \ inst
 	94 of del-char drop endof \ del
-	CR of insert-char cur-down sol show-page endof
-	insert-char
+	lf of ins-char cur-down sol show-page endof
+	ins-char
 	endcase
 ;
 
 : del-word
 line-dirty!
-begin 
+begin
 editpos c@ eol= if exit then
 editpos c@ del-char space= if exit then
 again ;
 
-28 allot value clipboard
-variable clipboard-count
-0 clipboard-count !
+variable clip 26 allot
+variable clip-count
+0 clip-count !
 
 : yank-line
-linelen clipboard-count !
-curlinestart @ clipboard linelen 
-cmove ;
+linelen clip-count !
+curlinestart @ clip linelen
+move ;
 
 : del-line
-sol 1 to need-refresh 
+sol 1 to need-refresh
 yank-line
 ( contract buffer )
 curlinestart @ find-next-line
 curlinestart @
 2dup swap - -rot
-eof @ curlinestart @ - cmove
+eof @ curlinestart @ - move
 eof +! ;
 
 : del
-[char] d set-status
+'d' set-status
 key case
-[char] w of del-word endof
-[char] d of del-line endof
+'w' of del-word endof
+'d' of del-line endof
 endcase clear-status ;
 
-10 allot value search-buf
+variable search-buf e allot
 
 : are-equal ( len a1 a2 -- equal? )
 	rot ( a1 a2 len )
@@ -489,97 +412,46 @@ endcase clear-status ;
 	again
 ;
 
-18 allot value drivebuf
-
-: do-backup
-	\ scratch old backup
-	drivebuf
-	[char] s over c! 1+
-	[char] : over c! 1+
-	[char] . over c! 1+
-	dup
-	filename swap filename-len c@ cmove
-	filename-len c@ +
-	CR swap c!
-
-	drivebuf filename-len c@ 4 +
-    f openw f closew
-
-	\ rename to new backup
-	drivebuf
-	[char] r over c! 1+
-	1+ \ colon already in place...
-	[char] . over c! 1+
-	filename-len c@ + \ filename ok
-	[char] = over c! 1+
-	dup
-	filename swap filename-len c@ cmove
-	filename-len c@ + \ filename ok
-	CR swap c!
-
-	drivebuf filename-len c@ 2 * 5 +
-    f openw f closew
-;
-
 : write-file
+filename-len c@ 0= if
+." no filename"
+key drop exit then
+
 rom-kernal
-do-backup
+page ." saving "
+filename filename-len c@ type ." .."
 
-bufstart
-eof @
-filename filename-len c@
-saveb
-1 to need-refresh ;
+\ scratch old file
+here
+'s' over c! 1+
+'0' over c! 1+
+':' over c! 1+
+filename over filename-len c@ move
+filename-len c@ + lf swap c!
+here filename-len c@ 4 +
+f openw f closew
 
-: save-as
-	[char] ! emit
-	0 ( len )
-	filename ( len filename )
-	begin
-		key
+bufstart eof @
+filename filename-len c@ saveb
+key to need-refresh ;
 
-		dup 5f = if \ leftarrow
-			2drop
-			drop
-			exit
-		then
-		dup cr= if
-			2drop ( len )
-			filename-len c!
-			write-file
-			exit
-		then
+: :w! 1 to need-refresh
+'!' emit filename f accept
+?dup 0= if exit then
+filename-len c! write-file ;
 
-		dup emit
-
-		( len filename key )
-		over c!
-
-		( len filename )
-		1+
-		swap 1+
-		swap
-	again
-;
-
-: colon-w
-	1 18 setcur
-	[char] w emit
-	key
-	case
-	CR of write-file endof
-	[char] ! of save-as endof
-	endcase
-;
+: :w 1 18 setcur 'w' emit key case
+lf of write-file endof
+'!' of :w! endof endcase ;
 
 : find-handler
 	0 18 setcur
 	clear-status
-	[char] / emit
+	'/' emit
 	0 ( count )
 	begin
 		key dup
-		CR <> if
+		lf <> if
 			( count key )
 			dup emit
 			over search-buf + ( count key dst )
@@ -599,84 +471,60 @@ saveb
 ;
 
 : open-line
-sol CR insert-char sol
-insert-start
+sol lf ins-char sol
+ins-start
 1 to need-refresh ;
 
 : paste-line
-open-line insert-stop
-( make room for clipboard contents )
+open-line ins-stop
+( make room for clip contents )
 curlinestart @
-dup clipboard-count @ +
-eof @ 1+ curlinestart @ - cmove>
-( copy from clipboard )
-clipboard
+dup clip-count @ +
+eof @ 1+ curlinestart @ - move
+( copy from clip )
+clip
 curlinestart @
-clipboard-count @ cmove
+clip-count @ move
 ( update eof )
-clipboard-count @ eof +! ;
+clip-count @ eof +! ;
 
-: change-word
-del-word
-bl insert-char
-cur-left
-insert-start ;
+: change-word del-word bl ins-char
+cur-left ins-start ;
 
-: force-cur-down
-editpos
-cur-down
-editpos = if
-eol
-force-cur-right
-CR insert-char
-cur-down
+: force-down editpos cur-down editpos =
+if eol force-right lf ins-char cur-down
 then ;
 
 header maintable
-key i c, ' insert-start ,
-key a c, ' append-start ,
-key / c, ' find-handler ,
+'i' c, ' ins-start ,
+'a' c, ' append-start ,
+'/' c, ' find-handler ,
 ( ctrl+u )
 15 c, ' half-page-back ,
 ( ctrl+d )
 4 c, ' half-page-fwd ,
-key J c, ' join-lines ,
-key g c, ' goto-start ,
-key G c, ' goto-eof ,
-key $ c, ' eol ,
-key 0 c, ' sol ,
-key r c, ' replace-char ,
-key O c, ' open-line ,
-key P c, ' paste-line ,
-key x c, ' del-char ,
-key X c, ' backspace ,
-key b c, ' word-back ,
-key w c, ' word-fwd ,
-key d c, ' del ,
-LEFT c, ' cur-left ,
-RIGHT c, ' cur-right ,
-UP c, ' cur-up ,
-DOWN c, ' cur-down ,
-key h c, ' cur-left ,
-key l c, ' cur-right ,
-key k c, ' cur-up ,
-key j c, ' cur-down ,
+'J' c, ' join-lines ,
+'g' c, ' goto-start ,
+'G' c, ' goto-eof ,
+'$' c, ' eol ,
+'0' c, ' sol ,
+'r' c, ' replace-char ,
+'O' c, ' open-line ,
+'P' c, ' paste-line ,
+'x' c, ' del-char ,
+'X' c, ' backspace ,
+'b' c, ' word-back ,
+'w' c, ' word-fwd ,
+'d' c, ' del ,
+left c, ' cur-left ,
+right c, ' cur-right ,
+up c, ' cur-up ,
+down c, ' cur-down ,
+'h' c, ' cur-left ,
+'l' c, ' cur-right ,
+'k' c, ' cur-up ,
+'j' c, ' cur-down ,
 0 c,
-
-\ custom restore handler
-\ "vi"
-here key v c, key i c, d c, 0 c,
-here cli, \ entry
-swap dup \ asm vi vi 
-\ compile-ram="vi"
-lda,# compile-ram sta,
-100/ lda,# compile-ram 1+ sta,
-\ lores
-9b lda,# d011 sta, 17 lda,# dd00 sta,
-17 lda,# d018 sta,
-318 @ jmp, \ jump to normal restore
-: compile-run sei literal 318 ! cli
-bufstart compile-ram ! ;
 
 : main-handler ( key -- quit? )
 	['] maintable ( key tableptr )
@@ -686,7 +534,7 @@ bufstart compile-ram ! ;
 		2dup ( key tableptr key tableptr )
 		c@ = if
 			( key tableptr )
-			1+ @ 
+			1+ @
 			execute
 			drop 0 exit
 		then
@@ -694,49 +542,51 @@ bufstart compile-ram ! ;
 
 		dup c@ 0=
 	until
-	
+
 	drop
 
 	case ( key )
 
-    [char] y of \ yy
-     key [char] y = if
+    'y' of \ yy
+     key 'y' = if
      yank-line
     then endof
-	[char] o of force-cur-down open-line endof
-	[char] p of force-cur-down paste-line endof
-	[char] Z of
+	'o' of force-down open-line endof
+	'p' of force-down paste-line endof
+	'Z' of
 		key
 		case
-		[char] Z of write-file ffff exit endof
+		'Z' of write-file ffff exit endof
 		endcase
 	endof
-	[char] : of 
-		[char] : set-status
-		key 
+	':' of
+		':' set-status
+		key
 		case
-		[char] w of colon-w endof
-		[char] q of ffff exit endof
+		'w' of :w endof
+		'q' of ffff exit endof
 		endcase
 		clear-status
 	endof
 
-	[char] c of
+	'c' of
 		key
-		[char] w = if change-word then
+		'w' = if change-word then
 	endof
 
-	( cursor )
-    \ eof should be 0 terminated!
-    eof @ c@ 0= assert
-    \ eof @ ae ! 
-	88 of compile-run ffff exit endof \ f7
-
-	endcase
+	88 of drop cleanup rom-kernal \ f7
+        bufstart eof @ bufstart - 1-
+        evaluate quit endof endcase
 	0
 ;
 
 : main-loop
+\ init colors -- border bgcol curscol
+d020 c@ d021 c@ 286 c@
+2 d021 c! a d020 c! 1 286 c!
+d800 400 1 fill
+
+show-page
 	begin
         ram-kernal
 		0 to need-refresh
@@ -744,16 +594,25 @@ bufstart compile-ram ! ;
 
 		depth \ stack check...
 
-		show-cursor
-        key
-		hide-cursor
+		\ show cursor
+        ins-active 0= if curx @
+        linelen dup if 1- then min
+        curx c! then cursor-scr-pos
+        dup @ 80 or swap c!
 
-		insert-active if
-			insert-handler
+        key
+
+        \ hide cursor
+        cursor-scr-pos dup @ 7f and
+        swap c!
+
+		ins-active if
+			ins-handler
 		else
-			main-handler if 
+			main-handler if
 				drop
                 rom-kernal
+                cleanup
 				exit
 			then
 		then
@@ -766,39 +625,32 @@ bufstart compile-ram ! ;
 			then
 		then
 
-		depth 1- = assert \ warn if stack changed
-	again
-;
-
-\ bring back editor
-: fg
-\ check sentinel
-bufstart 1- c@ if ." err" exit then
-init
-push-colors
-show-page
-main-loop
-cleanup ;
+depth 1- <> abort" stk"
+bufstart 1- c@ abort" sof"
+eof @ c@ abort" eof" again ;
 
 : vi
-depth 0= if \ in case no param
-eof @ if fg exit else
-s" noname" then then
+\ modifies kernal to change kbd prefs
+ram-kernal eaea @ 8ca <> if
+rom-kernal
+e000 dup 2000 move \ rom => ram
+a eaea c! \ repeat delay
+2 eb1d c! \ repeat speed
+then
 
-init
-go-to-file-start
+80 28a c! \ key repeat on
+clear-status
 
-\ store away filename
-2dup ( str len str len )	
-filename-len c!
-filename f cmove
+lf word count dup 0= if \ no param?
+eof @ if \ something in buffer?
+2drop main-loop exit \ yes - continue edit
+then then
 
-do-load
-push-colors
-show-page
-main-loop
-cleanup ;
+2dup filename-len c! filename f move
 
-loc vi
-hide-to CR
-hidden
+reset-buffer
+?dup if \ load file
+rom-kernal bufstart loadb
+if reset-buffer else \ file err
+ae @ eof ! 0 eof @ c! then
+else drop then main-loop ;

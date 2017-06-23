@@ -1,4 +1,7 @@
-map <F4> :wall!<CR>:make<CR>
+map <F4> :wall!<CR>:make all<CR>
 map <F5> :!x64 durexforth.d64 &<CR>
 
-set columns=80
+set nomodeline
+
+" acme
+set errorformat+=Error\ -\ File\ %f\\,\ line\ %l\ %m 

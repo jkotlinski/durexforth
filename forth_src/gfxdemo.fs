@@ -1,29 +1,34 @@
 \ examples from c64 step by step
 \ programming, gfx book 3, phil cornes
 
-s" rnd" load
-s" sin" load
+require rnd
+require sin
 
-: done key drop lores ;
+d020 c@
 
 : blkcol rot 2/ 2/ 2/
 rot 2/ 2/ 2/ rot blkcol ;
 
+.( lineweb..)
 : lineweb
-hires 7 clrcol
+7 clrcol
 5 begin
 dup 140 < while
 dup 0 plot 96 c8 line
 dup c7 plot 96 0 line
-a + repeat drop done ;
+a + repeat drop ;
+hires lineweb key drop lores
 
+.( rndline..)
 : rndline
 hires 10 clrcol
 80 begin ?dup while
-rnd ab / 20 -
-rnd f8 / 20 - line
-1- repeat done ;
+rnd 0 ab um/mod nip 20 -
+rnd 0 f8 um/mod nip 20 - line
+1- repeat ;
+hires rndline key drop lores
 
+.( radiant..)
 : radiant
 hires d0 clrcol
 168 begin
@@ -32,8 +37,10 @@ hires d0 clrcol
 12c over *cos 32 +
 over 12c swap *sin 64 +
 line
-1- repeat done ;
+1- repeat ;
+hires radiant key drop lores
 
+.( diamond..)
 : diamond
 hires 12 clrcol
 2 d020 c!
@@ -44,8 +51,10 @@ a0 over line
 13f 64 line
 a0 over c7 swap - line
 0 64 line
-5 + repeat drop done ;
+5 + repeat drop ;
+hires diamond key drop lores
 
+.( reccirc..)
 : reccircgo ( x r -- )
 dup if
 2dup 64 swap circle
@@ -55,10 +64,10 @@ then 2drop ;
 
 : reccirc
 hires 7 clrcol
-a0 50 reccircgo done ;
+a0 50 reccircgo ;
+hires reccirc key drop lores
 
-hide reccircgo
-
+.( 2reccirc..)
 variable yd
 
 : 2reccircgo ( x r -- )
@@ -74,11 +83,10 @@ then 2drop ;
 : 2reccirc
 hires 7 clrcol
 64 yd !
-a0 50 2reccircgo done ;
+a0 50 2reccircgo ;
+hires 2reccirc key drop lores
 
-hide yd
-hide 2reccircgo
-
+.( erasecirc..)
 : erasecirc
 hires 7 clrcol
 0 begin dup 140 < while
@@ -91,9 +99,11 @@ dup 0 swap plot dup 13f swap line
 a0 64 plot
 dup 64 swap *cos a0 +
 over 64 swap *sin 64 + line
-1- repeat 1 erase loop done 
+1- repeat 1 erase loop
 0 erase ;
+hires erasecirc key drop lores
 
+.( rotsqr..)
 : rotsqr
 hires 16 clrcol
 8 d020 c! 1 erase
@@ -108,8 +118,10 @@ dup dup *sin a0 +
 over dup *cos 64 swap - line
 dup dup *cos a0 +
 over dup *sin 64 + line
-5 - repeat loop 0 erase lores ;
+5 - repeat loop 0 erase ;
+hires rotsqr key drop lores
 
+.( seascape..)
 : seascape
 0 d020 c!
 hires e clrcol
@@ -133,10 +145,10 @@ c4 88 do j i 6 blkcol 8 +loop
 
 119 e8 do 81 50 do
 j i 7e blkcol
-8 +loop 8 +loop done ;
+8 +loop 8 +loop ;
+hires seascape key drop lores
 
-\ --- jungle
-
+.( jungle..)
 header jungledata
 c , a8 , ffff , 1 , e , 5f ,
 2f , 5f , f , 57 , f , 18 ,
@@ -216,24 +228,22 @@ else over fffe = if
 2drop a0 50 paint a0 b4 paint
 jcol jcol jcol jcol jcol
 jcol jcol jcol jcol jcol
-done exit then
+exit then
 line? @ if line else plot then
 then again ;
+hires jungle key drop lores
 
-hide jcol hide line? hide data
-hide jungledata
+.( colorchart..)
 
-\ --- colorchart
-
-defchar sqr
-00000000
-00000000
-00111100
-00111100
-00111100
-00111100
-00000000
-00000000
+create sqr
+%00000000 c,
+%00000000 c,
+%00111100 c,
+%00111100 c,
+%00111100 c,
+%00111100 c,
+%00000000 c,
+%00000000 c,
 
 : colorchart
 hires 9c clrcol c d020 c!
@@ -275,14 +285,7 @@ a 13 s" 15" text
 rot d + 8 * rot 4 + 8 * rot blkcol
 2dup swap d + swap 4 + sqr drawchar
 1+ repeat drop
-1+ repeat drop done ;
+1+ repeat drop ;
+hires colorchart key drop lores
 
-hide sqr
-hide done
-
-: gfxdemo
-d020 c@
-lineweb rndline radiant diamond
-reccirc 2reccirc erasecirc rotsqr
-seascape jungle colorchart d020 c! ; 
-gfxdemo
+d020 c!

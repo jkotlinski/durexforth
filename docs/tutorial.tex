@@ -2,11 +2,11 @@
 
 \section{Interpreter}
 
-Start up durexForth. If loaded successfully, it will greet you with a friendly \texttt{ok}. You have landed in the interpreter!
+Start up durexForth. When loaded, it will greet you with a blinking yellow cursor, waiting for your input. You have landed in the interpreter!
 
-Let's warm it up a little. Enter \texttt{1} (followed by return). You have now put a digit on the stack. This can be verified by the command \texttt{.s}, which will print out the stack. Now enter \texttt{.} to pop the digit and print it to screen, followed by \texttt{.s} to verify that the stack is empty.
+Let's warm it up a little. Enter \texttt{1} (followed by return). You have now put a digit on the stack. This can be verified by the command \texttt{.s}, which will print the stack contents without modifying it. Now enter \texttt{.} to pop the digit and print it to screen, followed by \texttt{.s} to verify that the stack is empty.
 
-Now some arithmetics. \texttt{1000 a * .} will calculate $\$a \times \$1000$ and print the result on the screen. \texttt{6502 100 / 1- .} will calculate and print $(\$6502 / \$100) - 1$.
+Now something about numbers. The default input mode in DurexForth is hexadecimal. As an example, \texttt{1000 a * u.} will calculate $\mathtt{a \times 1000}$ and print the result $\mathtt{a000}$. If you wish, it is possible to switch numerical base using \texttt{decimal} and \texttt{hex}. Or, you can prefix \texttt{\$}, \texttt{\#} or \texttt{\%} to your number to set a base for it: like \texttt{\$d020}, \texttt{\#1234} or \texttt{\%11010101}. 
 
 Let's define a word \texttt{bg!} for setting the border color\ldots 
 
@@ -21,41 +21,22 @@ Then, try changing it back again with \texttt{0 bg!}.
 
 The editor (fully described in chapter \ref{editor}) is convenient for editing larger pieces of code. With it, you keep an entire source file loaded in RAM, and you can recompile and test it easily.
 
-Start the editor by typing \texttt{vi}. You will enter the pink editor screen.
+Start the editor by typing \texttt{vi}. You will enter the red editor screen. To enter text, first press \texttt{i} to enter insert mode. This mode allows you to insert text into the buffer. You can see that it's active on the \texttt{I} that appears in the lower left corner. This is a good start for creating a program!
 
-To enter text, first press \texttt{i} to enter insert mode. This mode allows you to insert text into the buffer. You can see that it's active on the \texttt{I} that appears in the lower left corner.
-
-This is a good start for making a program. 
-But first, let's get rid of the "bg!" word we created previously. Enter:
+Now, enter the following lines\ldots
 
 \begin{verbatim}
-forget bg!
+: flash begin 1 d020 +! again ; flash
 \end{verbatim}
 
-\ldots and press $\leftarrow$ to leave insert mode. The line you entered forgets the \texttt{bg!} word that you defined in the last section, and everything defined after it. Let's try out if it works.
+\ldots and then press $\leftarrow$ to leave insert mode.
+Press \textsc{F7} to compile and run. If everything is entered right, you will be facing a wonderful color cycle.
 
-First, quit the editor by pressing \texttt{:q}. You should now be back in the interpreter screen.
-Verify that the word \texttt{bg!} still exists by  entering \texttt{0 bg!}, \texttt{1 bg!} like you did
-before. Then, jump back to the editor using the command \texttt{vi}. You should return to your edit buffer with the lonely \texttt{forget bg!} line.
-
-Now, compile and run the buffer by pressing \texttt{F7}. You will be thrown out to the interpreter
-again. Entering \texttt{bg!} should now give you the error \colorbox{yellow}{\texttt{bg!?}}. Success
---- we have forgotten the \texttt{bg!} word. Now, get back into the editor by entering \texttt{vi}.
-
-Beneath \texttt{forget bg!}, add the following lines:
-
-\begin{verbatim}
-: flash begin d020 c@ 1+ d020 c! again ;
-flash
-\end{verbatim}
-
-\texttt{flash} will cycle the border color infinitely. Before trying it out, go up and change \texttt{forget bg!} to \texttt{forget flash}. This makes sure you won't run out of RAM, no matter how many times you recompile the program. Now press \texttt{F7} to compile and run. If everything is entered right, you will be facing a wonderful color cycle.
-
-To get back into the editor, press Restore key. 
+When you finished watching, press \textsc{RESTORE} to quit your program, then enter \texttt{vi} to reopen the editor.
 
 \section{Assembler}
 
-If you need to flash as fast as possible, it is possible to use the durexForth assembler to generate machine code. \texttt{code} and \texttt{;code} define a code word, just like \texttt{:} and \texttt{;} define Forth words. Within a code word, you can use assembler mnemonics. 
+If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. \texttt{code} and \texttt{;code} define a code word, just like \texttt{:} and \texttt{;} define Forth words. Within a code word, you can use assembler mnemonics. 
 
 \begin{verbatim}
 code flash
@@ -123,7 +104,7 @@ and overflows.
 \begin{verbatim}
 : mainloop begin
 ( do stuff here... )
-depth if ." err" exit then
+depth abort" depth not 0"
 again ;
 \end{verbatim}
 
@@ -131,23 +112,26 @@ again ;
 
 \subsection{Stripping Modules}
 
-By default, durexForth boots up with all modules pre-compiled in RAM:
+By default, durexForth boots up with these modules pre-compiled in RAM:
 
 \begin{description}
-\item[doloop] Do-loop words.
-\item[debug] Words for debugging.
-\item[asm] The assembler.
-\item[vi] The text editor.
-\item[ls] List disk contents.
-\item[gfx] Graphics module.
+    \item[asm] The assembler. (Required and not forgettable.)
+    \item[labels] Assembler labels.
+    \item[doloop] Do-loop words.
+    \item[format] Numerical formatting words.
+    \item[sys] System calls.
+    \item[debug] Words for debugging.
+    \item[ls] List disk contents.
+    \item[vi] The text editor.
+    \item[require] The words require and required.
 \end{description}
 
 To reduce RAM usage, you may make a stripped-down version of durexForth. Do this by following these steps:
 
 \begin{enumerate}
-\item Issue \texttt{forget modules} to forget all modules.
-\item Optionally re-add the \texttt{modules} marker with \texttt{header modules}.
-\item One by one, load the modules you want included with your new Forth. (E.g. \texttt{s" debug" load})
+\item Issue \texttt{modules} to forget all modules.
+\item Optionally re-add the \texttt{modules} marker with \texttt{marker modules}.
+\item One by one, load the modules you want included with your new Forth. (E.g. \texttt{include debug})
 \item Save the new system with e.g. \texttt{s" acmeforth" save-forth}.
 \end{enumerate}
 
@@ -183,5 +167,5 @@ To save the new configuration to disk, use \texttt{save-forth}.
 \subsection{Other}
 
 \begin{itemize}
-\item \href{http://code.google.com/p/durexforth/}{durexForth source code}
+\item \href{https://github.com/jkotlinski/durexforth}{durexForth source code}
 \end{itemize}

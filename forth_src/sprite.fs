@@ -6,7 +6,6 @@ here
 swap 80lsr over c@ or swap c! ;
 : clrbit ( n addr -- )
 swap 80lsr invert over c@ and swap c! ;
-hide 80lsr
 
 : sp-x! ( x n -- )
 2dup 2* d000 + c! \ lsb
@@ -30,20 +29,13 @@ tuck sp-y! sp-x! ;
 : sp-col! ( c n -- ) d027 + c! ;
 
 ( read sprite byte )
-: ks key bl <> and or ;
+: ks 
+2* source drop >in @ + c@
+1 >in +! bl <> 1 and or ;
 : rdb ( addr -- addr )
-0 80 ks 40 ks 20 ks 10 ks
-8 ks 4 ks 2 ks 1 ks
+0 ks ks ks ks ks ks ks ks
 over c! 1+ ;
-
-( read sprite line )
-: rdl rdb rdb rdb key drop ;
 
 ( read sprite to address )
 : sp-data ( addr -- )
-rdl rdl rdl rdl rdl rdl rdl
-rdl rdl rdl rdl rdl rdl rdl
-rdl rdl rdl rdl rdl rdl rdl drop ;
-
-hide rdl hide rdb hide ks
-hide setbit hide clrbit
+#21 0 do refill rdb rdb rdb loop drop ;

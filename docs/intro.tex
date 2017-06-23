@@ -8,9 +8,9 @@ Forth is a unique language. What is so special about it? It is a very low-level 
 
 Compared to C64 Basic, Forth is more attractive in almost every way. It is a lot faster, more memory effective, and more powerful.
 
-Compared to C, the story is a little different. It's hard to make a fair comparison. Theoretically Forth code can be very memory efficient, and it's possible to make Forth code that is leaner than C code. But it is also true that cc65 code is generally faster than Forth code.
+Compared to C, the story is a little different. It's hard to make a fair comparison. Theoretically Forth code can be very memory efficient, and it's possible to make Forth code that is leaner than C code, but it is also true that cc65 code is generally faster than Forth code.
 
-The main advantage of Forth is that the environment runs on the actual machine. It would not be a lot of fun to use a C compiler that runs on a standard C64. But with Forth, it's possible to create an entire development suite with editor, compiler and assembler that runs entirely on the C64.
+The main advantage of Forth is that the environment runs on the actual machine. It would not be a lot of fun to use a C compiler that runs on a standard C64, but with Forth, it's possible to create an entire development suite with editor, compiler and assembler that runs entirely on the C64.
 
 Another advantage is that Forth has an interpreter. Compared to cross-compiling, it is really nice to make small edits and tweaks without going through the entire edit-compile-link-transfer-boot-run cycle.
 
@@ -23,42 +23,51 @@ recommend \href{http://thinking-forth.sourceforge.net/}{Thinking Forth} by the s
 There are other Forths for c64, most notably Blazin' Forth. Blazin' Forth is excellent, but durexForth has some advantages:
 
 \begin{itemize}
-\item Store your Forth sources as text files - no crazy block file system.
+\item durexForth uses text files instead of a custom block file system.
 \item durexForth is smaller.
 \item durexForth is faster.
+\item durexForth can boot from cartridge.
+\item durexForth fully implements the Forth 2012 core standard.
 \item The durexForth editor is a vi clone.
 \item durexForth is open source (available at \href{https://github.com/jkotlinski/durexforth}{Github}).
 \end{itemize}
 
+\section{Contents}
+
+durexForth is packaged as a 16-kByte cartridge file and a system disk image. Using the cartridge is equivalent to loading durexForth from disk, but of course the cartridge boots a lot faster. The disk image also contains optional Forth modules that can be loaded at will.
+
 \section{Appetizers}
 
-Some demonstration files are included as appetizers.
+Some demonstration files are included on the disk as appetizers.
 
 \subsection{Graphics}
 
 The gfxdemo package demonstrates the high-resolution graphics, with some examples adapted from the book "Step-By-Step Programming C64 Graphics" by Phil Cornes. 
 Show the demos by entering:
 
-\texttt{s" gfxdemo" load}
+\texttt{include gfx}
+\texttt{include gfxdemo}
 
 When a demo has finished drawing, press any key to continue.
 
 \subsection{Fractals}
 
-The fractal package demonstrates turtle graphics. You can load the package as follows:
+The fractals package demonstrates turtle graphics by generating fractal images. Run it by entering:
 
-\texttt{s" fractal" load}
+\texttt{include fractals}
 
-The fractals can then be shown by typing \texttt{koch weed1 bush1 bush2}. When a fractal have finished drawing, press any key to continue.
+When an image has finished drawing, press any key to continue.
 
 \subsection{Music}
 
-The mmldemo package demonstrates the MML music capabilities. To run:
+The mmldemo package demonstrates the MML music capabilities. To play some music:
 
-\texttt{s" mmldemo" load frere-jaques sarias-song}
+\texttt{include mmldemo}
 
 \subsection{Sprites}
 
-The sprite package adds functionality for defining and displaying sprites. To run a demo:
+The sprite package adds functionality for defining and displaying sprites. To run the demo:
 
-\texttt{s" spritedemo" load}
+\texttt{include spritedemo}
+
+Exit the demo by pressing any key.

@@ -1,254 +1,235 @@
-: 2dup over over ;
 : 2+ 1+ 1+ ;
 : cr d emit ;
 : nip swap drop ;
-: * um* nip ;
-: loc word find ;
-: ' loc >cfa ;
 : jmp, 4c c, ;
-: ['] immediate ' 
-[ ' literal compile, ] ;
-: [char] immediate key 
-[ ' literal compile, ] ;
-: if immediate no-tce
-['] 0branch compile, 
-here 0 , ;
-: then immediate no-tce
-here swap ! ;
-: else immediate jmp, here 0 ,
-swap here swap ! ;
-: postpone immediate
-loc dup >cfa swap 2+ c@ 80 and 0= if
-[ ' literal compile, ] ['] compile, then
-compile, ;
-: begin immediate here ;
-: until immediate no-tce 
-postpone 0branch , ;
-: again immediate jmp, , ;
-: while immediate postpone 0branch here 0 , ;
-: repeat immediate no-tce
-jmp, swap , here swap ! ;
-: recurse immediate latest @ >cfa compile, ;
-: ( immediate no-tce 
-begin key [char] ) = until ;
-: \ immediate no-tce 
-begin key d = until ;
+: ['] ' [ ' literal compile, ]
+; immediate
+: [char] char [ ' literal compile, ]
+; immediate
+: else jmp, here 0 ,
+swap here swap ! ; immediate
+: postpone bl word find -1 = if
+[ ' literal compile, ] ['] compile,
+then compile, ; immediate
+: until postpone 0branch , ; immediate
+: again jmp, , ; immediate
+: recurse
+latest @ >cfa compile, ; immediate
+: ( begin getc dup 0= if refill then
+')' = if exit then again ; immediate
+: \ refill ; immediate
 : tuck ( x y -- y x y ) swap over ;
-: ?dup dup if dup then ;
 : <> ( a b -- c ) = 0= ;
 : u> ( n -- b ) swap u< ;
 : 0<> ( x -- flag ) 0= 0= ;
 
-: litstring ( -- addr len )
+: lits ( -- addr len )
 r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 
-: s" immediate no-tce ( -- addr len )
-state if ( compile mode )
-postpone litstring here 0 , 0
-begin key dup [char] " <>
+: s" ( -- addr len )
+state c@ if ( compile mode )
+postpone lits here 0 , 0
+begin getc dup '"' <>
 while c, 1+ repeat
-drop swap !
-else ( immediate mode )
+drop swap ! exit
+then ( immediate mode )
 here here
-begin key dup [char] " <>
+begin getc dup '"' <>
 while over c! 1+ repeat
-drop here - then ;
+drop here - ; immediate
 
 : type ( caddr u -- )
+0 d4 c! ( quote mode off )
 begin ?dup while
 swap dup c@ emit 1+ swap 1-
 repeat drop ;
 
-: ." immediate postpone s" postpone type ;
-: .( begin key dup [char] ) <>
-while emit repeat drop ;
+: ." postpone s" postpone type
+; immediate
+: .( begin getc dup ')' <>
+while emit repeat drop ; immediate
 .( compile base..)
 
-: case immediate 0 ;
-: of immediate 
-postpone over
-postpone =
-postpone if 
-postpone drop ;
-: endof immediate postpone else ;
-: endcase immediate no-tce
-postpone drop
-begin ?dup while postpone then 
-repeat ;
+: case 0 ; immediate
+: (of) over = if drop r> 2+ >r exit
+then branch ;
+: of postpone (of) here 0 , ; immediate
+: endof postpone else ; immediate
+: endcase postpone drop
+begin ?dup while postpone then
+repeat ; immediate
 
-( gets pointer to first data field, i.e., skips
-the first jsr )
+( gets pointer to first data field,
+i.e., skips the first jsr )
 : >dfa >cfa 1+ 2+ ;
-
-: hide
-loc ?dup if hidden else ." err" then ;
 
 ( dodoes words contain:
  1. jsr dodoes
- 2. two-byte code pointer. default: point to exit
+ 2. two-byte code pointer. default: rts
  3. variable length data )
-here 60 c, \ rts
+here 60 c, ( rts )
 : create
 header postpone dodoes literal , ;
 : does> r> 1+ latest @ >dfa ! ;
 
 .( asm..)
-s" asm" load
+s" asm" included
 
 code rot ( a b c -- b c a )
-sp1 2+ ldy,x sp1 1+ lda,x 
-sp1 2+ sta,x sp1    lda,x
-sp1 1+ sta,x sp1    sty,x
-sp0 2+ ldy,x sp0 1+ lda,x 
-sp0 2+ sta,x sp0    lda,x
-sp0 1+ sta,x sp0    sty,x ;code
+msb 2+ ldy,x msb 1+ lda,x
+msb 2+ sta,x msb    lda,x
+msb 1+ sta,x msb    sty,x
+lsb 2+ ldy,x lsb 1+ lda,x
+lsb 2+ sta,x lsb    lda,x
+lsb 1+ sta,x lsb    sty,x ;code
 : -rot rot rot ;
 
-: /mod 0 -rot um/mod ;
-: / /mod nip ;
-: mod /mod drop ;
-: */mod -rot um* rot um/mod ;
-: */ */mod nip ;
-
 code 100/
-sp1 lda,x sp0 sta,x 
-0 lda,#   sp1 sta,x ;code
+msb lda,x lsb sta,x
+0 lda,#   msb sta,x ;code
 
-\ creates value that is fast to read
-\ but can only be rewritten by "to".
-\  0 value foo
-\  foo . \ prints 0
-\  1 to foo
-\  foo . \ prints 1
+( creates value that is fast to read
+  but can only be rewritten by "to".
+   0 value foo
+   foo . \ prints 0
+   1 to foo
+   foo . \ prints 1 )
 : value ( n -- )
-dup code
-lda,# 100/ ldy,# 
+dup code lda,# 100/ ldy,#
 ['] pushya jmp, ;
+: constant value ;
 
-20 value bl
 : space bl emit ;
+: spaces ( n -- )
+begin ?dup while space 1- repeat ;
 
-0 value 0 1 value 1
-8b value zptmp
-8d value zptmp2
-9e value zptmp3
+1 value 1 8b value w
+8d value w2 9e value w3
 
-\ "0 to foo" sets value foo to 0
+( "0 to foo" sets value foo to 0 )
 : (to) over 100/ over 2+ c! c! ;
-: to immediate ' 1+
-state if
-postpone literal postpone (to)
-else (to) then ;
+: to ' 1+ state c@ if
+postpone literal postpone (to) exit
+then (to) ; immediate
 
-: hex 10 to base ;
-: decimal a to base ;
+: hex 10 base ! ;
+: decimal a base ! ;
 
-: 2drop ( a b -- ) immediate no-tce
-postpone drop postpone drop ;
-
-: forget loc ?dup if
-dup @ latest ! to here then ;
-
-: hide-to  ( -- )
-loc latest
-begin @ dup hidden 2dup = until
-2drop ;
+: 2drop ( a b -- )
+postpone drop postpone drop ; immediate
 
 : save-forth ( strptr strlen -- )
-compile-ram @ -rot 0 compile-ram !
-801 -rot here -rot saveb
-compile-ram ! ;
+801 -rot here -rot saveb ;
 
-code 2/ sp1 lsr,x sp0 ror,x ;code
+code 2/
+msb lda,x 80 cmp,# msb ror,x lsb ror,x
+;code
 code or
-sp1 lda,x sp1 1+ ora,x sp1 1+ sta,x
-sp0 lda,x sp0 1+ ora,x sp0 1+ sta,x
+msb lda,x msb 1+ ora,x msb 1+ sta,x
+lsb lda,x lsb 1+ ora,x lsb 1+ sta,x
 inx, ;code
 code xor
-sp1 lda,x sp1 1+ eor,x sp1 1+ sta,x
-sp0 lda,x sp0 1+ eor,x sp0 1+ sta,x
+msb lda,x msb 1+ eor,x msb 1+ sta,x
+lsb lda,x lsb 1+ eor,x lsb 1+ sta,x
 inx, ;code
-code +! ( num addr -- ) 
-sp0 lda,x zptmp sta,
-sp1 lda,x zptmp 1+ sta,
+code +! ( num addr -- )
+lsb lda,x w sta,
+msb lda,x w 1+ sta,
 0 ldy,# clc,
-zptmp lda,(y) sp0 1+ adc,x 
-zptmp sta,(y) iny,
-zptmp lda,(y) sp1 1+ adc,x 
-zptmp sta,(y)
+w lda,(y) lsb 1+ adc,x
+w sta,(y) iny,
+w lda,(y) msb 1+ adc,x
+w sta,(y)
 inx, inx, ;code
 
-: allot ( n -- prev-here )
-here tuck + to here ;
+:- dup inx, ;code
+code lshift ( x1 u -- x2 )
+lsb dec,x -branch bmi,
+lsb 1+ asl,x msb 1+ rol,x
+latest @ >cfa jmp,
+code rshift ( x1 u -- x2 )
+lsb dec,x -branch bmi,
+msb 1+ lsr,x lsb 1+ ror,x
+latest @ >cfa jmp,
 
-: variable 2 allot value ;
+: allot ( n -- ) here + to here ;
 
-code 0< sp1 lda,x 80 and,# +branch beq,
-ff lda,# :+ sp0 sta,x sp1 sta,x ;code
-: abs dup 0< if negate then ;
-: < - 0< ;
+: variable
+0 value
+here latest @ >cfa 1+ (to)
+2 allot ;
+
+code 0< msb lda,x 80 and,# +branch beq,
+ff lda,# :+ lsb sta,x msb sta,x ;code
+
+( from FIG UK... )
+: s>d dup 0< ;
+: ?negate 0< if negate then ;
+: abs dup ?negate ;
+: dnegate invert >r invert r> 1 m+ ;
+: ?dnegate 0< if dnegate then ;
+: dabs dup ?dnegate ;
+: m* 2dup xor >r >r abs r>
+abs um* r> ?dnegate ;
+: * m* drop ;
+( ...from FIG UK )
+
+: fm/mod ( from Gforth )
+dup >r
+dup 0< if negate >r dnegate r> then
+over 0< if tuck + swap then
+um/mod
+r> 0< if swap negate swap then ;
+
+( from FIG UK... )
+: /mod >r s>d r> fm/mod ;
+: / /mod nip ;
+: mod /mod drop ;
+: */mod >r m* r> fm/mod ;
+: */ */mod nip ;
+( ...from FIG UK )
+
+code <
+0 ldy,# sec,
+lsb 1+ lda,x lsb sbc,x
+msb 1+ lda,x msb sbc,x
++branch bvc, 80 eor,# :+
++branch bpl, dey, :+
+inx, lsb sty,x msb sty,x ;code
 : > swap < ;
 
 : max ( a b - c )
 2dup < if swap then drop ;
 : min ( a b - c )
 2dup > if swap then drop ;
-: within ( test low high -- flag )
-over - >r - r> u< ;
 
-: u. 0 >r begin base /mod swap
-dup a < if 7 - then 37 + >r
-?dup 0= until
-begin r> ?dup while emit repeat space ;
-: . dup 0< if ." -" negate then u. ;
+.( format..) s" format" included
+
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
-code sei sei, ;code
-code cli cli, ;code
+code rvs 12 lda,# ffd2 jsr, ;code
 
-: assert 0= if
-begin 1 d020 +! again then ;
+: abort"
+postpone if
+postpone rvs
+postpone ."
+postpone cr
+postpone abort
+postpone then ; immediate
 
-header modules
-.( labels..)
-s" labels" load
-.( doloop..)
-s" doloop" load
+: marker create latest @ ,
+does> @ dup to here @ latest ! ;
 
-: lshift ( x1 u -- x2 ) 0 do 2* loop ;
-: rshift ( x1 u -- x2 ) 0 do 2/ loop ;
+marker modules
 
-.( sys..)
-s" sys" load
-.( debug..)
-s" debug" load
-.( ls..)
-s" ls" load
-.( gfx..)
-s" gfx" load
-\ s" sprite" load
-\ ." gfxdemo.."
-\ s" gfxdemo" load
-\ ." turtle.."
-\ s" turtle" load
-.( vi..)
-s" vi" load
-
-: scratch ( strptr strlen -- )
-2dup here 2+ swap cmove>
-[char] s here c!
-[char] : here 1+ c!
-nip 2+ here swap f openw f closew ;
-
-hide pushya
-
-s" purge-hidden" load
-
-.( scratch old durexforth..)
-s" durexforth" scratch
+.( labels..) s" labels" included
+.( doloop..) s" doloop" included
+.( sys..) s" sys" included
+.( debug..) s" debug" included
+.( ls..) s" ls" included
+.( vi..) s" vi" included
+.( require..) s" require" included
 
 .( save new durexforth..)
-s" durexforth" save-forth
-
-.( done!) cr
+s" @0:durexforth" save-forth .( ok!) cr

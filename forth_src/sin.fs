@@ -99,8 +99,6 @@ cf4 , df3 , efb , 100c ,
 \ r = degree [0..ff]
 \ todo: lerp?
 : *cos ( a r -- b )
-cos over 2* 1+ um* drop swap - ;
+cos over 2* 1+ um* nip swap - ;
 : *sin ( a r -- b )
-sin over 2* 1+ um* drop swap - ;
-
-hide sintab
+sin over 2* 1+ um* nip swap - ;

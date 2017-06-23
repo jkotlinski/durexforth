@@ -1,0 +1,24 @@
+\chapter{SID}
+
+\section{Introduction}
+
+The \texttt{sid} module contains low-level words for controlling the SID chip. To load it, type \texttt{include sid}. To test that it works, run \texttt{sid-demo}.
+
+\subsection{Voice Control}
+
+\begin{description}
+    \item[voice! ( n -- )] Selects SID voice 0-2.
+    \item[freq! ( n -- )] Writes 16-bit frequency.
+    \item[pulse! ( n -- )] Writes 16-bit pulse value.
+    \item[control! ( n -- )] Writes 8-bit control value.
+    \item[srad! ( srad -- )] Writes 16-bit ADSR value. (Bytes are swapped.)
+    \item[note! ( n -- )] Plays note in range [0, 94], where 0 equals C-0. The tuning is correct for PAL.
+\end{description}
+
+\subsection{SID Control}
+
+\begin{description}
+    \item[cutoff! ( n -- )] Writes 16-bit filter cutoff value.
+    \item[filter! ( n -- )] Writes 8-bit filter value.
+    \item[volume! ( n -- )] Writes 8-bit volume.
+\end{description}

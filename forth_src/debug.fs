@@ -1,5 +1,5 @@
 : id. ( header -- )
-2+ dup 1+ swap c@ 1f and type space ;
+2+ dup 1+ swap c@ 1f and type ;
 : cfa> ( codepointer -- word )
 latest @ begin ?dup while
 2dup > if nip exit then
@@ -14,101 +14,84 @@ endof
 ['] litc of
     2+ dup c@ . 1-
 endof
-['] litstring of
-    [char] s emit
-    [char] " emit space
+['] lits of
+    's' emit
+    '"' emit space
     2+ dup 2+ over @ type
-    [char] " emit space
+    '"' emit space
     dup @ +
-endof
-['] ['] of
-    ." ['] "
-    2+ dup @ cfa> id.
 endof
 ['] (loop) of
     ." (loop) " 2+
 endof
-['] branch of
-    ." branch ( "
-    2+ dup @ .
-    ." ) "
+['] (of) of
+    ." (of) " 2+
 endof
 ['] 0branch of
-    ." 0branch ( "
-    2+ dup @ .
+    ." 0branch( "
+    2+ dup @ over - .
     ." ) "
 endof ( default )
-    dup
-    cfa> id.
+    dup cfa> id.
+    dup dup cfa> >cfa
+    2dup <> if '+' emit - .
+    else 2drop space then
 endcase
 2+ ;
 
 : see
-	loc ?dup 0= if exit then
-	here
-	latest @
-	begin
-		2 pick
-		over
-		<>
-	while
-		nip
-		dup @
-	repeat
-	
-	drop
-	swap ( end-of-word start-of-word )
+bl word find 0= if
+rvs count type '?' emit abort then
+here latest @
+begin 2 pick over <
+while nip dup @ repeat
 
-	[char] : emit space dup id.
-	dup 2+ c@ 80 and if ." immediate " then
+rot drop \ eow sow
 
-	>cfa
+':' emit space dup id. space
+dup 2+ c@ 80 and if ." immediate " then
 
-	begin
-		2dup >
-	while
-		dup c@ case 
-        20 of see-jsr endof
-        4c of ." jmp( " see-jsr ." ) " endof
-        e8 of 1+ ." inx " endof
-        60 of 1+ ." rts " endof
-        ." ? " swap 1+ swap
-        endcase
-	repeat
-	[char] ; emit cr
-	2drop
-;
-hide (loop)
+>cfa
+
+begin
+    2dup >
+while
+    dup c@ case
+    20 of see-jsr endof
+    4c of ." jp( " see-jsr ." ) " endof
+    e8 of 1+ ." drop " endof \ inx
+    60 of 1+ ." exit " endof \ rts
+    ." ? " swap 1+ swap
+    endcase
+repeat
+';' emit cr 2drop ;
 
 variable last-dump
 
-: c. dup fff0 and 0= if
-[char] 0 emit then . ;
 : dump ( addr -- )
-8 0 do dup . space
-dup 8 0 do dup c@ c. 1+ loop drop
+base @ swap hex
+8 0 do dup u.
+dup 8 0 do dup c@ 0 <# # # #> type
+space 1+ loop drop
 8 0 do dup c@
-dup bl [char] ] within 0= if
-drop [char] .
-then emit 1+ loop cr loop
-last-dump ! ;
+dup 7f and 20 < if drop '.' then
+emit 1+ loop cr loop
+last-dump ! base ! ;
 
 : n last-dump @ dump ;
 
-: ?hidden 2+ c@ 40 and ;
 : more d6 c@ 18 = if ." <more>"
 key drop page then ;
 : words
 page latest @ begin ?dup while
-more dup ?hidden 0= if dup id.
-then @ repeat cr ;
+more dup id. space @ repeat cr ;
 
 \ size foo prints size of foo
 : size ( -- )
-loc >r
+bl word find drop >r
 here latest @ \ prev curr
 begin dup while
-dup r@ = if
+dup r@ < if
 - . r> drop exit then
 nip dup @ repeat
 . drop r> drop ;

@@ -46,5 +46,3 @@ i note!
 11 control!
 200 0 do loop
 loop ;
-
-hide voice

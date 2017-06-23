@@ -1,4 +1,5 @@
-s" sprite" load
+require rnd
+require sprite
 
 340 sp-data
 DDD  UU U RRR  EEEEX   X
@@ -23,7 +24,6 @@ FF   O  O R RR  TT  H  H
 FF    OO  R RR  TT  H  H
 FF    OO  R RR  TT  H  H
 
-s" rnd" load
 : rnds rnd 100/ 7 and ;
 : demo
 7 begin 
@@ -36,5 +36,6 @@ begin
 rnd rnd rnds sp-xy!
 rnds sp-1h rnds sp-2h
 rnds sp-1w rnds sp-2w
-again ;
+key? until key drop
+8 0 do i sp-off loop ;
 demo
