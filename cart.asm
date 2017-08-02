@@ -35,7 +35,7 @@ warmstart
     lda #8
     sta $8e
     sta $ba ; last device
-    lda #$d
+    lda #$1
     sta $8d
     ldy #0
 -
@@ -64,7 +64,7 @@ warmstart
     jmp $80d
 
 durexforth_bin
-    !binary "build/durexforth",,$e
+    !binary "build/durexforth",,$2
 
 * = $bfff                     ; fill up to -$9fff (or $bfff if 16K)
      !byte 0
