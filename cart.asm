@@ -1,17 +1,17 @@
 !cpu 6510
 !ct raw
 !to "build/cart.bin", plain	; set output file and format
-	
+
 * = $8000
      !word coldstart            ; coldstart vector
      !word warmstart            ; warmstart vector
      !byte $C3,$C2,$CD,$38,$30  ; "CBM80". Autostart string
- 
+
 coldstart
     sei
     stx $d016
     jsr $fda3 ;Prepare IRQ
-     
+
     ; init system constants ($fd50)
     lda #0
     tay
@@ -22,10 +22,10 @@ coldstart
     bne -
     lda #4
     sta $288
-    
+
     jsr $fd15 ;Init I/O
     jsr $ff5b ;Init video
- 
+
 warmstart
     sei
     lda #<durexforth_bin
@@ -65,6 +65,6 @@ warmstart
 
 durexforth_bin
     !binary "build/durexforth",,$e
- 
+
 * = $bfff                     ; fill up to -$9fff (or $bfff if 16K)
      !byte 0
