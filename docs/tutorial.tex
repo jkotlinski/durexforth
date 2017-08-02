@@ -6,9 +6,9 @@ Start up durexForth. When loaded, it will greet you with a blinking yellow curso
 
 Let's warm it up a little. Enter \texttt{1} (followed by return). You have now put a digit on the stack. This can be verified by the command \texttt{.s}, which will print the stack contents without modifying it. Now enter \texttt{.} to pop the digit and print it to screen, followed by \texttt{.s} to verify that the stack is empty.
 
-Now something about numbers. The default input mode in DurexForth is hexadecimal. As an example, \texttt{1000 a * u.} will calculate $\mathtt{a \times 1000}$ and print the result $\mathtt{a000}$. If you wish, it is possible to switch numerical base using \texttt{decimal} and \texttt{hex}. Or, you can prefix \texttt{\$}, \texttt{\#} or \texttt{\%} to your number to set a base for it: like \texttt{\$d020}, \texttt{\#1234} or \texttt{\%11010101}. 
+Now something about numbers. The default input mode in DurexForth is hexadecimal. As an example, \texttt{1000 a * u.} will calculate $\mathtt{a \times 1000}$ and print the result $\mathtt{a000}$. If you wish, it is possible to switch numerical base using \texttt{decimal} and \texttt{hex}. Or, you can prefix \texttt{\$}, \texttt{\#} or \texttt{\%} to your number to set a base for it: like \texttt{\$d020}, \texttt{\#1234} or \texttt{\%11010101}.
 
-Let's define a word \texttt{bg!} for setting the border color\ldots 
+Let's define a word \texttt{bg!} for setting the border color\ldots
 
 \begin{verbatim}
 : bg! d020 c! ;
@@ -36,7 +36,7 @@ When you finished watching, press \textsc{RESTORE} to quit your program, then en
 
 \section{Assembler}
 
-If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. \texttt{code} and \texttt{;code} define a code word, just like \texttt{:} and \texttt{;} define Forth words. Within a code word, you can use assembler mnemonics. 
+If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. \texttt{code} and \texttt{;code} define a code word, just like \texttt{:} and \texttt{;} define Forth words. Within a code word, you can use assembler mnemonics.
 
 \begin{verbatim}
 code flash
