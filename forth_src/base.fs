@@ -119,7 +119,7 @@ then (to) ; immediate
 postpone drop postpone drop ; immediate
 
 : save-forth ( strptr strlen -- )
-801 -rot here -rot saveb ;
+801 here d word count saveb ;
 
 code 2/
 msb lda,x 80 cmp,# msb ror,x lsb ror,x
@@ -232,4 +232,5 @@ marker modules
 .( require..) s" require" included
 
 .( save new durexforth..)
-s" @0:durexforth" save-forth .( ok!) cr
+save-forth @0:durexforth
+.( ok!) cr

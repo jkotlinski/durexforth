@@ -132,14 +132,14 @@ To reduce RAM usage, you may make a stripped-down version of durexForth. Do this
 \item Issue \texttt{modules} to forget all modules.
 \item Optionally re-add the \texttt{modules} marker with \texttt{marker modules}.
 \item One by one, load the modules you want included with your new Forth. (E.g. \texttt{include debug})
-\item Save the new system with e.g. \texttt{s" acmeforth" save-forth}.
+\item Save the new system with e.g. \texttt{save-forth acmeforth}.
 \end{enumerate}
 
 \subsection{Custom Start-Up}
 
 You may launch a word automatically at start-up by setting the variable \texttt{start} to the execution token of the word.  Example: \texttt{' megademo start !}
 
-To save the new configuration to disk, use \texttt{save-forth}.
+To save the new configuration to disk, use e.g. \texttt{save-forth megademo}.
 
 \section{How to Learn More}
 
