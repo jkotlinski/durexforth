@@ -1089,15 +1089,6 @@ INTERPRET
     sta curr_word_no_tail_call_elimination
     jmp LITERAL
 
-.on_stack_underflow
-    lda	#$12 ; reverse on
-    jsr	PUTCHR
-    lda #'e'
-    jsr	PUTCHR
-    lda #'r'
-    jsr	PUTCHR
-    jmp .stop_error_print
-
 .found_word
     ; OK, we found a word...
 
@@ -1120,11 +1111,7 @@ FOUND_WORD_WITH_NO_TCE = * + 1
 
 .execute_word
     inx
-    jsr EXECUTE
-    ; Checks for stack underflow.
-    cpx #X_INIT+1
-    bpl .on_stack_underflow
-    rts
+    jmp EXECUTE
 
 print_word_not_found_error
     lda	#$12 ; reverse on
@@ -1271,6 +1258,8 @@ interpret_loop
 
 interpret_tib
     jsr	INTERPRET
+    cpx #X_INIT+1
+    bpl .on_stack_underflow
     lda TO_IN
     cmp TIB_SIZE
     bne interpret_tib
@@ -1288,8 +1277,16 @@ interpret_tib
     lda	#$d
     jmp	PUTCHR
 
-; --- EXIT
+.on_stack_underflow
+    lda	#$12 ; reverse on
+    jsr	PUTCHR
+    lda #'e'
+    jsr	PUTCHR
+    lda #'r'
+    jsr	PUTCHR
+    jmp .stop_error_print
 
+; --- EXIT
 
     +BACKLINK
     !byte	4 | F_IMMED
