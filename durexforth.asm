@@ -990,18 +990,6 @@ TCFA
     inc	MSB, x
 +   rts
 
-; EXECUTE
-    +BACKLINK
-    !byte	7
-    !text	"execute"
-EXECUTE
-    lda	LSB, x
-    sta W
-    lda	MSB, x
-    sta	W + 1
-    inx
-    jmp	(W)
-
 !src "number.asm"
 
     +BACKLINK
@@ -1100,16 +1088,13 @@ FOUND_WORD_WITH_NO_TCE = * + 1
 
     inx
     lda MSB-1, x
-    beq	.execute_word ; immediate
+    beq	EXECUTE ; immediate
 
     lda	STATE ; are we compiling?
-    beq	.execute_word ; no, execute it.
+    beq	EXECUTE ; no, execute it.
 
     ; OK, this word should be compiled...
     jmp COMPILE_COMMA
-
-.execute_word
-    jmp EXECUTE
 
 print_word_not_found_error
     lda	#$12 ; reverse on
@@ -1129,6 +1114,17 @@ print_word_not_found_error
     lda	#$d ; cr
     jsr	PUTCHR
     jmp ABORT
+
+    +BACKLINK
+    !byte	7
+    !text	"execute"
+EXECUTE
+    lda	LSB, x
+    sta W
+    lda	MSB, x
+    sta	W + 1
+    inx
+    jmp	(W)
 
     +BACKLINK
     !byte	4
