@@ -1098,19 +1098,17 @@ FOUND_WORD_WITH_NO_TCE = * + 1
     lda #0
     sta curr_word_no_tail_call_elimination
 
-    lda MSB, x
+    inx
+    lda MSB-1, x
     beq	.execute_word ; immediate
 
     lda	STATE ; are we compiling?
     beq	.execute_word ; no, execute it.
 
     ; OK, this word should be compiled...
-    inx
-    jsr COMPILE_COMMA
-    rts
+    jmp COMPILE_COMMA
 
 .execute_word
-    inx
     jmp EXECUTE
 
 print_word_not_found_error
