@@ -1086,10 +1086,11 @@ FOUND_WORD_WITH_NO_TCE = * + 1
     lda #0
     sta curr_word_no_tail_call_elimination
 
+    ; Executes the word if it is immediate, or interpreting.
     inx
-    lda MSB-1, x ; is word immediate?
-    ora STATE    ; or are we compiling?
-    beq	EXECUTE  ; no, execute it.
+    lda MSB-1, x
+    and STATE
+    beq	EXECUTE
 
     ; OK, this word should be compiled...
     jmp COMPILE_COMMA
