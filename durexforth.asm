@@ -1061,11 +1061,6 @@ ABORT
     !byte	9
     !text	"interpret"
 INTERPRET
-    ; Checks for stack underflow.
-    cpx #X_INIT+1
-    bpl .on_stack_underflow
-
--
     dex
     lda #K_SPACE
     sta LSB,x
@@ -1126,6 +1121,9 @@ FOUND_WORD_WITH_NO_TCE = * + 1
 .execute_word
     inx
     jmp EXECUTE
+    cpx #X_INIT+1
+    bpl .on_stack_underflow
+    rts
 
 print_word_not_found_error
     lda	#$12 ; reverse on
