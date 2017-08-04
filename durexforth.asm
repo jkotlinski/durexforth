@@ -636,6 +636,7 @@ PAGE
     lda #K_CLRSCR
     jmp PUTCHR
 
+; TODO: Use HERE instead of a separate WORD_BUFFER?
 WORD_BUFFER
 WORD_BUFFER_LENGTH
     !byte 0
