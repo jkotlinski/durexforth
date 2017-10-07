@@ -316,7 +316,11 @@ Thanks to polluks for suggestions!
  * editor: starting without filename now doesn't read from disk
  * editor: :w on unnamed buffer now prints "no filename"
 
-v1.6.2
+2017-08-03: v1.6.2
 
  * forth: various see improvements
  * forth: moved >body to compat
+
+2017-10-07: v1.6.3
+
+ * bring back float module
