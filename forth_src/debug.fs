@@ -27,6 +27,11 @@ endof
 ['] (of) of
     ." (of) " 2+
 endof
+['] branch of
+    ." branch( "
+    2+ dup @ over - .
+    ." ) "
+endof
 ['] 0branch of
     ." 0branch( "
     2+ dup @ over - .

@@ -328,3 +328,4 @@ Thanks to polluks for suggestions!
 v1.6.4
 
  * forth: added defer, defer!, is to compat
+ * debug: made see show branch
