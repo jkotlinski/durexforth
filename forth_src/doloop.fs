@@ -15,17 +15,25 @@ variable lstk 14 allot
 variable lsp lstk lsp !
 : >l ( n -- ) lsp @ ! 2 lsp +! ;
 
-: do
+: do 0
+postpone (do) here dup >l ; immediate
+
+: ?do
+postpone 2dup postpone = postpone if
+postpone 2drop postpone branch
+here swap 0 , postpone then
 postpone (do) here dup >l ; immediate
 
 : leave
 postpone unloop
 postpone branch here >l 0 , ; immediate
 
-: resolve-leaves ( dopos -- )
+: resolve-leaves ( ?dopos dopos -- )
 begin -2 lsp +!
 dup lsp @ @ < while
-here lsp @ @ ! repeat drop ;
+here lsp @ @ ! repeat drop
+\ ?do forward branch
+?dup if here swap ! then ;
 
 code (loop)
 w stx, tsx, \ x = stack pointer
