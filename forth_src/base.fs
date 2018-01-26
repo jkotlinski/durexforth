@@ -231,6 +231,11 @@ marker modules
 .( vi..) s" vi" included
 .( require..) s" require" included
 
+7000 value buf
+: go s" terrain" buf loadb
+buf ae @ buf - evaluate ;
+' go start !
+
 .( save new durexforth..)
 save-forth @0:durexforth
 .( ok!) cr

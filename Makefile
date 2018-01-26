@@ -6,6 +6,11 @@ TAG_DEPLOY = `git describe --tags --abbrev=0 | tr . _`
 
 all:	durexforth.d64
 
+terrain: terrain.fs durexforth.d64
+	cat build/header terrain.fs | ext/petcom - > build/terrain.pet
+	$(C1541) -attach durexforth.d64 -delete terrain
+	$(C1541) -attach durexforth.d64 -write build/terrain.pet terrain
+
 deploy: durexforth.d64 cart.asm
 	rm -rf deploy
 	mkdir deploy
