@@ -227,9 +227,10 @@ marker modules
 .( doloop..) s" doloop" included
 .( sys..) s" sys" included
 .( debug..) s" debug" included
-.( ls..) s" ls" included
-.( vi..) s" vi" included
-.( require..) s" require" included
+\ .( ls..) s" ls" included
+\ .( vi..) s" vi" included
+\ .( require..) s" require" included
+.( gfx..) s" gfx" included
 
 7000 value buf
 : go s" terrain" buf loadb
