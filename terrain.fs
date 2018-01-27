@@ -42,26 +42,20 @@ s 2/ + swap s 2/ + plot ;
 w 1- 0 do w 1- 0 do
 i j diamond s +loop s +loop ;
 
-variable n
+: get x @ y @ w * m + + + c@ c>d +
+swap 1+ swap ;
 : square ( x y -- )
-y ! x ! 0 n ! 0 \ sum
+y ! x ! 0 0 \ n sum
 \ sample up
 y @ s 2/ - -1 > if
-x @ y @ s 2/ - w * m + + c@ c>d +
-1 n +! then
+s 2/ w * negate get then
 \ sample down
-y @ s 2/ + w < if
-x @ y @ s 2/ + w * m + + c@ c>d +
-1 n +! then
+y @ s 2/ + w < if s 2/ w * get then
 \ sample left
-x @ s 2/ - -1 > if
-x @ s 2/ - y @ w * m + + c@ c>d +
-1 n +! then
+x @ s 2/ - -1 > if s 2/ negate get then
 \ sample right
-x @ s 2/ + w < if
-x @ s 2/ + y @ w * m + + c@ c>d +
-1 n +! then
-n @ / crnd +
+x @ s 2/ + w < if s 2/ get then
+swap / crnd +
 m x @ + y @ w * +
 dup c@ 0<> abort" s"
 c!
