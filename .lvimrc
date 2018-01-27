@@ -1,5 +1,4 @@
-map <F4> :wall!<CR>:make terrain<CR>
-map <F5> :!CCS64.exe durexforth.d64 &<CR>
+map <F5> :wall!<CR>:make terrain<CR>:!CCS64.exe durexforth.d64 &<CR>
 
 set nomodeline
 

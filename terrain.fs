@@ -1,11 +1,11 @@
 decimal
-15 constant w
+17 constant w
 w dup * constant mapsize
 here mapsize allot constant map
 map mapsize 0 fill
 
 variable range 256 range !
-variable stepsize 32 stepsize !
+variable stepsize 16 stepsize !
 
 : crnd rnd range @ / ;
 
@@ -15,11 +15,19 @@ crnd map w 1- + c! \ ne
 crnd map w dup * + 1- c! \ se
 crnd map w dup 1- * + c! \ sw
 
+: diamond . . cr ;
+: diamonds
+w 0 do w 0 do
+j i diamond
+stepsize @ +loop
+stepsize @ +loop ;
+: squares ;
 : diamond-square
 begin
 stepsize @ 1 > while
-stepsize @ 2/ stepsize !
+diamonds squares
 range @ 2* range !
+stepsize @ 2/ stepsize !
 repeat ;
 diamond-square
 
@@ -27,7 +35,7 @@ diamond-square
 
 : plot-3d
 w 0 do w 0 do
-j 15 * 88 + i -5 * + \ x
+j 15 * 64 + i -3 * + \ x
 i 8 * 50 + \ y
 map i w * j + + c@ c>d 2/ 2/ + \ yd
 plot loop loop ;
