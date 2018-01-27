@@ -24,7 +24,9 @@ dup s - \ nw nw ne se sw
 c@ c>d swap c@ c>d + swap
 c@ c>d + swap c@ c>d + 4 / \ nw avg
 crnd + swap \ val nw
-s 2/ + s 2/ w * + c! ;
+s 2/ + s 2/ w * +
+dup c@ 0<> abort" d"
+c! ;
 : diamonds
 w 1- 0 do w 1- 0 do
 i j diamond s +loop s +loop ;
@@ -52,7 +54,9 @@ x @ s 2/ + w < if
 x @ s 2/ + y @ w * m + + c@ c>d +
 1 n +! then
 n @ / crnd +
-m x @ + y @ w * + c! ;
+m x @ + y @ w * +
+dup c@ 0<> abort" s"
+c! ;
 
 : squares
 w 1- 0 do w 1- 0 do
