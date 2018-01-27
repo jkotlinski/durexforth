@@ -231,6 +231,7 @@ marker modules
 \ .( vi..) s" vi" included
 \ .( require..) s" require" included
 .( gfx..) s" gfx" included
+s" rnd" included
 
 7000 value buf
 : go s" terrain" buf loadb
