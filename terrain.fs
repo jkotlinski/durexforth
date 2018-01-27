@@ -10,6 +10,15 @@ m mapsize 0 fill \ debug only
 : crnd rnd r / ;
 : c>d dup $80 and if $ff00 or then ;
 
+variable x
+variable y
+: plot ( y x -- )
+x ! y !
+x @ 15 * 64 + y @ -3 * + \ x
+y @ 8 * 50 + \ y
+m y @ w * x @ + + c@ c>d 2/ 2/ + \ yd
+plot ;
+
 \ init endpoints
 crnd m c! \ nw
 crnd m w 1- + c! \ ne
@@ -17,6 +26,7 @@ crnd m w dup * + 1- c! \ se
 crnd m w dup 1- * + c! \ sw
 
 : diamond  ( x y -- )
+2dup
 w * + m + dup \ nw nw
 dup s + \ nw nw ne
 dup s w * + \ nw nw ne se
@@ -26,13 +36,12 @@ c@ c>d + swap c@ c>d + 4 / \ nw avg
 crnd + swap \ val nw
 s 2/ + s 2/ w * +
 dup c@ 0<> abort" d"
-c! ;
+c!
+s 2/ + swap s 2/ + plot ;
 : diamonds
 w 1- 0 do w 1- 0 do
 i j diamond s +loop s +loop ;
 
-variable x
-variable y
 variable n
 : square ( x y -- )
 y ! x ! 0 n ! 0 \ sum
@@ -55,7 +64,8 @@ x @ s 2/ + y @ w * m + + c@ c>d +
 n @ / crnd +
 m x @ + y @ w * +
 dup c@ 0<> abort" s"
-c! ;
+c!
+y @ x @ plot ;
 
 : squares
 w 0 do w s 2/ do
@@ -70,15 +80,9 @@ diamonds squares
 r 2* to r
 s 2/ to s
 repeat ;
-diamond-square
-
-: plot-3d
-w 0 do w 0 do
-j 15 * 64 + i -3 * + \ x
-i 8 * 50 + \ y
-m i w * j + + c@ c>d 2/ 2/ + \ yd
-plot loop loop ;
 
 hex 52 clrcol hires
-plot-3d
+0 0 plot 0 w 1- plot
+w 1- 0 plot w 1- dup plot
+diamond-square
 key drop lores
