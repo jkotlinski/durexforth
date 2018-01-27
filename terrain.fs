@@ -35,7 +35,6 @@ variable x
 variable y
 variable n
 : square ( x y -- )
-2dup . . cr
 y ! x ! 0 n ! 0 \ sum
 \ sample up
 y @ s 2/ - -1 > if
@@ -59,12 +58,10 @@ dup c@ 0<> abort" s"
 c! ;
 
 : squares
-w 1- 0 do w 1- 0 do
-i s 2/ + j square \ u
-i s 2/ + j s + square \ d
-i j s 2/ + square \ l
-i s + j s 2/ + square \ r
-s +loop s +loop ;
+w 0 do w s 2/ do
+i j square s +loop s +loop
+w s 2/ do w 0 do
+i j square s +loop s +loop ;
 
 : diamond-square
 begin
