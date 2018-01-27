@@ -2,12 +2,13 @@ decimal
 17 constant w
 w dup * constant mapsize
 here mapsize allot constant map
-map mapsize 0 fill
+map mapsize 0 fill \ debug only
 
-variable range 256 range !
-variable stepsize 16 stepsize !
+variable r 256 r ! \ range
+16 value s \ step size
 
-: crnd rnd range @ / ;
+: crnd rnd r @ / ;
+: c>d dup $80 and if $ff00 or then ;
 
 \ init endpoints
 crnd map c! \ nw
@@ -15,23 +16,30 @@ crnd map w 1- + c! \ ne
 crnd map w dup * + 1- c! \ se
 crnd map w dup 1- * + c! \ sw
 
-: diamond . . cr ;
+: diamond  ( x y -- )
+w * + map + \ nw
+dup s + \ nw ne
+dup s w * + \ nw ne se
+dup s - \ nw ne se sw
+c@ c>d swap c@ c>d + swap
+c@ c>d + swap c@ c>d + 4 / \ avg
+drop \ todo
+;
+
 : diamonds
-w 0 do w 0 do
-j i diamond
-stepsize @ +loop
-stepsize @ +loop ;
+w 1- 0 do w 1- 0 do
+i j diamond
+s +loop
+s +loop ;
 : squares ;
 : diamond-square
 begin
-stepsize @ 1 > while
+s 1 > while
 diamonds squares
-range @ 2* range !
-stepsize @ 2/ stepsize !
+r @ 2* r !
+s 2/ to s
 repeat ;
 diamond-square
-
-: c>d dup $80 and if $ff00 or then ;
 
 : plot-3d
 w 0 do w 0 do
