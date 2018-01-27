@@ -12,12 +12,13 @@ m mapsize 0 fill \ debug only
 
 variable x
 variable y
-: plot ( y x -- )
+: coord ( y x -- y x )
 x ! y !
-x @ 15 * 64 + y @ -3 * + \ x
-y @ 8 * 50 + \ y
-m y @ w * x @ + + c@ c>d 2/ 2/ + \ yd
-plot ;
+x @ 15 * 64 + y @ -3 * +
+y @ 8 * 50 +
+m y @ w * x @ + + c@ c>d 2/ 2/ + ;
+: plot ( y x -- )
+coord plot ;
 
 \ init endpoints
 crnd m c! \ nw
