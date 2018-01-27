@@ -17,7 +17,7 @@ x ! y !
 x @ 15 * 64 + y @ -3 * +
 y @ 8 * 50 +
 m y @ w * x @ + + c@ c>d 2/ 2/ + ;
-: plot ( y x -- )
+: plot! ( y x -- )
 coord plot ;
 
 \ init endpoints
@@ -38,7 +38,7 @@ crnd + swap \ val nw
 s 2/ + s 2/ w * +
 dup c@ 0<> abort" d"
 c!
-s 2/ + swap s 2/ + plot ;
+s 2/ + swap s 2/ + plot! ;
 : diamonds
 w 1- 0 do w 1- 0 do
 i j diamond s +loop s +loop ;
@@ -60,7 +60,7 @@ swap / crnd +
 m x @ + y @ w * +
 dup c@ 0<> abort" s"
 c!
-y @ x @ plot ;
+y @ x @ plot! ;
 
 : squares
 w 0 do w s 2/ do
@@ -76,8 +76,20 @@ r 2* to r
 s 2/ to s
 repeat ;
 
+: tri-nw ( y x -- )
+2dup coord plot 2dup 1+ coord line 2dup
+swap 1+ swap coord line coord line ;
+: tri-sw ( y x -- )
+2dup 1+ coord plot
+2dup 1+ swap 1+ swap coord line
+2dup swap 1+ swap coord line 1+ coord line ;
+: wireframe
+w 1- 0 do w 1- 0 do i j tri-nw loop loop
+w 1- 0 do w 1- 0 do i j tri-sw loop loop ;
+
 hex 52 clrcol hires
-0 0 plot 0 w 1- plot
-w 1- 0 plot w 1- dup plot
+0 0 plot! 0 w 1- plot!
+w 1- 0 plot! w 1- dup plot!
 diamond-square
+wireframe
 key drop lores
