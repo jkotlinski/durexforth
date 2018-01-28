@@ -1,5 +1,6 @@
 decimal
 17 constant w
+: w* dup 2* 2* 2* 2* + ;
 w dup * constant mapsize
 here mapsize allot constant m \ map
 m mapsize 0 fill \ debug only
@@ -17,7 +18,7 @@ $ff lda,# msb sta,x 1 @: ;code
 to x to y
 x 15 * 64 + y -3 * +
 y 2* 2* 2* 50 +
-m y w * x + + c@ c>d 2/ 2/ + ;
+m y w* x + + c@ c>d 2/ 2/ + ;
 
 \ init endpoints
 crnd m c! \ nw
@@ -26,34 +27,34 @@ crnd m w dup * + 1- c! \ se
 crnd m w dup 1- * + c! \ sw
 
 : diamond  ( x y -- )
-w * + m + dup \ nw nw
+w* + m + dup \ nw nw
 dup s + \ nw nw ne
-dup s w * + \ nw nw ne se
+dup s w* + \ nw nw ne se
 dup s - \ nw nw ne se sw
 c@ c>d swap c@ c>d + swap
 c@ c>d + swap c@ c>d + 4 / \ nw avg
 crnd + swap \ val nw
-s 2/ + s 2/ w * +
+s 2/ + s 2/ w* +
 dup c@ 0<> abort" d" c! ;
 : diamonds
 w 1- 0 do w 1- 0 do
 i j diamond s +loop s +loop ;
 
-: get x y w * m + + + c@ c>d +
+: get x y w* m + + + c@ c>d +
 swap 1+ swap ;
 : square ( x y -- )
 to y to x 0 0 \ n sum
 \ sample up
 y s 2/ - -1 > if
-s 2/ w * negate get then
+s 2/ w* negate get then
 \ sample down
-y s 2/ + w < if s 2/ w * get then
+y s 2/ + w < if s 2/ w* get then
 \ sample left
 x s 2/ - -1 > if s 2/ negate get then
 \ sample right
 x s 2/ + w < if s 2/ get then
 swap / crnd +
-m x + y w * +
+m x + y w* +
 dup c@ 0<> abort" s"
 c! ;
 
@@ -82,8 +83,8 @@ coord line ;
 : wireframe w 1- 0 do w 1- 0 do
 i j 2dup tri-nw tri-sw loop loop ;
 
-\ hex 52 clrcol hires
+hex 52 clrcol hires
 diamond-square
-\ wireframe
+wireframe
 .( ok)
 key drop
