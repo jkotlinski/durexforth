@@ -11,13 +11,13 @@ m mapsize 0 fill \ debug only
 code c>d lsb lda,x $80 and,# 1 @@ beq,
 $ff lda,# msb sta,x 1 @: ;code
 
-variable x
-variable y
+0 value x
+0 value y
 : coord ( y x -- y x )
-x ! y !
-x @ 15 * 64 + y @ -3 * +
-y @ 2* 2* 2* 50 +
-m y @ w * x @ + + c@ c>d 2/ 2/ + ;
+to x to y
+x 15 * 64 + y -3 * +
+y 2* 2* 2* 50 +
+m y w * x + + c@ c>d 2/ 2/ + ;
 
 \ init endpoints
 crnd m c! \ nw
@@ -39,21 +39,21 @@ dup c@ 0<> abort" d" c! ;
 w 1- 0 do w 1- 0 do
 i j diamond s +loop s +loop ;
 
-: get x @ y @ w * m + + + c@ c>d +
+: get x y w * m + + + c@ c>d +
 swap 1+ swap ;
 : square ( x y -- )
-y ! x ! 0 0 \ n sum
+to y to x 0 0 \ n sum
 \ sample up
-y @ s 2/ - -1 > if
+y s 2/ - -1 > if
 s 2/ w * negate get then
 \ sample down
-y @ s 2/ + w < if s 2/ w * get then
+y s 2/ + w < if s 2/ w * get then
 \ sample left
-x @ s 2/ - -1 > if s 2/ negate get then
+x s 2/ - -1 > if s 2/ negate get then
 \ sample right
-x @ s 2/ + w < if s 2/ get then
+x s 2/ + w < if s 2/ get then
 swap / crnd +
-m x @ + y @ w * +
+m x + y w * +
 dup c@ 0<> abort" s"
 c! ;
 
