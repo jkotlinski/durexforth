@@ -3,7 +3,6 @@ decimal
 : w* dup 2* 2* 2* 2* + ;
 w dup * constant mapsize
 here mapsize allot constant m \ map
-m mapsize 0 fill \ debug only
 
 256 value r \ range
 16 value s \ step size
@@ -20,12 +19,6 @@ x 15 * 64 + y -3 * +
 y 2* 2* 2* 50 +
 m y w* x + + c@ c>d 2/ 2/ + ;
 
-\ init endpoints
-crnd m c! \ nw
-crnd m w 1- + c! \ ne
-crnd m w dup * + 1- c! \ se
-crnd m w dup 1- * + c! \ sw
-
 : diamond  ( x y -- )
 w* + m + dup \ nw nw
 dup s + \ nw nw ne
@@ -34,8 +27,7 @@ dup s - \ nw nw ne se sw
 c@ c>d swap c@ c>d + swap
 c@ c>d + swap c@ c>d + 4 / \ nw avg
 crnd + swap \ val nw
-s 2/ + s 2/ w* +
-dup c@ 0<> abort" d" c! ;
+s 2/ + s 2/ w* + c! ;
 : diamonds
 w 1- 0 do w 1- 0 do
 i j diamond s +loop s +loop ;
@@ -54,9 +46,7 @@ x s 2/ - -1 > if s 2/ negate get then
 \ sample right
 x s 2/ + w < if s 2/ get then
 swap / crnd +
-m x + y w* +
-dup c@ 0<> abort" s"
-c! ;
+m x + y w* + c! ;
 
 : squares
 w 0 do w s 2/ do
@@ -83,8 +73,16 @@ coord line ;
 : wireframe w 1- 0 do w 1- 0 do
 i j 2dup tri-nw tri-sw loop loop ;
 
-hex 52 clrcol hires
+: create-map
+s" map" m loadb if
+crnd m c! \ nw
+crnd m w 1- + c! \ ne
+crnd m w dup * + 1- c! \ se
+crnd m w dup 1- * + c! \ sw
 diamond-square
+m m mapsize + s" map" saveb then ;
+
+create-map
+hex 52 clrcol hires
 wireframe
-.( ok)
-key drop
+key drop lores
