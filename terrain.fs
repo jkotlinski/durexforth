@@ -16,7 +16,7 @@ variable y
 : coord ( y x -- y x )
 x ! y !
 x @ 15 * 64 + y @ -3 * +
-y @ 8 * 50 +
+y @ 2* 2* 2* 50 +
 m y @ w * x @ + + c@ c>d 2/ 2/ + ;
 
 \ init endpoints
