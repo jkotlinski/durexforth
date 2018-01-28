@@ -8,7 +8,8 @@ m mapsize 0 fill \ debug only
 16 value s \ step size
 
 : crnd rnd r / ;
-: c>d dup $80 and if $ff00 or then ;
+code c>d lsb lda,x $80 and,# 1 @@ beq,
+$ff lda,# msb sta,x 1 @: ;code
 
 variable x
 variable y
