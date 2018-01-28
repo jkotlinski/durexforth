@@ -65,7 +65,7 @@ i j square s +loop s +loop ;
 
 : diamond-square
 begin
-s 1 > while
+s 1 > while s .
 diamonds squares
 r 2* to r
 s 2/ to s
@@ -82,7 +82,8 @@ coord line ;
 : wireframe w 1- 0 do w 1- 0 do
 i j 2dup tri-nw tri-sw loop loop ;
 
-hex 52 clrcol hires
+\ hex 52 clrcol hires
 diamond-square
-wireframe
-key drop lores
+\ wireframe
+.( ok)
+key drop
