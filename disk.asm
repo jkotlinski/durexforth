@@ -337,7 +337,13 @@ INCLUDED
     jsr _errorchread
     jmp ABORT
 +
-
     pla
     tax
-    rts
+
+    ; interpret until EOF
+-   jsr REFILL
+    lda READ_EOF
+    bne +
+    jsr interpret_tib
+    jmp -
++   rts
