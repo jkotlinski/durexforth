@@ -82,14 +82,12 @@ swap 1+ swap coord line coord line ;
 : tri-sw ( y x -- )
 2dup 1+ coord plot
 2dup 1+ swap 1+ swap coord line
-2dup swap 1+ swap coord line 1+ coord line ;
-: wireframe
-w 1- 0 do w 1- 0 do i j tri-nw loop loop
-w 1- 0 do w 1- 0 do i j tri-sw loop loop ;
+2dup swap 1+ swap coord line 1+
+coord line ;
+: wireframe w 1- 0 do w 1- 0 do
+i j 2dup tri-nw tri-sw loop loop ;
 
 hex 52 clrcol hires
-0 0 plot! 0 w 1- plot!
-w 1- 0 plot! w 1- dup plot!
 diamond-square
 wireframe
 key drop lores
