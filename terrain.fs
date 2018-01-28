@@ -54,13 +54,16 @@ i j square s +loop s +loop
 w s 2/ do w 0 do
 i j square s +loop s +loop ;
 
+: init-corners
+crnd m c! \ nw
+crnd m w 1- + c! \ ne
+crnd m w dup * + 1- c! \ se
+crnd m w dup 1- * + c! ; \ sw
+
 : diamond-square
-begin
-s 1 > while s .
-diamonds squares
-r 2* to r
-s 2/ to s
-repeat ;
+init-corners begin
+s 1 > while s . diamonds squares
+r 2* to r s 2/ to s repeat ;
 
 : tri-nw ( y x -- )
 2dup coord plot 2dup 1+ coord line 2dup
@@ -75,10 +78,6 @@ i j 2dup tri-nw tri-sw loop loop ;
 
 : create-map
 s" map" m loadb if
-crnd m c! \ nw
-crnd m w 1- + c! \ ne
-crnd m w dup * + 1- c! \ se
-crnd m w dup 1- * + c! \ sw
 diamond-square
 m m mapsize + s" map" saveb then ;
 
