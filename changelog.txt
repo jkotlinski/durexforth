@@ -327,6 +327,7 @@ Thanks to polluks for suggestions!
 
 v1.6.4
 
+ * forth: INCLUDED now interprets the file
  * forth: added ?do
  * forth: added defer, defer!, is to compat
  * debug: made see show branch
