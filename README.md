@@ -17,3 +17,5 @@ http://www.facebook.com/DurexForth
 "Ich finde das Forth klein und effektiv, wunderbar." -Peter Bierbach
 
 "Ist eine mächtige Sprache für ein 8-Bitter." -Pebisoft
+
+"The author of durexForth was quite helpful... There is even a vim-like editor, impressive for being on a C64." -Christian Johansson
