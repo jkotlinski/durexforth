@@ -101,9 +101,9 @@ geof
         JMP CHKIN     ; keyboard now input device again
 
 
-; LOADB ( filenameptr filenamelen dst -- status ) load binary file
+; LOADB ( filenameptr filenamelen dst -- endaddress ) load binary file
 ;  - s" base" 7000 loadb #load file to 7000
-;  - end of loaded file is available in $ae/$af afterwards
+;  - returns 0 on failure, otherwise address after last written byte
     +BACKLINK
     !byte 5
     !text	"loadb"
@@ -129,20 +129,23 @@ LOADB
 
     inx
     inx
-    lda	load_binary_status
-    sta	MSB, x
-    sta	LSB, x
-    beq	+
+load_binary_status = * + 1
+    lda	#0 ; 0 = fail, ff = success
+    bne	.success
+    sta MSB,x
+    sta LSB,x
     txa
     pha
     jsr	_errorchread
     pla
     tax
-+
     rts
-
-load_binary_status
-    !byte	0
+.success:
+    lda $af
+    sta	MSB, x
+    lda $ae
+    sta	LSB, x
+    rts
 
 ;load_binary_base
 ;	lda	#basename_end - basename
@@ -157,8 +160,8 @@ load_binary_laddr_lo = *+1
     ldx #$ff	;<load_address
 load_binary_laddr_hi = *+1
     ldy #$ff	;>load_address
+    sty	load_binary_status
     lda #0		;0 = load to memory (no verify)
-    sta	load_binary_status
     jsr LOAD
     bcs .disk_io_error
     ldx #$00      ; filenumber 0 = keyboard
@@ -179,9 +182,8 @@ load_binary_laddr_hi = *+1
 
     ;... error handling ...
     ldx #$00      ; filenumber 0 = keyboard
+    stx	load_binary_status
     jsr CHKIN     ; call CHKIN (keyboard now input device again)
-    lda	#1
-    sta	load_binary_status
     rts
 
 ; SAVEB (save binary file)

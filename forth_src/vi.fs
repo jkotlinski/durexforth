@@ -651,6 +651,6 @@ then then
 reset-buffer
 ?dup if \ load file
 rom-kernal bufstart loadb
-if reset-buffer else \ file err
-ae @ eof ! 0 eof @ c! then
+?dup 0= if reset-buffer else
+eof ! 0 eof @ c! then
 else drop then main-loop ;
