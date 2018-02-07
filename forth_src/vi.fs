@@ -1,3 +1,4 @@
+hex
 d value lf
 
 7001 value bufstart
