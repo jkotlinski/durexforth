@@ -720,7 +720,7 @@ TO_IN
 
     +BACKLINK
     !byte	6
-    !text	"refill"
+    !text	"refill" ; ( -- )
 REFILL
 
 READ_EOF = * + 1
