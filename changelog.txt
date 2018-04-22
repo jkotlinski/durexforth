@@ -325,7 +325,7 @@ Thanks to polluks for suggestions!
 
  * bring back float module
 
-v1.6.4
+2018-04-22: v1.6.4
 
  * forth: INCLUDED now interprets the file
  * forth: added ?DO
