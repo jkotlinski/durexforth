@@ -635,8 +635,8 @@ eof @ c@ abort" eof" again ;
 ram-kernal eaea @ 8ca <> if
 rom-kernal
 e000 dup 2000 move \ rom => ram
-a eaea c! \ repeat delay
-2 eb1d c! \ repeat speed
+f eaea c! \ repeat delay
+4 eb1d c! \ repeat speed
 then
 
 80 28a c! \ key repeat on

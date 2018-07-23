@@ -332,3 +332,7 @@ Thanks to polluks for suggestions!
  * forth: added DEFER DEFER! IS to compat
  * forth: made loadb return address after last written byte
  * debug: made see show branch
+
+v1.6.5
+
+ * editor: slower key repeat settings
