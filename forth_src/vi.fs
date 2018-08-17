@@ -574,12 +574,7 @@ down c, ' cur-down ,
 		key
 		'w' = if change-word then
 	endof
-
-	88 of drop cleanup rom-kernal \ f7
-        bufstart eof @ bufstart - 1-
-        evaluate quit endof endcase
-	0
-;
+endcase 0 ;
 
 : main-loop
 \ init colors -- border bgcol curscol
@@ -606,6 +601,11 @@ show-page
         \ hide cursor
         cursor-scr-pos dup @ 7f and
         swap c!
+
+\ f7
+dup 88 = if 2drop cleanup rom-kernal
+bufstart eof @ bufstart - 1-
+evaluate quit then
 
 		ins-active if
 			ins-handler
@@ -639,6 +639,7 @@ f eaea c! \ repeat delay
 4 eb1d c! \ repeat speed
 then
 
+0 to ins-active
 80 28a c! \ key repeat on
 clear-status
 

@@ -336,3 +336,4 @@ Thanks to polluks for suggestions!
 v1.6.5
 
  * editor: slower key repeat settings
+ * editor: made f7 work in insert mode
