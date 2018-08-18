@@ -3,6 +3,7 @@ d value lf
 
 7001 value bufstart
 
+\ eof points to 0 sentinel
 variable eof ( ram eof )
 0 eof !
 
@@ -47,6 +48,7 @@ d cmp,#
 foundeol -branch beq,
 jmp,
 
+\ nb: may return eof
 code find-next-line ( addr -- addr )
 lsb ldy,x w sty,
 msb ldy,x w 1+ sty,
@@ -342,7 +344,10 @@ curlinestart @ find-next-line
 curlinestart @
 2dup swap - -rot
 eof @ curlinestart @ - move
-eof +! ;
+eof +!
+eof @ curlinestart @ = if
+0 eof @ c! 1 eof +! then
+linelen 0= if cur-up join-lines then ;
 
 : del
 'd' set-status
@@ -628,7 +633,9 @@ evaluate quit then
 
 depth 1- <> abort" stk"
 bufstart 1- c@ abort" sof"
-eof @ c@ abort" eof" again ;
+eof @ c@ abort" eof"
+curlinestart @ bufstart eof @ within 0= abort" cl"
+again ;
 
 : vi
 \ modifies kernal to change kbd prefs
