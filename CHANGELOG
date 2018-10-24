@@ -333,8 +333,8 @@ Thanks to polluks for suggestions!
  * forth: made loadb return address after last written byte
  * debug: made see show branch
 
-v1.6.5
+2018-10-24: v1.6.5
 
- * editor: bugfixed dd at end of buffer
+ * editor: fixed dd crash at end of buffer
  * editor: slower key repeat settings
  * editor: made f7 work in insert mode
