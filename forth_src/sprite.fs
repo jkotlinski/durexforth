@@ -17,14 +17,16 @@ else d010 clrbit then ;
 : sp-xy! ( x y n -- )
 tuck sp-y! sp-x! ;
 
-( expand width/height )
-: sp-1w ( n -- ) 7 swap - d01d clrbit ;
-: sp-2w ( n -- ) 7 swap - d01d setbit ;
-: sp-1h ( n -- ) 7 swap - d017 clrbit ;
-: sp-2h ( n -- ) 7 swap - d017 setbit ;
+: 7s- 7 swap - ;
 
-: sp-on ( n -- ) d015 setbit ;
-: sp-off ( n -- ) d015 clrbit ;
+( expand width/height )
+: sp-1w ( n -- ) 7s- d01d clrbit ;
+: sp-2w ( n -- ) 7s- d01d setbit ;
+: sp-1h ( n -- ) 7s- d017 clrbit ;
+: sp-2h ( n -- ) 7s- d017 setbit ;
+
+: sp-on ( n -- ) 7s- d015 setbit ;
+: sp-off ( n -- ) 7s- d015 clrbit ;
 
 : sp-col! ( c n -- ) d027 + c! ;
 
