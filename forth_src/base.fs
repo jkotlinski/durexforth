@@ -230,8 +230,8 @@ s" sys" included
 s" vi" included
 
 7000 value buf
-: go s" tvattrad" buf loadb
-buf ae @ buf - evaluate ;
+: go buf s" tvattrad" buf
+loadb buf - evaluate ;
 ' go start !
 save-forth @0:durexforth
 

@@ -1,24 +1,29 @@
-s" sprite" included
+340 value tvatt40
+tvatt40 sp-data
+........................
+.4....................4.
+.4...44....44....44...4.
+.44.4..4..4..4..4..4.44.
+.444....44....44....444.
+..4..................4..
+..4..................4..
+..44..4..4.4444..4..44..
+..44..4..4.4..4.4.4.44..
+...4..4..4.4..4..4..4...
+...4..4444.4..4.....4...
+...44....4.4..4....44...
+...44....4.4..4....44...
+....4....4.4444....4....
+....4..............4....
+....44............44....
+....4444444444444444....
+........................
+........................
+........................
+........................
 
-340 sp-data
-DDD  UU U RRR  EEEEX   X
-DDD  UU U RRR  EEEEX   X
-D DD UU U R RR E    X X
-D DD UU U R RR E    X X
-D  D UU U RRR  EEE   X
-D  D UU U RRR  EEE   X
-D  D UU U R RR E    X X
-D  D UU U R RR E    X X
-DDD   UUU R RR EEEEX   X
-DDD   UUU R RR EEEEX   X
-
-FFFF  OO  RRR TTTTTTH  H
-FFFF OOOO RRR TTTTTTH  H
-FF   O  O R RR  TT  H  H
-FF   O  O R RR  TT  H  H
-FFFF O  O RRR   TT  HHHH
-FFFF O  O RRR   TT  HHHH
-FF   O  O R RR  TT  H  H
-FF   O  O R RR  TT  H  H
-FF    OO  R RR  TT  H  H
-FF    OO  R RR  TT  H  H
+tvatt40 40 / 7f8 c!
+0 sp-on
+2 0 sp-col!
+a0 a0 0 sp-xy!
+0 sp-2h 0 sp-2w
