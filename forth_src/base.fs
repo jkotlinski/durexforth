@@ -223,14 +223,16 @@ does> @ dup to here @ latest ! ;
 
 marker modules
 
-.( labels..) s" labels" included
-.( doloop..) s" doloop" included
-.( sys..) s" sys" included
-.( debug..) s" debug" included
-.( ls..) s" ls" included
-.( vi..) s" vi" included
-.( require..) s" require" included
+s" labels" included
+s" doloop" included
+s" tvattrad" included
 
-.( save new durexforth..)
-save-forth @0:durexforth
-.( ok!) cr
+\ .( sys..) s" sys" included
+\ .( debug..) s" debug" included
+\ .( ls..) s" ls" included
+\ .( vi..) s" vi" included
+\ .( require..) s" require" included
+
+\ .( save new durexforth..)
+\ save-forth @0:durexforth
+\ .( ok!) cr

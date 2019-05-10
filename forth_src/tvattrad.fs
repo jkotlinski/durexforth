@@ -1,0 +1,24 @@
+s" sprite" included
+
+340 sp-data
+DDD  UU U RRR  EEEEX   X
+DDD  UU U RRR  EEEEX   X
+D DD UU U R RR E    X X
+D DD UU U R RR E    X X
+D  D UU U RRR  EEE   X
+D  D UU U RRR  EEE   X
+D  D UU U R RR E    X X
+D  D UU U R RR E    X X
+DDD   UUU R RR EEEEX   X
+DDD   UUU R RR EEEEX   X
+
+FFFF  OO  RRR TTTTTTH  H
+FFFF OOOO RRR TTTTTTH  H
+FF   O  O R RR  TT  H  H
+FF   O  O R RR  TT  H  H
+FFFF O  O RRR   TT  HHHH
+FFFF O  O RRR   TT  HHHH
+FF   O  O R RR  TT  H  H
+FF   O  O R RR  TT  H  H
+FF    OO  R RR  TT  H  H
+FF    OO  R RR  TT  H  H
