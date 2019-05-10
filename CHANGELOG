@@ -338,3 +338,8 @@ Thanks to polluks for suggestions!
  * editor: fixed dd crash at end of buffer
  * editor: slower key repeat settings
  * editor: made f7 work in insert mode
+
+UNRELEASED
+
+[Changed]
+ * sprite: sp-data uses . instead of bl to set 0 bits

@@ -29,9 +29,9 @@ tuck sp-y! sp-x! ;
 : sp-col! ( c n -- ) d027 + c! ;
 
 ( read sprite byte )
-: ks 
+: ks
 2* source drop >in @ + c@
-1 >in +! bl <> 1 and or ;
+1 >in +! '.' <> 1 and or ;
 : rdb ( addr -- addr )
 0 ks ks ks ks ks ks ks ks
 over c! 1+ ;
