@@ -137,9 +137,17 @@ To reduce RAM usage, you may make a stripped-down version of durexForth. Do this
 
 \subsection{Custom Start-Up}
 
-You may launch a word automatically at start-up by setting the variable \texttt{start} to the execution token of the word.  Example: \texttt{' megademo start !}
+You may launch a word automatically at start-up by setting the variable \texttt{start} to the execution token of the word.  Example: \texttt{' megademo start !} To save the new configuration to disk, type e.g. \texttt{save-forth megademo}.
 
-To save the new configuration to disk, use e.g. \texttt{save-forth megademo}.
+When writing a new program using a PC text editor, it is practical to configure durexForth to compile and execute the program at startup. That can be set up using the following snippet:
+
+\begin{verbatim}
+7000 value buf
+: go s" myprogramfile" buf loadb
+buf ae @ buf - evaluate ;
+' go start !
+save-forth durexforth
+\end{verbatim}
 
 \section{How to Learn More}
 
