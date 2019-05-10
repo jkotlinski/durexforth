@@ -1,6 +1,5 @@
 map <F3> :wall!<CR>:make all<CR>
-map <F4> :wall!<CR>:make tvattrad<CR>
-map <F5> :!x64.exe durexforth.d64 &<CR>
+map <F4> :wall!<CR>:make tvattrad<CR>:!x64.exe durexforth.d64 &<CR>
 
 set nomodeline
 
