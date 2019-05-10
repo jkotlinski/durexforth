@@ -225,7 +225,15 @@ marker modules
 
 s" labels" included
 s" doloop" included
-s" tvattrad" included
+s" sprite" included
+s" sys" included
+s" vi" included
+
+7000 value buf
+: go s" tvattrad" buf loadb
+buf ae @ buf - evaluate ;
+' go start !
+save-forth @0:durexforth
 
 \ .( sys..) s" sys" included
 \ .( debug..) s" debug" included

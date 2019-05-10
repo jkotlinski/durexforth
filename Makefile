@@ -22,8 +22,12 @@ deploy: durexforth.d64 cart.asm
 durexforth.prg: durexforth.asm number.asm math.asm move.asm disk.asm lowercase.asm
 	@$(AS) durexforth.asm
 
-FORTHLIST=base asm format labels tvattrad sprite doloop
+FORTHLIST=base asm format labels tvattrad sprite doloop vi sys
 # debug vi asm gfx gfxdemo rnd sin ls turtle fractals sprite doloop sys labels mml mmldemo sid spritedemo test testcore testcoreplus tester format require compat timer float
+
+tvattrad: forth_src/tvattrad.fs
+	cat build/header forth_src/tvattrad.fs | ext/petcom - > build/tvattrad.pet
+	$(C1541) -attach durexforth.d64 -delete tvattrad -write build/tvattrad.pet tvattrad
 
 durexforth.d64: durexforth.prg forth_src/base.fs forth_src/debug.fs forth_src/vi.fs forth_src/asm.fs forth_src/gfx.fs forth_src/gfxdemo.fs forth_src/rnd.fs forth_src/sin.fs forth_src/ls.fs forth_src/turtle.fs forth_src/fractals.fs forth_src/sprite.fs forth_src/doloop.fs forth_src/sys.fs forth_src/labels.fs forth_src/mml.fs forth_src/mmldemo.fs forth_src/sid.fs forth_src/spritedemo.fs forth_src/test.fs Makefile ext/petcom forth_src/testcore.fs forth_src/testcoreplus.fs forth_src/tester.fs forth_src/format.fs forth_src/require.fs forth_src/compat.fs forth_src/timer.fs forth_src/float.fs
 	$(C1541) -format "durexforth$(TAG),DF"  d64 durexforth.d64 # > /dev/null
