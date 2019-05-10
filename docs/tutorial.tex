@@ -143,8 +143,8 @@ When writing a new program using a PC text editor, it is practical to configure 
 
 \begin{verbatim}
 7000 value buf
-: go s" myprogramfile" buf loadb
-buf ae @ buf - evaluate ;
+: go buf s" myprogramfile" buf
+loadb buf - evaluate ;
 ' go start !
 save-forth @0:durexforth
 \end{verbatim}

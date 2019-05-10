@@ -342,4 +342,6 @@ Thanks to polluks for suggestions!
 UNRELEASED
 
 [Changed]
- * sprite: sp-data uses . instead of bl to set 0 bits
+ * sprite: sp-data now use . instead of bl to set 0 bits
+[Fixed]
+ * sprite: sp-on, sp-off had inverted sprite number
