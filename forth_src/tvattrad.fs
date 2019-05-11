@@ -1,18 +1,20 @@
 : initgfx
 10 clrcol ;
 
-variable row
-0 row !
+variable mat-text
+variable mat-rows
+0 to mat-rows
 
 : material
 ." Material Declaration" cr cr
 ." Enter one material per line" cr
 ." (e.g. '100% Cotton')" cr
 ." Finish with empty line" cr cr
-begin here 28 accept cr
+here mat-text !
+begin here 10 accept cr
 ?dup 0= if exit then
-0 swap row @ swap here swap text
-1 row +! again ;
+1 mat-rows +!
+allot d here c! 1 allot again ;
 
 : vattentvatt
 ." Wash Mode?" cr cr
@@ -34,7 +36,6 @@ endcase ;
 : wizard
 initgfx
 material
-\ vattentvatt
-hires key ;
+;
 
 wizard
