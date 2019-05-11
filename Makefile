@@ -22,7 +22,7 @@ deploy: durexforth.d64 cart.asm
 durexforth.prg: durexforth.asm number.asm math.asm move.asm disk.asm lowercase.asm
 	@$(AS) durexforth.asm
 
-FORTHLIST=base asm format labels tvattrad sprite doloop
+FORTHLIST=base asm format labels tvattrad sprite doloop sprites
 # debug vi asm gfx gfxdemo rnd sin ls turtle fractals sprite doloop sys labels mml mmldemo sid spritedemo test testcore testcoreplus tester format require compat timer float
 
 tvattrad: forth_src/tvattrad.fs

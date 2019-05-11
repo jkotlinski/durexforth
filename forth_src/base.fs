@@ -226,6 +226,7 @@ marker modules
 s" labels" included
 s" doloop" included
 s" sprite" included
+s" sprites" included
 \ s" sys" included
 \ s" vi" included
 
