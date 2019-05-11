@@ -343,5 +343,6 @@ UNRELEASED
 
 [Changed]
  * sprite: sp-data now use . instead of bl to set 0 bits
+ * forth: accept now reads keyboard only
 [Fixed]
  * sprite: sp-on, sp-off had inverted sprite number
