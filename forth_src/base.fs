@@ -226,10 +226,10 @@ marker modules
 s" labels" included
 s" doloop" included
 s" sprite" included
-s" sys" included
-s" vi" included
+\ s" sys" included
+\ s" vi" included
 
-7000 value buf
+6000 value buf
 : go buf s" tvattrad" buf
 loadb buf - evaluate ;
 ' go start !
