@@ -75,6 +75,7 @@ endcase sel-chem ;
 ." 4: Line Dry in Shade" cr
 ." 5: Drip Dry in Shade" cr
 ." 6: Dry Flat in Shade" cr
+." 7: Any of the Above" cr
 key case
 '1' of endof
 '2' of endof
@@ -82,19 +83,22 @@ key case
 '4' of endof
 '5' of endof
 '6' of endof
+'7' of endof
 endcase sel-iron ;
 
 : sel-tumble page
 ." Tumble Drying" cr cr
 ." 1: Do Not Tumble Dry" cr
-." 2: Low Temperature" cr
-." 3: Medium Temperature" cr
-." 4: High Temperature" cr
+." 2: No Heat" cr
+." 3: Low Temperature" cr
+." 4: Medium Temperature" cr
+." 5: High Temperature" cr
 key case
 '1' of sel-natural endof
 '2' of sel-iron endof
 '3' of sel-iron endof
 '4' of sel-iron endof
+'5' of sel-iron endof
 endcase ;
 
 : sel-bleach page
