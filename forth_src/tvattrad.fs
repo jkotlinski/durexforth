@@ -9,7 +9,7 @@ variable row
 ." Enter one material per line" cr
 ." (e.g. '100% Cotton')" cr
 ." Finish with empty line" cr cr
-begin here 28 accept
+begin here 28 accept cr
 ?dup 0= if exit then
 0 swap row @ swap here swap text
 1 row +! again ;
@@ -35,6 +35,6 @@ endcase ;
 initgfx
 material
 \ vattentvatt
-hires ;
+hires key ;
 
 wizard
