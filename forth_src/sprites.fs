@@ -13,6 +13,7 @@ swap spriteloc + c@ or
 swap c! ;
 
 : sprite create
+0 , 0 , 0 , 0 , 0 c,
 here 3f allot sp-data
 does> ( addr -- )
 kernal-out
@@ -26,8 +27,6 @@ i 3 * 18 + i 140 +
 over 1+ over 8 +
 over 1+ over 8 +
 write write write
-loop
-5 0 do
 i 3 * 30 + i 280 +
 over 1+ over 8 +
 over 1+ over 8 +
