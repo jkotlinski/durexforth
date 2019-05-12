@@ -339,7 +339,7 @@ Thanks to polluks for suggestions!
  * editor: slower key repeat settings
  * editor: made f7 work in insert mode
 
-UNRELEASED
+2019-05-12: v1.6.6
 
 [Changed]
  * sprite: sp-data now use . instead of bl to set 0 bits
