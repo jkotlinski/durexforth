@@ -3,10 +3,7 @@
 
 variable row 0 row !
 
-: material page
-." Material Declaration" cr cr
-." Enter one material per line" cr
-." (e.g. '100% Cotton')" cr
+: getlines
 ." Finish with empty line" cr cr
 begin here 20 accept cr
 ?dup 0= if exit then
@@ -14,12 +11,15 @@ begin here 20 accept cr
 1 row +!
 again ;
 
+: material page
+." Material Declaration" cr cr
+." Enter one material per line" cr
+." (e.g. '100% Cotton')" cr
+getlines ;
+
 : extra page
 ." Additional Instructions" cr
-." Finish with empty line" cr cr
-begin here 10 accept cr
-?dup 0= if exit then
-again ;
+getlines ;
 
 : sel-gentle page
 ." Dry Clean Gentleness" cr cr
