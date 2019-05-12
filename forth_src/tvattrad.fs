@@ -52,10 +52,10 @@ endcase ;
 ." 3: Medium Temperature" cr
 ." 4: High Temperature" cr
 iron key case
-'1' of x endof
-'2' of dot1 endof
-'3' of dot2 endof
-'4' of dot3 endof
+'1' of iron x endof
+'2' of iron-lo endof
+'3' of iron-mid endof
+'4' of iron-hi endof
 endcase sel-chem ;
 
 : sel-natural page
