@@ -1,32 +1,25 @@
 : initgfx
 10 clrcol ;
 
-variable mat-text
-variable mat-rows
-0 to mat-rows
-variable extra-text
-variable extra-rows
-0 to extra-rows
+variable row 0 row !
 
 : material page
 ." Material Declaration" cr cr
 ." Enter one material per line" cr
 ." (e.g. '100% Cotton')" cr
 ." Finish with empty line" cr cr
-here mat-text !
-begin here 10 accept cr
+begin here 20 accept cr
 ?dup 0= if exit then
-1 mat-rows +!
-allot d here c! 1 allot again ;
+0 swap row @ swap here swap text
+1 row +!
+again ;
 
 : extra page
 ." Additional Instructions" cr
 ." Finish with empty line" cr cr
-here extra-text !
 begin here 10 accept cr
 ?dup 0= if exit then
-1 extra-rows +!
-allot d here c! 1 allot again ;
+again ;
 
 : sel-gentle page
 ." Dry Clean Gentleness" cr cr
@@ -142,7 +135,10 @@ endcase ;
 
 : wizard
 initgfx
+10 clrcol
+
 material
+hires key
 vattentvatt
 extra ;
 
