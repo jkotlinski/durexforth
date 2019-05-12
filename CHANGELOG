@@ -346,3 +346,4 @@ UNRELEASED
  * forth: accept now reads keyboard only
 [Fixed]
  * sprite: sp-on, sp-off had inverted sprite number
+ * gfx: text now supports upper/lower case
