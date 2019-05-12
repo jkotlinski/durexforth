@@ -150,6 +150,8 @@ kernal-in emit loop
 cr f emit 7 +loop
 4 closew ;
 
+code brk brk, ;code
+
 : wizard
 1 clrcol
 material
@@ -158,6 +160,4 @@ vattentvatt 3 row +!
 extra
 hires 1 d021 c!
 9 #24 s" Press any key to print" text
-key print ;
-
-wizard
+key print brk ;
