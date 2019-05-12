@@ -17,8 +17,22 @@ here 3f allot sp-data
 does> ( addr -- )
 kernal-out
 to spriteloc calc-gfxloc
-8 0 do i 3 * i write loop
-kernal-in ;
+8 0 do
+i 3 * i
+over 1+ over 8 +
+over 1+ over 8 +
+write write write
+i 3 * 18 + i 140 +
+over 1+ over 8 +
+over 1+ over 8 +
+write write write
+loop
+5 0 do
+i 3 * 30 + i 280 +
+over 1+ over 8 +
+over 1+ over 8 +
+write write write
+loop kernal-in ;
 
 : new-symbol 1 spritex +! ;
 
