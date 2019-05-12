@@ -1,11 +1,8 @@
-: initgfx
-10 clrcol ;
-
 variable row 0 row !
 
 : getlines
 ." Finish with empty line" cr cr
-begin here 20 accept cr ?dup while
+begin here 10 accept cr ?dup while
 0 swap row @ swap here swap text
 1 row +! repeat ;
 
@@ -131,11 +128,36 @@ key case
 '6' of wash t95 sel-agitation endof
 endcase ;
 
+\ maxwidth: 3 * 6 = 18 chars
+
+0 value srcy
+: print
+4 device
+0 0 4 openw
+row @ 8 * 0 do
+8 emit \ bit printing mode
+90 0 do
+kernal-out
+80
+i j peek if 1+ then
+i j 1+ peek if 2 + then
+i j 2 + peek if 4 + then
+i j 3 + peek if 8 + then
+i j 4 + peek if 10 + then
+i j 5 + peek if 20 + then
+i j 6 + peek if 40 + then
+kernal-in emit loop
+cr f emit 7 +loop
+4 closew ;
+
 : wizard
-initgfx 10 clrcol
+1 clrcol
 material
 row @ spritey !
 vattentvatt 3 row +!
-extra hires key ;
+extra
+hires 1 d021 c!
+9 #24 s" Press any key to print" text
+key print ;
 
 wizard
