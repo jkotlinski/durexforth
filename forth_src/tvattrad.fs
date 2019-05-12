@@ -92,7 +92,7 @@ key case
 '5' of sel-iron endof
 endcase ;
 
-: sel-bleach page
+: sel-bleach page new-symbol
 ." Bleaching" cr cr
 ." 1: Do Not Bleach" cr
 ." 2: Non-Chlorine Bleach" cr
@@ -123,7 +123,7 @@ endcase sel-bleach ;
 ." 5: Machine Wash 60C" cr
 ." 6: Machine Wash 95C" cr
 key case
-'1' of sel-bleach endof
+'1' of wash x sel-bleach endof
 '2' of sel-bleach endof
 '3' of sel-agitation endof
 '4' of sel-agitation endof
@@ -133,8 +133,10 @@ endcase ;
 
 : wizard
 initgfx 10 clrcol
-material
-vattentvatt
+\ material
+row @ spritey !
+hires
+wash x key
 extra ;
 
 wizard

@@ -1,5 +1,26 @@
+variable spritex 0 spritex !
+variable spritey 0 spritey !
+
+0 value gfxloc
+0 value spriteloc
+: calc-gfxloc
+spritex @ 8 *
+spritey @ 200 * +
+bmpbase + to gfxloc ;
+: write ( spriteoffset gfxoffset -- )
+gfxloc + tuck c@
+swap spriteloc + c@ or
+swap c! ;
+
 : sprite create
-here 3f allot sp-data ;
+here 3f allot sp-data
+does> ( addr -- )
+kernal-out
+to spriteloc calc-gfxloc
+8 0 do i 3 * i write loop
+kernal-in ;
+
+: new-symbol 1 spritex +! ;
 
 sprite t30
 ........................
@@ -162,7 +183,7 @@ sprite extramild
 ........................
 ....4444444444444444....
 
-sprite tvatt
+sprite wash
 ........................
 .4....................4.
 .4...44....44....44...4.
