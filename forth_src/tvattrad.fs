@@ -5,11 +5,9 @@ variable row 0 row !
 
 : getlines
 ." Finish with empty line" cr cr
-begin here 20 accept cr
-?dup 0= if exit then
+begin here 20 accept cr ?dup while
 0 swap row @ swap here swap text
-1 row +!
-again ;
+1 row +! repeat ;
 
 : material page
 ." Material Declaration" cr cr
@@ -134,11 +132,8 @@ key case
 endcase ;
 
 : wizard
-initgfx
-10 clrcol
-
+initgfx 10 clrcol
 material
-hires key
 vattentvatt
 extra ;
 
