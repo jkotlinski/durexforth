@@ -21,6 +21,7 @@ getlines ;
 ." 1: Very Gentle" cr
 ." 2: Gentle" cr
 ." 3: Normal" cr
+cr ." Press 1-3" cr
 key case
 '1' of very-gentle endof
 '2' of gentle endof
@@ -34,6 +35,7 @@ endcase ;
 ." 3: PCE Only" cr
 ." 4: Hydrocarbon Only" cr
 ." 5: Any Solvent" cr
+cr ." Press 1-5" cr
 key case
 '1' of circle x endof
 '2' of chem-w sel-gentle endof
@@ -48,6 +50,7 @@ endcase ;
 ." 2: Low Temperature" cr
 ." 3: Medium Temperature" cr
 ." 4: High Temperature" cr
+cr ." Press 1-4" cr
 iron key case
 '1' of iron x endof
 '2' of iron-lo endof
@@ -64,6 +67,7 @@ endcase sel-chem ;
 ." 5: Drip Dry in Shade" cr
 ." 6: Dry Flat in Shade" cr
 ." 7: Any of the Above" cr
+cr ." Press 1-7" cr
 key case
 '1' of new-symbol dry-line endof
 '2' of new-symbol dry-drip endof
@@ -81,6 +85,7 @@ endcase sel-iron ;
 ." 3: Low Temperature" cr
 ." 4: Medium Temperature" cr
 ." 5: High Temperature" cr
+cr ." Press 1-5" cr
 box circle key case
 '1' of x sel-natural endof
 '2' of circle-full sel-iron endof
@@ -94,6 +99,7 @@ endcase ;
 ." 1: Do Not Bleach" cr
 ." 2: Non-Chlorine Bleach" cr
 ." 3: Any Bleach" cr
+cr ." Press 1-3" cr
 key case
 '1' of bleach x endof
 '2' of bleach-ncl endof
@@ -105,6 +111,7 @@ endcase sel-tumble ;
 ." 1: Low (Silk/Wool)" cr
 ." 2: Medium (Synthetics)" cr
 ." 3: Max (Cotton)" cr
+cr ." Press 1-3" cr
 key case
 '1' of very-gentle endof
 '2' of gentle endof
@@ -119,6 +126,7 @@ endcase sel-bleach ;
 ." 4: Machine Wash 40C" cr
 ." 5: Machine Wash 60C" cr
 ." 6: Machine Wash 95C" cr
+cr ." Press 1-6" cr
 key case
 '1' of wash x sel-bleach endof
 '2' of handwash sel-bleach endof
