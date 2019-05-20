@@ -351,4 +351,4 @@ Thanks to polluks for suggestions!
 2019-05-20: v1.6.7
 
 [Fixed]
- * include/included would clobber the text input buffer.
+ * include, included would clobber the text input buffer.
