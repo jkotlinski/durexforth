@@ -156,7 +156,7 @@ BL
     rts
 
 TIB_PTR
-    !word 0
+    !word TIB
 TIB_SIZE
     !word 0
 
@@ -566,6 +566,13 @@ SAVE_INPUT
     jsr push_input_stack
     lda TIB_PTR+1
     jsr push_input_stack
+
+    ; Temporarily moves the input buffer to avoid clobbering.
+    lda TIB_SIZE
+    clc
+    adc TIB_PTR
+    sta TIB_PTR
+
     lda TIB_SIZE
     jsr push_input_stack
     lda TIB_SIZE+1
@@ -747,11 +754,6 @@ READ_EOF = * + 1
     sty TIB_SIZE
     sty TIB_SIZE + 1
 
-    lda #<TIB
-    sta TIB_PTR
-    lda #>TIB
-    sta TIB_PTR + 1
-
     lda SOURCE_ID_LSB
     beq .getLineFromConsole
     lda SOURCE_ID_MSB
@@ -764,7 +766,7 @@ READ_EOF = * + 1
     cmp #$d
     beq .gotReturn
     sta TIB,x
-    cpx #$58
+    cpx #$58 ; Default TIB area is $200-$258
     beq -
     inx
     jmp -
@@ -776,17 +778,20 @@ READ_EOF = * + 1
     rts
 
 .getLineFromDisk
-    jsr GET_CHAR_BLOCKING
+    lda TIB_PTR
+    sta W
+    lda TIB_PTR + 1
+    sta W + 1
+-   jsr GET_CHAR_BLOCKING
     cmp #K_RETURN
     beq +
     inc $d020
     ldy TIB_SIZE
-    sta TIB,y
+    sta (W),y
     inc TIB_SIZE
     dec $d020
-    jmp .getLineFromDisk
-+
-    rts
+    jmp -
++   rts
 
 GET_CHAR_FROM_TIB
     lda TO_IN
@@ -869,7 +874,7 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     lda	MSB, x
     sta	W2 + 1
     lda	LSB, x
-    sta	W2 ; TMP2 contains pointer to find string
+    sta	W2 ; W2 contains pointer to find string
 
     ldy	#0
     lda	(W2), y ; get length of find string
