@@ -156,7 +156,7 @@ BL
     rts
 
 TIB_PTR
-    !word TIB
+    !word 0
 TIB_SIZE
     !word 0
 
@@ -1216,6 +1216,9 @@ quit_reset
     stx	$d020
     stx	$d021
 
+    lda #>TIB
+    sta TIB_PTR + 1
+
     lda #$56 ; ram + i/o + kernal
     sta 1
 
@@ -1233,6 +1236,7 @@ quit_reset
     stx     STATE
     stx     TIB_SIZE
     stx     TIB_SIZE + 1
+    stx     TIB_PTR
     stx     TO_IN
     stx     TO_IN + 1
     stx     SOURCE_ID_LSB
