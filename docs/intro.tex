@@ -4,15 +4,10 @@
 
 \subsection{Why Forth?}
 
-Forth is a unique language. What is so special about it? It is a very low-level and minimal language with its fair share of quirks and rough edges. At the same time, it is easy to scale it up to become a very high-level and domain-specific language, much like Lisp. 
+Forth is a unique language. What is so special about it? It is a small, low-level language, which can easily be extended to a high-level, domain-specific language that does anything you want it to do. Compared to C64 Basic, Forth is more attractive in almost every way. It is a lot faster, more memory effective, and more powerful.
 
-Compared to C64 Basic, Forth is more attractive in almost every way. It is a lot faster, more memory effective, and more powerful.
-
-Compared to C, the story is a little different. It's hard to make a fair comparison. Theoretically Forth code can be very memory efficient, and it's possible to make Forth code that is leaner than C code, but it is also true that cc65 code is generally faster than Forth code.
-
-The main advantage of Forth is that the environment runs on the actual machine. It would not be a lot of fun to use a C compiler that runs on a standard C64, but with Forth, it's possible to create an entire development suite with editor, compiler and assembler that runs entirely on the C64.
-
-Another advantage is that Forth has an interpreter. Compared to cross-compiling, it is really nice to make small edits and tweaks without going through the entire edit-compile-link-transfer-boot-run cycle.
+Compared to C, the nice thing about Forth is that you can run the full development environment on your C64,
+with text editor, compiler, assembler and debugger. It makes for a more interactive and fun experience than running a cross-compiler on PC.
 
 For a Forth introduction, please refer to the excellent
 \href{http://www.forth.com/starting-forth/}{Starting Forth} by Leo Brodie. As a follow-up, I
@@ -42,10 +37,9 @@ Some demonstration files are included on the disk as appetizers.
 
 \subsection{Graphics}
 
-The gfxdemo package demonstrates the high-resolution graphics, with some examples adapted from the book "Step-By-Step Programming C64 Graphics" by Phil Cornes. 
+The gfxdemo package demonstrates the high-resolution graphics, with some examples adapted from the book "Step-By-Step Programming C64 Graphics" by Phil Cornes.
 Show the demos by entering:
 
-\texttt{include gfx}
 \texttt{include gfxdemo}
 
 When a demo has finished drawing, press any key to continue.
