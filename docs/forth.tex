@@ -264,7 +264,7 @@ endcase
 \item[source ( -- caddr u)] Gives the address of, and number of characters in, the input buffer.
 \item[source-id ( -- n )] Returns 0 if current input is keyboard, -1 if it is a string from \texttt{evaluate}, or the current file id.
 
-\item[word ( delim -- addr )] Reads a word from input, using delimiter \texttt{delim}, and puts the string address on the stack.
+\item[word ( delim -- addr )] Reads a word from input, using delimiter \texttt{delim}, and puts the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.
 
 \item[interpret ( -- value )] Interprets a word from input and puts it on the stack.
 

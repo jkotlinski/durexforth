@@ -352,3 +352,9 @@ Thanks to polluks for suggestions!
 
 [Fixed]
  * include, included would clobber the text input buffer.
+
+2019-05-22: v1.6.8
+
+[Changed]
+ * when parsing, treat shift+space like space. it used to
+   be like this but accidentally (?) changed in 1.6.0.

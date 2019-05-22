@@ -838,14 +838,14 @@ WORD
 -
     jsr GET_CHAR_FROM_TIB
     beq .word_end
-    cmp LSB, x
+    jsr .is_delim
     beq -
     jmp .append
 
 .get_char
     jsr GET_CHAR_FROM_TIB
     beq .word_end
-    cmp LSB,x
+    jsr .is_delim
     beq .word_end
 
 .append
@@ -863,6 +863,20 @@ WORD
     lda	#>WORD_BUFFER
     sta	MSB, x
     rts
+
+.is_delim
+    ; a == delim?
+    cmp LSB,x
+    beq + ; yes
+
+    ; delim == space?
+    ldy LSB,x
+    cpy #K_SPACE
+    bne + ; no
+
+    ; compare with nonbreaking space, too
+    cmp #K_SPACE | $80
++   rts
 
 FIND_BUFFER_SIZE = 31
 FIND_BUFFER
