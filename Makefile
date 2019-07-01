@@ -1,8 +1,8 @@
 C1541   = c1541
 AS = acme
 TAG = `git describe --tags --abbrev=0 || svnversion --no-newline`
-TAG_DEPLOY_DOT = `git describe --tags --abbrev=0`
-TAG_DEPLOY = `git describe --tags --abbrev=0 | tr . _`
+TAG_DEPLOY_DOT = `git describe --tags --abbrev=0 --dirty=-M`
+TAG_DEPLOY = `git describe --tags --abbrev=0 --dirty=_M | tr _. -_`
 
 all:	durexforth.d64
 
