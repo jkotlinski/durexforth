@@ -10,7 +10,7 @@ REV_DATE := $(shell git log -1 --format=%ai)
 all:	durexforth.pdf
 
 SECTIONS = release_license.tex \
-        intro.tex tutorial.tex editor.tex forth.tex gfx.tex sid.tex mml.tex \
+        intro.tex tutorial.tex editor.tex words.tex gfx.tex sid.tex mml.tex \
         asm.tex mnemonics.tex memmap.tex anatomy.tex
 GENERATED = params-g.tex
 
