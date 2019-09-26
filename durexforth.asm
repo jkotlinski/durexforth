@@ -414,7 +414,7 @@ FILL
     rts
 +
 .fdst = * + 1
-    sty	$1234 ; replaced with buffer pointer
+    sty	$1234 ; replaced with memory pointer
 
     ; advance
     inc	.fdst
