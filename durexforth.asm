@@ -356,7 +356,7 @@ FETCH
     sta MSB,x
     rts
 
-; C!
+; C! ( char addr -- )
     +BACKLINK
     !byte	2
     !text	"c!"
@@ -366,12 +366,12 @@ STOREBYTE
     lda MSB,x
     sta + + 2
     lda	LSB+1,x
-+   sta $cafe
++   sta $cafe ; replaced with addr
     inx
     inx
     rts
 
-; C@
+; C@ ( addr -- char )
     +BACKLINK
     !byte	2
     !text	"c@"
@@ -380,7 +380,7 @@ FETCHBYTE
     sta + + 1
     lda MSB,x
     sta + + 2
-+   lda $cafe
++   lda $cafe ; replaced with addr
     sta LSB,x
     lda #0
     sta MSB,x
@@ -414,7 +414,7 @@ FILL
     rts
 +
 .fdst = * + 1
-    sty	$1234 ; replaced with memory pointer
+    sty	$cafe ; replaced with start
 
     ; advance
     inc	.fdst
@@ -1207,7 +1207,7 @@ LIT
     lda W + 1
     adc #0
     sta + + 2
-+   jmp $1234 ; replaced with instruction pointer
++   jmp $cafe ; replaced with instruction pointer
 
 ; --- QUIT
 
@@ -1327,7 +1327,7 @@ EXIT
     sta .instr_ptr + 1
     lda #OP_JMP
 .instr_ptr = * + 1
-    sta $1234 ; replaced with instruction pointer
+    sta $cafe ; replaced with instruction pointer
     rts
 +
     lda #OP_RTS
@@ -1623,7 +1623,7 @@ BRANCH
     dey
     lda	(W), y
     sta + + 1
-+   jmp $1234 ; replaced with branch destination
++   jmp $cafe ; replaced with branch destination
 
 ; 0BRANCH
     +BACKLINK
@@ -1643,7 +1643,7 @@ ZBRANCH
     pla
     adc #0
     sta + + 2
-+   jmp $1234 ; replaced with branch destination
++   jmp $cafe ; replaced with branch destination
 
 ; COLON
     +BACKLINK
