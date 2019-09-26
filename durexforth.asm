@@ -29,9 +29,12 @@
 
 !byte $b, $08, $a, 0, $9E, $32, $30, $36, $31, 0, 0, 0 ; basic header
 
-F_IMMED = $80
+;; Word flags
+F_IMMEDIATE = $80
 F_HIDDEN = $40
-F_NO_TAIL_CALL_ELIMINATION = $20 ; when set, skips tailcall elimination
+; When set, calls to the word will not be subject to tail call elimination.
+; I.e., "jsr WORD + rts" will not be replaced by "jmp WORD".
+F_NO_TAIL_CALL_ELIMINATION = $20
 STRLEN_MASK = $1f
 
 TIB = $200
@@ -162,7 +165,7 @@ TIB_SIZE
 
 ; DROP
     +BACKLINK
-    !byte	4 | F_IMMED
+    !byte	4 | F_IMMEDIATE
     !text	"drop"
 DROP
     lda STATE
@@ -411,7 +414,7 @@ FILL
     rts
 +
 .fdst = * + 1
-    sty	$ffff ; overwrite
+    sty	$1234 ; replaced with buffer pointer
 
     ; advance
     inc	.fdst
@@ -972,11 +975,11 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
 
     ldy	#2
     lda (W), y
-    and #F_NO_TAIL_CALL_ELIMINATION | F_IMMED
+    and #F_NO_TAIL_CALL_ELIMINATION | F_IMMEDIATE
     sta FOUND_WORD_WITH_NO_TCE
 
     lda	(W), y ; a contains string length + mask
-    and	#F_IMMED
+    and	#F_IMMEDIATE
     beq .not_immed
     dey
     sty LSB, x ; 1
@@ -1017,7 +1020,7 @@ TCFA
 !src "number.asm"
 
     +BACKLINK
-    !byte 7 | F_IMMED
+    !byte 7 | F_IMMEDIATE
     !text "literal"
 LITERAL
     dex
@@ -1204,7 +1207,7 @@ LIT
     lda W + 1
     adc #0
     sta + + 2
-+   jmp $1234
++   jmp $1234 ; replaced with instruction pointer
 
 ; --- QUIT
 
@@ -1310,7 +1313,7 @@ interpret_tib
 ; --- EXIT
 
     +BACKLINK
-    !byte	4 | F_IMMED
+    !byte	4 | F_IMMEDIATE
     !text	"exit"
 EXIT
     lda last_word_no_tail_call_elimination
@@ -1324,7 +1327,7 @@ EXIT
     sta .instr_ptr + 1
     lda #OP_JMP
 .instr_ptr = * + 1
-    sta $1234
+    sta $1234 ; replaced with instruction pointer
     rts
 +
     lda #OP_RTS
@@ -1452,7 +1455,7 @@ COMMA
 
 ; LBRAC
     +BACKLINK
-    !byte	1 | F_IMMED
+    !byte	1 | F_IMMEDIATE
     !text	"["
 LBRAC
     lda	#0
@@ -1471,7 +1474,7 @@ RBRAC
 
 ; SEMICOLON
     +BACKLINK
-    !byte	1 | F_IMMED
+    !byte	1 | F_IMMEDIATE
     !text	";"
 SEMICOLON
     jsr EXIT
@@ -1492,7 +1495,7 @@ SEMICOLON
     sta	W + 1
     ldy	#2
     lda	(W), y
-    ora	#F_IMMED
+    ora	#F_IMMEDIATE
     sta	(W), y
     rts
 
@@ -1620,7 +1623,7 @@ BRANCH
     dey
     lda	(W), y
     sta + + 1
-+   jmp $1234
++   jmp $1234 ; replaced with branch destination
 
 ; 0BRANCH
     +BACKLINK
@@ -1640,7 +1643,7 @@ ZBRANCH
     pla
     adc #0
     sta + + 2
-+   jmp $1234
++   jmp $1234 ; replaced with branch destination
 
 ; COLON
     +BACKLINK
@@ -1696,7 +1699,7 @@ TOGGLE_LATEST_HIDDEN
     rts
 
     +BACKLINK
-    !byte 2 | F_IMMED
+    !byte 2 | F_IMMEDIATE
     !text	"if"
     jsr LIT
     !word ZBRANCH
@@ -1706,19 +1709,19 @@ TOGGLE_LATEST_HIDDEN
     jmp COMMA
 
     +BACKLINK
-    !byte 4 | F_IMMED
+    !byte 4 | F_IMMEDIATE
     !text	"then"
     jsr HERE
     jsr SWAP
     jmp STORE
 
     +BACKLINK
-    !byte 5 | F_IMMED
+    !byte 5 | F_IMMEDIATE
     !text	"begin"
     jmp HERE
 
     +BACKLINK
-    !byte 5 | F_IMMED
+    !byte 5 | F_IMMEDIATE
     !text	"while"
     jsr LIT
     !word ZBRANCH
@@ -1734,7 +1737,7 @@ COMPILE_JMP
     jmp CCOMMA
 
     +BACKLINK
-    !byte 6 | F_IMMED
+    !byte 6 | F_IMMEDIATE
     !text	"repeat"
     jsr COMPILE_JMP
     jsr COMMA
