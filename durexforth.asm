@@ -75,6 +75,9 @@ K_LEFT = $9d
 
 C_YELLOW = 7
 
+; PLACEHOLDER_ADDRESS instances are overwritten using self-modifying code.
+PLACEHOLDER_ADDRESS = $1234
+
 !ct pet
 
 ; -------- program start
@@ -366,7 +369,7 @@ STOREBYTE
     lda MSB,x
     sta + + 2
     lda	LSB+1,x
-+   sta $cafe ; replaced with addr
++   sta PLACEHOLDER_ADDRESS ; replaced with addr
     inx
     inx
     rts
@@ -380,7 +383,7 @@ FETCHBYTE
     sta + + 1
     lda MSB,x
     sta + + 2
-+   lda $cafe ; replaced with addr
++   lda PLACEHOLDER_ADDRESS ; replaced with addr
     sta LSB,x
     lda #0
     sta MSB,x
@@ -414,7 +417,7 @@ FILL
     rts
 +
 .fdst = * + 1
-    sty	$cafe ; replaced with start
+    sty	PLACEHOLDER_ADDRESS ; replaced with start
 
     ; advance
     inc	.fdst
@@ -1207,7 +1210,7 @@ LIT
     lda W + 1
     adc #0
     sta + + 2
-+   jmp $cafe ; replaced with instruction pointer
++   jmp PLACEHOLDER_ADDRESS ; replaced with instruction pointer
 
 ; --- QUIT
 
@@ -1327,7 +1330,7 @@ EXIT
     sta .instr_ptr + 1
     lda #OP_JMP
 .instr_ptr = * + 1
-    sta $cafe ; replaced with instruction pointer
+    sta PLACEHOLDER_ADDRESS ; replaced with instruction pointer
     rts
 +
     lda #OP_RTS
@@ -1623,7 +1626,7 @@ BRANCH
     dey
     lda	(W), y
     sta + + 1
-+   jmp $cafe ; replaced with branch destination
++   jmp PLACEHOLDER_ADDRESS ; replaced with branch destination
 
 ; 0BRANCH
     +BACKLINK
@@ -1643,7 +1646,7 @@ ZBRANCH
     pla
     adc #0
     sta + + 2
-+   jmp $cafe ; replaced with branch destination
++   jmp PLACEHOLDER_ADDRESS ; replaced with branch destination
 
 ; COLON
     +BACKLINK
