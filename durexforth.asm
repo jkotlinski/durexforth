@@ -1011,10 +1011,7 @@ TCFA
     and	#STRLEN_MASK
     clc
     adc	#3 ; offset for link + string length
-    sta	.addend + 1
-    lda	LSB, x
-.addend
-    adc	#0
+    adc	LSB, x
     sta	LSB, x
     bcc	+
     inc	MSB, x
