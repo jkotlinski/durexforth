@@ -85,8 +85,8 @@ last-dump ! base ! ;
 
 : n last-dump @ dump ;
 
-: more d6 c@ 18 = if ." <more>"
-key drop page then ;
+: more d6 c@ 18 = if 12 emit ." more"
+92 emit key drop page then ;
 : words
 page latest @ begin ?dup while
 more dup id. space @ repeat cr ;
