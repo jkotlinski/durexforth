@@ -290,22 +290,18 @@ curx @ linelen 1- = if
 force-right else cur-right then ;
 
 : ins-handler
-	dup a0 = if drop bl then \ shift space => space
-
-	dup
-	case
-    3 of drop endof \ run/stop
-	5f of ins-stop drop endof \ leftarrow
-	left of cur-left drop endof
-	down of cur-down drop endof
-	up of cur-up drop endof
-	right of ins-right drop endof
-	14 of backspace drop endof \ inst
-	94 of del-char drop endof \ del
-	lf of ins-char cur-down sol show-page endof
-	ins-char
-	endcase
-;
+dup a0 = if drop bl then \ nbsp=>space
+dup case
+3 of drop endof \ run/stop
+5f of ins-stop drop endof \ <-
+left of cur-left drop endof
+down of cur-down drop endof
+up of cur-up drop endof
+right of ins-right drop endof
+14 of backspace drop endof \ inst
+94 of del-char drop endof \ del
+lf of ins-char cur-down sol show-page
+endof ins-char endcase ;
 
 : del-word
 line-dirty!
