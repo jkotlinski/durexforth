@@ -356,40 +356,22 @@ key case
 'd' of del-line endof
 endcase clear-status ;
 
-variable search-buf e allot
+\ search buffer
+variable sb e allot
+variable sb#
 
-: are-equal ( len a1 a2 -- equal? )
-rot 0 do over i + c@ over i + c@ <> if
-unloop 2drop 0 exit then loop drop ;
+: sb= ( addr -- addr|0 )
+sb# @ 0 do dup i + c@ sb i + c@ <> if
+unloop drop 0 exit then loop ;
 
-: do-find ( count -- addr )
-	editpos ( count a1 )
-	1+ ( count a1 )
-	begin
-		dup eof @ = if
-			drop bufstart ( count a1 )
-		then
-		dup editpos = if
-			( not found )
-			2drop
-			0
-			exit
-		then
-
-		dup c@ search-buf c@ = if
-			( first char matches... examine )
-			2dup ( count a1 count a1 )
-			search-buf ( count a1 count a1 search-buf )
-			are-equal ( count a1 equal? )
-			if
-				( count a1 )
-				swap drop ( a1 )
-				exit
-			then
-		then
-		1+
-	again
-;
+\ Searches text buffer starting at
+\ editpos, trying to find a direct match 
+\ with search buffer contents.
+: do-find ( -- addr|0 )
+eof @ editpos 1+ ?do i sb= if
+i unloop exit then loop
+editpos bufstart ?do i sb= if
+i unloop exit then loop 0 ;
 
 : write-file
 filename-len c@ 0= if
@@ -433,7 +415,7 @@ lf of write-file endof
 		lf <> if
 			( count key )
 			dup emit
-			over search-buf + ( count key dst )
+			over sb + ( count key dst )
 			c! ( count )
 			1+
 			0
@@ -442,7 +424,7 @@ lf of write-file endof
 			1
 		then
 	until
-	do-find ( count )
+	sb# ! do-find
 	?dup if
 		( found! )
 		show-location
