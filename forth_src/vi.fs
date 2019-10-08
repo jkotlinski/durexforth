@@ -376,7 +376,7 @@ unloop 2drop 0 exit then loop drop ;
 			exit
 		then
 
-		dup @ search-buf @ = if
+		dup c@ search-buf c@ = if
 			( first char matches... examine )
 			2dup ( count a1 count a1 )
 			search-buf ( count a1 count a1 search-buf )
