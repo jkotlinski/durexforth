@@ -48,32 +48,16 @@ W = $8b ; rnd seed
 W2 = $8d ; rnd seed
 W3 = $9e ; tape error log
 
-OP_NOP = $ea
 OP_JMP = $4c
 OP_JSR = $20
 OP_RTS = $60
 OP_INX = $e8
-OP_LDA_I = $a9
-OP_STA_AX = $9d
 
-GETCHR = $ffe4 ; get char from kbd
 PUTCHR = $ffd2 ; put char
 
-CURSOR_COLOR = $286
-
-K_F1 = $85
-K_F3 = $86
-K_BACKSPACE = $14
 K_RETURN = $d
 K_CLRSCR = $93
 K_SPACE = ' '
-K_REVERSE = $c7
-K_DOWN = $11
-K_RIGHT = $1d
-K_UP = $91
-K_LEFT = $9d
-
-C_YELLOW = 7
 
 ; PLACEHOLDER_ADDRESS instances are overwritten using self-modifying code.
 PLACEHOLDER_ADDRESS = $1234
@@ -1239,11 +1223,12 @@ quit_reset
     lda #$56 ; ram + i/o + kernal
     sta 1
 
-    lda	#C_YELLOW
-    sta	CURSOR_COLOR
+    ; Yellow text.
+    lda	#7
+    sta	$286
 
     ; Clears color area.
--	sta $d800, x
+-   sta $d800, x
     sta $d900, x
     sta $da00, x
     sta $db00, x
