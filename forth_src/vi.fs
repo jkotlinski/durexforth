@@ -368,10 +368,10 @@ unloop drop 0 exit then loop ;
 \ editpos, trying to find a direct match 
 \ with search buffer contents.
 : do-find ( -- addr|0 )
-eof @ editpos 1+ ?do i sb= if
-i unloop exit then loop
-editpos bufstart ?do i sb= if
-i unloop exit then loop 0 ;
+eof @ editpos 1+ ?do i sb= ?dup if
+unloop exit then loop
+editpos bufstart ?do i sb= ?dup if
+unloop exit then loop 0 ;
 
 : write-file
 filename-len c@ 0= if
