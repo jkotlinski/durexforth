@@ -408,9 +408,9 @@ lf of write-file endof
 
 : find-handler ( -- )
 0 18 setcur clear-status '/' emit
-sb 10 + sb do key dup lf = if
-drop i sb - sb# ! do-find unloop exit
-else dup emit i c! then loop ;
+10 0 do key dup lf = if
+drop i sb# ! do-find unloop exit
+else dup emit sb i + c! then loop ;
 
 : open-line
 sol lf ins-char sol
