@@ -651,7 +651,7 @@ tmp_x
     +BACKLINK
     !byte	4
     !text	"key?"
-    lda $c6 ; number of characters in keyboard buffer
+    lda $c6 ; Number of characters in keyboard buffer
     beq +
 .pushtrue
     lda #$ff
@@ -664,7 +664,7 @@ tmp_x
 -   lda $c6
     beq -
     stx W
-    jsr $e5b4
+    jsr $e5b4 ; Get character from keyboard buffer
     ldx W
     ldy #0
     jmp pushya
@@ -756,7 +756,7 @@ READ_EOF = * + 1
 .getLineFromConsole
     stx tmp_x
     ldx #0
--   jsr $e112 ; input char
+-   jsr $e112 ; Input Character
     cmp #$d
     beq .gotReturn
     sta TIB,x
