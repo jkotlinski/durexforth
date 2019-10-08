@@ -223,23 +223,10 @@ linelen if 1 curx +! then ;
 : ins-stop cur-left 0 to ins-active
 clear-status ;
 
-: show-location
-	dup ( loc loc )
-	begin
-		dup c@ eol= if
-			1+ ( loc sol )
-			tuck ( sol loc sol )
-			- curx !
-			0 cury !
-			dup homepos !
-			curlinestart !
-			1 to need-refresh
-			clear-status
-			exit
-		then
-		1-
-	again
-;
+: show-loc ( addr -- )
+dup find-start-of-line dup homepos ! 
+dup curlinestart ! - curx ! 0 cury !
+1 to need-refresh clear-status ;
 
 : replace-char
 key editpos c! line-dirty! ;
@@ -370,9 +357,9 @@ unloop drop 0 exit then loop ;
 \ If found, show the match location.
 : do-find ( -- )
 eof @ editpos 1+ ?do i sb= ?dup if
-show-location unloop exit then loop
+show-loc unloop exit then loop
 editpos bufstart ?do i sb= ?dup if
-show-location unloop exit then loop ;
+show-loc unloop exit then loop ;
 
 : write-file
 filename-len c@ 0= if
