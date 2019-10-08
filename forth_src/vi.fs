@@ -367,11 +367,12 @@ unloop drop 0 exit then loop ;
 \ Searches text buffer starting at
 \ editpos, trying to find a direct match 
 \ with search buffer contents.
-: do-find ( -- addr|0 )
+\ If found, show the match location.
+: do-find ( -- )
 eof @ editpos 1+ ?do i sb= ?dup if
-unloop exit then loop
+show-location unloop exit then loop
 editpos bufstart ?do i sb= ?dup if
-unloop exit then loop 0 ;
+show-location unloop exit then loop ;
 
 : write-file
 filename-len c@ 0= if
@@ -405,31 +406,11 @@ filename-len c! write-file ;
 lf of write-file endof
 '!' of :w! endof endcase ;
 
-: find-handler
-	0 18 setcur
-	clear-status
-	'/' emit
-	0 ( count )
-	begin
-		key dup
-		lf <> if
-			( count key )
-			dup emit
-			over sb + ( count key dst )
-			c! ( count )
-			1+
-			0
-		else
-			drop
-			1
-		then
-	until
-	sb# ! do-find
-	?dup if
-		( found! )
-		show-location
-	then
-;
+: find-handler ( -- )
+0 18 setcur clear-status '/' emit
+sb 10 + sb do key dup lf = if
+drop i sb - sb# ! do-find unloop exit
+else dup emit i c! then loop ;
 
 : open-line
 sol lf ins-char sol
