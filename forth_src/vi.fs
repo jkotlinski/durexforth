@@ -359,35 +359,8 @@ endcase clear-status ;
 variable search-buf e allot
 
 : are-equal ( len a1 a2 -- equal? )
-	rot ( a1 a2 len )
-	>r ( a1 a2 )
-	begin
-		r@ ( a1 a2 len )
-		0= if ( is len 0? )
-			( matches! )
-			2drop
-            r> drop
-			1
-			exit
-		then
-		( a1 a2 )
-		dup c@ ( a1 a2 c2 )
-		rot ( a2 c2 a1 )
-		dup c@ ( a2 c2 a1 c1 )
-		rot ( a2 a1 c1 c2 )
-		<> ( a2 a1 diff? )
-		if
-			( not equal!! )
-			2drop ( )
-            r> drop
-			0
-			exit
-		then
-		1+ ( a2 a1 )
-		swap 1+ ( a1 a2 )
-		r> 1- >r
-	again
-;
+rot 0 do over i + c@ over i + c@ <> if
+unloop 2drop 0 exit then loop drop ;
 
 : do-find ( count -- addr )
 	editpos ( count a1 )
