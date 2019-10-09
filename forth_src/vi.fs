@@ -15,7 +15,7 @@ variable curx
 variable cury
 0 value need-refresh
 variable line-dirty
-0 value ins-active
+0 value insert \ flag
 
 : line-dirty! 1 line-dirty c! ;
 
@@ -213,14 +213,14 @@ bufstart dup homepos ! curlinestart !
 1 to need-refresh ;
 
 : ins-start
-1 to ins-active 'i' set-status ;
+1 to insert 'i' set-status ;
 
 : force-right
 linelen if 1 curx +! then ;
 
 : append-start force-right ins-start ;
 
-: ins-stop cur-left 0 to ins-active
+: ins-stop cur-left 0 to insert
 clear-status ;
 
 : show-loc ( addr -- )
@@ -289,7 +289,7 @@ force-right backspace ;
 curx @ linelen 1- = if
 force-right else cur-right then ;
 
-: ins-handler
+: do-insert
 dup a0 = if drop bl then \ nbsp=>space
 dup case
 3 of drop endof \ run/stop
@@ -450,7 +450,7 @@ down c, ' cur-down ,
 'j' c, ' cur-down ,
 0 c,
 
-: main-handler ( key -- quit? )
+: do-main ( key -- quit? )
 	['] maintable ( key tableptr )
 
 	begin
@@ -514,7 +514,7 @@ show-page
 		depth \ stack check...
 
 		\ show cursor
-        ins-active 0= if curx @
+        insert 0= if curx @
         linelen dup if 1- then min
         curx c! then cursor-scr-pos
         dup @ 80 or swap c!
@@ -530,24 +530,11 @@ dup 88 = if 2drop cleanup rom-kernal
 bufstart eof @ bufstart - 1-
 evaluate quit then
 
-		ins-active if
-			ins-handler
-		else
-			main-handler if
-				drop
-                rom-kernal
-                cleanup
-				exit
-			then
-		then
+insert if do-insert else do-main if
+drop rom-kernal cleanup exit then then
 
-		need-refresh if
-			show-page
-		else
-			line-dirty c@ if
-				refresh-line
-			then
-		then
+need-refresh if show-page else
+line-dirty c@ if refresh-line then then
 
 depth 1- <> abort" stk"
 bufstart 1- c@ abort" sof"
@@ -564,7 +551,7 @@ f eaea c! \ repeat delay
 4 eb1d c! \ repeat speed
 then
 
-0 to ins-active
+0 to insert
 80 28a c! \ key repeat on
 clear-status
 
