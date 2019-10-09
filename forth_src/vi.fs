@@ -340,12 +340,11 @@ key case
 endcase clear-status ;
 
 \ search buffer
-variable sb e allot
-variable sb#
+variable sb f allot \ counted string
 
 : sb= ( addr -- addr|0 )
-sb# @ 0 do dup i + c@ sb i + c@ <> if
-unloop drop 0 exit then loop ;
+sb c@ 0 do dup i + c@ sb 1+ i + c@
+<> if unloop drop 0 exit then loop ;
 
 \ Searches text buffer starting at
 \ editpos, trying to find a direct match 
@@ -392,8 +391,8 @@ lf of write-file endof
 : find-handler ( -- )
 0 18 setcur clear-status '/' emit
 10 0 do key dup lf = if
-drop i sb# ! do-find unloop exit
-else dup emit sb i + c! then loop ;
+drop i sb c! do-find unloop exit
+else dup emit sb 1+ i + c! then loop ;
 
 : open-line
 sol lf ins-char sol
