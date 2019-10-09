@@ -7,7 +7,7 @@ d value lf
 variable eof ( ram eof )
 0 eof !
 
-variable homepos ( position at screen home )
+variable homepos \ screen home position
 variable curlinestart
 
 ( cursor screen pos )
@@ -101,7 +101,8 @@ status-pos 18 bl fill ;
 : set-status ( c -- )
 clear-status status-pos c! ;
 
-: cleanup ( bordercolor bgcolor cursorcolor -- )
+: cleanup ( bordercolor bgcolor
+cursorcolor -- )
 0 28a c! \ default key repeat
 286 c! d021 c! d020 c! page ;
 
@@ -153,7 +154,7 @@ editpos 1+ c@ eol= or if exit then
 : eol
 linelen dup if 1- then curx ! ;
 
-( left, or up + eol if we're at xpos 0 )
+\ left, or up+eol if we're at xpos 0
 : rewind-cur
 curx @ 0= if bufstart editpos <> if
 cur-up eol then else cur-left then ;
@@ -166,16 +167,12 @@ editpos c@ space= 0= and ;
 editpos bufstart = is-wordstart or
 0= while rewind-cur repeat ;
 
-\ right, or down + sol if we're at EOL. ret 1 if we cant advance
-: advance-cur
-	editpos
-	curx @ linelen 1- = linelen 0= or if
-		sol cur-down
-	else
-		cur-right
-	then
-	editpos =
-;
+\ right, or down+sol if we're at EOL.
+\ ret 1 if we cant advance
+: advance-cur editpos
+curx @ linelen 1- = linelen 0= or if
+sol cur-down else cur-right then
+editpos = ;
 
 : word-fwd advance-cur if exit then
 begin is-wordstart 0= while
@@ -237,8 +234,8 @@ editpos 1+ editpos
 eof @ editpos - move
 ffff eof +! ;
 
-: too-long-to-join
-curlinestart @ find-next-line find-next-line
+: too-long-to-join curlinestart @ 
+find-next-line find-next-line 
 curlinestart @ - 28 > ;
 
 : join-lines
@@ -344,8 +341,8 @@ sb c@ 0 do dup i + c@ sb 1+ i + c@
 <> if unloop drop 0 exit then loop ;
 
 \ Searches text buffer starting at
-\ editpos, trying to find a direct match 
-\ with search buffer contents.
+\ editpos, trying to match search
+\ buffer contents.
 \ If found, shows the match location.
 : do-find ( -- )
 eof @ editpos 1+ ?do i sb= ?dup if
