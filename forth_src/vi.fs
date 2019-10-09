@@ -346,7 +346,7 @@ sb c@ 0 do dup i + c@ sb 1+ i + c@
 \ Searches text buffer starting at
 \ editpos, trying to find a direct match 
 \ with search buffer contents.
-\ If found, show the match location.
+\ If found, shows the match location.
 : do-find ( -- )
 eof @ editpos 1+ ?do i sb= ?dup if
 show-loc unloop exit then loop
@@ -448,52 +448,31 @@ down c, ' cur-down ,
 0 c,
 
 : do-main ( key -- quit? )
-	['] maintable ( key tableptr )
+['] maintable begin 2dup c@ = if
+1+ @ execute drop 0 exit then
+3 + dup c@ 0= until drop
 
-	begin
-		( key tableptr )
-		2dup ( key tableptr key tableptr )
-		c@ = if
-			( key tableptr )
-			1+ @
-			execute
-			drop 0 exit
-		then
-		3 +
+case
+  'y' of key
+    'y' = if yank-line then
+  endof
+  'o' of force-down open-line endof
+  'p' of force-down paste-line endof
+  'Z' of key case 
+    'Z' of write-file ffff exit endof
+  endcase endof
+  ':' of
+    ':' set-status
+    key case
+    'w' of :w endof
+    'q' of ffff exit endof
+    endcase
+    clear-status
+  endof
 
-		dup c@ 0=
-	until
-
-	drop
-
-	case ( key )
-
-    'y' of \ yy
-     key 'y' = if
-     yank-line
-    then endof
-	'o' of force-down open-line endof
-	'p' of force-down paste-line endof
-	'Z' of
-		key
-		case
-		'Z' of write-file ffff exit endof
-		endcase
-	endof
-	':' of
-		':' set-status
-		key
-		case
-		'w' of :w endof
-		'q' of ffff exit endof
-		endcase
-		clear-status
-	endof
-
-	'c' of
-		key
-		'w' = if change-word then
-	endof
+  'c' of key
+    'w' = if change-word then
+  endof
 endcase 0 ;
 
 : main-loop
