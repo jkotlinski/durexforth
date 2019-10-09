@@ -39,10 +39,19 @@ STRLEN_MASK = $1f
 
 TIB = $200
 
-; zeropage
+; Zeropage
+
+; Parameter stack
+; The x register contains the current stack depth.
+; It is initially 0 and decrements when items are pushed.
+; The parameter stack is placed in zeropage to save space.
+; (E.g. lda $FF,x takes less space than lda $FFFF,x)
+; We use a split stack that store low-byte and high-byte
+; in separate ranges on the zeropage, so that popping and
+; pushing gets faster (only one inx/dex operation).
 X_INIT = 0
-MSB = $73 ; msb stack is [$3b, $72]
-LSB = $3b ; lsb stack is [3, $3a]
+MSB = $73 ; high-byte stack placed in [$3b, $72]
+LSB = $3b ; low-byte stack placed in [3, $3a]
 
 W = $8b ; rnd seed
 W2 = $8d ; rnd seed
