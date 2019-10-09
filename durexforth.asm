@@ -50,8 +50,8 @@ TIB = $200
 ; in separate ranges on the zeropage, so that popping and
 ; pushing gets faster (only one inx/dex operation).
 X_INIT = 0
-MSB = $73 ; high-byte stack placed in [$3b, $72]
-LSB = $3b ; low-byte stack placed in [3, $3a]
+MSB = $73 ; high-byte stack placed in [$3b .. $72]
+LSB = $3b ; low-byte stack placed in [3 .. $3a]
 
 W = $8b ; rnd seed
 W2 = $8d ; rnd seed
