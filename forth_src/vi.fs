@@ -267,18 +267,18 @@ editpos c@ eol= if exit then
 force-right backspace ;
 
 : ins-char
-	dup lf <> linelen 26 > and if drop exit then
+dup lf <> linelen 26 > and if 
+drop exit then
 
-	editpos
-	editpos 1+
-	eof @ editpos -
-	move
-	editpos c!
-	1 curx +!
-	1 eof +!
-	0 eof @ c!
-    line-dirty!
-;
+editpos
+editpos 1+
+eof @ editpos -
+move
+editpos c!
+1 curx +!
+1 eof +!
+0 eof @ c!
+line-dirty! ;
 
 9d value left
 11 value down
@@ -305,8 +305,7 @@ endof ins-char endcase ;
 
 : del-word
 line-dirty!
-begin
-editpos c@ eol= if exit then
+begin editpos c@ eol= if exit then
 editpos c@ del-char space= if exit then
 again ;
 
@@ -314,10 +313,8 @@ variable clip 26 allot
 variable clip-count
 0 clip-count !
 
-: yank-line
-linelen clip-count !
-curlinestart @ clip linelen
-move ;
+: yank-line linelen clip-count !
+curlinestart @ clip linelen move ;
 
 : del-line
 sol 1 to need-refresh
