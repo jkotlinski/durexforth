@@ -404,10 +404,8 @@ header maintable
 'i' c, ' ins-start ,
 'a' c, ' append-start ,
 '/' c, ' do-find ,
-( ctrl+u )
-15 c, ' half-page-back ,
-( ctrl+d )
-4 c, ' half-page-fwd ,
+15 c, ' half-page-back , \ ctrl+u
+4 c, ' half-page-fwd , \ ctrl+d
 'J' c, ' join-lines ,
 'g' c, ' goto-start ,
 'G' c, ' goto-eof ,
