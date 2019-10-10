@@ -19,9 +19,8 @@ variable line-dirty
 
 : line-dirty! 1 line-dirty c! ;
 
-here dup 10 allot
-value filename-len
-1+ value filename
+variable filename f allot \ counted string
+0 filename c!
 
 : editpos
 curlinestart @ curx @ + ;
@@ -346,33 +345,31 @@ editpos bufstart ?do i match? if
 i show-loc unloop drop exit then loop
 drop ." not found" ;
 
-: write-file
-filename-len c@ 0= if
-." no filename"
-key drop exit then
+: write-file filename c@ 0= if
+." no filename" exit then
 
 rom-kernal
 page ." saving "
-filename filename-len c@ type ." .."
+filename 1+ filename c@ type ." .."
 
 \ scratch old file
 here
 's' over c! 1+
 '0' over c! 1+
 ':' over c! 1+
-filename over filename-len c@ move
-filename-len c@ + lf swap c!
-here filename-len c@ 4 +
+filename 1+ over filename c@ move
+filename c@ + lf swap c!
+here filename c@ 4 +
 f openw f closew
 
 bufstart eof @
-filename filename-len c@ saveb
+filename 1+ filename c@ saveb
 key to need-refresh ;
 
 : :w! 1 to need-refresh
-'!' emit filename f accept
+'!' emit filename 1+ f accept
 ?dup 0= if exit then
-filename-len c! write-file ;
+filename c! write-file ;
 
 : :w 1 18 setcur 'w' emit key case
 lf of write-file endof
@@ -453,8 +450,8 @@ case
     key case
     'w' of :w endof
     'q' of ffff exit endof
-    endcase
     clear-status
+    endcase
   endof
 
   'c' of key
@@ -523,7 +520,7 @@ eof @ if \ something in buffer?
 2drop main-loop exit \ yes - continue edit
 then then
 
-2dup filename-len c! filename f move
+2dup filename c! filename 1+ f move
 
 reset-buffer
 ?dup if \ load file
