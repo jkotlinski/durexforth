@@ -22,15 +22,11 @@ variable line-dirty
 variable filename f allot \ counted string
 0 filename c!
 
-: editpos
-curlinestart @ curx @ + ;
+: editpos curlinestart @ curx @ + ;
 
 create foundeol
-clc,
-tya, w adc, lsb sta,x
-2 bcc,
-msb inc,x
-;code
+clc, tya, w adc, lsb sta,x
+2 bcc, msb inc,x ;code
 
 code print-line ( addr -- addr )
 lsb ldy,x w sty,
