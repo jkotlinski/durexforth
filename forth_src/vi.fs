@@ -333,22 +333,18 @@ key case
 'd' of del-line endof
 endcase clear-status ;
 
-\ search buffer
-variable sb f allot \ counted string
+: match? ( count addr -- count found? )
+over here + here do dup c@ i c@
+<> if unloop drop 0 exit then 1+ loop ;
 
-: sb= ( addr -- addr|0 )
-sb c@ 0 do dup i + c@ sb 1+ i + c@
-<> if unloop drop 0 exit then loop ;
-
-\ Searches text buffer starting at
-\ editpos, trying to match search
-\ buffer contents.
-\ If found, shows the match location.
 : do-find ( -- )
-eof @ editpos 1+ ?do i sb= ?dup if
-show-loc unloop exit then loop
-editpos bufstart ?do i sb= ?dup if
-show-loc unloop exit then loop ;
+0 18 setcur clear-status '/' emit
+here #38 accept
+eof @ editpos 1+ ?do i match? if
+i show-loc unloop drop exit then loop
+editpos bufstart ?do i match? if
+i show-loc unloop drop exit then loop
+drop ." not found" ;
 
 : write-file
 filename-len c@ 0= if
@@ -382,12 +378,6 @@ filename-len c! write-file ;
 lf of write-file endof
 '!' of :w! endof endcase ;
 
-: find-handler ( -- )
-0 18 setcur clear-status '/' emit
-10 0 do key dup lf = if
-drop i sb c! do-find unloop exit
-else dup emit sb 1+ i + c! then loop ;
-
 : open-line
 sol lf ins-char sol
 ins-start
@@ -416,7 +406,7 @@ then ;
 header maintable
 'i' c, ' ins-start ,
 'a' c, ' append-start ,
-'/' c, ' find-handler ,
+'/' c, ' do-find ,
 ( ctrl+u )
 15 c, ' half-page-back ,
 ( ctrl+d )
