@@ -350,7 +350,7 @@ drop ." not found" ;
 
 rom-kernal
 page ." saving "
-filename 1+ filename c@ type ." .."
+filename count type ." .."
 
 \ scratch old file
 here
@@ -363,7 +363,7 @@ here filename c@ 4 +
 f openw f closew
 
 bufstart eof @
-filename 1+ filename c@ saveb
+filename count saveb
 key to need-refresh ;
 
 : :w! 1 to need-refresh
