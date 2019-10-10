@@ -464,24 +464,24 @@ d020 c@ d021 c@ 286 c@
 d800 400 1 fill
 
 show-page
-	begin
-        ram-kernal
-		0 to need-refresh
-		0 line-dirty c!
 
-		depth \ stack check...
+begin ram-kernal
+0 to need-refresh
+0 line-dirty c!
 
-		\ show cursor
-        insert 0= if curx @
-        linelen dup if 1- then min
-        curx c! then cursor-scr-pos
-        dup @ 80 or swap c!
+depth \ stack check[
 
-        key
+\ show cursor
+insert 0= if curx @
+linelen dup if 1- then min
+curx c! then cursor-scr-pos
+dup @ 80 or swap c!
 
-        \ hide cursor
-        cursor-scr-pos dup @ 7f and
-        swap c!
+key
+
+\ hide cursor
+cursor-scr-pos dup @ 7f and
+swap c!
 
 \ f7
 dup 88 = if 2drop cleanup rom-kernal
@@ -494,11 +494,11 @@ drop rom-kernal cleanup exit then then
 need-refresh if show-page else
 line-dirty c@ if refresh-line then then
 
-depth 1- <> abort" stk"
+depth 1- <> abort" stk" \ stack check]
 bufstart 1- c@ abort" sof"
 eof @ c@ abort" eof"
-curlinestart @ bufstart eof @ within 0= abort" cl"
-again ;
+curlinestart @ bufstart eof @ within
+0= abort" cl" again ;
 
 : vi
 \ modifies kernal to change kbd prefs
