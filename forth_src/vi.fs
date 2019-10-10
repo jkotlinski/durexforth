@@ -32,16 +32,10 @@ code print-line ( addr -- addr )
 lsb ldy,x w sty,
 msb ldy,x w 1+ sty,
 0 ldy,#
-
-here
-w lda,(y)
-0 cmp,#
-foundeol -branch beq,
-e716 jsr, \ putchar
-iny,
-d cmp,#
-foundeol -branch beq,
-jmp,
+here w lda,(y)
+0 cmp,# foundeol -branch beq,
+e716 jsr, iny, \ putchar
+d cmp,# foundeol -branch beq, jmp,
 
 \ nb: may return eof
 code find-next-line ( addr -- addr )
