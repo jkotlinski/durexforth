@@ -75,6 +75,11 @@ PLACEHOLDER_ADDRESS = $1234
 
 ; -------- program start
 
+    ldx 1
+    stx INIT_1
+    tsx
+    stx INIT_S
+
     jsr quit_reset
 
     jsr PAGE
@@ -1264,15 +1269,29 @@ quit_reset
     !text	"quit"
 QUIT
     jsr quit_reset
+
     ; resets the return stack
     txa
-    ldx #$ff
+INIT_S = * + 1
+    ldx #0
     txs
     tax
+
 interpret_loop
     jsr REFILL
+
     jsr interpret_tib
     jmp interpret_loop
+
+    +BACKLINK
+    !byte 3
+    !text "bye"
+INIT_1 = * + 1
+    lda #0
+    sta 1
+    ldx INIT_S
+    txs
+    rts
 
 interpret_tib
     jsr	INTERPRET

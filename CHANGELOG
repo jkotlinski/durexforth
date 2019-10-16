@@ -361,5 +361,7 @@ Thanks to polluks for suggestions!
 
 UNRELEASED
 
+[Added]
+ * BYE
 [Fixed]
  * vi: / was broken when searching for a single character.
