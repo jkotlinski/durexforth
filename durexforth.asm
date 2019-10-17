@@ -77,6 +77,10 @@ PLACEHOLDER_ADDRESS = $1234
 
     ldx 1
     stx INIT_1
+    ldx $318
+    stx INIT_318
+    ldx $319
+    stx INIT_319
     tsx
     stx INIT_S
 
@@ -1287,8 +1291,14 @@ interpret_loop
     !byte 3
     !text "bye"
 INIT_1 = * + 1
-    lda #0
-    sta 1
+    ldx #0
+    stx 1
+INIT_318 = * + 1
+    ldx #0
+    stx $318
+INIT_319 = * + 1
+    ldx #0
+    stx $319
     ldx INIT_S
     txs
     rts
