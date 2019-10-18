@@ -75,12 +75,12 @@ PLACEHOLDER_ADDRESS = $1234
 
 ; -------- program start
 
-    ldx 1
-    stx INIT_1
-    ldx $318
-    stx INIT_318
-    ldx $319
-    stx INIT_319
+    lda 1
+    pha
+    lda $318
+    pha
+    lda $319
+    pha
     tsx
     stx INIT_S
 
@@ -1290,17 +1290,14 @@ interpret_loop
     +BACKLINK
     !byte 3
     !text "bye"
-INIT_1 = * + 1
-    ldx #0
-    stx 1
-INIT_318 = * + 1
-    ldx #0
-    stx $318
-INIT_319 = * + 1
-    ldx #0
-    stx $319
     ldx INIT_S
     txs
+    pla
+    sta $319
+    pla
+    sta $318
+    pla
+    sta 1
     rts
 
 interpret_tib
