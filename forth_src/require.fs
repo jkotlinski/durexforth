@@ -1,3 +1,4 @@
+hex
 variable req 1e allot
 req 20 0 fill
 : hash ( addr u -- hash )

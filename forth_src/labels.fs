@@ -1,3 +1,4 @@
+hex
 ( asm local labels.
 
 n @: = label n

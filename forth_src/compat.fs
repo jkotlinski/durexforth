@@ -1,3 +1,4 @@
+hex
 \ forth2012 compatibility stuff
 
 code 2over ( a b c d -- a b c d a b )

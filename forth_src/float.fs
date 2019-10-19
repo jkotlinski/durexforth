@@ -1,3 +1,4 @@
+hex
 ( BASIC floating point words.
 
 NB: If running from cartridge, these

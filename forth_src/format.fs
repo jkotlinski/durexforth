@@ -1,3 +1,4 @@
+hex
 variable end
 : <# here end ! ;
 : #> 2drop here end @ over - ;

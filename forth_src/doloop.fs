@@ -1,3 +1,4 @@
+hex
 code (do) ( limit first -- )
 pla, w sta,
 pla, tay,

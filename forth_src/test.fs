@@ -1,3 +1,4 @@
+hex
 : fakekeys ( n -- )
 c6 c! ;
 

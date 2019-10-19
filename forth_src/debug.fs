@@ -1,3 +1,4 @@
+hex
 : id. ( header -- )
 2+ dup 1+ swap c@ 1f and type ;
 : cfa> ( codepointer -- word )

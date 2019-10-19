@@ -1,3 +1,4 @@
+hex
 require rnd
 require sprite
 

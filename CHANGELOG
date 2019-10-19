@@ -361,6 +361,8 @@ Thanks to polluks for suggestions!
 
 UNRELEASED
 
+[Changed]
+ * startup base is now decimal instead of hex.
 [Added]
  * BYE
 [Fixed]

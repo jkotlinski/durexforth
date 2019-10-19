@@ -231,6 +231,8 @@ marker modules
 .( vi..) s" vi" included
 .( require..) s" require" included
 
+decimal
+
 .( save new durexforth..)
 save-forth @0:durexforth
 .( ok!) cr

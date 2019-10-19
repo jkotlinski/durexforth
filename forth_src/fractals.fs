@@ -1,3 +1,4 @@
+hex
 \ lindenmayer systems
 
 s" turtle" included

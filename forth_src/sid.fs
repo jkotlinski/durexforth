@@ -1,4 +1,5 @@
 \ low-level sid commands
+hex
 
 0 value voice
 

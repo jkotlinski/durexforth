@@ -46,8 +46,6 @@ Pick from stack element with depth u to top of stack.
 
 \section{Mathematics}
 
-These words assume that the lowest number is 0 and highest is FFFF.
-
 \begin{description}
 \item[1+ ( a -- b )] Increase top of stack value by 1.
 \item[1- ( a -- b )] Decrease top of stack value by 1.
@@ -404,4 +402,4 @@ The \texttt{compat} module contains various words that are not deemed necessary 
 
 Safe kernel calls may be done from Forth words using \texttt{sys} ( addr -- ). The helper variables \texttt{ar}, \texttt{xr}, \texttt{yr} and \texttt{sr} can be used to set arguments and get results through the a, x, y and status registers.
 
-Example: \texttt{'0' ar c! ffd2 sys} calls the CHROUT routine, which prints \texttt{0} on screen.
+Example: \texttt{'0' ar c! \$ffd2 sys} calls the CHROUT routine, which prints \texttt{0} on screen.

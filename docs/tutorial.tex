@@ -6,12 +6,10 @@ Start up durexForth. When loaded, it will greet you with a blinking yellow curso
 
 Let's warm it up a little. Enter \texttt{1} (followed by return). You have now put a digit on the stack. This can be verified by the command \texttt{.s}, which will print the stack contents without modifying it. Now enter \texttt{.} to pop the digit and print it to screen, followed by \texttt{.s} to verify that the stack is empty.
 
-Now something about numbers. The default input mode in DurexForth is hexadecimal. As an example, \texttt{1000 a * u.} will calculate $\mathtt{a \times 1000}$ and print the result $\mathtt{a000}$. If you wish, it is possible to switch numerical base using \texttt{decimal} and \texttt{hex}. Or, you can prefix \texttt{\$}, \texttt{\#} or \texttt{\%} to your number to set a base for it: like \texttt{\$d020}, \texttt{\#1234} or \texttt{\%11010101}.
-
 Let's define a word \texttt{bg!} for setting the border color\ldots
 
 \begin{verbatim}
-: bg! d020 c! ;
+: bg! $d020 c! ;
 \end{verbatim}
 
 Now try entering \texttt{1 bg!} to change the border color to white.
@@ -26,7 +24,7 @@ Start the editor by typing \texttt{vi}. You will enter the red editor screen. To
 Now, enter the following lines\ldots
 
 \begin{verbatim}
-: flash begin 1 d020 +! again ; flash
+: flash begin 1 $d020 +! again ; flash
 \end{verbatim}
 
 \ldots and then press $\leftarrow$ to leave insert mode.
@@ -41,7 +39,7 @@ If you want to color cycle as fast as possible, it is possible to use the durexF
 \begin{verbatim}
 code flash
 here ( push current addr )
-d020 inc,
+$d020 inc,
 jmp, ( jump to pushed addr )
 ;code
 flash
@@ -50,7 +48,7 @@ flash
 Alternatively, it is possible to use inline assembly within regular Forth words:
 
 \begin{verbatim}
-: flash begin [ d020 inc, ] again ;
+: flash begin [ $d020 inc, ] again ;
 flash
 \end{verbatim}
 
@@ -142,7 +140,7 @@ You may launch a word automatically at start-up by setting the variable \texttt{
 When writing a new program using a PC text editor, it is practical to configure durexForth to compile and execute the program at startup. That can be set up using the following snippet:
 
 \begin{verbatim}
-7000 value buf
+$7000 value buf
 : go buf s" myprogramfile" buf
 loadb buf - evaluate ;
 ' go start !

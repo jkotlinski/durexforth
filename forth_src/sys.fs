@@ -1,3 +1,4 @@
+hex
 ( Calls Basic/Kernal routines.
   Uses ar/xr/yr/sr for register I/O. )
 30c value ar 30d value xr

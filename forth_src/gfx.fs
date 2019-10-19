@@ -1,3 +1,4 @@
+hex
 e000 value bmpbase
 cc00 value colbase
 

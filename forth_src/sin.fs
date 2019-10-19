@@ -1,3 +1,4 @@
+hex
 ( cos 0-359 degrees
 could be more space optimized )
 header sintab

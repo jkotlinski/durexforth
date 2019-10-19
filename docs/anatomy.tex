@@ -5,7 +5,7 @@
 Let us define a word and see what it gets compiled to.
 
 \begin{verbatim}
-: bg d020 c! ;
+: bg $d020 c! ;
 \end{verbatim}
 
 After the word is defined, you can get its start address by \texttt{latest @}, and the contents of bg can be dumped using \texttt{latest @ dump}. Try it, and you will get output like the following:
