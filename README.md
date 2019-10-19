@@ -6,7 +6,7 @@ Goals:
 
 * Fun. The system should be nice to work with on the real machine.
 * Fast. DurexForth is the <a href=https://theultimatebenchmark.org/>fastest</a> C64 Forth, running at ~50x the speed of Basic V2!
-* Easy to use. Implements the <a href=http://forth-standard.org/standard/words>Forth 2012</a> core standard.
+* Easy to use. Implements the <a href=http://forth-standard.org/standard/words>Forth 2012</a> core standard, learn it with <a href=https://www.forth.com/starting-forth/>Starting Forth</a>!
 
 <img src=http://i.imgur.com/eXsaXjo.png?1>
 
