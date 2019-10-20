@@ -1,3 +1,4 @@
+hex
 require sin
 
 variable tx variable ty \ 10.6 fixedpoint
