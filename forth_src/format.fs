@@ -1,4 +1,3 @@
-hex
 variable end
 : <# here end ! ;
 : #> 2drop here end @ over - ;
@@ -11,7 +10,7 @@ here c! ;
 : ud/mod \ from Gforth
 >r 0 r@ um/mod r> swap >r um/mod r> ;
 : # base @ ud/mod rot
-dup a < if 7 - then 37 + hold ;
+dup a < if 7 - then $37 + hold ;
 : #s # begin 2dup or while # repeat ;
 
 : u. 0 <# #s #> type space ;
@@ -20,19 +19,19 @@ type space ;
 
 variable curr
 : accept ( addr u -- u )
-cc >r 0 cc c! \ enable cursor
+$cc >r 0 $cc c! \ enable cursor
 swap dup >r curr !
 begin
  key
- dup d = if \ cr
+ dup $d = if \ cr
   2drop curr @ r> -
-  space r> cc c! \ reset cursor
+  space r> $cc c! \ reset cursor
   exit
- else dup 14 = if \ del
+ else dup $14 = if \ del
   curr @ r@ > if
    emit -1 curr +! 1+
   else drop then
- else dup 7f and 20 < if
+ else dup $7f and $20 < if
   drop \ ignore
  else
   \ process character
