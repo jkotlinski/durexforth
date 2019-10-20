@@ -83,6 +83,7 @@ PLACEHOLDER_ADDRESS = $1234
     pha
     tsx
     stx INIT_S
+    ldx #X_INIT
 
     jsr quit_reset
 
