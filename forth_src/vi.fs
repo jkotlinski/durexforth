@@ -1,7 +1,6 @@
-hex
-d value lf
+$d value lf
 
-7001 value bufstart
+$7001 value bufstart
 
 \ eof points to 0 sentinel
 variable eof ( ram eof )
@@ -19,7 +18,7 @@ variable line-dirty
 
 : line-dirty! 1 line-dirty c! ;
 
-variable filename f allot \ counted string
+variable filename $f allot \ counted string
 0 filename c!
 
 : editpos curlinestart @ curx @ + ;
@@ -34,8 +33,8 @@ msb ldy,x w 1+ sty,
 0 ldy,#
 here w lda,(y)
 0 cmp,# foundeol -branch beq,
-e716 jsr, iny, \ putchar
-d cmp,# foundeol -branch beq, jmp,
+$e716 jsr, iny, \ putchar
+$d cmp,# foundeol -branch beq, jmp,
 
 \ nb: may return eof
 code find-next-line ( addr -- addr )
@@ -47,7 +46,7 @@ w lda,(y)
 iny,
 0 cmp,#
 foundeol -branch beq,
-d cmp,#
+$d cmp,#
 foundeol -branch beq,
 jmp,
 : find-next-line ( addr -- addr )
@@ -59,14 +58,14 @@ curlinestart @ -
 dup if 1- then ;
 
 : cursor-scr-pos
-cury @ 28 *
+cury @ $28 *
 curx @ linelen min +
-400 + ( addr ) ;
+$400 + ( addr ) ;
 
 : sol 0 curx ! ;
 
-: rom-kernal 37 1 c! ;
-: ram-kernal 35 1 c! ;
+: rom-kernal $37 1 c! ;
+: ram-kernal $35 1 c! ;
 
 : reset-buffer
 0 bufstart 1- c!
@@ -76,24 +75,24 @@ lf bufstart c!
 bufstart homepos !
 bufstart curlinestart ! ;
 
-7c0 value status-pos
+$7c0 value status-pos
 
 : show-page
 status-pos c@ page status-pos c!
 homepos @
-18 0 do print-line loop
+$18 0 do print-line loop
 drop ;
 
 : clear-status ( -- )
-status-pos 18 bl fill ;
+status-pos $18 bl fill ;
 
 : set-status ( c -- )
 clear-status status-pos c! ;
 
 : cleanup ( bordercolor bgcolor
 cursorcolor -- )
-0 28a c! \ default key repeat
-286 c! d021 c! d020 c! page ;
+0 $28a c! \ default key repeat
+$286 c! $d021 c! $d020 c! page ;
 
 : fit-curx-in-linelen
 linelen curx @ min curx ! ;
@@ -103,9 +102,9 @@ curlinestart @ ( curline )
 find-next-line dup ( 2xnextline )
 eof @ u< 0= if drop exit then
 curlinestart !
-cury @ 17 < if 1 cury +! else
+cury @ $17 < if 1 cury +! else
 homepos @ find-next-line homepos !
-428 400 398 move
+$428 $400 $398 move
 line-dirty!
 then
 fit-curx-in-linelen ;
@@ -126,10 +125,10 @@ curlinestart !
 fit-curx-in-linelen
 cury @ 0= if
 curlinestart @ homepos !
-400 428 398 move
+$400 $428 $398 move
 line-dirty!
 else
-ffff cury +!
+-1 cury +!
 then ;
 
 : cur-left
@@ -168,30 +167,30 @@ begin is-wordstart 0= while
 advance-cur if exit then repeat ;
 
 : setcur ( x y -- )
-xr ! yr ! e50c sys ;
+xr ! yr ! $e50c sys ;
 
 : refresh-line
-cury @ 28 * 400 + 28 bl fill
+cury @ $28 * $400 + $28 bl fill
 0 cury @ setcur
 curlinestart @ print-line drop ;
 
 : half-page-back
-c 0 do cur-up refresh-line loop ;
+$c 0 do cur-up refresh-line loop ;
 
 : half-page-fwd
-c 0 do cur-down refresh-line loop ;
+$c 0 do cur-down refresh-line loop ;
 
 : goto-eof ( can be much optimized... )
 bufstart eof @ = if exit then
 eof @ 1- find-start-of-line
 dup curlinestart ! homepos !
 sol
-17 begin
+$17 begin
 homepos @ 1- find-start-of-line homepos !
 1- dup 0=
 homepos @ bufstart = or
 until
-17 swap - dup cury ! 0 swap setcur
+$17 swap - dup cury ! 0 swap setcur
 1 to need-refresh ;
 
 : goto-start sol 0 cury !
@@ -221,11 +220,11 @@ key editpos c! line-dirty! ;
 editpos 1+ eof @ = if exit then
 editpos 1+ editpos
 eof @ editpos - move
-ffff eof +! ;
+-1 eof +! ;
 
 : too-long-to-join curlinestart @ 
 find-next-line find-next-line 
-curlinestart @ - 28 > ;
+curlinestart @ - $28 > ;
 
 : join-lines
 too-long-to-join if exit then
@@ -253,7 +252,7 @@ editpos c@ eol= if exit then
 force-right backspace ;
 
 : ins-char
-dup lf <> linelen 26 > and if 
+dup lf <> linelen $26 > and if 
 drop exit then
 
 editpos
@@ -266,26 +265,26 @@ editpos c!
 0 eof @ c!
 line-dirty! ;
 
-9d value left
-11 value down
-91 value up
-1d value right
+$9d value left
+$11 value down
+$91 value up
+$1d value right
 
 : ins-right
 curx @ linelen 1- = if
 force-right else cur-right then ;
 
 : do-insert
-dup a0 = if drop bl then \ nbsp=>space
+dup $a0 = if drop bl then \ nbsp=>space
 dup case
 3 of drop endof \ run/stop
-5f of ins-stop drop endof \ <-
+$5f of ins-stop drop endof \ <-
 left of cur-left drop endof
 down of cur-down drop endof
 up of cur-up drop endof
 right of ins-right drop endof
-14 of backspace drop endof \ inst
-94 of del-char drop endof \ del
+$14 of backspace drop endof \ inst
+$94 of del-char drop endof \ del
 lf of ins-char cur-down sol show-page
 endof ins-char endcase ;
 
@@ -295,7 +294,7 @@ begin editpos c@ eol= if exit then
 editpos c@ del-char space= if exit then
 again ;
 
-variable clip 26 allot
+variable clip $26 allot
 variable clip-count
 0 clip-count !
 
@@ -327,7 +326,7 @@ over here + here do dup c@ i c@
 <> if unloop drop 0 exit then 1+ loop ;
 
 : do-find ( -- )
-0 18 setcur clear-status '/' emit
+0 $18 setcur clear-status '/' emit
 here #38 accept
 eof @ editpos 1+ ?do i match? if
 i show-loc unloop drop exit then loop
@@ -361,7 +360,7 @@ key to need-refresh ;
 ?dup 0= if exit then
 filename c! write-file ;
 
-: :w 1 18 setcur 'w' emit key case
+: :w 1 $18 setcur 'w' emit key case
 lf of write-file endof
 '!' of :w! endof endcase ;
 
@@ -394,7 +393,7 @@ header maintable
 'i' c, ' ins-start ,
 'a' c, ' append-start ,
 '/' c, ' do-find ,
-15 c, ' half-page-back , \ ctrl+u
+$15 c, ' half-page-back , \ ctrl+u
 4 c, ' half-page-fwd , \ ctrl+d
 'J' c, ' join-lines ,
 'g' c, ' goto-start ,
@@ -449,9 +448,9 @@ endcase 0 ;
 
 : main-loop
 \ init colors -- border bgcol curscol
-d020 c@ d021 c@ 286 c@
-2 d021 c! a d020 c! 1 286 c!
-d800 400 1 fill
+$d020 c@ $d021 c@ $286 c@
+2 $d021 c! $a $d020 c! 1 $286 c!
+$d800 $400 1 fill
 
 show-page
 
@@ -465,16 +464,16 @@ depth \ stack check[
 insert 0= if curx @
 linelen dup if 1- then min
 curx c! then cursor-scr-pos
-dup @ 80 or swap c!
+dup @ $80 or swap c!
 
 key
 
 \ hide cursor
-cursor-scr-pos dup @ 7f and
+cursor-scr-pos dup @ $7f and
 swap c!
 
 \ f7
-dup 88 = if 2drop cleanup rom-kernal
+dup $88 = if 2drop cleanup rom-kernal
 bufstart eof @ bufstart - 1-
 evaluate quit then
 
@@ -492,15 +491,15 @@ curlinestart @ bufstart eof @ within
 
 : vi
 \ modifies kernal to change kbd prefs
-ram-kernal eaea @ 8ca <> if
+ram-kernal $eaea @ $8ca <> if
 rom-kernal
-e000 dup 2000 move \ rom => ram
-f eaea c! \ repeat delay
-4 eb1d c! \ repeat speed
+$e000 dup $2000 move \ rom => ram
+$f $eaea c! \ repeat delay
+4 $eb1d c! \ repeat speed
 then
 
 0 to insert
-80 28a c! \ key repeat on
+$80 $28a c! \ key repeat on
 clear-status
 
 lf word count dup 0= if \ no param?
