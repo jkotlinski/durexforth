@@ -1,4 +1,3 @@
-hex
 code (do) ( limit first -- )
 pla, w sta,
 pla, tay,
@@ -12,7 +11,7 @@ w lda, pha,
 ;code
 
 \ leave stack
-variable lstk 14 allot
+variable lstk $14 allot
 variable lsp lstk lsp !
 : >l ( n -- ) lsp @ ! 2 lsp +! ;
 
@@ -38,14 +37,14 @@ here lsp @ @ ! repeat drop
 
 code (loop)
 w stx, tsx, \ x = stack pointer
-103 inc,x 3 bne, 104 inc,x \ i++
-103 lda,x 105 cmp,x 1 @@ beq, \ lsb
+$103 inc,x 3 bne, $104 inc,x \ i++
+$103 lda,x $105 cmp,x 1 @@ beq, \ lsb
 2 @:
 \ not done, branch back
 w ldx, \ restore x
 ' branch jmp,
 1 @:
-104 lda,x 106 cmp,x 2 @@ bne, \ msb
+$104 lda,x $106 cmp,x 2 @@ bne, \ msb
 \ loop done
 \ skip branch addr
 pla, clc, 3 adc,# w2 sta,
@@ -69,6 +68,6 @@ postpone (+loop) dup , resolve-leaves ; immediate
 
 : i postpone r@ ; immediate
 code j txa, tsx,
-107 ldy,x w sty, 108 ldy,x
+$107 ldy,x w sty, $108 ldy,x
 tax, dex,
 msb sty,x w lda, lsb sta,x ;code
