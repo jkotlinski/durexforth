@@ -1,4 +1,3 @@
-hex
 : id. ( header -- )
 2+ dup 1+ swap c@ 1f and type ;
 : cfa> ( codepointer -- word )
@@ -55,7 +54,7 @@ while nip dup @ repeat
 rot drop \ eow sow
 
 ':' emit space dup id. space
-dup 2+ c@ 80 and if ." immediate " then
+dup 2+ c@ $80 and if ." immediate " then
 
 >cfa
 
@@ -63,10 +62,10 @@ begin
     2dup >
 while
     dup c@ case
-    20 of see-jsr endof
-    4c of ." jp( " see-jsr ." ) " endof
-    e8 of 1+ ." drop " endof \ inx
-    60 of 1+ ." exit " endof \ rts
+    $20 of see-jsr endof
+    $4c of ." jp( " see-jsr ." ) " endof
+    $e8 of 1+ ." drop " endof \ inx
+    $60 of 1+ ." exit " endof \ rts
     ." ? " swap 1+ swap
     endcase
 repeat
@@ -80,14 +79,14 @@ base @ swap hex
 dup 8 0 do dup c@ 0 <# # # #> type
 space 1+ loop drop
 8 0 do dup c@
-dup 7f and 20 < if drop '.' then
+dup $7f and $20 < if drop '.' then
 emit 1+ loop cr loop
 last-dump ! base ! ;
 
 : n last-dump @ dump ;
 
-: more d6 c@ 18 = if 12 emit ." more"
-92 emit key drop page then ;
+: more $d6 c@ $18 = if $12 emit
+." more" $92 emit key drop page then ;
 : words
 page latest @ begin ?dup while
 more dup id. space @ repeat cr ;
