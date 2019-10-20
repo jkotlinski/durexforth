@@ -1,8 +1,7 @@
-hex
 require rnd
 require sprite
 
-340 sp-data
+$340 sp-data
 DDD..UU.U.RRR..EEEEX...X
 DDD..UU.U.RRR..EEEEX...X
 D.DD.UU.U.R.RR.E....X.X.
@@ -28,7 +27,7 @@ FF....OO..R.RR..TT..H..H
 : rnds rnd 100/ 7 and ;
 : demo
 7 begin
-340 40 / over 7f8 + c!
+$340 $40 / over $7f8 + c!
 dup sp-on
 1 over + over sp-col!
 ?dup while 1- repeat
