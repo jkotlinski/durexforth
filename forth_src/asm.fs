@@ -1,4 +1,3 @@
-base @ hex
 : 1mi create c, does> c@ c, ;
 : 2mi create c, does> c@ c, c, ;
 : 3mi create c, does> c@ c, , ;
@@ -154,8 +153,6 @@ ba 1mi tsx,
 
 \ illegal opcodes
 cb 2mi sbx,#
-
-base !
 
 : code header ;
 : ;code rts, ;
