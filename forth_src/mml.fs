@@ -1,4 +1,4 @@
-hex
+base @ hex
 variable sid 13 allot
 variable voice
 
@@ -327,3 +327,5 @@ apply-sid
 
 \ restore sentinels
 r> r> c! r> r> c! r> r> c! ;
+
+base !
