@@ -1,11 +1,9 @@
-hex
-: fakekeys ( n -- )
-c6 c! ;
+: fakekeys ( n -- ) $c6 c! ;
 
 here latest @
 
 .( gfxdemo )
-b fakekeys \ skips demos
+$b fakekeys \ skips demos
 s" gfx" included
 s" gfxdemo" included
 
@@ -29,17 +27,16 @@ s" tester" included
 s" testcore" included
 s" testcoreplus" included
 
-hex
 : push ( ch -- )
-c6 c@ 277 + c!
-1 c6 +! ;
+$c6 c@ $277 + c!
+1 $c6 +! ;
 
 .( vi )
 \ The FIFO is only 10 bytes.
 \ Don't add more.
-'i' push d push
+'i' push $d push
 '.' push '(' push bl push
 'O' push 'K' push ')' push
-5f push \ leftarrow
-88 push \ f7
+$5f push \ leftarrow
+$88 push \ f7
 vi
