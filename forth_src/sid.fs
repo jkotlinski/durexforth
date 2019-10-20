@@ -1,5 +1,5 @@
 \ low-level sid commands
-hex
+base @ hex
 
 0 value voice
 
@@ -47,3 +47,5 @@ i note!
 11 control!
 200 0 do loop
 loop ;
+
+base !
