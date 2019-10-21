@@ -365,5 +365,7 @@ UNRELEASED
  * startup base is now decimal instead of hex.
 [Added]
  * BYE
+ * VICE utilities. 'include viceutil' and DUMP-LABELS
+   to generate a label file for VICE debugging.
 [Fixed]
  * vi: / was broken when searching for a single character.
