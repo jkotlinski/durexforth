@@ -1205,8 +1205,10 @@ INTERPRET
     rts
 +
     ; Stuffs the name as a counted string in HERE, to satisfy FIND.
-    ; ...it's not really great that we first copy the string to HERE,
-    ; then copy it again in FIND, but what to do?
+    ; It's not great that we first copy the string to HERE,
+    ; then FIND copies it again to FIND_BUFFER. The other option would
+    ; be having an alternate FIND that accepts c-addr u. That's not
+    ; too great, either.
     jsr DUP
     jsr HERE
     jsr STOREBYTE
