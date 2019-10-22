@@ -1518,59 +1518,40 @@ compile_a
 HEADER
     inc last_word_no_tail_call_elimination
 
-    dex
-    lda #K_SPACE
-    sta LSB,x
-    jsr	WORD
+    jsr HERE
 
-    ; store link in header. W = dst
-    lda	HERE_LSB
-    sta	W
-    lda	HERE_MSB
-    sta	W + 1
+    ; Store backlink.
+    jsr LATEST
+    jsr FETCH
+    jsr COMMA
 
-    ldy	#0
-    lda	_LATEST
-    sta	(W), y
-
-    inc	W
-    bne	+
-    inc	W + 1
+-   jsr PARSE_NAME
+    lda LSB,x
+    bne +
+    jsr REFILL
+    jmp -
 +
-    lda	_LATEST + 1
-    sta	(W), y
+    ; Store length byte.
+    jsr DUP
+    jsr CCOMMA
 
-    inc	W
-    bne	+
-    inc	W + 1
-+
-
-    ; copy length byte + string
--   lda	WORD_BUFFER, y
+-   jsr SWAP
+    jsr DUP
+    jsr FETCHBYTE
+    lda LSB,x
     jsr CHAR_TO_LOWERCASE
-    sta	(W), y
-    iny
-    dec WORD_BUFFER_LENGTH
-    bpl	-
-
-    ; update _LATEST
-    lda	HERE_LSB
-    sta	_LATEST
-    lda	HERE_MSB
-    sta	_LATEST + 1
-
-    ; update HERE
-    tya
-    ldy	W + 1
-    clc
-    adc	W
-    sta	HERE_LSB
-    bcc	+
-    iny
-+   sty HERE_MSB
-
+    sta LSB,x
+    jsr CCOMMA
+    jsr ONEPLUS
+    jsr SWAP
+    jsr ONEMINUS
+    lda LSB,x
+    bne -
     inx
-    rts
+    inx
+
+    jsr LATEST
+    jmp STORE
 
 ; CCOMMA - write char
     +BACKLINK
