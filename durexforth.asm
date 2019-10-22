@@ -152,6 +152,7 @@ BL
     +BACKLINK
     !byte 6
     !text	"source"
+SOURCE
     dex
     dex
     lda TIB_PTR
@@ -486,8 +487,8 @@ EVALUATE
 
 evaluate_get_new_line
     ldy #0
-    sty TO_IN
-    sty TO_IN + 1
+    sty TO_IN_W
+    sty TO_IN_W + 1
 
     ; Determines TIB_SIZE.
     lda TIB_PTR
@@ -563,9 +564,9 @@ SAVE_INPUT
     jsr push_input_stack
     lda #0
     sta READ_EOF
-    lda TO_IN
+    lda TO_IN_W
     jsr push_input_stack
-    lda TO_IN+1
+    lda TO_IN_W+1
     jsr push_input_stack
     lda SOURCE_ID_LSB
     jsr push_input_stack
@@ -576,7 +577,7 @@ SAVE_INPUT
     lda TIB_PTR+1
     jsr push_input_stack
 
-    lda TO_IN
+    lda TO_IN_W
     cmp TIB_SIZE
     beq +
     ; Temporarily moves the input buffer to avoid clobbering.
@@ -605,9 +606,9 @@ RESTORE_INPUT
     jsr pop_input_stack
     sta SOURCE_ID_LSB
     jsr pop_input_stack
-    sta TO_IN+1
+    sta TO_IN_W+1
     jsr pop_input_stack
-    sta TO_IN
+    sta TO_IN_W
     jsr pop_input_stack
     sta READ_EOF
     rts
@@ -734,8 +735,9 @@ GET_CHAR_BLOCKING
     +BACKLINK
     !byte	3
     !text	">in"
-    +VALUE TO_IN
 TO_IN
+    +VALUE TO_IN_W
+TO_IN_W
     !word 0
 
     +BACKLINK
@@ -762,8 +764,8 @@ READ_EOF = * + 1
     jmp evaluate_get_new_line
 +
     ldy #0
-    sty TO_IN
-    sty TO_IN + 1
+    sty TO_IN_W
+    sty TO_IN_W + 1
     sty TIB_SIZE
     sty TIB_SIZE + 1
 
@@ -807,10 +809,10 @@ READ_EOF = * + 1
 +   rts
 
 GET_CHAR_FROM_TIB
-    lda TO_IN
+    lda TO_IN_W
     cmp TIB_SIZE
     bne +
-    lda TO_IN + 1
+    lda TO_IN_W + 1
     cmp TIB_SIZE + 1
     bne +
     lda #0
@@ -818,10 +820,10 @@ GET_CHAR_FROM_TIB
 +
     clc
     lda TIB_PTR
-    adc TO_IN
+    adc TO_IN_W
     sta W
     lda TIB_PTR + 1
-    adc TO_IN + 1
+    adc TO_IN_W + 1
     sta W + 1
     ldy #0
     lda (W),y
@@ -830,9 +832,9 @@ GET_CHAR_FROM_TIB
     ; jsr PUTCHR ; debug
     ; pla
 
-    inc TO_IN
+    inc TO_IN_W
     bne +
-    inc TO_IN + 1
+    inc TO_IN_W + 1
 +   rts
 
 ; WORD ( delim -- strptr )
@@ -1057,24 +1059,139 @@ last_word_no_tail_call_elimination
     !byte 1
 
     +BACKLINK
-    !byte	5
-    !text	"abort"
-ABORT
-    ldx #X_INIT ; reset stack
-    jmp QUIT
+    !byte 7
+    !text	"/string"
+SLASH_STRING ; ( addr u n -- addr u )
+    jsr DUP
+    jsr TO_R
+    jsr MINUS
+    jsr SWAP
+    jsr R_TO
+    jsr PLUS
+    jmp SWAP
 
-    +BACKLINK
-    !byte	1
-    !text	"'"
+IS_SPACE ; ( c -- f )
     jsr BL
-    jsr WORD
-    jsr FIND
-    lda LSB,x
-    beq print_word_not_found_error
+    jsr ONEPLUS
+    jmp U_LESS
+
+IS_NOT_SPACE ; ( c -- f )
+    jsr IS_SPACE
+    jmp ZEQU
+
+XT_SKIP ; ( addr n xt -- addr n )
+    ; skip all chars satisfying xt
+    jsr TO_R
+-   jsr DUP
+    jsr ZBRANCH
+    !word .done
+    jsr OVER
+    jsr FETCHBYTE
+    jsr R_FETCH
+    jsr EXECUTE
+    jsr ZBRANCH
+    !word .done
+    jsr ONE
+    jsr SLASH_STRING
+    jmp -
+.done
+    jsr R_TO
     inx
     rts
 
-; INTERPRET
+    +BACKLINK
+    !byte 1
+    !text	"<"
+LESS_THAN
+    ldy #0
+    sec
+    lda LSB+1,x
+    sbc LSB,x
+    lda MSB+1,x
+    sbc MSB,x
+    bvc +
+    eor #$80
++   bpl +
+    dey
++   inx
+    sty LSB,x
+    sty MSB,x
+    rts
+
+    +BACKLINK
+    !byte 1
+    !text	">"
+GREATER_THAN
+    jsr SWAP
+    jmp LESS_THAN
+
+    +BACKLINK
+    !byte 3
+    !text "max"
+MAX
+    jsr TWODUP
+    jsr LESS_THAN
+    jsr ZBRANCH
+    !word +
+    jsr SWAP
++   inx
+    rts
+
+    +BACKLINK
+    !byte 3
+    !text "min"
+MIN
+    jsr TWODUP
+    jsr GREATER_THAN
+    jsr ZBRANCH
+    !word +
+    jsr SWAP
++   inx
+    rts
+
+    +BACKLINK
+    !byte 1
+    !text	"1"
+ONE
+    +VALUE 1
+
+    +BACKLINK
+    !byte 10
+    !text	"parse-name"
+PARSE_NAME ; ( name -- addr u )
+    jsr SOURCE
+    jsr TO_IN
+    jsr FETCH
+    jsr SLASH_STRING
+    jsr LIT
+    !word IS_SPACE
+    jsr XT_SKIP
+    jsr OVER
+    jsr TO_R
+    jsr LIT
+    !word IS_NOT_SPACE
+    jsr XT_SKIP
+    jsr TWODUP
+    jsr ONE
+    jsr MIN
+    jsr PLUS
+    jsr SOURCE
+    inx
+    jsr MINUS
+    jsr TO_IN
+    jsr STORE
+    inx
+    jsr R_TO
+    jsr TUCK
+    jmp MINUS
+
+    +BACKLINK
+    !byte	4
+    !text	"tuck"
+TUCK ; ( x y -- y x y ) 
+    jsr SWAP
+    jmp OVER
+
     +BACKLINK
     !byte	9
     !text	"interpret"
@@ -1143,6 +1260,25 @@ print_word_not_found_error
     lda	#$d ; cr
     jsr	PUTCHR
     jmp ABORT
+
+    +BACKLINK
+    !byte	5
+    !text	"abort"
+ABORT
+    ldx #X_INIT ; reset stack
+    jmp QUIT
+
+    +BACKLINK
+    !byte	1
+    !text	"'"
+    jsr BL
+    jsr WORD
+    jsr FIND
+    lda LSB,x
+    beq print_word_not_found_error
+    inx
+    rts
+
 
     +BACKLINK
     !byte	7
@@ -1258,8 +1394,8 @@ quit_reset
     stx     TIB_SIZE
     stx     TIB_SIZE + 1
     stx     TIB_PTR
-    stx     TO_IN
-    stx     TO_IN + 1
+    stx     TO_IN_W
+    stx     TO_IN_W + 1
     stx     SOURCE_ID_LSB
     stx     SOURCE_ID_MSB
     stx     SAVE_INPUT_STACK_DEPTH
@@ -1305,10 +1441,10 @@ interpret_tib
     jsr	INTERPRET
     cpx #X_INIT+1
     bpl .on_stack_underflow
-    lda TO_IN
+    lda TO_IN_W
     cmp TIB_SIZE
     bne interpret_tib
-    lda TO_IN + 1
+    lda TO_IN_W + 1
     cmp TIB_SIZE + 1
     bne interpret_tib
 
@@ -1557,6 +1693,7 @@ SEMICOLON
     +BACKLINK
     !byte	2 | F_NO_TAIL_CALL_ELIMINATION
     !text	"r@"
+R_FETCH
     txa
     tsx
     ldy $103,x

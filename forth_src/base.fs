@@ -18,7 +18,6 @@ latest @ >cfa compile, ; immediate
 : ( begin getc dup 0= if refill then
 ')' = if exit then again ; immediate
 : \ refill ; immediate
-: tuck ( x y -- y x y ) swap over ;
 : <> ( a b -- c ) = 0= ;
 : u> ( n -- b ) swap u< ;
 : 0<> ( x -- flag ) 0= 0= ;
@@ -103,8 +102,9 @@ dup code lda,# 100/ ldy,#
 : spaces ( n -- )
 begin ?dup while space 1- repeat ;
 
-1 value 1 8b value w
-8d value w2 9e value w3
+8b value w
+8d value w2
+9e value w3
 
 ( "0 to foo" sets value foo to 0 )
 : (to) over 100/ over 2+ c! c! ;
@@ -188,20 +188,6 @@ r> 0< if swap negate swap then ;
 : */mod >r m* r> fm/mod ;
 : */ */mod nip ;
 ( ...from FIG UK )
-
-code <
-0 ldy,# sec,
-lsb 1+ lda,x lsb sbc,x
-msb 1+ lda,x msb sbc,x
-+branch bvc, 80 eor,# :+
-+branch bpl, dey, :+
-inx, lsb sty,x msb sty,x ;code
-: > swap < ;
-
-: max ( a b - c )
-2dup < if swap then drop ;
-: min ( a b - c )
-2dup > if swap then drop ;
 
 .( format..) s" format" included
 
