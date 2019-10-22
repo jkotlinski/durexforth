@@ -1263,10 +1263,8 @@ FOUND_WORD_WITH_NO_TCE = * + 1
 print_word_not_found_error
     lda	#$12 ; reverse on
     jsr	PUTCHR
-
     jsr COUNT
     jsr TYPE
-
     lda	#'?'
 .stop_error_print
     jsr	PUTCHR
