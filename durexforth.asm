@@ -892,6 +892,17 @@ FIND_BUFFER_SIZE = 31
 FIND_BUFFER
     !fill FIND_BUFFER_SIZE
 
+FIND_NAME ; ( caddr u -- str 0 | xt 1 | xt -1 )
+    lda	LSB,x
+    sta FIND_BUFFER
+    jsr LIT
+    !word FIND_BUFFER+1
+    jsr SWAP
+    jsr CMOVE
+    jsr LIT
+    !word FIND_BUFFER
+    jmp FIND
+
     +BACKLINK
     !byte	4
     !text	"find"
@@ -914,7 +925,7 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     tay
 -   lda (W2), y
     jsr CHAR_TO_LOWERCASE
-    sta FIND_BUFFER-1, y
+    sta FIND_BUFFER, y
     dey
     beq +
     jmp -
@@ -958,7 +969,7 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     lda #0
     sta .strlen
 -   iny
-    lda	FIND_BUFFER-3, y ; find string
+    lda	FIND_BUFFER-2, y ; find string
     cmp	(W), y ; dictionary string
     bne	.word_not_equal
     dec	.strlen
@@ -1212,21 +1223,7 @@ INTERPRET
     inx
     rts
 +
-    ; Stuffs the name as a counted string in HERE, to satisfy FIND.
-    ; It's not great that we first copy the string to HERE,
-    ; then FIND copies it again to FIND_BUFFER. The other option would
-    ; be having an alternate FIND that accepts c-addr u. That's not
-    ; too great, either.
-    jsr DUP
-    jsr HERE
-    jsr STOREBYTE
-    jsr HERE
-    jsr ONEPLUS
-    jsr SWAP
-    jsr CMOVE
-
-    jsr HERE
-    jsr	FIND ; replace string with dictionary ptr
+    jsr	FIND_NAME ; replace string with dictionary ptr
     lda LSB, x
     bne	.found_word
 
@@ -1267,7 +1264,6 @@ print_word_not_found_error
     lda	#$12 ; reverse on
     jsr	PUTCHR
 
-    jsr HERE
     jsr COUNT
     jsr TYPE
 
@@ -1296,7 +1292,6 @@ ABORT
     beq print_word_not_found_error
     inx
     rts
-
 
     +BACKLINK
     !byte	7
