@@ -1259,12 +1259,9 @@ print_word_not_found_error
     lda	#$12 ; reverse on
     jsr	PUTCHR
 
-    ldy	#0
--   lda	WORD_BUFFER_DATA, y
-    jsr	PUTCHR
-    iny
-    dec WORD_BUFFER_LENGTH
-    bne -
+    jsr HERE
+    jsr COUNT
+    jsr TYPE
 
     lda	#'?'
 .stop_error_print
@@ -1915,6 +1912,27 @@ COMPILE_JMP
     jsr HERE
     jsr SWAP
     jmp STORE
+
+    +BACKLINK
+    !byte 4
+    !text	"type"
+TYPE ; ( caddr u -- )
+    lda #0 ; quote mode off
+    sta $d4
+-   lda LSB,x
+    ora MSB,x
+    bne +
+    inx
+    inx
+    rts
++   jsr SWAP
+    jsr DUP
+    jsr FETCHBYTE
+    jsr EMIT
+    jsr ONEPLUS
+    jsr SWAP
+    jsr ONEMINUS
+    jmp -
 
 ; -----------
 

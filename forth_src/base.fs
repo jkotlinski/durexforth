@@ -31,12 +31,6 @@ begin getc dup '"' <>
 while c, 1+ repeat
 drop swap ! ; immediate
 
-: type ( caddr u -- )
-0 d4 c! ( quote mode off )
-begin ?dup while
-swap dup c@ emit 1+ swap 1-
-repeat drop ;
-
 : ." postpone s" postpone type
 ; immediate
 : .( begin getc dup ')' <>
