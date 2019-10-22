@@ -303,11 +303,15 @@ Print a string. Example: \texttt{.( foo)}
 
 Compile-time version of "\texttt{.(}". Example: \texttt{: foo ." bar" ;}
 
-\item[s" ( -- strptr strlen )] Define a string. Example: \texttt{s" foo"}.
+\item[s" ( -- caddr u )] Define a string. Compile-time only! Example: \texttt{s" foo"}.
+
+\item[parse-name ( name -- caddr u )] Skip leading spaces. Parse name delimited by a space.
 
 \item[count ( str -- caddr u )] Returns data address and length of the counted string str.
 
 \item[type ( caddr u -- )] Prints a string.
+
+\item[/string ( caddr u n -- caddr+n u-n )] Adjusts the string by n characters. 
 
 \end{description}
 

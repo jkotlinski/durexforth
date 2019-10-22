@@ -362,10 +362,15 @@ Thanks to polluks for suggestions!
 UNRELEASED
 
 [Changed]
- * startup base is now decimal instead of hex.
+ * startup BASE is now DECIMAL instead of HEX.
+ * S" now only works when compiling.
 [Added]
  * BYE
- * VICE utilities. 'include viceutil' and DUMP-LABELS
+ * /STRING
+ * PARSE-NAME
+ * VICE label dumper. 'include viceutil' and DUMP-LABELS
    to generate a label file for VICE debugging.
 [Fixed]
  * vi: / was broken when searching for a single character.
+ * WORD did not work while interpreting because INTERPRET
+   clobbered the word buffer.
