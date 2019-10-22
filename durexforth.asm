@@ -1196,15 +1196,26 @@ TUCK ; ( x y -- y x y )
     !byte	9
     !text	"interpret"
 INTERPRET
-    dex
-    lda #K_SPACE
-    sta LSB,x
-    jsr	WORD
-    lda WORD_BUFFER_LENGTH
+    jsr PARSE_NAME
+
+    lda LSB,x
     bne +
+    inx
     inx
     rts
 +
+    ; Stuffs the name as a counted string in HERE, to satisfy FIND.
+    ; ...it's not really great that we first copy the string to HERE,
+    ; then copy it again in FIND, but what to do?
+    jsr DUP
+    jsr HERE
+    jsr STOREBYTE
+    jsr HERE
+    jsr ONEPLUS
+    jsr SWAP
+    jsr CMOVE
+
+    jsr HERE
     jsr	FIND ; replace string with dictionary ptr
     lda LSB, x
     bne	.found_word
