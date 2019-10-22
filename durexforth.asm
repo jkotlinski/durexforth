@@ -1071,9 +1071,18 @@ SLASH_STRING ; ( addr u n -- addr u )
     jmp SWAP
 
 IS_SPACE ; ( c -- f )
-    jsr BL
-    jsr ONEPLUS
-    jmp U_LESS
+    ldy #1
+    lda LSB,x
+    cmp #' ' | 0x80
+    beq .is_space
+    lda #' '
+    cmp LSB,x
+    bcs .is_space
+    dey
+.is_space:
+    sty LSB,x
+    sty MSB,x
+    rts
 
 IS_NOT_SPACE ; ( c -- f )
     jsr IS_SPACE

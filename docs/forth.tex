@@ -265,7 +265,7 @@ endcase
 
 \item[word ( delim -- addr )] Reads a word from input, using delimiter \texttt{delim}, and puts the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.
 
-\item[parse-name ( name -- caddr u )] Reads a word from input, delimited by a space. Skips leading spaces. 
+\item[parse-name ( name -- caddr u )] Reads a word from input, delimited by whitespace. Skips leading spaces. 
 
 \item[interpret ( -- value )] Interprets a word from input and puts it on the stack.
 
