@@ -883,17 +883,20 @@ WORD
     cmp #K_SPACE | $80
 +   rts
 
-FIND_NAME ; ( caddr u -- str 0 | xt 1 | xt -1 )
-    jsr DUP
-    jsr HERE
-    jsr STOREBYTE
+FIND_BUFFER
+    !fill 31
 
-    jsr HERE
-    jsr ONEPLUS
+FIND_NAME ; ( caddr u -- str 0 | xt 1 | xt -1 )
+    lda LSB,x
+    sta FIND_BUFFER
+
+    jsr LIT
+    !word FIND_BUFFER+1
     jsr SWAP
     jsr MOVE
 
-    jsr HERE
+    jsr LIT
+    !word FIND_BUFFER
     jmp FIND
 
     +BACKLINK
