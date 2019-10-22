@@ -883,19 +883,17 @@ WORD
     cmp #K_SPACE | $80
 +   rts
 
-FIND_BUFFER_SIZE = 31
-FIND_BUFFER
-    !fill FIND_BUFFER_SIZE
-
 FIND_NAME ; ( caddr u -- str 0 | xt 1 | xt -1 )
-    lda	LSB,x
-    sta FIND_BUFFER
-    jsr LIT
-    !word FIND_BUFFER+1
+    jsr DUP
+    jsr HERE
+    jsr STOREBYTE
+
+    jsr HERE
+    jsr ONEPLUS
     jsr SWAP
-    jsr CMOVE
-    jsr LIT
-    !word FIND_BUFFER
+    jsr MOVE
+
+    jsr HERE
     jmp FIND
 
     +BACKLINK
@@ -917,14 +915,11 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
     sta	.findlen + 1
     sta	.findlen2 + 1
 
-    tay
--   lda (W2), y
-    jsr CHAR_TO_LOWERCASE
-    sta FIND_BUFFER, y
-    dey
-    beq +
-    jmp -
-+
+    lda W2
+    bne +
+    dec W2+1
++   dec W2
+
     ldx	_LATEST
     lda	_LATEST + 1
 .examine_word
@@ -963,8 +958,9 @@ FIND ; ( str -- str 0 | xt 1 | xt -1 )
 .findlen2
     lda #0
     sta .strlen
--   iny
-    lda	FIND_BUFFER-2, y ; find string
+-   lda	(W2), y ; find string
+    jsr CHAR_TO_LOWERCASE
+    iny
     cmp	(W), y ; dictionary string
     bne	.word_not_equal
     dec	.strlen
