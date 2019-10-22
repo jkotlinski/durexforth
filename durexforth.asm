@@ -691,7 +691,6 @@ tmp_x
     +BACKLINK
     !byte	4
     !text	"getc"
-GETC
     jsr GET_CHAR_FROM_TIB
     bne +
     jsr REFILL
@@ -701,21 +700,17 @@ GETC
 
     +BACKLINK
     !byte	4
-    !text	"char"
--
-    dex
-    lda #K_SPACE
-    sta LSB,x
-    jsr	WORD
-    inx
-    lda WORD_BUFFER_LENGTH
+    !text	"char" 
+CHAR ; ( name -- char )
+-   jsr PARSE_NAME
+    lda LSB,x
     bne +
+    inx
+    inx
     jsr REFILL
     jmp -
-+
-    lda WORD_BUFFER_DATA
-    ldy #0
-    jmp pushya
++   inx
+    jmp FETCHBYTE
 
 GET_CHAR_BLOCKING
     stx	tmp_x
