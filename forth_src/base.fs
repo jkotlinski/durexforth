@@ -26,16 +26,10 @@ latest @ >cfa compile, ; immediate
 r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 
 : s" ( -- addr len )
-state c@ if ( compile mode )
 postpone lits here 0 , 0
 begin getc dup '"' <>
 while c, 1+ repeat
-drop swap ! exit
-then ( immediate mode )
-here here
-begin getc dup '"' <>
-while over c! 1+ repeat
-drop here - ; immediate
+drop swap ! ; immediate
 
 : type ( caddr u -- )
 0 d4 c! ( quote mode off )
@@ -72,7 +66,7 @@ header postpone dodoes literal , ;
 : does> r> 1+ latest @ >dfa ! ;
 
 .( asm..)
-s" asm" included
+parse-name asm included
 
 code rot ( a b c -- b c a )
 msb 2+ ldy,x msb 1+ lda,x
@@ -189,7 +183,7 @@ r> 0< if swap negate swap then ;
 : */ */mod nip ;
 ( ...from FIG UK )
 
-.( format..) s" format" included
+.( format..) parse-name format included
 
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
@@ -209,13 +203,13 @@ does> @ dup to here @ latest ! ;
 
 marker modules
 
-.( labels..) s" labels" included
-.( doloop..) s" doloop" included
-.( sys..) s" sys" included
-.( debug..) s" debug" included
-.( ls..) s" ls" included
-.( vi..) s" vi" included
-.( require..) s" require" included
+.( labels..) parse-name labels included
+.( doloop..) parse-name doloop included
+.( sys..) parse-name sys included
+.( debug..) parse-name debug included
+.( ls..) parse-name ls included
+.( vi..) parse-name vi included
+.( require..) parse-name require included
 
 decimal
 
