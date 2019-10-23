@@ -1,0 +1,242 @@
+;{{{ The MIT License
+;
+;Copyright (c) 2008 Johan Kotlinski, Mats Andren
+;
+;Permission is hereby granted, free of charge, to any person obtaining a copy
+;of this software and associated documentation files (the "Software"), to deal
+;in the Software without restriction, including without limitation the rights
+;to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+;copies of the Software, and to permit persons to whom the Software is
+;furnished to do so, subject to the following conditions:
+;
+;The above copyright notice and this permission notice shall be included in
+;all copies or substantial portions of the Software.
+;
+;THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+;THE SOFTWARE. }}}
+
+; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT
+
+    +BACKLINK
+    !byte	4 | F_IMMEDIATE
+    !text	"drop"
+DROP
+    lda STATE
+    bne +
+    inx
+    rts
++   lda #OP_INX
+    jmp compile_a
+
+    +BACKLINK
+    !byte	4
+    !text	"swap"
+SWAP
+    ldy	MSB, x
+    lda	MSB + 1, x
+    sta MSB, x
+    sty	MSB + 1, x
+
+    ldy	LSB, x
+    lda	LSB + 1, x
+    sta LSB, x
+    sty	LSB + 1, x
+    rts
+
+    +BACKLINK
+    !byte	3
+    !text	"dup"
+DUP
+    dex
+    lda	MSB + 1, x
+    sta	MSB, x
+    lda	LSB + 1, x
+    sta	LSB, x
+    rts
+
+    +BACKLINK
+    !byte 4
+    !text "?dup"
+QDUP
+    lda MSB, x
+    ora LSB, x
+    bne DUP
+    rts
+
+    +BACKLINK
+    !byte	4
+    !text	"over"
+OVER
+    dex
+    lda	MSB + 2, x
+    sta	MSB, x
+    lda	LSB + 2, x
+    sta	LSB, x
+    rts
+
+    +BACKLINK
+    !byte	4
+    !text	"2dup"
+TWODUP
+    jsr OVER
+    jmp OVER
+
+    +BACKLINK
+    !byte	2
+    !text	"1+"
+ONEPLUS
+    inc LSB, x
+    bne +
+    inc MSB, x
++   rts
+
+    +BACKLINK
+    !byte	2
+    !text	"1-"
+ONEMINUS
+    lda LSB, x
+    bne +
+    dec MSB, x
++   dec LSB, x
+    rts
+
+    +BACKLINK
+    !byte	1
+    !text	"+"
+PLUS
+    lda	LSB, x
+    clc
+    adc LSB + 1, x
+    sta	LSB + 1, x
+
+    lda	MSB, x
+    adc MSB + 1, x
+    sta MSB + 1, x
+
+    inx
+    rts
+
+    +BACKLINK
+    !byte	1
+    !text	"="
+EQUAL
+    ldy #0
+    lda	LSB, x
+    cmp	LSB + 1, x
+    bne	+
+    lda	MSB, x
+    cmp	MSB + 1, x
+    bne	+
+    dey
++   inx
+    sty MSB, x
+    sty	LSB, x
+    rts
+
+; 0=
+    +BACKLINK
+    !byte	2
+    !text	"0="
+ZEQU
+    ldy #0
+    lda MSB, x
+    bne +
+    lda LSB, x
+    bne +
+    dey
++   sty MSB, x
+    sty LSB, x
+    rts
+
+    +BACKLINK
+    !byte	3
+    !text	"and"
+    lda	MSB, x
+    and MSB + 1, x
+    sta MSB + 1, x
+
+    lda	LSB, x
+    and LSB + 1, x
+    sta LSB + 1, x
+
+    inx
+    rts
+
+    +BACKLINK
+    !byte	1
+    !text	"!"
+STORE
+    lda LSB, x
+    sta W
+    lda MSB, x
+    sta W + 1
+
+    ldy #0
+    lda	LSB+1, x
+    sta (W), y
+    iny
+    lda	MSB+1, x
+    sta	(W), y
+
+    inx
+    inx
+    rts
+
+    +BACKLINK
+    !byte	1
+    !text	"@"
+FETCH
+    lda LSB,x
+    sta W
+    lda MSB,x
+    sta W+1
+
+    ldy #0
+    lda	(W),y
+    sta LSB,x
+    iny
+    lda	(W),y
+    sta MSB,x
+    rts
+
+    +BACKLINK
+    !byte	2
+    !text	"c!"
+STOREBYTE
+    lda LSB,x
+    sta + + 1
+    lda MSB,x
+    sta + + 2
+    lda	LSB+1,x
++   sta PLACEHOLDER_ADDRESS ; replaced with addr
+    inx
+    inx
+    rts
+
+    +BACKLINK
+    !byte	2
+    !text	"c@"
+FETCHBYTE
+    lda LSB,x
+    sta + + 1
+    lda MSB,x
+    sta + + 2
++   lda PLACEHOLDER_ADDRESS ; replaced with addr
+    sta LSB,x
+    lda #0
+    sta MSB,x
+    rts
+
+    +BACKLINK
+    !byte   5
+    !text   "count"
+COUNT
+    jsr DUP
+    jsr ONEPLUS
+    jsr SWAP
+    jmp FETCHBYTE
