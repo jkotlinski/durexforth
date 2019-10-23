@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; C, , ; IMMEDIATE [ ] STATE : HEADER LIT LITC COMPILE, LITERAL
+; C, , ; IMMEDIATE [ ] STATE : HEADER LIT LITC COMPILE, LITERAL HERE
 
 curr_word_no_tail_call_elimination
     !byte 1
@@ -277,3 +277,13 @@ LITERAL
     sta MSB, x
     jsr COMPILE_COMMA
     jmp COMMA ; writes number
+
+; HERE - points to the next free byte of memory. When compiling, compiled words go here.
+    +BACKLINK
+    !byte 4
+    !text	"here"
+HERE
+HERE_LSB = * + 1
+HERE_MSB = * + 3
+    +VALUE	_LATEST + 2
+

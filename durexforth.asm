@@ -159,17 +159,7 @@ ONE
 
 !src "core.asm"
 !src "math.asm"
-
 !src "move.asm"
-
-; HERE - points to the next free byte of memory. When compiling, compiled words go here.
-    +BACKLINK
-    !byte 4
-    !text	"here"
-HERE
-HERE_LSB = * + 1
-HERE_MSB = * + 3
-    +VALUE	_LATEST + 2
 
 tmp_x
     !byte	0
