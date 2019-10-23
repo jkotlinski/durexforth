@@ -886,7 +886,11 @@ WORD
 FIND_BUFFER
     !fill 31
 
-FIND_NAME ; ( caddr u -- str 0 | xt 1 | xt -1 )
+FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
+    jsr TWODUP
+    jsr TO_R
+    jsr TO_R
+
     lda LSB,x
     sta FIND_BUFFER
 
@@ -897,7 +901,21 @@ FIND_NAME ; ( caddr u -- str 0 | xt 1 | xt -1 )
 
     jsr LIT
     !word FIND_BUFFER
-    jmp FIND
+    jsr FIND
+    lda LSB,x
+    bne +
+    ; not found
+    inx
+    inx
+    jsr R_TO
+    jsr R_TO
+    jmp ZERO
++   ; found
+    jsr R_TO
+    jsr R_TO
+    inx
+    inx
+    rts
 
     +BACKLINK
     !byte	4
@@ -1222,7 +1240,6 @@ INTERPRET
     bne	.found_word
 
     inx ; drop
-    jsr COUNT
     jsr READ_NUMBER
     beq .was_number
 
