@@ -212,6 +212,16 @@ print_word_not_found_error ; ( caddr u -- )
     jmp ABORT
 
     +BACKLINK
+    !byte	1
+    !text	"'"
+    jsr PARSE_NAME
+    jsr FIND_NAME
+    inx
+    lda LSB-1,x
+    beq print_word_not_found_error
+    rts
+
+    +BACKLINK
     !byte	4
     !text	"find"
 FIND
@@ -569,19 +579,6 @@ evaluate_consume_tib
 
 .bufend
     !word 0
-
-    +BACKLINK
-    !byte	1
-    !text	"'"
-    jsr BL
-    jsr WORD
-    jsr FIND
-    inx
-    lda LSB-1,x
-    bne +
-    jsr COUNT
-    jmp print_word_not_found_error
-+   rts
 
     +BACKLINK
     !byte	5
