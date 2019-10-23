@@ -201,12 +201,12 @@ ABORT
     jsr BL
     jsr WORD
     jsr FIND
-    lda LSB,x
+    inx
+    lda LSB-1,x
     bne +
     jsr COUNT
     jmp print_word_not_found_error
-+   inx
-    rts
++   rts
 
 !src "interpreter.asm"
 !src "compiler.asm"
