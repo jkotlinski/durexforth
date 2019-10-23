@@ -21,7 +21,7 @@
 ;THE SOFTWARE. }}}
 
 ; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN TUCK
-; >R R> R@ BL
+; >R R> R@ BL PICK DEPTH
 
     +BACKLINK
     !byte	4 | F_IMMEDIATE
@@ -359,3 +359,31 @@ R_FETCH
 BL
     +VALUE	K_SPACE
 
+    +BACKLINK
+    !byte   4
+    !text   "pick" ; ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u )
+    stx tmp_x
+    txa
+    clc
+    adc LSB,x
+    tax
+    inx
+    lda LSB,x
+    ldy MSB,x
+    ldx tmp_x
+    sta LSB,x
+    sty MSB,x
+    rts
+
+    +BACKLINK
+    !byte 5
+    !text	"depth"
+    txa
+    eor #$ff
+    tay
+    iny
+    dex
+    sty LSB,x
+    lda #0
+    sta MSB,x
+    rts

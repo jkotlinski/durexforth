@@ -969,35 +969,6 @@ WITHIN ; ( test low high -- flag )
     jsr R_TO
     jmp U_LESS
 
-    +BACKLINK
-    !byte   4
-    !text   "pick" ; ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u )
-    stx tmp_x
-    txa
-    clc
-    adc LSB,x
-    tax
-    inx
-    lda LSB,x
-    ldy MSB,x
-    ldx tmp_x
-    sta LSB,x
-    sty MSB,x
-    rts
-
-    +BACKLINK
-    !byte 5
-    !text	"depth"
-    txa
-    eor #$ff
-    tay
-    iny
-    dex
-    sty LSB,x
-    lda #0
-    sta MSB,x
-    rts
-
 !src "control.asm"
 !src "io.asm"
 !src "lowercase.asm"
