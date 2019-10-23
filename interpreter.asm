@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE
+; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE '
 
 quit_reset
     sei
@@ -569,3 +569,16 @@ evaluate_consume_tib
 
 .bufend
     !word 0
+
+    +BACKLINK
+    !byte	1
+    !text	"'"
+    jsr BL
+    jsr WORD
+    jsr FIND
+    inx
+    lda LSB-1,x
+    bne +
+    jsr COUNT
+    jmp print_word_not_found_error
++   rts

@@ -195,19 +195,6 @@ ABORT
     ldx #X_INIT ; reset stack
     jmp QUIT
 
-    +BACKLINK
-    !byte	1
-    !text	"'"
-    jsr BL
-    jsr WORD
-    jsr FIND
-    inx
-    lda LSB-1,x
-    bne +
-    jsr COUNT
-    jmp print_word_not_found_error
-+   rts
-
 !src "interpreter.asm"
 !src "compiler.asm"
 
