@@ -883,6 +883,24 @@ WORD
     cmp #K_SPACE | $80
 +   rts
 
+    +BACKLINK
+    !byte	4
+    !text	"find"
+    jsr DUP
+    jsr TO_R
+    jsr COUNT
+    jsr FIND_NAME
+    lda LSB,x
+    beq +
+    jsr R_TO
+    inx
+    rts
++   inx
+    inx
+    inx
+    jsr R_TO
+    jmp ZERO
+
 FIND_BUFFER
     !fill 31
 
@@ -901,7 +919,7 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
 
     jsr LIT
     !word FIND_BUFFER
-    jsr FIND
+    jsr DOFIND
     lda LSB,x
     bne +
     ; not found
@@ -917,10 +935,7 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     inx
     rts
 
-    +BACKLINK
-    !byte	4
-    !text	"find"
-FIND ; ( str -- str 0 | xt 1 | xt -1 )
+DOFIND ; ( str -- str 0 | xt 1 | xt -1 )
     txa
     pha
 
