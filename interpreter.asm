@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE ' ABORT
+; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE ' ABORT /STRING
 
 quit_reset
     sei
@@ -589,3 +589,15 @@ evaluate_consume_tib
 ABORT
     ldx #X_INIT ; reset stack
     jmp QUIT
+
+    +BACKLINK
+    !byte 7
+    !text	"/string"
+SLASH_STRING ; ( addr u n -- addr u )
+    jsr DUP
+    jsr TO_R
+    jsr MINUS
+    jsr SWAP
+    jsr R_TO
+    jsr PLUS
+    jmp SWAP

@@ -160,24 +160,7 @@ ONE
 !src "core.asm"
 !src "math.asm"
 !src "move.asm"
-
-tmp_x
-    !byte	0
-
 !src "number.asm"
-
-    +BACKLINK
-    !byte 7
-    !text	"/string"
-SLASH_STRING ; ( addr u n -- addr u )
-    jsr DUP
-    jsr TO_R
-    jsr MINUS
-    jsr SWAP
-    jsr R_TO
-    jsr PLUS
-    jmp SWAP
-
 !src "interpreter.asm"
 !src "compiler.asm"
 

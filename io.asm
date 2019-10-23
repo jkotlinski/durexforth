@@ -88,13 +88,13 @@ READ_EOF = * + 1
     lda #0
     beq +
     ; handle EOF
-    stx tmp_x
+    stx W
     lda	SOURCE_ID_LSB
     jsr	CLOSE
     dec	SOURCE_ID_LSB
     ldx SOURCE_ID_LSB
     jsr CHKIN
-    ldx tmp_x
+    ldx W
     jmp RESTORE_INPUT ; exit
 +
     lda SOURCE_ID_MSB
@@ -114,7 +114,7 @@ READ_EOF = * + 1
     beq	.getLineFromDisk
 
 .getLineFromConsole
-    stx tmp_x
+    stx W
     ldx #0
 -   jsr $e112 ; Input Character
     cmp #$d
@@ -128,14 +128,14 @@ READ_EOF = * + 1
     jsr PUTCHR
     ; Set TIB_SIZE to number of chars fetched.
     stx TIB_SIZE
-    ldx tmp_x
+    ldx W
     rts
 
 .getLineFromDisk
     lda TIB_PTR
     sta W
     lda TIB_PTR + 1
-    sta W + 1
+    sta W+1
 -   jsr .get_char_blocking
     cmp #K_RETURN
     beq +
@@ -148,7 +148,7 @@ READ_EOF = * + 1
 +   rts
 
 .get_char_blocking
-    stx	tmp_x
+    stx	W2
 -
     jsr	CHRIN ; wastes x
     pha
@@ -158,7 +158,7 @@ READ_EOF = * + 1
     ora #0
     beq -
 
-    ldx tmp_x
+    ldx W2
     rts
 
 GET_CHAR_FROM_TIB

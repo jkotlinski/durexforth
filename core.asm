@@ -362,15 +362,16 @@ BL
     +BACKLINK
     !byte   4
     !text   "pick" ; ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u )
-    stx tmp_x
     txa
+    pha
     clc
     adc LSB,x
     tax
     inx
     lda LSB,x
     ldy MSB,x
-    ldx tmp_x
+    pla
+    tax
     sta LSB,x
     sty MSB,x
     rts

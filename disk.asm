@@ -192,7 +192,7 @@ load_binary_laddr_hi = *+1
     !byte 5
     !text	"saveb"
 SAVEB
-    stx tmp_x
+    stx W
 
     lda	$ae
     pha
@@ -232,7 +232,7 @@ save_binary_srange_end_hi = *+1
     pla
     sta	$ae
 
-    ldx tmp_x
+    ldx W
     inx
     inx
     inx
