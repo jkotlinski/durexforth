@@ -134,7 +134,15 @@ READ_EOF = * + 1
     sta W
     lda TIB_PTR + 1
     sta W+1
--   jsr .get_char_blocking
+-   stx W2
+    jsr	CHRIN
+    ldx W2
+    pha
+    jsr	READST
+    sta READ_EOF
+    pla
+    ora #0
+    beq -
     cmp #K_RETURN
     beq +
     inc $d020
@@ -144,20 +152,6 @@ READ_EOF = * + 1
     dec $d020
     jmp -
 +   rts
-
-.get_char_blocking
-    stx	W2
--
-    jsr	CHRIN ; wastes x
-    pha
-    jsr	READST
-    sta READ_EOF
-    pla
-    ora #0
-    beq -
-
-    ldx W2
-    rts
 
 GET_CHAR_FROM_TIB
     lda TO_IN_W
