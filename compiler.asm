@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; C, , ; IMMEDIATE [ ] STATE : HEADER LIT LITC COMPILE, LITERAL HERE
+; C, , ; IMMEDIATE [ ] STATE : HEADER LIT LITC COMPILE, LITERAL HERE DODOES
 
 curr_word_no_tail_call_elimination
     !byte 1
@@ -286,4 +286,38 @@ HERE
 HERE_LSB = * + 1
 HERE_MSB = * + 3
     +VALUE	_LATEST + 2
+
+    !word	LINK
+    !set	LINK = * - 2
+    !byte	6
+    !text	"dodoes"
+
+    ; behavior pointer address => W
+    pla
+    sta W
+    pla
+    sta W + 1
+
+    inc W
+    bne +
+    inc W + 1
++
+
+    ; push data pointer to param stack
+    dex
+    lda W
+    clc
+    adc #2
+    sta LSB,x
+    lda W + 1
+    adc #0
+    sta MSB,x
+
+    ldy #0
+    lda (W),y
+    sta W2
+    iny
+    lda (W),y
+    sta W2 + 1
+    jmp (W2)
 
