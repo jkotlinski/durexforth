@@ -357,34 +357,8 @@ HERE_LSB = * + 1
 HERE_MSB = * + 3
     +VALUE	_LATEST + 2
 
-; ------------ i/o
-
 tmp_x
     !byte	0
-
-    +BACKLINK
-    !byte	4
-    !text	"getc"
-    jsr GET_CHAR_FROM_TIB
-    bne +
-    jsr REFILL
-    lda #K_RETURN
-+   ldy #0
-    jmp pushya
-
-    +BACKLINK
-    !byte	4
-    !text	"char" 
-CHAR ; ( name -- char )
--   jsr PARSE_NAME
-    lda LSB,x
-    bne +
-    inx
-    inx
-    jsr REFILL
-    jmp -
-+   inx
-    jmp FETCHBYTE
 
 !src "number.asm"
 

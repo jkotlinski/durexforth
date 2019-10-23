@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; TYPE EMIT PAGE KEY? KEY REFILL SOURCE SOURCE-ID >IN
+; TYPE EMIT PAGE KEY? KEY REFILL SOURCE SOURCE-ID >IN GETC CHAR
 
     +BACKLINK
     !byte	4
@@ -224,3 +224,27 @@ TO_IN
     +VALUE TO_IN_W
 TO_IN_W
     !word 0
+
+    +BACKLINK
+    !byte	4
+    !text	"getc"
+    jsr GET_CHAR_FROM_TIB
+    bne +
+    jsr REFILL
+    lda #K_RETURN
++   ldy #0
+    jmp pushya
+
+    +BACKLINK
+    !byte	4
+    !text	"char"
+CHAR ; ( name -- char )
+-   jsr PARSE_NAME
+    lda LSB,x
+    bne +
+    inx
+    inx
+    jsr REFILL
+    jmp -
++   inx
+    jmp FETCHBYTE
