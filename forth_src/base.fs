@@ -202,7 +202,7 @@ marker modules
 .( sys..) parse-name sys included
 .( debug..) parse-name debug included
 .( ls..) parse-name ls included
-.( vi..) parse-name vi included
+.( v..) parse-name v included
 .( require..) parse-name require included
 
 decimal
