@@ -386,20 +386,6 @@ CHAR ; ( name -- char )
 +   inx
     jmp FETCHBYTE
 
-GET_CHAR_BLOCKING
-    stx	tmp_x
--
-    jsr	CHRIN ; wastes x
-    pha
-    jsr	READST
-    sta READ_EOF
-    pla
-    ora #0
-    beq -
-
-    ldx tmp_x
-    rts
-
 !src "number.asm"
 
     +BACKLINK
