@@ -404,45 +404,8 @@ ZERO
 
 ; ------------ i/o
 
-; EMIT
-    +BACKLINK
-    !byte	4
-    !text	"emit"
-EMIT
-    lda	LSB, x
-    inx
-    jmp	PUTCHR
-
-    +BACKLINK
-    !byte   4
-    !text   "page"
-PAGE
-    lda #K_CLRSCR
-    jmp PUTCHR
-
 tmp_x
     !byte	0
-
-    +BACKLINK
-    !byte	4
-    !text	"key?"
-    lda $c6 ; Number of characters in keyboard buffer
-    beq +
-.pushtrue
-    lda #$ff
-+   tay
-    jmp pushya
-
-    +BACKLINK
-    !byte	3
-    !text	"key"
--   lda $c6
-    beq -
-    stx W
-    jsr $e5b4 ; Get character from keyboard buffer
-    ldx W
-    ldy #0
-    jmp pushya
 
     +BACKLINK
     !byte	4
@@ -1196,30 +1159,7 @@ WITHIN ; ( test low high -- flag )
     rts
 
 !src "control.asm"
-
-    +BACKLINK
-    !byte 4
-    !text	"type"
-TYPE ; ( caddr u -- )
-    lda #0 ; quote mode off
-    sta $d4
--   lda LSB,x
-    ora MSB,x
-    bne +
-    inx
-    inx
-    rts
-+   jsr SWAP
-    jsr DUP
-    jsr FETCHBYTE
-    jsr EMIT
-    jsr ONEPLUS
-    jsr SWAP
-    jsr ONEMINUS
-    jmp -
-
-; -----------
-
+!src "io.asm"
 !src "lowercase.asm"
 !src "disk.asm"
 
