@@ -188,13 +188,6 @@ SLASH_STRING ; ( addr u n -- addr u )
     jsr PLUS
     jmp SWAP
 
-    +BACKLINK
-    !byte	5
-    !text	"abort"
-ABORT
-    ldx #X_INIT ; reset stack
-    jmp QUIT
-
 !src "interpreter.asm"
 !src "compiler.asm"
 

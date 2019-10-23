@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE '
+; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE ' ABORT
 
 quit_reset
     sei
@@ -582,3 +582,10 @@ evaluate_consume_tib
     jsr COUNT
     jmp print_word_not_found_error
 +   rts
+
+    +BACKLINK
+    !byte	5
+    !text	"abort"
+ABORT
+    ldx #X_INIT ; reset stack
+    jmp QUIT
