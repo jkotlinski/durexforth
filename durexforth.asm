@@ -134,12 +134,6 @@ pushya
     +VALUE	_START
 
     +BACKLINK
-    !byte 2
-    !text	"bl"
-BL
-    +VALUE	K_SPACE
-
-    +BACKLINK
     !byte 3
     !text	"msb"
     +VALUE	MSB

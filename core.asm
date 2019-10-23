@@ -21,7 +21,7 @@
 ;THE SOFTWARE. }}}
 
 ; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN TUCK
-; >R R> R@
+; >R R> R@ BL
 
     +BACKLINK
     !byte	4 | F_IMMEDIATE
@@ -352,4 +352,10 @@ R_FETCH
     lda W
     sta LSB,x
     rts
+
+    +BACKLINK
+    !byte 2
+    !text	"bl"
+BL
+    +VALUE	K_SPACE
 
