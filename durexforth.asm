@@ -357,14 +357,6 @@ HERE_LSB = * + 1
 HERE_MSB = * + 3
     +VALUE	_LATEST + 2
 
-    +BACKLINK
-    !byte 1
-    !text	"0"
-ZERO
-    lda	#0
-    tay
-    jmp pushya
-
 ; ------------ i/o
 
 tmp_x
@@ -667,12 +659,6 @@ XT_SKIP ; ( addr n xt -- addr n )
     jsr R_TO
     inx
     rts
-
-    +BACKLINK
-    !byte 1
-    !text	"1"
-ONE
-    +VALUE 1
 
     +BACKLINK
     !byte 10

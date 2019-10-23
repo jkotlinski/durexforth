@@ -21,7 +21,7 @@
 ;THE SOFTWARE. }}}
 
 ; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN TUCK
-; >R R> R@ BL PICK DEPTH
+; >R R> R@ BL PICK DEPTH 0 1
 
     +BACKLINK
     !byte	4 | F_IMMEDIATE
@@ -387,3 +387,17 @@ BL
     lda #0
     sta MSB,x
     rts
+
+    +BACKLINK
+    !byte 1
+    !text	"0"
+ZERO
+    lda	#0
+    tay
+    jmp pushya
+
+    +BACKLINK
+    !byte 1
+    !text	"1"
+ONE
+    +VALUE 1
