@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN
+; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN TUCK
 
     +BACKLINK
     !byte	4 | F_IMMEDIATE
@@ -290,3 +290,11 @@ MIN
     jsr SWAP
 +   inx
     rts
+
+    +BACKLINK
+    !byte	4
+    !text	"tuck"
+TUCK ; ( x y -- y x y ) 
+    jsr SWAP
+    jmp OVER
+

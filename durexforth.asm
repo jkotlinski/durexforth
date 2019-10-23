@@ -918,13 +918,6 @@ PARSE_NAME ; ( name -- addr u )
     jmp MINUS
 
     +BACKLINK
-    !byte	4
-    !text	"tuck"
-TUCK ; ( x y -- y x y ) 
-    jsr SWAP
-    jmp OVER
-
-    +BACKLINK
     !byte	9
     !text	"interpret"
 INTERPRET
@@ -1432,17 +1425,6 @@ R_TO
     jmp (W)
 
     +BACKLINK
-    !byte	6 | F_NO_TAIL_CALL_ELIMINATION
-    !text	"unloop"
-    jsr R_TO
-    jsr R_TO
-    jsr R_TO
-    inx
-    inx
-    jsr TO_R
-    rts
-
-    +BACKLINK
     !byte 6
     !text   "within"
 WITHIN ; ( test low high -- flag )
@@ -1471,43 +1453,6 @@ TO_R
     pha
     inx
     jmp (W)
-
-    +BACKLINK
-    !byte	6
-    !text	"branch"
-BRANCH
-    pla
-    sta W
-    pla
-    sta W + 1
-
-    ldy	#2
-    lda	(W), y
-    sta + + 2
-    dey
-    lda	(W), y
-    sta + + 1
-+   jmp PLACEHOLDER_ADDRESS ; replaced with branch destination
-
-; 0BRANCH
-    +BACKLINK
-    !byte	7
-    !text	"0branch"
-ZBRANCH
-    inx
-    lda	LSB-1, x
-    ora	MSB-1, x
-    beq BRANCH
-
-    ; skip offset
-    pla
-    clc
-    adc #3
-    sta + + 1
-    pla
-    adc #0
-    sta + + 2
-+   jmp PLACEHOLDER_ADDRESS ; replaced with branch destination
 
 ; COLON
     +BACKLINK
@@ -1562,52 +1507,7 @@ TOGGLE_LATEST_HIDDEN
     sta MSB,x
     rts
 
-    +BACKLINK
-    !byte 2 | F_IMMEDIATE
-    !text	"if"
-    jsr LIT
-    !word ZBRANCH
-    jsr COMPILE_COMMA
-    jsr HERE
-    jsr ZERO
-    jmp COMMA
-
-    +BACKLINK
-    !byte 4 | F_IMMEDIATE
-    !text	"then"
-    jsr HERE
-    jsr SWAP
-    jmp STORE
-
-    +BACKLINK
-    !byte 5 | F_IMMEDIATE
-    !text	"begin"
-    jmp HERE
-
-    +BACKLINK
-    !byte 5 | F_IMMEDIATE
-    !text	"while"
-    jsr LIT
-    !word ZBRANCH
-    jsr COMPILE_COMMA
-    jsr HERE
-    jsr ZERO
-    jsr COMMA
-    jmp SWAP
-
-COMPILE_JMP
-    jsr LITC
-    !byte OP_JMP
-    jmp CCOMMA
-
-    +BACKLINK
-    !byte 6 | F_IMMEDIATE
-    !text	"repeat"
-    jsr COMPILE_JMP
-    jsr COMMA
-    jsr HERE
-    jsr SWAP
-    jmp STORE
+!src "control.asm"
 
     +BACKLINK
     !byte 4
