@@ -21,6 +21,7 @@
 ;THE SOFTWARE. }}}
 
 ; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN TUCK
+; >R R> R@
 
     +BACKLINK
     !byte	4 | F_IMMEDIATE
@@ -297,4 +298,58 @@ MIN
 TUCK ; ( x y -- y x y ) 
     jsr SWAP
     jmp OVER
+
+    +BACKLINK
+    !byte	2 | F_NO_TAIL_CALL_ELIMINATION
+    !text	">r"
+TO_R
+    pla
+    sta W
+    pla
+    sta W+1
+    inc W
+    bne +
+    inc W+1
++
+    lda MSB,x
+    pha
+    lda LSB,x
+    pha
+    inx
+    jmp (W)
+
+    +BACKLINK
+    !byte	2 | F_NO_TAIL_CALL_ELIMINATION
+    !text	"r>"
+R_TO
+    pla
+    sta W
+    pla
+    sta W+1
+    inc W
+    bne +
+    inc W+1
++
+    dex
+    pla
+    sta LSB,x
+    pla
+    sta MSB,x
+    jmp (W)
+
+    +BACKLINK
+    !byte	2 | F_NO_TAIL_CALL_ELIMINATION
+    !text	"r@"
+R_FETCH
+    txa
+    tsx
+    ldy $103,x
+    sty W
+    ldy $104,x
+    tax
+    dex
+    sty MSB,x
+    lda W
+    sta LSB,x
+    rts
 
