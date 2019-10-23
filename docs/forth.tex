@@ -335,6 +335,7 @@ For more info about number formatting, read Starting Forth!
 \begin{description}
 \item[' xxx ( -- addr )] Find execution token of word \texttt{xxx}.
 \item[find ( cstr -- cstr 0 $\vert$ xt -1 $\vert$ xt 1 )] Find the definition named in the counted string cstr. If the definition is not found, return cstr and 0, otherwise return the execution token. If the definition is immediate, also return 1, otherwise also return -1.
+\item[find-name ( caddr u -- caddr u 0 $\vert$ xt -1 $\vert$ xt 1 )] Like \texttt{find}, except that it does not require a counted string.
 \item[execute ( xt -- )] Execute the execution token on top of stack.
 \item[$>$cfa ( addr -- xt )] Get execution token (a.k.a. code field adress) of word at adress \texttt{addr}.
 
