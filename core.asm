@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT
+; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN
 
     +BACKLINK
     !byte	4 | F_IMMEDIATE
@@ -240,3 +240,53 @@ COUNT
     jsr ONEPLUS
     jsr SWAP
     jmp FETCHBYTE
+
+    +BACKLINK
+    !byte 1
+    !text	"<"
+LESS_THAN
+    ldy #0
+    sec
+    lda LSB+1,x
+    sbc LSB,x
+    lda MSB+1,x
+    sbc MSB,x
+    bvc +
+    eor #$80
++   bpl +
+    dey
++   inx
+    sty LSB,x
+    sty MSB,x
+    rts
+
+    +BACKLINK
+    !byte 1
+    !text	">"
+GREATER_THAN
+    jsr SWAP
+    jmp LESS_THAN
+
+    +BACKLINK
+    !byte 3
+    !text "max"
+MAX
+    jsr TWODUP
+    jsr LESS_THAN
+    jsr ZBRANCH
+    !word +
+    jsr SWAP
++   inx
+    rts
+
+    +BACKLINK
+    !byte 3
+    !text "min"
+MIN
+    jsr TWODUP
+    jsr GREATER_THAN
+    jsr ZBRANCH
+    !word +
+    jsr SWAP
++   inx
+    rts
