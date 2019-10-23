@@ -160,7 +160,6 @@ ONE
 !src "core.asm"
 !src "math.asm"
 !src "move.asm"
-!src "number.asm"
 !src "interpreter.asm"
 !src "compiler.asm"
 !src "control.asm"

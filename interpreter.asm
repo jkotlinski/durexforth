@@ -601,3 +601,143 @@ SLASH_STRING ; ( addr u n -- addr u )
     jsr R_TO
     jsr PLUS
     jmp SWAP
+
+apply_base
+    sta BASE
+    dec .chars_to_process
+    inc W3
+    bne +
+    inc W3+1
++   lda (W3),y
+    rts
+
+; Z = success, NZ = fail
+; success: ( caddr u -- number )
+; fail: ( caddr u -- caddr u )
+READ_NUMBER
+    lda LSB,x
+    sta .chars_to_process
+    lda MSB+1,x
+    sta W3+1
+    lda LSB+1,x
+    sta W3
+
+    lda BASE
+    sta OLD_BASE
+
+    ldy #0
+    sty .negate
+    dex
+    dex
+    sty LSB+1,x
+    sty MSB+1,x
+    sty MSB,x
+
+    lda (W3), y
+    cmp #"'"
+    beq .parse_char
+
+    cmp #"#"
+    bne .check_decimal
+    lda #10
+    jsr apply_base
+
+.check_decimal
+    cmp #"$"
+    bne .check_binary
+    lda #16
+    jsr apply_base
+
+.check_binary
+    cmp #"%"
+    bne .check_negate
+    lda #2
+    jsr apply_base
+
+.check_negate
+    cmp #"-"
+    bne .loop_entry
+    inc .negate
+    jmp .prepare_next_char
+
+.next_digit
+    ; number *= BASE
+    lda BASE
+    sta LSB,x
+    jsr U_M_STAR
+    lda LSB,x
+    bne .parse_failed ; overflow!
+
+    inc W3
+    bne +
+    inc W3+1
++   lda (W3), y
+
+.loop_entry
+    jsr CHAR_TO_LOWERCASE
+
+    clc
+    adc #-$30 ; petscii 0-9 -> 0-9
+
+    cmp	#10 ; within 0-9?
+    bcc	+
+
+    clc
+    adc	#-$7 ; a-f..?
+
+    cmp	#10
+    bcc	.parse_failed
+
++   cmp BASE
+    bcs .parse_failed
+
+    adc LSB+1,x
+    sta LSB+1,x
+    bcc .prepare_next_char
+    inc MSB+1,x
+    beq .parse_failed
+.prepare_next_char
+    dec .chars_to_process
+    bne .next_digit
+
+.parse_done
+OLD_BASE = * + 1
+    lda #0
+    sta BASE
+
+    lda LSB+1,x
+    sta LSB+3,x
+    lda MSB+1,x
+    sta MSB+3,x
+    inx
+    inx
+    inx
+.negate = * + 1
+    lda #0
+    beq +
+    jsr NEGATE
+    tya ; clear Z flag
++   rts
+
+.parse_char
+    lda .chars_to_process
+    cmp #3
+    bne .parse_failed
+    ldy #2
+    lda (W3),y
+    cmp #"'"
+    bne .parse_failed
+    dey
+    lda (W3),y
+    sta LSB+1,x
+    lda #0
+    sta MSB+1,x
+    jmp .parse_done
+
+.parse_failed
+    inx
+    inx ; Z flag set
+    rts
+
+.chars_to_process
+    !byte 0
