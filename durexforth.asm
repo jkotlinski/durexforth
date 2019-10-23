@@ -1049,32 +1049,6 @@ interpret_tib
     jsr	PUTCHR
     jmp .stop_error_print
 
-; --- EXIT
-
-    +BACKLINK
-    !byte	4 | F_IMMEDIATE
-    !text	"exit"
-EXIT
-    lda last_word_no_tail_call_elimination
-    bne +
-    lda HERE_LSB
-    sec
-    sbc #3
-    sta .instr_ptr
-    lda HERE_MSB
-    sbc #0
-    sta .instr_ptr + 1
-    lda #OP_JMP
-.instr_ptr = * + 1
-    sta PLACEHOLDER_ADDRESS ; replaced with instruction pointer
-    rts
-+
-    lda #OP_RTS
-compile_a
-    dex
-    sta LSB, x
-    jmp CCOMMA
-
     +BACKLINK
     !byte   2
     !text	"2*"
