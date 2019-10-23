@@ -22,6 +22,10 @@
 
 ; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE ' ABORT /STRING
 
+restore_handler
+    cli
+    jmp QUIT
+
 quit_reset
     sei
     lda	#<restore_handler

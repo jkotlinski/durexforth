@@ -95,10 +95,6 @@ PLACEHOLDER_ADDRESS = $1234
 _START = * + 1
     jsr load_base
 
-restore_handler
-    cli
-    jmp QUIT
-
 ; ----------- macros
 
 !set LINK = 0
