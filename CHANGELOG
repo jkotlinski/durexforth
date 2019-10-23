@@ -368,9 +368,9 @@ UNRELEASED
  * BYE
  * /STRING
  * PARSE-NAME
+ * FIND-NAME
  * VICE label dumper. 'include viceutil' and DUMP-LABELS
    to generate a label file for VICE debugging.
 [Fixed]
  * vi: / was broken when searching for a single character.
- * WORD did not work while interpreting because INTERPRET
-   clobbered the word buffer.
+ * WORD did not work while interpreting.
