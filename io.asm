@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; TYPE EMIT PAGE KEY? KEY REFILL
+; TYPE EMIT PAGE KEY? KEY REFILL SOURCE
 
     +BACKLINK
     !byte	4
@@ -172,3 +172,23 @@ GET_CHAR_FROM_TIB
     inc TO_IN_W + 1
 +   rts
 
+    +BACKLINK
+    !byte 6
+    !text	"source"
+SOURCE
+    dex
+    dex
+    lda TIB_PTR
+    sta LSB+1, x
+    lda TIB_PTR + 1
+    sta MSB+1, x
+    lda TIB_SIZE
+    sta LSB, x
+    lda TIB_SIZE + 1
+    sta MSB, x
+    rts
+
+TIB_PTR
+    !word 0
+TIB_SIZE
+    !word 0

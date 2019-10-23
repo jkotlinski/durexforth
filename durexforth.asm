@@ -143,27 +143,6 @@ pushya
     !text	"lsb"
     +VALUE	LSB
 
-    +BACKLINK
-    !byte 6
-    !text	"source"
-SOURCE
-    dex
-    dex
-    lda TIB_PTR
-    sta LSB+1, x
-    lda TIB_PTR + 1
-    sta MSB+1, x
-    lda TIB_SIZE
-    sta LSB, x
-    lda TIB_SIZE + 1
-    sta MSB, x
-    rts
-
-TIB_PTR
-    !word 0
-TIB_SIZE
-    !word 0
-
 !src "core.asm"
 !src "math.asm"
 
