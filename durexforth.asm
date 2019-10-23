@@ -886,6 +886,7 @@ WORD
     +BACKLINK
     !byte	4
     !text	"find"
+FIND
     jsr DUP
     jsr TO_R
     jsr COUNT
@@ -983,11 +984,7 @@ DOFIND ; ( str -- str 0 | xt 1 | xt -1 )
 .find_failed
     pla
     tax
-    dex
-    lda #0
-    sta	LSB, x
-    sta	MSB, x
-    rts
+    jmp ZERO
 
 .string_compare ; y = 2
     ; equal strlen, now compare strings...
