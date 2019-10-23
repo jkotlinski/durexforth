@@ -188,44 +188,6 @@ SLASH_STRING ; ( addr u n -- addr u )
     jsr PLUS
     jmp SWAP
 
-IS_SPACE ; ( c -- f )
-    ldy #1
-    lda LSB,x
-    cmp #' ' | 0x80
-    beq .is_space
-    lda #' '
-    cmp LSB,x
-    bcs .is_space
-    dey
-.is_space:
-    sty LSB,x
-    sty MSB,x
-    rts
-
-IS_NOT_SPACE ; ( c -- f )
-    jsr IS_SPACE
-    jmp ZEQU
-
-XT_SKIP ; ( addr n xt -- addr n )
-    ; skip all chars satisfying xt
-    jsr TO_R
--   jsr DUP
-    jsr ZBRANCH
-    !word .done
-    jsr OVER
-    jsr FETCHBYTE
-    jsr R_FETCH
-    jsr EXECUTE
-    jsr ZBRANCH
-    !word .done
-    jsr ONE
-    jsr SLASH_STRING
-    jmp -
-.done
-    jsr R_TO
-    inx
-    rts
-
     +BACKLINK
     !byte	5
     !text	"abort"
