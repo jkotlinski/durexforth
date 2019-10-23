@@ -21,7 +21,7 @@
 ;THE SOFTWARE. }}}
 
 ; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN TUCK
-; >R R> R@ BL PICK DEPTH 0 1
+; >R R> R@ BL PICK DEPTH 0 1 WITHIN
 
     +BACKLINK
     !byte	4 | F_IMMEDIATE
@@ -401,3 +401,14 @@ ZERO
     !text	"1"
 ONE
     +VALUE 1
+
+    +BACKLINK
+    !byte 6
+    !text   "within"
+WITHIN ; ( test low high -- flag )
+    jsr OVER
+    jsr MINUS
+    jsr TO_R
+    jsr MINUS
+    jsr R_TO
+    jmp U_LESS

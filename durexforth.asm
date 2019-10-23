@@ -305,17 +305,6 @@ ABORT
     sta W2 + 1
     jmp (W2)
 
-    +BACKLINK
-    !byte 6
-    !text   "within"
-WITHIN ; ( test low high -- flag )
-    jsr OVER
-    jsr MINUS
-    jsr TO_R
-    jsr MINUS
-    jsr R_TO
-    jmp U_LESS
-
 !src "control.asm"
 !src "io.asm"
 !src "lowercase.asm"
