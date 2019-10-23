@@ -902,56 +902,27 @@ FIND
     jsr R_TO
     jmp ZERO
 
-FIND_BUFFER
-    !fill 31
-
+    +BACKLINK
+    !byte	9
+    !text	"find-name"
 FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
-    jsr TWODUP
-    jsr TO_R
-    jsr TO_R
-
-    lda LSB,x
-    sta FIND_BUFFER
-
-    jsr LIT
-    !word FIND_BUFFER+1
-    jsr SWAP
-    jsr MOVE
-
-    jsr LIT
-    !word FIND_BUFFER
-    jsr DOFIND
-    lda LSB,x
-    bne +
-    ; not found
-    inx
-    inx
-    jsr R_TO
-    jsr R_TO
-    jmp ZERO
-+   ; found
-    jsr R_TO
-    jsr R_TO
-    inx
-    inx
-    rts
-
-DOFIND ; ( str -- str 0 | xt 1 | xt -1 )
     txa
     pha
 
-    lda	MSB, x
-    sta	W2 + 1
-    lda	LSB, x
-    sta	W2 ; W2 contains pointer to find string
-
-    ldy	#0
-    lda	(W2), y ; get length of find string
+    lda LSB,x
     beq .find_failed
-    ; store findlen
     sta	.findlen + 1
     sta	.findlen2 + 1
 
+    lda	MSB+1,x
+    sta	W2+1
+    lda	LSB+1,x
+    sta	W2
+
+    lda W2
+    bne +
+    dec W2+1
++   dec W2
     lda W2
     bne +
     dec W2+1
@@ -1006,6 +977,7 @@ DOFIND ; ( str -- str 0 | xt 1 | xt -1 )
     ; return address to dictionary word
     pla
     tax
+    inx
     lda	W
     sta	LSB, x
     lda	W + 1
