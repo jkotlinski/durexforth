@@ -98,12 +98,13 @@ ZBRANCH
     ; skip offset
     pla
     clc
-    adc #3
-    sta + + 1
+    adc #2
+    bcc +
     pla
     adc #0
-    sta + + 2
-+   jmp PLACEHOLDER_ADDRESS ; replaced with branch destination
+    pha
++   pha
+    rts
 
     +BACKLINK
     !byte	6 | F_NO_TAIL_CALL_ELIMINATION
