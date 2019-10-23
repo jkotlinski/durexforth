@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; QUIT
+; QUIT INTERPRET
 
 quit_reset
     sei
@@ -138,3 +138,65 @@ interpret_tib
     lda #'r'
     jsr	PUTCHR
     jmp .stop_error_print
+
+    +BACKLINK
+    !byte	9
+    !text	"interpret"
+INTERPRET
+    jsr PARSE_NAME
+
+    lda LSB,x
+    bne +
+    inx
+    inx
+    rts
++
+    jsr	FIND_NAME ; replace string with dictionary ptr
+    lda LSB, x
+    bne	.found_word
+
+    inx ; drop
+    jsr READ_NUMBER
+    beq .was_number
+
+    jmp print_word_not_found_error
+
+    ; yep, it's a number...
+.was_number
+    lda	STATE ; are we compiling?
+    bne	+
+    rts
++   ; yes, compile the number
+    sta curr_word_no_tail_call_elimination
+    jmp LITERAL
+
+.found_word
+    ; OK, we found a word...
+
+    lda curr_word_no_tail_call_elimination
+    sta last_word_no_tail_call_elimination
+FOUND_WORD_WITH_NO_TCE = * + 1
+    lda #0
+    sta curr_word_no_tail_call_elimination
+
+    ; Executes the word if it is immediate, or interpreting.
+    inx
+    lda MSB-1, x
+    and STATE
+    beq	EXECUTE
+
+    ; OK, this word should be compiled...
+    jmp COMPILE_COMMA
+
+print_word_not_found_error ; ( caddr u -- )
+    lda	#$12 ; reverse on
+    jsr	PUTCHR
+    jsr TYPE
+    lda	#'?'
+.stop_error_print
+    jsr	PUTCHR
+
+    lda	#$d ; cr
+    jsr	PUTCHR
+    jmp ABORT
+
