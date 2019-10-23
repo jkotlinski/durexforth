@@ -110,6 +110,14 @@ restore_handler
     !set	LINK = * - 2
 }
 
+!macro VALUE .word {
+    lda	#<.word
+    ldy	#>.word
+    jmp pushya
+}
+
+; ---------- words
+
     +BACKLINK
     !byte 6
     !text	"pushya"
@@ -119,13 +127,19 @@ pushya
     sty	MSB, x
     rts
 
-!macro VALUE .word {
-    lda	#<.word
-    ldy	#>.word
+    +BACKLINK
+    !byte 1
+    !text	"0"
+ZERO
+    lda	#0
+    tay
     jmp pushya
-}
 
-; ---------- words
+    +BACKLINK
+    !byte 1
+    !text	"1"
+ONE
+    +VALUE 1
 
 ; START - points to the code of the startup word.
     +BACKLINK
@@ -145,42 +159,6 @@ pushya
 
 !src "core.asm"
 !src "math.asm"
-
-; FILL ( start len char -- )
-    +BACKLINK
-    !byte	4
-    !text	"fill"
-FILL
-    lda	LSB, x
-    tay
-    lda	LSB + 2, x
-    sta	.fdst
-    lda	MSB + 2, x
-    sta	.fdst + 1
-    lda	LSB + 1, x
-    eor	#$ff
-    sta	W
-    lda	MSB + 1, x
-    eor	#$ff
-    sta	W + 1
-    inx
-    inx
-    inx
--
-    inc	W
-    bne	+
-    inc	W + 1
-    bne	+
-    rts
-+
-.fdst = * + 1
-    sty	PLACEHOLDER_ADDRESS ; replaced with start
-
-    ; advance
-    inc	.fdst
-    bne	-
-    inc	.fdst + 1
-    jmp	-
 
 !src "move.asm"
 

@@ -21,7 +21,7 @@
 ;THE SOFTWARE. }}}
 
 ; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN TUCK
-; >R R> R@ BL PICK DEPTH 0 1 WITHIN
+; >R R> R@ BL PICK DEPTH WITHIN FILL
 
     +BACKLINK
     !byte	4 | F_IMMEDIATE
@@ -389,20 +389,6 @@ BL
     rts
 
     +BACKLINK
-    !byte 1
-    !text	"0"
-ZERO
-    lda	#0
-    tay
-    jmp pushya
-
-    +BACKLINK
-    !byte 1
-    !text	"1"
-ONE
-    +VALUE 1
-
-    +BACKLINK
     !byte 6
     !text   "within"
 WITHIN ; ( test low high -- flag )
@@ -412,3 +398,39 @@ WITHIN ; ( test low high -- flag )
     jsr MINUS
     jsr R_TO
     jmp U_LESS
+
+; FILL ( start len char -- )
+    +BACKLINK
+    !byte	4
+    !text	"fill"
+FILL
+    lda	LSB, x
+    tay
+    lda	LSB + 2, x
+    sta	.fdst
+    lda	MSB + 2, x
+    sta	.fdst + 1
+    lda	LSB + 1, x
+    eor	#$ff
+    sta	W
+    lda	MSB + 1, x
+    eor	#$ff
+    sta	W + 1
+    inx
+    inx
+    inx
+-
+    inc	W
+    bne	+
+    inc	W + 1
+    bne	+
+    rts
++
+.fdst = * + 1
+    sty	PLACEHOLDER_ADDRESS ; replaced with start
+
+    ; advance
+    inc	.fdst
+    bne	-
+    inc	.fdst + 1
+    jmp	-
