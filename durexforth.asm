@@ -657,13 +657,6 @@ PAGE
     lda #K_CLRSCR
     jmp PUTCHR
 
-WORD_BUFFER
-WORD_BUFFER_LENGTH
-    !byte 0
-MAX_WORD_LENGTH = 31
-WORD_BUFFER_DATA
-    !fill MAX_WORD_LENGTH
-
 tmp_x
     !byte	0
 
@@ -836,38 +829,41 @@ GET_CHAR_FROM_TIB
     !byte      4
     !text      "word"
 WORD
-    lda	#0
-    sta	WORD_BUFFER_LENGTH
+    jsr ZERO
+    jsr HERE
+    jsr STOREBYTE
 
     ; skips initial delimiters.
--
-    jsr GET_CHAR_FROM_TIB
+-   jsr GET_CHAR_FROM_TIB
     beq .word_end
     jsr .is_delim
     beq -
     jmp .append
 
-.get_char
-    jsr GET_CHAR_FROM_TIB
+-   jsr GET_CHAR_FROM_TIB
     beq .word_end
     jsr .is_delim
     beq .word_end
 
 .append
-    ldy WORD_BUFFER_LENGTH
-    sta WORD_BUFFER_DATA,y
-    iny
-    sty WORD_BUFFER_LENGTH
-    tya
-    cmp #MAX_WORD_LENGTH
-    bne .get_char
+    jsr pushya
+
+    jsr HERE
+    jsr FETCHBYTE
+    jsr ONEPLUS
+    jsr HERE
+    jsr STOREBYTE
+
+    jsr HERE
+    jsr HERE
+    jsr FETCHBYTE
+    jsr PLUS
+    jsr STOREBYTE
+    jmp -
 
 .word_end
-    lda	#<WORD_BUFFER
-    sta	LSB, x
-    lda	#>WORD_BUFFER
-    sta	MSB, x
-    rts
+    inx
+    jmp HERE
 
 .is_delim
     ; a == delim?
