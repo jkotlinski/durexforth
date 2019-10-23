@@ -30,7 +30,7 @@ deploy: durexforth.d64 cart.asm
 	@$(AS) cart.asm
 	cartconv -t simon -i build/cart.bin -o deploy/durexforth-$(TAG_DEPLOY).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
 
-durexforth.prg: durexforth.asm math.asm move.asm disk.asm lowercase.asm
+durexforth.prg: *.asm
 	@$(AS) durexforth.asm
 
 durexforth.d64: durexforth.prg Makefile ext/petcom $(SRCS)

@@ -363,15 +363,14 @@ BL
     !byte   4
     !text   "pick" ; ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u )
     txa
-    pha
+    sta + + 1
     clc
     adc LSB,x
     tax
     inx
     lda LSB,x
     ldy MSB,x
-    pla
-    tax
++   ldx #0
     sta LSB,x
     sty MSB,x
     rts
