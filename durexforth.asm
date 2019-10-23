@@ -1222,6 +1222,7 @@ INTERPRET
     bne	.found_word
 
     inx ; drop
+    jsr COUNT
     jsr READ_NUMBER
     beq .was_number
 
@@ -1254,10 +1255,9 @@ FOUND_WORD_WITH_NO_TCE = * + 1
     ; OK, this word should be compiled...
     jmp COMPILE_COMMA
 
-print_word_not_found_error
+print_word_not_found_error ; ( caddr u -- )
     lda	#$12 ; reverse on
     jsr	PUTCHR
-    jsr COUNT
     jsr TYPE
     lda	#'?'
 .stop_error_print
@@ -1281,8 +1281,10 @@ ABORT
     jsr WORD
     jsr FIND
     lda LSB,x
-    beq print_word_not_found_error
-    inx
+    bne +
+    jsr COUNT
+    jmp print_word_not_found_error
++   inx
     rts
 
     +BACKLINK

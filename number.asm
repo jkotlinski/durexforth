@@ -58,35 +58,26 @@ apply_base
     rts
 
 ; Z = success, NZ = fail
-; success: ( string ptr -- number )
-; fail: ( string ptr -- string ptr )
+; success: ( caddr u -- number )
+; fail: ( caddr u -- caddr u )
 READ_NUMBER
-    lda MSB, x
-    sta W3 + 1
-    lda LSB, x
+    lda LSB,x
+    sta .chars_to_process
+    lda MSB+1,x
+    sta W3+1
+    lda LSB+1,x
     sta W3
-    ; W3 now points to string length
-    ; followed by string. (Using W3
-    ; because U_M_STAR trashes W, W2)
-
-    dex
-    dex
 
     lda BASE
     sta OLD_BASE
 
     ldy #0
     sty .negate
+    dex
+    dex
     sty LSB+1,x
     sty MSB+1,x
     sty MSB,x
-    lda (W3), y
-    sta .chars_to_process
-
-    inc W3
-    bne +
-    inc W3+1
-+
 
     lda (W3), y
     cmp #"'"
@@ -161,9 +152,10 @@ OLD_BASE = * + 1
     sta BASE
 
     lda LSB+1,x
-    sta LSB+2,x
+    sta LSB+3,x
     lda MSB+1,x
-    sta MSB+2,x
+    sta MSB+3,x
+    inx
     inx
     inx
 .negate = * + 1
