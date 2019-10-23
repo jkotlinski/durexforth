@@ -472,17 +472,6 @@ ABORT
 +   inx
     rts
 
-    +BACKLINK
-    !byte	7
-    !text	"execute"
-EXECUTE
-    lda	LSB, x
-    sta W
-    lda	MSB, x
-    sta	W + 1
-    inx
-    jmp	(W)
-
 !src "interpreter.asm"
 !src "compiler.asm"
 

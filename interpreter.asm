@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD
+; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE
 
 quit_reset
     sei
@@ -138,6 +138,17 @@ interpret_tib
     lda #'r'
     jsr	PUTCHR
     jmp .stop_error_print
+
+    +BACKLINK
+    !byte	7
+    !text	"execute"
+EXECUTE
+    lda	LSB, x
+    sta W
+    lda	MSB, x
+    sta	W + 1
+    inx
+    jmp	(W)
 
     +BACKLINK
     !byte	9
