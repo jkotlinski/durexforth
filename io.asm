@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; TYPE EMIT PAGE KEY? KEY REFILL SOURCE SOURCE-ID
+; TYPE EMIT PAGE KEY? KEY REFILL SOURCE SOURCE-ID >IN
 
     +BACKLINK
     !byte	4
@@ -202,3 +202,12 @@ SOURCE_ID_MSB = * + 3
     ; 0 : keyboard
     ; 1+ : file id
     +VALUE	0
+
+    +BACKLINK
+    !byte	3
+    !text	">in"
+TO_IN
+    +VALUE TO_IN_W
+TO_IN_W
+    !word 0
+

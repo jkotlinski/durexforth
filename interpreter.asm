@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; QUIT INTERPRET
+; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD
 
 quit_reset
     sei
@@ -200,3 +200,232 @@ print_word_not_found_error ; ( caddr u -- )
     jsr	PUTCHR
     jmp ABORT
 
+    +BACKLINK
+    !byte	4
+    !text	"find"
+FIND
+    jsr DUP
+    jsr TO_R
+    jsr COUNT
+    jsr FIND_NAME
+    lda LSB,x
+    beq +
+    jsr R_TO
+    inx
+    rts
++   inx
+    inx
+    inx
+    jsr R_TO
+    jmp ZERO
+
+    +BACKLINK
+    !byte	9
+    !text	"find-name"
+FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
+    txa
+    pha
+
+    lda LSB,x
+    beq .find_failed
+    sta	.findlen + 1
+    sta	.findlen2 + 1
+
+    lda	MSB+1,x
+    sta	W2+1
+    lda	LSB+1,x
+    sta	W2
+
+    lda W2
+    bne +
+    dec W2+1
++   dec W2
+    lda W2
+    bne +
+    dec W2+1
++   dec W2
+
+    ldx	_LATEST
+    lda	_LATEST + 1
+.examine_word
+    sta	W + 1
+    stx	W
+    ; W now contains new dictionary word.
+
+    ldy	#2
+    lda	(W), y ; get string length of dictionary word
+    and	#STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
+.findlen
+    cmp	#0
+    beq	.string_compare
+
+.word_not_equal
+    ; no match, advance the linked list.
+    ldy	#0
+    lax	(W), y
+    iny
+    lda	(W), y
+    ; Is word null? If not, examine it.
+    bne .examine_word
+
+    ; It is null - give up.
+.find_failed
+    pla
+    tax
+    jmp ZERO
+
+.string_compare ; y = 2
+    ; equal strlen, now compare strings...
+.findlen2
+    lda #0
+    sta .strlen
+-   lda	(W2), y ; find string
+    jsr CHAR_TO_LOWERCASE
+    iny
+    cmp	(W), y ; dictionary string
+    bne	.word_not_equal
+    dec	.strlen
+    beq	.word_is_equal
+    jmp	-
+
+.strlen !byte 0
+
+.word_is_equal
+    ; return address to dictionary word
+    pla
+    tax
+    inx
+    lda	W
+    sta	LSB, x
+    lda	W + 1
+    sta	MSB, x
+
+    jsr TCFA
+
+    dex
+
+    ldy	#2
+    lda (W), y
+    and #F_NO_TAIL_CALL_ELIMINATION | F_IMMEDIATE
+    sta FOUND_WORD_WITH_NO_TCE
+
+    lda	(W), y ; a contains string length + mask
+    and	#F_IMMEDIATE
+    beq .not_immed
+    dey
+    sty LSB, x ; 1
+    dey
+    sty MSB, x ; 0
+    rts
+
+.not_immed
+    lda #$ff
+    sta LSB, x
+    sta MSB, x
+    rts
+
+; >CFA
+    +BACKLINK
+    !byte	4
+    !text	">cfa"
+TCFA
+    lda	MSB, x
+    sta	W + 1
+    lda	LSB, x
+    sta W
+    ; W contains pointer to word
+    ldy	#2
+    lda	(W), y ; a contains string length + mask
+    and	#STRLEN_MASK
+    clc
+    adc	#3 ; offset for link + string length
+    adc	LSB, x
+    sta	LSB, x
+    bcc	+
+    inc	MSB, x
++   rts
+
+    +BACKLINK
+    !byte 10
+    !text	"parse-name"
+PARSE_NAME ; ( name -- addr u )
+    jsr SOURCE
+    jsr TO_IN
+    jsr FETCH
+    jsr SLASH_STRING
+    jsr LIT
+    !word IS_SPACE
+    jsr XT_SKIP
+    jsr OVER
+    jsr TO_R
+    jsr LIT
+    !word IS_NOT_SPACE
+    jsr XT_SKIP
+    jsr TWODUP
+    jsr ONE
+    jsr MIN
+    jsr PLUS
+    jsr SOURCE
+    inx
+    jsr MINUS
+    jsr TO_IN
+    jsr STORE
+    inx
+    jsr R_TO
+    jsr TUCK
+    jmp MINUS
+
+; WORD ( delim -- strptr )
+    +BACKLINK
+    !byte      4
+    !text      "word"
+WORD
+    jsr ZERO
+    jsr HERE
+    jsr STOREBYTE
+
+    ; skips initial delimiters.
+-   jsr GET_CHAR_FROM_TIB
+    beq .word_end
+    jsr .is_delim
+    beq -
+    jmp .append
+
+-   jsr GET_CHAR_FROM_TIB
+    beq .word_end
+    jsr .is_delim
+    beq .word_end
+
+.append
+    jsr pushya
+
+    jsr HERE
+    jsr FETCHBYTE
+    jsr ONEPLUS
+    jsr HERE
+    jsr STOREBYTE
+
+    jsr HERE
+    jsr HERE
+    jsr FETCHBYTE
+    jsr PLUS
+    jsr STOREBYTE
+    jmp -
+
+.word_end
+    inx
+    jmp HERE
+
+.is_delim
+    ; a == delim?
+    cmp LSB,x
+    beq + ; yes
+
+    ; delim == space?
+    ldy LSB,x
+    cpy #K_SPACE
+    bne + ; no
+
+    ; compare with nonbreaking space, too
+    cmp #K_SPACE | $80
++   rts
