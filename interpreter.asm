@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE
+; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE
 
 quit_reset
     sei
@@ -440,3 +440,94 @@ WORD
     ; compare with nonbreaking space, too
     cmp #K_SPACE | $80
 +   rts
+
+    +BACKLINK
+    !byte 8
+    !text	"evaluate" ; ( addr size -- )
+EVALUATE
+    jsr SAVE_INPUT
+    lda LSB + 1, x
+    sta TIB_PTR
+    lda MSB + 1, x
+    sta TIB_PTR + 1
+    jsr PLUS
+    lda LSB, x
+    sta .bufend
+    lda MSB, x
+    sta .bufend + 1
+    inx
+
+    jsr evaluate_get_new_line
+    ldy #$ff
+    sty SOURCE_ID_LSB
+    sty SOURCE_ID_MSB
+
+.eval_loop
+    lda TIB_PTR + 1
+    cmp .bufend + 1
+    bcc +
+    lda TIB_PTR
+    cmp .bufend
+    bcc +
+    jmp RESTORE_INPUT ; exit
++
+    jsr interpret_tib
+    jsr REFILL
+    jmp .eval_loop
+
+evaluate_get_new_line
+    ldy #0
+    sty TO_IN_W
+    sty TO_IN_W + 1
+
+    ; Determines TIB_SIZE.
+    lda TIB_PTR
+    sta W
+    lda TIB_PTR + 1
+    sta W + 1
+.findtibsizeloop
+    lda .bufend + 1
+    cmp W + 1
+    bcc .foundeol
+    bne +
+    lda W
+    cmp .bufend
+    bcs .foundeol
++
+    ldy #0
+    lda (W),y
+    cmp #K_RETURN
+    beq .foundeol
+
+    inc W
+    bne +
+    inc W + 1
++
+    jmp .findtibsizeloop
+
+.foundeol
+    lda W
+    sec
+    sbc TIB_PTR
+    sta TIB_SIZE
+    lda W + 1
+    sbc TIB_PTR + 1
+    sta TIB_SIZE + 1
+    rts
+
+evaluate_consume_tib
+    lda TIB_PTR
+    clc
+    adc TIB_SIZE
+    sta TIB_PTR
+    lda TIB_PTR + 1
+    adc TIB_SIZE + 1
+    sta TIB_PTR + 1
+
+    inc TIB_PTR ; skip cr
+    bne +
+    inc TIB_PTR + 1
++   rts
+
+.bufend
+    !word 0
