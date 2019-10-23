@@ -21,7 +21,7 @@
 ;THE SOFTWARE. }}}
 
 ; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN TUCK
-; >R R> R@ BL PICK DEPTH WITHIN FILL INVERT NEGATE BASE
+; >R R> R@ BL PICK DEPTH WITHIN FILL INVERT NEGATE BASE 2*
 
     +BACKLINK
     !byte	4 | F_IMMEDIATE
@@ -461,3 +461,10 @@ NEGATE
     +VALUE	BASE
 BASE
     !word 16
+
+    +BACKLINK
+    !byte   2
+    !text       "2*"
+    asl LSB, x
+    rol MSB, x
+    rts
