@@ -187,16 +187,6 @@ FILL
 ; ---------- variables
 
     +BACKLINK
-    !byte 9
-    !text	"source-id"
-SOURCE_ID_LSB = * + 1
-SOURCE_ID_MSB = * + 3
-    ; -1 : string (via evaluate)
-    ; 0 : keyboard
-    ; 1+ : file id
-    +VALUE	0
-
-    +BACKLINK
     !byte 8
     !text	"evaluate" ; ( addr size -- )
 EVALUATE

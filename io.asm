@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; TYPE EMIT PAGE KEY? KEY REFILL SOURCE
+; TYPE EMIT PAGE KEY? KEY REFILL SOURCE SOURCE-ID
 
     +BACKLINK
     !byte	4
@@ -192,3 +192,13 @@ TIB_PTR
     !word 0
 TIB_SIZE
     !word 0
+
+    +BACKLINK
+    !byte 9
+    !text	"source-id"
+SOURCE_ID_LSB = * + 1
+SOURCE_ID_MSB = * + 3
+    ; -1 : string (via evaluate)
+    ; 0 : keyboard
+    ; 1+ : file id
+    +VALUE	0
