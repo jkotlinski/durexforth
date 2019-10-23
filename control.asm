@@ -100,9 +100,11 @@ ZBRANCH
     clc
     adc #2
     bcc +
+    tay
     pla
     adc #0
     pha
+    tya
 +   pha
     rts
 
