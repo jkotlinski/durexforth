@@ -49,13 +49,11 @@ TYPE ; ( caddr u -- )
     inx
     inx
     rts
-+   jsr SWAP
-    jsr DUP
++   jsr OVER
     jsr FETCHBYTE
     jsr EMIT
-    jsr ONEPLUS
-    jsr SWAP
-    jsr ONEMINUS
+    jsr ONE
+    jsr SLASH_STRING
     jmp -
 
     +BACKLINK
