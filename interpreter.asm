@@ -754,6 +754,7 @@ TRAVERSE_WORDLIST ; ( xt -- )
     jsr LATEST
     jsr FETCH
 -   lda MSB,x
+    ora LSB,x
     beq .ret
     jsr DUP
 .xt = * + 1
