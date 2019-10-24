@@ -752,24 +752,17 @@ TRAVERSE_WORDLIST ; ( xt -- )
     sta .xt + 1
     inx
     jsr LATEST
--   jsr FETCH
-    lda MSB,x
+    jsr FETCH
+-   lda MSB,x
     beq .ret
-    pha
-    lda LSB,x
-    pha
+    jsr DUP
 .xt = * + 1
     jsr PLACEHOLDER_ADDRESS
-    lda MSB,x
-    ora LSB,x
-    bne +
-    pla
-    pla
-    jmp .ret
-+   pla
-    sta LSB,x
-    pla
-    sta MSB,x
+    inx
+    lda MSB-1,x
+    ora LSB-1,x
+    beq .ret
+    jsr FETCH
     jmp -
 .ret
     inx
