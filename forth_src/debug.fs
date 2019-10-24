@@ -1,6 +1,6 @@
 : name>string ( word -- caddr u )
 2+ dup 1+ swap c@ 1f and ;
-: cfa> ( codepointer -- word )
+: xt> ( codepointer -- word )
 latest @ begin ?dup while
 2dup > if nip exit then
 @ repeat drop 0 ;
@@ -37,8 +37,8 @@ endof
     2+ dup @ over - .
     ." ) "
 endof ( default )
-    dup cfa> name>string type
-    dup dup cfa> >cfa
+    dup xt> name>string type
+    dup dup xt> >xt
     2dup <> if '+' emit - .
     else 2drop space then
 endcase
@@ -56,7 +56,7 @@ rot drop \ eow sow
 ':' emit space dup name>string type space
 dup 2+ c@ $80 and if ." immediate " then
 
->cfa
+>xt
 
 begin
     2dup >

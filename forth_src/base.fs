@@ -14,7 +14,7 @@ then compile, ; immediate
 : until postpone 0branch , ; immediate
 : again jmp, , ; immediate
 : recurse
-latest @ >cfa compile, ; immediate
+latest @ >xt compile, ; immediate
 : ( begin getc dup 0= if refill then
 ')' = if exit then again ; immediate
 : \ refill ; immediate
@@ -46,9 +46,9 @@ then branch ;
 begin ?dup while postpone then
 repeat ; immediate
 
-( gets pointer to first data field,
-i.e., skips the first jsr )
-: >dfa >cfa 1+ 2+ ;
+( Returns data field address, which is
+after jsr dodoes )
+: >dfa >xt 1+ 2+ ;
 
 ( dodoes words contain:
  1. jsr dodoes
@@ -134,17 +134,17 @@ inx, inx, ;code
 code lshift ( x1 u -- x2 )
 lsb dec,x -branch bmi,
 lsb 1+ asl,x msb 1+ rol,x
-latest @ >cfa jmp,
+latest @ >xt jmp,
 code rshift ( x1 u -- x2 )
 lsb dec,x -branch bmi,
 msb 1+ lsr,x lsb 1+ ror,x
-latest @ >cfa jmp,
+latest @ >xt jmp,
 
 : allot ( n -- ) here + to here ;
 
 : variable
 0 value
-here latest @ >cfa 1+ (to)
+here latest @ >xt 1+ (to)
 2 allot ;
 
 code 0< msb lda,x 80 and,# +branch beq,

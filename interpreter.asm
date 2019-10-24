@@ -325,7 +325,7 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     lda	W + 1
     sta	MSB, x
 
-    jsr TCFA
+    jsr TO_XT
 
     dex
 
@@ -349,11 +349,10 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     sta MSB, x
     rts
 
-; >CFA
     +BACKLINK
     !byte	4
-    !text	">cfa"
-TCFA
+    !text	">xt"
+TO_XT
     lda	MSB, x
     sta	W + 1
     lda	LSB, x

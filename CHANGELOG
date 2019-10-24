@@ -364,7 +364,8 @@ UNRELEASED
 [Changed]
  * Startup BASE is now DECIMAL instead of HEX.
  * S" now only works when compiling.
- * Renamed "vi" to "v", to avoid confusion with vi.
+ * Renamed VI to V, to avoid confusion with vi.
+ * Renamed >CFA to >XT.
 [Added]
  * BYE
  * /STRING

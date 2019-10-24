@@ -136,7 +136,7 @@ Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to 
 \item[{]} ( -- )] Return to compile mode.
 \item[immediate] Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
 \item[{[']} name ( -- xt )] Place name's execution token xt on the stack. The execution token returned by the compiled phrase \texttt{['] x} is the same value returned by \texttt{' x} outside of compilation state. Typical use: \texttt{: x ... {[}'{]} name ... ;}
-\item[compile, ( xt -- )] Append \texttt{jsr xt} to the word being compiled. Typical use: \texttt{: recurse immed latest @ >cfa compile, ;}
+\item[compile, ( xt -- )] Append \texttt{jsr xt} to the word being compiled. Typical use: \texttt{: recurse immed latest @ >xt compile, ;}
 \item[postpone xxx] Compile the compilation semantics (instead of interpretation semantics) of xxx. Typical use:
 \begin{verbatim}
 : endif postpone then ; immediate
@@ -337,7 +337,7 @@ For more info about number formatting, read Starting Forth!
 \item[find ( cstr -- cstr 0 $\vert$ xt -1 $\vert$ xt 1 )] Find the definition named in the counted string cstr. If the definition is not found, return cstr and 0, otherwise return the execution token. If the definition is immediate, also return 1, otherwise also return -1.
 \item[find-name ( caddr u -- caddr u 0 $\vert$ xt -1 $\vert$ xt 1 )] Like \texttt{find}, except that it does not require a counted string.
 \item[execute ( xt -- )] Execute the execution token on top of stack.
-\item[$>$cfa ( addr -- xt )] Get execution token (a.k.a. code field adress) of word at adress \texttt{addr}.
+\item[$>$xt ( addr -- xt )] Get execution token of word at adress \texttt{addr}.
 
 \end{description}
 

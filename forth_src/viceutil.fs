@@ -12,7 +12,7 @@ monitor using 'll "words"'
 : dump-labels base @ hex
 s" words" 1 openw
 latest @ begin ?dup while
-." al " dup >cfa . '.' emit
+." al " dup >xt . '.' emit
 dup name>string
 over + swap do i c@ 
 dup 'a' < over 'z' > or if case
