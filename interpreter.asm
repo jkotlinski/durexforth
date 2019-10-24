@@ -350,7 +350,7 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     rts
 
     +BACKLINK
-    !byte	4
+    !byte	3
     !text	">xt"
 TO_XT
     lda	MSB, x
