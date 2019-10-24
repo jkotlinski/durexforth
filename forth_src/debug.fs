@@ -1,6 +1,5 @@
 : name>string ( word -- caddr u )
 2+ dup 1+ swap c@ 1f and ;
-: id. ( word -- ) name>string type ;
 : cfa> ( codepointer -- word )
 latest @ begin ?dup while
 2dup > if nip exit then
@@ -38,7 +37,7 @@ endof
     2+ dup @ over - .
     ." ) "
 endof ( default )
-    dup cfa> id.
+    dup cfa> name>string type
     dup dup cfa> >cfa
     2dup <> if '+' emit - .
     else 2drop space then
@@ -54,7 +53,7 @@ while nip dup @ repeat
 
 rot drop \ eow sow
 
-':' emit space dup id. space
+':' emit space dup name>string type space
 dup 2+ c@ $80 and if ." immediate " then
 
 >cfa
@@ -90,7 +89,7 @@ last-dump ! base ! ;
 ." more" $92 emit key drop page then ;
 : words
 page latest @ begin ?dup while
-more dup id. space @ repeat cr ;
+more dup name>string type space @ repeat cr ;
 
 \ size foo prints size of foo
 : size ( -- )
