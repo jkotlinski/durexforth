@@ -1,5 +1,6 @@
-: id. ( header -- )
-2+ dup 1+ swap c@ 1f and type ;
+: name>string ( word -- caddr u )
+2+ dup 1+ swap c@ 1f and ;
+: id. ( word -- ) name>string type ;
 : cfa> ( codepointer -- word )
 latest @ begin ?dup while
 2dup > if nip exit then

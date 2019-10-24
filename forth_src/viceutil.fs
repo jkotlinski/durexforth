@@ -13,7 +13,7 @@ monitor using 'll "words"'
 s" words" 1 openw
 latest @ begin ?dup while
 ." al " dup >cfa . '.' emit
-dup 3 + dup 1- c@ $1f and
+dup name>string
 over + swap do i c@ 
 dup 'a' < over 'z' > or if case
 \ escape forbidden chars
