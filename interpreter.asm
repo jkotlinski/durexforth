@@ -741,30 +741,3 @@ OLD_BASE = * + 1
 
 .chars_to_process
     !byte 0
-
-    +BACKLINK
-    !byte 17
-    !text "traverse-wordlist"
-TRAVERSE_WORDLIST ; ( xt -- )
-    lda LSB,x
-    sta .xt
-    lda MSB,x
-    sta .xt + 1
-    inx
-    jsr LATEST
-    jsr FETCH
--   lda MSB,x
-    ora LSB,x
-    beq .ret
-    jsr DUP
-.xt = * + 1
-    jsr PLACEHOLDER_ADDRESS
-    inx
-    lda MSB-1,x
-    ora LSB-1,x
-    beq .ret
-    jsr FETCH
-    jmp -
-.ret
-    inx
-    rts
