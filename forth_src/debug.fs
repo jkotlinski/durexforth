@@ -85,11 +85,12 @@ last-dump ! base ! ;
 
 : n last-dump @ dump ;
 
-: more $d6 c@ $18 = if $12 emit
-." more" $92 emit key drop page then ;
-: words
-page latest @ begin ?dup while
-more dup name>string type space @ repeat cr ;
+: print-word ( word -- flag )
+$d6 c@ $18 = if $12 emit
+." more" $92 emit key drop page then
+name>string type space 1 ;
+: words page
+['] print-word traverse-wordlist ;
 
 \ size foo prints size of foo
 : size ( -- )
@@ -100,4 +101,3 @@ dup r@ < if
 - . r> drop exit then
 nip dup @ repeat
 . drop r> drop ;
-
