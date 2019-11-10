@@ -167,7 +167,7 @@ bar inc,
 here over 2+ - swap 1+ c! ;
 
 ( usage:
-:- d014 lda, f4 cmp,#
+:- $d014 lda, f4 cmp,#
 -branch bne, )
 : :- here ;
 : -branch ( absaddr -- reladdr )

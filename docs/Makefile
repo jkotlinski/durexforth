@@ -24,8 +24,8 @@ release_license.tex: params-g.tex
 params-g.tex:
 	touch $@
 	cp $@ $@.tmp
-	echo "\\def\\revisiontagdoc{$(REV_TAG_DOC)}" > $@
-	echo "\\def\\revisiondate{$(REV_DATE)}" >> $@
+	echo "\\def\\\revisiontagdoc{$(REV_TAG_DOC)}" > $@
+	echo "\\def\\\revisiondate{$(REV_DATE)}" >> $@
 
 clean:
 	rm -f *.pdf $(GENERATED)

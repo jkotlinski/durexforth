@@ -41,11 +41,10 @@ Pick from stack element with depth u to top of stack.
 \item[space] Displays one space.
 \item[spaces ( n -- )] Displays n spaces.
 \item[page] Clears the screen.
+\item[bye] Exits DurexForth.
 \end{description}
 
 \section{Mathematics}
-
-These words assume that the lowest number is 0 and highest is FFFF.
 
 \begin{description}
 \item[1+ ( a -- b )] Increase top of stack value by 1.
@@ -137,7 +136,7 @@ Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to 
 \item[{]} ( -- )] Return to compile mode.
 \item[immediate] Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
 \item[{[']} name ( -- xt )] Place name's execution token xt on the stack. The execution token returned by the compiled phrase \texttt{['] x} is the same value returned by \texttt{' x} outside of compilation state. Typical use: \texttt{: x ... {[}'{]} name ... ;}
-\item[compile, ( xt -- )] Append \texttt{jsr xt} to the word being compiled. Typical use: \texttt{: recurse immed latest @ >cfa compile, ;}
+\item[compile, ( xt -- )] Append \texttt{jsr xt} to the word being compiled. Typical use: \texttt{: recurse immed latest @ >xt compile, ;}
 \item[postpone xxx] Compile the compilation semantics (instead of interpretation semantics) of xxx. Typical use:
 \begin{verbatim}
 : endif postpone then ; immediate
@@ -266,6 +265,8 @@ endcase
 
 \item[word ( delim -- addr )] Reads a word from input, using delimiter \texttt{delim}, and puts the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.
 
+\item[parse-name ( name -- caddr u )] Reads a word from input, delimited by whitespace. Skips leading spaces. 
+
 \item[interpret ( -- value )] Interprets a word from input and puts it on the stack.
 
 \item[accept ( addr u -- u )] Receive a string of at most u characters into the buffer that starts at addr. Returns how many characters were received.
@@ -285,7 +286,7 @@ endcase
 \section{Editing}
 
 \begin{description}
-\item[vi filename]
+\item[v filename]
 
 Opens text editor and starts editing the file named "filename".
 If filename is empty and a buffer is already open, editor will pick up where it left.
@@ -304,11 +305,13 @@ Print a string. Example: \texttt{.( foo)}
 
 Compile-time version of "\texttt{.(}". Example: \texttt{: foo ." bar" ;}
 
-\item[s" ( -- strptr strlen )] Define a string. Example: \texttt{s" foo"}.
+\item[s" ( -- caddr u )] Define a string. Compile-time only! Example: \texttt{s" foo"}.
 
 \item[count ( str -- caddr u )] Returns data address and length of the counted string str.
 
 \item[type ( caddr u -- )] Prints a string.
+
+\item[/string ( caddr u n -- caddr+n u-n )] Adjusts the string by n characters. 
 
 \end{description}
 
@@ -332,8 +335,9 @@ For more info about number formatting, read Starting Forth!
 \begin{description}
 \item[' xxx ( -- addr )] Find execution token of word \texttt{xxx}.
 \item[find ( cstr -- cstr 0 $\vert$ xt -1 $\vert$ xt 1 )] Find the definition named in the counted string cstr. If the definition is not found, return cstr and 0, otherwise return the execution token. If the definition is immediate, also return 1, otherwise also return -1.
+\item[find-name ( caddr u -- caddr u 0 $\vert$ xt -1 $\vert$ xt 1 )] Like \texttt{find}, except that it does not require a counted string.
 \item[execute ( xt -- )] Execute the execution token on top of stack.
-\item[$>$cfa ( addr -- xt )] Get execution token (a.k.a. code field adress) of word at adress \texttt{addr}.
+\item[$>$xt ( addr -- xt )] Get execution token of word at adress \texttt{addr}.
 
 \end{description}
 
@@ -403,4 +407,4 @@ The \texttt{compat} module contains various words that are not deemed necessary 
 
 Safe kernel calls may be done from Forth words using \texttt{sys} ( addr -- ). The helper variables \texttt{ar}, \texttt{xr}, \texttt{yr} and \texttt{sr} can be used to set arguments and get results through the a, x, y and status registers.
 
-Example: \texttt{'0' ar c! ffd2 sys} calls the CHROUT routine, which prints \texttt{0} on screen.
+Example: \texttt{'0' ar c! \$ffd2 sys} calls the CHROUT routine, which prints \texttt{0} on screen.

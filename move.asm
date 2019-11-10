@@ -107,6 +107,7 @@ cmove_done
     +BACKLINK
     !byte	4
     !text	"move" ; ( src dst u -- )
+MOVE
     jsr TO_R
     jsr TWODUP
     jsr U_LESS

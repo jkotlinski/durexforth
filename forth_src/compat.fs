@@ -41,7 +41,7 @@ swap >r swap base @ um* drop
 rot base @ um* d+ r> ;
 
 : pet# ( char -- num )
-7f and dup \ lowercase
+$7f and dup \ lowercase
 ':' < if '0' else '7' then - ;
 
 : digit? ( char -- flag )

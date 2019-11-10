@@ -4,6 +4,17 @@ TAG = `git describe --tags --abbrev=0 || svnversion --no-newline`
 TAG_DEPLOY_DOT = `git describe --tags --abbrev=0 --dirty=-M`
 TAG_DEPLOY = `git describe --tags --abbrev=0 --dirty=_M | tr _. -_`
 
+SRC_DIR = forth_src
+SRC_NAMES = base debug v asm gfx gfxdemo rnd sin ls turtle fractals \
+    sprite doloop sys labels mml mmldemo sid spritedemo test testcore \
+    testcoreplus tester format require compat timer float viceutil
+SRCS = $(addprefix $(SRC_DIR)/,$(addsuffix .fs,$(SRC_NAMES)))
+
+EMPTY_FILE = _empty.txt
+SEPARATOR_NAME1 = '=-=-=-=-=-=-=-=,s'
+SEPARATOR_NAME2 = '=-------------=,s'
+SEPARATOR_NAME3 = '=-=---=-=---=-=,s'
+
 all:	durexforth.d64
 
 deploy: durexforth.d64 cart.asm
@@ -19,21 +30,25 @@ deploy: durexforth.d64 cart.asm
 	@$(AS) cart.asm
 	cartconv -t simon -i build/cart.bin -o deploy/durexforth-$(TAG_DEPLOY).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
 
-durexforth.prg: durexforth.asm number.asm math.asm move.asm disk.asm lowercase.asm
+durexforth.prg: *.asm
 	@$(AS) durexforth.asm
 
-FORTHLIST=base debug vi asm gfx gfxdemo rnd sin ls turtle fractals sprite doloop sys labels mml mmldemo sid spritedemo test testcore testcoreplus tester format require compat timer float
-
-durexforth.d64: durexforth.prg forth_src/base.fs forth_src/debug.fs forth_src/vi.fs forth_src/asm.fs forth_src/gfx.fs forth_src/gfxdemo.fs forth_src/rnd.fs forth_src/sin.fs forth_src/ls.fs forth_src/turtle.fs forth_src/fractals.fs forth_src/sprite.fs forth_src/doloop.fs forth_src/sys.fs forth_src/labels.fs forth_src/mml.fs forth_src/mmldemo.fs forth_src/sid.fs forth_src/spritedemo.fs forth_src/test.fs Makefile ext/petcom forth_src/testcore.fs forth_src/testcoreplus.fs forth_src/tester.fs forth_src/format.fs forth_src/require.fs forth_src/compat.fs forth_src/timer.fs forth_src/float.fs
-	$(C1541) -format "durexforth$(TAG),DF"  d64 durexforth.d64 # > /dev/null
+durexforth.d64: durexforth.prg Makefile ext/petcom $(SRCS)
+	touch $(EMPTY_FILE)
+	$(C1541) -format "durexforth,DF"  d64 durexforth.d64 # > /dev/null
 	$(C1541) -attach $@ -write durexforth.prg durexforth # > /dev/null
+	$(C1541) -attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME1) # > /dev/null
+	$(C1541) -attach $@ -write $(EMPTY_FILE) $(TAG_DEPLOY_DOT),s # > /dev/null
+	$(C1541) -attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME2) # > /dev/null
 # $(C1541) -attach $@ -write debug.bak
 	mkdir -p build
 	echo -n "aa" > build/header
-	@for forth in $(FORTHLIST); do\
-        cat build/header forth_src/$$forth.fs | ext/petcom - > build/$$forth.pet; \
+	@for forth in $(SRC_NAMES); do\
+        cat build/header $(SRC_DIR)/$$forth.fs | ext/petcom - > build/$$forth.pet; \
         $(C1541) -attach $@ -write build/$$forth.pet $$forth; \
     done;
+	$(C1541) -attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME3) # > /dev/null
+	rm -f $(EMPTY_FILE)
 
 clean:
 	$(MAKE) -C docs clean

@@ -4,4 +4,4 @@ variable seed
 \ randomness than LSB, use 100/
 \ when getting bytes.
 : rnd ( -- u ) seed @
-7abd * 1b0f + dup seed ! ;
+$7abd * $1b0f + dup seed ! ;

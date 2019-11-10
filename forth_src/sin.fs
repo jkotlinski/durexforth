@@ -1,3 +1,4 @@
+base @ hex
 ( cos 0-359 degrees
 could be more space optimized )
 header sintab
@@ -102,3 +103,4 @@ cf4 , df3 , efb , 100c ,
 cos over 2* 1+ um* nip swap - ;
 : *sin ( a r -- b )
 sin over 2* 1+ um* nip swap - ;
+base !

@@ -1,44 +1,42 @@
-: fakekeys ( n -- )
-c6 c! ;
+: fakekeys ( n -- ) $c6 c! ;
 
 here latest @
 
 .( gfxdemo )
-b fakekeys \ skips demos
-s" gfx" included
-s" gfxdemo" included
+$b fakekeys \ skips demos
+parse-name gfx included
+parse-name gfxdemo included
 
 .( fractals )
 4 fakekeys \ skips demos
-s" fractals" included
+parse-name fractals included
 
 .( mmldemo )
-s" mmldemo" included
+parse-name mmldemo included
 
 .( spritedemo )
 1 fakekeys \ exits demo
-s" spritedemo" included
+parse-name spritedemo included
 
 latest ! to here
 
 : x depth abort" depth" ; x
 
-s" compat" included
-s" tester" included
-s" testcore" included
-s" testcoreplus" included
+parse-name compat included
+parse-name tester included
+parse-name testcore included
+parse-name testcoreplus included
 
-hex
 : push ( ch -- )
-c6 c@ 277 + c!
-1 c6 +! ;
+$c6 c@ $277 + c!
+1 $c6 +! ;
 
-.( vi )
+.( v )
 \ The FIFO is only 10 bytes.
 \ Don't add more.
-'i' push d push
+'i' push $d push
 '.' push '(' push bl push
 'O' push 'K' push ')' push
-5f push \ leftarrow
-88 push \ f7
-vi
+$5f push \ leftarrow
+$88 push \ f7
+v

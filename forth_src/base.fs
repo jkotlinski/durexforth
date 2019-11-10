@@ -14,11 +14,10 @@ then compile, ; immediate
 : until postpone 0branch , ; immediate
 : again jmp, , ; immediate
 : recurse
-latest @ >cfa compile, ; immediate
+latest @ >xt compile, ; immediate
 : ( begin getc dup 0= if refill then
 ')' = if exit then again ; immediate
 : \ refill ; immediate
-: tuck ( x y -- y x y ) swap over ;
 : <> ( a b -- c ) = 0= ;
 : u> ( n -- b ) swap u< ;
 : 0<> ( x -- flag ) 0= 0= ;
@@ -27,22 +26,10 @@ latest @ >cfa compile, ; immediate
 r> 1+ dup 2+ swap @ 2dup + 1- >r ;
 
 : s" ( -- addr len )
-state c@ if ( compile mode )
 postpone lits here 0 , 0
 begin getc dup '"' <>
 while c, 1+ repeat
-drop swap ! exit
-then ( immediate mode )
-here here
-begin getc dup '"' <>
-while over c! 1+ repeat
-drop here - ; immediate
-
-: type ( caddr u -- )
-0 d4 c! ( quote mode off )
-begin ?dup while
-swap dup c@ emit 1+ swap 1-
-repeat drop ;
+drop swap ! ; immediate
 
 : ." postpone s" postpone type
 ; immediate
@@ -59,9 +46,9 @@ then branch ;
 begin ?dup while postpone then
 repeat ; immediate
 
-( gets pointer to first data field,
-i.e., skips the first jsr )
-: >dfa >cfa 1+ 2+ ;
+( Returns data field address, which is
+after jsr dodoes )
+: >dfa >xt 1+ 2+ ;
 
 ( dodoes words contain:
  1. jsr dodoes
@@ -73,7 +60,7 @@ header postpone dodoes literal , ;
 : does> r> 1+ latest @ >dfa ! ;
 
 .( asm..)
-s" asm" included
+parse-name asm included
 
 code rot ( a b c -- b c a )
 msb 2+ ldy,x msb 1+ lda,x
@@ -103,8 +90,9 @@ dup code lda,# 100/ ldy,#
 : spaces ( n -- )
 begin ?dup while space 1- repeat ;
 
-1 value 1 8b value w
-8d value w2 9e value w3
+8b value w
+8d value w2
+9e value w3
 
 ( "0 to foo" sets value foo to 0 )
 : (to) over 100/ over 2+ c! c! ;
@@ -146,17 +134,17 @@ inx, inx, ;code
 code lshift ( x1 u -- x2 )
 lsb dec,x -branch bmi,
 lsb 1+ asl,x msb 1+ rol,x
-latest @ >cfa jmp,
+latest @ >xt jmp,
 code rshift ( x1 u -- x2 )
 lsb dec,x -branch bmi,
 msb 1+ lsr,x lsb 1+ ror,x
-latest @ >cfa jmp,
+latest @ >xt jmp,
 
 : allot ( n -- ) here + to here ;
 
 : variable
 0 value
-here latest @ >cfa 1+ (to)
+here latest @ >xt 1+ (to)
 2 allot ;
 
 code 0< msb lda,x 80 and,# +branch beq,
@@ -189,21 +177,7 @@ r> 0< if swap negate swap then ;
 : */ */mod nip ;
 ( ...from FIG UK )
 
-code <
-0 ldy,# sec,
-lsb 1+ lda,x lsb sbc,x
-msb 1+ lda,x msb sbc,x
-+branch bvc, 80 eor,# :+
-+branch bpl, dey, :+
-inx, lsb sty,x msb sty,x ;code
-: > swap < ;
-
-: max ( a b - c )
-2dup < if swap then drop ;
-: min ( a b - c )
-2dup > if swap then drop ;
-
-.( format..) s" format" included
+.( format..) parse-name format included
 
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
@@ -223,13 +197,15 @@ does> @ dup to here @ latest ! ;
 
 marker modules
 
-.( labels..) s" labels" included
-.( doloop..) s" doloop" included
-.( sys..) s" sys" included
-.( debug..) s" debug" included
-.( ls..) s" ls" included
-.( vi..) s" vi" included
-.( require..) s" require" included
+.( labels..) parse-name labels included
+.( doloop..) parse-name doloop included
+.( sys..) parse-name sys included
+.( debug..) parse-name debug included
+.( ls..) parse-name ls included
+.( v..) parse-name v included
+.( require..) parse-name require included
+
+decimal
 
 .( save new durexforth..)
 save-forth @0:durexforth

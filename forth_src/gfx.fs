@@ -1,3 +1,4 @@
+base @ hex
 e000 value bmpbase
 cc00 value colbase
 
@@ -599,3 +600,4 @@ r> 1 c! drop kernal-in ;
 kernal-out
 swap 140 * rot 8 * + bmpbase +
 8 move kernal-in ;
+base !

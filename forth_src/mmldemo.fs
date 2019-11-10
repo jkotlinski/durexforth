@@ -1,4 +1,4 @@
-s" mml" included
+require mml
 cr .( Frere Jaques) 
 : frere-jaques
 s" o3l4fgaffgafab->c&c<ab->c&cl8cdc<b-

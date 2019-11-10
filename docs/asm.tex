@@ -7,7 +7,7 @@ DurexForth features a simple but useful 6510 assembler with support for branches
 \begin{verbatim}
 code flash
 here        ( push current addr )
-d020 inc,   ( inc $d020 )
+$d020 inc,  ( inc $d020 )
 jmp,        ( jump to pushed addr )
 ;code
 \end{verbatim}
@@ -15,7 +15,7 @@ jmp,        ( jump to pushed addr )
 It is also possible to inline assembly code into a regular Forth word, as seen in the tutorial:
 
 \begin{verbatim}
-: flash begin [ d020 inc, ] again ;
+: flash begin [ $d020 inc, ] again ;
 \end{verbatim}
 
 \section{Variables}
@@ -67,7 +67,7 @@ bar inc, :+
 Example of a backward branch:
 
 \begin{verbatim}
-:- d014 lda, f4 cmp,#
+:- $d014 lda, f4 cmp,#
 -branch bne,
 \end{verbatim}
 
@@ -84,8 +84,8 @@ Example:
 
 \begin{verbatim}
 code checkers
-7f lda,# 0 ldy,# 'l' @:
-400 sta,y 500 sta,y
-600 sta,y 700 sta,y
+$7f lda,# 0 ldy,# 'l' @:
+$400 sta,y $500 sta,y
+$600 sta,y $700 sta,y
 dey, 'l' @@ bne, ;code
 \end{verbatim}

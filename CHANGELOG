@@ -358,3 +358,21 @@ Thanks to polluks for suggestions!
 [Changed]
  * when parsing, treat shift+space like space. it used to
    be like this but accidentally (?) changed in 1.6.0.
+
+UNRELEASED
+
+[Changed]
+ * Startup BASE is now DECIMAL instead of HEX.
+ * S" now only works when compiling.
+ * Renamed VI to V, to avoid confusion with vi.
+ * Renamed >CFA to >XT.
+[Added]
+ * BYE
+ * /STRING
+ * PARSE-NAME
+ * FIND-NAME
+ * VICE label dumper. 'include viceutil' and DUMP-LABELS
+   to generate a label file for VICE debugging.
+[Fixed]
+ * v: / was broken when searching for a single character.
+ * WORD did not work while interpreting.

@@ -1,6 +1,6 @@
 ;{{{ The MIT License
 ;
-;Copyright (c) 2008-2013 Johan Kotlinski, Mats Andren
+;Copyright (c) 2008 Johan Kotlinski, Mats Andren
 ;
 ;Permission is hereby granted, free of charge, to any person obtaining a copy
 ;of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,8 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; disk i/o
+; DEVICE OPENW CLOSEW LOADB SAVEB INCLUDED
+
 READST = $ffb7
 SETLFS = $ffba
 SETNAM = $ffbd
@@ -192,7 +193,7 @@ load_binary_laddr_hi = *+1
     !byte 5
     !text	"saveb"
 SAVEB
-    stx tmp_x
+    stx W
 
     lda	$ae
     pha
@@ -232,7 +233,7 @@ save_binary_srange_end_hi = *+1
     pla
     sta	$ae
 
-    ldx tmp_x
+    ldx W
     inx
     inx
     inx
