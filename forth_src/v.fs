@@ -334,6 +334,28 @@ editpos bufstart ?do i match? if
 i show-loc unloop drop exit then loop
 drop ." not found" ;
 
+: cmove ?dup if 0 do over i + c@ over i + c!
+loop then 2drop ;
+
+: wordlen ( -- n )
+eof @ editpos - 0 ?do editpos i + c@
+space= if i unloop exit then loop 0 ;
+
+: star ( -- )
+0 $18 setcur clear-status '/' emit
+curx c@ 0 > if editpos 1- c@ bl <>
+if word-back then then
+wordlen 1+ editpos over 2dup 1- type
+here swap cmove
+eof @ editpos 1+ ?do i match? if
+i 1- c@ space= if
+i show-loc unloop drop exit then then
+loop
+editpos bufstart ?do i match? if
+i bufstart = i 1- c@ space= or if
+i show-loc unloop drop exit then then
+loop drop ."  not found" ;
+
 : write-file filename c@ 0= if
 ." no filename" exit then
 
@@ -416,6 +438,7 @@ down c, ' cur-down ,
 'l' c, ' cur-right ,
 'k' c, ' cur-up ,
 'j' c, ' cur-down ,
+'*' c, ' star ,
 0 c,
 
 : do-main ( key -- quit? )
