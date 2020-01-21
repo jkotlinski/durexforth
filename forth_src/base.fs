@@ -195,15 +195,17 @@ postpone then ; immediate
 : marker create latest @ ,
 does> @ dup to here @ latest ! ;
 
+: include parse-name included ;
+
 marker modules
 
-.( labels..) parse-name labels included
-.( doloop..) parse-name doloop included
-.( sys..) parse-name sys included
-.( debug..) parse-name debug included
-.( ls..) parse-name ls included
-.( v..) parse-name v included
-.( require..) parse-name require included
+.( labels..) include labels
+.( doloop..) include doloop
+.( sys..) include sys
+.( debug..) include debug
+.( ls..) include ls
+.( v..) include v
+.( require..) include require
 
 decimal
 

@@ -1,5 +1,5 @@
 : name>string ( word -- caddr u )
-2+ dup 1+ swap c@ 1f and ;
+2+ dup 1+ swap c@ $1f and ;
 : xt> ( codepointer -- word )
 latest @ begin ?dup while
 2dup > if nip exit then
