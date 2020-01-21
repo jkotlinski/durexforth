@@ -311,7 +311,7 @@ curlinestart @
 eof @ curlinestart @ - move
 eof +!
 eof @ curlinestart @ = if
-0 eof @ c! 1 eof +! then
+0 eof @ ! 1 eof +! then
 linelen 0= if cur-up join-lines then ;
 
 : del
