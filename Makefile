@@ -23,7 +23,7 @@ deploy: durexforth.d64 cart.asm
 	$(MAKE) -C docs
 	cp docs/durexforth.pdf deploy/durexforth-$(TAG_DEPLOY).pdf
 	cp durexforth.d64 deploy/durexforth-$(TAG_DEPLOY).d64
-	x64 deploy/durexforth-$(TAG_DEPLOY).d64
+	x64 -default -warp deploy/durexforth-$(TAG_DEPLOY).d64
 	# make cartridge
 	c1541 -attach deploy/durexforth-$(TAG_DEPLOY).d64 -read durexforth
 	mv durexforth build/durexforth
