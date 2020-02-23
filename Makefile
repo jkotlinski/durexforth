@@ -7,7 +7,8 @@ TAG_DEPLOY = `git describe --tags --abbrev=0 --dirty=_M | tr _. -_`
 SRC_DIR = forth_src
 SRC_NAMES = base debug v asm gfx gfxdemo rnd sin ls turtle fractals \
     sprite doloop sys labels mml mmldemo sid spritedemo test testcore \
-    testcoreplus tester format require compat timer float viceutil
+    testcoreplus tester format require compat timer float viceutil \
+    filesystem
 SRCS = $(addprefix $(SRC_DIR)/,$(addsuffix .fs,$(SRC_NAMES)))
 
 EMPTY_FILE = _empty.txt
@@ -23,7 +24,7 @@ deploy: durexforth.d64 cart.asm
 	$(MAKE) -C docs
 	cp docs/durexforth.pdf deploy/durexforth-$(TAG_DEPLOY).pdf
 	cp durexforth.d64 deploy/durexforth-$(TAG_DEPLOY).d64
-	x64 -default -warp deploy/durexforth-$(TAG_DEPLOY).d64
+	x64 -default -warp +confirmexit deploy/durexforth-$(TAG_DEPLOY).d64
 	# make cartridge
 	c1541 -attach deploy/durexforth-$(TAG_DEPLOY).d64 -read durexforth
 	mv durexforth build/durexforth
