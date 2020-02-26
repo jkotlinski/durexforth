@@ -7,8 +7,7 @@ TAG_DEPLOY = `git describe --tags --abbrev=0 --dirty=_M | tr _. -_`
 SRC_DIR = forth_src
 SRC_NAMES = base debug v asm gfx gfxdemo rnd sin ls turtle fractals \
     sprite doloop sys labels mml mmldemo sid spritedemo test testcore \
-    testcoreplus tester format require compat timer float viceutil \
-    filesystem
+    testcoreplus tester format require compat timer float viceutil
 SRCS = $(addprefix $(SRC_DIR)/,$(addsuffix .fs,$(SRC_NAMES)))
 
 EMPTY_FILE = _empty.txt
