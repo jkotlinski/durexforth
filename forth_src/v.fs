@@ -64,7 +64,9 @@ $400 + ( addr ) ;
 
 : sol 0 curx ! ;
 
-: rom-kernal $37 1 c! ;
+\ ram + io + kernal rom
+: rom-kernal $36 1 c! ;
+\ ram + io + ram
 : ram-kernal $35 1 c! ;
 
 : reset-buffer

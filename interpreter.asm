@@ -51,7 +51,7 @@ quit_reset
     lda #>TIB
     sta TIB_PTR + 1
 
-    lda #$56 ; ram + i/o + kernal
+    lda #$36 ; ram + i/o + kernal
     sta 1
 
     ; Yellow text.
