@@ -324,6 +324,7 @@ key case
 endcase clear-status ;
 
 create fbuf #39 allot
+0 fbuf c!
 
 : match? ( addr -- found? )
 fbuf c@ fbuf + 1+ fbuf 1+ do dup c@ i c@
@@ -341,19 +342,18 @@ i show-loc unloop exit then loop
 fbuf 1+ #38 accept fbuf c!
 do-match ;
 
-: word-len ( -- count )
-0 begin dup editpos + c@ space=
-0= while 1+ repeat ;
+: word-len ( -- )
+1 begin dup editpos + dup c@ space= 0= 
+swap eof @ < AND
+while 1+ repeat ;
 
 : do-* ( -- )
-\ copy the word under the cursor to fbuf
-editpos 1- c@ space= 0= if
-word-back then 
-word-len fbuf c!
-editpos fbuf 1+ fbuf c@ move
 0 $18 setcur clear-status '/' emit
-fbuf 1+ fbuf c@ type ' ' emit
-do-match ;
+is-wordstart 0= if word-back then
+editpos fbuf 1+ word-len dup fbuf c! move
+fbuf 1+ fbuf c@ type bl emit
+do-match
+;
 
 : write-file filename c@ 0= if
 ." no filename" exit then
