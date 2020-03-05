@@ -18,7 +18,8 @@ variable line-dirty
 
 : line-dirty! 1 line-dirty c! ;
 
-variable filename $f allot \ counted string
+\ counted string
+variable filename $f allot
 0 filename c!
 
 : editpos curlinestart @ curx @ + ;
@@ -188,7 +189,8 @@ eof @ 1- find-start-of-line
 dup curlinestart ! homepos !
 sol
 $17 begin
-homepos @ 1- find-start-of-line homepos !
+homepos @ 1- find-start-of-line
+homepos !
 1- dup 0=
 homepos @ bufstart = or
 until
@@ -506,7 +508,7 @@ clear-status
 
 lf word count dup 0= if \ no param?
 eof @ if \ something in buffer?
-2drop main-loop exit \ yes - continue edit
+2drop main-loop exit \ yes - cont. edit
 then then
 
 2dup filename c! filename 1+ f move
