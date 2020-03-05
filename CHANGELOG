@@ -366,6 +366,7 @@ UNRELEASED
  * S" now only works when compiling.
  * Renamed VI to V, to avoid confusion with vi.
  * Renamed >CFA to >XT.
+ * 'make deploy' launches Vice with nice settings.
 [Added]
  * BYE
  * /STRING
@@ -374,5 +375,8 @@ UNRELEASED
  * VICE label dumper. 'include viceutil' and DUMP-LABELS
    to generate a label file for VICE debugging.
 [Fixed]
+ * code stripping tutorial did not work.
  * v: / was broken when searching for a single character.
  * WORD did not work while interpreting.
+ * v: q: switched in BASIC rom.
+ * v: error when clearing buffer with dd.
