@@ -325,18 +325,37 @@ key case
 'd' of del-line endof
 endcase clear-status ;
 
-: match? ( count addr -- count found? )
-over here + here do dup c@ i c@
+create fbuf #39 allot
+0 fbuf c!
+
+: match? ( addr -- found? )
+fbuf c@ fbuf + 1+ fbuf 1+ do dup c@ i c@
 <> if unloop drop 0 exit then 1+ loop ;
+
+: do-match ( -- )
+eof @ editpos 1+ ?do i match? if
+i show-loc unloop exit then loop
+editpos bufstart ?do i match? if
+i show-loc unloop exit then loop
+." not found" ;
 
 : do-find ( -- )
 0 $18 setcur clear-status '/' emit
-here #38 accept
-eof @ editpos 1+ ?do i match? if
-i show-loc unloop drop exit then loop
-editpos bufstart ?do i match? if
-i show-loc unloop drop exit then loop
-drop ." not found" ;
+fbuf 1+ #38 accept fbuf c!
+do-match ;
+
+: word-len ( -- )
+1 begin dup editpos + dup c@ space= 0= 
+swap eof @ < AND
+while 1+ repeat ;
+
+: do-* ( -- )
+0 $18 setcur clear-status '/' emit
+is-wordstart 0= if word-back then
+editpos fbuf 1+ word-len dup fbuf c! move
+fbuf 1+ fbuf c@ type bl emit
+do-match
+;
 
 : write-file filename c@ 0= if
 ." no filename" exit then
@@ -397,6 +416,8 @@ header maintable
 'i' c, ' ins-start ,
 'a' c, ' append-start ,
 '/' c, ' do-find ,
+'n' c, ' do-match ,
+'*' c, ' do-* ,
 $15 c, ' half-page-back , \ ctrl+u
 4 c, ' half-page-fwd , \ ctrl+d
 'J' c, ' join-lines ,
