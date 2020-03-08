@@ -374,6 +374,7 @@ UNRELEASED
  * FIND-NAME
  * VICE label dumper. 'include viceutil' and DUMP-LABELS
    to generate a label file for VICE debugging.
+ * v: * and n commands
 [Fixed]
  * code stripping tutorial did not work.
  * v: / was broken when searching for a single character.
