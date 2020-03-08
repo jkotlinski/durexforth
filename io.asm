@@ -275,17 +275,6 @@ SAVE_INPUT
     jsr push_input_stack
     lda TIB_PTR+1
     jsr push_input_stack
-
-    lda TO_IN_W
-    cmp TIB_SIZE
-    beq +
-    ; Temporarily moves the input buffer to avoid clobbering.
-    lda TIB_SIZE
-    clc
-    adc TIB_PTR
-    sta TIB_PTR
-+
-
     lda TIB_SIZE
     jsr push_input_stack
     lda TIB_SIZE+1

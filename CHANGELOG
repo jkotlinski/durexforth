@@ -376,6 +376,8 @@ UNRELEASED
    to generate a label file for VICE debugging.
  * v: * and n commands
 [Fixed]
+ * Evaluating an INCLUDE would corrupt the evaluated string.
+   Broke in 1.6.7.
  * code stripping tutorial did not work.
  * v: / was broken when searching for a single character.
  * WORD did not work while interpreting.

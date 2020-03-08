@@ -295,6 +295,30 @@ INCLUDED
 
     jsr SAVE_INPUT
 
+    ; Is TIB_PTR pointing to TIB?
+    lda	TIB_PTR+1
+    cmp #>TIB
+    bne .reset_tib_ptr_to_tib
+
+    ; ...if yes: Adjust TIB_PTR to point past the current TIB content, to avoid clobbering.
+    lda TO_IN_W
+    cmp TIB_SIZE
+    beq .load_file ; If TIB is already consumed, no need to do anything.
+    lda TIB_SIZE
+    clc
+    adc TIB_PTR
+    sta TIB_PTR
+    jmp .load_file
+
+    ; ...if no: Reset TIB_PTR so that it points to TIB again.
+.reset_tib_ptr_to_tib:
+    lda #<TIB
+    sta TIB_PTR
+    lda #>TIB
+    sta TIB_PTR+1
+
+.load_file:
+
     txa
     pha
 
