@@ -197,15 +197,15 @@ does> @ dup to here @ latest ! ;
 
 : include parse-name included ;
 
-marker modules
+marker ---modules---
 
 .( labels..) include labels
 .( doloop..) include doloop
 .( sys..) include sys
 .( debug..) include debug
 .( ls..) include ls
-.( v..) include v
 .( require..) include require
+.( v..) include v
 
 decimal
 

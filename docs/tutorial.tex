@@ -113,22 +113,21 @@ again ;
 By default, durexForth boots up with these modules pre-compiled in RAM:
 
 \begin{description}
-    \item[asm] The assembler. (Required and not forgettable.)
+    \item[asm] The assembler. (Required and may not be stripped.)
     \item[labels] Assembler labels.
     \item[doloop] Do-loop words.
     \item[format] Numerical formatting words.
     \item[sys] System calls.
     \item[debug] Words for debugging.
     \item[ls] List disk contents.
-    \item[v] The text editor.
     \item[require] The words require and required.
+    \item[v] The text editor.
 \end{description}
 
 To reduce RAM usage, you may make a stripped-down version of durexForth. Do this by following these steps:
 
 \begin{enumerate}
-\item Issue \texttt{modules} to forget all modules.
-\item Optionally re-add the \texttt{modules} marker with \texttt{marker modules}.
+\item Issue \texttt{---modules---} to unload all modules, or \texttt{---editor---} to unload the editor only.
 \item One by one, load the modules you want included with your new Forth. (E.g. \texttt{include labels})
 \item Save the new system with e.g. \texttt{save-forth acmeforth}.
 \end{enumerate}
