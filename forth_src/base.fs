@@ -192,8 +192,15 @@ postpone cr
 postpone abort
 postpone then ; immediate
 
+\ hashes of INCLUDED file names
+\ see required.fs
+variable (includes) $1e allot
+(includes) $20 0 fill
+
 : marker create latest @ ,
-does> @ dup to here @ latest ! ;
+(includes) begin dup @ while 2+ repeat ,
+does> dup @ dup to here @ latest !
+2+ @ 0 swap ! ;
 
 : include parse-name included ;
 

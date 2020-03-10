@@ -378,9 +378,10 @@ UNRELEASED
 [Fixed]
  * Evaluating an INCLUDE would corrupt the evaluated string.
    Broke in 1.6.7.
- * code stripping tutorial did not work.
+ * Code stripping tutorial did not work.
  * WORD did not work while interpreting.
  * REQUIRED marked a file as included even if it was not found.
+ * MARKER did not reset REQUIRED state.
  * v: / was broken when searching for a single character.
  * v: q: switched in BASIC rom.
  * v: error when clearing buffer with dd.
