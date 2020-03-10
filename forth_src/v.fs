@@ -381,9 +381,10 @@ filename count saveb
 key to need-refresh ;
 
 : :w! 1 to need-refresh
-'!' emit filename 1+ f accept
+'!' emit here f accept
 ?dup 0= if exit then
-filename c! write-file ;
+filename c! here filename count move
+write-file ;
 
 : :w 1 $18 setcur 'w' emit key case
 lf of write-file endof
