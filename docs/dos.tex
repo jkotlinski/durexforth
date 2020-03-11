@@ -1,0 +1,37 @@
+\chapter{DOS}
+
+The \texttt{dos} module provides words for operating on disks and files. Files can be copied, deleted and renamed. Two files can be joined together (WIP), files can be copied across disks (WIP). Disks can be mounted, checked, formatted (quick or slow).
+
+Two versions of the words are provided: one is designed to be used on
+programs, taking parameters from the stack. The other is meant for
+interactive use, and parses ahead filenames, while still taking
+numerical parameters off the stack. This part can be unloaded when
+building an image which requires the non-interactive functionality.
+
+\section{For programs}
+
+\begin{description}
+\item[mount ( n -- )] Execute the DOS command \texttt{INIT} on the specified drive.
+\item[check-disk ( n -- )] Execute the DOS command \texttt{VALIDATE} on the specified drive.
+\item[delete-file ( addr n drv -- )] Execute the DOS command \texttt{SCRATCH} giving it the specified string. You can delete multiple files with it.
+\item[l] Followed by a number, specifies the default length used by notes or rests which do not explicitly specify one.
+\item[\&] Ties two notes together.
+\end{description}
+
+\begin{verbatim}
+: frere-jaques
+s" o3l4fgaffgafab->c&c<ab->c&cl8cdc<b-l4af>l8cdc<b-l4affcf&ffcf&f"
+s" r1o3l4fgaffgafab->c&c<ab->c&cl8cdc<b-l4af>l8cdc<b-l4affcf&ffcf&f"
+s" " play-mml ;
+\end{verbatim}
+
+\section{For interactive use}
+
+\begin{description}
+\item[cdefgab] The letters \texttt{c} to \texttt{b} represent musical notes. Sharp notes are produced by appending a \texttt{+}, flat notes are produced by appending a \texttt{-}. The length of a note is specified by appending a number representing its length as a fraction of a whole note -- for example, \texttt{c8} represents a C eight note, and \texttt{f+2} an F\# half note. Valid note lengths are 1, 2, 3, 4, 6, 8, 16, 24 and 32. Appending a \texttt{.} increases the duration of the note by half of its value.
+\item[o] Followed by a number, \texttt{o} selects the octave the instrument will play in.
+\item[r] A rest. The length of the rest is specified in the same manner as the length of a note.
+\item[$<$,$>$] Used to step down or up one octave.
+\item[l] Followed by a number, specifies the default length used by notes or rests which do not explicitly specify one.
+\item[\&] Ties two notes together.
+\end{description}

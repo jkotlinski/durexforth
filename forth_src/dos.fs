@@ -3,7 +3,7 @@
 \ (c) 2020 Sergi Reyner
 \ MIT licensed
 
-\ NOTE: max command length is 40 chars
+\ NOTE: max command length is 40? chars
 
 \ these words take parameters off the
 \ stack, and are meant for programmatic
@@ -14,7 +14,7 @@ marker ---(dos)---
 : (dos.cmd)  ( addr n -- )
   15 openw 15 closew ;
 
-: (0cmd):  ( "name" c -- )
+: i0cmd:  ( "name" c -- )
   create c,
   does>  ( drv -- )
     $ba c@ >r swap device
@@ -23,7 +23,7 @@ marker ---(dos)---
     here 2 (dos.cmd)
     r> device ;
 
-: (1cmd):  ( "name" c -- )
+: i1cmd:  ( "name" c -- )
   create c,
   does>  ( addr n drv -- )
     $ba c@ >r swap device
@@ -33,7 +33,7 @@ marker ---(dos)---
     here tuck - (dos.cmd)
     r> device ;
 
-: (2cmd):
+: i2cmd:
   create c,  ( "name" -- c )
   does>  ( saddr n daddr n drv -- )
     $ba c@ >r swap device
@@ -45,14 +45,14 @@ marker ---(dos)---
     here tuck - (dos.cmd)
     r> device ;
 
-'i' (0cmd): (mount)
-'v' (0cmd): (check-disk)
+'i' i0cmd: mount
+'v' i0cmd: check-disk
 
-'s' (1cmd): (delete-file)
-'n' (1cmd): (format-disk)
+'s' i1cmd: delete-file
+'n' i1cmd: format-disk
 
-'c' (2cmd): (copy-file)
-'r' (2cmd): (rename-file)
+'c' i2cmd: copy-file
+'r' i2cmd: rename-file
 
 
 \ these are parsing words for
@@ -76,14 +76,14 @@ marker ---dos---
     @ >r parse-name parse-name
     $ba c@ r> execute ;
 
-' (mount) 0cmd: mount
-' (check-disk) 0cmd: check-disk
+' mount 0cmd: fs.mount
+' check-disk 0cmd: fs.check-disk
 
-' (delete-file) 1cmd: delete-file
-' (format-disk) 1cmd: format-disk
+' delete-file 1cmd: fs.delete-file
+' format-disk 1cmd: fs.format-disk
 
-' (copy-file) 2cmd: copy-file
-' (rename-file) 2cmd: rename-file
+' copy-file 2cmd: fs.copy-file
+' rename-file 2cmd: fs.rename-file
 
 
 \ These words use the editor memory
