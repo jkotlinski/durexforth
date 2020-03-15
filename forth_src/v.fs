@@ -68,9 +68,11 @@ $400 + ( addr ) ;
 : sol 0 curx ! ;
 
 \ ram + io + kernal rom
-: rom-kernal $36 1 c! ;
+code rom-kernal
+$36 lda,# 1 sta, ;code
 \ ram + io + ram
-: ram-kernal $35 1 c! ;
+code ram-kernal
+$35 lda,# 1 sta, ;code
 
 : reset-buffer
 0 bufstart 1- c!
