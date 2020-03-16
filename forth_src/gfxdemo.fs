@@ -1,10 +1,10 @@
+hex
 \ examples from c64 step by step
 \ programming, gfx book 3, phil cornes
 
 require gfx
 require rnd
 require sin
-hex
 
 d020 c@
 
