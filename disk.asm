@@ -373,4 +373,4 @@ INCLUDED
     bne +
     jsr interpret_tib
     jmp -
-+   rts
++   jmp interpret_tib
