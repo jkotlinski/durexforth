@@ -9,12 +9,11 @@ do $1f * i c@ + loop ;
 i @ 0= if i ! leave then
 dup i @ = if drop leave then
 2 +loop ;
-: include bl word count included ;
+: include parse-name included ;
 
 : required ( addr u -- )
 (includes) $20 + (includes) do
 i @ 0= if included leave then
 2dup hash i @ = if 2drop leave then
 2 +loop ;
-: require bl word count required ;
-
+: require parse-name required ;
