@@ -437,13 +437,21 @@ PARSE_NAME ; ( name -- addr u )
     jsr TUCK
     jmp MINUS
 
+    +BACKLINK
+    !byte 7
+    !text	"wordbuf"
+WORDBUF
+    +VALUE	_WORDBUF
+_WORDBUF
+    !fill	34 ; minimum allowed size for WORD and #> is "cell size in bits" * 2 + 2
+
 ; WORD ( delim -- strptr )
     +BACKLINK
     !byte      4
     !text      "word"
 WORD
     jsr ZERO
-    jsr HERE
+    jsr WORDBUF
     jsr STOREBYTE
 
     ; skips initial delimiters.
@@ -461,14 +469,14 @@ WORD
 .append
     jsr pushya
 
-    jsr HERE
+    jsr WORDBUF
     jsr FETCHBYTE
     jsr ONEPLUS
-    jsr HERE
+    jsr WORDBUF
     jsr STOREBYTE
 
-    jsr HERE
-    jsr HERE
+    jsr WORDBUF
+    jsr WORDBUF
     jsr FETCHBYTE
     jsr PLUS
     jsr STOREBYTE
@@ -476,7 +484,7 @@ WORD
 
 .word_end
     inx
-    jmp HERE
+    jmp WORDBUF
 
 .is_delim
     ; a == delim?
