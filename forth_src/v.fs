@@ -382,16 +382,6 @@ bufstart eof @
 filename count saveb
 key to need-refresh ;
 
-: :w! 1 to need-refresh
-'!' emit here f accept
-?dup 0= if exit then
-filename c! here filename count move
-write-file ;
-
-: :w 1 $18 setcur 'w' emit key case
-lf of write-file endof
-'!' of :w! endof endcase ;
-
 : open-line
 sol lf ins-char sol
 ins-start
@@ -462,7 +452,18 @@ case
   ':' of
     ':' set-status
     key case
-    'w' of :w endof
+    'w' of
+      1 $18 setcur 'w' emit key case
+      lf of write-file endof
+      '!' of
+        1 to need-refresh
+        '!' emit here f accept
+        ?dup 0= if exit then
+        filename c! here
+        filename count move
+        write-file
+      endof endcase
+    endof
     'q' of ffff exit endof
     clear-status
     endcase
