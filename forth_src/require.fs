@@ -4,7 +4,7 @@
 over + swap 0 -rot
 do $1f * i c@ + loop ;
 : included ( addr u -- )
-2dup hash -rot included
+2dup hash >r included r>
 (includes) $20 + (includes) do
 i @ 0= if i ! leave then
 dup i @ = if drop leave then
