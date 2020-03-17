@@ -56,7 +56,7 @@ after jsr dodoes )
  3. variable length data )
 here 60 c, ( rts )
 : create
-header postpone dodoes literal , ;
+header postpone dodoes [ swap ] literal , ;
 : does> r> 1+ latest @ >dfa ! ;
 
 .( asm..)
@@ -203,6 +203,8 @@ does> dup @ dup to here @ latest !
 2+ @ 0 swap ! ;
 
 : include parse-name included ;
+
+: :noname here 0 ] ;
 
 marker ---modules---
 

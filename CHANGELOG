@@ -368,6 +368,7 @@ UNRELEASED
  * Renamed >CFA to >XT.
  * 'make deploy' launches Vice with nice settings.
 [Added]
+ * :NONAME
  * BYE
  * /STRING
  * PARSE-NAME

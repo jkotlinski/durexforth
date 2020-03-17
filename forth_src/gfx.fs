@@ -581,7 +581,7 @@ d8 c, d9 c, da c, db c, dc c, dd c, de c, df c,
 68 c, 69 c, 6a c, 6b c, 6c c, 6d c, 6e c, 6f c,
 70 c, 71 c, 72 c, 73 c, 74 c, 75 c, 76 c, 77 c, \ f
 78 c, 79 c, 7a c, 7b c, 7c c, 7d c, 7e c, 5e c,
-: pet>scr literal + c@ ;
+: pet>scr [ swap ] literal + c@ ;
 
 : text ( col row str strlen -- )
 kernal-out

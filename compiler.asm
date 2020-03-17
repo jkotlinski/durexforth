@@ -101,8 +101,19 @@ RBRAC
 SEMICOLON
     jsr EXIT
 
-    ; unhide the word.
-    jsr TOGGLE_LATEST_HIDDEN
+    ; Unhides the word.
+    inx
+    lda MSB - 1, x
+    beq +
+    sta	W + 1
+    lda	LSB - 1, x
+    sta W
+
+    ldy	#2 ; skip link, point to flags
+    lda	(W), y
+    and	#!F_HIDDEN ; clear hidden flag
+    sta	(W), y
++
 
     ; go back to IMMEDIATE mode.
     jmp LBRAC
@@ -134,22 +145,22 @@ STATE
 COLON
     jsr HEADER ; makes the dictionary entry / header
 
-    ; hide word
-    jsr TOGGLE_LATEST_HIDDEN
-
-    jmp RBRAC ; enter compile mode
-
-TOGGLE_LATEST_HIDDEN
+    ; Hides the word.
+    dex
     lda	_LATEST
     sta	W
+    sta LSB, x
     lda	_LATEST + 1
     sta W + 1
+    sta MSB, x
 
     ldy	#2 ; skip link, point to flags
     lda	(W), y
-    eor	#F_HIDDEN ; toggle hidden flag
+    ora	#F_HIDDEN ; sets hidden flag
     sta	(W), y
-    rts
+
+    jmp RBRAC ; enter compile mode
+
 
 ; --- HEADER ( name -- )
     +BACKLINK
