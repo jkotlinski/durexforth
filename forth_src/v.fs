@@ -410,9 +410,6 @@ clip-count @ move
 ( update eof )
 clip-count @ eof +! ;
 
-: change-word del-word bl ins-char
-cur-left ins-start ;
-
 : force-down editpos cur-down editpos =
 if eol force-right lf ins-char cur-down
 then ;
@@ -472,7 +469,10 @@ case
   endof
 
   'c' of key
-    'w' = if change-word then
+    'w' = if 
+      del-word bl ins-char
+      cur-left ins-start
+    then
   endof
 endcase 0 ;
 
