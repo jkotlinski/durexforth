@@ -197,12 +197,12 @@ editpos 1+ editpos
 eof @ editpos - move
 -1 eof +! ;
 
-: too-long-to-join curlinestart @ 
-find-next-line find-next-line 
-curlinestart @ - $28 > ;
-
 : join-lines
-too-long-to-join if exit then
+\ too long to join?
+curlinestart @
+find-next-line find-next-line
+curlinestart @ - $28 >
+if exit then
 1 to need-refresh
 linelen 0= if nipchar exit then
 
