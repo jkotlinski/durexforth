@@ -169,10 +169,6 @@ curx @ linelen 1- = linelen 0= or if
 sol cur-down else cur-right then
 editpos = ;
 
-: word-fwd advance-cur if exit then
-begin is-wordstart 0= while
-advance-cur if exit then repeat ;
-
 : setcur ( x y -- )
 xr ! yr ! $e50c sys ;
 
@@ -181,37 +177,11 @@ cury @ $28 * $400 + $28 bl fill
 0 cury @ setcur
 curlinestart @ print-line drop ;
 
-: half-page-back
-$c 0 do cur-up refresh-line loop ;
-
-: half-page-fwd
-$c 0 do cur-down refresh-line loop ;
-
-: goto-eof ( can be much optimized... )
-bufstart eof @ = if exit then
-eof @ 1- find-start-of-line
-dup curlinestart ! homepos !
-sol
-$17 begin
-homepos @ 1- find-start-of-line
-homepos !
-1- dup 0=
-homepos @ bufstart = or
-until
-$17 swap - dup cury ! 0 swap setcur
-1 to need-refresh ;
-
-: goto-start sol 0 cury !
-bufstart dup homepos ! curlinestart !
-1 to need-refresh ;
-
 : ins-start
 1 to insert 'i' set-status ;
 
 : force-right
 linelen if 1 curx +! then ;
-
-: append-start force-right ins-start ;
 
 : ins-stop cur-left 0 to insert
 clear-status ;
@@ -220,9 +190,6 @@ clear-status ;
 dup find-start-of-line dup homepos ! 
 dup curlinestart ! - curx ! 0 cury !
 1 to need-refresh clear-status ;
-
-: replace-char
-key editpos c! line-dirty! ;
 
 : nipchar
 editpos 1+ eof @ = if exit then
@@ -322,13 +289,6 @@ eof @ curlinestart @ = if
 0 eof @ ! 1 eof +! then
 linelen 0= if cur-up join-lines then ;
 
-: del
-'d' set-status
-key case
-'w' of del-word endof
-'d' of del-line endof
-endcase clear-status ;
-
 create fbuf #39 allot
 0 fbuf c!
 
@@ -343,23 +303,10 @@ editpos bufstart ?do i match? if
 i show-loc unloop exit then loop
 ." not found" ;
 
-: do-find ( -- )
-0 $18 setcur clear-status '/' emit
-fbuf 1+ #38 accept fbuf c!
-do-match ;
-
 : word-len ( -- )
 1 begin dup editpos + dup c@ space= 0= 
 swap eof @ < AND
 while 1+ repeat ;
-
-: do-* ( -- )
-0 $18 setcur clear-status '/' emit
-is-wordstart 0= if word-back then
-editpos fbuf 1+ word-len dup fbuf c! move
-fbuf 1+ fbuf c@ type bl emit
-do-match
-;
 
 : write-file filename c@ 0= if
 ." no filename" exit then
@@ -404,27 +351,19 @@ clip-count @ eof +! ;
 if eol force-right lf ins-char cur-down
 then ;
 
-header maintable
-'i' c, ' ins-start ,
-'a' c, ' append-start ,
-'/' c, ' do-find ,
-'n' c, ' do-match ,
-'*' c, ' do-* ,
-$15 c, ' half-page-back , \ ctrl+u
-4 c, ' half-page-fwd , \ ctrl+d
-'J' c, ' join-lines ,
-'g' c, ' goto-start ,
-'G' c, ' goto-eof ,
+\ --- key handlers start
+
+here
 '$' c, ' eol ,
 '0' c, ' sol ,
-'r' c, ' replace-char ,
+'J' c, ' join-lines ,
 'O' c, ' open-line ,
 'P' c, ' paste-line ,
-'x' c, ' del-char ,
 'X' c, ' backspace ,
 'b' c, ' word-back ,
-'w' c, ' word-fwd ,
-'d' c, ' del ,
+'i' c, ' ins-start ,
+'n' c, ' do-match ,
+'x' c, ' del-char ,
 left c, ' cur-left ,
 right c, ' cur-right ,
 up c, ' cur-up ,
@@ -433,12 +372,93 @@ down c, ' cur-down ,
 'l' c, ' cur-right ,
 'k' c, ' cur-up ,
 'j' c, ' cur-down ,
+\ defined later
+$15 c, 0 , \ ctrl+u
+4 c,   0 , \ ctrl+d
+'*' c, 0 ,
+'/' c, 0 ,
+'G' c, 0 ,
+'a' c, 0 ,
+'d' c, 0 ,
+'g' c, 0 ,
+'r' c, 0 ,
+'w' c, 0 ,
 0 c,
 
+: key-fn ( key -- fn-addr|0 )
+[ swap ] literal begin 2dup c@ = if
+1+ nip exit then
+3 + dup c@ 0= until 2drop 0 ;
+
+:noname force-right ins-start ;
+'a' key-fn !
+
+:noname
+'d' set-status
+key case
+'w' of del-word endof
+'d' of del-line endof
+endcase clear-status ;
+'d' key-fn !
+
+:noname
+0 $18 setcur clear-status '/' emit
+fbuf 1+ #38 accept fbuf c!
+do-match ;
+'/' key-fn !
+
+:noname
+0 $18 setcur clear-status '/' emit
+is-wordstart 0= if word-back then
+editpos fbuf 1+ word-len dup fbuf c! move
+fbuf 1+ fbuf c@ type bl emit
+do-match ;
+'*' key-fn !
+
+:noname
+$c 0 do cur-up refresh-line loop ;
+$15 key-fn ! \ ctrl+u
+
+:noname
+$c 0 do cur-down refresh-line loop ;
+4 key-fn ! \ ctrl+d
+
+:noname
+sol 0 cury !
+bufstart dup homepos ! curlinestart !
+1 to need-refresh ;
+'g' key-fn !
+
+:noname
+\ can be much optimized...
+bufstart eof @ = if exit then
+eof @ 1- find-start-of-line
+dup curlinestart ! homepos !
+sol
+$17 begin
+homepos @ 1- find-start-of-line
+homepos !
+1- dup 0=
+homepos @ bufstart = or
+until
+$17 swap - dup cury ! 0 swap setcur
+1 to need-refresh ;
+'G' key-fn !
+
+:noname
+key editpos c! line-dirty! ;
+'r' key-fn !
+
+:noname advance-cur if exit then
+begin is-wordstart 0= while
+advance-cur if exit then repeat ;
+'w' key-fn !
+
+\ --- key handlers end
+
 : do-main ( key -- quit? )
-['] maintable begin 2dup c@ = if
-1+ @ execute drop 0 exit then
-3 + dup c@ 0= until drop
+dup key-fn ?dup if
+@ execute drop 0 exit then
 
 case
   'y' of key
