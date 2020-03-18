@@ -410,7 +410,8 @@ do-match ;
 :noname
 0 $18 setcur clear-status '/' emit
 is-wordstart 0= if word-back then
-editpos fbuf 1+ word-len dup fbuf c! move
+editpos fbuf 1+ word-len dup fbuf c!
+move
 fbuf 1+ fbuf c@ type bl emit
 do-match ;
 '*' key-fn !
