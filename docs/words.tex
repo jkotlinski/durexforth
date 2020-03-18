@@ -123,8 +123,9 @@ Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to 
 \section{Compiling}
 
 \begin{description}
-\item[: ("$<$spaces$>$name" -- )] Start compiling a new Forth word.
-\item[;] End compiling Forth word.
+\item[: (C: "$<$spaces$>$name" -- colon-sys )] Define the word with the given name and enter compilation state.
+\item[:noname ( -- xt colon-sys )] Create an execution token and enter compilation state.
+\item[; ( colon-sys -- ) ] End the current definition, allow it to be found in the dictionary and go back to interpretation state.
 \item[code ( "$<$spaces$>$name" -- )] Start assembling a new word.
 \item[;code] End assembler.
 \item[, ( n -- )] Write word on stack to \texttt{here} position and increase \texttt{here} by 2.
