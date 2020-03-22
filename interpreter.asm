@@ -125,7 +125,6 @@ interpret_tib
     bne interpret_tib
 
     lda SOURCE_ID_LSB
-    ora STATE
     beq +
     rts
 +   lda	#'o'
