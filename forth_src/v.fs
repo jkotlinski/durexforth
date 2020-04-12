@@ -323,7 +323,7 @@ here
 filename 1+ over filename c@ move
 filename c@ + lf swap c!
 here filename c@ 4 +
-f openw f closew
+$f openw $f closew
 
 bufstart eof @
 filename count saveb
@@ -468,7 +468,7 @@ case
   'o' of force-down open-line endof
   'p' of force-down paste-line endof
   'Z' of key case 
-    'Z' of write-file ffff exit endof
+    'Z' of write-file -1 exit endof
   endcase endof
   ':' of
     ':' set-status
@@ -478,14 +478,14 @@ case
       lf of write-file endof
       '!' of
         1 to need-refresh
-        '!' emit here f accept
+        '!' emit here $f accept
         ?dup 0= if exit then
         filename c! here
         filename count move
         write-file
       endof endcase
     endof
-    'q' of ffff exit endof
+    'q' of -1 exit endof
     clear-status
     endcase
   endof
@@ -559,7 +559,7 @@ eof @ if \ something in buffer?
 2drop main-loop exit \ yes - cont. edit
 then then
 
-2dup filename c! filename 1+ f move
+2dup filename c! filename 1+ $f move
 
 reset-buffer
 ?dup if \ load file

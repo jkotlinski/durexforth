@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+###Fixed
+ - v did not compile in DECIMAL mode.
+
 ## [2.0.0] - 2020-03-22
 
 ### Changed
