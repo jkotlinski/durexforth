@@ -1,20 +1,31 @@
 \ submitted by kevin reno
 
-: ls
-$f word count dup 0<> if
-tuck here 3 + swap move
-3 + here
-'$' over c!
-'0' over 1+ c!
-':' over 2+ c!
-tuck
-else 2drop s" $" here then
-loadb 2 - here
-begin 2dup <> while
-2+ dup @ . space 2+
+: ls ( addr -- )
+begin ?dup while
+2+ dup @ . 2+
 begin dup c@ ?dup while
 emit 1+ repeat 1+ cr
-more repeat 2drop ;
+dup c@ 0= if drop 0 then
+more repeat ;
+
+\ sample code
+\ $c000 try $0:*=s
+\ : try ( addr -- ) 
+\ dup parse-name rot loadb drop ls ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
