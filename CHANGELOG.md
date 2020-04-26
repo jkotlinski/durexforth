@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+ - LS now accepts wildcards, drive #'s or not.
+### Added
+ - RDIR will display directory formatted data anywhere in memory.
+
+## [2.0.0] - 2020-04-26
+
+## [Unreleased]
+
 ###Fixed
  - v did not compile in DECIMAL mode.
 
@@ -219,7 +228,7 @@ Thanks to Christian Johansson and polluks for bug reports!
 
 ## [1.4.2] - 2015-10-30
 
- - renamed EOL comment # to \ (PC) or £ (C64)
+ - renamed EOL comment # to \ (PC) or Â£ (C64)
  - renamed :asm => code
  - renamed ;asm => ;code
  - renamed tell => type
