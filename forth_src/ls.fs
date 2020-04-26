@@ -12,7 +12,6 @@ repeat ;
 else drop s" $"  
 then here loadb drop here rdir ;
 
-: bs here rdir ;  \ careful, if pad has changed
 
 
 
