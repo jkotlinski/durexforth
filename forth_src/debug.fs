@@ -84,10 +84,9 @@ emit 1+ loop cr loop
 last-dump ! base ! ;
 : n last-dump @ dump ;
 
-variable more?
-true more? !
+true value more?
 
-: more more? @ if  
+: more more? if  
 $d6 c@ $18 = if $12 emit
 ." more" $92 emit key drop page then then ;
 
