@@ -87,7 +87,7 @@ last-dump ! base ! ;
 variable more?
 true more? !
 
-: more more? if  
+: more more? @ if  
 $d6 c@ $18 = if $12 emit
 ." more" $92 emit key drop page then then ;
 
