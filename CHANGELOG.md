@@ -8,11 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
  - LS now accepts wildcards, drive #'s or not.
- - Made MORE optional via variable MORE?
+ - Made MORE optional via value MORE?
 ### Added
  - RDIR will display directory formatted data anywhere in memory.
- - variable  MORE?  default value TRUE
  - constants TRUE and FALSE
+ - value MORE?  default value TRUE
  
 ## [2.0.0] - 2020-04-26
 
