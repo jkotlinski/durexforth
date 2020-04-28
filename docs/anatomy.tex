@@ -40,7 +40,7 @@ The name length byte is also used to store special attributes of the word. Bit 7
 The code section contain pure 6502 machine code.
 
 \begin{description}
-\item[20 cf 0e ( jsr \$ecf )] \$ecf is the adress of the \texttt{lit} code. \texttt{lit} copies the two following bytes to parameter stack.
+\item[20 cf 0e ( jsr \$ecf )] \$ecf is the address of the \texttt{lit} code. \texttt{lit} copies the two following bytes to parameter stack.
 \item[20 d0 ( \$d020 )] The parameter to the \texttt{lit} word. When executed, \texttt{lit} will add \$d020 to the parameter stack.
 \item[4c 49 0a ( jmp \$a49 )] \$a49 is the address of the \texttt{c!} code.
 \end{description}
