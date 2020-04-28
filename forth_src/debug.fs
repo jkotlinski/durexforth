@@ -84,11 +84,9 @@ emit 1+ loop cr loop
 last-dump ! base ! ;
 : n last-dump @ dump ;
 
-true value more?
-
-: more more? if  
+: more 
 $d6 c@ $18 = if $12 emit
-." more" $92 emit key drop page then then ;
+." more" $92 emit key drop page then ;
 
 : words
 page latest @ begin ?dup while
