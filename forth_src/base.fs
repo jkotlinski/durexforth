@@ -85,8 +85,6 @@ msb lda,x lsb sta,x
 dup code lda,# 100/ ldy,#
 ['] pushya jmp, ;
 : constant value ;
--1 constant true
-0 constant false
 
 : space bl emit ;
 : spaces ( n -- )
