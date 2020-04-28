@@ -11,27 +11,3 @@ repeat ;
 : ls parse-name ?dup if  \ accepts wildcards or not 
 else drop s" $"  
 then here loadb drop here rdir ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
