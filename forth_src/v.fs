@@ -293,8 +293,9 @@ create fbuf #39 allot
 0 fbuf c!
 
 : match? ( addr -- found? )
-fbuf c@ fbuf + 1+ fbuf 1+ do dup c@ i c@
-<> if unloop drop 0 exit then 1+ loop ;
+fbuf c@ fbuf + 1+ fbuf 1+ do dup c@ i
+c@ <> if unloop drop 0 exit
+then 1+ loop ;
 
 : do-match ( -- )
 eof @ editpos 1+ ?do i match? if
