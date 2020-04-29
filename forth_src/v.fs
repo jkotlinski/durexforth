@@ -316,13 +316,13 @@ page ." saving "
 filename count type ." .."
 
 \ scratch old file
-here
+pad
 's' over c! 1+
 '0' over c! 1+
 ':' over c! 1+
 filename 1+ over filename c@ move
 filename c@ + lf swap c!
-here filename c@ 4 +
+pad filename c@ 4 +
 $f openw $f closew
 
 bufstart eof @
@@ -478,9 +478,9 @@ case
       lf of write-file endof
       '!' of
         1 to need-refresh
-        '!' emit here $f accept
+        '!' emit pad $f accept
         ?dup 0= if exit then
-        filename c! here
+        filename c! pad
         filename count move
         write-file
       endof endcase
