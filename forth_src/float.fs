@@ -27,4 +27,3 @@ dup 100/ yr ! ar ! $bba2 bsys ;
 : fac* ( faddr -- )
 dup 100/ yr ! ar ! $ba28 bsys ;
 : fac. $bddd bsys $b487 bsys $ab21 bsys ;
-© 2020 GitHub, Inc.
