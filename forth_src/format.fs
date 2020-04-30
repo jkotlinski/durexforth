@@ -1,11 +1,11 @@
 variable end
-: <# pad end ! ;
-: #> 2drop pad end @ over - ;
+: <# here end ! ;
+: #> 2drop here end @ over - ;
 : hold
 \ reserve space for char at start
-pad dup 1+ end @ pad - move
+here dup 1+ end @ here - move
 1 end +!
-pad c! ;
+here c! ;
 : sign 0< if '-' hold then ;
 : ud/mod \ from Gforth
 >r 0 r@ um/mod r> swap >r um/mod r> ;
