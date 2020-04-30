@@ -12,6 +12,10 @@ Goals:
 
 http://www.facebook.com/DurexForth
 
+[C64 Programming May the Forth be with you Pt 1 - YouTube](https://www.youtube.com/watch?v=TXIDqptXmiM)
+
+[C64 Programming Into the Forth Dimension Pt 2 - YouTube](https://www.youtube.com/watch?v=1oZztCmC8kc)
+
 "Just fooling around but Durexforth is fast and fun!" -Kevin Reno
 
 "Ich finde das Forth klein und effektiv, wunderbar." -Peter Bierbach
