@@ -10,9 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - LS now accepts wildcards, drive #'s or not.
 ### Added
  - RDIR will display directory formatted data anywhere in memory.
+ - PAD Scratch pad memory set to cassette buffer. Untouched by DurexForth
 ### Fixed
- - v did not compile in DECIMAL mode.
-
+ - V did not compile in DECIMAL mode.
+ - V long line
 ## [2.0.0] - 2020-03-22
 
 ### Changed
