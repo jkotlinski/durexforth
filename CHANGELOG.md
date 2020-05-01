@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
  - V did not compile in DECIMAL mode.
  - V long line
+
 ## [2.0.0] - 2020-03-22
 
 ### Changed
