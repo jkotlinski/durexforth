@@ -10,7 +10,7 @@ here c! ;
 : ud/mod \ from Gforth
 >r 0 r@ um/mod r> swap >r um/mod r> ;
 : # base @ ud/mod rot
-dup a < if 7 - then $37 + hold ;
+dup $a < if 7 - then $37 + hold ;
 : #s # begin 2dup or while # repeat ;
 
 : u. 0 <# #s #> type space ;
