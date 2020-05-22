@@ -11,4 +11,4 @@ repeat ;
 : ls parse-name ?dup if
 else drop s" $"
 then here loadb if
-here rdir then ;
+page here rdir then ;
