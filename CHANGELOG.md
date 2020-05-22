@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+ - LS now responds properly to BLOAD disk errors
+ ## [2.0.0] - 2020-05-22
+
 ### Changed
  - LS now accepts wildcards, drive #'s or not.
 ### Added
