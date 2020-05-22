@@ -8,6 +8,7 @@ emit 1+ repeat 1+ cr    \ print line, eol
 dup c@ 0= if c@ then    \ if eof then addr = 0
 repeat ;                
 
-: ls parse-name ?dup if  \ accepts wildcards or not 
-else drop s" $"  
-then here loadb drop here rdir ;
+: ls parse-name ?dup if
+else drop s" $"
+then here loadb if
+here rdir then ;
