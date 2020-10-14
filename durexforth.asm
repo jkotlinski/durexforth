@@ -156,6 +156,7 @@ ONE
 !src "core.asm"
 !src "math.asm"
 !src "move.asm"
+!src "searchorder.asm"
 !src "interpreter.asm"
 !src "compiler.asm"
 !src "control.asm"
@@ -175,6 +176,10 @@ _LATEST
 ; ALL CONTENTS BELOW LATEST WILL BE OVERWRITTEN!!!
 
 load_base
+    lda _LATEST
+    sta WIDS
+    lda _LATEST+1
+    sta WIDS+1
     lda #<QUIT
     sta _START
     lda #>QUIT

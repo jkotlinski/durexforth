@@ -251,6 +251,16 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     txa
     pha
 
+    lda CURRENT
+    sec
+    sbc #1
+    asl
+    tay
+    lda _LATEST
+    sta WIDS,y
+    lda _LATEST+1
+    sta WIDS+1,y
+
     lda LSB,x
     beq .find_failed
     sta	.findlen + 1
@@ -270,8 +280,21 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     dec W2+1
 +   dec W2
 
-    ldx	_LATEST
-    lda	_LATEST + 1
+    lda #$0
+    cmp _ORDER
+    beq .find_failed
+    sta W3
+.next_wid
+    ldy W3
+    lda CONTEXT,y
+    beq .find_failed
+    inc W3
+    sec
+    sbc #1
+    asl
+    tay
+    ldx	WIDS,y
+    lda	WIDS+1,y
 .examine_word
     sta	W + 1
     stx	W
@@ -292,7 +315,9 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     lda	(W), y
     ; Is word null? If not, examine it.
     bne .examine_word
-
+    lda W3
+    cmp _ORDER
+    bne .next_wid
     ; It is null - give up.
 .find_failed
     pla
