@@ -29,8 +29,7 @@ _ORDER
     !byte 1
 
 CONTEXT
-    !byte 1
-    !fill 7, 0
+    !fill 8, 0
 
     +BACKLINK
     !byte	14
@@ -48,6 +47,8 @@ CONTEXT
     dey
     dex
     lda CONTEXT,y
+    clc
+    adc #1
     sta LSB,x
     lda #0 
     sta MSB,x
@@ -72,7 +73,7 @@ CONTEXT
     cmp #$ff
     bne .set_not_negative
     
-    lda #1 
+    lda #0 
     sta CONTEXT
     lda #1
     sta _ORDER
@@ -96,6 +97,8 @@ CONTEXT
     ldy #0
 .set_pull_wid
     lda LSB,x
+    sec
+    sbc #1
     sta CONTEXT,y
     inx
     iny
@@ -107,28 +110,9 @@ CONTEXT
     !byte   11
     !text   "set-current"
 SET_CURRENT
-    ; save the current latest pointer
-    lda CURRENT
-    sec
-    sbc #1
-    asl
-    tay
-    lda _LATEST
-    sta WIDS,y
-    lda _LATEST+1
-    sta WIDS+1,y
-    ; update current
-    lda LSB,x
-    sta CURRENT
-    ; update the latest pointer
-    sec
-    sbc #1
-    asl
-    tay
-    lda WIDS,y
-    sta _LATEST
-    lda WIDS+1,y
-    sta _LATEST+1
+    ldy LSB,x
+    dey
+    sty CURRENT
     inx
     rts
 
@@ -136,22 +120,23 @@ SET_CURRENT
     !byte   11
     !text   "get-current"
     dex
-    lda CURRENT
-    sta LSB,x
+    ldy CURRENT
+    iny
+    sty LSB,x
     lda #0
     sta MSB,x
     rts
 CURRENT
-    !byte 1
+    !byte 0
 NEXT_WID
-    !byte 2
+    !byte 1
     
     +BACKLINK
     !byte 8
     !text "wordlist"
     dex
-    lda NEXT_WID
     inc NEXT_WID
+    lda NEXT_WID
     sta LSB,x
     lda #0
     sta MSB,x
@@ -161,7 +146,8 @@ NEXT_WID
     !byte 11
     !text "definitions"
     dex
-    lda CONTEXT
+    ldy CONTEXT
+    iny
     sta LSB,x
     lda #0
     sta MSB,x

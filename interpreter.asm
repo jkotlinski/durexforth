@@ -251,16 +251,6 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     txa
     pha
 
-    lda CURRENT
-    sec
-    sbc #1
-    asl
-    tay
-    lda _LATEST
-    sta WIDS,y
-    lda _LATEST+1
-    sta WIDS+1,y
-
     lda LSB,x
     beq .find_failed
     sta	.findlen + 1
@@ -280,17 +270,14 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     dec W2+1
 +   dec W2
 
-    lda #$0
+    lda #0
     cmp _ORDER
     beq .find_failed
     sta W3
 .next_wid
     ldy W3
     lda CONTEXT,y
-    beq .find_failed
     inc W3
-    sec
-    sbc #1
     asl
     tay
     ldx	WIDS,y

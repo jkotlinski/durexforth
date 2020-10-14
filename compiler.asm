@@ -121,9 +121,12 @@ SEMICOLON
     +BACKLINK
     !byte	9
     !text	"immediate"
-    lda	_LATEST
+    lda CURRENT
+    asl
+    tay
+    lda	WIDS,y
     sta	W
-    lda	_LATEST + 1
+    lda	WIDS+1,y
     sta	W + 1
     ldy	#2
     lda	(W), y
@@ -147,10 +150,13 @@ COLON
 
     ; Hides the word.
     dex
-    lda	_LATEST
+    lda CURRENT
+    asl
+    tay
+    lda WIDS,y	
     sta	W
     sta LSB, x
-    lda	_LATEST + 1
+    lda	WIDS+1,y
     sta W + 1
     sta MSB, x
 
@@ -296,7 +302,7 @@ LITERAL
 HERE
 HERE_LSB = * + 1
 HERE_MSB = * + 3
-    +VALUE	_LATEST + 2
+    +VALUE	BASE_HERE
 
     !word	LINK
     !set	LINK = * - 2

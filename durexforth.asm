@@ -169,16 +169,25 @@ ONE
     !byte 6
     !text	"latest"
 LATEST
-    +VALUE	_LATEST
-_LATEST
-    !word	LINK
+    dex
+    lda CURRENT
+    asl ; 0 certain to carry
+    ; clc
+    adc #<WIDS
+    sta LSB,x
+    lda #>WIDS
+    adc #0
+    sta MSB,x
+    rts
 
-; ALL CONTENTS BELOW LATEST WILL BE OVERWRITTEN!!!
+BASE_HERE
+
+; ALL CONTENTS BELOW BASE_HERE WILL BE OVERWRITTEN!!!
 
 load_base
-    lda _LATEST
+    lda #<LINK
     sta WIDS
-    lda _LATEST+1
+    lda #>LINK
     sta WIDS+1
     lda #<QUIT
     sta _START
