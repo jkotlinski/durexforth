@@ -23,24 +23,16 @@
 ; DEFINITIONS FORTH-WORDLIST GET-CURRENT GET-ORDER SET-CURRENT SET-ORDER
 ; WORDLIST
 
-WIDS
+WIDS ; lastest for each wordlist
     !fill 16, 0
 _ORDER
     !byte 1
-
 CONTEXT
     !fill 8, 0
 
     +BACKLINK
-    !byte	14
-    !text	"forth-wordlist"
-    +VALUE 1
-
-    +BACKLINK
     !byte   9
     !text   "get-order"
-    lda #0
-    sta W
     ldy _ORDER
     beq .gdone_count
 .gpush_wid
@@ -52,15 +44,11 @@ CONTEXT
     sta LSB,x
     lda #0 
     sta MSB,x
-    inc W
     cpy #0
     bne .gpush_wid
 .gdone_count
-    dex
-    sta MSB,x
-    ldy W
-    sty LSB,x
-    rts
+    lda _ORDER
+    jmp pushya 
 
     +BACKLINK
     !byte	9
@@ -90,7 +78,7 @@ CONTEXT
     inx
     rts
 .set_not_zero
-    inx
+    inx 
     lda LSB,x
     sta _ORDER
     inx
@@ -128,28 +116,34 @@ SET_CURRENT
     rts
 CURRENT
     !byte 0
-NEXT_WID
-    !byte 1
     
     +BACKLINK
     !byte 8
     !text "wordlist"
     dex
-    inc NEXT_WID
-    lda NEXT_WID
+NEXT_WID
+    lda #2 
     sta LSB,x
     lda #0
     sta MSB,x
+    inc NEXT_WID+1
     rts
-    
-    +BACKLINK
-    !byte 11
-    !text "definitions"
-    dex
-    ldy CONTEXT
-    iny
-    sta LSB,x
-    lda #0
-    sta MSB,x
-    jmp SET_CURRENT
+
+; redundant to: get-order 1- 0 do nip loop    
+;    +BACKLINK
+;    !byte 11
+;    !text "definitions"
+;    dex
+;    ldy CONTEXT
+;    iny
+;    sta LSB,x
+;    lda #0
+;    sta MSB,x
+;    jmp SET_CURRENT
+;
+; constant value can be documented, inferred from -1 set-order
+;    +BACKLINK
+;    !byte	14
+;    !text	"forth-wordlist"
+;    +VALUE 1
 
