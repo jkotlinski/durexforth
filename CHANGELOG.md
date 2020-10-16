@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
  - LS abort on LOADB error, PAGE upon success.
  - RDIR improve placement of MORE.
-### Changed
  - LS now accepts wildcards, drive #'s or not.
 ### Added
  - RDIR will display directory formatted data anywhere in memory.
