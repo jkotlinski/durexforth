@@ -14,7 +14,7 @@ then compile, ; immediate
 : until postpone 0branch , ; immediate
 : again jmp, , ; immediate
 : recurse
-latest @ >xt compile, ; immediate
+latest >xt compile, ; immediate
 : ( begin getc dup 0= if refill then
 ')' = if exit then again ; immediate
 : \ refill ; immediate
@@ -57,7 +57,7 @@ after jsr dodoes )
 here 60 c, ( rts )
 : create
 header postpone dodoes [ swap ] literal , ;
-: does> r> 1+ latest @ >dfa ! ;
+: does> r> 1+ latest >dfa ! ;
 
 .( asm..)
 parse-name asm included
@@ -106,8 +106,14 @@ then (to) ; immediate
 : 2drop ( a b -- )
 postpone drop postpone drop ; immediate
 
-: save-forth ( strptr strlen -- )
-801 here d word count saveb ;
+: :noname here 0 ] ;
+
+: dsize ( -- n) \ not really needed?
+top latest - ;
+
+: top! ( addr -- )
+latest swap dsize 2dup - to latest 
+over to top swap over - swap 1+ move ;
 
 code 2/
 msb lda,x 80 cmp,# msb ror,x lsb ror,x
@@ -134,17 +140,17 @@ inx, inx, ;code
 code lshift ( x1 u -- x2 )
 lsb dec,x -branch bmi,
 lsb 1+ asl,x msb 1+ rol,x
-latest @ >xt jmp,
+latest >xt jmp,
 code rshift ( x1 u -- x2 )
 lsb dec,x -branch bmi,
 msb 1+ lsr,x lsb 1+ ror,x
-latest @ >xt jmp,
+latest >xt jmp,
 
 : allot ( n -- ) here + to here ;
 
 : variable
 0 value
-here latest @ >xt 1+ (to)
+here latest >xt 1+ (to)
 2 allot ;
 
 code 0< msb lda,x 80 and,# +branch beq,
@@ -192,19 +198,41 @@ postpone cr
 postpone abort
 postpone then ; immediate
 
+top value oldtop
+start @ value oldstart
+
+: restore-forth
+oldtop top! 
+oldstart execute ;
+
+: save-pack ( strptr strlen -- )
+start @ to oldstart
+top to oldtop 
+['] restore-forth start ! 
+here 20 + dsize + top!
+801 top 1+ d word count saveb ;
+
+: save-prg ( strptr strlen -- )
+here 0 , top to latest top!
+save-pack ;
+
+
+: save-forth ( strptr strlen -- )
+801 top 1+ d word count saveb ;
+
+
 \ hashes of INCLUDED file names
 \ see required.fs
 variable (includes) $1e allot
 (includes) $20 0 fill
 
-: marker create latest @ ,
-(includes) begin dup @ while 2+ repeat ,
-does> dup @ dup to here @ latest !
+: marker top latest - here create , , 
+(includes) begin dup @ while 2+ repeat , 
+does> dup @ to here
+2+ dup @ top swap - to latest 
 2+ @ 0 swap ! ;
 
 : include parse-name included ;
-
-: :noname here 0 ] ;
 
 marker ---modules---
 
@@ -219,5 +247,5 @@ marker ---modules---
 decimal
 
 .( save new durexforth..)
-save-forth @0:durexforth
+save-pack @0:durexforth
 .( ok!) cr

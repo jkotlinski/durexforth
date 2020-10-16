@@ -97,13 +97,22 @@ _START = * + 1
 
 ; ----------- macros
 
-!set LINK = 0
+!set TOP = $6fff
+!set DICTOP = TOP
 
-!macro BACKLINK {
-    ; it's tempting to add the string as a macro parameter,
-    ; but this does not seem to be supported by ACME.
-    !word	LINK
-    !set	LINK = * - 2
+!set BACK = *
+* = DICTOP
+!byte 0
+* = BACK
+
+!macro BACKLINK .name , .namesize {
+    !set DICTOP = DICTOP - 3 - len(.name)
+    !set .xt = *
+    * = DICTOP
+    !byte .namesize
+    !text .name
+	!word .xt
+    * = .xt
 }
 
 !macro VALUE .word {
@@ -114,43 +123,31 @@ _START = * + 1
 
 ; ---------- words
 
-    +BACKLINK
-    !byte 6
-    !text	"pushya"
+    +BACKLINK "pushya", 6
 pushya
     dex
     sta	LSB, x
     sty	MSB, x
     rts
 
-    +BACKLINK
-    !byte 1
-    !text	"0"
+    +BACKLINK "0", 1
 ZERO
     lda	#0
     tay
     jmp pushya
 
-    +BACKLINK
-    !byte 1
-    !text	"1"
+    +BACKLINK "1", 1
 ONE
     +VALUE 1
 
 ; START - points to the code of the startup word.
-    +BACKLINK
-    !byte 5
-    !text	"start"
+    +BACKLINK "start", 5
     +VALUE	_START
 
-    +BACKLINK
-    !byte 3
-    !text	"msb"
+    +BACKLINK "msb", 3
     +VALUE	MSB
 
-    +BACKLINK
-    !byte 3
-    !text	"lsb"
+    +BACKLINK "lsb", 3
     +VALUE	LSB
 
 !src "core.asm"
@@ -163,14 +160,17 @@ ONE
 !src "lowercase.asm"
 !src "disk.asm"
 
+    +BACKLINK "top", 3
+    +VALUE  TOP
+
 ; LATEST - points to the most recently defined dictionary word.
-    +BACKLINK
-    !byte 6
-    !text	"latest"
+; OBSOLETE!!! No user facing dict lists?
+
+    +BACKLINK "latest", 6
 LATEST
-    +VALUE	_LATEST
-_LATEST
-    !word	LINK
+LATEST_LSB = * + 1
+LATEST_MSB = * + 3
+    +VALUE	DICTOP
 
 ; ALL CONTENTS BELOW LATEST WILL BE OVERWRITTEN!!!
 

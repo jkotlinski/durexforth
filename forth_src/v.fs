@@ -542,6 +542,7 @@ eof @ c@ abort" eof"
 curlinestart @ bufstart eof @ within
 0= abort" cl" again ;
 
+
 : v
 \ modifies kernal to change kbd prefs
 ram-kernal $eaea @ $8ca <> if

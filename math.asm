@@ -25,9 +25,7 @@
 
 ; U< - UM* UM/MOD M+
 
-    +BACKLINK
-    !byte	2
-    !text	"u<"
+    +BACKLINK "u<", 2
 U_LESS
     ldy #0
     lda	MSB, x
@@ -46,9 +44,7 @@ U_LESS
     sty	LSB, x
     rts
 
-    +BACKLINK
-    !byte	1
-    !text	"-"
+    +BACKLINK "-", 1
 MINUS
     lda	LSB + 1, x
     sec
@@ -64,9 +60,7 @@ MINUS
 
 product = W
 
-    +BACKLINK
-    !byte	3
-    !text	"um*"
+    +BACKLINK "um*", 3
 ; wastes W, W2, y
 U_M_STAR
     lda #$00
@@ -102,9 +96,7 @@ rotate_r
     sta	MSB, x
     rts
 
-    +BACKLINK
-	!byte	6
-	!text	"um/mod"
+    +BACKLINK "um/mod", 6
 ; ( lsw msw divisor -- rem quot )
         N = W
         SEC
@@ -151,9 +143,7 @@ oflo:   LDA     #$FF    ; If overflow or /0 condition found,
 end:    INX
         jmp SWAP
 
-    +BACKLINK
-	!byte	2
-	!text	"m+" ; ( d1 u -- d2 )
+    +BACKLINK "m+", 2
     ldy #0
     lda MSB,x
     bpl +

@@ -23,9 +23,7 @@
 ; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN TUCK
 ; >R R> R@ BL PICK DEPTH WITHIN FILL INVERT NEGATE BASE 2*
 
-    +BACKLINK
-    !byte	4 | F_IMMEDIATE
-    !text	"drop"
+    +BACKLINK "drop", 4 | F_IMMEDIATE
 DROP
     lda STATE
     bne +
@@ -34,9 +32,7 @@ DROP
 +   lda #OP_INX
     jmp compile_a
 
-    +BACKLINK
-    !byte	4
-    !text	"swap"
+    +BACKLINK "swap", 4
 SWAP
     ldy	MSB, x
     lda	MSB + 1, x
@@ -49,9 +45,7 @@ SWAP
     sty	LSB + 1, x
     rts
 
-    +BACKLINK
-    !byte	3
-    !text	"dup"
+    +BACKLINK "dup", 3
 DUP
     dex
     lda	MSB + 1, x
@@ -60,18 +54,14 @@ DUP
     sta	LSB, x
     rts
 
-    +BACKLINK
-    !byte 4
-    !text "?dup"
+    +BACKLINK "?dup", 4
 QDUP
     lda MSB, x
     ora LSB, x
     bne DUP
     rts
 
-    +BACKLINK
-    !byte	4
-    !text	"over"
+    +BACKLINK "over", 4
 OVER
     dex
     lda	MSB + 2, x
@@ -80,25 +70,19 @@ OVER
     sta	LSB, x
     rts
 
-    +BACKLINK
-    !byte	4
-    !text	"2dup"
+    +BACKLINK "2dup", 4
 TWODUP
     jsr OVER
     jmp OVER
 
-    +BACKLINK
-    !byte	2
-    !text	"1+"
+    +BACKLINK "1+", 2
 ONEPLUS
     inc LSB, x
     bne +
     inc MSB, x
 +   rts
 
-    +BACKLINK
-    !byte	2
-    !text	"1-"
+    +BACKLINK "1-", 2
 ONEMINUS
     lda LSB, x
     bne +
@@ -106,9 +90,7 @@ ONEMINUS
 +   dec LSB, x
     rts
 
-    +BACKLINK
-    !byte	1
-    !text	"+"
+    +BACKLINK "+", 1
 PLUS
     lda	LSB, x
     clc
@@ -122,9 +104,7 @@ PLUS
     inx
     rts
 
-    +BACKLINK
-    !byte	1
-    !text	"="
+    +BACKLINK "=", 1
 EQUAL
     ldy #0
     lda	LSB, x
@@ -140,9 +120,7 @@ EQUAL
     rts
 
 ; 0=
-    +BACKLINK
-    !byte	2
-    !text	"0="
+    +BACKLINK "0=", 2
 ZEQU
     ldy #0
     lda MSB, x
@@ -154,9 +132,7 @@ ZEQU
     sty LSB, x
     rts
 
-    +BACKLINK
-    !byte	3
-    !text	"and"
+    +BACKLINK "and", 3
     lda	MSB, x
     and MSB + 1, x
     sta MSB + 1, x
@@ -168,9 +144,7 @@ ZEQU
     inx
     rts
 
-    +BACKLINK
-    !byte	1
-    !text	"!"
+    +BACKLINK "!", 1
 STORE
     lda LSB, x
     sta W
@@ -188,9 +162,7 @@ STORE
     inx
     rts
 
-    +BACKLINK
-    !byte	1
-    !text	"@"
+    +BACKLINK "@", 1
 FETCH
     lda LSB,x
     sta W
@@ -205,9 +177,7 @@ FETCH
     sta MSB,x
     rts
 
-    +BACKLINK
-    !byte	2
-    !text	"c!"
+    +BACKLINK "c!", 2
 STOREBYTE
     lda LSB,x
     sta + + 1
@@ -219,9 +189,7 @@ STOREBYTE
     inx
     rts
 
-    +BACKLINK
-    !byte	2
-    !text	"c@"
+    +BACKLINK "c@", 2
 FETCHBYTE
     lda LSB,x
     sta + + 1
@@ -233,18 +201,14 @@ FETCHBYTE
     sta MSB,x
     rts
 
-    +BACKLINK
-    !byte   5
-    !text   "count"
+    +BACKLINK "count", 5
 COUNT
     jsr DUP
     jsr ONEPLUS
     jsr SWAP
     jmp FETCHBYTE
 
-    +BACKLINK
-    !byte 1
-    !text	"<"
+    +BACKLINK "<", 1
 LESS_THAN
     ldy #0
     sec
@@ -261,16 +225,12 @@ LESS_THAN
     sty MSB,x
     rts
 
-    +BACKLINK
-    !byte 1
-    !text	">"
+    +BACKLINK ">", 1
 GREATER_THAN
     jsr SWAP
     jmp LESS_THAN
 
-    +BACKLINK
-    !byte 3
-    !text "max"
+    +BACKLINK "max", 3
 MAX
     jsr TWODUP
     jsr LESS_THAN
@@ -280,9 +240,7 @@ MAX
 +   inx
     rts
 
-    +BACKLINK
-    !byte 3
-    !text "min"
+    +BACKLINK "min", 3
 MIN
     jsr TWODUP
     jsr GREATER_THAN
@@ -292,16 +250,12 @@ MIN
 +   inx
     rts
 
-    +BACKLINK
-    !byte	4
-    !text	"tuck"
-TUCK ; ( x y -- y x y ) 
+    +BACKLINK "tuck", 4
+TUCK ; ( x y -- y x y )
     jsr SWAP
     jmp OVER
 
-    +BACKLINK
-    !byte	2 | F_NO_TAIL_CALL_ELIMINATION
-    !text	">r"
+    +BACKLINK ">r", 2 | F_NO_TAIL_CALL_ELIMINATION
 TO_R
     pla
     sta W
@@ -318,9 +272,7 @@ TO_R
     inx
     jmp (W)
 
-    +BACKLINK
-    !byte	2 | F_NO_TAIL_CALL_ELIMINATION
-    !text	"r>"
+    +BACKLINK "r>", 2 | F_NO_TAIL_CALL_ELIMINATION
 R_TO
     pla
     sta W
@@ -337,9 +289,7 @@ R_TO
     sta MSB,x
     jmp (W)
 
-    +BACKLINK
-    !byte	2 | F_NO_TAIL_CALL_ELIMINATION
-    !text	"r@"
+    +BACKLINK "r@", 2 | F_NO_TAIL_CALL_ELIMINATION
 R_FETCH
     txa
     tsx
@@ -353,15 +303,11 @@ R_FETCH
     sta LSB,x
     rts
 
-    +BACKLINK
-    !byte 2
-    !text	"bl"
+    +BACKLINK "bl", 2
 BL
     +VALUE	K_SPACE
 
-    +BACKLINK
-    !byte   4
-    !text   "pick" ; ( x_u ... x_1 x_0 u -- x_u ... x_1 x_0 x_u )
+    +BACKLINK "pick", 4
     txa
     sta + + 1
     clc
@@ -375,9 +321,7 @@ BL
     sty MSB,x
     rts
 
-    +BACKLINK
-    !byte 5
-    !text	"depth"
+    +BACKLINK "depth", 5
     txa
     eor #$ff
     tay
@@ -388,9 +332,7 @@ BL
     sta MSB,x
     rts
 
-    +BACKLINK
-    !byte 6
-    !text   "within"
+    +BACKLINK "within", 6
 WITHIN ; ( test low high -- flag )
     jsr OVER
     jsr MINUS
@@ -400,9 +342,7 @@ WITHIN ; ( test low high -- flag )
     jmp U_LESS
 
 ; FILL ( start len char -- )
-    +BACKLINK
-    !byte	4
-    !text	"fill"
+    +BACKLINK "fill", 4
 FILL
     lda	LSB, x
     tay
@@ -435,9 +375,7 @@ FILL
     inc	.fdst + 1
     jmp	-
 
-    +BACKLINK
-    !byte 6
-    !text "invert"
+    +BACKLINK "invert", 6
 INVERT
     lda MSB, x
     eor #$ff
@@ -447,23 +385,17 @@ INVERT
     sta LSB,x
     rts
 
-    +BACKLINK
-    !byte 6
-    !text "negate"
+    +BACKLINK "negate", 6
 NEGATE
     jsr INVERT
     jmp ONEPLUS
 
-    +BACKLINK
-    !byte 4
-    !text "base"
+    +BACKLINK "base", 4
     +VALUE	BASE
 BASE
     !word 16
 
-    +BACKLINK
-    !byte   2
-    !text       "2*"
+    +BACKLINK "2*", 2
     asl LSB, x
     rol MSB, x
     rts
