@@ -9,9 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
  - LS abort on LOADB error, PAGE upon success.
  - RDIR improve placement of MORE.
- 
-## [2.0.0] - 2020-05-26
-
 ### Changed
  - LS now accepts wildcards, drive #'s or not.
 ### Added
