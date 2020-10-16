@@ -22,9 +22,7 @@
 
 ; IF THEN BEGIN WHILE REPEAT BRANCH 0BRANCH UNLOOP EXIT
 
-    +BACKLINK
-    !byte 2 | F_IMMEDIATE
-    !text	"if"
+    +BACKLINK "if", 2 | F_IMMEDIATE
     jsr LIT
     !word ZBRANCH
     jsr COMPILE_COMMA
@@ -32,21 +30,15 @@
     jsr ZERO
     jmp COMMA
 
-    +BACKLINK
-    !byte 4 | F_IMMEDIATE
-    !text	"then"
+    +BACKLINK "then", 4 | F_IMMEDIATE
     jsr HERE
     jsr SWAP
     jmp STORE
 
-    +BACKLINK
-    !byte 5 | F_IMMEDIATE
-    !text	"begin"
+    +BACKLINK "begin", 5 | F_IMMEDIATE
     jmp HERE
 
-    +BACKLINK
-    !byte 5 | F_IMMEDIATE
-    !text	"while"
+    +BACKLINK "while", 5 | F_IMMEDIATE
     jsr LIT
     !word ZBRANCH
     jsr COMPILE_COMMA
@@ -60,18 +52,14 @@ COMPILE_JMP
     !byte OP_JMP
     jmp CCOMMA
 
-    +BACKLINK
-    !byte 6 | F_IMMEDIATE
-    !text	"repeat"
+    +BACKLINK "repeat", 6 | F_IMMEDIATE
     jsr COMPILE_JMP
     jsr COMMA
     jsr HERE
     jsr SWAP
     jmp STORE
 
-    +BACKLINK
-    !byte	6
-    !text	"branch"
+    +BACKLINK "branch", 6
 BRANCH
     pla
     sta W
@@ -86,9 +74,7 @@ BRANCH
     sta + + 1
 +   jmp PLACEHOLDER_ADDRESS ; replaced with branch destination
 
-    +BACKLINK
-    !byte	7
-    !text	"0branch"
+    +BACKLINK "0branch", 7
 ZBRANCH
     inx
     lda	LSB-1, x
@@ -108,9 +94,7 @@ ZBRANCH
 +   pha
     rts
 
-    +BACKLINK
-    !byte	6 | F_NO_TAIL_CALL_ELIMINATION
-    !text	"unloop"
+    +BACKLINK "unloop",	6 | F_NO_TAIL_CALL_ELIMINATION
     jsr R_TO
     jsr R_TO
     jsr R_TO
@@ -119,9 +103,7 @@ ZBRANCH
     jsr TO_R
     rts
 
-    +BACKLINK
-    !byte	4 | F_IMMEDIATE
-    !text	"exit"
+    +BACKLINK "exit", 4 | F_IMMEDIATE
 EXIT
     lda last_word_no_tail_call_elimination
     bne +

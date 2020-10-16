@@ -37,18 +37,14 @@ SAVE = $ffd8
 
 ; -----
 
-    +BACKLINK
-    !byte 6
-    !text	"device" ; ( deviceno -- )
+    +BACKLINK "device", 6
     lda LSB,x
     sta $ba
     inx
     rts
 
 ; CLOSEW ( file# -- )
-    +BACKLINK
-    !byte 6
-    !text	"closew"
+    +BACKLINK "closew", 6
 CLOSEW
     lda LSB,x
     sta W
@@ -105,9 +101,7 @@ geof
 ; LOADB ( filenameptr filenamelen dst -- endaddress ) load binary file
 ;  - s" base" 7000 loadb #load file to 7000
 ;  - returns 0 on failure, otherwise address after last written byte
-    +BACKLINK
-    !byte 5
-    !text	"loadb"
+    +BACKLINK "loadb", 5
 LOADB
     txa
     pha
@@ -189,9 +183,7 @@ load_binary_laddr_hi = *+1
 
 ; SAVEB (save binary file)
 ;  - 7000 71ae s" base" saveb #save file from 7000 to 71ae (= the byte AFTER the last byte in the file)
-    +BACKLINK
-    !byte 5
-    !text	"saveb"
+    +BACKLINK "saveb", 5
 SAVEB
     stx W
 
@@ -241,9 +233,7 @@ save_binary_srange_end_hi = *+1
     rts
 
 ; OPENW ( strptr strlen file# ) open file for writing
-    +BACKLINK
-    !byte 5
-    !text	"openw"
+    +BACKLINK "openw", 5
 OPENW
     lda LSB,x
     sta W ; fileno
@@ -280,9 +270,7 @@ OPENW
     jsr CLOSE
     jmp CLRCHN
 
-    +BACKLINK
-    !byte 8
-    !text	"included"
+    +BACKLINK "included", 8
 INCLUDED
     lda	LSB, x
     sta .filelen

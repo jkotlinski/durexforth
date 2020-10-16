@@ -81,9 +81,7 @@ quit_reset
     tax
     rts
 
-    +BACKLINK
-    !byte	4
-    !text	"quit"
+    +BACKLINK "quit", 4
 QUIT
     jsr quit_reset
 
@@ -100,9 +98,7 @@ interpret_loop
     jsr interpret_tib
     jmp interpret_loop
 
-    +BACKLINK
-    !byte 3
-    !text "bye"
+    +BACKLINK "bye", 3
     ldx INIT_S
     txs
     pla
@@ -143,9 +139,7 @@ interpret_tib
     jsr	PUTCHR
     jmp .stop_error_print
 
-    +BACKLINK
-    !byte	7
-    !text	"execute"
+    +BACKLINK "execute", 7
 EXECUTE
     lda	LSB, x
     sta W
@@ -154,9 +148,7 @@ EXECUTE
     inx
     jmp	(W)
 
-    +BACKLINK
-    !byte	9
-    !text	"interpret"
+    +BACKLINK "interpret", 9
 INTERPRET
     jsr PARSE_NAME
 
@@ -215,9 +207,7 @@ print_word_not_found_error ; ( caddr u -- )
     jsr	PUTCHR
     jmp ABORT
 
-    +BACKLINK
-    !byte	1
-    !text	"'"
+    +BACKLINK "'", 1
     jsr PARSE_NAME
     jsr FIND_NAME
     inx
@@ -225,9 +215,7 @@ print_word_not_found_error ; ( caddr u -- )
     beq print_word_not_found_error
     rts
 
-    +BACKLINK
-    !byte	4
-    !text	"find"
+    +BACKLINK "find", 4
 FIND
     jsr DUP
     jsr TO_R
@@ -244,13 +232,8 @@ FIND
     jsr R_TO
     jmp ZERO
 
-    +BACKLINK
-    !byte	9
-    !text	"find-name"
+    +BACKLINK "find-name", 9
 FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
-    txa
-    pha
-
     lda LSB,x
     beq .find_failed
     sta	.findlen + 1
@@ -261,23 +244,13 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     lda	LSB+1,x
     sta	W2
 
-    lda W2
-    bne +
-    dec W2+1
-+   dec W2
-    lda W2
-    bne +
-    dec W2+1
-+   dec W2
-
-    ldx	_LATEST
+    lda	_LATEST
+    sta	W
     lda	_LATEST + 1
-.examine_word
     sta	W + 1
-    stx	W
-    ; W now contains new dictionary word.
-
-    ldy	#2
+    ; W now contains new dictionary pointer.
+.examine_word
+    ldy	#0
     lda	(W), y ; get string length of dictionary word
     and	#STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
 .findlen
@@ -285,21 +258,25 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     beq	.string_compare
 
 .word_not_equal
-    ; no match, advance the linked list.
-    ldy	#0
-    lax	(W), y
-    iny
-    lda	(W), y
+    ; no match, advance the dp
+    ldy #0
+    lda (W), y
+    and #STRLEN_MASK
+    clc
+    adc #3
+    adc W
+    sta W
+    bcc +
+    inc W + 1
++   lda(W), y
     ; Is word null? If not, examine it.
     bne .examine_word
 
     ; It is null - give up.
 .find_failed
-    pla
-    tax
     jmp ZERO
 
-.string_compare ; y = 2
+.string_compare
     ; equal strlen, now compare strings...
 .findlen2
     lda #0
@@ -317,30 +294,29 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
 
 .word_is_equal
     ; return address to dictionary word
-    pla
-    tax
     inx
     lda	W
     sta	LSB, x
+    sta W2
     lda	W + 1
     sta	MSB, x
+    sta W2 + 1
 
     jsr TO_XT
 
     dex
 
-    ldy	#2
-    lda (W), y
+    ldy	#0
+    lda (W2), y
     and #F_NO_TAIL_CALL_ELIMINATION | F_IMMEDIATE
     sta FOUND_WORD_WITH_NO_TCE
 
-    lda	(W), y ; a contains string length + mask
+    lda	(W2), y ; a contains string length + mask
     and	#F_IMMEDIATE
     beq .not_immed
-    dey
-    sty LSB, x ; 1
-    dey
     sty MSB, x ; 0
+    iny
+    sty LSB, x ; 1
     rts
 
 .not_immed
@@ -349,25 +325,24 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     sta MSB, x
     rts
 
-    +BACKLINK
-    !byte	3
-    !text	">xt"
+    +BACKLINK ">xt", 3
 TO_XT
     lda	MSB, x
     sta	W + 1
     lda	LSB, x
     sta W
     ; W contains pointer to word
-    ldy	#2
+    ldy	#0
     lda	(W), y ; a contains string length + mask
     and	#STRLEN_MASK
     clc
-    adc	#3 ; offset for link + string length
+    adc	#1 ; offset for char + string length
     adc	LSB, x
     sta	LSB, x
     bcc	+
     inc	MSB, x
-+   rts
++   jsr FETCH
+    rts
 
 IS_SPACE ; ( c -- f )
     ldy #1
@@ -407,9 +382,7 @@ XT_SKIP ; ( addr n xt -- addr n )
     inx
     rts
 
-    +BACKLINK
-    !byte 10
-    !text	"parse-name"
+    +BACKLINK "parse-name", 10
 PARSE_NAME ; ( name -- addr u )
     jsr SOURCE
     jsr TO_IN
@@ -438,9 +411,7 @@ PARSE_NAME ; ( name -- addr u )
     jmp MINUS
 
 ; WORD ( delim -- strptr )
-    +BACKLINK
-    !byte      4
-    !text      "word"
+    +BACKLINK "word", 4
 WORD
     jsr ZERO
     jsr HERE
@@ -492,9 +463,7 @@ WORD
     cmp #K_SPACE | $80
 +   rts
 
-    +BACKLINK
-    !byte 8
-    !text	"evaluate" ; ( addr size -- )
+    +BACKLINK "evaluate", 8
 EVALUATE
     jsr SAVE_INPUT
     lda LSB + 1, x
@@ -583,16 +552,12 @@ evaluate_consume_tib
 .bufend
     !word 0
 
-    +BACKLINK
-    !byte	5
-    !text	"abort"
+    +BACKLINK "abort", 5
 ABORT
     ldx #X_INIT ; reset stack
     jmp QUIT
 
-    +BACKLINK
-    !byte 7
-    !text	"/string"
+    +BACKLINK "/string", 7
 SLASH_STRING ; ( addr u n -- addr u )
     jsr DUP
     jsr TO_R

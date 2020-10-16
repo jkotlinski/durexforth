@@ -107,7 +107,7 @@ then (to) ; immediate
 postpone drop postpone drop ; immediate
 
 : save-forth ( strptr strlen -- )
-801 here d word count saveb ;
+801 6fff d word count saveb ;
 
 code 2/
 msb lda,x 80 cmp,# msb ror,x lsb ror,x
