@@ -253,6 +253,7 @@ force-right else cur-right then ;
 dup $a0 = if drop bl then \ nbsp=>space
 dup case
 3 of drop endof \ run/stop
+$13 of drop endof \ clr/home
 $5f of ins-stop drop endof \ <-
 left of cur-left drop endof
 down of cur-down drop endof
