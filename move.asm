@@ -33,7 +33,7 @@ CMOVE_BACK
     clc
     adc LEN + 1
     sta DST + 1
-    
+
     ldy LEN
     bne .entry
     beq .pagesizecopy
@@ -104,9 +104,7 @@ cmove_done
 	tax
 	rts
 
-    +BACKLINK
-    !byte	4
-    !text	"move" ; ( src dst u -- )
+    +BACKLINK "move", 4
 MOVE
     jsr TO_R
     jsr TWODUP

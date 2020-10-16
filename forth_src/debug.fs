@@ -1,9 +1,11 @@
-: name>string ( word -- caddr u )
-2+ dup 1+ swap c@ $1f and ;
-: xt> ( codepointer -- word )
-latest @ begin ?dup while
-2dup > if nip exit then
-@ repeat drop 0 ;
+: name>string ( nametoken -- caddr u )
+count $1f and ;
+: (xt>) ( xt1 nt -- nt xt 0 | xt1 1 )
+2dup name>string + @
+< invert if swap drop 0  
+exit then drop 1 ;
+: xt> ( codepointer -- nametoken )
+['] (xt>) dowords ;
 
 : see-jsr
 1+ dup @
@@ -44,20 +46,26 @@ endof ( default )
 endcase
 2+ ;
 
+\ finding the next closest word requires scanning
+\ the whole dictionary, sadly
+: (see) ( xt xt-1 nt -- xt xt-1 1 | xt xt-1 0 )
+>xt dup 3 pick 
+> if ( xt xt-1 xt0 )
+2dup < if drop else
+nip then 1 exit then drop 1 ;
+
+: size ( word -- )
+' here ['] (see) dowords
+swap - . cr ;
+
 : see
 bl word find 0= if
 rvs count type '?' emit abort then
-here latest @
-begin 2 pick over <
-while nip dup @ repeat
+here ['] (see) dowords
+swap
 
-rot drop \ eow sow
-
-':' emit space dup name>string type space
-dup 2+ c@ $80 and if ." immediate " then
-
->xt
-
+':' emit space dup xt> dup name>string type space
+2+ c@ $80 and if ." immediate " then
 begin
     2dup >
 while
@@ -88,17 +96,5 @@ last-dump ! base ! ;
 $d6 c@ $18 = if $12 emit
 ." more" $92 emit key drop page then ;
 
-: words
-page latest @ begin ?dup while
-more dup name>string type space @ repeat cr ;
-
-\ size foo prints size of foo
-: size ( -- )
-bl word find drop >r
-here latest @ \ prev curr
-begin dup while
-dup r@ < if
-- . r> drop exit then
-nip dup @ repeat
-. drop r> drop ;
-
+: (words) more name>string type space 1 ;
+: words ['] (words) dowords ;

@@ -22,24 +22,18 @@
 
 ; TYPE EMIT PAGE KEY? KEY REFILL SOURCE SOURCE-ID >IN GETC CHAR
 
-    +BACKLINK
-    !byte	4
-    !text	"emit"
+    +BACKLINK "emit", 4
 EMIT
     lda	LSB, x
     inx
     jmp	PUTCHR
 
-    +BACKLINK
-    !byte   4
-    !text   "page"
+    +BACKLINK "page", 4
 PAGE
     lda #K_CLRSCR
     jmp PUTCHR
 
-    +BACKLINK
-    !byte 4
-    !text	"type"
+    +BACKLINK "type", 4
 TYPE ; ( caddr u -- )
     lda #0 ; quote mode off
     sta $d4
@@ -56,9 +50,7 @@ TYPE ; ( caddr u -- )
     jsr SLASH_STRING
     jmp -
 
-    +BACKLINK
-    !byte	4
-    !text	"key?"
+    +BACKLINK "key?", 4
     lda $c6 ; Number of characters in keyboard buffer
     beq +
 .pushtrue
@@ -66,9 +58,7 @@ TYPE ; ( caddr u -- )
 +   tay
     jmp pushya
 
-    +BACKLINK
-    !byte	3
-    !text	"key"
+    +BACKLINK "key", 3
 -   lda $c6
     beq -
     stx W
@@ -77,9 +67,7 @@ TYPE ; ( caddr u -- )
     ldy #0
     jmp pushya
 
-    +BACKLINK
-    !byte	6
-    !text	"refill" ; ( -- )
+    +BACKLINK "refill", 6
 REFILL
 
 READ_EOF = * + 1
@@ -178,9 +166,7 @@ GET_CHAR_FROM_TIB
     inc TO_IN_W + 1
 +   rts
 
-    +BACKLINK
-    !byte 6
-    !text	"source"
+    +BACKLINK "source", 6
 SOURCE
     dex
     dex
@@ -199,9 +185,7 @@ TIB_PTR
 TIB_SIZE
     !word 0
 
-    +BACKLINK
-    !byte 9
-    !text	"source-id"
+    +BACKLINK "source-id", 9
 SOURCE_ID_LSB = * + 1
 SOURCE_ID_MSB = * + 3
     ; -1 : string (via evaluate)
@@ -209,17 +193,13 @@ SOURCE_ID_MSB = * + 3
     ; 1+ : file id
     +VALUE	0
 
-    +BACKLINK
-    !byte	3
-    !text	">in"
+    +BACKLINK ">in", 3
 TO_IN
     +VALUE TO_IN_W
 TO_IN_W
     !word 0
 
-    +BACKLINK
-    !byte	4
-    !text	"getc"
+    +BACKLINK "getc", 4
     jsr GET_CHAR_FROM_TIB
     bne +
     jsr REFILL
@@ -227,9 +207,7 @@ TO_IN_W
 +   ldy #0
     jmp pushya
 
-    +BACKLINK
-    !byte	4
-    !text	"char"
+    +BACKLINK "char", 4
 CHAR ; ( name -- char )
 -   jsr PARSE_NAME
     lda LSB,x

@@ -356,9 +356,20 @@ For more info about number formatting, read Starting Forth!
 
 \begin{description}
 
-\item[latest (variable)] Position of latest defined word.
 
-\item[here (variable)] Write position of the Forth compiler (usually first unused byte of memory). Many C64 assemblers refer to this as program counter or \texttt{*}.
+\item[latest (variable)] Address of latest defined header.
+
+\item[here (value)] Write position of the Forth compiler (usually first unused byte of code space). Many C64 assemblers refer to this as program counter or \texttt{*}.
+
+
+\item[top ( -- addr )] Address of the top of the dictionary, default: \$6fff. 
+
+\item[top! ( addr -- )] Relocates the header space to \texttt{addr}. Example:
+
+\begin{verbatim}
+\ not using the editor, give all memory to dictionary
+$cbff top!
+\end{verbatim}
 
 \item[marker name ( -- )] Creates a word that when called, forgets itself and all words that were defined after it. Example:
 
@@ -366,6 +377,14 @@ For more info about number formatting, read Starting Forth!
 marker forget
 : x ;
 forget
+\end{verbatim}
+
+\item[dowords ( xt -- )] Executes \texttt{xt} for successive headers starting from \texttt{latest}. Each time \texttt{xt} is called, it must consume an argument from the stack and leave behind a truth value. If true (not 0), it will continue to the next header address and call \texttt{xt} again. If false, or if it reaches the end of the dictionary, dowords will return. Example:
+
+\begin{verbatim}
+\ from debug.fs
+: (words) more name>string space 1 ;
+: words ['] (words) dowords ;
 \end{verbatim}
 \end{description}
 
@@ -380,6 +399,8 @@ forget
 \item[saveb ( start end filenameptr filenamelength -- )] Save binary block.
 \item[device ( device\# -- )] Switches the active device.
 \item[save-forth filename ( -- )] Saves the forth to the given filename.
+\item[save-pack filename ( -- )] Saves a compact version of forth to the given filename.
+\item[save-prg filename ( -- )] Saves a forth program with no dictionary to filename.
 \item[ls ( -- )] Load disk directory to here and display, with optional drive \# and wildcards. Example: \texttt{ls \$1:*=p} Load directory, drive 1 only prg files.
 \item[rdir ( addr -- )] Display disk directory previously loaded to addr.
 \end{description}

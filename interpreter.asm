@@ -28,9 +28,9 @@ restore_handler
 
 quit_reset
     sei
-    lda	#<restore_handler
+    lda #<restore_handler
     sta $318
-    lda	#>restore_handler
+    lda #>restore_handler
     sta $319
     cli
 
@@ -45,8 +45,8 @@ quit_reset
     pha
 
     ldx #0
-    stx	$d020
-    stx	$d021
+    stx $d020
+    stx $d021
 
     lda #>TIB
     sta TIB_PTR + 1
@@ -55,8 +55,8 @@ quit_reset
     sta 1
 
     ; Yellow text.
-    lda	#7
-    sta	$286
+    lda #7
+    sta $286
 
     ; Clears color area.
 -   sta $d800, x
@@ -64,7 +64,7 @@ quit_reset
     sta $da00, x
     sta $db00, x
     dex
-    bne	-
+    bne -
 
     stx     STATE
     stx     TIB_SIZE
@@ -81,9 +81,7 @@ quit_reset
     tax
     rts
 
-    +BACKLINK
-    !byte	4
-    !text	"quit"
+    +BACKLINK "quit", 4
 QUIT
     jsr quit_reset
 
@@ -100,9 +98,7 @@ interpret_loop
     jsr interpret_tib
     jmp interpret_loop
 
-    +BACKLINK
-    !byte 3
-    !text "bye"
+    +BACKLINK "bye", 3
     ldx INIT_S
     txs
     pla
@@ -114,7 +110,7 @@ interpret_loop
     rts
 
 interpret_tib
-    jsr	INTERPRET
+    jsr INTERPRET
     cpx #X_INIT+1
     bpl .on_stack_underflow
     lda TO_IN_W
@@ -127,36 +123,50 @@ interpret_tib
     lda SOURCE_ID_LSB
     beq +
     rts
-+   lda	#'o'
-    jsr	PUTCHR
-    lda	#'k'
-    jsr	PUTCHR
-    lda	#$d
-    jmp	PUTCHR
++   lda _LATEST
+    sec
+    sbc HERE_LSB
+    lda _LATEST + 1
+    sbc HERE_MSB
+    beq .on_data_underflow
+    lda #'o'
+    jsr PUTCHR
+    lda #'k'
+    jsr PUTCHR
+    lda #$d
+    jmp PUTCHR
 
 .on_stack_underflow
-    lda	#$12 ; reverse on
-    jsr	PUTCHR
+    lda #$12 ; reverse on
+    jsr PUTCHR
     lda #'e'
-    jsr	PUTCHR
+    jsr PUTCHR
     lda #'r'
-    jsr	PUTCHR
+    jsr PUTCHR
     jmp .stop_error_print
 
-    +BACKLINK
-    !byte	7
-    !text	"execute"
-EXECUTE
-    lda	LSB, x
-    sta W
-    lda	MSB, x
-    sta	W + 1
-    inx
-    jmp	(W)
+.on_data_underflow
+    lda #$12 ; reverse on
+    jsr PUTCHR
+    lda #'f'
+    jsr PUTCHR
+    lda #'u'
+    jsr PUTCHR
+    lda #'l'
+    jsr PUTCHR
+    lda #$d
+    jmp PUTCHR
 
-    +BACKLINK
-    !byte	9
-    !text	"interpret"
+    +BACKLINK "execute", 7
+EXECUTE
+    lda LSB, x
+    sta W
+    lda MSB, x
+    sta W + 1
+    inx
+    jmp (W)
+
+    +BACKLINK "interpret", 9
 INTERPRET
     jsr PARSE_NAME
 
@@ -166,9 +176,9 @@ INTERPRET
     inx
     rts
 +
-    jsr	FIND_NAME ; replace string with dictionary ptr
+    jsr FIND_NAME ; replace string with dictionary ptr
     lda LSB, x
-    bne	.found_word
+    bne .found_word
 
     inx ; drop
     jsr READ_NUMBER
@@ -178,8 +188,8 @@ INTERPRET
 
     ; yep, it's a number...
 .was_number
-    lda	STATE ; are we compiling?
-    bne	+
+    lda STATE ; are we compiling?
+    bne +
     rts
 +   ; yes, compile the number
     sta curr_word_no_tail_call_elimination
@@ -198,26 +208,24 @@ FOUND_WORD_WITH_NO_TCE = * + 1
     inx
     lda MSB-1, x
     and STATE
-    beq	EXECUTE
+    beq EXECUTE
 
     ; OK, this word should be compiled...
     jmp COMPILE_COMMA
 
 print_word_not_found_error ; ( caddr u -- )
-    lda	#$12 ; reverse on
-    jsr	PUTCHR
+    lda #$12 ; reverse on
+    jsr PUTCHR
     jsr TYPE
-    lda	#'?'
+    lda #'?'
 .stop_error_print
-    jsr	PUTCHR
+    jsr PUTCHR
 
-    lda	#$d ; cr
-    jsr	PUTCHR
+    lda #$d ; cr
+    jsr PUTCHR
     jmp ABORT
 
-    +BACKLINK
-    !byte	1
-    !text	"'"
+    +BACKLINK "'", 1
     jsr PARSE_NAME
     jsr FIND_NAME
     inx
@@ -225,9 +233,7 @@ print_word_not_found_error ; ( caddr u -- )
     beq print_word_not_found_error
     rts
 
-    +BACKLINK
-    !byte	4
-    !text	"find"
+    +BACKLINK "find", 4
 FIND
     jsr DUP
     jsr TO_R
@@ -244,103 +250,90 @@ FIND
     jsr R_TO
     jmp ZERO
 
-    +BACKLINK
-    !byte	9
-    !text	"find-name"
+    +BACKLINK "find-name", 9
 FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
-    txa
-    pha
-
     lda LSB,x
     beq .find_failed
-    sta	.findlen + 1
-    sta	.findlen2 + 1
+    sta .findlen + 1
+    sta .findlen2 + 1
 
-    lda	MSB+1,x
-    sta	W2+1
-    lda	LSB+1,x
-    sta	W2
-
-    lda W2
-    bne +
-    dec W2+1
-+   dec W2
-    lda W2
-    bne +
-    dec W2+1
-+   dec W2
-
-    ldx	_LATEST
-    lda	_LATEST + 1
+    lda MSB+1,x
+    sta W2+1
+    lda LSB+1,x
+    sta W2
+    lda _LATEST
+    sta W
+    lda _LATEST + 1
+    sta W + 1
+    ; W now contains new dictionary pointer.
 .examine_word
-    sta	W + 1
-    stx	W
-    ; W now contains new dictionary word.
-
-    ldy	#2
-    lda	(W), y ; get string length of dictionary word
-    and	#STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
+    ldy #0
+    lda (W), y ; get string length of dictionary word
+    and #STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
 .findlen
-    cmp	#0
-    beq	.string_compare
+    cmp #0
+    beq .string_compare
 
 .word_not_equal
-    ; no match, advance the linked list.
-    ldy	#0
-    lax	(W), y
-    iny
-    lda	(W), y
+    ; no match, advance the dp
+    ldy #0
+    lda (W), y
+    and #STRLEN_MASK
+    clc
+    adc #3
+    adc W
+    sta W
+    bcc +
+    inc W + 1
++   lda(W), y
     ; Is word null? If not, examine it.
     bne .examine_word
 
     ; It is null - give up.
 .find_failed
-    pla
-    tax
     jmp ZERO
 
-.string_compare ; y = 2
+.string_compare
     ; equal strlen, now compare strings...
 .findlen2
     lda #0
     sta .strlen
--   lda	(W2), y ; find string
+-   lda (W2), y ; find string
     jsr CHAR_TO_LOWERCASE
     iny
-    cmp	(W), y ; dictionary string
-    bne	.word_not_equal
-    dec	.strlen
-    beq	.word_is_equal
-    jmp	-
+    cmp (W), y ; dictionary string
+    bne .word_not_equal
+    dec .strlen
+    beq .word_is_equal
+    jmp -
 
 .strlen !byte 0
 
 .word_is_equal
     ; return address to dictionary word
-    pla
-    tax
     inx
-    lda	W
-    sta	LSB, x
-    lda	W + 1
-    sta	MSB, x
+    lda W
+    sta LSB, x
+    sta W2
+    lda W + 1
+    sta MSB, x
+    sta W2 + 1
 
     jsr TO_XT
 
     dex
 
-    ldy	#2
-    lda (W), y
+    ldy #0
+    lda (W2), y
     and #F_NO_TAIL_CALL_ELIMINATION | F_IMMEDIATE
     sta FOUND_WORD_WITH_NO_TCE
 
-    lda	(W), y ; a contains string length + mask
-    and	#F_IMMEDIATE
+    lda (W2), y ; a contains string length + mask
+    and #F_IMMEDIATE
     beq .not_immed
-    dey
-    sty LSB, x ; 1
-    dey
     sty MSB, x ; 0
+    iny
+    sty LSB, x ; 1
     rts
 
 .not_immed
@@ -349,25 +342,24 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     sta MSB, x
     rts
 
-    +BACKLINK
-    !byte	3
-    !text	">xt"
+    +BACKLINK ">xt", 3
 TO_XT
-    lda	MSB, x
-    sta	W + 1
-    lda	LSB, x
+    lda MSB, x
+    sta W + 1
+    lda LSB, x
     sta W
     ; W contains pointer to word
-    ldy	#2
-    lda	(W), y ; a contains string length + mask
-    and	#STRLEN_MASK
+    ldy #0
+    lda (W), y ; a contains string length + mask
+    and #STRLEN_MASK
     clc
-    adc	#3 ; offset for link + string length
-    adc	LSB, x
-    sta	LSB, x
-    bcc	+
-    inc	MSB, x
-+   rts
+    adc #1 ; offset for char + string length
+    adc LSB, x
+    sta LSB, x
+    bcc +
+    inc MSB, x
++   jsr FETCH
+    rts
 
 IS_SPACE ; ( c -- f )
     ldy #1
@@ -407,9 +399,7 @@ XT_SKIP ; ( addr n xt -- addr n )
     inx
     rts
 
-    +BACKLINK
-    !byte 10
-    !text	"parse-name"
+    +BACKLINK "parse-name", 10
 PARSE_NAME ; ( name -- addr u )
     jsr SOURCE
     jsr TO_IN
@@ -438,9 +428,7 @@ PARSE_NAME ; ( name -- addr u )
     jmp MINUS
 
 ; WORD ( delim -- strptr )
-    +BACKLINK
-    !byte      4
-    !text      "word"
+    +BACKLINK "word", 4
 WORD
     jsr ZERO
     jsr HERE
@@ -492,9 +480,7 @@ WORD
     cmp #K_SPACE | $80
 +   rts
 
-    +BACKLINK
-    !byte 8
-    !text	"evaluate" ; ( addr size -- )
+    +BACKLINK "evaluate", 8
 EVALUATE
     jsr SAVE_INPUT
     lda LSB + 1, x
@@ -583,16 +569,12 @@ evaluate_consume_tib
 .bufend
     !word 0
 
-    +BACKLINK
-    !byte	5
-    !text	"abort"
+    +BACKLINK "abort", 5
 ABORT
     ldx #X_INIT ; reset stack
     jmp QUIT
 
-    +BACKLINK
-    !byte 7
-    !text	"/string"
+    +BACKLINK "/string", 7
 SLASH_STRING ; ( addr u n -- addr u )
     jsr DUP
     jsr TO_R
@@ -679,14 +661,14 @@ READ_NUMBER
     clc
     adc #-$30 ; petscii 0-9 -> 0-9
 
-    cmp	#10 ; within 0-9?
-    bcc	+
+    cmp #10 ; within 0-9?
+    bcc +
 
     clc
-    adc	#-$7 ; a-f..?
+    adc #-$7 ; a-f..?
 
-    cmp	#10
-    bcc	.parse_failed
+    cmp #10
+    bcc .parse_failed
 
 +   cmp BASE
     bcs .parse_failed
@@ -741,3 +723,48 @@ OLD_BASE = * + 1
 
 .chars_to_process
     !byte 0
+
++BACKLINK "dowords", 7 ; ( xt -- )
+    ; to be useful, nothing must be left on stack before execute
+    ; so that there is no distance between nt and the rest of the stack
+    lda LSB,x
+    sta .xt
+    lda MSB, x
+    sta .xt + 1
+    inx
+    lda _LATEST
+    sta .dowords_nt
+    lda _LATEST + 1
+    sta .dowords_nt + 1
+
+.dowords_lambda
+    dex
+    lda .dowords_nt
+    sta LSB, x
+    lda .dowords_nt + 1
+    sta MSB, x
+.xt = * + 1
+    jsr PLACEHOLDER_ADDRESS
+    inx
+    lda LSB-1, x
+    bne +
+-   rts
++   ldy #0
+    lda .dowords_nt
+    sta W
+    lda .dowords_nt + 1
+    sta W + 1
+    lda (W), y
+    beq -
+    and #STRLEN_MASK
+    clc
+    adc #3 ; guaranteed carry clear
+    adc .dowords_nt
+    sta .dowords_nt
+    lda .dowords_nt + 1
+    adc #0
+    sta .dowords_nt + 1
+    jmp .dowords_lambda
+; using a word here in case the lambda trashes Ws
+.dowords_nt
+    !word 0
