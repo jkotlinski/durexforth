@@ -107,7 +107,7 @@ then (to) ; immediate
 postpone drop postpone drop ; immediate
 
 : dsize ( -- n)
-top @ latest @ - ;
+top latest @ - ;
 
 : top! ( addr -- )
 latest @ swap ( src dst )
@@ -115,7 +115,7 @@ dsize ( src dst size )
 2dup 
 - ( a sz latest )
 latest ! ( ol a sz )
-over top !
+over to top
 swap over - swap 1+
 move ;
 
@@ -125,9 +125,9 @@ oldtop top! quit
 ;
 : save-forth ( strptr strlen -- )
 ['] restore-forth start !
-top @ to oldtop
+top to oldtop
 here 10 + dsize + top!
-801 top @ 1+ d word count saveb 
+801 top 1+ d word count saveb 
 restore-forth
 ;
 
@@ -219,10 +219,14 @@ postpone then ; immediate
 variable (includes) $1e allot
 (includes) $20 0 fill
 
-: marker create latest @ ,
+: marker here create top , ,
+latest @ dup 2+ c@ + 3 + ,
 (includes) begin dup @ while 2+ repeat ,
-does> dup @ dup to here @ latest !
-2+ @ 0 swap ! ;
+does>
+dup @ dup top <> if top! else drop then
+2+ dup @ to here 2+ dup @ latest !
+2+ dup @ 0 swap !
+;
 
 : include parse-name included ;
 

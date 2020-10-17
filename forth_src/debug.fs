@@ -1,9 +1,12 @@
 : name>string ( word -- caddr u )
 2+ dup 1+ swap c@ $1f and ;
 : xt> ( codepointer -- word )
-latest @ begin ?dup while
-2dup > if nip exit then
-@ repeat drop 0 ;
+latest @ begin ( xt1 da )
+2dup @ ?dup if ( xt1 da xt1 xt2 )
+ = if nip exit then
+else 2drop 0 exit then ( xt1 da )
+name>string +
+again ;
 
 : see-jsr
 1+ dup @
@@ -89,8 +92,8 @@ $d6 c@ $18 = if $12 emit
 ." more" $92 emit key drop page then ;
 
 : words
-page latest @ begin ?dup while
-more dup name>string type space @ repeat cr ;
+page latest @ begin dup @ while
+more dup name>string type space name>string + repeat drop cr ;
 
 \ size foo prints size of foo
 : size ( -- )
@@ -99,6 +102,6 @@ here latest @ \ prev curr
 begin dup while
 dup r@ < if
 - . r> drop exit then
-nip dup @ repeat
+nip dup name>string + repeat
 . drop r> drop ;
 
