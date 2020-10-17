@@ -98,20 +98,20 @@ _START = * + 1
 ; ----------- macros
 
 !set TOP = $6fff
-!set DICTOP = TOP
+!set DICTOP = TOP -1
 
 !set BACK = *
-* = $6fff
-!byte 0
+* = $6ffe
+!word 0
 * = BACK
 
 !macro BACKLINK .name , .namesize {
     !set DICTOP = DICTOP - 3 - len(.name)
     !set .xt = *
     * = DICTOP
+    !word .xt
     !byte .namesize
-	!text .name
-	!word .xt
+    !text .name
     * = .xt
 }
 
