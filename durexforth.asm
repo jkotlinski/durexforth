@@ -161,9 +161,7 @@ ONE
 !src "disk.asm"
 
     +BACKLINK "top", 3
-    +VALUE  _TOP
-_TOP
-    !word   TOP
+    +VALUE  TOP
 
 ; LATEST - points to the most recently defined dictionary word.
 ; OBSOLETE!!! No user facing dict lists?
