@@ -106,8 +106,30 @@ then (to) ; immediate
 : 2drop ( a b -- )
 postpone drop postpone drop ; immediate
 
+: dsize ( -- n)
+top @ latest @ - ;
+
+: top! ( addr -- )
+latest @ swap ( src dst )
+dsize ( src dst size )
+2dup 
+- ( a sz latest )
+latest ! ( ol a sz )
+over top !
+swap over - swap 1+
+move ;
+
+$6fff value oldtop
+: restore-forth
+oldtop top! quit 
+;
 : save-forth ( strptr strlen -- )
-801 6fff d word count saveb ;
+['] restore-forth start !
+top @ to oldtop
+here 10 + dsize + top!
+801 top @ 1+ d word count saveb 
+restore-forth
+;
 
 code 2/
 msb lda,x 80 cmp,# msb ror,x lsb ror,x

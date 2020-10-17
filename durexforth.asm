@@ -97,11 +97,14 @@ _START = * + 1
 
 ; ----------- macros
 
-!set DICTOP = $6fff
+!set TOP = $6fff
+!set DICTOP = TOP
+
 !set BACK = *
 * = $6fff
 !byte 0
 * = BACK
+
 !macro BACKLINK .name , .namesize {
     !set DICTOP = DICTOP - 3 - len(.name)
     !set .xt = *
@@ -156,6 +159,11 @@ ONE
 !src "io.asm"
 !src "lowercase.asm"
 !src "disk.asm"
+
+    +BACKLINK "top", 3
+    +VALUE  _TOP
+_TOP
+    !word   TOP
 
 ; LATEST - points to the most recently defined dictionary word.
 ; OBSOLETE!!! No user facing dict lists?
