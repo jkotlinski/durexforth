@@ -1,4 +1,5 @@
 marker ---editor---
+latest @
 
 $d value lf
 
@@ -542,7 +543,8 @@ eof @ c@ abort" eof"
 curlinestart @ bufstart eof @ within
 0= abort" cl" again ;
 
-: v
+
+:noname
 \ modifies kernal to change kbd prefs
 ram-kernal $eaea @ $8ca <> if
 rom-kernal
@@ -568,3 +570,8 @@ rom-kernal bufstart loadb
 ?dup 0= if reset-buffer else
 eof ! 0 eof @ c! then
 else drop then main-loop ;
+
+swap 
+latest !
+: v ;
+latest @ !

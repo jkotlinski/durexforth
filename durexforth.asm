@@ -101,7 +101,7 @@ _START = * + 1
 !set DICTOP = TOP -1
 
 !set BACK = *
-* = $6ffe
+* = DICTOP
 !word 0
 * = BACK
 

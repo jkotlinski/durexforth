@@ -119,7 +119,7 @@ over to top
 swap over - swap 1+
 move ;
 
-$6fff value oldtop
+top value oldtop
 : restore-forth
 oldtop top! quit 
 ;
@@ -231,6 +231,8 @@ dup @ dup top <> if top! else drop then
 : include parse-name included ;
 
 : :noname here 0 ] ;
+
+\ $cbff top!
 
 marker ---modules---
 
