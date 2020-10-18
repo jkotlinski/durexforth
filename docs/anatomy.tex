@@ -8,39 +8,39 @@ Let us define a word and see what it gets compiled to.
 : bg $d020 c! ;
 \end{verbatim}
 
-After the word is defined, you can get its start address by \texttt{latest @}, and the contents of bg can be dumped using \texttt{latest @ dump}. Try it, and you will get output like the following:
+Information about the word is split into two areas of memory, the dictionary and the code/data space. Code and data are placed in an upward-growing segment starting at \$801, and the dictionary grows downward from \texttt{top}, default \$6fff. \texttt{latest @} points to the last dictionary record. A dictionary record consists of an execution token (XT) and a counted string.
+
+\section{Dictionary}
+To inspect the dictionary entry, type \texttt{latest @ dump}. You should see something like this:
 
 \begin{alltt}
-4c38  ed 4b 02 42 47 20 cf 0e .k.bg ..
-4c40  20 d0 4c 49 0a ff ff ff  .li....
-4c48  ff ff ff ff ff ff ff ff ........
-4c50  ...
+6228  \textcolor{red}{fd 39 02 42 47} 28 39 01 \textcolor{red}{.9.bg}(9.
+6230  65 6a 37 09 4d 41 49 4e vJ7.main
+...
 \end{alltt}
 
-Here, we can see that the "bg" word is 14 bytes long and starts at address \$4c38. It contains two parts: Header and code.
-
-\section{Header}
-
-\begin{alltt}
-4c38  \textcolor{red}{ed 4b 02 42 47} 20 cf 0e \textcolor{red}{.k.bg} ..
-4c40  20 d0 4c 49 0a ff ff ff  .li....
-\end{alltt}
-
-The first two bytes contain a back-pointer to the previous word, starting at \$4bed. The next byte, "02", is the length of "bg" name string. After that, the string "bg" follows. (42 = 'b', 47 = 'g')
+The first two bytes contain the execution token of \texttt{bg}, starting at \$39fd. The next byte, "02", is the length of "bg" name string. After that, the string "bg" follows. (42 = 'b', 47 = 'g')
 
 The name length byte is also used to store special attributes of the word. Bit 7 is "immediate" flag, which means that the word should execute immediately instead of being compiled into word definitions. ("(" is such an example of an immediate word that does not get compiled.) Bit 6 is "hidden" flag, which makes a word unfindable. Bit 5 is the "no-tail-call-elimination" flag, which makes sure that tail call elimination (the practice of replacing jsr/rts with jmp) is not performed if this word is the jsr target. Since bg does not have these flags set, bits 7-5 are all clear.
 
 \section{Code}
+We saw that the "bg" execution token is \$39fd. To inspect the code, type \texttt{\$39fd dump} or \texttt{latest @ @ dump}.
 
 \begin{alltt}
-4c38  ed 4b 02 42 47 \textcolor{red}{20 cf 0e} .k.bg\textcolor{red}{ ..}
-4c40  \textcolor{red}{20 d0 4c 49 0a ff ff ff  .li..}..
+39fd  \textcolor{red}{20 15 11 20 d0 4c 0e 09  .. Pl..}
+6230  65 6a 37 09 4d 41 49 4e vJ7.main
+...
 \end{alltt}
 
 The code section contain pure 6502 machine code.
 
 \begin{description}
-\item[20 cf 0e ( jsr \$ecf )] \$ecf is the address of the \texttt{lit} code. \texttt{lit} copies the two following bytes to parameter stack.
+\item[20 15 11 ( jsr \$1115 )] \$1115 is the address of the \texttt{lit} code. \texttt{lit} copies the two following bytes to parameter stack.
 \item[20 d0 ( \$d020 )] The parameter to the \texttt{lit} word. When executed, \texttt{lit} will add \$d020 to the parameter stack.
-\item[4c 49 0a ( jmp \$a49 )] \$a49 is the address of the \texttt{c!} code.
+\item[4c 0e 09 ( jmp \$90e )] \$90e is the address of the \texttt{c!} code.
 \end{description}
+
+\subsection{Tail call elimination}
+
+The final call to the \texttt{c!} code is a \texttt{jmp} call, while the \texttt{lit} code is called with a \texttt{jsr}. When possible, Durexforth will replace the final \texttt{jsr} followed by \texttt{rts} with a \texttt{jmp}, knowing that the called word or some word it jumps to will execute \texttt{rts}. Some instances cannot benefit from this "tail call elimination", for example if the last word before the \texttt{jsr} is an immediate.
+

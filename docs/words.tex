@@ -356,9 +356,14 @@ For more info about number formatting, read Starting Forth!
 
 \begin{description}
 
-\item[latest (variable)] Position of latest defined word.
 
-\item[here (variable)] Write position of the Forth compiler (usually first unused byte of memory). Many C64 assemblers refer to this as program counter or \texttt{*}.
+\item[here (value)] Write position of the Forth compiler (usually first unused byte of memory). Many C64 assemblers refer to this as program counter or \texttt{*}.
+
+\item[latest (variable)] Dictionary position of latest defined word.
+
+\item[top (value)] Gets the top of the dictionary. (default: \$6fff)
+
+\item[top! ( addr -- )] Relocates the dictionary to \texttt{addr}.
 
 \item[marker name ( -- )] Creates a word that when called, forgets itself and all words that were defined after it. Example:
 

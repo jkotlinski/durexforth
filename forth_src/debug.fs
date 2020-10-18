@@ -1,5 +1,5 @@
 : name>string ( word -- caddr u )
-2+ dup 1+ swap c@ $1f and ;
+2+ count $1f and ;
 : xt> ( codepointer -- word )
 latest @ begin ( xt1 da )
 2dup @ ?dup if ( xt1 da xt1 xt2 )
