@@ -3,7 +3,7 @@
 : xt> ( codepointer -- word )
 latest @ begin ( xt1 da )
 2dup @ ?dup if ( xt1 da xt1 xt2 )
- = if nip exit then
+ < invert if nip exit then
 else 2drop 0 exit then ( xt1 da )
 name>string +
 again ;
@@ -50,17 +50,17 @@ endcase
 : see
 bl word find 0= if
 rvs count type '?' emit abort then
-here latest @
-begin 2 pick over <
-while nip dup @ repeat
+( xt )
+latest @ begin ( xt dp )
+dup name>string + ( xt dp next )
+dup @ ( xt dp next xt2 )
+3 pick <> while ( xt dp next )
+nip repeat
+drop @ swap \ eow sow
+2dup
 
-rot drop \ eow sow
-
-':' emit space dup name>string type space
-dup 2+ c@ $80 and if ." immediate " then
-
->xt
-
+':' emit space dup xt> dup name>string type space
+2+ c@ $80 and if ." immediate " then
 begin
     2dup >
 while
