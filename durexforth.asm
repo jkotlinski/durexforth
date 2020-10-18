@@ -98,11 +98,11 @@ _START = * + 1
 ; ----------- macros
 
 !set TOP = $6fff
-!set DICTOP = TOP -1
-
+!set DICTOP = TOP - 2
 !set BACK = *
 * = DICTOP
 !word 0
+!byte 0 ; we need this byte here to mark TOP without slowing FIND-NAME
 * = BACK
 
 !macro BACKLINK .name , .namesize {
