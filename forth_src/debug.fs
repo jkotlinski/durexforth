@@ -1,7 +1,7 @@
 : name>string ( word -- caddr u )
 2+ count $1f and ;
 : xt> ( codepointer -- word )
-latest @ begin ( xt1 da )
+latest begin ( xt1 da )
 2dup @ ?dup if ( xt1 da xt1 xt2 )
  < invert if nip exit then
 else 2drop 0 exit then ( xt1 da )
@@ -51,7 +51,7 @@ endcase
 bl word find 0= if
 rvs count type '?' emit abort then
 ( xt )
-latest @ begin ( xt dp )
+latest begin ( xt dp )
 dup name>string + ( xt dp next )
 dup @ ( xt dp next xt2 )
 3 pick <> while ( xt dp next )
@@ -92,13 +92,13 @@ $d6 c@ $18 = if $12 emit
 ." more" $92 emit key drop page then ;
 
 : words
-page latest @ begin dup @ while
+page latest begin dup @ while
 more dup name>string type space name>string + repeat drop cr ;
 
 \ size foo prints size of foo
 : size ( -- )
 bl word find drop >r
-here latest @ \ prev curr
+here latest \ prev curr
 begin dup while
 dup r@ < if
 - . r> drop exit then

@@ -137,7 +137,7 @@ Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to 
 \item[{]} ( -- )] Return to compile mode.
 \item[immediate] Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
 \item[{[']} name ( -- xt )] Place name's execution token xt on the stack. The execution token returned by the compiled phrase \texttt{['] x} is the same value returned by \texttt{' x} outside of compilation state. Typical use: \texttt{: x ... {[}'{]} name ... ;}
-\item[compile, ( xt -- )] Append \texttt{jsr xt} to the word being compiled. Typical use: \texttt{: recurse immed latest @ >xt compile, ;}
+\item[compile, ( xt -- )] Append \texttt{jsr xt} to the word being compiled. Typical use: \texttt{: recurse immed latest >xt compile, ;}
 \item[postpone xxx] Compile the compilation semantics (instead of interpretation semantics) of xxx. Typical use:
 \begin{verbatim}
 : endif postpone then ; immediate
@@ -359,7 +359,7 @@ For more info about number formatting, read Starting Forth!
 
 \item[here (value)] Write position of the Forth compiler (usually first unused byte of memory). Many C64 assemblers refer to this as program counter or \texttt{*}.
 
-\item[latest (variable)] Dictionary position of latest defined word.
+\item[latest (value)] Dictionary position of latest defined word.
 
 \item[top (value)] Gets the top of the dictionary. (default: \$6fff)
 

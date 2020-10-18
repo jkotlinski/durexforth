@@ -1,5 +1,5 @@
 marker ---editor---
-latest @
+latest
 
 $d value lf
 
@@ -572,6 +572,6 @@ eof ! 0 eof @ c! then
 else drop then main-loop ;
 
 swap 
-latest !
+to latest
 : v ;
-latest @ !
+latest !

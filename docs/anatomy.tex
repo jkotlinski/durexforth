@@ -8,10 +8,10 @@ Let us define a word and see what it gets compiled to.
 : bg $d020 c! ;
 \end{verbatim}
 
-Information about the word is split into two areas of memory, the dictionary and the code/data space. Code and data are placed in an upward-growing segment starting at \$801, and the dictionary grows downward from \texttt{top}, default \$6fff. \texttt{latest @} points to the last dictionary record. A dictionary record consists of an execution token (XT) and a counted string.
+Information about the word is split into two areas of memory, the dictionary and the code/data space. Code and data are placed in an upward-growing segment starting at \$801, and the dictionary grows downward from \texttt{top}, default \$6fff. \texttt{latest} points to the last dictionary record. A dictionary record consists of an execution token (XT) and a counted string.
 
 \section{Dictionary}
-To inspect the dictionary entry, type \texttt{latest @ dump}. You should see something like this:
+To inspect the dictionary entry, type \texttt{latest dump}. You should see something like this:
 
 \begin{alltt}
 6228  \textcolor{red}{fd 39 02 42 47} 28 39 01 \textcolor{red}{.9.bg}(9.
@@ -24,7 +24,7 @@ The first two bytes contain the execution token of \texttt{bg}, starting at \$39
 The name length byte is also used to store special attributes of the word. Bit 7 is "immediate" flag, which means that the word should execute immediately instead of being compiled into word definitions. ("(" is such an example of an immediate word that does not get compiled.) Bit 6 is "hidden" flag, which makes a word unfindable. Bit 5 is the "no-tail-call-elimination" flag, which makes sure that tail call elimination (the practice of replacing jsr/rts with jmp) is not performed if this word is the jsr target. Since bg does not have these flags set, bits 7-5 are all clear.
 
 \section{Code}
-We saw that the "bg" execution token is \$39fd. To inspect the code, type \texttt{\$39fd dump} or \texttt{latest @ @ dump}.
+We saw that the "bg" execution token is \$39fd. To inspect the code, type \texttt{\$39fd dump} or \texttt{latest @ dump}.
 
 \begin{alltt}
 39fd  \textcolor{red}{20 15 11 20 d0 4c 0e 09  .. Pl..}

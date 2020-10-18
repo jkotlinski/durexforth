@@ -248,9 +248,9 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     bcs +
     dec W2+1
 +
-    lda _LATEST
+    lda LATEST_LSB
     sta W
-    lda _LATEST + 1
+    lda LATEST_MSB
     sta W + 1
     ; W now contains new dictionary pointer.
     ldy #2
