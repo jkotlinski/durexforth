@@ -1,12 +1,13 @@
-: name>string ( word -- caddr u )
+: name>string ( nametoken -- caddr u )
 count $1f and ;
-: xt> ( codepointer -- word )
-latest begin ( xt1 da )
-2dup @ ?dup if ( xt1 da xt1 xt2 )
- < invert if nip exit then
-else 2drop 0 exit then ( xt1 da )
-name>string +
-again ;
+
+: (xt>) ( xt1 xtl nt -- nt xt 0 | xt1 xtl 1 )
+2 pick over name>string + 1+ @
+< invert if rot drop swap 0
+exit then drop 1 ;
+
+: xt> ( codepointer -- nametoken )
+['] (xt>) traverse-wordlist ;
 
 : see-jsr
 1+ dup @
@@ -47,6 +48,7 @@ endof ( default )
 endcase
 2+ ;
 
+\ TODO adapt to traverse-wordlist
 : see
 bl word find 0= if
 rvs count type '?' emit abort then
@@ -91,9 +93,10 @@ last-dump ! base ! ;
 $d6 c@ $18 = if $12 emit
 ." more" $92 emit key drop page then ;
 
-: typeword more name>string type space 1 ;
-: words ['] typeword traverse-wordlist ;
+: (words) more name>string type space 1 ;
+: words ['] (words) traverse-wordlist ;
 
+\ TODO adapt to traverse-wordlist
 \ size foo prints size of foo
 : size ( -- )
 bl word find drop >r
