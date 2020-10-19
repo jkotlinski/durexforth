@@ -359,11 +359,17 @@ For more info about number formatting, read Starting Forth!
 
 \item[here (value)] Write position of the Forth compiler (usually first unused byte of memory). Many C64 assemblers refer to this as program counter or \texttt{*}.
 
-\item[latest (value)] Dictionary position of latest defined word.
+\item[latest (value)] Address of latest defined header.
 
-\item[top (value)] Gets the top of the dictionary. (default: \$6fff)
+\item[unused ( -- n )] Free space between code and headers. (\texttt{latest here -})
+\item[top ( -- addr )] Address of the top of the dictionary, default: \$6fff. 
 
-\item[top! ( addr -- )] Relocates the dictionary to \texttt{addr}.
+\item[top! ( addr -- )] Relocates the header space to \texttt{addr}. Example:
+
+\begin{verbatim}
+\ done defining words, shrink the dictionary
+top unused $20 - - top!
+\end{verbatim}
 
 \item[marker name ( -- )] Creates a word that when called, forgets itself and all words that were defined after it. Example:
 
@@ -371,6 +377,19 @@ For more info about number formatting, read Starting Forth!
 marker forget
 : x ;
 forget
+\end{verbatim}
+
+\item[traverse-wordlist ( xt -- )] Executes \texttt{xt} for successive headers starting from \texttt{latest}. Each time \texttt{xt} is called, it must consume an argument from the stack and leave behind a truth value. If true (not 0), it will continue to the next header address and call \texttt{xt} again. If false, or if it reaches the end of the dictionary, traverse-wordlist will return. Example:
+
+\begin{verbatim}
+\ from debug.fs
+: (xt>) ( xt1 nt -- nt xt 0 | xt1 1 )
+2dup name>string + @
+< invert if swap drop 0  
+exit then drop 1 ;
+
+: xt> ( codepointer -- nametoken )
+['] (xt>) traverse-wordlist ;
 \end{verbatim}
 \end{description}
 

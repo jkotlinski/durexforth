@@ -124,11 +124,9 @@ top value oldtop
 oldtop top! quit 
 ;
 : save-forth ( strptr strlen -- )
-['] restore-forth start !
 top to oldtop
 here 10 + dsize + top!
 801 top 1+ d word count saveb 
-restore-forth
 ;
 
 code 2/
@@ -247,5 +245,7 @@ marker ---modules---
 decimal
 
 .( save new durexforth..)
+' restore-forth start ! \ must be default
 save-forth @0:durexforth
+restore-forth
 .( ok!) cr

@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0]
+
+### Changed
+ - Dictionary restructured, now header and code data are split.
+ - Header data is not a linked list, and grows downward from a default TOP of $6fff. Record structure: `len_flags | str | xt`
+ - LATEST is now a VALUE that points to the bottom of the headers.
+ - Prompt displays `ful` when there is less than 256 bytes of dictionary space left.
+ - SAVE-FORTH packs the dictionary together before saving.
+### Added
+ - RESTORE-FORTH unpacks the dictionary to its original TOP
+ - UNUSED describes the number of bytes between HERE and LATEST.
+ - DSIZE returns the size in bytes of the header data.
+ - TOP is a read-only VALUE (not enforced!) which is the address of the last byte of the header structure. The value at this address will always be 0.
+ - TOP! can be used to specify the position of header data.
+ - TRAVERSE-WORDLIST can be used to scan the header records.
+
 ## [Unreleased]
 
 ### Changed
