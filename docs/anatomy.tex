@@ -8,18 +8,18 @@ Let us define a word and see what it gets compiled to.
 : bg $d020 c! ;
 \end{verbatim}
 
-Information about the word is split into two areas of memory, the dictionary and the code/data space. Code and data are placed in an upward-growing segment starting at \$801, and the dictionary grows downward from \texttt{top}, default \$6fff. \texttt{latest} points to the last dictionary record. A dictionary record consists of an execution token (XT) and a counted string.
+Information about the word is split into two areas of memory, the dictionary and the code/data space. Code and data are placed in an upward-growing segment starting at \$801, and the dictionary grows downward from \texttt{top}, default \$6fff. \texttt{latest} points to the last dictionary record. A dictionary record consists of a counted string with flags, and an execution token (XT).
 
 \section{Dictionary}
 To inspect the dictionary entry, type \texttt{latest dump}. You should see something like this:
 
 \begin{alltt}
-6228  \textcolor{red}{fd 39 02 42 47} 28 39 01 \textcolor{red}{.9.bg}(9.
+6228  \textcolor{red}{02 42 47 fd 39} 28 39 01 \textcolor{red}{.bg.9}(9.
 6230  65 6a 37 09 4d 41 49 4e vJ7.main
 ...
 \end{alltt}
 
-The first two bytes contain the execution token of \texttt{bg}, starting at \$39fd. The next byte, "02", is the length of "bg" name string. After that, the string "bg" follows. (42 = 'b', 47 = 'g')
+The first byte, "02", is the length of "bg" name string. After that, the string "bg" follows. (42 = 'b', 47 = 'g'). The final two bytes contain the execution token of \texttt{bg}, starting at \$39fd.
 
 The name length byte is also used to store special attributes of the word. Bit 7 is "immediate" flag, which means that the word should execute immediately instead of being compiled into word definitions. ("(" is such an example of an immediate word that does not get compiled.) Bit 6 is "hidden" flag, which makes a word unfindable. Bit 5 is the "no-tail-call-elimination" flag, which makes sure that tail call elimination (the practice of replacing jsr/rts with jmp) is not performed if this word is the jsr target. Since bg does not have these flags set, bits 7-5 are all clear.
 
