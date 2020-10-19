@@ -48,18 +48,17 @@ endof ( default )
 endcase
 2+ ;
 
-\ TODO adapt to traverse-wordlist
+: (see) ( xt xt-1 nt -- xt xt-1 1 | xt xt-1 0 )
+>xt dup 3 pick = if ( xt xt-1 xt0 )
+drop 0 exit then
+nip 1 ;
+
 : see
 bl word find 0= if
 rvs count type '?' emit abort then
 ( xt )
-latest begin ( xt dp )
-dup name>string + ( xt dp next )
-dup @ ( xt dp next xt2 )
-3 pick <> while ( xt dp next )
-nip repeat
-drop @ swap \ eow sow
-2dup
+here ['] (see) traverse-wordlist
+swap
 
 ':' emit space dup xt> dup name>string type space
 2+ c@ $80 and if ." immediate " then
