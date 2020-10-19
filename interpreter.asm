@@ -113,10 +113,6 @@ interpret_tib
     jsr INTERPRET
     cpx #X_INIT+1
     bpl .on_stack_underflow
-    lda LATEST_MSB
-    sec
-    sbc HERE_MSB
-    beq .on_data_underflow
     lda TO_IN_W
     cmp TIB_SIZE
     bne interpret_tib
@@ -127,7 +123,13 @@ interpret_tib
     lda SOURCE_ID_LSB
     beq +
     rts
-+   lda #'o'
++   lda LATEST_LSB
+    sec
+    sbc HERE_LSB
+    lda LATEST_MSB
+    sbc HERE_MSB
+    beq .on_data_underflow
+    lda #'o'
     jsr PUTCHR
     lda #'k'
     jsr PUTCHR
