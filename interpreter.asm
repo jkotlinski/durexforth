@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE ' ABORT /STRING
+; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE ' ABORT /STRING UNUSED
 
 restore_handler
     cli
@@ -707,3 +707,39 @@ OLD_BASE = * + 1
 
 .chars_to_process
     !byte 0
+
++BACKLINK "unused", 6
+    jsr LATEST
+    jsr HERE
+    jmp MINUS
+
++BACKLINK "traverse-wordlist", 17 ; ( xt -- )
+    jsr LATEST
+.traverse_lambda
+    jsr TWODUP
+    jsr SWAP
+    jsr EXECUTE
+    jsr ZEQU
+    inx
+    lda LSB-1, x
+    bne .traverse_done
+    lda LSB, x
+    sta W
+    lda MSB, x
+    sta W + 1
+    ldy #2
+    lda (W), y
+    beq .traverse_done
+    and #STRLEN_MASK
+    clc
+    adc #3 ; guaranteed carry clear
+    adc LSB, x
+    sta LSB, x
+    lda MSB, x
+    adc #0
+    sta MSB, x
+    jmp .traverse_lambda
+.traverse_done
+    inx ; dp
+    inx ; xt
+    rts
