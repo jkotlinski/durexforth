@@ -1,9 +1,9 @@
 : name>string ( nametoken -- caddr u )
 count $1f and ;
 
-: (xt>) ( xt1 xtl nt -- nt xt 0 | xt1 xtl 1 )
-2 pick over name>string + 1+ @
-< invert if rot drop swap 0
+: (xt>) ( xt1 nt -- nt xt 0 | xt1 1 )
+2dup name>string + @
+< invert if swap drop 0  
 exit then drop 1 ;
 
 : xt> ( codepointer -- nametoken )
