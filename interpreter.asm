@@ -28,9 +28,9 @@ restore_handler
 
 quit_reset
     sei
-    lda #<restore_handler
+    lda	#<restore_handler
     sta $318
-    lda #>restore_handler
+    lda	#>restore_handler
     sta $319
     cli
 
@@ -45,8 +45,8 @@ quit_reset
     pha
 
     ldx #0
-    stx $d020
-    stx $d021
+    stx	$d020
+    stx	$d021
 
     lda #>TIB
     sta TIB_PTR + 1
@@ -55,8 +55,8 @@ quit_reset
     sta 1
 
     ; Yellow text.
-    lda #7
-    sta $286
+    lda	#7
+    sta	$286
 
     ; Clears color area.
 -   sta $d800, x
@@ -64,7 +64,7 @@ quit_reset
     sta $da00, x
     sta $db00, x
     dex
-    bne -
+    bne	-
 
     stx     STATE
     stx     TIB_SIZE
@@ -110,7 +110,7 @@ interpret_loop
     rts
 
 interpret_tib
-    jsr INTERPRET
+    jsr	INTERPRET
     cpx #X_INIT+1
     bpl .on_stack_underflow
     lda TO_IN_W
@@ -123,30 +123,30 @@ interpret_tib
     lda SOURCE_ID_LSB
     beq +
     rts
-+   lda #'o'
-    jsr PUTCHR
-    lda #'k'
-    jsr PUTCHR
-    lda #$d
-    jmp PUTCHR
++   lda	#'o'
+    jsr	PUTCHR
+    lda	#'k'
+    jsr	PUTCHR
+    lda	#$d
+    jmp	PUTCHR
 
 .on_stack_underflow
-    lda #$12 ; reverse on
-    jsr PUTCHR
+    lda	#$12 ; reverse on
+    jsr	PUTCHR
     lda #'e'
-    jsr PUTCHR
+    jsr	PUTCHR
     lda #'r'
-    jsr PUTCHR
+    jsr	PUTCHR
     jmp .stop_error_print
 
     +BACKLINK "execute", 7
 EXECUTE
-    lda LSB, x
+    lda	LSB, x
     sta W
-    lda MSB, x
-    sta W + 1
+    lda	MSB, x
+    sta	W + 1
     inx
-    jmp (W)
+    jmp	(W)
 
     +BACKLINK "interpret", 9
 INTERPRET
@@ -158,9 +158,9 @@ INTERPRET
     inx
     rts
 +
-    jsr FIND_NAME ; replace string with dictionary ptr
+    jsr	FIND_NAME ; replace string with dictionary ptr
     lda LSB, x
-    bne .found_word
+    bne	.found_word
 
     inx ; drop
     jsr READ_NUMBER
@@ -170,8 +170,8 @@ INTERPRET
 
     ; yep, it's a number...
 .was_number
-    lda STATE ; are we compiling?
-    bne +
+    lda	STATE ; are we compiling?
+    bne	+
     rts
 +   ; yes, compile the number
     sta curr_word_no_tail_call_elimination
@@ -190,21 +190,21 @@ FOUND_WORD_WITH_NO_TCE = * + 1
     inx
     lda MSB-1, x
     and STATE
-    beq EXECUTE
+    beq	EXECUTE
 
     ; OK, this word should be compiled...
     jmp COMPILE_COMMA
 
 print_word_not_found_error ; ( caddr u -- )
-    lda #$12 ; reverse on
-    jsr PUTCHR
+    lda	#$12 ; reverse on
+    jsr	PUTCHR
     jsr TYPE
-    lda #'?'
+    lda	#'?'
 .stop_error_print
-    jsr PUTCHR
+    jsr	PUTCHR
 
-    lda #$d ; cr
-    jsr PUTCHR
+    lda	#$d ; cr
+    jsr	PUTCHR
     jmp ABORT
 
     +BACKLINK "'", 1
@@ -242,28 +242,23 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
     lda MSB+1,x
     sta W2+1
     lda LSB+1,x
-    sec
-    sbc #3
     sta W2
-    bcs +
-    dec W2+1
-+
     lda LATEST_LSB
     sta W
     lda LATEST_MSB
     sta W + 1
     ; W now contains new dictionary pointer.
-    ldy #2
-    lda (W), y ; get string length of dictionary word
 .examine_word
-    and #STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
+    ldy	#0
+    lda	(W), y ; get string length of dictionary word
+    and	#STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
 .findlen
-    cmp #0
-    beq .string_compare
+    cmp	#0
+    beq	.string_compare
 
 .word_not_equal
     ; no match, advance the dp
-    ldy #2
+    ldy #0
     lda (W), y
     and #STRLEN_MASK
     clc
@@ -285,43 +280,42 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
 .findlen2
     lda #0
     sta .strlen
--   iny
-    lda (W2), y ; find string
+-   lda	(W2), y ; find string
     jsr CHAR_TO_LOWERCASE
-    cmp (W), y ; dictionary string
-    bne .word_not_equal
-    dec .strlen
-    beq .word_is_equal
-    jmp -
+    iny
+    cmp	(W), y ; dictionary string
+    bne	.word_not_equal
+    dec	.strlen
+    beq	.word_is_equal
+    jmp	-
 
 .strlen !byte 0
 
 .word_is_equal
     ; return address to dictionary word
     inx
-    lda W
-    sta LSB, x
+    lda	W
+    sta	LSB, x
     sta W2
-    lda W + 1
-    sta MSB, x
+    lda	W + 1
+    sta	MSB, x
     sta W2 + 1
 
     jsr TO_XT
 
     dex
 
-    ldy #2
+    ldy	#0
     lda (W2), y
     and #F_NO_TAIL_CALL_ELIMINATION | F_IMMEDIATE
     sta FOUND_WORD_WITH_NO_TCE
 
-    lda (W2), y ; a contains string length + mask
-    and #F_IMMEDIATE
+    lda	(W2), y ; a contains string length + mask
+    and	#F_IMMEDIATE
     beq .not_immed
-    dey
-    sty LSB, x ; 1
-    dey
     sty MSB, x ; 0
+    iny
+    sty LSB, x ; 1
     rts
 
 .not_immed
@@ -332,17 +326,21 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
 
     +BACKLINK ">xt", 3
 TO_XT
-    lda MSB, x
-    sta W + 1
-    lda LSB, x
+    lda	MSB, x
+    sta	W + 1
+    lda	LSB, x
     sta W
     ; W contains pointer to word
-    ldy #0
-    lda (W), y ; a contains string length + mask
-    sta LSB, x
-    iny
-    lda (W), y
-    sta MSB, x
+    ldy	#0
+    lda	(W), y ; a contains string length + mask
+    and	#STRLEN_MASK
+    clc
+    adc	#1 ; offset for char + string length
+    adc	LSB, x
+    sta	LSB, x
+    bcc	+
+    inc	MSB, x
++   jsr FETCH
     rts
 
 IS_SPACE ; ( c -- f )
@@ -645,14 +643,14 @@ READ_NUMBER
     clc
     adc #-$30 ; petscii 0-9 -> 0-9
 
-    cmp #10 ; within 0-9?
-    bcc +
+    cmp	#10 ; within 0-9?
+    bcc	+
 
     clc
-    adc #-$7 ; a-f..?
+    adc	#-$7 ; a-f..?
 
-    cmp #10
-    bcc .parse_failed
+    cmp	#10
+    bcc	.parse_failed
 
 +   cmp BASE
     bcs .parse_failed
@@ -727,7 +725,7 @@ OLD_BASE = * + 1
     sta W
     lda MSB, x
     sta W + 1
-    ldy #2
+    ldy #0
     lda (W), y
     beq .traverse_done
     and #STRLEN_MASK

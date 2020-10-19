@@ -574,4 +574,4 @@ else drop then main-loop ;
 swap 
 to latest
 : v ;
-latest !
+latest dup c@ $1f and + 1+ !

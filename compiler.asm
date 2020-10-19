@@ -99,7 +99,7 @@ SEMICOLON
     lda	LSB - 1, x
     sta W
 
-    ldy	#2
+    ldy	#0
     lda	(W), y
     and	#!F_HIDDEN ; clear hidden flag
     sta	(W), y
@@ -109,7 +109,7 @@ SEMICOLON
     jmp LBRAC
 
     +BACKLINK "immediate", 9
-    ldy #2
+    ldy #0
     lda LATEST_LSB
     sta W
     lda LATEST_MSB
@@ -138,7 +138,7 @@ COLON
     sta W + 1
     sta MSB, x
 
-    ldy	#2
+    ldy	#0
     lda	(W), y
     ora	#F_HIDDEN ; sets hidden flag
     sta	(W), y
@@ -161,9 +161,9 @@ HEADER
 +
     ; update dictionary pointer
     lda LSB, x
+    sta .putlen+1
     clc
     adc #3
-    sta .putlen+1
     sta W
     lda LATEST_LSB
     sec
@@ -176,36 +176,30 @@ HEADER
     lda LATEST_MSB
     sta W + 1
     ldy #0
+    ; Store length byte.
+    lda LSB, x
+    sta (W), y
+    inx
+    lda LSB, x
+    sta W2
+    lda MSB, x
+    sta W2 + 1
+    ; copy string
+-   lda (W2), y
+    jsr CHAR_TO_LOWERCASE
+    iny
+    sta (W), y
+.putlen
+    cpy #0
+    bne -
     ; store here
+    iny
     lda HERE_LSB
     sta (W), y
     iny
     lda HERE_MSB
     sta (W), y
-    iny
-    ; Store length byte.
-    lda LSB, x
     inx
-    sta (W), y
-    iny
-    lda MSB, x
-    sta W2 + 1
-    lda LSB, x
-    inx
-    sec
-    sbc #3
-    sta W2
-    bcs +
-    dec W2 + 1
-+
-    ; copy string
--   lda (W2), y
-    jsr CHAR_TO_LOWERCASE
-    sta (W), y
-    iny
-.putlen
-    cpy #0
-    bne -
     rts
 
     +BACKLINK "lit", 3
