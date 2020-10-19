@@ -712,32 +712,47 @@ OLD_BASE = * + 1
     jmp MINUS
 
 +BACKLINK "traverse-wordlist", 17 ; ( xt -- )
-    jsr LATEST
+    ; per the standard, nothing must be left on stack before execute
+    lda LSB,x
+    sta .traverse_xt
+    lda MSB, x
+    sta .traverse_xt + 1
+    inx
+    lda LATEST_LSB
+    sta .traverse_dp
+    lda LATEST_MSB
+    sta .traverse_dp + 1
+
 .traverse_lambda
-    jsr TWODUP
-    jsr SWAP
-    jsr EXECUTE
-    jsr ZEQU
+    dex
+    lda .traverse_dp
+    sta LSB, x
+    lda .traverse_dp + 1
+    sta MSB, x
+    jsr JMP_TRAVERSE
     inx
     lda LSB-1, x
-    bne .traverse_done
-    lda LSB, x
+    bne +
+-   rts
++   ldy #0
+    lda .traverse_dp
     sta W
-    lda MSB, x
+    lda .traverse_dp + 1
     sta W + 1
-    ldy #0
     lda (W), y
-    beq .traverse_done
+    beq -
     and #STRLEN_MASK
     clc
     adc #3 ; guaranteed carry clear
-    adc LSB, x
-    sta LSB, x
-    lda MSB, x
+    adc .traverse_dp
+    sta .traverse_dp
+    lda .traverse_dp + 1
     adc #0
-    sta MSB, x
+    sta .traverse_dp + 1
     jmp .traverse_lambda
-.traverse_done
-    inx ; dp
-    inx ; xt
-    rts
+.traverse_xt
+    !word 0
+.traverse_dp
+    !word 0
+JMP_TRAVERSE
+    jmp (.traverse_xt)
