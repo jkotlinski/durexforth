@@ -36,7 +36,6 @@ F_HIDDEN = $40
 ; I.e., "jsr WORD + rts" will not be replaced by "jmp WORD".
 F_NO_TAIL_CALL_ELIMINATION = $20
 STRLEN_MASK = $1f
-FREE_MASK = $80
 
 TIB = $200
 
@@ -154,7 +153,6 @@ ONE
 !src "core.asm"
 !src "math.asm"
 !src "move.asm"
-!src "memory.asm"
 !src "interpreter.asm"
 !src "compiler.asm"
 !src "control.asm"
