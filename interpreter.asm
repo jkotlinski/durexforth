@@ -730,7 +730,7 @@ UNUSED
     jsr HERE
     jmp MINUS
 
-+BACKLINK "traverse-wordlist", 17 ; ( xt -- )
++BACKLINK "dowords", 7 ; ( xt -- )
     ; per the standard, nothing must be left on stack before execute
     lda LSB,x
     sta .traverse_xt

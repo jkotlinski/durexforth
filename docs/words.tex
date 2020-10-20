@@ -381,7 +381,7 @@ marker forget
 forget
 \end{verbatim}
 
-\item[traverse-wordlist ( xt -- )] Executes \texttt{xt} for successive headers starting from \texttt{latest}. Each time \texttt{xt} is called, it must consume an argument from the stack and leave behind a truth value. If true (not 0), it will continue to the next header address and call \texttt{xt} again. If false, or if it reaches the end of the dictionary, traverse-wordlist will return. Example:
+\item[dowords ( xt -- )] Executes \texttt{xt} for successive headers starting from \texttt{latest}. Each time \texttt{xt} is called, it must consume an argument from the stack and leave behind a truth value. If true (not 0), it will continue to the next header address and call \texttt{xt} again. If false, or if it reaches the end of the dictionary, dowords will return. Example:
 
 \begin{verbatim}
 \ from debug.fs
@@ -391,7 +391,7 @@ forget
 exit then drop 1 ;
 
 : xt> ( codepointer -- nametoken )
-['] (xt>) traverse-wordlist ;
+['] (xt>) dowords ;
 \end{verbatim}
 \end{description}
 

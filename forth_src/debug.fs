@@ -7,7 +7,7 @@ count $1f and ;
 exit then drop 1 ;
 
 : xt> ( codepointer -- nametoken )
-['] (xt>) traverse-wordlist ;
+['] (xt>) dowords ;
 
 : see-jsr
 1+ dup @
@@ -57,7 +57,7 @@ nip 1 ;
 bl word find 0= if
 rvs count type '?' emit abort then
 ( xt )
-here ['] (see) traverse-wordlist
+here ['] (see) dowords
 swap
 
 ':' emit space dup xt> dup name>string type space
@@ -93,11 +93,11 @@ $d6 c@ $18 = if $12 emit
 ." more" $92 emit key drop page then ;
 
 : (words) more name>string type space 1 ;
-: words ['] (words) traverse-wordlist ;
+: words ['] (words) dowords ;
 
 \ size foo prints size of foo
 
 : size ( word -- )
-' here ['] (see) traverse-wordlist
+' here ['] (see) dowords
 swap - . cr ;
 
