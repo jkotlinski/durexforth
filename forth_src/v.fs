@@ -2,8 +2,7 @@ marker ---editor---
 latest
 
 $d value lf
-
-$7001 value bufstart
+0 value bufstart
 
 \ eof points to 0 sentinel
 variable eof ( ram eof )
@@ -556,7 +555,8 @@ then
 0 to insert
 $80 $28a c! \ key repeat on
 clear-status
-
+bufstart 0= if $2000 allocate 1+
+to bufstart then
 lf word count dup 0= if \ no param?
 eof @ if \ something in buffer?
 2drop main-loop exit \ yes - cont. edit

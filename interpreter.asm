@@ -79,7 +79,7 @@ quit_reset
     jsr     CHKIN
     pla
     tax
-    rts
+    jmp INIT_MEM
 
     +BACKLINK "quit", 4
 QUIT
