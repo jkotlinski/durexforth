@@ -731,47 +731,46 @@ UNUSED
     jmp MINUS
 
 +BACKLINK "dowords", 7 ; ( xt -- )
-    ; per the standard, nothing must be left on stack before execute
+    ; to be useful, nothing must be left on stack before execute
+    ; so that there is no distance between nt and the rest of the stack
     lda LSB,x
-    sta .traverse_xt
+    sta .xt
     lda MSB, x
-    sta .traverse_xt + 1
+    sta .xt + 1
     inx
     lda LATEST_LSB
-    sta .traverse_dp
+    sta .dowords_nt
     lda LATEST_MSB
-    sta .traverse_dp + 1
+    sta .dowords_nt + 1
 
-.traverse_lambda
+.dowords_lambda
     dex
-    lda .traverse_dp
+    lda .dowords_nt
     sta LSB, x
-    lda .traverse_dp + 1
+    lda .dowords_nt + 1
     sta MSB, x
-    jsr JMP_TRAVERSE
+.xt = * + 1
+    jsr PLACEHOLDER_ADDRESS
     inx
     lda LSB-1, x
     bne +
 -   rts
 +   ldy #0
-    lda .traverse_dp
+    lda .dowords_nt
     sta W
-    lda .traverse_dp + 1
+    lda .dowords_nt + 1
     sta W + 1
     lda (W), y
     beq -
     and #STRLEN_MASK
     clc
     adc #3 ; guaranteed carry clear
-    adc .traverse_dp
-    sta .traverse_dp
-    lda .traverse_dp + 1
+    adc .dowords_nt
+    sta .dowords_nt
+    lda .dowords_nt + 1
     adc #0
-    sta .traverse_dp + 1
-    jmp .traverse_lambda
-.traverse_xt
+    sta .dowords_nt + 1
+    jmp .dowords_lambda
+; using a word here in case the lambda trashes Ws
+.dowords_nt
     !word 0
-.traverse_dp
-    !word 0
-JMP_TRAVERSE
-    jmp (.traverse_xt)
