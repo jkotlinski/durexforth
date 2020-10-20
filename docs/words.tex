@@ -118,8 +118,6 @@ The following words use double-cell integers. On the stack, the cell containing 
 \item[fill ( addr len char -- )] Fill range [addr, len + addr) with char.
 \item[move ( src dst len -- )]
 Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to emory beginning at \texttt{dst}.
-\item[allocate ( size -- addr )] Allocates a block of memory \texttt{size} bytes large in the heap, returning its address.
-\item[free ( addr -- )] Frees a block of memory created by \texttt{allocate}.
 
 \end{description}
 \section{Compiling}

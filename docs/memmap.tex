@@ -14,7 +14,9 @@
 \item[\$801 - \texttt{here}] Forth Kernel followed by code and data space.
 \item[\ldots]
 \item[\texttt{latest} - \texttt{top}] Dictionary. Grows downwards as needed. Default \texttt{top} is \$6fff. 
-\item[\texttt{top} - \$cbff] Heap RAM.
+\item[\texttt{bufstart} - \texttt{eof}] Editor text buffer. Grows upwards as needed. Default \texttt{bufstart} is \$7000.
+\item[\ldots]
+\item[\$a000 - \$cbff] Free RAM.
 \item[\$cc00 - \$cfff] Hi-res graphics colors.
 \item[\$d000 - \$dfff] I/O area. 
 \item[\$e000 - \$ffff] Kernal / hi-res graphics bitmap.
