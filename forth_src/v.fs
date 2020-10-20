@@ -1,4 +1,7 @@
 marker ---editor---
+
+header v
+
 latest
 
 $d value lf
@@ -569,9 +572,6 @@ reset-buffer
 rom-kernal bufstart loadb
 ?dup 0= if reset-buffer else
 eof ! 0 eof @ c! then
-else drop then main-loop ;
+else drop then main-loop ; defines v
 
-swap 
 to latest
-: v ;
-latest dup c@ $1f and + 1+ !

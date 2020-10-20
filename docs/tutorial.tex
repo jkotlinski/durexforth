@@ -140,26 +140,23 @@ When writing a new program using a PC text editor, it is practical to configure 
 
 \begin{verbatim}
 $7000 value buf
-: go restore-forth
-buf s" myprogramfile" buf
+: go buf s" myprogramfile" buf
 loadb buf - evaluate ;
 ' go start !
 save-forth @0:durexforth
 \end{verbatim}
 
-Each start routine should start by calling \texttt{restore-forth} to unpack the dictionary. Before \texttt{save-forth} writes the program to disk, it moves the header data down next to the code data. Without calling \texttt{restore-forth}, there will be no space for new words, and only 32 bytes between \texttt{here} and \texttt{latest}.
-
 \subsection{Turn-key Operation}
 
-If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary entirely before calling \texttt{save-forth} with \texttt{ top to latest }. Now, the header space is 1 byte at \texttt{top}.
+Programs can be saved in a compacted state using \texttt{save-prg}. These programs are stored with 32 bytes between \texttt{here} and \texttt{latest}. When they are first loaded, they will restore the header space to its original \texttt{top}.
 
-As noted above, without calling \texttt{restore-forth}, \texttt{top} will remain 32 bytes above \texttt{here}, or else it will move to its original \texttt{top}. If you wish to keep the header space safe, reserve a byte that remains at value 0. For example, after you have assigned you \texttt{start} word:
+If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary entirely before calling \texttt{save-forth} or \texttt{save-prg} with \texttt{top to latest}. Now, the header space is 1 byte at \texttt{top}. If you expect that you may overwrite the original \texttt{top} byte, you can reposition it to a constant value within your code space.
 
 \begin{verbatim}
-here 0 , top to latest top! save-forth @0:turnkey
+here 0 , top to latest top! save-prg @0:turnkey
 \end{verbatim}
 
-This allows your program to use memory down to \texttt{here}.
+This allows your program to use memory down to \texttt{here} plus 32 bytes for safety. Note that the above command cannot be executed from a prompt, as \texttt{top to latest} immediately removes all word headers.
 
 \section{How to Learn More}
 

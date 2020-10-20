@@ -106,28 +106,37 @@ then (to) ; immediate
 : 2drop ( a b -- )
 postpone drop postpone drop ; immediate
 
-: dsize ( -- n)
+: :noname here 0 ] ;
+
+: dsize ( -- n) \ not really needed?
 top latest - ;
 
 : top! ( addr -- )
-latest swap ( src dst )
-dsize ( src dst size )
-2dup 
-- ( a sz latest )
-to latest ( ol a sz )
-over to top
-swap over - swap 1+
-move ;
+latest swap dsize 2dup - to latest 
+over to top swap over - swap 1+ move ;
 
-top value oldtop
-: restore-forth
-oldtop top! quit 
-;
-: save-forth ( strptr strlen -- )
-top to oldtop
-here 10 + dsize + top!
-801 top 1+ d word count saveb 
-;
+\ first pass unfactored code ahead
+
+: compare ( caddr u caddr u -- 1 | 0 )
+2 pick over <> if 2drop 2drop 1 exit then
+drop swap
+begin ( caddr caddr u )
+1- 2dup + c@ ( caddr caddr u c )
+over 4 pick + c@ <> if ( caddr caddr u )
+2drop drop 1 exit then
+dup 0= if 2drop drop 0 exit then again ;
+
+: name>xta count $1f and + ;
+
+: (string>name) ( caddr u nt ) ( nt 0 | caddr u )
+dup count $1f and ( caddr u nt caddr u )
+4 pick 4 pick ( caddr u nt caddr u caddr u )
+compare if drop 1 exit then ( caddr u nt )
+nip nip 0 0 ;
+
+: defines ( xt word -- )
+parse-name ['] (string>name) dowords
+if 2drop exit then name>xta ! ;
 
 code 2/
 msb lda,x 80 cmp,# msb ror,x lsb ror,x
@@ -212,23 +221,44 @@ postpone cr
 postpone abort
 postpone then ; immediate
 
+\ 
+header save-prg
+latest	\ begin hiding words
+
+variable oldtop
+variable oldstart
+
+: restore-forth
+oldtop @ top! 
+oldstart @ execute ;
+
+:noname ( strptr strlen -- )
+start @ oldstart !
+top oldtop !
+['] restore-forth start ! 
+here 20 + dsize + top!
+801 top 1+ d word count saveb ;
+defines save-prg
+
+to latest \ end hiding words
+
+: save-forth ( strptr strlen -- )
+801 top 1+ d word count saveb ;
+
+
 \ hashes of INCLUDED file names
 \ see required.fs
 variable (includes) $1e allot
 (includes) $20 0 fill
 
-: marker here create top , ,
-latest dup 2+ c@ + 3 + ,
-(includes) begin dup @ while 2+ repeat ,
-does>
-dup @ dup top <> if top! else drop then
-2+ dup @ to here 2+ dup @ to latest
-2+ dup @ 0 swap !
-;
+: marker top latest - here create , , 
+(includes) begin dup @ while 2+ repeat , 
+does> dup @ to here
+2+ dup @ top swap - to latest 
+2+ dup @ 0 swap ! ;
 
 : include parse-name included ;
 
-: :noname here 0 ] ;
 
 \ $cbff top!
 
@@ -245,7 +275,5 @@ marker ---modules---
 decimal
 
 .( save new durexforth..)
-' restore-forth start ! \ must be default
-save-forth @0:durexforth
-restore-forth
+save-prg @0:durexforth
 .( ok!) cr

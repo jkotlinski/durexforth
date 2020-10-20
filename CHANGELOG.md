@@ -11,14 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Header data is not a linked list, and grows downward from a default TOP of $6fff. Record structure: `len_flags | str | xt`
  - LATEST is now a VALUE that points to the bottom of the headers.
  - Prompt displays `ful` when there is less than 256 bytes of dictionary space left.
- - SAVE-FORTH packs the dictionary together before saving.
 ### Added
- - RESTORE-FORTH unpacks the dictionary to its original TOP
+ - SAVE-PRG packs the dictionary together before saving, which unpacks at runtime.
  - UNUSED describes the number of bytes between HERE and LATEST.
  - DSIZE returns the size in bytes of the header data.
  - TOP is a read-only VALUE (not enforced!) which is the address of the last byte of the header structure. The value at this address will always be 0.
  - TOP! can be used to specify the position of header data.
- - TRAVERSE-WORDLIST can be used to scan the header records.
+ - DOWORDS can be used to scan the header records.
+ - DEFINES replaces the XT for an existing word
 
 ## [Unreleased]
 
