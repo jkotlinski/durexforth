@@ -95,14 +95,9 @@ $d6 c@ $18 = if $12 emit
 : (words) more name>string type space 1 ;
 : words ['] (words) traverse-wordlist ;
 
-\ TODO adapt to traverse-wordlist
 \ size foo prints size of foo
-: size ( -- )
-bl word find drop >r
-here latest \ prev curr
-begin dup while
-dup r@ < if
-- . r> drop exit then
-nip dup name>string + repeat
-. drop r> drop ;
+
+: size ( word -- )
+' here ['] (see) traverse-wordlist
+swap - . cr ;
 
