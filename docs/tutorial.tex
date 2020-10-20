@@ -140,11 +140,26 @@ When writing a new program using a PC text editor, it is practical to configure 
 
 \begin{verbatim}
 $7000 value buf
-: go buf s" myprogramfile" buf
+: go restore-forth
+buf s" myprogramfile" buf
 loadb buf - evaluate ;
 ' go start !
 save-forth @0:durexforth
 \end{verbatim}
+
+Each start routine should start by calling \texttt{restore-forth} to unpack the dictionary. Before \texttt{save-forth} writes the program to disk, it moves the header data down next to the code data. Without calling \texttt{restore-forth}, there will be no space for new words, and only 32 bytes between \texttt{here} and \texttt{latest}.
+
+\subsection{Turn-key Operation}
+
+If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary entirely before calling \texttt{save-forth} with \texttt{ top to latest }. Now, the header space is 1 byte at \texttt{top}.
+
+As noted above, without calling \texttt{restore-forth}, \texttt{top} will remain 32 bytes above \texttt{here}, or else it will move to its original \texttt{top}. If you wish to keep the header space safe, reserve a byte that remains at value 0. For example, after you have assigned you \texttt{start} word:
+
+\begin{verbatim}
+here 0 , top to latest top! save-forth @0:turnkey
+\end{verbatim}
+
+This allows your program to use memory down to \texttt{here}.
 
 \section{How to Learn More}
 
