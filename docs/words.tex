@@ -396,8 +396,7 @@ exit then drop 1 ;
 
 \item[hide: ( -- )] Starts a block where word headers are deleted after compilation.
 \item[;hide ( -- )] Ends the block, removing all headers created inside it.
-\item[show ( xt name -- )] Assign \texttt{xt} as the execution token for the existing word \texttt{xt}.
-\end{description}
+\item[show ( xt name -- )] Assign \texttt{xt} as the execution token for the existing word \texttt{xt}. Can be used with \texttt{header} as a zero-overhead word alias. Example:
 
 \begin{verbatim}
 header v
@@ -406,6 +405,11 @@ hide:
 :noname ... the function v ... ; show v
 hide;
 \end{verbatim}
+
+\item[hide ( name -- )] Removes a word header from the dictionary, preventing it from being found by the interpreter.
+
+	Note: Do not delete words before a \texttt{marker} and then call that \texttt{marker}. Doing so will corrupt the dictionary.
+\end{description}
 
 \section{Disk I/O}
 

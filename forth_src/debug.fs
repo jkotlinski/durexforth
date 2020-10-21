@@ -1,14 +1,3 @@
-: name>string ( nametoken -- caddr u )
-count $1f and ;
-
-: (xt>) ( xt1 nt -- nt xt 0 | xt1 1 )
-2dup name>string + @
-< invert if swap drop 0  
-exit then drop 1 ;
-
-: xt> ( codepointer -- nametoken )
-['] (xt>) dowords ;
-
 : see-jsr
 1+ dup @
 case

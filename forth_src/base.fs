@@ -116,6 +116,18 @@ latest swap dsize 2dup - to latest
 over to top swap over - swap 1+ move ;
 
 \ first pass unfactored code ahead
+\ basic dictionary stuff needs to be in base
+
+: name>string ( nametoken -- caddr u )
+count $1f and ;
+
+: (xt>) ( xt1 nt -- nt xt 0 | xt1 1 )
+2dup name>string + @
+< invert if swap drop 0  
+exit then drop 1 ;
+
+: xt> ( codepointer -- nametoken )
+['] (xt>) dowords ;
 
 : compare ( caddr u caddr u -- 1 | 0 )
 2 pick over <> if 2drop 2drop 1 exit then
@@ -226,6 +238,16 @@ postpone ."
 postpone cr
 postpone abort
 postpone then ; immediate
+
+: hide
+parse-name find-name 
+0= abort" not found"
+xt> ( nt )
+dup c@ 3 + ( offset )
+swap latest - >r ( offset ) 
+latest + ( dst )
+latest swap dup to latest ( src dst ) r>
+move ;
 
 header save-prg
 header save-pack
