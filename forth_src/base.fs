@@ -261,7 +261,7 @@ variable (includes) $1e allot
 (includes) begin dup @ while 2+ repeat , 
 does> dup @ to here
 2+ dup @ top swap - to latest 
-2+ dup @ 0 swap ! ;
+2+ @ 0 swap ! ;
 
 : include parse-name included ;
 
