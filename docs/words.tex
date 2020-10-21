@@ -393,11 +393,11 @@ exit then drop 1 ;
 : xt> ( codepointer -- nametoken )
 ['] (xt>) dowords ;
 \end{verbatim}
-\end{description}
 
 \item[hide: ( -- )] Starts a block where word headers are deleted after compilation.
 \item[;hide ( -- )] Ends the block, removing all headers created inside it.
 \item[show ( xt name -- )] Assign \texttt{xt} as the execution token for the existing word \texttt{xt}.
+\end{description}
 
 \begin{verbatim}
 header v
