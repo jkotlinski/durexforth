@@ -2,8 +2,7 @@ marker ---editor---
 
 header v
 
-latest
-
+hide:
 $d value lf
 
 $7001 value bufstart
@@ -572,6 +571,6 @@ reset-buffer
 rom-kernal bufstart loadb
 ?dup 0= if reset-buffer else
 eof ! 0 eof @ c! then
-else drop then main-loop ; defines v
+else drop then main-loop ; show v
 
-to latest
+;hide

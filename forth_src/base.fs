@@ -134,9 +134,15 @@ dup count $1f and ( caddr u nt caddr u )
 compare if drop 1 exit then ( caddr u nt )
 nip nip 0 0 ;
 
-: defines ( xt word -- )
+: show ( xt word -- )
 parse-name ['] (string>name) dowords
 if 2drop exit then name>xta ! ;
+\ show usage: create a header, assign it an xt
+\ effectively aliases an xt with no overhead
+header hide:
+' latest show hide:
+: ;hide to latest ;
+
 
 code 2/
 msb lda,x 80 cmp,# msb ror,x lsb ror,x
@@ -224,7 +230,7 @@ postpone then ; immediate
 header save-prg
 header save-pack
 
-latest	\ begin hiding words
+hide:
 
 top value oldtop
 start @ value oldstart
@@ -239,18 +245,17 @@ top to oldtop
 ['] restore-forth start ! 
 here 20 + dsize + top!
 801 top 1+ d word count saveb ;
-defines save-pack
+show save-pack
 
 :noname ( strptr strlen -- )
 here 0 , top to latest top!
 save-pack ;
-defines save-prg
+show save-prg
 
-to latest \ end hiding words
+;hide
 
 : save-forth ( strptr strlen -- )
 801 top 1+ d word count saveb ;
-
 
 \ hashes of INCLUDED file names
 \ see required.fs

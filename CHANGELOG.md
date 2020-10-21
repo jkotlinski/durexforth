@@ -12,13 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - LATEST is now a VALUE that points to the bottom of the headers.
  - Prompt displays `ful` when there is less than 256 bytes of dictionary space left.
 ### Added
- - SAVE-PRG packs the dictionary together before saving, which unpacks at runtime.
+ - SAVE-PACK packs the dictionary together before saving, which unpacks at runtime.
+ - SAVE-PRG removes the dictionary and saves the program
  - UNUSED describes the number of bytes between HERE and LATEST.
  - DSIZE returns the size in bytes of the header data.
- - TOP is a read-only VALUE (not enforced!) which is the address of the last byte of the header structure. The value at this address will always be 0.
+ - TOP returns the address of the last byte of the header structure. The value at this address will always be 0.
  - TOP! can be used to specify the position of header data.
  - DOWORDS can be used to scan the header records.
- - DEFINES replaces the XT for an existing word
+ - HIDE: and ;HIDE can remove headers from the dictionary after compilation
+ - SHOW can be used with HEADER to export a word from a hidden scope
 
 ## [Unreleased]
 

@@ -395,6 +395,18 @@ exit then drop 1 ;
 \end{verbatim}
 \end{description}
 
+\item[hide: ( -- )] Starts a block where word headers are deleted after compilation.
+\item[;hide ( -- )] Ends the block, removing all headers created inside it.
+\item[show ( xt name -- )] Assign \texttt{xt} as the execution token for the existing word \texttt{xt}.
+
+\begin{verbatim}
+header v
+hide:
+... entire v source code ...
+:noname ... the function v ... ; show v
+hide;
+\end{verbatim}
+
 \section{Disk I/O}
 
 \begin{description}

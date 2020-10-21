@@ -50,7 +50,7 @@ endcase
 
 header see
 header size
-latest
+hide:
 \ finding the next closest word requires scanning
 \ the whole dictionary, sadly
 : (see) ( xt xt-1 nt -- xt xt-1 1 | xt xt-1 0 )
@@ -63,7 +63,7 @@ nip then 1 exit then drop 1 ;
 
 :noname \ size ( word -- )
 ' here ['] (see) dowords
-swap - . cr ; defines size
+swap - . cr ; show size
 
 :noname \ see
 bl word find 0= if
@@ -85,8 +85,8 @@ while
     ." ? " swap 1+ swap
     endcase
 repeat
-';' emit cr 2drop ; defines see
-to latest
+';' emit cr 2drop ; show see
+;hide
 
 variable last-dump
 
@@ -106,7 +106,7 @@ $d6 c@ $18 = if $12 emit
 ." more" $92 emit key drop page then ;
 
 header words
-latest
+hide:
 : (words) more name>string type space 1 ;
-:noname ['] (words) dowords ; defines words
-to latest
+:noname ['] (words) dowords ; show words
+;hide
