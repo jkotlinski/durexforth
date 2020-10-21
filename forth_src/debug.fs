@@ -48,12 +48,24 @@ endof ( default )
 endcase
 2+ ;
 
+header see
+header size
+latest
+\ finding the next closest word requires scanning
+\ the whole dictionary, sadly
 : (see) ( xt xt-1 nt -- xt xt-1 1 | xt xt-1 0 )
->xt dup 3 pick = if ( xt xt-1 xt0 )
-drop 0 exit then
-nip 1 ;
+>xt dup 3 pick 
+> if ( xt xt-1 xt0 )
+2dup < if drop else
+nip then 1 exit then drop 1 ;
 
-: see
+\ size foo prints size of foo
+
+:noname \ size ( word -- )
+' here ['] (see) dowords
+swap - . cr ; defines size
+
+:noname \ see
 bl word find 0= if
 rvs count type '?' emit abort then
 ( xt )
@@ -73,7 +85,8 @@ while
     ." ? " swap 1+ swap
     endcase
 repeat
-';' emit cr 2drop ;
+';' emit cr 2drop ; defines see
+to latest
 
 variable last-dump
 
@@ -92,12 +105,8 @@ last-dump ! base ! ;
 $d6 c@ $18 = if $12 emit
 ." more" $92 emit key drop page then ;
 
+header words
+latest
 : (words) more name>string type space 1 ;
-: words ['] (words) dowords ;
-
-\ size foo prints size of foo
-
-: size ( word -- )
-' here ['] (see) dowords
-swap - . cr ;
-
+:noname ['] (words) dowords ; defines words
+to latest

@@ -221,8 +221,9 @@ postpone cr
 postpone abort
 postpone then ; immediate
 
-\ 
 header save-prg
+header save-pack
+
 latest	\ begin hiding words
 
 variable oldtop
@@ -238,6 +239,11 @@ top oldtop !
 ['] restore-forth start ! 
 here 20 + dsize + top!
 801 top 1+ d word count saveb ;
+defines save-pack
+
+:noname ( strptr strlen -- )
+here 0 , top to latest top!
+save-pack ;
 defines save-prg
 
 to latest \ end hiding words
@@ -259,9 +265,6 @@ does> dup @ to here
 
 : include parse-name included ;
 
-
-\ $cbff top!
-
 marker ---modules---
 
 .( labels..) include labels
@@ -275,5 +278,5 @@ marker ---modules---
 decimal
 
 .( save new durexforth..)
-save-prg @0:durexforth
+save-pack @0:durexforth
 .( ok!) cr
