@@ -226,16 +226,16 @@ header save-pack
 
 latest	\ begin hiding words
 
-variable oldtop
-variable oldstart
+top value oldtop
+start @ value oldstart
 
 : restore-forth
-oldtop @ top! 
-oldstart @ execute ;
+oldtop top! 
+oldstart execute ;
 
 :noname ( strptr strlen -- )
-start @ oldstart !
-top oldtop !
+start @ to oldstart
+top to oldtop 
 ['] restore-forth start ! 
 here 20 + dsize + top!
 801 top 1+ d word count saveb ;
