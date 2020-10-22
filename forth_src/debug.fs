@@ -94,8 +94,6 @@ last-dump ! base ! ;
 $d6 c@ $18 = if $12 emit
 ." more" $92 emit key drop page then ;
 
-header words
-hide:
 : (words) more name>string type space 1 ;
-:noname ['] (words) dowords ; show words
-;hide
+: words ['] (words) dowords ;
+hide (words)
