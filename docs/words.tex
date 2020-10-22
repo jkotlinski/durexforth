@@ -369,10 +369,11 @@ Note: Words that are followed by \texttt{:noname} will appear at the end of that
 \item[top! ( addr -- )] Relocates the header space to \texttt{addr}. Example:
 
 \begin{verbatim}
-\ done defining words, shrink the dictionary
-top unused $20 - - top!
+\ not using the editor, give all memory to dictionary
+$cbff top!
 \end{verbatim}
 
+\item[pad ( -- addr )] Address of the \texttt{pad}, a 191-byte region of memory that can be used temporarily by words. No built-in words will modify this region.
 \item[marker name ( -- )] Creates a word that when called, forgets itself and all words that were defined after it. Example:
 
 \begin{verbatim}
