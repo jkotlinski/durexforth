@@ -9,16 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
  - LS now accepts wildcards, drive #'s or not.
  - Dictionary restructured, now header and code data are split.
- - Header data is not a linked list, and grows downward from a default TOP of $6fff. Record structure: `len_flags | str | xt`
+ - Header data is not a linked list, and grows downward from $9fff. Record structure: `len_flags | str | xt`
  - Prompt displays `ful` when there is less than 256 bytes of dictionary space left.
 ### Added
  - RDIR will display directory formatted data anywhere in memory.
  - PAD Scratch pad memory set to cassette buffer. Untouched by DurexForth
+ - DOWORDS, which allows executing an xt for every word in the wordlist 
+ - Turn-key operation utilities in TURNKEY:
  - SAVE-PACK packs the dictionary together before saving, which unpacks at runtime.
  - SAVE-PRG removes the dictionary and saves the program
  - TOP returns the address of the last byte of the header structure. The value at this address will always be 0.
  - TOP! can be used to specify the position of header data.
- - DOWORDS can be used to scan the header records.
 ### Fixed
  - V did not compile in DECIMAL mode.
  - V long line

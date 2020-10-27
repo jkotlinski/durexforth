@@ -106,31 +106,9 @@ then (to) ; immediate
 : 2drop ( a b -- )
 postpone drop postpone drop ; immediate
 
-top value oldtop
-start @ value oldstart
-
-: top! ( addr -- )
-latest @ swap top latest @ - 
-2dup - latest ! 
-over to top swap over - swap 1+ move ;
-
-: restore-forth
-oldtop top! 
-oldstart execute ;
-
-: save-pack ( strptr strlen -- )
-start @ to oldstart
-top to oldtop 
-['] restore-forth start ! 
-here 20 + top latest @ - + top!
-801 top 1+ d word count saveb ;
-
-: save-prg ( strptr strlen -- )
-here 0 , top latest ! top!
-save-pack ;
 
 : save-forth ( strptr strlen -- )
-801 top 1+ d word count saveb ;
+801 $a000 d word count saveb ;
 
 code 2/
 msb lda,x 80 cmp,# msb ror,x lsb ror,x
@@ -220,10 +198,10 @@ postpone then ; immediate
 variable (includes) $1e allot
 (includes) $20 0 fill
 
-: marker top latest @ - here create , , 
+: marker latest @ here create , ,
 (includes) begin dup @ while 2+ repeat , 
 does> dup @ to here
-2+ dup @ top swap - latest ! 
+2+ dup @ latest ! 
 2+ @ 0 swap ! ;
 
 : include parse-name included ;
@@ -241,6 +219,7 @@ marker ---modules---
 .( v..) include v
 
 decimal
+include turnkey 
 cr
 .( cart: )
 $4000 $68 -

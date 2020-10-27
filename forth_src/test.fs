@@ -1,6 +1,5 @@
 : fakekeys ( n -- ) $c6 c! ;
 
-$cbff top! \ this section compiles past $6fff.
 marker ---test---
 
 .( gfxdemo )
@@ -20,7 +19,6 @@ parse-name mmldemo included
 parse-name spritedemo included
 
 ---test---
-$6fff top!
 
 : x depth abort" depth" ; x
 

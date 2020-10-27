@@ -733,15 +733,15 @@ OLD_BASE = * + 1
     sta .xt + 1
     inx
     lda _LATEST
-    sta .dowords_nt
+    sta .dowords_nametoken
     lda _LATEST + 1
-    sta .dowords_nt + 1
+    sta .dowords_nametoken + 1
 
 .dowords_lambda
     dex
-    lda .dowords_nt
+    lda .dowords_nametoken
     sta LSB, x
-    lda .dowords_nt + 1
+    lda .dowords_nametoken + 1
     sta MSB, x
 .xt = * + 1
     jsr PLACEHOLDER_ADDRESS
@@ -750,21 +750,21 @@ OLD_BASE = * + 1
     bne +
 -   rts
 +   ldy #0
-    lda .dowords_nt
+    lda .dowords_nametoken
     sta W
-    lda .dowords_nt + 1
+    lda .dowords_nametoken + 1
     sta W + 1
     lda (W), y
     beq -
     and #STRLEN_MASK
     clc
     adc #3 ; guaranteed carry clear
-    adc .dowords_nt
-    sta .dowords_nt
-    lda .dowords_nt + 1
+    adc .dowords_nametoken
+    sta .dowords_nametoken
+    lda .dowords_nametoken + 1
     adc #0
-    sta .dowords_nt + 1
+    sta .dowords_nametoken + 1
     jmp .dowords_lambda
 ; using a word here in case the lambda trashes Ws
-.dowords_nt
+.dowords_nametoken
     !word 0

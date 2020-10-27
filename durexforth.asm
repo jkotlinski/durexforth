@@ -97,18 +97,18 @@ _START = * + 1
 
 ; ----------- macros
 
-!set TOP = $6fff
-!set DICTOP = TOP
+!set WORDLIST_BASE = $9fff
+!set __LATEST = WORDLIST_BASE
 
 !set BACK = *
-* = DICTOP
+* = __LATEST
 !byte 0
 * = BACK
 
 !macro BACKLINK .name , .namesize {
-    !set DICTOP = DICTOP - 3 - len(.name)
+    !set __LATEST = __LATEST - 3 - len(.name)
     !set .xt = *
-    * = DICTOP
+    * = __LATEST
     !byte .namesize
     !text .name
 	!word .xt
@@ -160,16 +160,13 @@ ONE
 !src "lowercase.asm"
 !src "disk.asm"
 
-    +BACKLINK "top", 3
-    +VALUE  TOP
-
 ; LATEST - points to the most recently defined dictionary word.
 
     +BACKLINK "latest", 6
 LATEST
     +VALUE	_LATEST
 _LATEST
-    !word DICTOP
+    !word __LATEST
 ; ALL CONTENTS BELOW LATEST WILL BE OVERWRITTEN!!!
 
 load_base

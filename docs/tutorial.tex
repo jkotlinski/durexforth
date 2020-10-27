@@ -148,6 +148,8 @@ save-forth @0:durexforth
 
 \subsection{Turn-key Operation}
 
+Durexforth offers utilities to save your program in a turn-key fashion by including the \texttt{turnkey} module.
+
 Programs can be saved in a compacted state using \texttt{save-pack}. These programs are stored with 32 bytes between \texttt{here} and \texttt{latest}. When they are first loaded, they will restore the header space to its original \texttt{top}.
 
 If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary entirely when saving with \texttt{save-prg}. This allows your program to use memory down to \texttt{here} plus 32 bytes for safety. 

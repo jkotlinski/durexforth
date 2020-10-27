@@ -362,15 +362,6 @@ For more info about number formatting, read Starting Forth!
 \item[here (value)] Write position of the Forth compiler (usually first unused byte of code space). Many C64 assemblers refer to this as program counter or \texttt{*}.
 
 
-\item[top ( -- addr )] Address of the top of the dictionary, default: \$6fff. 
-
-\item[top! ( addr -- )] Relocates the header space to \texttt{addr}. Example:
-
-\begin{verbatim}
-\ not using the editor, give all memory to dictionary
-$cbff top!
-\end{verbatim}
-
 \item[marker name ( -- )] Creates a word that when called, forgets itself and all words that were defined after it. Example:
 
 \begin{verbatim}
@@ -379,7 +370,7 @@ marker forget
 forget
 \end{verbatim}
 
-\item[dowords ( xt -- )] Executes \texttt{xt} for successive headers starting from \texttt{latest}. Each time \texttt{xt} is called, it must consume an argument from the stack and leave behind a truth value. If true (not 0), it will continue to the next header address and call \texttt{xt} again. If false, or if it reaches the end of the dictionary, dowords will return. Example:
+\item[dowords ( xt -- )] Remove \texttt{xt} from the stack. Execute \texttt{xt} once for every word in the wordlist, passing the name token \texttt{nt} of the word to \texttt{xt}, until the wordlist is exhausted or until \texttt{xt} returns false. The invoked \texttt{xt} has the stack effect \texttt{( k * x nt -- l * x flag)}. If \texttt{flag} is true, \texttt{dowords} will continue on to the next name, otherwise it will return.
 
 \begin{verbatim}
 \ from debug.fs
@@ -399,8 +390,6 @@ forget
 \item[saveb ( start end filenameptr filenamelength -- )] Save binary block.
 \item[device ( device\# -- )] Switches the active device.
 \item[save-forth filename ( -- )] Saves the forth to the given filename.
-\item[save-pack filename ( -- )] Saves a compact version of forth to the given filename.
-\item[save-prg filename ( -- )] Saves a forth program with no dictionary to filename.
 \item[ls ( -- )] Load disk directory to here and display, with optional drive \# and wildcards. Example: \texttt{ls \$1:*=p} Load directory, drive 1 only prg files.
 \item[rdir ( addr -- )] Display disk directory previously loaded to addr.
 \end{description}
@@ -432,3 +421,21 @@ The \texttt{compat} module contains various words that are not deemed necessary 
 Safe kernel calls may be done from Forth words using \texttt{sys} ( addr -- ). The helper variables \texttt{ar}, \texttt{xr}, \texttt{yr} and \texttt{sr} can be used to set arguments and get results through the a, x, y and status registers.
 
 Example: \texttt{'0' ar c! \$ffd2 sys} calls the CHROUT routine, which prints \texttt{0} on screen.
+
+\section{Turn-key Utilities}
+These words are available by including \texttt{turnkey}.
+\begin{description}
+\item[top ( -- addr )] Address of the top of the dictionary, default: \$9fff. 
+
+\item[top! ( addr -- )] Relocates the dictionary to \texttt{addr}. Example:
+
+\begin{verbatim}
+\ not using $a000 block, give all memory to dictionary
+$cbff top!
+\end{verbatim}
+
+\item[save-pack filename ( -- )] Saves a compact version of forth to the given filename.
+\item[save-prg filename ( -- )] Saves a forth program with no dictionary to filename.
+\end{description}
+
+	Further details on use of these words outlined in the Turn-key Operation section of the tutorial.
