@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+ - LS abort on LOADB error, PAGE upon success.
+ - RDIR improve placement of MORE.
  - LS now accepts wildcards, drive #'s or not.
  - Dictionary restructured, now header and code data are split.
  - Header data is not a linked list, and grows downward from $9fff. Record structure: `len_flags | str | xt`
