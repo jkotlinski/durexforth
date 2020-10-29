@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Dictionary restructured, now header and code data are split.
  - Header data is not a linked list, and grows downward from $9fff. Record structure: `len_flags | str | xt`
  - Prompt displays `ful` when there is less than 256 bytes of dictionary space left.
+ - FIND-NAME now returns a name token per the standard proposal
 ### Added
  - RDIR will display directory formatted data anywhere in memory.
  - PAD Scratch pad memory set to cassette buffer. Untouched by DurexForth
