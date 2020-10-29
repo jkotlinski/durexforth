@@ -9,6 +9,7 @@ Then, load the file from VICE
 monitor using 'll "words"'
 )
 
+\ TODO broken until TRAVERSE-WORDLIST
 : dump-labels base @ hex
 s" words" 1 openw
 latest @ begin ?dup while

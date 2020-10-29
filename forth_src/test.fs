@@ -1,6 +1,6 @@
 : fakekeys ( n -- ) $c6 c! ;
 
-here latest @
+marker ---test---
 
 .( gfxdemo )
 $b fakekeys \ skips demos
@@ -18,7 +18,7 @@ parse-name mmldemo included
 1 fakekeys \ exits demo
 parse-name spritedemo included
 
-latest ! to here
+---test---
 
 : x depth abort" depth" ; x
 

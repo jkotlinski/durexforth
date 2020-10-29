@@ -27,9 +27,7 @@ curr_word_no_tail_call_elimination
 last_word_no_tail_call_elimination
     !byte 1
 
-    +BACKLINK
-    !byte	2
-    !text	"c,"
+    +BACKLINK "c,", 2
 CCOMMA
     lda	HERE_LSB
     sta	W
@@ -47,9 +45,7 @@ CCOMMA
 +   inx
     rts
 
-    +BACKLINK
-    !byte	1
-    !text	","
+    +BACKLINK ",", 1
 COMMA
     lda	HERE_LSB
     sta	W
@@ -76,9 +72,7 @@ COMMA
 
 ; -----
 
-    +BACKLINK
-    !byte	1 | F_IMMEDIATE
-    !text	"["
+    +BACKLINK "[", 1 | F_IMMEDIATE
 LBRAC
     lda	#0
     sta	STATE
@@ -86,18 +80,14 @@ LBRAC
 
 ; -----
 
-    +BACKLINK
     ; disable tail call elimination in case of inline assembly
-    !byte      1 | F_NO_TAIL_CALL_ELIMINATION
-    !text	"]"
+    +BACKLINK "]", 1 | F_NO_TAIL_CALL_ELIMINATION
 RBRAC
     lda	#1
     sta	STATE
     rts
 
-    +BACKLINK
-    !byte	1 | F_IMMEDIATE
-    !text	";"
+    +BACKLINK ";", 1 | F_IMMEDIATE
 SEMICOLON
     jsr EXIT
 
@@ -109,7 +99,7 @@ SEMICOLON
     lda	LSB - 1, x
     sta W
 
-    ldy	#2 ; skip link, point to flags
+    ldy	#0
     lda	(W), y
     and	#!F_HIDDEN ; clear hidden flag
     sta	(W), y
@@ -118,30 +108,24 @@ SEMICOLON
     ; go back to IMMEDIATE mode.
     jmp LBRAC
 
-    +BACKLINK
-    !byte	9
-    !text	"immediate"
-    lda	_LATEST
-    sta	W
-    lda	_LATEST + 1
-    sta	W + 1
-    ldy	#2
+    +BACKLINK "immediate", 9
+    ldy #0
+    lda _LATEST
+    sta W
+    lda _LATEST + 1
+    sta W + 1
     lda	(W), y
     ora	#F_IMMEDIATE
     sta	(W), y
     rts
 
 ; STATE - Is the interpreter executing code (0) or compiling a word (non-zero)?
-    +BACKLINK
-    !byte 5
-    !text	"state"
+    +BACKLINK "state", 5
     +VALUE	STATE
 STATE
     !word 0
 
-    +BACKLINK
-    !byte	1 | F_NO_TAIL_CALL_ELIMINATION
-    !text	":"
+    +BACKLINK ":", 1 | F_NO_TAIL_CALL_ELIMINATION
 COLON
     jsr HEADER ; makes the dictionary entry / header
 
@@ -154,7 +138,7 @@ COLON
     sta W + 1
     sta MSB, x
 
-    ldy	#2 ; skip link, point to flags
+    ldy	#0
     lda	(W), y
     ora	#F_HIDDEN ; sets hidden flag
     sta	(W), y
@@ -163,18 +147,11 @@ COLON
 
 
 ; --- HEADER ( name -- )
-    +BACKLINK
-    !byte	6
-    !text	"header"
+    +BACKLINK "header", 6
 HEADER
     inc last_word_no_tail_call_elimination
 
-    jsr HERE
-
-    ; Store backlink.
-    jsr LATEST
-    jsr FETCH
-    jsr COMMA
+    ; update dictionary
 
 -   jsr PARSE_NAME
     lda LSB,x
@@ -182,31 +159,50 @@ HEADER
     jsr REFILL
     jmp -
 +
+    ; update dictionary pointer
+    lda LSB, x
+    sta .putlen+1
+    clc
+    adc #3
+    sta W
+    lda _LATEST
+    sec
+    sbc W
+    sta _LATEST
+    sta W
+    bcs +
+    dec _LATEST + 1
++
+    lda _LATEST + 1
+    sta W + 1
+    ldy #0
     ; Store length byte.
-    jsr DUP
-    jsr CCOMMA
-
--   jsr SWAP
-    jsr DUP
-    jsr FETCHBYTE
-    lda LSB,x
+    lda LSB, x
+    sta (W), y
+    inx
+    lda LSB, x
+    sta W2
+    lda MSB, x
+    sta W2 + 1
+    ; copy string
+-   lda (W2), y
     jsr CHAR_TO_LOWERCASE
-    sta LSB,x
-    jsr CCOMMA
-    jsr ONEPLUS
-    jsr SWAP
-    jsr ONEMINUS
-    lda LSB,x
+    iny
+    sta (W), y
+.putlen
+    cpy #0
     bne -
+    ; store here
+    iny
+    lda HERE_LSB
+    sta (W), y
+    iny
+    lda HERE_MSB
+    sta (W), y
     inx
-    inx
+    rts
 
-    jsr LATEST
-    jmp STORE
-
-    +BACKLINK
-    !byte	3
-    !text	"lit"
+    +BACKLINK "lit", 3
 LIT
     dex
 
@@ -233,9 +229,7 @@ LIT
     sta + + 2
 +   jmp PLACEHOLDER_ADDRESS ; replaced with instruction pointer
 
-    +BACKLINK
-    !byte	4
-    !text	"litc"
+    +BACKLINK "litc", 4
 LITC
     dex
 
@@ -260,17 +254,13 @@ LITC
     inc W + 1
 +   jmp (W)
 
-    +BACKLINK
-    !byte	8
-    !text	"compile,"
+    +BACKLINK "compile,", 8
 COMPILE_COMMA
     lda #OP_JSR
     jsr compile_a
     jmp COMMA
 
-    +BACKLINK
-    !byte 7 | F_IMMEDIATE
-    !text "literal"
+    +BACKLINK "literal", 7 | F_IMMEDIATE
 LITERAL
     dex
     lda MSB+1,x
@@ -290,18 +280,13 @@ LITERAL
     jmp COMMA ; writes number
 
 ; HERE - points to the next free byte of memory. When compiling, compiled words go here.
-    +BACKLINK
-    !byte 4
-    !text	"here"
+    +BACKLINK "here", 4
 HERE
 HERE_LSB = * + 1
 HERE_MSB = * + 3
-    +VALUE	_LATEST + 2
+    +VALUE  load_base
 
-    !word	LINK
-    !set	LINK = * - 2
-    !byte	6
-    !text	"dodoes"
+    +BACKLINK "dodoes", 6
 
     ; behavior pointer address => W
     pla
