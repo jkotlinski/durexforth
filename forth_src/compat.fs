@@ -52,14 +52,6 @@ begin over c@ digit? over and while
 >r dup c@ pet# accumulate
 1+ r> 1- repeat ;
 
-: >body ( xt -- dataaddr ) 5 + ;
-: defer create ['] abort ,
-does> @ execute ;
-: defer! >body ! ;
-: is state @ if
-postpone ['] postpone defer!
-else ' defer! then ; immediate
-
 \ from FIG UK
 : sm/rem
 2dup xor >r over >r abs >r dabs
