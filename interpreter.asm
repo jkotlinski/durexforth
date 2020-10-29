@@ -120,6 +120,7 @@ interpret_tib
     cmp TIB_SIZE + 1
     bne interpret_tib
 
+    ; 0 - keyboard, -1 evaluate, else file
     lda SOURCE_ID_LSB
     beq +
     rts
@@ -176,11 +177,12 @@ INTERPRET
     inx
     rts
 +
-    jsr FIND_NAME ; replace string with dictionary ptr
-    lda LSB, x
+    jsr TWODUP
+    jsr FIND_NAME ; ( caddr u 0 | caddr u nt )
+    lda MSB, x
     bne .found_word
 
-    inx ; drop
+    inx
     jsr READ_NUMBER
     beq .was_number
 
@@ -198,6 +200,18 @@ INTERPRET
 .found_word
     ; OK, we found a word...
 
+    lda MSB, x
+    ldy LSB, x
+    inx
+    sta MSB, x
+    sty LSB, x
+    sta MSB+1, x
+    sty LSB+1, x
+    jsr TO_XT
+    jsr SWAP
+    jsr GET_IMMED ; ( xt 1 | xt -1 )
+    inx
+
     lda curr_word_no_tail_call_elimination
     sta last_word_no_tail_call_elimination
 FOUND_WORD_WITH_NO_TCE = * + 1
@@ -205,7 +219,6 @@ FOUND_WORD_WITH_NO_TCE = * + 1
     sta curr_word_no_tail_call_elimination
 
     ; Executes the word if it is immediate, or interpreting.
-    inx
     lda MSB-1, x
     and STATE
     beq EXECUTE
@@ -227,39 +240,52 @@ print_word_not_found_error ; ( caddr u -- )
 
     +BACKLINK "'", 1
     jsr PARSE_NAME
+    jsr TWODUP
     jsr FIND_NAME
     inx
-    lda LSB-1,x
+    lda MSB-1,x
     beq print_word_not_found_error
++   ldy LSB-1, x
+    sty LSB, x
+    sta MSB, x
+    sty LSB+1, x
+    sta MSB+1, x
+    jsr TO_XT
+    jsr SWAP
+    jsr GET_IMMED
+    inx
     rts
 
     +BACKLINK "find", 4
-FIND
+FIND ; ( xt -1 | xt 1 | caddr 0 )
     jsr DUP
     jsr TO_R
     jsr COUNT
     jsr FIND_NAME
-    lda LSB,x
+    lda MSB, x
     beq +
+    jsr DUP
+    jsr TO_XT
+    jsr SWAP
+    jsr GET_IMMED
     jsr R_TO
     inx
     rts
 +   inx
-    inx
-    inx
     jsr R_TO
     jmp ZERO
 
     +BACKLINK "find-name", 9
-FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
-    lda LSB,x
+FIND_NAME ; ( caddr u -- nt | 0 )
+    inx
+    lda LSB-1,x
     beq .find_failed
     sta .findlen + 1
     sta .findlen2 + 1
 
-    lda MSB+1,x
+    lda MSB,x
     sta W2+1
-    lda LSB+1,x
+    lda LSB,x
     sta W2
     lda _LATEST
     sta W
@@ -291,6 +317,7 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
 
     ; It is null - give up.
 .find_failed
+    inx
     jmp ZERO
 
 .string_compare
@@ -311,24 +338,25 @@ FIND_NAME ; ( caddr u -- caddr u 0 | xt 1 | xt -1 )
 
 .word_is_equal
     ; return address to dictionary word
-    inx
-    lda W
-    sta LSB, x
-    sta W2
-    lda W + 1
-    sta MSB, x
-    sta W2 + 1
-
-    jsr TO_XT
-
-    dex
-
     ldy #0
-    lda (W2), y
+    lda (W), y
     and #F_NO_TAIL_CALL_ELIMINATION | F_IMMEDIATE
     sta FOUND_WORD_WITH_NO_TCE
+    lda W
+    sta LSB, x
+    lda W + 1
+    sta MSB, x
+    rts
 
-    lda (W2), y ; a contains string length + mask
+
+GET_IMMED ; ( nt -- 1 | -1 )
+    lda MSB, x
+    sta W + 1
+    lda LSB, x
+    sta W
+    ldy #0
+
+    lda (W), y ; a contains string length + mask
     and #F_IMMEDIATE
     beq .not_immed
     sty MSB, x ; 0
