@@ -23,7 +23,7 @@
 CHAR_TO_LOWERCASE ; ( a -- a )
     sta .save
     sec
-    sbc #'a' + $80 
+    sbc #'a' + $80
     cmp #1 + 'z' - 'a'
     bcs +
     adc #'a'
@@ -37,6 +37,6 @@ CHAR_TO_LOWERCASE ; ( a -- a )
     bcs +
     adc #'a'
     rts
-+   
++
     lda .save
     rts
