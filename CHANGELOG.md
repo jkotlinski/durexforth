@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - SAVE-PRG removes the dictionary and saves the program
  - TOP returns the address of the last byte of the header structure. The value at this address will always be 0.
  - TOP! can be used to specify the position of header data.
+ - HIDE removes words from the dictionary.
 ### Fixed
  - V did not compile in DECIMAL mode.
  - V long line
