@@ -1,5 +1,9 @@
 marker ---editor---
 
+defer v
+
+latest @ \ begin hiding words
+
 $d value lf
 
 $7001 value bufstart
@@ -543,7 +547,7 @@ eof @ c@ abort" eof"
 curlinestart @ bufstart eof @ within
 0= abort" cl" again ;
 
-: v
+:noname
 \ modifies kernal to change kbd prefs
 ram-kernal $eaea @ $8ca <> if
 rom-kernal
@@ -568,4 +572,6 @@ reset-buffer
 rom-kernal bufstart loadb
 ?dup 0= if reset-buffer else
 eof ! 0 eof @ c! then
-else drop then main-loop ;
+else drop then main-loop ; is v
+
+latest ! \ end hiding words
