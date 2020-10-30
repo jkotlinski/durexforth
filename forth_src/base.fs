@@ -210,6 +210,7 @@ does> dup @ to here
 
 marker ---modules---
 
+.( defer..) include defer
 .( labels..) include labels
 .( doloop..) include doloop
 .( sys..) include sys
