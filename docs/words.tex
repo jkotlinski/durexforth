@@ -350,6 +350,8 @@ For more info about number formatting, read Starting Forth!
 \item[dump ( n -- )] Memory dump starting at address n.
 \item[n] Continue memory dump where last one stopped.
 \item[see word] Decompile Forth word and print to screen. Try \texttt{see see}.
+	Note: \texttt{see} will concatenate subsequent \texttt{noname:} definitions when displaying output. This is because \texttt{see} displays all code between the target word and the address of the next word located in the dictionary. Because \texttt{:noname} does not create a word header, it will not be present in the dictionary.
+		Some modules hide internal words, and define their public words with \texttt{defer}. Using \texttt{see} on the very last of these deferred words in a module will display the code and data of all of the internal words. Calling \texttt{see v} for example will produce pages of output.
 \end{description}
 
 \section{System State}
