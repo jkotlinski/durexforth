@@ -5,7 +5,7 @@ does> @ execute ;
 : is state @ if
 postpone ['] postpone defer!
 else ' defer! then ; immediate
-: hide ( word -- )
+: hide ( "name" -- )
 parse-name find-name ?dup if
 dup latest @ - ( nt size )
 >r c@ $1f and 3 + ( off )

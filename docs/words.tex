@@ -147,6 +147,7 @@ Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to 
 \item[create xxx/does$>$] Create a word creating word \texttt{xxx} with custom behavior
 specified after \texttt{does$>$}. For further description, see "Starting Forth."
 \item[state ( -- addr)] addr is the address of a cell containing the compilation-state flag. It is 1 when compiling, otherwise 0.
+\item[hide xxx] Removes \texttt{xxx} from the word list, while leaving its definition in place.
 
 \end{description}
 
