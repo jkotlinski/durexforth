@@ -1,6 +1,6 @@
 marker ---editor---
 
-defer v
+header v
 
 latest @ \ begin hiding words
 
@@ -572,6 +572,6 @@ reset-buffer
 rom-kernal bufstart loadb
 ?dup 0= if reset-buffer else
 eof ! 0 eof @ c! then
-else drop then main-loop ; is v
+else drop then main-loop ; show v
 
 latest ! \ end hiding words

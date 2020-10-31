@@ -57,3 +57,11 @@ begin over c@ digit? over and while
 2dup xor >r over >r abs >r dabs
 r> um/mod swap r> ?negate
 swap r> ?negate ;
+
+: >body ( xt -- dataaddr ) 5 + ;
+: defer create ['] abort ,
+does> @ execute ;
+: defer! >body ! ;
+: is state @ if
+postpone ['] postpone defer!
+else ' defer! then ; immediate

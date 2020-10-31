@@ -14,7 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Header data is not a linked list, and grows downward from $9fff. Record structure: `len_flags | str | xt`
  - Prompt displays `ful` when there is less than 256 bytes of dictionary space left.
  - FIND-NAME now returns a name token per the standard proposal
- - DEFER and associated words moved to defer.fs, included in base distribution.
  - V internal words hidden, BUFSTART no longer variable, fixed at $7000.
 ### Added
  - RDIR will display directory formatted data anywhere in memory.
@@ -26,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - TOP returns the address of the last byte of the header structure. The value at this address will always be 0.
  - TOP! can be used to specify the position of header data.
  - HIDE removes a word from the word list, while leaving its definition in place.
+ - SHOW assigns a new execution token to an existing word.
 ### Fixed
  - V did not compile in DECIMAL mode.
  - V long line
