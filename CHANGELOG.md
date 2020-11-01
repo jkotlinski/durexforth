@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - FIND-NAME now returns a name token per the standard proposal
  - DEFER and associated words moved to defer.fs, included in base distribution.
  - V internal words hidden, BUFSTART no longer variable, fixed at $7000.
+ - LATEST changed from VARIABLE to VALUE
 ### Added
  - RDIR will display directory formatted data anywhere in memory.
  - PAD Scratch pad memory set to cassette buffer. Untouched by DurexForth

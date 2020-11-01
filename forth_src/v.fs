@@ -2,7 +2,7 @@ marker ---editor---
 
 defer v
 
-latest @ \ begin hiding words
+latest \ begin hiding words
 
 $d value lf
 
@@ -574,4 +574,4 @@ rom-kernal bufstart loadb
 eof ! 0 eof @ c! then
 else drop then main-loop ; is v
 
-latest ! \ end hiding words
+to latest \ end hiding words

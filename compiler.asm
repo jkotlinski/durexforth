@@ -110,9 +110,9 @@ SEMICOLON
 
     +BACKLINK "immediate", 9
     ldy #0
-    lda _LATEST
+    lda LATEST_LSB
     sta W
-    lda _LATEST + 1
+    lda LATEST_MSB
     sta W + 1
     lda	(W), y
     ora	#F_IMMEDIATE
@@ -131,10 +131,10 @@ COLON
 
     ; Hides the word.
     dex
-    lda	_LATEST
+    lda	LATEST_LSB
     sta	W
     sta LSB, x
-    lda	_LATEST + 1
+    lda	LATEST_MSB
     sta W + 1
     sta MSB, x
 
@@ -165,15 +165,15 @@ HEADER
     clc
     adc #3
     sta W
-    lda _LATEST
+    lda LATEST_LSB
     sec
     sbc W
-    sta _LATEST
+    sta LATEST_LSB
     sta W
     bcs +
-    dec _LATEST + 1
+    dec LATEST_MSB
 +
-    lda _LATEST + 1
+    lda LATEST_MSB
     sta W + 1
     ldy #0
     ; Store length byte.

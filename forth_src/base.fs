@@ -14,7 +14,7 @@ then compile, ; immediate
 : until postpone 0branch , ; immediate
 : again jmp, , ; immediate
 : recurse
-latest @ >xt compile, ; immediate
+latest >xt compile, ; immediate
 : ( begin getc dup 0= if refill then
 ')' = if exit then again ; immediate
 : \ refill ; immediate
@@ -57,7 +57,7 @@ after jsr dodoes )
 here 60 c, ( rts )
 : create
 header postpone dodoes [ swap ] literal , ;
-: does> r> 1+ latest @ >dfa ! ;
+: does> r> 1+ latest >dfa ! ;
 
 .( asm..)
 parse-name asm included
@@ -135,17 +135,17 @@ inx, inx, ;code
 code lshift ( x1 u -- x2 )
 lsb dec,x -branch bmi,
 lsb 1+ asl,x msb 1+ rol,x
-latest @ >xt jmp,
+latest >xt jmp,
 code rshift ( x1 u -- x2 )
 lsb dec,x -branch bmi,
 msb 1+ lsr,x lsb 1+ ror,x
-latest @ >xt jmp,
+latest >xt jmp,
 
 : allot ( n -- ) here + to here ;
 
 : variable
 0 value
-here latest @ >xt 1+ (to)
+here latest >xt 1+ (to)
 2 allot ;
 
 code 0< msb lda,x 80 and,# +branch beq,
@@ -198,10 +198,10 @@ postpone then ; immediate
 variable (includes) $1e allot
 (includes) $20 0 fill
 
-: marker latest @ here create , ,
+: marker latest here create , ,
 (includes) begin dup @ while 2+ repeat , 
 does> dup @ to here
-2+ dup @ latest ! 
+2+ dup @ to latest 
 2+ @ 0 swap ! ;
 
 : include parse-name included ;
@@ -224,7 +224,7 @@ include turnkey
 cr
 .( cart: )
 $4000 $68 -
-here $801 - top latest @ -
+here $801 - top latest -
 $21 + + -
 . .( bytes remain.) cr
 
