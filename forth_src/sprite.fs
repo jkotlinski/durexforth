@@ -7,17 +7,17 @@ swap 80lsr over c@ or swap c! ;
 : clrbit ( n addr -- )
 swap 80lsr invert over c@ and swap c! ;
 
+: 7s- 7 swap - ;
+
 : sp-x! ( x n -- )
 2dup 2* $d000 + c! \ lsb
-swap $100 and if $d010 setbit
-else $d010 clrbit then ;
+swap $100 and if 7s- $d010 setbit
+else 7s- $d010 clrbit then ;
 
 : sp-y! ( y n -- ) 2* $d001 + c! ;
 
 : sp-xy! ( x y n -- )
 tuck sp-y! sp-x! ;
-
-: 7s- 7 swap - ;
 
 ( expand width/height )
 : sp-1w ( n -- ) 7s- $d01d clrbit ;
