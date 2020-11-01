@@ -124,10 +124,10 @@ interpret_tib
     lda SOURCE_ID_LSB
     beq +
     rts
-+   lda _LATEST
++   lda LATEST_LSB
     sec
     sbc HERE_LSB
-    lda _LATEST + 1
+    lda LATEST_MSB
     sbc HERE_MSB
     beq .on_data_underflow
     lda #'o'
@@ -287,9 +287,9 @@ FIND_NAME ; ( caddr u -- nt | 0 )
     sta W2+1
     lda LSB,x
     sta W2
-    lda _LATEST
+    lda LATEST_LSB
     sta W
-    lda _LATEST + 1
+    lda LATEST_MSB
     sta W + 1
     ; W now contains new dictionary pointer.
 .examine_word
@@ -760,9 +760,9 @@ OLD_BASE = * + 1
     lda MSB, x
     sta .xt + 1
     inx
-    lda _LATEST
+    lda LATEST_LSB
     sta .dowords_nametoken
-    lda _LATEST + 1
+    lda LATEST_MSB
     sta .dowords_nametoken + 1
 
 .dowords_lambda
