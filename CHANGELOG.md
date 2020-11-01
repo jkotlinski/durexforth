@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - V did not compile in DECIMAL mode.
  - V long line
  - Documented SEE concatenating subsequent :NONAME
+ - SP-X! had bug in most significant bit
 
 ## [2.0.0] - 2020-03-22
 
