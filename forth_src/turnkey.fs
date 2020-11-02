@@ -25,3 +25,7 @@ $801 top 1+ $d word count saveb ;
 : save-prg ( strptr strlen -- )
 here 0 , top to latest top!
 save-pack ;
+
+hide oldtop
+hide oldstart
+hide restore-forth

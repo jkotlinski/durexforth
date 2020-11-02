@@ -6,6 +6,7 @@ count $1f and ;
 exit then drop 1 ;
 : xt> ( codepointer -- nametoken )
 ['] (xt>) dowords ;
+hide (xt>)
 
 : see-jsr
 1+ dup @
@@ -78,6 +79,8 @@ while
     endcase
 repeat
 ';' emit cr 2drop ;
+hide (see)
+hide see-jsr
 
 variable last-dump
 
@@ -91,6 +94,7 @@ dup $7f and $20 < if drop '.' then
 emit 1+ loop cr loop
 last-dump ! base ! ;
 : n last-dump @ dump ;
+hide last-dump
 
 : more 
 $d6 c@ $18 = if $12 emit
@@ -98,3 +102,4 @@ $d6 c@ $18 = if $12 emit
 
 : (words) more name>string type space 1 ;
 : words ['] (words) dowords ;
+hide (words)
