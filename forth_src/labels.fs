@@ -41,3 +41,8 @@ over @ over @ 2+ - over @ 1+ c!
 then 3 + repeat drop 3 + repeat drop
 \ reset
 locs locp ! refs refp ! ;
+
+hide locs
+hide locp
+hide refs
+hide refp
