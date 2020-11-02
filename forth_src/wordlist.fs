@@ -5,8 +5,8 @@ dup latest @ - ( nt size )
 latest @ swap over +  ( srca dsta )
 dup latest !
 r> move then ;
-: define ( "name" -- )
+: defcode ( "name" -- )
 parse-name find-name ?dup 0=
 abort" not found."
-count $1f and + here swap !
-1 state ! 0 ;
+count $1f and + here swap ! ;
+: define defcode 0 ] ;
