@@ -296,7 +296,7 @@ lf of ins-char cur-down sol show-page
 endof 
 insert 2 = if at-eol if
 ins-start ins-char else repl-char 
-curx @ 1+ curx ! then 
+1 curx +! then 
 else ins-char then endcase ;
 
 : del-word
