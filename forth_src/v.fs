@@ -59,8 +59,11 @@ jmp,
 : find-next-line ( addr -- addr )
 dup eof @ u< if find-next-line then ;
 
+: next-line-start
+curlinestart @ find-next-line ;
+
 : linelen
-curlinestart @ find-next-line
+next-line-start
 curlinestart @ -
 dup if 1- then ;
 
@@ -123,9 +126,17 @@ fit-curx-in-linelen ;
 : cr= lf = ;
 : eol= dup 0= swap cr= or ;
 : space= dup cr= swap bl = or ;
+: eof= eof @ = ;
 
 : find-start-of-line ( addr -- addr )
 begin 1- dup c@ eol= until 1+ ;
+
+: goto ( line )
+sol dup cury !
+homepos @ swap
+?dup if 0
+do find-next-line loop then
+curlinestart ! ;
 
 : cur-up
 curlinestart @
@@ -145,10 +156,10 @@ then ;
 : cur-left
 curx @ ?dup if 1- curx ! then ;
 
-: cur-right
-editpos c@ eol=
-editpos 1+ c@ eol= or if exit then
-1 curx +! ;
+: at-eol editpos c@ eol= ;
+
+: cur-right at-eol editpos 1+ c@
+eol= or if exit then 1 curx +! ;
 
 : eol
 linelen dup if 1- then curx ! ;
@@ -173,6 +184,14 @@ curx @ linelen 1- = linelen 0= or if
 sol cur-down else cur-right then
 editpos = ;
 
+: word-forward 
+begin editpos eof= editpos c@ space=
+or advance-cur or until ;
+
+: word-end
+begin advance-cur editpos 1+ dup
+eof= swap c@ space= or or until ;
+
 : setcur ( x y -- )
 xr ! yr ! $e50c sys ;
 
@@ -184,19 +203,24 @@ curlinestart @ print-line drop ;
 : ins-start
 1 to insert 'i' set-status ;
 
+: repl-start
+2 to insert 'r' set-status ;
+
 : force-right
 linelen if 1 curx +! then ;
 
 : ins-stop cur-left 0 to insert
 clear-status ;
 
+: need-refresh! 1 to need-refresh ;
+
 : show-loc ( addr -- )
 dup find-start-of-line dup homepos ! 
 dup curlinestart ! - curx ! 0 cury !
-1 to need-refresh clear-status ;
+need-refresh! clear-status ;
 
 : nipchar
-editpos 1+ eof @ = if exit then
+editpos 1+ eof= if exit then
 editpos 1+ editpos
 eof @ editpos - move
 -1 eof +! ;
@@ -207,7 +231,7 @@ curlinestart @
 find-next-line find-next-line
 curlinestart @ - $28 >
 if exit then
-1 to need-refresh
+need-refresh!
 linelen 0= if nipchar exit then
 
 cury @ curx @ curlinestart @
@@ -227,8 +251,11 @@ curx @ if cur-left nipchar line-dirty!
 then ;
 
 : del-char
-editpos c@ eol= if exit then
+at-eol if exit then
 force-right backspace ;
+
+: repl-char
+editpos c! line-dirty! ;
 
 : ins-char
 dup lf <> linelen $26 > and if 
@@ -266,13 +293,17 @@ right of ins-right drop endof
 $14 of backspace drop endof \ inst
 $94 of del-char drop endof \ del
 lf of ins-char cur-down sol show-page
-endof ins-char endcase ;
+endof 
+insert 2 = if at-eol if
+ins-start ins-char else repl-char 
+curx @ 1+ curx ! then 
+else ins-char then endcase ;
 
 : del-word
 line-dirty!
-begin editpos c@ eol= if exit then
-editpos c@ del-char space= if exit then
-again ;
+begin at-eol if exit then
+editpos c@ del-char space= 
+until ;
 
 variable clip $26 allot
 variable clip-count
@@ -281,18 +312,22 @@ variable clip-count
 : yank-line linelen clip-count !
 curlinestart @ clip linelen move ;
 
+: del-between ( addr )
+2dup swap - -rot ( off a1 a2 )
+eof @ over - move eof +! 
+eof @ editpos = if
+0 eof @ ! 1 eof +! then 
+need-refresh! ;
+
 : del-line
-sol 1 to need-refresh
-yank-line
+sol yank-line
 ( contract buffer )
-curlinestart @ find-next-line
-curlinestart @
-2dup swap - -rot
-eof @ curlinestart @ - move
-eof +!
-eof @ curlinestart @ = if
-0 eof @ ! 1 eof +! then
-linelen 0= if cur-up join-lines then ;
+next-line-start curlinestart @
+del-between ;
+
+: del-to-eol
+next-line-start 1- editpos 
+del-between ;
 
 create fbuf #39 allot
 0 fbuf c!
@@ -338,7 +373,7 @@ key to need-refresh ;
 : open-line
 sol lf ins-char sol
 ins-start
-1 to need-refresh ;
+need-refresh! ;
 
 : paste-line
 open-line ins-stop
@@ -357,88 +392,43 @@ clip-count @ eof +! ;
 if eol force-right lf ins-char cur-down
 then ;
 
-\ --- key handlers start
+: append force-right ins-start ;
 
-here
-'$' c, ' eol ,
-'0' c, ' sol ,
-'J' c, ' join-lines ,
-'O' c, ' open-line ,
-'P' c, ' paste-line ,
-'X' c, ' backspace ,
-'b' c, ' word-back ,
-'i' c, ' ins-start ,
-'n' c, ' do-match ,
-'x' c, ' del-char ,
-left c, ' cur-left ,
-right c, ' cur-right ,
-up c, ' cur-up ,
-down c, ' cur-down ,
-'h' c, ' cur-left ,
-'l' c, ' cur-right ,
-'k' c, ' cur-up ,
-'j' c, ' cur-down ,
-\ defined later
-$15 c, 0 , \ ctrl+u
-4 c,   0 , \ ctrl+d
-'*' c, 0 ,
-'/' c, 0 ,
-'G' c, 0 ,
-'a' c, 0 ,
-'d' c, 0 ,
-'g' c, 0 ,
-'r' c, 0 ,
-'w' c, 0 ,
-0 c,
+: append-line eol append ;
 
-: key-fn ( key -- fn-addr|0 )
-[ swap ] literal begin 2dup c@ = if
-1+ nip exit then
-3 + dup c@ 0= until 2drop 0 ;
-
-:noname force-right ins-start ;
-'a' key-fn !
-
-:noname
+: delete-enter
 'd' set-status
 key case
 'w' of del-word endof
 'd' of del-line endof
 endcase clear-status ;
-'d' key-fn !
 
-:noname
+: find-enter
 0 $18 setcur clear-status '/' emit
 fbuf 1+ #38 accept fbuf c!
 do-match ;
-'/' key-fn !
 
-:noname
+: find-under
 0 $18 setcur clear-status '/' emit
 is-wordstart 0= if word-back then
 editpos fbuf 1+ word-len dup fbuf c!
 move
 fbuf 1+ fbuf c@ type bl emit
 do-match ;
-'*' key-fn !
 
-:noname
+: page-up
 $c 0 do cur-up refresh-line loop ;
-$15 key-fn ! \ ctrl+u
 
-:noname
+: page-down
 $c 0 do cur-down refresh-line loop ;
-4 key-fn ! \ ctrl+d
 
-:noname
+: go-enter
 sol 0 cury !
 bufstart dup homepos ! curlinestart !
-1 to need-refresh ;
-'g' key-fn !
-
-:noname
+need-refresh! ;
+: go-sof
 \ can be much optimized...
-bufstart eof @ = if exit then
+bufstart eof= if exit then
 eof @ 1- find-start-of-line
 dup curlinestart ! homepos !
 sol
@@ -449,30 +439,104 @@ homepos !
 homepos @ bufstart = or
 until
 $17 swap - dup cury ! 0 swap setcur
-1 to need-refresh ;
-'G' key-fn !
+need-refresh! ;
 
-:noname
-key editpos c! line-dirty! ;
-'r' key-fn !
+: repl-under key repl-char ;
 
-:noname advance-cur if exit then
-begin is-wordstart 0= while
-advance-cur if exit then repeat ;
-'w' key-fn !
+: line-down 
+next-line-start
+eof= if exit then homepos @
+find-next-line homepos ! 
+next-line-start curlinestart !
+sol need-refresh!  ;
 
+: go-home 0 goto ;
+
+: line-up cury @ next-line-start
+go-home cur-up curlinestart ! cury !
+need-refresh! ;
+
+: yank key 'y' = if yank-line then ;
+
+: open-line-down force-down
+open-line ;
+
+: paste-line-down force-down
+paste-line ;
+
+: change-word key 'w' = if 
+del-word bl ins-char cur-left
+ins-start then ;
+
+: substitute-char del-char ins-start ;
+
+: substitute-line del-line open-line 
+ins-start ;
+
+: go-last $17 goto ;
+
+: go-mid $c goto ;
+
+: change-line del-to-eol ins-start ;
+
+\ key handler table
+\ semi-ordered by most-used
+header keytab
+left c, ' cur-left ,
+right c, ' cur-right ,
+up c, ' cur-up ,
+down c, ' cur-down ,
+'h' c, ' cur-left ,
+'l' c, ' cur-right ,
+'k' c, ' cur-up ,
+'j' c, ' cur-down ,
+'$' c, ' eol ,
+'0' c, ' sol ,
+$13 c, ' sol ,
+'i' c, ' ins-start ,
+'R' c, ' repl-start ,
+'a' c, ' append ,
+'A' c, ' append-line ,
+'s' c, ' substitute-char ,
+'S' c, ' substitute-line ,
+'J' c, ' join-lines ,
+'O' c, ' open-line ,
+'P' c, ' paste-line ,
+'X' c, ' backspace ,
+'x' c, ' del-char ,
+'D' c, ' del-to-eol ,
+'C' c, ' change-line ,
+'b' c, ' word-back ,
+'e' c, ' word-end ,
+'d' c, ' delete-enter ,
+'g' c, ' go-enter ,
+'r' c, ' repl-under ,
+'w' c, ' word-forward ,
+'y' c, ' yank ,
+'o' c, ' open-line-down ,
+'p' c, ' paste-line-down ,
+'c' c, ' change-word ,
+'n' c, ' do-match ,
+'+' c, ' line-down ,
+'-' c, ' line-up ,
+$15 c, ' page-up , \ ctrl+u
+4 c,   ' page-down , \ ctrl+d
+$17 c, ' del-word , \ ctrl+w
+'*' c, ' find-under ,
+'/' c, ' find-enter ,
+'G' c, ' go-sof ,
+'H' c, ' go-home ,
+'L' c, ' go-last ,
+'M' c, ' go-mid ,
+0 c,
 \ --- key handlers end
 
 : do-main ( key -- quit? )
-dup key-fn ?dup if
-@ execute drop 0 exit then
+dup ['] keytab begin 2dup c@ = if
+1+ nip @ execute drop 0 exit then
+3 + dup c@ 0= until 2drop 
 
-case
-  'y' of key
-    'y' = if yank-line then
-  endof
-  'o' of force-down open-line endof
-  'p' of force-down paste-line endof
+case \ keys that can quit
   'Z' of key case 
     'Z' of write-file -1 exit endof
   endcase endof
@@ -483,7 +547,7 @@ case
       1 $18 setcur 'w' emit key case
       lf of write-file endof
       '!' of
-        1 to need-refresh
+        need-refresh!
         '!' emit here $f accept
         ?dup 0= if exit then
         filename c! here
@@ -494,13 +558,6 @@ case
     'q' of -1 exit endof
     clear-status
     endcase
-  endof
-
-  'c' of key
-    'w' = if 
-      del-word bl ins-char
-      cur-left ins-start
-    then
   endof
 endcase 0 ;
 

@@ -7,10 +7,15 @@ The position of the editor buffer is \$7000.
 \section{Key Presses}
 
 \subsection{Inserting Text}
-Following commands enter insert mode. Insert mode allows you to insert text. It can be exited by pressing $\leftarrow$.
+At startup, the editor is in command mode. The following commands enter insert mode, which allows you to enter text into the editor buffer. You can return to command mode with $\leftarrow$.
 \begin{description}
 \item[i] Insert text.
+\item[R] Replace text.
 \item[a] Append text.
+\item[A] Append text at end of line.
+\item[C] Change rest of line.
+\item[S] Substitute line.
+\item[s] Substitute character.
 \item[o] Open new line after cursor line.
 \item[O] Open new line on cursor line.
 \item[cw] Change word.
@@ -20,14 +25,20 @@ Following commands enter insert mode. Insert mode allows you to insert text. It 
 \begin{description}
 \item[hjkl] Cursor left, down, up, right.
 \item[Cursor Keys] ...also work fine.
+\item[-] Scroll 1 line up.
+\item[+] Scroll 1 line down.
 \item[Ctrl+u] Half page up.
 \item[Ctrl+d] Half page down.
 \item[b] Go to previous word.
 \item[w] Go to next word.
-\item[0] Go to line start.
+\item[e] Go to end of word.
+\item[0 | Home] Go to line start.
 \item[\$] Go to line end.
 \item[g] Go to start of file.
 \item[G] Go to end of file.
+\item[H] Go to home window line.
+\item[L] Go to last window line.
+\item[M] Go to middle window line.
 \item[/\{string\}] Search forward for the next occurrence of the string.
 \item[*] Search forward for the next occurrence of the word under the cursor.
 \item[n] Repeat the latest search.
@@ -52,6 +63,7 @@ After quitting, the editor can be re-opened by entering \texttt{v}, and it will 
 \item[X] Backspace-delete character.
 \item[dw] Delete word.
 \item[dd] Cut line.
+\item[D] Delete rest of line.
 \item[yy] Yank (copy) line.
 \item[p] Paste line below cursor position.
 \item[P] Paste line on cursor position.

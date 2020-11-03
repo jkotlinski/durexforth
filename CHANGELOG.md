@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - HIDE removes a word from the word list, while leaving its definition in place.
  - DEFINE assigns HERE to a word in the word list and begins compilation.
  - DEFCODE does the same as DEFINE, but begins a CODE: segment instead.
+ - V commands: A, R, +, -, HOME, e, C, D, s, S, H, L, M, ^w
 ### Fixed
  - V did not compile in DECIMAL mode.
  - V long line
