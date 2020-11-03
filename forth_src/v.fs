@@ -479,6 +479,17 @@ ins-start ;
 
 : change-line del-to-eol ins-start ;
 
+: findchar ( dir )
+curx @ swap key begin 
+over editpos + c@ eol= invert while
+over curx +! dup editpos c@ = if
+2drop drop exit then repeat
+2drop curx ! ;
+
+: findchar-fwd 1 findchar ;
+
+: findchar-back -1 findchar ; 
+
 \ key handler table
 \ semi-ordered by most-used
 header keytab
@@ -528,6 +539,8 @@ $17 c, ' del-word , \ ctrl+w
 'H' c, ' go-home ,
 'L' c, ' go-last ,
 'M' c, ' go-mid ,
+'f' c, ' findchar-fwd ,
+'F' c, ' findchar-back ,
 0 c,
 \ --- key handlers end
 
