@@ -17,3 +17,5 @@ i @ 0= if included leave then
 2dup hash i @ = if 2drop leave then
 2 +loop ;
 : require parse-name required ;
+
+hide hash
