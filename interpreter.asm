@@ -107,7 +107,7 @@ interpret_loop
     sta $318
     pla
     sta 1
-    rts
+    jmp $fffc ; warm reset vector
 
 interpret_tib
     jsr INTERPRET
