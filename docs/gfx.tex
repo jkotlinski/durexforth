@@ -16,13 +16,16 @@ The turtle graphics library is loaded with \texttt{include turtle}.
 \item[right ( deg -- )] Rotates the turtle \texttt{deg} degrees right.
 \item[penup ( -- )] Pen up (disables drawing).
 \item[pendown ( -- )] Pen down (enables drawing).
+\item[turtle@ ( -- \textit{state} )] Remembers turtle state.
+\item[turtle! ( \textit{state} -- )] Restores turtle state as earlier read by \texttt{turtle@}.
+\item[moveto ( x y deg -- )] Moves turtle to \texttt{x y} with angle \texttt{deg}.
 \end{description}
 
 \section{High-Resolution Graphics}
 
-The high-resolution graphics library is loaded with \texttt{include gfx}. 
+The high-resolution graphics library is loaded with \texttt{include gfx}.
 It is inspired by "Step-by-Step Programming Commodore 64: Graphics Book 3."
-Some demonstrations can be found in \texttt{gfxdemo}. 
+Some demonstrations can be found in \texttt{gfxdemo}.
 \begin{description}
 \item[hires ( -- )] Enters the high-resolution drawing mode.
 \item[lores ( -- )] Switches back to low-resolution text mode.
