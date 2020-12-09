@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - V long line
  - Documented SEE concatenating subsequent :NONAME
  - SP-X! had bug in most significant bit
+ - GFX: PEEK fetched bitmap pixels from ROM instead of RAM
 
 ## [2.0.0] - 2020-03-22
 
