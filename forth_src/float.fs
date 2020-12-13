@@ -1,6 +1,13 @@
 ( BASIC floating point words.
 
-NB: If running from cartridge, these
+Caution! This code cannot be used
+safely, as the Kernal floating-point
+routines use addresses inside the
+Durexforth parameter stack area.
+It is only intended for amusement
+and as a fun hack.
+
+If running from cartridge, these
 words will crash because BASIC ROM
 cannot be accessed!
 
