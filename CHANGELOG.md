@@ -7,19 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
- - LS abort on LOADB error, PAGE upon success.
- - RDIR improve placement of MORE.
- - LS now accepts wildcards, drive #'s or not.
+ - LATEST changed from VARIABLE to VALUE
+ - FIND-NAME now returns a name token per the standard proposal
  - Dictionary restructured, now header and code data are split.
  - Header data is not a linked list, and grows downward from $9fff. Record structure: `len_flags | str | xt`
+ - LS abort on LOADB error, PAGE upon success.
+ - LS now accepts wildcards, drive #'s or not.
+ - RDIR improve placement of MORE.
  - Prompt displays `ful` when there is less than 256 bytes of dictionary space left.
- - FIND-NAME now returns a name token per the standard proposal
  - V internal words hidden, BUFSTART no longer variable, fixed at $7000.
- - LATEST changed from VARIABLE to VALUE
 ### Added
  - RDIR will display directory formatted data anywhere in memory.
  - PAD Scratch pad memory set to cassette buffer. Untouched by DurexForth
- - DOWORDS, which allows executing an xt for every word in the wordlist 
+ - DOWORDS, which allows executing an xt for every word in the wordlist
  - Turn-key operation utilities in TURNKEY:
  - SAVE-PACK packs the dictionary together before saving, which unpacks at runtime.
  - SAVE-PRG removes the dictionary and saves the program
@@ -30,11 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - DEFCODE does the same as DEFINE, but begins a CODE: segment instead.
  - V commands: A, R, +, -, HOME, e, C, D, s, S, H, L, M, ^w, f, F
 ### Fixed
- - V did not compile in DECIMAL mode.
- - V long line
- - Documented SEE concatenating subsequent :NONAME
  - SP-X! had bug in most significant bit
  - GFX: PEEK fetched bitmap pixels from ROM instead of RAM
+ - V did not compile in DECIMAL mode.
+ - Documented SEE concatenating subsequent :NONAME
 
 ## [2.0.0] - 2020-03-22
 
