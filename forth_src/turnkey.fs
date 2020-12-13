@@ -11,21 +11,26 @@ swap over - swap 1+ move ;
 
 : restore-forth
 oldtop top! 
-oldstart
----turnkey---
-execute ;
+oldstart start !
+---turnkey--- ;
+
+: newstart
+restore-forth
+start @ execute ;
 
 : save-pack ( strptr strlen -- )
 start @ to oldstart
 top to oldtop 
-['] restore-forth start ! 
+['] newstart start ! 
 here $20 + top latest - + top!
-$801 top 1+ $d word count saveb ;
+$801 top 1+ $d word count saveb
+restore-forth ;
 
 : save-prg ( strptr strlen -- )
-here 0 , top to latest top!
+top to latest ['] 0 1+ top! \ constant 0
 save-pack ;
 
 hide oldtop
 hide oldstart
 hide restore-forth
+hide newstart
