@@ -34,9 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - V long line
  - Documented SEE concatenating subsequent :NONAME
  - SP-X! had bug in most significant bit
- - RESTORE-FORTH did not restore start vector
- - SAVE-PACK did not leave the system usable
- - SAVE-PRG now points LATEST to a constant 0
+ - GFX: PEEK fetched bitmap pixels from ROM instead of RAM
 
 ## [2.0.0] - 2020-03-22
 

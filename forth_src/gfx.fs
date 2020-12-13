@@ -109,7 +109,7 @@ kernal-out
 kernal-in ;
 
 : peek ( x y -- b )
-blitloc c@ and ;
+blitloc kernal-out c@ kernal-in and ;
 
 variable dy
 variable sy variable sx
@@ -496,15 +496,14 @@ jmp, \ recurse
 : paint ( x y -- )
 2dup c8 < 0= swap 140 < 0= or
 if 2drop exit then
-kernal-out
-2dup peek if 2drop kernal-in exit then
-
+2dup peek if 2drop exit then
 here stk !
 \ push y x x 1
 2dup swap dup 1 spush
 \ push y+1 x x -1
 1+ swap dup ffff spush
 
+kernal-out
 begin here stk @ < while
 spop dy @ + \ y
 
