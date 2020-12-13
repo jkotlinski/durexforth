@@ -151,11 +151,18 @@ save-forth @0:durexforth
 
 \subsection{Turn-key Operation}
 
-Durexforth offers utilities to save your program in a turn-key fashion by including the \texttt{turnkey} module.
+Durexforth offers utilities to save your program in a turn-key fashion by including the \texttt{turnkey} module once the program is ready to be saved.
 
 Programs can be saved in a compacted state using \texttt{save-pack}. These programs are stored with 32 bytes between \texttt{here} and \texttt{latest}. When they are first loaded, they will restore the header space to its original \texttt{top}.
 
-If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary entirely when saving with \texttt{save-prg}. This allows your program to use memory down to \texttt{here} plus 32 bytes for safety. 
+If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary headers entirely when saving with \texttt{save-prg}. This allows your program to use memory down to \texttt{here} plus 32 bytes for safety.
+
+After either of these words have saved the file to disk, they will restore forth to the unpacked state, and strip the \texttt{turnkey} module from the dictionary. This allows you to continue to use forth interactively in the case of \texttt{save-pack}. As \texttt{save-prg} has stripped the dictionary headers from the system, it will no longer be usable. If you wish to test your program after saving, you can compile a call to \texttt{save-prg} instead:
+\begin{verbatim}
+: build save-prg mydemo start @ execute ;
+build
+\end{verbatim}
+This will simulate the start-up sequence after saving the packed program.
 
 \section{How to Learn More}
 
