@@ -85,7 +85,6 @@ msb lda,x lsb sta,x
 dup code lda,# 100/ ldy,#
 ['] pushya jmp, ;
 : constant value ;
-$33c constant pad
 : space bl emit ;
 : spaces ( n -- )
 begin ?dup while space 1- repeat ;
@@ -108,7 +107,7 @@ postpone drop postpone drop ; immediate
 
 
 : save-forth ( strptr strlen -- )
-801 $a000 d word count saveb ;
+basic-start $a000 d word count saveb ;
 
 code 2/
 msb lda,x 80 cmp,# msb ror,x lsb ror,x
@@ -225,7 +224,7 @@ include turnkey
 cr
 .( cart: )
 $4000 $68 -
-here $801 - top latest -
+here basic-start - top latest -
 $21 + + -
 . .( bytes remain.) cr
 

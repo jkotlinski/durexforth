@@ -1,0 +1,103 @@
+\chapter{Commodore 128}
+
+\section{Introduction}
+
+If you are the lucky owner of a Commodore 128, durexForth can run in native 128 mode, with full support for the 128's 80 column text display, 2MHz processor mode, and fast-serial data transfer (with fast-serial-capable disk drives).
+
+\section{Features}
+
+\subsection{80 Column Display}
+
+The Commodore 128 has two independent displays - the 40-column, Commodore-64-compatible VIC-IIe, and the 80-column VDC. durexForth supports text output both displays, and will default to the display that was in use at the time durexForth was started.
+
+As in Commodore BASIC, it is possible to switch between displays on-the-fly by pressing the ESC key, followed by the X key.
+
+\subsection{Graphics}
+
+The 80-column display is only supported for text output. durexForth's graphics words will always draw to the 40-column display, regardless of which display is selected for text. If you have separate monitors connected to your Commodore 128, you can use this to your advantage, interacting with the interpreter on the 80 column display while graphics are displayed on the 40 column display.
+
+\subsection{Fast Mode}
+
+The Commodore 128's `Fast' mode doubles the system clock speed, running at 2MHz rather than 1MHz. Due to a limitation in the VIC-IIe chip, the 40-column display can only operate at 1MHz, and durexForth blanks the 40-column display while the system is in fast mode. As a result, the system should not be put into fast mode while graphics are being displayed, or the 40-column display is selected for text.
+
+\subsection{Memory}
+
+The Commodore 128 has 128KB of RAM, divided into two 64KB banks, RAM 0 and RAM 1. The durexForth interpreter and dictionary reside entirely in RAM 0, leaving RAM 1 free for use by user programs.
+
+The \texttt{!far}, \texttt{@far}, \texttt{c!far} and \texttt{c@far} words can be used to read and write `far' memory, taking a bank number in addition to the address used by their non-far counterparts.
+
+\texttt{sysfar} works in a similar fashion, allowing subroutines in far memory to be called from Forth.
+
+\section{Compatibility}
+
+While every effort has been made to make durexForth's included word-set compatible with the Commodore 128, existing Forth code may need to be modified in order to run successfully on the Commodore 128. In general, code that exclusively calls durexForth words and does not access Kernal variables or call Kernal routines, will run unchanged on the Commodore 128. Code that does any of the following, will require changes:
+
+\begin{itemize}
+\item Reads or writes to Kernal variables.
+
+Many Kernal variables have different locations on the Commodore 128.
+
+\item Calls to Kernal or BASIC routines using \texttt{sys} or Assembler code.
+
+While routines in the `public' Kernal jump table (\texttt{\$ff83}-\texttt{\$fff3}) are generally compatible, jumping directly into ROM routines will likely not work.
+
+\item Writes to VIC registers \texttt{\$d011}, \texttt{\$d016}, or \texttt{\$d018}.
+
+These registers are under control of the Commodore 128's IRQ handler, and any data written to them will be overwritten on the next vertical refresh.
+
+\item Writes to \texttt{\$01}
+
+Memory banking on the Commodore 128 works entirely differently to the Commodore 64, and \texttt{\$01} serves different functions.
+
+\item Writing to addresses \texttt{\$ff00}-\texttt{\$ff04}
+
+Addresses \texttt{\$ff00}-\texttt{\$ff04} are hard-wired to registers in the Commodore 128's Memory Management Unit. Attempting to write to memory at these addresses will modify the computer's memory map and cause a crash.
+
+\end{itemize}
+
+It is beyond the scope of this manual to explain the exact changes required to resolve all of these differences. For further details, the following books are indispensible:
+
+\begin{itemize}
+\item The \href{https://archive.org/details/C128_Programmers_Reference_Guide_1986_Bamtam_Books}{Commodore 128 Programmer’s Reference Guide} by Commodore Business Machines Inc.
+
+\item \href{https://archive.org/details/Compute_s_Mapping_the_Commodore_128/}{Mapping the Commodore 128} by Ottis R. Cowper.
+\end{itemize}
+
+The \texttt{gfxcore} and \texttt{vcore} source files contain the platform-specific components of the \texttt{gfx} library and the \texttt{v} text editor, and may be useful as examples of the kinds of changes required.
+
+\section{Additional Words}
+
+In addition to the words described so far, durexForth provides some additional words for accessing the Commodore 128's extended capabilities:
+
+\subsection{Speed Control}
+
+\begin{description}
+    \item[fast ( -- )] Sets the Commodore 128's clock speed to 2Mhz for faster processing.
+    \item[slow ( -- )] Sets the Commodore 128's clock speed to 1Mhz for greater compatibility.
+    \item[fast? ( -- is-fast )] Returns 1 if the Commodore 128's clock speed is 2Mhz, and 0 if the clock speed is 1Mhz.
+\end{description}
+
+Keep in mind that, due to hardware limitations, the 40-column screen will be blanked while the system is in \texttt{fast} mode.
+
+\subsection{Far Memory}
+
+These words, for manipulating memory across banks, are available by including \texttt{far}.
+
+\begin{description}
+    \item[sysfar ( bank addr -- )] Call a subroutine in the given memory bank. The helper variables \texttt{ar}, \texttt{xr}, \texttt{yr} and \texttt{sr} can be used to set arguments and get results through the a, x, y and status registers.
+    \item[!far ( value bank addr -- )] Store a 16-bit value to an address in the given memory bank.
+    \item[@far ( bank addr -- value )] Retrieve a 16-bit value from an address in the given memory bank.
+    \item[c@far ( bank addr -- value )] Store an 8-bit value to an address in the given memory bank.
+    \item[c!far ( value bank addr -- )] Retrieve an 8-bit value from an address in the given memory bank.
+\end{description}
+
+The \texttt{bank} argument is a memory configuration identifier from 0 to 15. In general, the following configurations are useful:
+
+\begin{description}
+    \item[0] RAM bank 0, no IO or ROM
+    \item[1] RAM bank 1, no IO or ROM
+    \item[14] RAM bank 0 + BASIC ROM + Character ROM + Kernal
+    \item[15] RAM bank 0 + BASIC ROM + IO + Kernal
+\end{description}
+
+For a full list of memory configurations and further explanation, see the \href{https://archive.org/details/C128_Programmers_Reference_Guide_1986_Bamtam_Books}{Commodore 128 Programmer’s Reference Guide}.
