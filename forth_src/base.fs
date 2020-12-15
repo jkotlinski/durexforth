@@ -214,6 +214,7 @@ marker ---modules---
 .( labels..) include labels
 .( doloop..) include doloop
 .( sys..) include sys
+.( kernal..) include kernal
 .( debug..) include debug
 .( ls..) include ls
 .( require..) include require
