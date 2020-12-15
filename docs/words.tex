@@ -450,3 +450,14 @@ $cbff top!
 \end{description}
 
 	Further details on use of these words outlined in the Turn-key Operation section of the tutorial.
+
+\section{Platform Detection}
+
+\texttt{include platform} will detect the type of system durexForth is currently running on, and create the constant \texttt{platform} with a corresponding value.
+
+Currently-supported \texttt{platform} values are:
+
+\begin{description}
+\item[64] Commodore 64, SX-64, or Commodore 128 running in Commodore 64 mode.
+\item[128] Commodore 128 running in native mode.
+\end{description}
