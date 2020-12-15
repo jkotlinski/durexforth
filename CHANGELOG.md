@@ -29,6 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - DEFINE assigns HERE to a word in the word list and begins compilation.
  - DEFCODE does the same as DEFINE, but begins a CODE: segment instead.
  - V commands: A, R, +, -, HOME, e, C, D, s, S, H, L, M, ^w, f, F
+ - Native support for Commodore 128
+ - Split V and GFX code into common and platform-specific components
+ - PLATFORM identifies whether durexForth is running on a Commodore 64 or 128
 ### Fixed
  - SP-X! had bug in most significant bit
  - GFX: PEEK fetched bitmap pixels from ROM instead of RAM
