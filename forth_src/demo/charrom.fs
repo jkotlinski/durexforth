@@ -1,5 +1,3 @@
-
-
 ( how to modify char ROM font )
 : chardemo
 ( switch in char ROM )

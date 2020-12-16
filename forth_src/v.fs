@@ -184,7 +184,7 @@ curx @ linelen 1- = linelen 0= or if
 sol cur-down else cur-right then
 editpos = ;
 
-: word-forward 
+: word-forward
 begin editpos eof= editpos c@ space=
 or advance-cur or until ;
 
@@ -215,7 +215,7 @@ clear-status ;
 : need-refresh! 1 to need-refresh ;
 
 : show-loc ( addr -- )
-dup find-start-of-line dup homepos ! 
+dup find-start-of-line dup homepos !
 dup curlinestart ! - curx ! 0 cury !
 need-refresh! clear-status ;
 
@@ -258,7 +258,7 @@ force-right backspace ;
 editpos c! line-dirty! ;
 
 : ins-char
-dup lf <> linelen $26 > and if 
+dup lf <> linelen $26 > and if
 drop exit then
 
 editpos
@@ -293,16 +293,16 @@ right of ins-right drop endof
 $14 of backspace drop endof \ inst
 $94 of del-char drop endof \ del
 lf of ins-char cur-down sol show-page
-endof 
+endof
 insert 2 = if at-eol if
-ins-start ins-char else repl-char 
-1 curx +! then 
+ins-start ins-char else repl-char
+1 curx +! then
 else ins-char then endcase ;
 
 : del-word
 line-dirty!
 begin at-eol if exit then
-editpos c@ del-char space= 
+editpos c@ del-char space=
 until ;
 
 variable clip $26 allot
@@ -314,9 +314,9 @@ curlinestart @ clip linelen move ;
 
 : del-between ( addr )
 2dup swap - -rot ( off a1 a2 )
-eof @ over - move eof +! 
+eof @ over - move eof +!
 eof @ editpos = if
-0 eof @ ! 1 eof +! then 
+0 eof @ ! 1 eof +! then
 need-refresh! ;
 
 : del-line
@@ -326,7 +326,7 @@ next-line-start curlinestart @
 del-between ;
 
 : del-to-eol
-next-line-start 1- editpos 
+next-line-start 1- editpos
 del-between ;
 
 create fbuf #39 allot
@@ -345,7 +345,7 @@ i show-loc unloop exit then loop
 ." not found" ;
 
 : word-len ( -- )
-1 begin dup editpos + dup c@ space= 0= 
+1 begin dup editpos + dup c@ space= 0=
 swap eof @ < AND
 while 1+ repeat ;
 
@@ -443,10 +443,10 @@ need-refresh! ;
 
 : repl-under key repl-char ;
 
-: line-down 
+: line-down
 next-line-start
 eof= if exit then homepos @
-find-next-line homepos ! 
+find-next-line homepos !
 next-line-start curlinestart !
 sol need-refresh!  ;
 
@@ -464,13 +464,13 @@ open-line ;
 : paste-line-down force-down
 paste-line ;
 
-: change-word key 'w' = if 
+: change-word key 'w' = if
 del-word bl ins-char cur-left
 ins-start then ;
 
 : substitute-char del-char ins-start ;
 
-: substitute-line del-line open-line 
+: substitute-line del-line open-line
 ins-start ;
 
 : go-last $17 goto ;
@@ -480,7 +480,7 @@ ins-start ;
 : change-line del-to-eol ins-start ;
 
 : findchar ( dir )
-curx @ swap key begin 
+curx @ swap key begin
 over editpos + c@ eol= invert while
 over curx +! dup editpos c@ = if
 2drop drop exit then repeat
@@ -488,7 +488,7 @@ over curx +! dup editpos c@ = if
 
 : findchar-fwd 1 findchar ;
 
-: findchar-back -1 findchar ; 
+: findchar-back -1 findchar ;
 
 \ key handler table
 \ semi-ordered by most-used
@@ -547,10 +547,10 @@ $17 c, ' del-word , \ ctrl+w
 : do-main ( key -- quit? )
 dup ['] keytab begin 2dup c@ = if
 1+ nip @ execute drop 0 exit then
-3 + dup c@ 0= until 2drop 
+3 + dup c@ 0= until 2drop
 
 case \ keys that can quit
-  'Z' of key case 
+  'Z' of key case
     'Z' of write-file -1 exit endof
   endcase endof
   ':' of
@@ -642,6 +642,6 @@ reset-buffer
 rom-kernal bufstart loadb
 ?dup 0= if reset-buffer else
 eof ! 0 eof @ c! then
-else drop then main-loop ;  
+else drop then main-loop ;
 
 to latest \ end hiding words

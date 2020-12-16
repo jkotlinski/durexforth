@@ -1,3 +1,4 @@
+#!env python
 import math
 
 for d in xrange(360):

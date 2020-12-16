@@ -1,5 +1,5 @@
 require mml
-cr .( Frere Jaques) 
+cr .( Frere Jaques)
 : frere-jaques
 s" o3l4fgaffgafab->c&c<ab->c&cl8cdc<b-
 l4af>l8cdc<b-l4affcf&ffcf&f"
@@ -8,7 +8,7 @@ c<b-l4af>l8cdc<b-l4affcf&ffcf&f"
 s" " play-mml ;
 frere-jaques
 
-cr .( Sarias Song) 
+cr .( Sarias Song)
 : sarias-song
 s" l16o3f8o4crcrcro3f8o4crcrcro3f8o4crc
 rcro3f8o4crcro3cre8o4crcrcro3e8o4
