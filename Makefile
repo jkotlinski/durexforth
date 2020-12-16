@@ -21,7 +21,7 @@ SEPARATOR_NAME1 = '=-=-=-=-=-=-=-=,s'
 SEPARATOR_NAME2 = '=-------------=,s'
 SEPARATOR_NAME3 = '=-=---=-=---=-=,s'
 
-all: durexforth.d64
+all: durexforth.d64 durexforth128.d64
 
 docs:
 	$(MAKE) -C docs
