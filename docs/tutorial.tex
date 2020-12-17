@@ -63,6 +63,27 @@ This piece of code reads from keyboard and sends back the chars to screen:
 foo
 \end{verbatim}
 
+\section{Printer Example}
+
+This piece of code prints a message to a printer on device \#4, and then prints a message to the screen:
+
+\begin{verbatim}
+include io
+
+: print-hello
+4 device ( use device #4 )
+0 0 7 47 open ( open address 7 on device 4 as file 47 )
+47 chkout ( redirect output to file 47 )
+." Hello, printer!" cr
+clrch ( stop input and output redirection )
+." Hello, screen!" cr
+47 close ( close file 47 ) ;
+
+print-hello
+\end{verbatim}
+
+The device number and address may differ between printer models. Commodore MPS series printers use address 0 to print in their uppercase/graphics font, and address 7 to print in their lowercase/uppercase font.
+
 \section{Avoiding Stack Crashes}
 
 durexForth should be one of the fastest and leanest Forths for the C64. To achieve this, there are
