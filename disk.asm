@@ -369,12 +369,7 @@ INCLUDED
     ldx	CURRENT_DEVICE
     jsr	SETLFS
 
-!if TARGET = 128 {
-    ; On the C128, drive must be UNTALKed before OPEN to avoid
-    ; a bug that causes a byte to be lost from a channel that
-    ; is currently open.
-    jsr UNTALK
-}
+    jsr CLRCHN
 
     jsr	OPEN
     bcc	+
