@@ -405,6 +405,24 @@ forget
 \item[rdir ( addr -- )] Display disk directory previously loaded to addr.
 \end{description}
 
+\subsection{Low-Level Device I/O}
+
+For more advanced uses, words corresponding to the standard Commodore Kernal IO routines are available by including \texttt{io}.
+
+\begin{description}
+    \item[open ( filenameptr filenamelength secondary-addr file-number -- )] Open a file.
+    \item[chkin ( file-number -- )] Selects a file as the current input device.
+    \item[chkout ( file-number -- )] Selects a file as the current output device.
+    \item[clrch ( -- )] Resets input and output to the keyboard and screen.
+    \item[readst ( -- status )] Returns the status from the last IO operation.
+    \item[chrin ( -- char)] Reads a character from the current input device.
+    \item[faccept ( addr u -- u )] Analog of \texttt{accept} that reads from the current input device rather than the keyboard. Receive a string of at most u characters from the current input device, into the buffer that starts at addr.  Returns how many characters were received.
+\end{description}
+
+\texttt{open}, \texttt{chkin} and \texttt{chkout} will close the file and abort with the message ``\texttt{io err}'' if an error is encountered. If you want to handle errors yourself, the words \texttt{(open)}, \texttt{(chkin)} and \texttt{(chkout)} take the same arguments, but return 0 on success and nonzero on failure, without any error handling.
+
+As per the underlying Kernal routines, \texttt{chrin} does not check for end-of-file or any other error condition. \texttt{readst} should be called to ensure that the returned character is valid.
+
 \section{Compatibility}
 
 The \texttt{compat} module contains various words that are not deemed necessary for enjoyable DurexForth operation, but still must be provided to comply with the Forth 2012 core standard.

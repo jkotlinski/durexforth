@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - RDIR improve placement of MORE.
  - Prompt displays `ful` when there is less than 256 bytes of dictionary space left.
  - V internal words hidden, BUFSTART no longer variable, fixed at $7000.
+ - Undocumented OPENW and CLOSEW words removed.
 ### Added
  - RDIR will display directory formatted data anywhere in memory.
  - PAD Scratch pad memory set to cassette buffer. Untouched by DurexForth
@@ -29,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - DEFINE assigns HERE to a word in the word list and begins compilation.
  - DEFCODE does the same as DEFINE, but begins a CODE: segment instead.
  - V commands: A, R, +, -, HOME, e, C, D, s, S, H, L, M, ^w, f, F
+ - Words for file and device IO in OPEN: and IO:
 ### Fixed
  - SP-X! had bug in most significant bit
  - GFX: PEEK fetched bitmap pixels from ROM instead of RAM

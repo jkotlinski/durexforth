@@ -217,6 +217,7 @@ marker ---modules---
 .( debug..) include debug
 .( ls..) include ls
 .( require..) include require
+.( open..) include open
 .( v..) include v
 
 decimal
