@@ -20,7 +20,7 @@
 ;OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;THE SOFTWARE. }}}
 
-; DEVICE OPENW CLOSEW LOADB SAVEB INCLUDED
+; DEVICE OPENW CLOSE LOADB SAVEB INCLUDED
 
 READST = $ffb7
 SETLFS = $ffba
@@ -43,15 +43,13 @@ SAVE = $ffd8
     inx
     rts
 
-; CLOSEW ( file# -- )
-    +BACKLINK "closew", 6
-CLOSEW
+; close ( file# -- )
+    +BACKLINK "close", 5
     lda LSB,x
     sta W
     stx	W2
     jsr	CLOSE
-    ldx	W
-    jsr	CHKOUT
+    jsr	CLRCHN
     ldx W2
     inx
     rts
@@ -232,9 +230,13 @@ save_binary_srange_end_hi = *+1
     inx
     rts
 
-; OPENW ( strptr strlen file# ) open file for writing
+; OPENW ( strptr strlen file# sa# ) open file for writing
     +BACKLINK "openw", 5
 OPENW
+    lda LSB,x
+    sta W3 ; secondary address
+    inx
+
     lda LSB,x
     sta W ; fileno
     stx	W2
@@ -246,13 +248,13 @@ OPENW
     tax
     pla
 
-    jsr	SETNAM
-    lda	W ; file number
-    ldx	$ba ; last used device#
-    tay ; secondary address
-    jsr	SETLFS
-    jsr	OPEN
-    bcc	+
+    jsr SETNAM
+    lda W       ; file number
+    ldx $ba     ; last used device#
+    ldy W3      ; secondary address
+    jsr SETLFS
+    jsr OPEN
+    bcc +
     jsr .close
     jmp ++
 +

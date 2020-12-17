@@ -3,19 +3,19 @@ $12 emit .( dump-labels) $92 emit
 labels to the file 'words'
 
 When written, extract the file from
-.d64 using c1541 command 
+.d64 using c1541 command
 'read words'.
-Then, load the file from VICE 
+Then, load the file from VICE
 monitor using 'll "words"'
 )
 
 \ TODO broken until TRAVERSE-WORDLIST
 : dump-labels base @ hex
-s" words" 1 openw
+s" words" 1 1 openw
 latest @ begin ?dup while
 ." al " dup >xt . '.' emit
 dup name>string
-over + swap do i c@ 
+over + swap do i c@
 dup 'a' < over 'z' > or if case
 \ escape forbidden chars
 '0' of ." :zero:" endof
@@ -51,4 +51,4 @@ dup 'a' < over 'z' > or if case
 '"' of ." :quote:" endof
 dup emit endcase
 else emit then loop
-$a emit @ repeat 1 closew base ! ;
+$a emit @ repeat 1 close base ! ;

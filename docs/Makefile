@@ -1,5 +1,3 @@
-C1541 = c1541
-AS = acme
 TAG := $(shell git describe --tags --abbrev=0 || svnversion --no-newline)
 REV_TAG_P := $(shell git describe --tags --abbrev=0 --dirty=-M || svnversion --no-newline)
 REV_TAG_DOC := $(shell git describe --tags --long --dirty=_MODIFIED | sed 's/-g[0-9a-f]\+//' | tr _- -.)

@@ -275,7 +275,7 @@ endcase
 
 \item[word ( delim -- addr )] Reads a word from input, using delimiter \texttt{delim}, and puts the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.
 
-\item[parse-name ( name -- caddr u )] Reads a word from input, delimited by whitespace. Skips leading spaces. 
+\item[parse-name ( name -- caddr u )] Reads a word from input, delimited by whitespace. Skips leading spaces.
 
 \item[interpret ( -- value )] Interprets a word from input and puts it on the stack.
 
@@ -321,7 +321,7 @@ Compile-time version of "\texttt{.(}". Example: \texttt{: foo ." bar" ;}
 
 \item[type ( caddr u -- )] Prints a string.
 
-\item[/string ( caddr u n -- caddr+n u-n )] Adjusts the string by n characters. 
+\item[/string ( caddr u n -- caddr+n u-n )] Adjusts the string by n characters.
 
 \end{description}
 
@@ -403,6 +403,8 @@ forget
 \item[save-forth filename ( -- )] Saves the forth to the given filename.
 \item[ls ( -- )] Load disk directory to here and display, with optional drive \# and wildcards. Example: \texttt{ls \$1:*=p} Load directory, drive 1 only prg files.
 \item[rdir ( addr -- )] Display disk directory previously loaded to addr.
+\item[openw ( filenameptr filenamelength file\# sa\# -- )] Open file with logical number \texttt{file\#} and secondary address \texttt{sa\#} for writing.
+\item[close ( file\# -- )] Close file with logical number \texttt{file\#}.
 \end{description}
 
 \section{Compatibility}
@@ -436,7 +438,7 @@ Example: \texttt{'0' ar c! \$ffd2 sys} calls the CHROUT routine, which prints \t
 \section{Turn-key Utilities}
 These words are available by including \texttt{turnkey}.
 \begin{description}
-\item[top ( -- addr )] Address of the top of the dictionary, default: \$9fff. 
+\item[top ( -- addr )] Address of the top of the dictionary, default: \$9fff.
 
 \item[top! ( addr -- )] Relocates the dictionary to \texttt{addr}. Example:
 

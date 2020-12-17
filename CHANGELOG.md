@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - RDIR improve placement of MORE.
  - Prompt displays `ful` when there is less than 256 bytes of dictionary space left.
  - V internal words hidden, BUFSTART no longer variable, fixed at $7000.
+ - Added secondary address to OPENW.
+ - Renamed CLOSEW to CLOSE.
 ### Added
  - RDIR will display directory formatted data anywhere in memory.
  - PAD Scratch pad memory set to cassette buffer. Untouched by DurexForth
@@ -33,7 +35,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - SP-X! had bug in most significant bit
  - GFX: PEEK fetched bitmap pixels from ROM instead of RAM
  - V did not compile in DECIMAL mode.
+ - CLOSE/CLOSEW now does a proper CLRCHN.
  - Documented SEE concatenating subsequent :NONAME
+ - Documented OPENW, CLOSE.
 
 ## [2.0.0] - 2020-03-22
 
