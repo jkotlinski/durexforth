@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - DEFCODE does the same as DEFINE, but begins a CODE: segment instead.
  - V commands: A, R, +, -, HOME, e, C, D, s, S, H, L, M, ^w, f, F
  - Words for file and device IO in OPEN: and IO:
+ - Utility for drive status and DOS commands in DOS:
 ### Fixed
  - SP-X! had bug in most significant bit
  - GFX: PEEK fetched bitmap pixels from ROM instead of RAM

@@ -405,6 +405,20 @@ forget
 \item[rdir ( addr -- )] Display disk directory previously loaded to addr.
 \end{description}
 
+\subsection{DOS Commands}
+
+Words for sending DOS commands to drives and reading drive status are available by including \texttt{dos}.
+
+\begin{description}
+    \item[send-cmd ( addr length -- )] Writes the given string to secondary address 15 on the current device, and prints the drive's response. The following example defines a word, \texttt{backup} that creates a copy of \texttt{durexforth} called \texttt{backup}:
+    \begin{verbatim}
+        : backup s" copy0:backup=durexforth" send-cmd ;
+        backup
+    \end{verbatim} 
+
+    \item[dos command ( -- )] Sends \texttt{command} to secondary address 15 on the current device, and prints the drive's response. Note that the remainder of the line is treated as part of the command. This makes it possible to refer to file names that contain spaces, but means that \texttt{dos} and its command should be on their own line, or the last words on a line. Example: \texttt{dos scratch0:old file} will delete a file named ``\texttt{old file}''.
+\end{description}
+
 \subsection{Low-Level Device I/O}
 
 For more advanced uses, words corresponding to the standard Commodore Kernal IO routines are available by including \texttt{io}.
