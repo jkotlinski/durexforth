@@ -8,11 +8,14 @@ TAG_DEPLOY = $(shell git describe --tags --abbrev=0 --dirty=_M | tr _. -_)
 
 SRC_DIR = forth_src
 SRCS_COMMON = $(wildcard $(SRC_DIR)/*.fs)
-SRCS_C64 = $(SRCS_COMMON) $(wildcard $(SRC_DIR)/c64/*.fs)
-SRCS_C128 = $(SRCS_COMMON) $(wildcard $(SRC_DIR)/c128/*.fs)
+SRCS_C64 = $(wildcard $(SRC_DIR)/c64/*.fs)
+SRCS_C128 = $(wildcard $(SRC_DIR)/c128/*.fs)
 
+PETSRCS_COMMON = $(subst forth_src/,build/,$(SRCS_COMMON:%.fs=%.pet))
 PETSRCS_C64 = $(subst forth_src/,build/,$(SRCS_C64:%.fs=%.pet))
 PETSRCS_C128 = $(subst forth_src/,build/,$(SRCS_C128:%.fs=%.pet))
+
+PETSRCS_ALL = $(PETSRCS_COMMON) $(PETSRCS_C64) $(PETSRCS_C128)
 
 SRCNAME = $(patsubst %.pet,%,$(notdir $(1)))
 
@@ -51,22 +54,22 @@ deploy/durexforth-$(TAG_DEPLOY).crt: deploy/durexforth-$(TAG_DEPLOY).d64 cart.as
 	$(AS) cart.asm
 	cartconv -t simon -i build/cart.bin -o deploy/durexforth-$(TAG_DEPLOY).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
 
-durexforth.d64: durexforth.prg $(EMPTY_FILE) $(PETSRCS_C64)
+durexforth.d64: durexforth.prg $(EMPTY_FILE) $(PETSRCS_COMMON) $(PETSRCS_C64)
 	$(C1541) -format "durexforth,DF"  d64 $@ \
 	-attach $@ -write durexforth.prg durexforth \
 	-attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME1) \
 	-attach $@ -write $(EMPTY_FILE) $(TAG_DEPLOY_DOT),s \
 	-attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME2) \
-	$(foreach f,$(PETSRCS_C64),-write $f $(call SRCNAME,$f)) \
+	$(foreach f,$(PETSRCS_COMMON) $(PETSRCS_C64),-write $f $(call SRCNAME,$f)) \
 	-attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME3)
 
-durexforth128.d64: durexforth128.prg $(EMPTY_FILE) $(PETSRCS_C128)
+durexforth128.d64: durexforth128.prg $(EMPTY_FILE) $(PETSRCS_COMMON) $(PETSRCS_C128)
 	$(C1541) -format "durexforth,DF"  d64 $@ \
 	-attach $@ -write durexforth128.prg durexforth \
 	-attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME1) \
 	-attach $@ -write $(EMPTY_FILE) $(TAG_DEPLOY_DOT),s \
 	-attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME2) \
-	$(foreach f,$(PETSRCS_C128),-write $f $(call SRCNAME,$f)) \
+	$(foreach f,$(PETSRCS_COMMON) $(PETSRCS_C128),-write $f $(call SRCNAME,$f)) \
 	-attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME3)
 
 durexforth.prg: *.asm
@@ -75,7 +78,7 @@ durexforth.prg: *.asm
 durexforth128.prg: *.asm
 	$(AS) -f cbm -DTARGET=128 -o $@ --vicelabels durexforth.lbl --report durexforth.lst durexforth.asm
 
-build/%.pet: $(SRC_DIR)/%.fs | build/header
+$(PETSRCS_ALL) : build/%.pet : $(SRC_DIR)/%.fs | build/header ext/petcom
 	@mkdir -p $(dir $@)
 	cat build/header $< | ext/petcom - > $@
 
