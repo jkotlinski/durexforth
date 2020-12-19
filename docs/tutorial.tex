@@ -2,14 +2,9 @@
 
 \section{Interpreter}
 
-Start up durexForth. When loaded, it will greet you with a blinking yellow
-cursor, waiting for your input. You have landed in the interpreter!
+Start up durexForth. When loaded, it will greet you with a blinking yellow cursor, waiting for your input. You have landed in the interpreter!
 
-Let's warm it up a little. Enter \texttt{1} (followed by return). You have
-now put a digit on the stack. This can be verified by the command
-\texttt{.s}, which will print the stack contents without modifying it. Now
-enter \texttt{.} to pop the digit and print it to screen, followed by
-\texttt{.s} to verify that the stack is empty.
+Let's warm it up a little. Enter \texttt{1} (followed by return). You have now put a digit on the stack. This can be verified by the command \texttt{.s}, which will print the stack contents without modifying it. Now enter \texttt{.} to pop the digit and print it to screen, followed by \texttt{.s} to verify that the stack is empty.
 
 Let's define a word \texttt{bg!} for setting the border color\ldots
 
@@ -22,15 +17,9 @@ Then, try changing it back again with \texttt{0 bg!}.
 
 \section{Editor}
 
-The editor (fully described in chapter \ref{editor}) is convenient for
-editing larger pieces of code. With it, you keep an entire source file
-loaded in RAM, and you can recompile and test it easily.
+The editor (fully described in chapter \ref{editor}) is convenient for editing larger pieces of code. With it, you keep an entire source file loaded in RAM, and you can recompile and test it easily.
 
-Start the editor by typing \texttt{v}. You will enter the red editor
-screen. To enter text, first press \texttt{i} to enter insert mode. This
-mode allows you to insert text into the buffer. You can see that it's
-active on the \texttt{I} that appears in the lower left corner. This is a
-good start for creating a program!
+Start the editor by typing \texttt{v}. You will enter the red editor screen. To enter text, first press \texttt{i} to enter insert mode. This mode allows you to insert text into the buffer. You can see that it's active on the \texttt{I} that appears in the lower left corner. This is a good start for creating a program!
 
 Now, enter the following lines\ldots
 
@@ -39,18 +28,13 @@ Now, enter the following lines\ldots
 \end{verbatim}
 
 \ldots and then press $\leftarrow$ to leave insert mode.
-Press \textsc{F7} to compile and run. If everything is entered right, you
-will be facing a wonderful color cycle.
+Press \textsc{F7} to compile and run. If everything is entered right, you will be facing a wonderful color cycle.
 
-When you finished watching, press \textsc{RESTORE} to quit your program,
-then enter \texttt{v} to reopen the editor.
+When you finished watching, press \textsc{RESTORE} to quit your program, then enter \texttt{v} to reopen the editor.
 
 \section{Assembler}
 
-If you want to color cycle as fast as possible, it is possible to use the
-durexForth assembler to generate machine code. \texttt{code} and
-\texttt{;code} define a code word, just like \texttt{:} and \texttt{;}
-define Forth words. Within a code word, you can use assembler mnemonics.
+If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. \texttt{code} and \texttt{;code} define a code word, just like \texttt{:} and \texttt{;} define Forth words. Within a code word, you can use assembler mnemonics.
 
 \begin{verbatim}
 code flash
@@ -68,8 +52,7 @@ Alternatively, it is possible to use inline assembly within regular Forth words:
 flash
 \end{verbatim}
 
-Note: As the \texttt{x} register contains the parameter stack depth, it is
-important that your assembly code leaves it unchanged.
+Note: As the \texttt{x} register contains the parameter stack depth, it is important that your assembly code leaves it unchanged.
 
 \section{Console I/O Example}
 
@@ -110,10 +93,7 @@ blkcol \pounds color x y
 Once the word is working as supposed, it may be nice to again remove the comments, as
 they are no longer very interesting to read.
 \par{}\medskip{}
-Note: The Forth standard defines the backslash (\textbackslash) as the line
-comment character, but the C64 lacks a real backslash. Moreover, ASCII
-\textbackslash{} and PETSCII \pounds{} both map to \${}5c. Therefore, the
-\pounds{} character is used as a substitution on the C64.
+Note: The Forth standard defines the backslash (\textbackslash) as the line comment character, but the C64 lacks a real backslash. Moreover, ASCII \textbackslash{} and PETSCII \pounds{} both map to \${}5c. Therefore, the \pounds{} character is used as a substitution on the C64.
 
 \subsection{Stack Checks}
 
@@ -147,8 +127,7 @@ By default, durexForth boots up with these modules pre-compiled in RAM:
     \item[v] The text editor.
 \end{description}
 
-To reduce RAM usage, you may make a stripped-down version of durexForth. Do
-this by following these steps:
+To reduce RAM usage, you may make a stripped-down version of durexForth. Do this by following these steps:
 
 \begin{enumerate}
 \item Issue \texttt{---modules---} to unload all modules, or \texttt{---editor---} to unload the editor only.
@@ -158,14 +137,9 @@ this by following these steps:
 
 \subsection{Custom Start-Up}
 
-You may launch a word automatically at start-up by setting the variable
-\texttt{start} to the execution token of the word. Example: \texttt{'
-megademo start !} To save the new configuration to disk, type e.g.
-\texttt{save-forth megademo}.
+You may launch a word automatically at start-up by setting the variable \texttt{start} to the execution token of the word.  Example: \texttt{' megademo start !} To save the new configuration to disk, type e.g. \texttt{save-forth megademo}.
 
-When writing a new program using a PC text editor, it is practical to
-configure durexForth to compile and execute the program at startup. That
-can be set up using the following snippet:
+When writing a new program using a PC text editor, it is practical to configure durexForth to compile and execute the program at startup. That can be set up using the following snippet:
 
 \begin{verbatim}
 $7000 value buf
@@ -177,27 +151,13 @@ save-forth @0:durexforth
 
 \subsection{Turn-key Operation}
 
-Durexforth offers utilities to save your program in a turn-key fashion by
-including the \texttt{turnkey} module once the program is ready to be
-saved.
+Durexforth offers utilities to save your program in a turn-key fashion by including the \texttt{turnkey} module once the program is ready to be saved.
 
-Programs can be saved in a compacted state using \texttt{save-pack}. These
-programs are stored with 32 bytes between \texttt{here} and
-\texttt{latest}. When they are first loaded, they will restore the header
-space to its original \texttt{top}.
+Programs can be saved in a compacted state using \texttt{save-pack}. These programs are stored with 32 bytes between \texttt{here} and \texttt{latest}. When they are first loaded, they will restore the header space to its original \texttt{top}.
 
-If you have developed a program that has no further need of the
-interpreter, you can eliminate the dictionary headers entirely when saving
-with \texttt{save-prg}. This allows your program to use memory down to
-\texttt{here} plus 32 bytes for safety.
+If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary headers entirely when saving with \texttt{save-prg}. This allows your program to use memory down to \texttt{here} plus 32 bytes for safety.
 
-After either of these words have saved the file to disk, they will restore
-forth to the unpacked state, and strip the \texttt{turnkey} module from the
-dictionary. This allows you to continue to use forth interactively in the
-case of \texttt{save-pack}. As \texttt{save-prg} has stripped the
-dictionary headers from the system, it will no longer be usable. If you
-wish to test your program after saving, you can compile a call to
-\texttt{save-prg} instead:
+After either of these words have saved the file to disk, they will restore forth to the unpacked state, and strip the \texttt{turnkey} module from the dictionary. This allows you to continue to use forth interactively in the case of \texttt{save-pack}. As \texttt{save-prg} has stripped the dictionary headers from the system, it will no longer be usable. If you wish to test your program after saving, you can compile a call to \texttt{save-prg} instead:
 \begin{verbatim}
 : build save-prg mydemo start @ execute ;
 build
