@@ -76,7 +76,7 @@ quit_reset
     stx     SOURCE_ID_MSB
     stx     SAVE_INPUT_STACK_DEPTH
     stx     READ_EOF
-    jsr     CHKIN
+    jsr     $ffcc   ; CLRCHN
     pla
     tax
     rts

@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Documented SEE concatenating subsequent :NONAME
 ### Removed
  - Removed undocumented OPENW and CLOSEW words.
+ - Made QUIT do CLRCHN instead of CHKIN
 
 ## [2.0.0] - 2020-03-22
 
