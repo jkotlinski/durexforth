@@ -784,9 +784,9 @@ OLD_BASE = * + 1
 .xt = * + 1
     jsr PLACEHOLDER_ADDRESS
     inx
-    lda LSB-1, x
-    beq -
     pla
+    ldy LSB-1, x
+    beq -
     clc
     adc #3 ; guaranteed carry clear
     adc .dowords_nametoken
