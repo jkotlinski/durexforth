@@ -1,32 +1,35 @@
 require open
 
-\ select a file for input
-\ no error handling
-code (chkin) ( file# -- result )
+\ Set input device to open file #
+\ returns 0 on success, file # on error
+code chkin? ( file# -- file# result )
 w stx,
 lsb lda,x tax, \ x = file#
 $ffc6 jsr, \ CHKIN
-0 lda,#
-+branch bcc, \ carry clear: OK
-1 lda,# \ carry set: error
++branch bcs, \ carry set = error
+0 lda,# \ A is only valid on error
 :+
-w ldx, lsb sta,x \ push result
+w ldx, dex, 
+lsb sta,x
+0 lda,# msb sta,x
 ;code
 
 \ Set output device to open file #
-code (chkout) ( file# -- result )
+\ returns 0 on success, file # on error
+code chkout? ( file# -- file# result )
 w stx,
 lsb lda,x tax, \ x = file#
 $ffc9 jsr, \ CHKOUT
-0 lda,#
-+branch bcc, \ carry clear: OK
-1 lda,# \ carry set: error
++branch bcs, \ carry set = error
+0 lda,# \ A is only valid on error
 :+
-w ldx, lsb sta,x \ push result
+w ldx, dex,
+lsb sta,x
+0 lda,# msb sta,x
 ;code
 
 \ Reset input and output to console 
-code clrch ( -- ) 
+code clrchn ( -- ) 
 txa, pha,
 $ffcc jsr,  \ CLRCH
 pla, tax,
@@ -46,30 +49,31 @@ $ffcf jsr, \ CHRIN
 w ldx, lsb sta,x
 ;code
 
-\ handle returned result value
+\ handle return value from open?, chkin?
+\ and chkout?. If result is nonzero,
+\ close file, print error msg, and abort
 : ioerr ( file# result -- )
-if clrch close rvs ." io err" cr abort 
-then drop ;
+?dup if rvs case
+2 of ." file# in use" endof
+3 of ." file not open" endof
+5 of ." device not present" endof
+6 of ." not input file" endof
+7 of ." not output file" endof
+." io err" 
+endcase clrchn close cr abort
+else drop then ;
 
 \ Open a file
 \ 'easy' version, aborts on error
-: open ( caddr u sa file# -- )
-dup >r (open) r> swap ioerr ;
+: open ( caddr u file# sa -- )
+open? ioerr ;
 
 \ Set input device to open file #
 \ 'easy' version, aborts on error
-: chkin ( file# -- )
-dup (chkin) ioerr ;
+: chkin ( file# -- ) 
+chkin? ioerr ;
 
 \ Set output device to open file #
 \ 'easy' version, aborts on error
-: chkout 
-dup (chkout) ioerr ;
-
-\ accept only works for keyboard input
-: faccept ( addr len -- len ) 
-tuck 0 do \ len addr
-chrin over c! 1+ \ len addr+1
-dup $d = readst or \ stop at CR or EOF
-if 2drop i unloop exit then
-loop ;
+: chkout ( file# -- )
+chkout? ioerr ;

@@ -1,9 +1,11 @@
 \ Open a file, no error handling
-( nameaddr namelen sa file# -- result )
-code (open)
+\ returns 0 on success, file # on error
+( nameaddr namelen file# sa -- 
+  file# result )
+code open?
 w stx,
-lsb lda,x \ a = file #
-lsb 1+ ldy,x \ y = sec. address
+lsb 1+ lda,x \ a = file #
+lsb ldy,x \ y = sec. address
 $ba ldx, \ x = device
 $ffba jsr, \ SETLFS
 
@@ -14,13 +16,14 @@ lsb 3 + lda,x tax, pla, \ xy = nameptr
 $ffbd jsr, \ SETNAM
 
 $ffc0 jsr, \ OPEN
-0 lda,#
-+branch bcc, \ carry clear: OK
-1 lda,# \ carry set: report error
++branch bcs, \ carry set = error
+0 lda,# \ A is only valid on error
 :+
-w ldx, inx, inx, inx,
+w ldx,
+inx, inx,
 lsb sta,x
-0 lda,# msb sta,x \ push result
+lsb 1- lda,x lsb 1+ sta,x
+0 lda,# msb sta,x msb 1+ sta,x
 ;code
 
 \ Close a file
