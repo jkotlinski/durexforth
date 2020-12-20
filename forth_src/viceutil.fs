@@ -1,6 +1,8 @@
+require io
+
 $12 emit .( dump-labels) $92 emit
 .(  writes VICE emulator
-labels to the file 'words'
+labels to the PRG file 'words'
 
 When written, extract the file from
 .d64 using c1541 command 
@@ -54,6 +56,6 @@ else emit then loop
 $a emit 1 ;
 
 : dump-labels base @ >r hex
-s" words" 1 openw
+s" words,w" 1 1 open 1 chkout
 ['] (label) dowords
-1 closew r> base ! ;
+clrchn 1 close r> base ! ;
