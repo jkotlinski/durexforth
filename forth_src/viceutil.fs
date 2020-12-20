@@ -9,12 +9,12 @@ Then, load the file from VICE
 monitor using 'll "words"'
 )
 
-\ TODO broken until TRAVERSE-WORDLIST
-: dump-labels base @ hex
-s" words" 1 openw
-latest @ begin ?dup while
-." al " dup >xt . '.' emit
-dup name>string
+\ print a VICE label definition for a
+\ given nametoken. returns 1, for use
+\ with dowords
+: (label) ( nametoken -- 1 )
+." al " dup >xt u. '.' emit
+name>string
 over + swap do i c@ 
 dup 'a' < over 'z' > or if case
 \ escape forbidden chars
@@ -51,4 +51,9 @@ dup 'a' < over 'z' > or if case
 '"' of ." :quote:" endof
 dup emit endcase
 else emit then loop
-$a emit @ repeat 1 closew base ! ;
+$a emit 1 ;
+
+: dump-labels base @ >r hex
+s" words" 1 openw
+['] (label) dowords
+1 closew r> base ! ;

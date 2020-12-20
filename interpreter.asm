@@ -766,6 +766,16 @@ OLD_BASE = * + 1
     sta .dowords_nametoken + 1
 
 .dowords_lambda
+    lda .dowords_nametoken
+    sta W
+    lda .dowords_nametoken + 1
+    sta W + 1
+    ldy #0
+    lda (W), y
+    bne +
+-   rts
++   and #STRLEN_MASK
+    pha
     dex
     lda .dowords_nametoken
     sta LSB, x
@@ -774,17 +784,9 @@ OLD_BASE = * + 1
 .xt = * + 1
     jsr PLACEHOLDER_ADDRESS
     inx
-    lda LSB-1, x
-    bne +
--   rts
-+   ldy #0
-    lda .dowords_nametoken
-    sta W
-    lda .dowords_nametoken + 1
-    sta W + 1
-    lda (W), y
+    pla
+    ldy LSB-1, x
     beq -
-    and #STRLEN_MASK
     clc
     adc #3 ; guaranteed carry clear
     adc .dowords_nametoken
