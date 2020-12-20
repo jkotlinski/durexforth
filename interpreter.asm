@@ -29,34 +29,52 @@ restore_handler
 quit_reset
     sei
     lda #<restore_handler
-    sta $318
+    sta NMIVEC
     lda #>restore_handler
-    sta $319
+    sta NMIVEC+1
     cli
 
     ; lores
+!if TARGET = 128 {
+    lda #0
+    sta SCREEN_MODE
+} else {
     lda #$9b
-    sta $d011
+    sta VIC_CR1
     lda #$17
-    sta $dd00
-    sta $d018
+    sta CIA2_PRA
+    sta VIC_ADDR
+}
 
     txa
     pha
 
     ldx #0
-    stx $d020
-    stx $d021
+    stx VIC_BORDER
+    stx VIC_BG1
 
     lda #>TIB
     sta TIB_PTR + 1
 
+!if TARGET = 128 {
+    sei
+    ; bank out BASIC ROM
+    lda #%00001110
+    sta MMUCR
+    
+    ; tell Kernal IRQ routines not to call BASIC IRQs
+    lda INIT_STATUS
+    and #%11111110
+    sta INIT_STATUS
+    cli
+} else {
     lda #$36 ; ram + i/o + kernal
     sta 1
+}
 
     ; Yellow text.
     lda #7
-    sta $286
+    sta COLOR
 
     ; Clears color area.
 -   sta $d800, x
@@ -102,9 +120,9 @@ interpret_loop
     ldx INIT_S
     txs
     pla
-    sta $319
+    sta NMIVEC+1
     pla
-    sta $318
+    sta NMIVEC
     pla
     sta 1
     rts

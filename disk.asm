@@ -22,9 +22,11 @@
 
 ; DEVICE OPENW CLOSEW LOADB SAVEB INCLUDED
 
+SETBNK = $f73f
 READST = $ffb7
 SETLFS = $ffba
 SETNAM = $ffbd
+UNTALK = $ffab
 OPEN = $ffc0
 CLOSE = $ffc3
 CHKIN = $ffc6
@@ -39,7 +41,7 @@ SAVE = $ffd8
 
     +BACKLINK "device", 6
     lda LSB,x
-    sta $ba
+    sta CURRENT_DEVICE
     inx
     rts
 
@@ -62,7 +64,7 @@ _errorchread
         tay
         JSR SETNAM
         LDA #$0F      ; file number 15
-        LDX $BA       ; last used device number
+        LDX CURRENT_DEVICE
         BNE +
         LDX #$08      ; default to device 8
 +	    LDY #$0F      ; secondary address 15 (error channel)
@@ -106,6 +108,16 @@ LOADB
     txa
     pha
 
+!if TARGET = 128 {
+    lda #0
+    ldx #0
+    jsr SETBNK
+
+    pla
+    pha
+    tax
+}
+
     lda MSB, x		; >destination
     sta load_binary_laddr_hi
     lda LSB, x		; <destination
@@ -136,9 +148,9 @@ load_binary_status = * + 1
     tax
     rts
 .success:
-    lda $af
+    lda LOADSAVE_END+1
     sta	MSB, x
-    lda $ae
+    lda LOADSAVE_END
     sta	LSB, x
     rts
 
@@ -164,7 +176,7 @@ load_binary_laddr_hi = *+1
 
 .disk_io_setnamsetlfs ;reused by both loadb and saveb
     jsr SETNAM
-    lda $ba		;last used device number
+    lda CURRENT_DEVICE
     and #3		;Make 0-3 possible numbers
     ora #8		;Transform to 8-B
     tax
@@ -187,15 +199,23 @@ load_binary_laddr_hi = *+1
 SAVEB
     stx W
 
-    lda	$ae
+!if TARGET = 128 {
+    lda #0
+    ldx #0
+    jsr SETBNK
+
+    ldx W
+}
+
+    lda	LOADSAVE_END
     pha
-    lda	$af
+    lda	LOADSAVE_END+1
     pha
 
     lda LSB+3, x		; range begin lo
-    sta $c1
+    sta LOADSAVE_ADDR
     lda MSB+3, x		; range begin hi
-    sta $c2
+    sta LOADSAVE_ADDR+1
 
     lda LSB+2, x		; range end lo
     sta save_binary_srange_end_lo
@@ -221,9 +241,9 @@ save_binary_srange_end_hi = *+1
     jsr _errorchread
 
     pla
-    sta	$af
+    sta	LOADSAVE_END+1
     pla
-    sta	$ae
+    sta	LOADSAVE_END
 
     ldx W
     inx
@@ -235,6 +255,18 @@ save_binary_srange_end_hi = *+1
 ; OPENW ( strptr strlen file# ) open file for writing
     +BACKLINK "openw", 5
 OPENW
+!if TARGET = 128 {
+    txa
+    pha
+
+    lda #0
+    ldx #0
+    jsr SETBNK
+
+    pla
+    tax
+}
+
     lda LSB,x
     sta W ; fileno
     stx	W2
@@ -248,7 +280,7 @@ OPENW
 
     jsr	SETNAM
     lda	W ; file number
-    ldx	$ba ; last used device#
+    ldx	CURRENT_DEVICE
     tay ; secondary address
     jsr	SETLFS
     jsr	OPEN
@@ -266,7 +298,7 @@ OPENW
     rts
 
 .close
-    lda $b8 ; current file
+    lda CURRENT_LFN
     jsr CLOSE
     jmp CLRCHN
 
@@ -309,6 +341,12 @@ INCLUDED
 
     txa
     pha
+    
+!if TARGET = 128 {
+    lda #0
+    ldx #0
+    jsr SETBNK
+}
 
 .filelen = * + 1
     lda #0
@@ -328,8 +366,11 @@ INCLUDED
     tay
     sty SOURCE_ID_LSB
 
-    ldx	$ba ; last used device#
+    ldx	CURRENT_DEVICE
     jsr	SETLFS
+
+    jsr CLRCHN
+
     jsr	OPEN
     bcc	+
     jsr .close

@@ -1,55 +1,95 @@
-C1541   = c1541
-AS = acme
-TAG = `git describe --tags --abbrev=0 || svnversion --no-newline`
-TAG_DEPLOY_DOT = `git describe --tags --abbrev=0 --dirty=-M`
-TAG_DEPLOY = `git describe --tags --abbrev=0 --dirty=_M | tr _. -_`
+ASFLAGS :=
+
+C1541 = c1541
+AS = acme $(ASFLAGS)
+TAG = $(shell git describe --tags --abbrev=0 || svnversion --no-newline)
+TAG_DEPLOY_DOT = $(shell git describe --tags --abbrev=0 --dirty=-M)
+TAG_DEPLOY = $(shell git describe --tags --abbrev=0 --dirty=_M | tr _. -_)
 
 SRC_DIR = forth_src
-SRC_NAMES = base debug v asm gfx gfxdemo rnd sin ls turtle fractals \
-    sprite doloop sys labels mml mmldemo sid spritedemo test testcore \
-    testcoreplus tester format require compat timer float viceutil turnkey \
-    wordlist
-SRCS = $(addprefix $(SRC_DIR)/,$(addsuffix .fs,$(SRC_NAMES)))
+SRCS_COMMON = $(wildcard $(SRC_DIR)/*.fs)
+SRCS_C64 = $(wildcard $(SRC_DIR)/c64/*.fs)
+SRCS_C128 = $(wildcard $(SRC_DIR)/c128/*.fs)
+
+PETSRCS_COMMON = $(subst forth_src/,build/,$(SRCS_COMMON:%.fs=%.pet))
+PETSRCS_C64 = $(subst forth_src/,build/,$(SRCS_C64:%.fs=%.pet))
+PETSRCS_C128 = $(subst forth_src/,build/,$(SRCS_C128:%.fs=%.pet))
+
+PETSRCS_ALL = $(PETSRCS_COMMON) $(PETSRCS_C64) $(PETSRCS_C128)
+
+SRCNAME = $(patsubst %.pet,%,$(notdir $(1)))
 
 EMPTY_FILE = _empty.txt
 SEPARATOR_NAME1 = '=-=-=-=-=-=-=-=,s'
 SEPARATOR_NAME2 = '=-------------=,s'
 SEPARATOR_NAME3 = '=-=---=-=---=-=,s'
 
-all:	durexforth.d64
+all: durexforth.d64 durexforth128.d64
 
-deploy: durexforth.d64 cart.asm
-	rm -rf deploy
-	mkdir deploy
+docs:
 	$(MAKE) -C docs
-	cp docs/durexforth.pdf deploy/durexforth-$(TAG_DEPLOY).pdf
-	cp durexforth.d64 deploy/durexforth-$(TAG_DEPLOY).d64
-	x64 -warp +confirmexit deploy/durexforth-$(TAG_DEPLOY).d64
-	# make cartridge
-	c1541 -attach deploy/durexforth-$(TAG_DEPLOY).d64 -read durexforth
-	mv durexforth build/durexforth
-	@$(AS) cart.asm
+
+deploy: deploy/durexforth-$(TAG_DEPLOY).pdf deploy/durexforth-$(TAG_DEPLOY).d64 deploy/durexforth-$(TAG_DEPLOY).crt deploy/durexforth128-$(TAG_DEPLOY).d64
+
+.PHONY: all clean docs deploy
+
+deploy/durexforth-$(TAG_DEPLOY).pdf: docs
+	@mkdir -p deploy
+	cp docs/durexforth.pdf $@
+
+# Precompile and save a packed Forth for release
+deploy/durexforth-$(TAG_DEPLOY).d64: durexforth.d64
+	@mkdir -p deploy
+	cp $< $@
+	x64 -warp +confirmonexit $@
+
+deploy/durexforth128-$(TAG_DEPLOY).d64: durexforth128.d64
+	@mkdir -p deploy
+	cp $< $@
+	x128 -warp +confirmonexit $@
+
+# Build a cartridge image out of the precompiled Forth
+deploy/durexforth-$(TAG_DEPLOY).crt: deploy/durexforth-$(TAG_DEPLOY).d64 cart.asm
+	c1541 -attach deploy/durexforth-$(TAG_DEPLOY).d64 -read durexforth build/durexforth
+	$(AS) cart.asm
 	cartconv -t simon -i build/cart.bin -o deploy/durexforth-$(TAG_DEPLOY).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
 
-durexforth.prg: *.asm
-	@$(AS) durexforth.asm
+durexforth.d64: durexforth.prg $(EMPTY_FILE) $(PETSRCS_COMMON) $(PETSRCS_C64)
+	$(C1541) -format "durexforth,DF"  d64 $@ \
+	-attach $@ -write durexforth.prg durexforth \
+	-attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME1) \
+	-attach $@ -write $(EMPTY_FILE) $(TAG_DEPLOY_DOT),s \
+	-attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME2) \
+	$(foreach f,$(PETSRCS_COMMON) $(PETSRCS_C64),-write $f $(call SRCNAME,$f)) \
+	-attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME3)
 
-durexforth.d64: durexforth.prg Makefile ext/petcom $(SRCS)
-	touch $(EMPTY_FILE)
-	$(C1541) -format "durexforth,DF"  d64 durexforth.d64 # > /dev/null
-	$(C1541) -attach $@ -write durexforth.prg durexforth # > /dev/null
-	$(C1541) -attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME1) # > /dev/null
-	$(C1541) -attach $@ -write $(EMPTY_FILE) $(TAG_DEPLOY_DOT),s # > /dev/null
-	$(C1541) -attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME2) # > /dev/null
-# $(C1541) -attach $@ -write debug.bak
-	mkdir -p build
+durexforth128.d64: durexforth128.prg $(EMPTY_FILE) $(PETSRCS_COMMON) $(PETSRCS_C128)
+	$(C1541) -format "durexforth,DF"  d64 $@ \
+	-attach $@ -write durexforth128.prg durexforth \
+	-attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME1) \
+	-attach $@ -write $(EMPTY_FILE) $(TAG_DEPLOY_DOT),s \
+	-attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME2) \
+	$(foreach f,$(PETSRCS_COMMON) $(PETSRCS_C128),-write $f $(call SRCNAME,$f)) \
+	-attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME3)
+
+durexforth.prg: *.asm
+	$(AS) -f cbm -DTARGET=64 -o $@ --vicelabels durexforth.lbl --report durexforth.lst durexforth.asm
+
+durexforth128.prg: *.asm
+	$(AS) -f cbm -DTARGET=128 -o $@ --vicelabels durexforth.lbl --report durexforth.lst durexforth.asm
+
+$(PETSRCS_ALL) : build/%.pet : $(SRC_DIR)/%.fs | build/header ext/petcom
+	@mkdir -p $(dir $@)
+	cat build/header $< | ext/petcom - > $@
+
+.INTERMEDIATE: $(EMPTY_FILE) build/header
+
+build/header:
+	@mkdir -p build
 	echo -n "aa" > build/header
-	@for forth in $(SRC_NAMES); do\
-        cat build/header $(SRC_DIR)/$$forth.fs | ext/petcom - > build/$$forth.pet; \
-        $(C1541) -attach $@ -write build/$$forth.pet $$forth; \
-    done;
-	$(C1541) -attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME3) # > /dev/null
-	rm -f $(EMPTY_FILE)
+	
+ $(EMPTY_FILE):
+	touch $@
 
 clean:
 	$(MAKE) -C docs clean

@@ -1,5 +1,6 @@
 \chapter{Memory Map}
 
+\section{Commodore 64}
 \begin{description}
 \item[3 - \$3a] Parameter stack, LSB section.
 \item[\$3b - \$72] Parameter stack, MSB section.
@@ -20,6 +21,29 @@
 \item[\$cc00 - \$cfff] Hi-res graphics colors.
 \item[\$d000 - \$dfff] I/O area. 
 \item[\$e000 - \$ffff] Kernal / hi-res graphics bitmap.
+\end{description}
+
+\section{Commodore 128}
+\begin{description}
+\item[3 - \$3a] Parameter stack, LSB section.
+\item[\$3b - \$72] Parameter stack, MSB section.
+\item[\$8b - \$8c] w (work area for code words).
+\item[\$8d - \$8e] w2 (work area for code words).
+\item[\$9e - \$9f] w3 (work area for code words).
+\item[\ldots]
+\item[\$100 - \$1ff] Return stack.
+\item[\$200 - \$258] Text input buffer.
+\item[\$B00 - \$BFF] PAD Scratch pad memory, Cassette Buffer, untouched by DurexForth. 
+\item[\ldots]
+\item[\$1c01 - \texttt{here}] Forth Kernel followed by code and data space.
+\item[\ldots]
+\item[\$7000 - \texttt{eof}] Editor text buffer. Grows upwards as needed.
+\item[\ldots]
+\item[\texttt{latest} - \$9fff] Dictionary. Grows downwards as needed.
+\item[\$a000 - \$bfff] Free RAM.
+\item[\$c000 - \$cfff] Kernal / Hi-res graphics bitmap.
+\item[\$d000 - \$dfff] I/O area / Hi-res graphics bitmap.
+\item[\$e000 - \$ffff] Kernal / hi-res graphics colors.
 
 \end{description}
 

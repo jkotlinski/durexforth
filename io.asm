@@ -36,7 +36,7 @@ PAGE
     +BACKLINK "type", 4
 TYPE ; ( caddr u -- )
     lda #0 ; quote mode off
-    sta $d4
+    sta QTSW
 -   lda LSB,x
     ora MSB,x
     bne +
@@ -51,7 +51,11 @@ TYPE ; ( caddr u -- )
     jmp -
 
     +BACKLINK "key?", 4
-    lda $c6 ; Number of characters in keyboard buffer
+!if TARGET = 128 {
+    lda MACRO_NDX ; Number of characters pending from function-key macro
+    bne .pushtrue
+}
+    lda NDX
     beq +
 .pushtrue
     lda #$ff
@@ -59,10 +63,14 @@ TYPE ; ( caddr u -- )
     jmp pushya
 
     +BACKLINK "key", 3
--   lda $c6
+!if TARGET = 128 {
+    lda MACRO_NDX ; Number of characters pending from function-key macro
+    bne +
+}
+-   lda NDX
     beq -
-    stx W
-    jsr $e5b4 ; Get character from keyboard buffer
++   stx W
+    jsr KEYIN ; Get character from keyboard buffer
     ldx W
     ldy #0
     jmp pushya
@@ -102,7 +110,7 @@ READ_EOF = * + 1
 .getLineFromConsole
     stx W
     ldx #0
--   jsr $e112 ; Input Character
+-   jsr CHRIN ; Input Character
     cmp #$d
     beq .gotReturn
     sta TIB,x

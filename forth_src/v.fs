@@ -4,6 +4,8 @@ header v
 
 latest \ begin hiding words
 
+include vcore
+
 $d value lf
 
 $7001 value bufstart
@@ -40,7 +42,7 @@ msb ldy,x w 1+ sty,
 0 ldy,#
 here w lda,(y)
 0 cmp,# foundeol -branch beq,
-$e716 jsr, iny, \ putchar
+$ffd2 jsr, iny, \ putchar
 $d cmp,# foundeol -branch beq, jmp,
 
 \ nb: may return eof
@@ -73,13 +75,6 @@ curx @ linelen min +
 $400 + ( addr ) ;
 
 : sol 0 curx ! ;
-
-\ ram + io + kernal rom
-code rom-kernal
-$36 lda,# 1 sta, ;code
-\ ram + io + ram
-code ram-kernal
-$35 lda,# 1 sta, ;code
 
 : reset-buffer
 0 bufstart 1- c!
@@ -193,7 +188,7 @@ begin advance-cur editpos 1+ dup
 eof= swap c@ space= or or until ;
 
 : setcur ( x y -- )
-xr ! yr ! $e50c sys ;
+xr ! yr ! 0 sr ! $fff0 sys ;
 
 : refresh-line
 cury @ $28 * $400 + $28 bl fill
@@ -618,13 +613,7 @@ curlinestart @ bufstart eof @ within
 0= abort" cl" again ;
 
 define v
-\ modifies kernal to change kbd prefs
-ram-kernal $eaea @ $8ca <> if
-rom-kernal
-$e000 dup $2000 move \ rom => ram
-$f $eaea c! \ repeat delay
-4 $eb1d c! \ repeat speed
-then
+v-startup \ platform-specific startup
 
 0 to insert
 $80 $28a c! \ key repeat on

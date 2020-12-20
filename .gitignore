@@ -1,4 +1,6 @@
 *.d64
+*.lbl
+*.lst
 *.prg
 build
 deploy

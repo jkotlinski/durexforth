@@ -23,11 +23,26 @@
 ; ACME assembler
 
 !cpu 6510
-!to "durexforth.prg", cbm	; set output file and format
 
-* = $801
+!ifdef TARGET {} else {
+!set TARGET = 64
+}
 
-!byte $b, $08, $a, 0, $9E, $32, $30, $36, $31, 0, 0, 0 ; basic header
+!if TARGET = 128 {
+BASIC_START = $1c01
+} else {
+BASIC_START = $0801
+}
+
+* = BASIC_START
+
+!byte $b, $08, $a, 0 
+!byte $9E ; SYS
+!byte '0' + entry % 10000 / 1000 ; entrypoint address as decimal digits       
+!byte '0' + entry %  1000 /  100        
+!byte '0' + entry %   100 /   10        
+!byte '0' + entry %    10
+!byte 0, 0, 0 ; end BASIC
 
 ;; Word flags
 F_IMMEDIATE = $80
@@ -62,11 +77,44 @@ OP_JSR = $20
 OP_RTS = $60
 OP_INX = $e8
 
+CHRIN = $ffcf
 PUTCHR = $ffd2 ; put char
 
 K_RETURN = $d
 K_CLRSCR = $93
 K_SPACE = ' '
+
+CURRENT_LFN = $b8
+CURRENT_DEVICE = $ba
+LOADSAVE_ADDR = $c1
+LOADSAVE_END = $ae
+
+NMIVEC = $318
+
+VIC_CR1 = $d011
+VIC_ADDR = $d018
+VIC_BORDER = $d020
+VIC_BG1 = $d021
+CIA2_PRA = $dd00
+
+!if TARGET = 128 {
+NDX = $d0
+MACRO_NDX = $d1
+SCREEN_MODE = $d8
+COLOR = $f1
+QTSW = $f4
+INIT_STATUS = $0a04
+CASSETTEBUF = $0b00
+KEYIN = $c006
+MMUCR = $ff00
+} else {
+NDX = $c6
+QTSW = $d4
+COLOR = $286
+CASSETTEBUF = $033c
+
+KEYIN = $e5b4
+}
 
 ; PLACEHOLDER_ADDRESS instances are overwritten using self-modifying code.
 PLACEHOLDER_ADDRESS = $1234
@@ -74,12 +122,12 @@ PLACEHOLDER_ADDRESS = $1234
 !ct pet
 
 ; -------- program start
-
+entry
     lda 1
     pha
-    lda $318
+    lda NMIVEC
     pha
-    lda $319
+    lda NMIVEC+1
     pha
     tsx
     stx INIT_S
@@ -89,8 +137,13 @@ PLACEHOLDER_ADDRESS = $1234
 
     jsr PAGE
 
+!if TARGET = 128 {
+    lda #14
+    jsr PUTCHR
+} else {
     lda	#%00010110 ; lowercase
-    sta	$d018
+    sta	VIC_ADDR
+}
 
 _START = * + 1
     jsr load_base
@@ -160,6 +213,17 @@ ONE
 !src "lowercase.asm"
 !src "disk.asm"
 
+; PAD - points to area of scratchpad memory guaranteed to be untouched by Forth
+
+    +BACKLINK "pad", 3
+    +VALUE CASSETTEBUF
+
+; BASIC-START - points to BASIC program start address, used as start address for
+; SAVE-FORTH etc.
+
+    +BACKLINK "basic-start", 11
+    +VALUE BASIC_START
+
 ; LATEST - points to the most recently defined dictionary word.
 
     +BACKLINK "latest", 6
@@ -187,4 +251,4 @@ load_base
 
 basename
 !text	"base"
-basename_end
+basename_end    

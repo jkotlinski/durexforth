@@ -11,7 +11,7 @@ all:	durexforth.pdf
 
 SECTIONS = release_license.tex \
         intro.tex tutorial.tex editor.tex words.tex gfx.tex sid.tex mml.tex \
-        asm.tex mnemonics.tex memmap.tex anatomy.tex
+        asm.tex c128.tex mnemonics.tex memmap.tex anatomy.tex
 GENERATED = params-g.tex
 
 durexforth.pdf:	manual.tex $(SECTIONS)

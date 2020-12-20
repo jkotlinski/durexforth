@@ -1,32 +1,12 @@
 base @ hex
-e000 value bmpbase
-cc00 value colbase
 
-code kernal-in
-36 lda,# 1 sta, cli, ;code
-code kernal-out
-sei, 35 lda,# 1 sta, ;code
-
-code hires
-bb lda,# d011 sta, \ enable bitmap mode
-dd00 lda,
-%11111100 and,# \ vic bank 2
-dd00 sta,
-38 lda,# d018 sta,
-;code
-
-code lores
-9b lda,# d011 sta,
-dd00 lda,
-%11 ora,#
-dd00 sta,
-17 lda,#
-d018 sta,
-;code
+include gfxcore
 
 : clrcol ( fgbgcol -- )
+kernal-out
 colbase 3e8 rot fill
-bmpbase 1f40 0 fill ;
+bmpbase 1f40 0 fill 
+kernal-in ;
 
 : blkcol ( col row c -- )
 -rot 28 * + colbase + c! ;
@@ -89,7 +69,8 @@ w lda,(y) w3 sta,
 
 clc,
 lsb 1+ lda,x f8 and,# lsb adc,x lsb sta,x
-msb 1+ lda,x msb adc,x clc, e0 adc,# msb sta,x
+msb 1+ lda,x msb adc,x clc, 
+bmpbase 100/ adc,# msb sta,x
 w3 lda, lsb 1+ sta,x
 0 lda,# msb 1+ sta,x
 rts,
@@ -587,13 +568,12 @@ kernal-out
 \ addr=dst
 rot 140 * addr !
 rot 8 * bmpbase + addr +!
-\ disable interrupt,enable char rom
-1 c@ dup >r fb and 1 c!
+charrom-in
 begin ?dup while
 swap dup c@ pet>scr 8 * d800 +
 addr @ 8 move
 1+ swap 8 addr +! 1- repeat
-r> 1 c! drop kernal-in ;
+drop kernal-in ;
 
 : drawchar ( col row srcaddr -- )
 kernal-out
