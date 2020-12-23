@@ -364,7 +364,7 @@ here
 filename 1+ over filename c@ move
 filename c@ + lf swap c!
 here filename c@ 4 +
-$f $f open? drop close
+$f $f open drop close
 
 bufstart eof @
 filename count saveb

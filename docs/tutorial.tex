@@ -71,11 +71,11 @@ This piece of code prints a message to a printer on device \#4, and then prints 
 include io
 
 : print-hello
-4 device ( use device #4 )
-0 0 7 47 open ( open address 7 on device 4 as file 47 )
-47 chkout ( redirect output to file 47 )
+4 device ( use device 4 )
+0 0 47 7 open ioabort ( open address 7 as file 47, abort on failure )
+47 chkout ioabort ( redirect output to file 47, abort on failure )
 ." Hello, printer!" cr
-clrch ( stop input and output redirection )
+clrchn ( stop input and output redirection )
 ." Hello, screen!" cr
 47 close ( close file 47 ) ;
 

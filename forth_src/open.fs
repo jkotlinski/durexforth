@@ -1,8 +1,9 @@
-\ Open a file, no error handling
-\ returns 0 on success, file # on error
+\ Open a logical file
+\ ioresult is 0 on success, kernal
+\ error # on failure.
 ( nameaddr namelen file# sa -- 
-  file# result )
-code open?
+  file# ioresult )
+code open
 w stx,
 lsb 1+ lda,x \ a = file #
 lsb ldy,x \ y = sec. address
@@ -26,7 +27,7 @@ lsb 1- lda,x lsb 1+ sta,x
 0 lda,# msb sta,x msb 1+ sta,x
 ;code
 
-\ Close a file
+\ Close a logical file
 code close ( file# -- )
 txa, pha,
 lsb lda,x \ x = file#

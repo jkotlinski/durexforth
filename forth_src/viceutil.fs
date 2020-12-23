@@ -56,6 +56,7 @@ else emit then loop
 $a emit 1 ;
 
 : dump-labels base @ >r hex
-s" words,w" 1 1 open 1 chkout
+s" words,w" 1 1 open ioabort
+1 chkout ioabort
 ['] (label) dowords
 clrchn 1 close r> base ! ;

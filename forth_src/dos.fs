@@ -3,7 +3,8 @@ require io
 \ send command string to drive and
 \ print response
 : send-cmd ( addr len -- )
-$f $f open clrchn $f chkin
+$f $f open ioabort 
+clrchn $f chkin ioabort
 begin chrin emit readst until
 clrchn $f close cr ;
 

@@ -36,9 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - GFX: PEEK fetched bitmap pixels from ROM instead of RAM
  - V did not compile in DECIMAL mode.
  - Documented SEE concatenating subsequent :NONAME
+ - Made QUIT do CLRCHN instead of CHKIN
 ### Removed
  - Removed undocumented OPENW and CLOSEW words.
- - Made QUIT do CLRCHN instead of CHKIN
 
 ## [2.0.0] - 2020-03-22
 

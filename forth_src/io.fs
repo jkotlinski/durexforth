@@ -1,8 +1,9 @@
 require open
 
-\ Set input device to open file #
-\ returns 0 on success, file # on error
-code chkin? ( file# -- file# result )
+\ Use logical file as input device
+\ ioresult is 0 on success, kernal
+\ error # on failure.
+code chkin ( file# -- file# ioresult )
 w stx,
 lsb lda,x tax, \ x = file#
 $ffc6 jsr, \ CHKIN
@@ -14,9 +15,10 @@ lsb sta,x
 0 lda,# msb sta,x
 ;code
 
-\ Set output device to open file #
-\ returns 0 on success, file # on error
-code chkout? ( file# -- file# result )
+\ Use logical file as output device
+\ ioresult is 0 on success, kernal
+\ error # on failure.
+code chkout ( file# -- file# ioresult )
 w stx,
 lsb lda,x tax, \ x = file#
 $ffc9 jsr, \ CHKOUT
@@ -49,10 +51,11 @@ $ffcf jsr, \ CHRIN
 w ldx, lsb sta,x
 ;code
 
-\ handle return value from open?, chkin?
-\ and chkout?. If result is nonzero,
-\ close file, print error msg, and abort
-: ioerr ( file# result -- )
+\ handle errors returned by open,
+\ close, and chkin. If ioresult is 
+\ nonzero, close file and abort with
+\ an appropriate error message.
+: ioabort ( file# ioresult -- )
 ?dup if rvs case
 2 of ." file# in use" endof
 3 of ." file not open" endof
@@ -62,18 +65,3 @@ w ldx, lsb sta,x
 ." io err" 
 endcase clrchn close cr abort
 else drop then ;
-
-\ Open a file
-\ 'easy' version, aborts on error
-: open ( caddr u file# sa -- )
-open? ioerr ;
-
-\ Set input device to open file #
-\ 'easy' version, aborts on error
-: chkin ( file# -- ) 
-chkin? ioerr ;
-
-\ Set output device to open file #
-\ 'easy' version, aborts on error
-: chkout ( file# -- )
-chkout? ioerr ;
