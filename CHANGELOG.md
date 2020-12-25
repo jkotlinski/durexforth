@@ -29,12 +29,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - DEFINE assigns HERE to a word in the word list and begins compilation.
  - DEFCODE does the same as DEFINE, but begins a CODE: segment instead.
  - V commands: A, R, +, -, HOME, e, C, D, s, S, H, L, M, ^w, f, F
+ - Words for file and device IO in OPEN: and IO:
+ - Utility for drive status and DOS commands in DOS:
 ### Fixed
  - SP-X! had bug in most significant bit
  - GFX: PEEK fetched bitmap pixels from ROM instead of RAM
  - V did not compile in DECIMAL mode.
  - Documented SEE concatenating subsequent :NONAME
- - Made QUIT do CLRCHN instead of CHKIN.
+ - Made QUIT do CLRCHN instead of CHKIN
+### Removed
+ - Removed undocumented OPENW and CLOSEW words.
 
 ## [2.0.0] - 2020-03-22
 
