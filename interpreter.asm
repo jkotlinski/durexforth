@@ -51,8 +51,10 @@ quit_reset  ; execute once at start
     sta $318
     lda #>restore_handler
     sta $319
-    cli
+    
 keep_nmi
+    cli ; still have to
+
     ; lores
     lda #$9b
     sta $d011
