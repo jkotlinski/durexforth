@@ -38,18 +38,18 @@ kernal_nmi
 
 stop_restore
    jsr	$f6bc		; increment real time clock
-   jsr	$ffe1		; scan stop key
+   jsr	$ffe1		; scan stop key 
    bne	kernal_nmi	; if not [stop] restore registers and exit interrupt
    
    jmp QUIT
-quit_reset
+quit_reset  ; execute once at start
     sei
     lda #<restore_handler
     sta $318
     lda #>restore_handler
     sta $319
     cli
-
+keep_nmi
     ; lores
     lda #$9b
     sta $d011
@@ -99,7 +99,7 @@ quit_reset
 
     +BACKLINK "quit", 4
 QUIT
-    jsr quit_reset
+    jsr keep_nmi
 
     ; resets the return stack
     txa
