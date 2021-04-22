@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Words for file and device IO in OPEN: and IO:
  - Utility for drive status and DOS commands in DOS:
 ### Fixed
+ - BRK vector was redirected to QUIT 
  - RS232: NMI vector was redirected to QUIT
  - SP-X! had bug in most significant bit
  - GFX: PEEK fetched bitmap pixels from ROM instead of RAM
