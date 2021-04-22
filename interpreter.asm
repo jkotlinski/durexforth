@@ -40,8 +40,11 @@ stop_restore
    jsr	$f6bc		; increment real time clock
    jsr	$ffe1		; scan stop key 
    bne	kernal_nmi	; if not [stop] restore registers and exit interrupt
-   
+   pla
+   pla
+   tax              ; restore xr for QUIT
    jmp QUIT
+   
 quit_reset  ; execute once at start
     sei
     lda #<restore_handler
