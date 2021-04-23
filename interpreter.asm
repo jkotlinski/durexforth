@@ -37,14 +37,10 @@ kernal_nmi
    jmp $fe72
 
 stop_restore
-    jsr	$f6bc		; increment real time clock
-                    ; scan stop key 
-   	lda	$91 		; read the stop key column
-	cmp	#$7f		; compare with [stp] down
-	        		; if not [stp] or not just [stp] exit
-    bne	kernal_nmi	; if not [stop] restore registers and exit interrupt
-
-
+   jsr	$f6bc		; increment real time clock
+   jsr	$ffe1		; scan stop key 
+   bne	kernal_nmi	; if not [stop] restore registers and exit interrupt
+   
 brk_handler
    pla
    pla
