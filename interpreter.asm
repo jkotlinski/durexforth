@@ -43,7 +43,7 @@ stop_restore
 	cmp	#$7f		; compare with [stp] down
 	        		; if not [stp] or not just [stp] exit
     bne	kernal_nmi	; if not [stop] restore registers and exit interrupt
-
+    jsr $f333       ; set screen, keyboard, devices untalk, unlisten
 
 brk_handler
    pla
