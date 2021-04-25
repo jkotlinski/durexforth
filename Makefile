@@ -1,5 +1,15 @@
 C1541   = c1541
 AS = acme
+X64 = x64
+
+X64_OPTS = -warp
+ifdef VICE_X64SC
+    X64 = x64sc
+    X64_OPTS += +confirmonexit
+else
+    X64_OPTS += +confirmexit
+endif
+
 TAG = `git describe --tags --abbrev=0 || svnversion --no-newline`
 TAG_DEPLOY_DOT = `git describe --tags --abbrev=0 --dirty=-M`
 TAG_DEPLOY = `git describe --tags --abbrev=0 --dirty=_M | tr _. -_`
@@ -24,7 +34,7 @@ deploy: durexforth.d64 cart.asm
 	$(MAKE) -C docs
 	cp docs/durexforth.pdf deploy/durexforth-$(TAG_DEPLOY).pdf
 	cp durexforth.d64 deploy/durexforth-$(TAG_DEPLOY).d64
-	x64 -warp +confirmexit deploy/durexforth-$(TAG_DEPLOY).d64
+	$(X64) $(X64_OPTS) deploy/durexforth-$(TAG_DEPLOY).d64
 	# make cartridge
 	c1541 -attach deploy/durexforth-$(TAG_DEPLOY).d64 -read durexforth
 	mv durexforth build/durexforth
