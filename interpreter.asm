@@ -43,13 +43,16 @@ stop_restore
 	cmp	#$7f		; compare with [stp] down
 	        		; if not [stp] or not just [stp] exit
     bne	kernal_nmi	; if not [stop] restore registers and exit interrupt
-    jsr $f333       ; set screen, keyboard, devices untalk, unlisten
+    pla
+    pla
+    tax
+    jmp QUIT
 
 brk_handler
    pla
    pla
    tax              ; restore xr for QUIT
-   jmp QUIT
+   jmp skip_clall
    
 quit_reset  ; execute once at start
     sei
@@ -115,6 +118,10 @@ keep_nmi
 
     +BACKLINK "quit", 4
 QUIT
+    jsr $ffe7       ; CLALL. Clear file table; call CLRCHN.
+    
+skip_clall
+
     jsr keep_nmi
 
     ; resets the return stack
