@@ -2,7 +2,7 @@ C1541   = c1541
 AS = acme
 
 TAG := $(shell git describe --tags --abbrev=0 || svnversion --no-newline)
-TAG_DEPLOY_DOT := $(shell git describe --tags --abbrev=0 --dirty=-m)
+TAG_DEPLOY_DOT := $(shell git describe --tags --long --dirty=_m | sed 's/-g[0-9a-f]\+//' | tr _- -.)
 TAG_DEPLOY := $(shell git describe --tags --abbrev=0 --dirty=_M | tr _. -_)
 GIT_HASH := $(shell git rev-parse --short HEAD)
 
