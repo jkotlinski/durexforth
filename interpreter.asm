@@ -107,7 +107,7 @@ keep_nmi
     stx     SOURCE_ID_MSB
     stx     SAVE_INPUT_STACK_DEPTH
     stx     READ_EOF
-    jsr $ffe7       ; CLALL. Clear file table; call CLRCHN.
+    jsr     $ffcc   ; CLRCHN
     pla
     tax
     rts
