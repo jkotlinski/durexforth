@@ -6,6 +6,15 @@ TAG_DEPLOY_DOT := $(shell git describe --tags --long --dirty=_m | sed 's/-g[0-9a
 TAG_DEPLOY := $(shell git describe --tags --abbrev=0 --dirty=_M | tr _. -_)
 GIT_HASH := $(shell git rev-parse --short HEAD)
 
+X64 = x64
+X64_OPTS = -warp
+ifdef VICE_X64SC
+    X64 = x64sc
+    X64_OPTS += +confirmonexit
+else
+    X64_OPTS += +confirmexit
+endif
+
 SRC_DIR = forth_src
 SRC_NAMES = base debug v asm gfx gfxdemo rnd sin ls turtle fractals \
     sprite doloop sys labels mml mmldemo sid spritedemo test testcore \
@@ -26,7 +35,7 @@ deploy: durexforth.d64 cart.asm
 	$(MAKE) -C docs
 	cp docs/durexforth.pdf deploy/durexforth-$(TAG_DEPLOY).pdf
 	cp durexforth.d64 deploy/durexforth-$(TAG_DEPLOY).d64
-	x64 -warp +confirmexit deploy/durexforth-$(TAG_DEPLOY).d64
+	$(X64) $(X64_OPTS) deploy/durexforth-$(TAG_DEPLOY).d64
 	# make cartridge
 	c1541 -attach deploy/durexforth-$(TAG_DEPLOY).d64 -read durexforth
 	mv durexforth build/durexforth

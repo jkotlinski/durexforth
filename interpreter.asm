@@ -23,16 +23,46 @@
 ; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE ' ABORT /STRING
 
 restore_handler
-    cli
-    jmp QUIT
+   pha				; save a
+   txa				; copy x
+   pha				; save x
+   tya				; copy y
+   pha				; save y
+   lda	#$7f	    ; disable all interrupts
+   sta	$dd0d       ; 
+   ldy	$dd0d       ; save cia 2 icr
+   bpl stop_restore ; if high bit not set
 
+kernal_nmi
+   jmp $fe72
+
+stop_restore
+    jsr	$f6bc		; increment real time clock
+                    ; scan stop key 
+   	lda	$91 		; read the stop key column
+	cmp	#$7f		; compare with [stp] down
+	        		; if not [stp] or not just [stp] exit
+    bne	kernal_nmi	; if not [stop] restore registers and exit interrupt
+    
+brk_handler
+   pla
+   pla
+   tax              ; restore xr for QUIT
+   jmp QUIT
+   
 quit_reset
     sei
     lda #<restore_handler
     sta $318
     lda #>restore_handler
     sta $319
-    cli
+
+    lda #<brk_handler
+    sta $316
+    lda #>brk_handler
+    sta $317
+    
+   cli ; still have to
 
     ; lores
     lda #$9b
