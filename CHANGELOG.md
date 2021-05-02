@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+ - Restore key is clean NMI, Run/Stop Restore to QUIT
  - LATEST changed from VARIABLE to VALUE
  - FIND-NAME now returns a name token per the standard proposal
  - Dictionary restructured, now header and code data are split.
@@ -32,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Words for file and device IO in OPEN: and IO:
  - Utility for drive status and DOS commands in DOS:
 ### Fixed
+ - BRK vector was redirected to QUIT 
+ - RS232: NMI vector was redirected to QUIT
  - SP-X! had bug in most significant bit
  - GFX: PEEK fetched bitmap pixels from ROM instead of RAM
  - V did not compile in DECIMAL mode.
