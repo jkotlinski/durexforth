@@ -50,7 +50,7 @@ brk_handler
    tax              ; restore xr for QUIT
    jmp QUIT
    
-quit_reset  ; execute once at start
+quit_reset
     sei
     lda #<restore_handler
     sta $318
@@ -62,8 +62,7 @@ quit_reset  ; execute once at start
     lda #>brk_handler
     sta $317
     
-keep_nmi
-    cli ; still have to
+   cli ; still have to
 
     ; lores
     lda #$9b
@@ -114,7 +113,7 @@ keep_nmi
 
     +BACKLINK "quit", 4
 QUIT
-    jsr keep_nmi
+    jsr quit_reset
 
     ; resets the return stack
     txa
