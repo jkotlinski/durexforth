@@ -1,7 +1,12 @@
 C1541   = c1541
 AS = acme
-X64 = x64
 
+TAG := $(shell git describe --tags --abbrev=0 || svnversion --no-newline)
+TAG_DEPLOY_DOT := $(shell git describe --tags --long --dirty=_m | sed 's/-g[0-9a-f]\+//' | tr _- -.)
+TAG_DEPLOY := $(shell git describe --tags --abbrev=0 --dirty=_M | tr _. -_)
+GIT_HASH := $(shell git rev-parse --short HEAD)
+
+X64 = x64
 X64_OPTS = -warp
 ifdef VICE_X64SC
     X64 = x64sc
@@ -9,10 +14,6 @@ ifdef VICE_X64SC
 else
     X64_OPTS += +confirmexit
 endif
-
-TAG = `git describe --tags --abbrev=0 || svnversion --no-newline`
-TAG_DEPLOY_DOT = `git describe --tags --abbrev=0 --dirty=-M`
-TAG_DEPLOY = `git describe --tags --abbrev=0 --dirty=_M | tr _. -_`
 
 SRC_DIR = forth_src
 SRC_NAMES = base debug v asm gfx gfxdemo rnd sin ls turtle fractals \
@@ -50,6 +51,7 @@ durexforth.d64: durexforth.prg Makefile ext/petcom $(SRCS)
 	$(C1541) -attach $@ -write durexforth.prg durexforth # > /dev/null
 	$(C1541) -attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME1) # > /dev/null
 	$(C1541) -attach $@ -write $(EMPTY_FILE) $(TAG_DEPLOY_DOT),s # > /dev/null
+	$(C1541) -attach $@ -write $(EMPTY_FILE) '  '$(GIT_HASH),s # > /dev/null
 	$(C1541) -attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME2) # > /dev/null
 # $(C1541) -attach $@ -write debug.bak
 	mkdir -p build
