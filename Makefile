@@ -1,10 +1,15 @@
 C1541   = c1541
 AS = acme
+# deploy 1571 (d71) or 1581 (d81); e.g. make DISK_SUF=d81 deploy
+DISK_SUF = d64
 
 TAG := $(shell git describe --tags --abbrev=0 || svnversion --no-newline)
 TAG_DEPLOY_DOT := $(shell git describe --tags --long --dirty=_m | sed 's/-g[0-9a-f]\+//' | tr _- -.)
 TAG_DEPLOY := $(shell git describe --tags --abbrev=0 --dirty=_M | tr _. -_)
 GIT_HASH := $(shell git rev-parse --short HEAD)
+
+DEPLOY_NAME = durexforth-$(TAG_DEPLOY)
+DISK_IMAGE = durexforth.$(DISK_SUF)
 
 X64 = x64
 X64_OPTS = -warp
@@ -27,27 +32,27 @@ SEPARATOR_NAME1 = '=-=-=-=-=-=-=-=,s'
 SEPARATOR_NAME2 = '=-------------=,s'
 SEPARATOR_NAME3 = '=-=---=-=---=-=,s'
 
-all:	durexforth.d64
+all: $(DISK_IMAGE)
 
-deploy: durexforth.d64 cart.asm
+deploy: $(DISK_IMAGE) cart.asm
 	rm -rf deploy
 	mkdir deploy
 	$(MAKE) -C docs
-	cp docs/durexforth.pdf deploy/durexforth-$(TAG_DEPLOY).pdf
-	cp durexforth.d64 deploy/durexforth-$(TAG_DEPLOY).d64
-	$(X64) $(X64_OPTS) deploy/durexforth-$(TAG_DEPLOY).d64
+	cp docs/durexforth.pdf deploy/$(DEPLOY_NAME).pdf
+	cp $(DISK_IMAGE) deploy/$(DEPLOY_NAME).$(DISK_SUF)
+	$(X64) $(X64_OPTS) deploy/$(DEPLOY_NAME).$(DISK_SUF)
 	# make cartridge
-	c1541 -attach deploy/durexforth-$(TAG_DEPLOY).d64 -read durexforth
+	c1541 -attach deploy/$(DEPLOY_NAME).$(DISK_SUF) -read durexforth
 	mv durexforth build/durexforth
 	@$(AS) cart.asm
-	cartconv -t simon -i build/cart.bin -o deploy/durexforth-$(TAG_DEPLOY).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
+	cartconv -t simon -i build/cart.bin -o deploy/$(DEPLOY_NAME).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
 
 durexforth.prg: *.asm
 	@$(AS) durexforth.asm
 
-durexforth.d64: durexforth.prg Makefile ext/petcom $(SRCS)
+$(DISK_IMAGE): durexforth.prg Makefile ext/petcom $(SRCS)
 	touch $(EMPTY_FILE)
-	$(C1541) -format "durexforth,DF"  d64 durexforth.d64 # > /dev/null
+	$(C1541) -format "durexforth,DF" $(DISK_SUF) $@ # > /dev/null
 	$(C1541) -attach $@ -write durexforth.prg durexforth # > /dev/null
 	$(C1541) -attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME1) # > /dev/null
 	$(C1541) -attach $@ -write $(EMPTY_FILE) $(TAG_DEPLOY_DOT),s # > /dev/null
@@ -65,5 +70,5 @@ durexforth.d64: durexforth.prg Makefile ext/petcom $(SRCS)
 
 clean:
 	$(MAKE) -C docs clean
-	rm -f *.lbl *.prg *.d64
+	rm -f *.lbl *.prg *.$(DISK_SUF)
 	rm -rf build deploy
