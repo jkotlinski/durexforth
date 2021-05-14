@@ -316,3 +316,15 @@ INCLUDED
     jsr interpret_tib
     jmp -
 +   jmp interpret_tib
+
+; Used registers: A, X, Y
+close_all_logical_files:
+    ldx #0
+-   txa
+    pha
+    jsr CLOSE
+    pla
+    tax
+    dex
+    bne -
+    rts
