@@ -46,10 +46,6 @@ then branch ;
 begin ?dup while postpone then
 repeat ; immediate
 
-( Returns data field address, which is
-after jsr dodoes )
-: >dfa >xt 1+ 2+ ;
-
 ( dodoes words contain:
  1. jsr dodoes
  2. two-byte code pointer. default: rts
@@ -57,7 +53,7 @@ after jsr dodoes )
 here 60 c, ( rts )
 : create
 header postpone dodoes [ swap ] literal , ;
-: does> r> 1+ latest >dfa ! ;
+: does> r> 1+ latest >xt 1+ 2+ ! ;
 
 .( asm..)
 parse-name asm included
@@ -199,9 +195,9 @@ variable (includes) $1e allot
 (includes) $20 0 fill
 
 : marker latest here create , ,
-(includes) begin dup @ while 2+ repeat , 
+(includes) begin dup @ while 2+ repeat ,
 does> dup @ to here
-2+ dup @ to latest 
+2+ dup @ to latest
 2+ @ 0 swap ! ;
 
 : include parse-name included ;
@@ -221,7 +217,7 @@ marker ---modules---
 .( v..) include v
 
 decimal
-include turnkey 
+include turnkey
 cr
 .( cart: )
 $4000 $68 -

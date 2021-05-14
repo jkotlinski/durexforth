@@ -42,7 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Made QUIT do CLRCHN instead of CHKIN
  - Made QUIT close all open files.
 ### Removed
- - Removed undocumented OPENW and CLOSEW words.
+ - Removed undocumented >DFA, OPENW and CLOSEW words.
 
 ## [2.0.0] - 2020-03-22
 
