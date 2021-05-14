@@ -6,17 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2021-05-14
+
 ### Changed
- - Restore key is clean NMI, Run/Stop Restore to QUIT
- - LATEST changed from VARIABLE to VALUE
- - FIND-NAME now returns a name token per the standard proposal
  - Dictionary restructured, now header and code data are split.
  - Header data is not a linked list, and grows downward from $9fff. Record structure: `len_flags | str | xt`
+ - LATEST changed from VARIABLE to VALUE
+ - V internal words hidden, BUFSTART no longer variable, fixed at $7000.
+ - Restore key is clean NMI, Run/Stop Restore to QUIT
+ - FIND-NAME now returns a name token per the standard proposal
  - LS abort on LOADB error, PAGE upon success.
  - LS now accepts wildcards, drive #'s or not.
  - RDIR improve placement of MORE.
  - Prompt displays `ful` when there is less than 256 bytes of dictionary space left.
- - V internal words hidden, BUFSTART no longer variable, fixed at $7000.
 ### Added
  - RDIR will display directory formatted data anywhere in memory.
  - PAD Scratch pad memory set to cassette buffer. Untouched by DurexForth
