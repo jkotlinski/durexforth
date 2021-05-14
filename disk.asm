@@ -219,11 +219,6 @@ save_binary_srange_end_hi = *+1
     inx
     rts
 
-.close
-    lda $b8 ; current file
-    jsr CLOSE
-    jmp CLRCHN
-
     +BACKLINK "included", 8
 INCLUDED
     lda	LSB, x
@@ -286,7 +281,6 @@ INCLUDED
     jsr	SETLFS
     jsr	OPEN
     bcc	+
-    jsr .close
     jmp ABORT
 +
     ldx	SOURCE_ID_LSB ; file number
@@ -302,7 +296,6 @@ INCLUDED
 
     jsr READST
     beq +
-    jsr .close
     jsr _errorchread
     jmp ABORT
 +
