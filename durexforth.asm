@@ -180,7 +180,7 @@ load_base
     sta LSB+1, x
     lda #>basename
     sta MSB+1, x
-    lda #4
+    lda #(basename_end - basename)
     sta LSB,x
     jsr INCLUDED
     jmp interpret_loop
