@@ -2,7 +2,7 @@
 count $1f and ;
 : (xt>) ( xt1 nt -- nt xt 0 | xt1 1 )
 2dup name>string + @
-< invert if swap drop 0  
+< invert if swap drop 0
 exit then drop 1 ;
 : xt> ( codepointer -- nametoken )
 ['] (xt>) dowords ;
@@ -50,7 +50,7 @@ endcase
 \ finding the next closest word requires scanning
 \ the whole dictionary, sadly
 : (see) ( xt xt-1 nt -- xt xt-1 1 | xt xt-1 0 )
->xt dup 3 pick 
+>xt dup 3 pick
 > if ( xt xt-1 xt0 )
 2dup < if drop else
 nip then 1 exit then drop 1 ;
@@ -96,10 +96,10 @@ last-dump ! base ! ;
 : n last-dump @ dump ;
 hide last-dump
 
-: more 
+: more
 $d6 c@ $18 = if $12 emit
 ." more" $92 emit key drop page then ;
 
 : (words) more name>string type space 1 ;
-: words ['] (words) dowords ;
+: words page ['] (words) dowords ;
 hide (words)
