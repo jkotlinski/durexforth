@@ -41,6 +41,7 @@ Pick from stack element with depth u to top of stack.
 \item[space] Displays one space.
 \item[spaces ( n -- )] Displays n spaces.
 \item[page] Clears the screen.
+\item[rvs] Reverse screen output.
 \item[bye] Exits DurexForth.
 \end{description}
 
@@ -275,7 +276,7 @@ endcase
 
 \item[word ( delim -- addr )] Reads a word from input, using delimiter \texttt{delim}, and puts the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.
 
-\item[parse-name ( name -- caddr u )] Reads a word from input, delimited by whitespace. Skips leading spaces. 
+\item[parse-name ( name -- caddr u )] Reads a word from input, delimited by whitespace. Skips leading spaces.
 
 \item[interpret ( -- value )] Interprets a word from input and puts it on the stack.
 
@@ -321,7 +322,7 @@ Compile-time version of "\texttt{.(}". Example: \texttt{: foo ." bar" ;}
 
 \item[type ( caddr u -- )] Prints a string.
 
-\item[/string ( caddr u n -- caddr+n u-n )] Adjusts the string by n characters. 
+\item[/string ( caddr u n -- caddr+n u-n )] Adjusts the string by n characters.
 
 \end{description}
 
@@ -414,7 +415,7 @@ Words for sending DOS commands to drives and reading drive status are available 
     \begin{verbatim}
         : backup s" copy0:backup=durexforth" send-cmd ;
         backup
-    \end{verbatim} 
+    \end{verbatim}
 
     \item[dos command ( -- )] Sends \texttt{command} to the current device's command channel, and prints the response. Note that the remainder of the line is treated as part of the command. This makes it possible to refer to file names that contain spaces, but means that \texttt{dos} and its command should be on their own line, or the last words on a line. Example: \texttt{dos scratch0:old file} will delete a file named ``\texttt{old file}''.
 \end{description}
@@ -478,7 +479,7 @@ Example: \texttt{'0' ar c! \$ffd2 sys} calls the CHROUT routine, which prints \t
 \section{Turn-key Utilities}
 These words are available by including \texttt{turnkey}.
 \begin{description}
-\item[top ( -- addr )] Address of the top of the dictionary, default: \$9fff. 
+\item[top ( -- addr )] Address of the top of the dictionary, default: \$9fff.
 
 \item[top! ( addr -- )] Relocates the dictionary to \texttt{addr}. Example:
 
