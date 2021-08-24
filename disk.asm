@@ -129,12 +129,6 @@ load_binary_status = * + 1
     sta	LSB, x
     rts
 
-;load_binary_base
-;	lda	#basename_end - basename
-;	ldx	#<basename
-;	ldy	#>basename
-;	; fall through...
-
 load_binary
     jsr .disk_io_setnamsetlfs
 
