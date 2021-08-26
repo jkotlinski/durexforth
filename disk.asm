@@ -145,13 +145,10 @@ load_binary_laddr_hi = *+1
 
 .disk_io_setnamsetlfs ;reused by both loadb and saveb
     jsr SETNAM
-    lda $ba		;last used device number
-    and #3		;Make 0-3 possible numbers
-    ora #8		;Transform to 8-B
-    tax
-    lda #1
-    ldy #0		;if load: 0 = load to new address, if save: 0 = dunno, but okay...
-    jmp SETLFS	;End with JMP instead of jsr/rts to save a jsr/rts pair...
+    ldx $ba     ; keep current device
+    lda #1      ; logical file #
+    ldy #0      ; if load: 0 = load to new address, if save: 0 = dunno, but okay...
+    jmp SETLFS
 
 .disk_io_error
     ; Accumulator contains BASIC error code
