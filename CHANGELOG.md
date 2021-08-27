@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
  - LOADB/SAVEB could change active device.
+ - editor: Improved I/O error handling.
 
 ## [3.0.0] - 2021-05-14
 

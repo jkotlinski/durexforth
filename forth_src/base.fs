@@ -214,6 +214,7 @@ marker ---modules---
 .( ls..) include ls
 .( require..) include require
 .( open..) include open
+.( io..) include io
 .( v..) include v
 
 decimal
