@@ -10,7 +10,7 @@ $ffc6 jsr, \ CHKIN
 +branch bcs, \ carry set = error
 0 lda,# \ A is only valid on error
 :+
-w ldx, dex, 
+w ldx, dex,
 lsb sta,x
 0 lda,# msb sta,x
 ;code
@@ -30,8 +30,8 @@ lsb sta,x
 0 lda,# msb sta,x
 ;code
 
-\ Reset input and output to console 
-code clrchn ( -- ) 
+\ Reset input and output to console
+code clrchn ( -- )
 txa, pha,
 $ffcc jsr,  \ CLRCH
 pla, tax,
@@ -52,7 +52,7 @@ w ldx, lsb sta,x
 ;code
 
 \ handle errors returned by open,
-\ close, and chkin. If ioresult is 
+\ close, and chkin. If ioresult is
 \ nonzero, close file and abort with
 \ an appropriate error message.
 : ioabort ( file# ioresult -- )
@@ -66,6 +66,6 @@ w ldx, lsb sta,x
 7 of ." not output file" endof
 8 of ." missing filename" endof
 9 of ." illegal device number" endof
-." io err" 
+." io err " dup .
 endcase clrchn close cr abort
 else drop then ;
