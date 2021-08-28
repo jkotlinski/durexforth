@@ -63,5 +63,5 @@ cr abort then ;
 
 \ handle out of range ioresult
 : ioabort  ( ioresult -- ? )
-dup 9 > if rev ." io err" drop
+dup 9 > if rev ." io err" cr abort
 else berr then ;
