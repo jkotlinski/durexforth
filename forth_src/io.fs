@@ -55,13 +55,13 @@ w ldx, lsb sta,x
 \ abort.
 : berr ( ioresult -- )
 ?dup if
-rvs 55 1 c! 1-
+rvs $37 1 c! 1-
 2* $a328 + @
-begin dup c@ dup 128 and 0= while
-emit 1+ repeat 128 - emit
+begin dup c@ dup $80 and 0= while
+emit 1+ repeat $80 - emit
 cr abort then ;
 
 \ handle out of range ioresult
 : ioabort  ( ioresult -- ? )
-dup 9 > if rev ." io err" cr abort
+dup 9 > if rvs ." io err" cr abort
 else berr then ;
