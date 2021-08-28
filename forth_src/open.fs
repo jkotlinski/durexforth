@@ -1,8 +1,8 @@
 \ Open a logical file
 \ ioresult is 0 on success, kernal
 \ error # on failure.
-( nameaddr namelen file# sa -- 
-  file# ioresult )
+( nameaddr namelen file# sa --
+  ioresult )
 code open
 w stx,
 lsb 1+ lda,x \ a = file #
@@ -21,10 +21,9 @@ $ffc0 jsr, \ OPEN
 0 lda,# \ A is only valid on error
 :+
 w ldx,
-inx, inx,
+inx, inx, inx,
 lsb sta,x
-lsb 1- lda,x lsb 1+ sta,x
-0 lda,# msb sta,x msb 1+ sta,x
+0 lda,# msb sta,x
 ;code
 
 \ Close a logical file
