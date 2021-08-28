@@ -53,15 +53,15 @@ w ldx, lsb sta,x
 \ close, and chkin. If ioresult is
 \ nonzero, print error message and
 \ abort.
-: ioabort ( ioresult -- )
-?dup if rvs case
-1 of ." too many files" endof
-2 of ." file# in use" endof
-3 of ." file not open" endof
-4 of ." file not found" endof
-5 of ." device not present" endof
-6 of ." not input file" endof
-7 of ." not output file" endof
-8 of ." missing filename" endof
-9 of ." illegal device #" endof
-." io err" endcase cr abort then ;
+: berr ( ioresult -- )
+?dup if
+rvs 55 1 c! 1-
+2* $a328 + @
+begin dup c@ dup 128 and 0= while
+emit 1+ repeat 128 - emit
+cr abort then ;
+
+\ handle out of range ioresult
+: ioabort  ( ioresult -- ? )
+dup 9 > if rev ." io err" cr abort
+else berr then ;
