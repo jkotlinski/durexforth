@@ -53,11 +53,14 @@ w ldx, lsb sta,x
 \ close, and chkin. If ioresult is
 \ nonzero, print error message and
 \ abort.
-: ioabort ( ioresult -- )
+: berr ( ioresult -- )
 ?dup if
 rvs 55 1 c! 1-
-1 lshift $a328 + @
+2* $a328 + @
 begin dup c@ dup 128 and 0= while
 emit 1+ repeat 128 - emit
-54 1 c!
 cr abort then ;
+\ handle out of range ioresult
+: ioabort  ( ioresult -- ? )
+dup 9 > if rev ." io err" drop
+else berr then ;
