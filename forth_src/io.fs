@@ -60,6 +60,7 @@ rvs 55 1 c! 1-
 begin dup c@ dup 128 and 0= while
 emit 1+ repeat 128 - emit
 cr abort then ;
+
 \ handle out of range ioresult
 : ioabort  ( ioresult -- ? )
 dup 9 > if rev ." io err" drop
