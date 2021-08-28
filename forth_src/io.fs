@@ -55,7 +55,7 @@ w ldx, lsb sta,x
 \ abort.
 : berr ( ioresult -- )
 ?dup if
-rvs 55 1 c! 1-
+rvs 1 c@ 1 or 1 c! 1-
 2* $a328 + @
 begin dup c@ dup 128 and 0= while
 emit 1+ repeat 128 - emit
