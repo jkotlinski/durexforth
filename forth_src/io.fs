@@ -53,7 +53,6 @@ w ldx, lsb sta,x
 \ close, and chkin. If ioresult is
 \ nonzero, print error message and
 \ abort.
-
 : ioabort ( ioresult -- )
 ?dup if
 rvs 55 1 c! 1-
@@ -61,4 +60,4 @@ rvs 55 1 c! 1-
 begin dup c@ dup 128 and 0= while
 emit 1+ repeat 128 - emit
 54 1 c!
-cr abort else then ;
+cr abort then ;
