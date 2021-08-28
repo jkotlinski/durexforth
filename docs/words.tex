@@ -290,7 +290,7 @@ endcase
 
     Typical use: \texttt{: x ... test abort" error" ... ;}
 
-\item[quit] Enters an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting input.
+\item[quit] Enters an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting I/O.
 
 \end{description}
 
@@ -425,14 +425,14 @@ Words for sending DOS commands to drives and reading drive status are available 
 For more advanced uses, words corresponding to the standard Commodore Kernal IO routines are available by including \texttt{io}.
 
 \begin{description}
-    \item[open ( filenameptr filenamelength file\# secondary-addr -- file\# ioresult )] Open a logical file.
-    \item[chkin ( file\# -- file\# ioresult )] Use a logical file as input device.
-    \item[chkout ( file\# -- file\# ioresult )] Use a logical file as output device.
+    \item[open ( filenameptr filenamelength file\# secondary-addr -- ioresult )] Open a logical file.
+    \item[chkin ( file\# -- ioresult )] Use a logical file as input device.
+    \item[chkout ( file\# -- ioresult )] Use a logical file as output device.
     \item[clrchn ( -- )] Resets input and output to the keyboard and screen.
     \item[close ( file\# -- )] Close a logical file.
     \item[readst ( -- status )] Returns the status of the last IO operation. For serial-bus devices, \texttt{\$01} = write timeout, \texttt{\$02} = read timeout, \texttt{\$40} = end of file (EOI), \texttt{\$80} = device not present.
     \item[chrin ( -- char)] Reads a character from the current input device.
-    \item[ioabort ( file\# ioresult -- )] Handle error conditions for \texttt{open}, \texttt{chkin} or \texttt{chkout}. On error, close the file and abort with an explanatory error message.
+    \item[ioabort ( ioresult -- )] Handles error conditions for \texttt{open}, \texttt{chkin} and \texttt{chkout}. On failure, print error message and abort.
 \end{description}
 
 As per the underlying Kernal routines, \texttt{chrin} does not check for end-of-file or any other error condition. \texttt{readst} should be called to ensure that the returned character is valid.

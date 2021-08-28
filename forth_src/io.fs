@@ -1,16 +1,14 @@
-require open
-
 \ Use logical file as input device
 \ ioresult is 0 on success, kernal
 \ error # on failure.
-code chkin ( file# -- file# ioresult )
+code chkin ( file# -- ioresult )
 w stx,
 lsb lda,x tax, \ x = file#
 $ffc6 jsr, \ CHKIN
 +branch bcs, \ carry set = error
 0 lda,# \ A is only valid on error
 :+
-w ldx, dex,
+w ldx,
 lsb sta,x
 0 lda,# msb sta,x
 ;code
@@ -18,14 +16,14 @@ lsb sta,x
 \ Use logical file as output device
 \ ioresult is 0 on success, kernal
 \ error # on failure.
-code chkout ( file# -- file# ioresult )
+code chkout ( file# -- ioresult )
 w stx,
 lsb lda,x tax, \ x = file#
 $ffc9 jsr, \ CHKOUT
 +branch bcs, \ carry set = error
 0 lda,# \ A is only valid on error
 :+
-w ldx, dex,
+w ldx,
 lsb sta,x
 0 lda,# msb sta,x
 ;code
@@ -55,7 +53,7 @@ w ldx, lsb sta,x
 \ close, and chkin. If ioresult is
 \ nonzero, print error message and
 \ abort.
-: ioabort ( file# ioresult -- )
+: ioabort ( ioresult -- )
 ?dup if rvs case
 1 of ." too many files" endof
 2 of ." file# in use" endof
@@ -66,5 +64,4 @@ w ldx, lsb sta,x
 7 of ." not output file" endof
 8 of ." missing filename" endof
 9 of ." illegal device #" endof
-." io err " endcase
-cr abort else drop then ;
+." io err" endcase cr abort then ;
