@@ -272,7 +272,9 @@ INCLUDED
     jsr	SETLFS
     jsr	OPEN
     bcc	+
-    jmp ABORT
+    ldx #-1
+    sta LSB,x
+    jmp IOABORT
 +
     ldx	SOURCE_ID_LSB ; file number
     jsr	CHKIN
