@@ -272,7 +272,9 @@ INCLUDED
     jsr	SETLFS
     jsr	OPEN
     bcc	+
-    ldx #-1
+    pla
+    tax
+    dex
     sta LSB,x
     jmp IOABORT
 +
