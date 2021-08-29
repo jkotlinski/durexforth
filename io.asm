@@ -304,6 +304,8 @@ IOABORT ; ( ioresult -- )
     lda LSB-1,x
     cmp #10
     bcc .print_basic_error
+
+    ; prints "ioerr"
     lda #'i'
     jsr CHROUT
     lda #'o'
