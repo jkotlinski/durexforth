@@ -316,6 +316,7 @@ IOABORT ; ( ioresult -- )
     jsr CHROUT
     jsr CHROUT
     jmp .cr_abort
+
 .print_basic_error
     lda #$37
     sta 1
