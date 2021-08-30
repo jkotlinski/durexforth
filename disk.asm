@@ -79,11 +79,7 @@ geof
 
 .glose
         LDA #$0F      ; filenumber 15
-        JSR CLOSE
-
-        LDX #$00      ; filenumber 0 = keyboard
-        JMP CHKIN     ; keyboard now input device again
-
+        jmp CLOSE
 
 ; LOADB ( filenameptr filenamelen dst -- endaddress ) load binary file
 ;  - s" base" 7000 loadb #load file to 7000
