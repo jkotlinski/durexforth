@@ -306,18 +306,15 @@ IOABORT ; ( ioresult -- )
     bcc .print_basic_error
 
     ; prints "ioerr"
-    lda #'i'
-    jsr CHROUT
-    lda #'o'
-    jsr CHROUT
-    lda #' '
-    jsr CHROUT
-    lda #'e'
-    jsr CHROUT
-    lda #'r'
-    jsr CHROUT
-    jsr CHROUT
-    jmp .cr_abort
+    lda #<.ioerr
+    sta W
+    lda #>.ioerr
+    lda W+1
+    jmp .print_msb_terminated_string
+
+.ioerr
+    !text "ioer"
+    !byte 'r'|$80
 
 .print_basic_error
     lda #$37
@@ -331,6 +328,7 @@ IOABORT ; ( ioresult -- )
     lda $a327,x
     sta W+1
 
+.print_msb_terminated_string
     ldy #0
 -   lda (W),y
     pha
