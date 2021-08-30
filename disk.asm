@@ -80,9 +80,7 @@ geof
 .glose
         LDA #$0F      ; filenumber 15
         JSR CLOSE
-
-        LDX #$00      ; filenumber 0 = keyboard
-        JMP CHKIN     ; keyboard now input device again
+        jmp CLRCHN
 
 
 ; LOADB ( filenameptr filenamelen dst -- endaddress ) load binary file
@@ -140,8 +138,7 @@ load_binary_laddr_hi = *+1
     lda #0		;0 = load to memory (no verify)
     jsr LOAD
     bcs .disk_io_error
-    ldx #$00      ; filenumber 0 = keyboard
-    jmp CHKIN     ; call CHKIN (keyboard now input device again)
+    jmp CLRCHN
 
 .disk_io_setnamsetlfs ;reused by both loadb and saveb
     jsr SETNAM
@@ -156,8 +153,7 @@ load_binary_laddr_hi = *+1
     ;... error handling ...
     ldx #$00      ; filenumber 0 = keyboard
     stx	load_binary_status
-    jsr CHKIN     ; call CHKIN (keyboard now input device again)
-    rts
+    jmp CLRCHN
 
 ; SAVEB (save binary file)
 ;  - 7000 71ae s" base" saveb #save file from 7000 to 71ae (= the byte AFTER the last byte in the file)
