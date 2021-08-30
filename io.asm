@@ -300,8 +300,7 @@ IOABORT ; ( ioresult -- )
     ora MSB-1,x
     bne +
     rts
-+   jsr RVS
-    lda LSB-1,x
++   lda LSB-1,x
     cmp #10
     bcc .print_basic_error
 
@@ -329,6 +328,9 @@ IOABORT ; ( ioresult -- )
     sta W+1
 
 .print_msb_terminated_string
+    jsr CLRCHN
+    jsr RVS
+
     ldy #0
 -   lda (W),y
     pha
