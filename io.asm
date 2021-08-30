@@ -296,15 +296,15 @@ RESTORE_INPUT
     +BACKLINK "ioabort", 7
 IOABORT ; ( ioresult -- )
     inx
+    lda MSB-1,x
+    bne .print_ioerr
     lda LSB-1,x
-    ora MSB-1,x
     bne +
     rts
-+   lda LSB-1,x
-    cmp #10
++   cmp #10
     bcc .print_basic_error
 
-    ; prints "ioerr"
+.print_ioerr
     lda #<.ioerr
     sta W
     lda #>.ioerr
