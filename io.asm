@@ -309,7 +309,7 @@ IOABORT ; ( ioresult -- )
     lda #<.ioerr
     sta W
     lda #>.ioerr
-    lda W+1
+    sta W+1
     jmp .print_msb_terminated_string
 
 .ioerr
