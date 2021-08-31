@@ -44,15 +44,13 @@ SAVE = $ffd8
     rts
 
 _errorchread
-        LDA #$00      ; no filename
-        tax
-        tay
+        LDA #$00      ; no filename x,y don't matter if A=0
         JSR SETNAM
         LDA #$0F      ; file number 15
         LDX $BA       ; last used device number
         BNE +
         LDX #$08      ; default to device 8
-+	    LDY #$0F      ; secondary address 15 (error channel)
++	    LDY #$FF      ; secondary address $FF if none)
         JSR SETLFS
 
         JSR OPEN
