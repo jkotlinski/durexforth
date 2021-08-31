@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - LOADB/SAVEB could change active device.
  - editor: Improved I/O error handling.
  - IOABORT did not print all error messages.
+ - REFILL would not properly switch back to keyboard after EOF.
 
 ## [3.0.0] - 2021-05-14
 

@@ -82,17 +82,19 @@ REFILL
 
 READ_EOF = * + 1
     lda #0
-    beq +
-    ; handle EOF
+    beq .not_eof
     stx W
     lda	SOURCE_ID_LSB
     jsr	CLOSE
-    dec	SOURCE_ID_LSB
+    jsr RESTORE_INPUT
     ldx SOURCE_ID_LSB
+    beq +
     jsr CHKIN
-    ldx W
-    jmp RESTORE_INPUT ; exit
-+
+    jmp ++
++   jsr CLRCHN
+++  ldx W
+    rts
+.not_eof
     lda SOURCE_ID_MSB
     beq +
     jsr evaluate_consume_tib
