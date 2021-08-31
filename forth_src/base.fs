@@ -1,5 +1,4 @@
 : 2+ 1+ 1+ ;
-: cr d emit ;
 : nip swap drop ;
 : jmp, 4c c, ;
 : ['] ' [ ' literal compile, ]
@@ -179,8 +178,6 @@ r> 0< if swap negate swap then ;
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
-code rvs 12 lda,# ffd2 jsr, ;code
-
 : abort"
 postpone if
 postpone rvs
@@ -214,7 +211,6 @@ marker ---modules---
 .( ls..) include ls
 .( require..) include require
 .( open..) include open
-.( io..) include io
 .( v..) include v
 
 decimal

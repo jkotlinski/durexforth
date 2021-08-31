@@ -33,6 +33,16 @@ PAGE
     lda #K_CLRSCR
     jmp PUTCHR
 
+    +BACKLINK "rvs", 3
+RVS ; ( -- ) invert text output
+    lda #$12
+    jmp CHROUT
+
+    +BACKLINK "cr", 2
+CR ; ( -- )
+    lda #$d
+    jmp CHROUT
+
     +BACKLINK "type", 4
 TYPE ; ( caddr u -- )
     lda #0 ; quote mode off
@@ -280,3 +290,58 @@ RESTORE_INPUT
     jsr pop_input_stack
     sta READ_EOF
     rts
+
+; handle errors returned by open,
+; close, and chkin. If ioresult is
+; nonzero, print error message and
+; abort.
+    +BACKLINK "ioabort", 7
+IOABORT ; ( ioresult -- )
+    inx
+    lda MSB-1,x
+    bne .print_ioerr
+    lda LSB-1,x
+    bne +
+    rts
++   cmp #10
+    bcc .print_basic_error
+
+.print_ioerr
+    lda #<.ioerr
+    sta W
+    lda #>.ioerr
+    sta W+1
+    jmp .print_msb_terminated_string
+
+.ioerr
+    !text "ioer"
+    !byte 'r'|$80
+
+.print_basic_error
+    lda #$37
+    sta 1
+
+    lda LSB-1,x
+    asl
+    tax
+    lda $a326,x
+    sta W
+    lda $a327,x
+    sta W+1
+
+.print_msb_terminated_string
+    jsr CLRCHN
+    jsr RVS
+
+    ldy #0
+-   lda (W),y
+    pha
+    and #$7f
+    jsr CHROUT
+    iny
+    pla
+    bpl -
+
+.cr_abort
+    jsr CR
+    jmp ABORT

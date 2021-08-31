@@ -48,15 +48,3 @@ dex, w stx, 0 lda,# msb sta,x
 $ffcf jsr, \ CHRIN
 w ldx, lsb sta,x
 ;code
-
-\ handle errors returned by open,
-\ close, and chkin. If ioresult is
-\ nonzero, print error message and
-\ abort.
-: ioabort  ( ioresult -- )
-?dup 0= if exit then rvs
-dup 9 > if ." io err" else
-$37 1 c! 1- 2* $a328 + @
-begin dup c@ dup $80 and 0= while
-emit 1+ repeat $80 - emit
-then cr abort ;
