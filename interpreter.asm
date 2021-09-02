@@ -131,17 +131,6 @@ interpret_loop
     jsr interpret_tib
     jmp interpret_loop
 
-    +BACKLINK "bye", 3
-    ldx INIT_S
-    txs
-    pla
-    sta $319
-    pla
-    sta $318
-    pla
-    sta 1
-    rts
-
 interpret_tib
     jsr INTERPRET
     cpx #X_INIT+1

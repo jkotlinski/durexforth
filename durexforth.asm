@@ -75,12 +75,6 @@ PLACEHOLDER_ADDRESS = $1234
 
 ; -------- program start
 
-    lda 1
-    pha
-    lda $318
-    pha
-    lda $319
-    pha
     tsx
     stx INIT_S
     ldx #X_INIT
