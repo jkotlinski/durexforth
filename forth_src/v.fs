@@ -619,6 +619,8 @@ curlinestart @ bufstart eof @ within
 0= abort" cl" again ;
 
 define v
+$ba c@ 8 < abort" bad device#"
+
 \ modifies kernal to change kbd prefs
 ram-kernal $eaea @ $8ca <> if
 rom-kernal
