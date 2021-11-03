@@ -37,6 +37,7 @@ warmstart
     sta $ba ; last device
     lda #$1
     sta $8d
+    sta $de00 ; make sure we are in 16k mode (doesn't matter what we write, just a write does the trick)
     ldy #0
 -
     lda ($8b),y
