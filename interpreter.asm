@@ -46,8 +46,18 @@ stop_restore
 
 brk_handler
    pla
+   sta $30e         ; yr
    pla
    tax              ; restore xr for QUIT
+   sta $30d         ; xr
+   pla
+   sta $30c         ; ar
+   pla
+   sta $30f         ; sr
+   pla
+   sta $14          ; store rti address where Kernal SYS stores address
+   pla
+   sta $15          ; enables " : continue $14 @ sys ; "
    jmp QUIT
 
 quit_reset
