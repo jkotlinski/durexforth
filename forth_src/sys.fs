@@ -7,3 +7,8 @@ lsb lda,x $14 sta, msb lda,x $15 sta,
 txa, pha,
 $e130 jsr, \ perform [sys]
 pla, tax, inx, ;code
+
+code resume
+$e130 jsr, \ perform [sys] after brk, or run/stop restore
+;code
+
