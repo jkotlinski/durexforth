@@ -41,7 +41,7 @@ brk_handler         ; all non-CIA NMI
     pla
     tax              ; restore xr for QUIT
     sei
-    
+quit_reset    
     lda #<restore_handler
     sta $318
     lda #>restore_handler
