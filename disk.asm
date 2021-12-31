@@ -301,12 +301,9 @@ INCLUDED
 
 ; Used registers: A, X, Y
 close_all_logical_files:
-    ldx #0
--   txa
-    pha
-    jsr CLOSE
-    pla
-    tax
-    dex
-    bne -
-    rts
+-   ldx $98    ; number of open files
+    beq +       
+    lda $259,x ; logical file number table
+    jsr CLOSE  ; decrements $98 
+    beq -
++   rts
