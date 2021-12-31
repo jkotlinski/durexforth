@@ -31,27 +31,17 @@ restore_handler
    lda	#$7f	    ; disable all interrupts
    sta	$dd0d       ;
    ldy	$dd0d       ; save cia 2 icr
-   bpl stop_restore ; if high bit not set
+   bpl brk_handler  ; if high bit not set
 
 kernal_nmi
    jmp $fe72
-
-stop_restore
-    jsr	$f6bc		; increment real time clock
-                    ; scan stop key
-   	lda	$91 		; read the stop key column
-	cmp	#$7f		; compare with [stp] down
-	        		; if not [stp] or not just [stp] exit
-    bne	kernal_nmi	; if not [stop] restore registers and exit interrupt
-
-brk_handler
-   pla
-   pla
-   tax              ; restore xr for QUIT
-   jmp QUIT
-
-quit_reset
+   
+brk_handler         ; all non-CIA NMI 
+    pla
+    pla
+    tax              ; restore xr for QUIT
     sei
+quit_reset    
     lda #<restore_handler
     sta $318
     lda #>restore_handler
