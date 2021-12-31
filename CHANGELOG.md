@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - IOABORT did not print all error messages.
  - REFILL would not properly switch back to keyboard after EOF.
  - Cartridge initialization for Ultimate64.
+ - Press RESTORE to QUIT. (v3.0.0 inadvertedly changed this to RUN/STOP+RESTORE.)
 
 ### Removed
  - BYE.
