@@ -282,6 +282,7 @@ force-right else cur-right then ;
 
 : do-insert
 dup $a0 = if drop bl then \ nbsp=>space
+dup $8d = if drop $d then \ shiftreturn
 dup case
 3 of drop endof \ run/stop
 $13 of drop endof \ clr/home
