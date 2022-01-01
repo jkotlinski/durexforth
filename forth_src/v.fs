@@ -576,6 +576,14 @@ case \ keys that can quit
   endof
 endcase 0 ;
 
+\ Returns true if the file to be loaded
+\ is too big for the text buffer area.
+: file-too-big
+'$' here c! ':' here 1+ c!
+filename 1+ here 2+ filename c@ move
+here filename c@ 2+ here loadb drop
+here $20 + @ $fe * latest bufstart - > ;
+
 : main-loop
 \ init colors -- border bgcol curscol
 $d020 c@ $d021 c@ $286 c@
@@ -639,11 +647,13 @@ eof @ if \ something in buffer?
 2drop main-loop exit \ yes - cont. edit
 then then
 
-2dup filename c! filename 1+ $f move
+filename c! filename 1+ $f move
 
 reset-buffer
-?dup if \ load file
-rom-kernal bufstart loadb
+filename c@ if \ load file
+rom-kernal
+file-too-big abort" too big"
+filename 1+ filename c@ bufstart loadb
 ?dup 0= if reset-buffer else
 eof ! 0 eof @ c! then
 else drop then main-loop ;
