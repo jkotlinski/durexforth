@@ -305,5 +305,5 @@ close_all_logical_files:
     beq +       
     lda $259,x ; logical file number table
     jsr CLOSE  ; decrements $98 
-    beq -
+    bcc -
 +   rts
