@@ -10,8 +10,6 @@ Goals:
 
 <img src=http://i.imgur.com/eXsaXjo.png?1>
 
-http://www.facebook.com/DurexForth
-
 [C64 Programming May the Forth be with you Pt 1 - YouTube](https://www.youtube.com/watch?v=TXIDqptXmiM)
 
 [C64 Programming Into the Forth Dimension Pt 2 - YouTube](https://www.youtube.com/watch?v=1oZztCmC8kc)
