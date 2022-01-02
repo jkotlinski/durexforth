@@ -6,7 +6,7 @@ latest \ begin hiding words
 
 $d value lf
 
-$7001 value bufstart
+$a001 value bufstart \ use $a000-$cbff
 
 \ eof points to 0 sentinel
 variable eof ( ram eof )
@@ -649,7 +649,7 @@ rom-kernal
 '$' here c! ':' here 1+ c!
 filename 1+ here 2+ $f move
 here filename c@ 2+ here loadb drop
-here $20 + @ $fe * latest bufstart - >
+here $20 + @ 44 > \ 44=$2c00/254
 abort" too big"
 
 filename 1+ filename c@ bufstart loadb

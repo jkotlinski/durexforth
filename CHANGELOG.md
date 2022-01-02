@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - OPEN/CHKIN/CHKOUT no longer returns a file number.
  - IOABORT no longer accepts a file number.
  - INCLUDED now prints error message on failed OPEN.
+ - V: Moved text buffer to $a000.
 
 ### Fixed
  - LOADB/SAVEB could change active device.
