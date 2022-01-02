@@ -653,7 +653,7 @@ rom-kernal
 '$' here c! ':' here 1+ c!
 filename 1+ here 2+ $f move
 here filename c@ 2+ here loadb drop
-here $20 + @ 44 > \ 44=$2c00/254
+here $20 + @ #44 > \ 44=$2c00/254
 abort" too big"
 
 filename 1+ filename c@ bufstart loadb
