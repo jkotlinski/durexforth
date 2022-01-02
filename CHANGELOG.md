@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - OPEN/CHKIN/CHKOUT no longer returns a file number.
  - IOABORT no longer accepts a file number.
  - INCLUDED now prints error message on failed OPEN.
- - V: Moved text buffer to $a000.
+ - V: Moved text buffer to $a000-$cbff.
 
 ### Fixed
  - LOADB/SAVEB could change active device.
@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - REFILL would not properly switch back to keyboard after EOF.
  - Cartridge initialization for Ultimate64.
  - Press RESTORE to QUIT. (v3.0.0 inadvertedly changed this to RUN/STOP+RESTORE.)
- - V: Insert SHIFT+RETURN.
+ - V: Inserting SHIFT+RETURN would make things weird.
  - REQUIRE now fails with error if there are more opened files than it can handle.
 
 ### Removed
