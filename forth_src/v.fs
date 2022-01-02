@@ -106,7 +106,10 @@ clear-status status-pos c! ;
 : cleanup ( bordercolor bgcolor
 cursorcolor -- )
 0 $28a c! \ default key repeat
-$286 c! $d021 c! $d020 c! page ;
+[ lsb lda,x $286 sta, inx,
+  lsb lda,x $d020 sta,
+  msb lda,x $d021 sta, inx, ]
+page ;
 
 : fit-curx-in-linelen
 linelen curx @ min curx ! ;
@@ -582,8 +585,13 @@ endcase 0 ;
 
 : main-loop
 \ init colors -- border bgcol curscol
-$d020 c@ $d021 c@ $286 c@
-2 $d021 c! $a $d020 c! 1 $286 c!
+[ dex, $d020 lda, lsb sta,x
+       $d021 lda, msb sta,x
+  dex, $286  lda, lsb sta,x
+
+  2  lda,#  $d021 sta,
+  $a lda,#  $d020 sta,
+  1  lda,#  $286  sta, ]
 $d800 $400 1 fill
 
 show-page
