@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - REFILL would not properly switch back to keyboard after EOF.
  - Cartridge initialization for Ultimate64.
  - Press RESTORE to QUIT. (v3.0.0 inadvertedly changed this to RUN/STOP+RESTORE.)
+ - V: Abort when loading a text file bigger than 44 blocks = 11,176 bytes.
  - V: Inserting SHIFT+RETURN would make things weird.
  - REQUIRE now fails with error if there are more opened files than it can handle.
 
