@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - V: Abort when loading a text file bigger than 44 blocks = 11,176 bytes.
  - V: Inserting SHIFT+RETURN would make things weird.
  - V: Improved I/O error handling.
+ - sid-demo broke in 2.0.0.
 ### Removed
  - BYE.
 
