@@ -366,7 +366,7 @@ here
 's' over c! 1+
 '0' over c! 1+
 ':' over c! 1+
-filename 1+ over filename c@ move
+filename count swap -rot move
 filename c@ + lf swap c!
 here filename c@ 4 +
 $f $f open ioabort $f close
@@ -653,7 +653,8 @@ rom-kernal
 '$' here c! ':' here 1+ c!
 filename 1+ here 2+ $f move
 here filename c@ 2+ here loadb drop
-here $20 + @ #44 > \ 44=$2c00/254
+here $22 + @ $2020 = \ found?
+here $20 + @ #44 > and \ 44=$2c00/254
 abort" too big"
 
 filename count bufstart loadb
