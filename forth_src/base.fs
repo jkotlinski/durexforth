@@ -204,6 +204,10 @@ does> dup @ to here
 marker ---modules---
 
 .( wordlist..) include wordlist
+
+\ hide private assembler words
+hide 1mi hide 2mi hide 23mi hide 3mi
+
 .( labels..) include labels
 .( doloop..) include doloop
 .( sys..) include sys
