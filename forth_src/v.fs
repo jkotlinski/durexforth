@@ -281,8 +281,12 @@ curx @ linelen 1- = if
 force-right else cur-right then ;
 
 : do-insert
-dup $a0 = if drop bl then \ nbsp=>space
-dup $8d = if drop $d then \ shiftreturn
+[ \ nbsp => space
+lsb lda,x $a0 cmp,# +branch bne,
+$20 lda,# lsb sta,x
+\ shift+return => return
+:+ $8d cmp,# +branch bne,
+$d lda,# lsb sta,x :+ ]
 dup case
 3 of drop endof \ run/stop
 $13 of drop endof \ clr/home
