@@ -13,9 +13,9 @@ dup i @ = if drop leave then
 
 : required ( addr u -- )
 (includes) $20 + (includes) do
-i @ 0= if included leave then
-2dup hash i @ = if 2drop leave then
-2 +loop ;
+i @ 0= if included unloop exit then
+2dup hash i @ = if 2drop unloop exit
+then 2 +loop 1 abort" req.err" ;
 : require parse-name required ;
 
 hide hash
