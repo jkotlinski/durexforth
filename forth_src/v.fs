@@ -656,7 +656,7 @@ here filename c@ 2+ here loadb drop
 here $20 + @ #44 > \ 44=$2c00/254
 abort" too big"
 
-filename 1+ filename c@ bufstart loadb
+filename count bufstart loadb
 ?dup 0= if reset-buffer else
 eof ! 0 eof @ c! then then main-loop ;
 
