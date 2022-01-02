@@ -205,8 +205,9 @@ marker ---modules---
 
 .( wordlist..) include wordlist
 
-\ hide private assembler words
+\ hide words from asm,format
 hide 1mi hide 2mi hide 23mi hide 3mi
+hide curr hide end
 
 .( labels..) include labels
 .( doloop..) include doloop
