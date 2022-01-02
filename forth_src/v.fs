@@ -6,7 +6,7 @@ latest \ begin hiding words
 
 $d value lf
 
-$7001 value bufstart
+$a001 value bufstart \ use $a000-$cbff
 
 \ eof points to 0 sentinel
 variable eof ( ram eof )
@@ -369,7 +369,7 @@ here
 's' over c! 1+
 '0' over c! 1+
 ':' over c! 1+
-filename 1+ over filename c@ move
+filename count swap -rot move
 filename c@ + lf swap c!
 here filename c@ 4 +
 $f $f open ioabort $f close
@@ -651,13 +651,22 @@ eof @ if \ something in buffer?
 2drop main-loop exit \ yes - cont. edit
 then then
 
-2dup filename c! filename 1+ $f move
+filename c! filename 1+ $f move
 
 reset-buffer
-?dup if \ load file
-rom-kernal bufstart loadb
+filename c@ if \ load file
+rom-kernal
+
+\ Abort if the file is too big to load.
+'$' here c! ':' here 1+ c!
+filename 1+ here 2+ $f move
+here filename c@ 2+ here loadb drop
+here $22 + @ $2020 = \ found?
+here $20 + @ #44 > and \ 44=$2c00/254
+abort" too big"
+
+filename count bufstart loadb
 ?dup 0= if reset-buffer else
-eof ! 0 eof @ c! then
-else drop then main-loop ;
+eof ! 0 eof @ c! then then main-loop ;
 
 to latest \ end hiding words
