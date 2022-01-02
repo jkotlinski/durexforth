@@ -11,14 +11,9 @@ GIT_HASH := $(shell git rev-parse --short HEAD)
 DEPLOY_NAME = durexforth-$(TAG_DEPLOY)
 DISK_IMAGE = durexforth.$(DISK_SUF)
 
-X64 = x64
 X64_OPTS = -warp
-ifdef VICE_X64SC
-    X64 = x64sc
-    X64_OPTS += +confirmonexit
-else
-    X64_OPTS += +confirmexit
-endif
+X64 = x64sc
+X64_OPTS += +confirmonexit
 
 SRC_DIR = forth_src
 SRC_NAMES = base debug v asm gfx gfxdemo rnd sin ls turtle fractals \
