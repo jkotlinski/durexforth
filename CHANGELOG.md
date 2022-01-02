@@ -9,19 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - OPEN/CHKIN/CHKOUT no longer returns a file number.
  - IOABORT no longer accepts a file number.
  - INCLUDED now prints error message on failed OPEN.
+ - REQUIRED now aborts with "too many" if 16 files are already INCLUDED.
  - V: Moved text buffer to $a000-$cbff.
-
 ### Fixed
  - LOADB/SAVEB could change active device.
- - editor: Improved I/O error handling.
  - IOABORT did not print all error messages.
  - REFILL would not properly switch back to keyboard after EOF.
  - Cartridge initialization for Ultimate64.
  - Press RESTORE to QUIT. (v3.0.0 inadvertedly changed this to RUN/STOP+RESTORE.)
  - V: Abort when loading a text file bigger than 44 blocks = 11,176 bytes.
  - V: Inserting SHIFT+RETURN would make things weird.
- - REQUIRE now fails with error if there are more opened files than it can handle.
-
+ - V: Improved I/O error handling.
 ### Removed
  - BYE.
 
