@@ -647,14 +647,13 @@ rom-kernal
 
 \ Abort if the file is too big to load.
 '$' here c! ':' here 1+ c!
-filename 1+ here 2+ filename c@ move
+filename 1+ here 2+ $f move
 here filename c@ 2+ here loadb drop
 here $20 + @ $fe * latest bufstart - >
 abort" too big"
 
 filename 1+ filename c@ bufstart loadb
 ?dup 0= if reset-buffer else
-eof ! 0 eof @ c! then
-else drop then main-loop ;
+eof ! 0 eof @ c! then then main-loop ;
 
 to latest \ end hiding words
