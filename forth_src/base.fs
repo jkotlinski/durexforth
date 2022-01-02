@@ -217,7 +217,7 @@ decimal
 include turnkey
 cr
 .( cart: )
-$4000 $68 -
+$4000 $6b -
 here $801 - top latest -
 $21 + + -
 . .( bytes remain.) cr
