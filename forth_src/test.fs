@@ -14,6 +14,9 @@ parse-name fractals included
 .( mmldemo )
 parse-name mmldemo included
 
+.( siddemo )
+parse-name sid included sid-demo
+
 .( spritedemo )
 1 fakekeys \ exits demo
 parse-name spritedemo included
