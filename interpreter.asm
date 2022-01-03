@@ -287,20 +287,31 @@ FIND ; ( xt -1 | xt 1 | caddr 0 )
     jsr R_TO
     jmp ZERO
 
+FIND_BUFFER_SIZE = 31
+FIND_BUFFER
+    !fill FIND_BUFFER_SIZE
+
     +BACKLINK "find-name", 9
 FIND_NAME ; ( caddr u -- nt | 0 )
     inx
-    txa
-    pha
-
     lda LSB-1,x
+    tay
     beq .find_failed
+    cmp #FIND_BUFFER_SIZE+1
+    bcs .find_failed
     sta .findlen + 1
 
     lda MSB,x
     sta W2+1
     lda LSB,x
     sta W2
+
+    dey
+-   lda (W2),y
+    jsr CHAR_TO_LOWERCASE
+    sta FIND_BUFFER,y
+    dey
+    bpl -
 
     lda LATEST_LSB
     sta W
@@ -324,48 +335,40 @@ FIND_NAME ; ( caddr u -- nt | 0 )
     sta W
     bcc +
     inc W + 1
-+   lda(W), y
++   lda (W), y
     ; Is word null? If not, examine it.
     bne .examine_word
 
     ; It is null - give up.
 .find_failed
-    pla
-    tax
     inx
     jmp ZERO
 
 .string_compare
     ; equal strlen, now compare strings...
-    tax
--   lda (W2), y ; find string
-    jsr CHAR_TO_LOWERCASE
-    iny
-    cmp (W), y ; dictionary string
+    tay
+-   lda (W), y
+    cmp FIND_BUFFER - 1, y
     bne .word_not_equal
-    dex
-    beq .word_is_equal
-    jmp -
+    dey
+    bne -
 
-.word_not_equal
-    ldy #0
-    lda (W), y
-    jmp .string_compare_failed
-
-.word_is_equal
+    ; word is equal!
     ; return address to dictionary word
     ldy #0
     lda (W), y
     and #F_NO_TAIL_CALL_ELIMINATION | F_IMMEDIATE
     sta FOUND_WORD_WITH_NO_TCE
-    pla
-    tax
     lda W
     sta LSB, x
     lda W + 1
     sta MSB, x
     rts
 
+.word_not_equal
+    ldy #0
+    lda (W), y
+    jmp .string_compare_failed
 
 GET_IMMED ; ( nt -- 1 | -1 )
     lda MSB, x
