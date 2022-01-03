@@ -35,13 +35,13 @@ restore_handler
 
 kernal_nmi
    jmp $fe72
-   
-brk_handler         ; all non-CIA NMI 
+
+brk_handler         ; all non-CIA NMI
     pla
     pla
     tax              ; restore xr for QUIT
     sei
-quit_reset    
+quit_reset
     lda #<restore_handler
     sta $318
     lda #>restore_handler
@@ -290,32 +290,33 @@ FIND ; ( xt -1 | xt 1 | caddr 0 )
     +BACKLINK "find-name", 9
 FIND_NAME ; ( caddr u -- nt | 0 )
     inx
+    txa
+    pha
+
     lda LSB-1,x
     beq .find_failed
     sta .findlen + 1
-    sta .findlen2 + 1
 
     lda MSB,x
     sta W2+1
     lda LSB,x
     sta W2
+
     lda LATEST_LSB
     sta W
     lda LATEST_MSB
     sta W + 1
     ; W now contains new dictionary pointer.
-.examine_word
     ldy #0
     lda (W), y ; get string length of dictionary word
+.examine_word
     and #STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
 .findlen
-    cmp #0
+    cmp #$ff ; overwritten
     beq .string_compare
 
-.word_not_equal
+.string_compare_failed
     ; no match, advance the dp
-    ldy #0
-    lda (W), y
     and #STRLEN_MASK
     clc
     adc #3
@@ -329,24 +330,27 @@ FIND_NAME ; ( caddr u -- nt | 0 )
 
     ; It is null - give up.
 .find_failed
+    pla
+    tax
     inx
     jmp ZERO
 
 .string_compare
     ; equal strlen, now compare strings...
-.findlen2
-    lda #0
-    sta .strlen
+    tax
 -   lda (W2), y ; find string
     jsr CHAR_TO_LOWERCASE
     iny
     cmp (W), y ; dictionary string
     bne .word_not_equal
-    dec .strlen
+    dex
     beq .word_is_equal
     jmp -
 
-.strlen !byte 0
+.word_not_equal
+    ldy #0
+    lda (W), y
+    jmp .string_compare_failed
 
 .word_is_equal
     ; return address to dictionary word
@@ -354,6 +358,8 @@ FIND_NAME ; ( caddr u -- nt | 0 )
     lda (W), y
     and #F_NO_TAIL_CALL_ELIMINATION | F_IMMEDIATE
     sta FOUND_WORD_WITH_NO_TCE
+    pla
+    tax
     lda W
     sta LSB, x
     lda W + 1
