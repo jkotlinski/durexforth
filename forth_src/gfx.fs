@@ -2,10 +2,8 @@ base @ hex
 e000 value bmpbase
 cc00 value colbase
 
-code kernal-in
-36 lda,# 1 sta, cli, ;code
-code kernal-out
-sei, 35 lda,# 1 sta, ;code
+: kernal-in 6 bank ;
+: kernal-out 5 bank ;
 
 code hires
 bb lda,# d011 sta, \ enable bitmap mode
