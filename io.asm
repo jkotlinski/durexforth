@@ -232,11 +232,14 @@ CHAR ; ( name -- char )
     jmp FETCHBYTE
 
 SAVE_INPUT_STACK
-    !fill 9*4
+    !fill 9*5
 SAVE_INPUT_STACK_DEPTH
     !byte 0
 
 push_input_stack
+    ; ! there is no check for stack overflow!
+    ; 5 is however enough for one EVALUATE and four DOS channels.
+    ; opening more than four channels gives "no channel" error on C64.
     ldy SAVE_INPUT_STACK_DEPTH
     sta SAVE_INPUT_STACK, y
     inc SAVE_INPUT_STACK_DEPTH
