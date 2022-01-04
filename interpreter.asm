@@ -287,9 +287,8 @@ FIND ; ( xt -1 | xt 1 | caddr 0 )
     jsr R_TO
     jmp ZERO
 
+FIND_BUFFER = $33c
 FIND_BUFFER_SIZE = 31
-FIND_BUFFER
-    !fill FIND_BUFFER_SIZE
 
     +BACKLINK "find-name", 9
 FIND_NAME ; ( caddr u -- nt | 0 )

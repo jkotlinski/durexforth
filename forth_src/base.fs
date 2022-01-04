@@ -80,7 +80,7 @@ msb lda,x lsb sta,x
 dup code lda,# 100/ ldy,#
 ['] pushya jmp, ;
 : constant value ;
-$33c constant pad
+$35b constant pad
 : space bl emit ;
 : spaces ( n -- )
 begin ?dup while space 1- repeat ;
