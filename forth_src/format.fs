@@ -14,6 +14,9 @@ dup a < if 7 - then $37 + hold ;
 : #s # begin 2dup or while # repeat ;
 
 : u. 0 <# #s #> type space ;
+
+\ this implementation of . is super
+\ slow and messes up HERE area :(
 : . dup abs 0 <# #s rot sign #>
 type space ;
 
