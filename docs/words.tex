@@ -372,7 +372,7 @@ For more info about number formatting, read Starting Forth!
 
 \item[here (value)] Write position of the Forth compiler (usually first unused byte of code space). Many C64 assemblers refer to this as program counter or \texttt{*}.
 
-\item[pad ( -- addr )] Address of the \texttt{pad}, a 191-byte region of memory that can be used temporarily by user words. No built-in words will modify this region.
+\item[pad ( -- addr )] Address of the \texttt{pad}, a 192-byte memory region that can be used freely by user words. No built-in words will modify this region.
 
 \item[marker name ( -- )] Creates a word that when called, forgets itself and all words that were defined after it. Example:
 
