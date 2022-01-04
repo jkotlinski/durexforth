@@ -74,12 +74,6 @@ $400 + ( addr ) ;
 
 : sol 0 curx ! ;
 
-\ ram + io + kernal rom
-: rom-kernal 6 bank ;
-
-\ ram + io + ram
-: ram-kernal 5 bank ;
-
 : reset-buffer
 0 bufstart 1- c!
 bufstart 1+ eof !
@@ -359,7 +353,7 @@ while 1+ repeat ;
 : write-file filename c@ 0= if
 ." no filename" exit then
 
-rom-kernal
+6 bank
 page
 $9d c@ $ff $9d c! \ kernal log on
 
@@ -595,7 +589,7 @@ $d800 $400 1 fill
 
 show-page
 
-begin ram-kernal
+begin 5 bank
 0 to need-refresh
 0 line-dirty c!
 
@@ -614,12 +608,12 @@ cursor-scr-pos dup @ $7f and
 swap c!
 
 \ f7
-dup $88 = if 2drop cleanup rom-kernal
+dup $88 = if 2drop cleanup 6 bank
 bufstart eof @ bufstart - 1-
 evaluate quit then
 
 insert if do-insert else do-main if
-drop rom-kernal cleanup exit then then
+drop 6 bank cleanup exit then then
 
 need-refresh if show-page else
 line-dirty c@ if refresh-line then then
@@ -634,8 +628,8 @@ define v
 $ba c@ 8 < abort" bad device#"
 
 \ modifies kernal to change kbd prefs
-ram-kernal $eaea @ $8ca <> if
-rom-kernal
+5 bank $eaea @ $8ca <> if
+6 bank
 $e000 dup $2000 move \ rom => ram
 $f $eaea c! \ repeat delay
 4 $eb1d c! \ repeat speed
@@ -654,7 +648,7 @@ filename c! filename 1+ $f move
 
 reset-buffer
 filename c@ if \ load file
-rom-kernal
+6 bank
 
 \ Abort if the file is too big to load.
 '$' here c! ':' here 1+ c!
