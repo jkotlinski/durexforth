@@ -321,14 +321,13 @@ FIND_NAME ; ( caddr u -- nt | 0 )
     ldy #0
     lda (W), y ; get string length of dictionary word
 .examine_word
-    and #STRLEN_MASK | F_HIDDEN ; include hidden flag... so we don't find the hidden words.
+    and #STRLEN_MASK
 .findlen
     cmp #$ff ; overwritten
     beq .string_compare
 
 .string_compare_failed
     ; no match, advance the dp
-    and #STRLEN_MASK
     clc
     adc #3
     adc W
@@ -368,6 +367,7 @@ FIND_NAME ; ( caddr u -- nt | 0 )
 .word_not_equal
     ldy #0
     lda (W), y
+    and #STRLEN_MASK
     jmp .string_compare_failed
 
 GET_IMMED ; ( nt -- 1 | -1 )

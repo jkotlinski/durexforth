@@ -21,8 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - V: Inserting SHIFT+RETURN would make things weird.
  - V: Improved I/O error handling.
  - sid-demo broke in 2.0.0.
+ - :NONAME did not work with RECURSE.
 ### Removed
  - BYE.
+ - HIDDEN word header flag.
 
 ## [3.0.0] - 2021-05-14
 

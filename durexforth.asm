@@ -31,10 +31,9 @@
 
 ;; Word flags
 F_IMMEDIATE = $80
-F_HIDDEN = $40
 ; When set, calls to the word will not be subject to tail call elimination.
 ; I.e., "jsr WORD + rts" will not be replaced by "jmp WORD".
-F_NO_TAIL_CALL_ELIMINATION = $20
+F_NO_TAIL_CALL_ELIMINATION = $40
 STRLEN_MASK = $1f
 
 TIB = $200

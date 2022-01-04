@@ -13,7 +13,7 @@ then compile, ; immediate
 : until postpone 0branch , ; immediate
 : again jmp, , ; immediate
 : recurse
-latest >xt compile, ; immediate
+latestxt compile, ; immediate
 : ( begin getc dup 0= if refill then
 ')' = if exit then again ; immediate
 : \ refill ; immediate
@@ -199,15 +199,15 @@ does> dup @ to here
 
 : include parse-name included ;
 
-: :noname here 0 ] ;
+: :noname here here to latestxt 0 ] ;
 
 marker ---modules---
 
 .( wordlist..) include wordlist
 
-\ hide words from asm,format
+\ hides private words
 hide 1mi hide 2mi hide 23mi hide 3mi
-hide curr hide end
+hide curr hide end hide latestxt
 
 .( labels..) include labels
 .( doloop..) include doloop

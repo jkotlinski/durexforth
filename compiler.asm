@@ -95,14 +95,9 @@ SEMICOLON
     inx
     lda MSB - 1, x
     beq +
-    sta	W + 1
+    sta	LATEST_MSB
     lda	LSB - 1, x
-    sta W
-
-    ldy	#0
-    lda	(W), y
-    and	#!F_HIDDEN ; clear hidden flag
-    sta	(W), y
+    sta LATEST_LSB
 +
 
     ; go back to IMMEDIATE mode.
@@ -125,23 +120,36 @@ SEMICOLON
 STATE
     !word 0
 
+    +BACKLINK "latestxt", 8
+LATEST_XT_LSB = * + 1
+LATEST_XT_MSB = * + 3
+    +VALUE	0
+
     +BACKLINK ":", 1 | F_NO_TAIL_CALL_ELIMINATION
 COLON
+    lda LATEST_LSB
+    pha
+    lda LATEST_MSB
+    pha
+
     jsr HEADER ; makes the dictionary entry / header
 
-    ; Hides the word.
+    ; defer the LATEST update to ;
     dex
-    lda	LATEST_LSB
-    sta	W
+    lda LATEST_LSB
     sta LSB, x
-    lda	LATEST_MSB
-    sta W + 1
+    lda LATEST_MSB
     sta MSB, x
 
-    ldy	#0
-    lda	(W), y
-    ora	#F_HIDDEN ; sets hidden flag
-    sta	(W), y
+    pla
+    sta LATEST_MSB
+    pla
+    sta LATEST_LSB
+
+    lda HERE_LSB
+    sta LATEST_XT_LSB
+    lda HERE_MSB
+    sta LATEST_XT_MSB
 
     jmp RBRAC ; enter compile mode
 
