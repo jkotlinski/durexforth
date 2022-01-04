@@ -20,7 +20,7 @@ To inspect the dictionary entry, type \texttt{latest dump}. You should see somet
 
 The first byte, "02", is the length of "bg" name string. After that, the string "bg" follows. (42 = 'b', 47 = 'g'). The final two bytes contain the execution token of \texttt{bg}, starting at \$39fd.
 
-The name length byte is also used to store special attributes of the word. Bit 7 is "immediate" flag, which means that the word should execute immediately instead of being compiled into word definitions. ("(" is such an example of an immediate word that does not get compiled.) Bit 6 is "hidden" flag, which makes a word unfindable. Bit 5 is the "no-tail-call-elimination" flag, which makes sure that tail call elimination (the practice of replacing jsr/rts with jmp) is not performed if this word is the jsr target. Since bg does not have these flags set, bits 7-5 are all clear.
+The name length byte is also used to store special attributes of the word. Bit 7 is "immediate" flag, which means that the word should execute immediately instead of being compiled into word definitions. ("(" is such an example of an immediate word that does not get compiled.) Bit 6 is the "no-tail-call-elimination" flag, which makes sure that tail call elimination (the practice of replacing jsr/rts with jmp) is not performed if this word is the jsr target. Since bg does not have these flags set, bits 7 and 6 are both clear.
 
 \section{Code}
 We saw that the "bg" execution token is \$39fd. To inspect the code, type \texttt{\$39fd dump} or \texttt{latest >xt dump}.
