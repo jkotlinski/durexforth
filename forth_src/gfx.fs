@@ -2,8 +2,6 @@ base @ hex
 e000 value bmpbase
 cc00 value colbase
 
-: kernal-in 6 bank ;
-: kernal-out 5 bank ;
 
 code hires
 bb lda,# d011 sta, \ enable bitmap mode
@@ -102,12 +100,12 @@ over 13f > over c7 > or
 if 2drop else doplot then ;
 
 : plot ( x y -- )
-kernal-out
+5 bank
 2dup peny ! penx ! chkplot
-kernal-in ;
+6 bank ;
 
 : peek ( x y -- b )
-blitloc kernal-out c@ kernal-in and ;
+blitloc 5 bank c@ 6 bank and ;
 
 variable dy
 variable sy variable sx
@@ -230,7 +228,7 @@ penx 1+ lda, msb 1+ cmp,x 1 @@ bne,
 inx, inx, ;code
 
 : line ( x y -- )
-kernal-out
+5 bank
 2dup peny @ - abs dy2 !
 penx @ - abs dx2 !
 2dup
@@ -241,7 +239,7 @@ dy2 @ negate dy2 !
 
 penx @ peny @ blitloc addr ! mask !
 
-doline kernal-in ;
+doline 6 bank ;
 
 \ --- circle
 
@@ -266,7 +264,7 @@ swap plot4 swap
 then ;
 
 : circle ( cx cy r -- )
-kernal-out
+5 bank
 dup negate err !
 swap to cy
 swap to cx
@@ -281,7 +279,7 @@ over negate err +!
 swap 1- swap
 over negate err +!
 then
-repeat 2drop kernal-in ;
+repeat 2drop 6 bank ;
 
 : erase if
 4d ['] xor else
@@ -501,7 +499,7 @@ here stk !
 \ push y+1 x x -1
 1+ swap dup ffff spush
 
-kernal-out
+5 bank
 begin here stk @ < while
 spop dy @ + \ y
 
@@ -543,7 +541,7 @@ swap 1+ swap
 \ y x y
 over x2 @ > until
 
-2drop drop repeat kernal-in ;
+2drop drop repeat 6 bank ;
 
 here
 80 c, 81 c, 82 c, 83 c, 84 c, 85 c, 86 c, 87 c, \ 0
@@ -581,7 +579,7 @@ d8 c, d9 c, da c, db c, dc c, dd c, de c, df c,
 : pet>scr [ swap ] literal + c@ ;
 
 : text ( col row str strlen -- )
-kernal-out
+5 bank
 \ addr=dst
 rot 140 * addr !
 rot 8 * bmpbase + addr +!
@@ -591,10 +589,10 @@ begin ?dup while
 swap dup c@ pet>scr 8 * d800 +
 addr @ 8 move
 1+ swap 8 addr +! 1- repeat
-r> 1 c! drop kernal-in ;
+r> 1 c! drop 6 bank ;
 
 : drawchar ( col row srcaddr -- )
-kernal-out
+5 bank
 swap 140 * rot 8 * + bmpbase +
-8 move kernal-in ;
+8 move 6 bank ;
 base !
