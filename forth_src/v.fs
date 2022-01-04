@@ -369,7 +369,7 @@ here
 's' over c! 1+
 '0' over c! 1+
 ':' over c! 1+
-filename count swap -rot move
+filename 1+ over filename c@ move
 filename c@ + lf swap c!
 here filename c@ 4 +
 $f $f open ioabort $f close
