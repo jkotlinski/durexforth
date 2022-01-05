@@ -169,8 +169,7 @@ ABS:
     lda MSB,x
     bmi +
     rts
-+   jsr INVERT
-    jmp ONEPLUS
++   jmp NEGATE
 
     +BACKLINK "*", 1
     lda MSB,x
@@ -183,7 +182,6 @@ ABS:
     inx
     pla
     bpl +
-    jsr INVERT
-    jmp ONEPLUS
+    jmp NEGATE
 +   rts
 
