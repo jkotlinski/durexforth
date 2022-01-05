@@ -163,3 +163,27 @@ end:    INX
     sta MSB+1,x
     inx
     rts
+
+    +BACKLINK "abs", 3
+ABS:
+    lda MSB,x
+    bmi +
+    rts
++   jsr INVERT
+    jmp ONEPLUS
+
+    +BACKLINK "*", 1
+    lda MSB,x
+    eor MSB+1,x
+    pha
+    jsr ABS
+    jsr SWAP
+    jsr ABS
+    jsr U_M_STAR
+    inx
+    pla
+    bpl +
+    jsr INVERT
+    jmp ONEPLUS
++   rts
+
