@@ -28,20 +28,23 @@ restore_handler
    pha				; save x
    tya				; copy y
    pha				; save y
-   lda	#$7f	    ; disable all interrupts
+   lda	#$7f	    ; disable all CIA 2 interrupts
    sta	$dd0d       ;
-   ldy	$dd0d       ; save cia 2 icr
-   bpl brk_handler  ; if high bit not set
+   ldy	$dd0d       ; save CIA 2 interrupt control register for kernal_nmi
+   bpl brk_handler  ; CIA 2 is not the NMI source if the most significant bit is not set.
 
 kernal_nmi
-   jmp $fe72
-
-brk_handler         ; all non-CIA NMI
-    pla
-    pla
-    tax              ; restore xr for QUIT
-    sei
+   jmp $fe72        ; all CIA 2 NMI's fall through to the Kernals' RS-232 routines
+   
+                    
+brk_handler         ; all non-CIA NMI (RESTORE key) and brk instructions- via IRQ vector end up here.
+    pla             ; drop y -the return stack will be reset by QUIT anyway
+    pla             ; pull x
+    tax             ; restore parameter stack pointer for QUIT
+                    ; already under sei from NMI stub in Kernal or from IRQ to brk_handler
 quit_reset
+    sei             ; goes here for QUIT and program start
+    
     lda #<restore_handler
     sta $318
     lda #>restore_handler
