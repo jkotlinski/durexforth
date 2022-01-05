@@ -23,7 +23,7 @@
 ; UM/MOD by Garth Wilson
 ; http://6502.org/source/integers/ummodfix/ummodfix.htm
 
-; U< - UM* UM/MOD M+
+; U< - UM* UM/MOD M+ INVERT NEGATE ABS * DNEGATE M*
 
     +BACKLINK "u<", 2
 U_LESS
