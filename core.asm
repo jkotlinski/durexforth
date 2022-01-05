@@ -375,21 +375,6 @@ FILL
     inc	.fdst + 1
     jmp	-
 
-    +BACKLINK "invert", 6
-INVERT
-    lda MSB, x
-    eor #$ff
-    sta MSB, x
-    lda LSB, x
-    eor #$ff
-    sta LSB,x
-    rts
-
-    +BACKLINK "negate", 6
-NEGATE
-    jsr INVERT
-    jmp ONEPLUS
-
     +BACKLINK "base", 4
     +VALUE	BASE
 BASE

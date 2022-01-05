@@ -164,12 +164,26 @@ end:    INX
     inx
     rts
 
+    +BACKLINK "invert", 6
+INVERT
+    lda MSB, x
+    eor #$ff
+    sta MSB, x
+    lda LSB, x
+    eor #$ff
+    sta LSB,x
+    rts
+
+    +BACKLINK "negate", 6
+NEGATE
+    jsr INVERT
+    jmp ONEPLUS
+
     +BACKLINK "abs", 3
 ABS:
     lda MSB,x
-    bmi +
+    bmi NEGATE
     rts
-+   jmp NEGATE
 
     +BACKLINK "*", 1
     lda MSB,x
@@ -181,7 +195,5 @@ ABS:
     jsr U_M_STAR
     inx
     pla
-    bpl +
-    jmp NEGATE
-+   rts
-
+    bmi NEGATE
+    rts
