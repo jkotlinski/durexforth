@@ -190,8 +190,9 @@ ABS:
     eor MSB+1,x
     pha
     jsr ABS
-    jsr SWAP
+    inx
     jsr ABS
+    dex
     jsr U_M_STAR
     inx
     pla
