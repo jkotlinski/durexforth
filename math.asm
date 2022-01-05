@@ -218,6 +218,5 @@ DNEGATE
 
     +BACKLINK "m*", 2
     jsr DABS_STAR
-    and #$ff
     bmi DNEGATE
     rts
