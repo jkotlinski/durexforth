@@ -144,6 +144,7 @@ end:    INX
         jmp SWAP
 
     +BACKLINK "m+", 2
+M_PLUS
     ldy #0
     lda MSB,x
     bpl +
@@ -180,12 +181,12 @@ NEGATE
     jmp ONEPLUS
 
     +BACKLINK "abs", 3
-ABS:
+ABS
     lda MSB,x
     bmi NEGATE
     rts
 
-    +BACKLINK "*", 1
+DABS_STAR
     lda MSB,x
     eor MSB+1,x
     pha
@@ -194,7 +195,29 @@ ABS:
     jsr ABS
     dex
     jsr U_M_STAR
-    inx
     pla
+    rts
+
+    +BACKLINK "*", 1
+    jsr DABS_STAR
+    inx
+    and #$ff
     bmi NEGATE
+    rts
+
+    +BACKLINK "dnegate", 7
+DNEGATE
+    jsr INVERT
+    inx
+    jsr INVERT
+    dex
+    lda #1
+    ldy #0
+    jsr pushya
+    jmp M_PLUS
+
+    +BACKLINK "m*", 2
+    jsr DABS_STAR
+    and #$ff
+    bmi DNEGATE
     rts

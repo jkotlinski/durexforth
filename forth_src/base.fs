@@ -150,11 +150,6 @@ ff lda,# :+ lsb sta,x msb sta,x ;code
 
 ( from FIG UK... )
 : s>d dup 0< ;
-: dnegate invert >r invert r> 1 m+ ;
-: ?dnegate 0< if dnegate then ;
-: dabs dup ?dnegate ;
-: m* 2dup xor >r >r abs r>
-abs um* r> ?dnegate ;
 ( ...from FIG UK )
 
 : fm/mod ( from Gforth )
