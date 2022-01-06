@@ -41,9 +41,10 @@ brk_handler         ; all non-CIA NMI (RESTORE key) and brk instructions- via IR
     pla             ; drop y -the return stack will be reset by QUIT anyway
     pla             ; pull x
     tax             ; restore parameter stack pointer for QUIT
-                    ; already under sei from NMI stub in Kernal or from IRQ to brk_handler
+    jmp QUIT        ; already under sei from NMI stub in Kernal or from IRQ to brk_handler
+    
 quit_reset
-    sei             ; goes here for QUIT and program start
+    sei             ; goes here from QUIT and program start
     
     lda #<restore_handler
     sta $318
