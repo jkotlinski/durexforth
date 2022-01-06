@@ -145,14 +145,6 @@ latest >xt jmp,
 here latest >xt 1+ (to)
 2 allot ;
 
-( : fm/mod ( from Gforth )
-( dup >r
-dup 0< if negate >r dnegate r> then
-over 0< if tuck + swap then
-um/mod
-r> 0< if swap negate swap then ;
-)
-
 ( from FIG UK... )
 : / /mod nip ;
 : mod /mod drop ;
