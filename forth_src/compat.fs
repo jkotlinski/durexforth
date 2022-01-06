@@ -53,6 +53,9 @@ begin over c@ digit? over and while
 1+ r> 1- repeat ;
 
 \ from FIG UK
+: ?negate 0< if negate then ;
+: ?dnegate 0< if dnegate then ;
+: dabs dup ?dnegate ;
 : sm/rem
 2dup xor >r over >r abs >r dabs
 r> um/mod swap r> ?negate

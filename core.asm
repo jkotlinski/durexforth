@@ -21,7 +21,7 @@
 ;THE SOFTWARE. }}}
 
 ; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN TUCK
-; >R R> R@ BL PICK DEPTH WITHIN FILL INVERT NEGATE BASE 2*
+; >R R> R@ BL PICK DEPTH WITHIN FILL BASE 2*
 
     +BACKLINK "drop", 4 | F_IMMEDIATE
 DROP
@@ -374,21 +374,6 @@ FILL
     bne	-
     inc	.fdst + 1
     jmp	-
-
-    +BACKLINK "invert", 6
-INVERT
-    lda MSB, x
-    eor #$ff
-    sta MSB, x
-    lda LSB, x
-    eor #$ff
-    sta LSB,x
-    rts
-
-    +BACKLINK "negate", 6
-NEGATE
-    jsr INVERT
-    jmp ONEPLUS
 
     +BACKLINK "base", 4
     +VALUE	BASE

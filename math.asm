@@ -23,7 +23,7 @@
 ; UM/MOD by Garth Wilson
 ; http://6502.org/source/integers/ummodfix/ummodfix.htm
 
-; U< - UM* UM/MOD M+
+; U< - UM* UM/MOD M+ INVERT NEGATE ABS * DNEGATE M*
 
     +BACKLINK "u<", 2
 U_LESS
@@ -144,6 +144,7 @@ end:    INX
         jmp SWAP
 
     +BACKLINK "m+", 2
+M_PLUS
     ldy #0
     lda MSB,x
     bpl +
@@ -162,4 +163,65 @@ end:    INX
     adc MSB+1,x
     sta MSB+1,x
     inx
+    rts
+
+    +BACKLINK "invert", 6
+INVERT
+    lda MSB, x
+    eor #$ff
+    sta MSB, x
+    lda LSB, x
+    eor #$ff
+    sta LSB,x
+    rts
+
+    +BACKLINK "negate", 6
+NEGATE
+    jsr INVERT
+    jmp ONEPLUS
+
+    +BACKLINK "abs", 3
+ABS
+    lda MSB,x
+    bmi NEGATE
+    rts
+
+DABS_STAR           ; ( n1 n2 -- ud1 )
+    lda MSB,x	    ;	ud1 = abs(n1) * abs(n2)
+    eor MSB+1,x     ;	with final sign output in A register
+    pha
+    jsr ABS
+    inx
+    jsr ABS
+    dex
+    jsr U_M_STAR
+    pla
+    rts
+
+    +BACKLINK "*", 1
+    jsr DABS_STAR
+    inx
+    and #$ff
+    bmi NEGATE
+    rts
+
+    +BACKLINK "dnegate", 7
+DNEGATE
+    jsr INVERT
+    inx
+    jsr INVERT
+    dex
+// +BACKLINK "d1+", 3 // this is possible but not necessary.
+    inc LSB+1,x
+    bne +
+    inc MSB+1,x
+    bne +
+    inc LSB,x
+    bne +
+    inc MSB,x
++   rts
+
+    +BACKLINK "m*", 2 ;
+    jsr DABS_STAR
+    bmi DNEGATE
     rts
