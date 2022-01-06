@@ -145,22 +145,7 @@ latest >xt jmp,
 here latest >xt 1+ (to)
 2 allot ;
 
-code 0< msb lda,x 80 and,# +branch beq,
-ff lda,# :+ lsb sta,x msb sta,x ;code
-
 ( from FIG UK... )
-: s>d dup 0< ;
-( ...from FIG UK )
-
-: fm/mod ( from Gforth )
-dup >r
-dup 0< if negate >r dnegate r> then
-over 0< if tuck + swap then
-um/mod
-r> 0< if swap negate swap then ;
-
-( from FIG UK... )
-: /mod >r s>d r> fm/mod ;
 : / /mod nip ;
 : mod /mod drop ;
 : */mod >r m* r> fm/mod ;

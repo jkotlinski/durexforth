@@ -97,6 +97,7 @@ rotate_r
     rts
 
     +BACKLINK "um/mod", 6
+UM_DIV_MOD
 ; ( lsw msw divisor -- rem quot )
         N = W
         SEC
@@ -187,8 +188,8 @@ ABS
     rts
 
 DABS_STAR           ; ( n1 n2 -- ud1 )
-    lda MSB,x	    ;	ud1 = abs(n1) * abs(n2)
-    eor MSB+1,x     ;	with final sign output in A register
+    lda MSB,x      ;   ud1 = abs(n1) * abs(n2)
+    eor MSB+1,x     ;  with final sign output in A register
     pha
     jsr ABS
     inx
@@ -211,7 +212,6 @@ DNEGATE
     inx
     jsr INVERT
     dex
-// +BACKLINK "d1+", 3 // this is possible but not necessary.
     inc LSB+1,x
     bne +
     inc MSB+1,x
@@ -221,7 +221,55 @@ DNEGATE
     inc MSB,x
 +   rts
 
-    +BACKLINK "m*", 2 ;
+    +BACKLINK "m*", 2
     jsr DABS_STAR
     bmi DNEGATE
     rts
+
+    +BACKLINK "0<", 2
+ZERO_LESS
+    lda MSB,x
+    and #$80
+    beq +
+    lda #$ff
++   sta MSB,x
+    sta LSB,x
+    rts
+
+    +BACKLINK "s>d", 3
+S_TO_D
+    jsr DUP
+    jmp ZERO_LESS
+
+    +BACKLINK "fm/mod", 6
+FM_DIV_MOD
+    lda MSB,x
+    sta DIVISOR_SIGN
+    bpl +
+    jsr NEGATE
+    inx
+    jsr DNEGATE
+    dex
++   lda MSB+1,x
+    bpl +
+    jsr TUCK
+    jsr PLUS
+    jsr SWAP
++   jsr UM_DIV_MOD
+DIVISOR_SIGN = * + 1
+    lda #$ff        // placeholder
+    bpl +
+    inx
+    jsr NEGATE
+    dex
++   rts
+
+    +BACKLINK "/mod", 4
+    lda MSB,x
+    sta MSB-1,x
+    lda LSB,x
+    sta LSB-1,x
+    inx
+    jsr S_TO_D
+    dex
+    jmp FM_DIV_MOD
