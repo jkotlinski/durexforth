@@ -40,4 +40,4 @@ $0c old-vector +
              jmp,
 ;code
 
-: install ' nmi $318 ! abort ;
+: install ' nmi $318 ! [ $318 (jmp), ] ;
