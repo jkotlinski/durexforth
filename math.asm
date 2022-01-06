@@ -187,9 +187,9 @@ ABS
     bmi NEGATE
     rts
 
-DABS_STAR
-    lda MSB,x
-    eor MSB+1,x
+DABS_STAR           ; ( n1 n2 -- ud1 )
+    lda MSB,x	    ;	ud1 = abs(n1) * abs(n2)
+    eor MSB+1,x     ;	with final sign output in A register
     pha
     jsr ABS
     inx
@@ -212,6 +212,7 @@ DNEGATE
     inx
     jsr INVERT
     dex
+// +BACKLINK "d1+", 3 // this is possible but not necessary.
     inc LSB+1,x
     bne +
     inc MSB+1,x
