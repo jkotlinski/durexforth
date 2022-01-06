@@ -28,10 +28,10 @@ restore_handler     ; this becomes OLD-VECTOR
     jmp QUIT        ; all NMI and brk instructions go here
 quit_reset          
     sei             ; goes here for QUIT , program start        
-    lda #<QUIT
+    lda #<restore_handler
     sta $318        ; nmi vector
     sta $316        ; brk vector
-    lda #>QUIT
+    lda #>restore_handler
     sta $319         ; nmi vector
     sta $317         ; brk vector
     
