@@ -31,13 +31,14 @@ $319        sta,
 dup 100/ swap
 $ff and
  
-            lda,#
+            lda,#       \ brk
 $316        sta,
             lda,#
 $317        sta,
 
-$0c old-vector +
-             jmp,
+$10 old-vector +
+             jsr        \ quit-reset
+' quit 3 +   jmp        \ reset return stack and interpret             
 ;code
 
 : install ' nmi $318 ! [ $318 (jmp), ] ;
