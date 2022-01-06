@@ -21,40 +21,18 @@
 ;THE SOFTWARE. }}}
 
 ; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE ' ABORT /STRING
-
-restore_handler
-   pha				; save a
-   txa				; copy x
-   pha				; save x
-   tya				; copy y
-   pha				; save y
-   lda	#$7f	    ; disable all CIA 2 interrupts
-   sta	$dd0d       ;
-   ldy	$dd0d       ; save CIA 2 interrupt control register for kernal_nmi
-   bpl brk_handler  ; CIA 2 is not the NMI source if the most significant bit is not set.
-
-kernal_nmi
-   jmp $fe72        ; all CIA 2 NMI's fall through to the Kernals' RS-232 routines
-   
-                    
-brk_handler         ; all non-CIA NMI (RESTORE key) and brk instructions- via IRQ vector end up here.
-    pla             ; drop y -the return stack will be reset by QUIT anyway
-    pla             ; pull x
-    tax             ; restore parameter stack pointer for QUIT
-                    ; already under sei from NMI stub in Kernal or from IRQ to brk_handler
+               
 quit_reset
-    sei             ; goes here for QUIT and program start
+    sei             ; goes here for QUIT , program start
     
+restore_handler     ; all NMI and brk instructions go here
     lda #<restore_handler
-    sta $318
+    sta $318        ; nmi vector
+    sta $316        ; brk vector
     lda #>restore_handler
-    sta $319
-
-    lda #<brk_handler
-    sta $316
-    lda #>brk_handler
-    sta $317
-
+    sta $319         ; nmi vector
+    sta $317         ; brk vector
+    
     cli ; still have to
 
     ; lores
