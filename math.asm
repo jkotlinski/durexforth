@@ -211,10 +211,15 @@ DNEGATE
     inx
     jsr INVERT
     dex
-    lda #1
-    ldy #0
-    jsr pushya
-    jmp M_PLUS
+// +BACKLINK "d1+", 3 // this is possible but not necessary.
+    inc LSB+1,x
+    bne +
+    inc MSB+1,x
+    bne +
+    inc LSB,x
+    bne +
+    inc MSB,x
++   rts
 
     +BACKLINK "m*", 2
     jsr DABS_STAR
