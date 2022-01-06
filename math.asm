@@ -273,3 +273,32 @@ DIVISOR_SIGN = * + 1
     jsr S_TO_D
     dex
     jmp FM_DIV_MOD
+
+    ; (ud1 u2 -- urem udquat)
+    +BACKLINK "ud/mod", 6
+    lda LSB,x
+    sta LSB - 1,x
+    sta W3
+    lda MSB,x
+    sta MSB - 1,x
+    sta W3 + 1		; cache the divisor
+    lda #0
+    sta LSB,x
+    sta MSB,x
+    dex
+    jsr UM_DIV_MOD	; divide the high word
+    lda LSB,x
+    pha
+    lda MSB,x
+    pha		; store the high byte of quotient
+    lda W3		; uncache the divisor
+    sta LSB,x
+    lda W3 + 1
+    sta MSB,x
+    jsr UM_DIV_MOD	; divide the low byte
+    dex
+    pla 		; push the high word of quotient
+    sta MSB,x
+    pla
+    sta LSB,x
+    rts
