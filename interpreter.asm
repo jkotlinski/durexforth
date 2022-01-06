@@ -22,10 +22,11 @@
 
 ; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE ' ABORT /STRING
                
-quit_reset
+quit_reset          ; this becomes OLD_VECTOR
     sei             ; goes here for QUIT , program start
     
-restore_handler     ; all NMI and brk instructions go here
+restore_handler     ; this becomes OLD-VECTOR +1
+                    ; all NMI and brk instructions go here
     lda #<restore_handler
     sta $318        ; nmi vector
     sta $316        ; brk vector
@@ -33,8 +34,8 @@ restore_handler     ; all NMI and brk instructions go here
     sta $319         ; nmi vector
     sta $317         ; brk vector
     
-    cli ; still have to
-
+    cli              ; still have to
+                     ; OLD_VECTOR +13 
     ; lores
     lda #$9b
     sta $d011
