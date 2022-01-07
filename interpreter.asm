@@ -35,17 +35,17 @@ restore_handler
 
 kernal_nmi
    jmp $fe72        ; all CIA 2 NMI's fall through to the Kernals' RS-232 routines
-   
-                    
+
+
 brk_handler         ; all non-CIA NMI (RESTORE key) and brk instructions- via IRQ vector end up here.
     pla             ; drop y -the return stack will be reset by QUIT anyway
     pla             ; pull x
     tax             ; restore parameter stack pointer for QUIT
     jmp QUIT        ; already under sei from NMI stub in Kernal or from IRQ to brk_handler
-    
+
 quit_reset
     sei             ; goes here from QUIT and program start
-    
+
     lda #<restore_handler
     sta $318
     lda #>restore_handler
@@ -359,6 +359,8 @@ FIND_NAME ; ( caddr u -- nt | 0 )
     ; return address to dictionary word
     ldy #0
     lda (W), y
+    ; Immediate words are exempt from TCE because custom compile-time behavior.
+    ; (E.g. DROP compiles inx instead of jsr DROP.)
     and #F_NO_TAIL_CALL_ELIMINATION | F_IMMEDIATE
     sta FOUND_WORD_WITH_NO_TCE
     lda W

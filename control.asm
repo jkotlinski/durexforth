@@ -94,6 +94,7 @@ ZBRANCH
 +   pha
     rts
 
+    ; Exempt from TCE as top of return stack must contain a return address.
     +BACKLINK "unloop",	6 | F_NO_TAIL_CALL_ELIMINATION
     jsr R_TO
     jsr R_TO

@@ -255,6 +255,7 @@ TUCK ; ( x y -- y x y )
     jsr SWAP
     jmp OVER
 
+    ; Exempt from TCE as top of return stack must contain a return address.
     +BACKLINK ">r", 2 | F_NO_TAIL_CALL_ELIMINATION
 TO_R
     pla
@@ -272,6 +273,7 @@ TO_R
     inx
     jmp (W)
 
+    ; Exempt from TCE as top of return stack must contain a return address.
     +BACKLINK "r>", 2 | F_NO_TAIL_CALL_ELIMINATION
 R_TO
     pla
@@ -289,6 +291,7 @@ R_TO
     sta MSB,x
     jmp (W)
 
+    ; Exempt from TCE as top of return stack must contain a return address.
     +BACKLINK "r@", 2 | F_NO_TAIL_CALL_ELIMINATION
 R_FETCH
     txa

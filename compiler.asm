@@ -80,7 +80,7 @@ LBRAC
 
 ; -----
 
-    ; disable tail call elimination in case of inline assembly
+    ; Exempt from TCE because `: x [ ] ;` does not compile a jsr.
     +BACKLINK "]", 1 | F_NO_TAIL_CALL_ELIMINATION
 RBRAC
     lda	#1
@@ -125,6 +125,7 @@ LATEST_XT_LSB = * + 1
 LATEST_XT_MSB = * + 3
     +VALUE	0
 
+    ; Exempt from TCE because `: x ;` does not compile a jsr.
     +BACKLINK ":", 1 | F_NO_TAIL_CALL_ELIMINATION
 COLON
     lda LATEST_LSB
