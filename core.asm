@@ -208,27 +208,25 @@ COUNT
     jsr SWAP
     jmp FETCHBYTE
 
-    +BACKLINK "<", 1
-LESS_THAN
+    +BACKLINK ">", 1
+GREATER_THAN
     ldy #0
     sec
-    lda LSB+1,x
-    sbc LSB,x
-    lda MSB+1,x
-    sbc MSB,x
-    bvc +
-    eor #$80
-+   bpl +
+    lda LSB,x
+    sbc LSB+1,x
+    lda MSB,x
+    sbc MSB+1,x
+    bpl +
     dey
 +   inx
     sty LSB,x
     sty MSB,x
     rts
 
-    +BACKLINK ">", 1
-GREATER_THAN
+    +BACKLINK "<", 1
+LESS_THAN
     jsr SWAP
-    jmp LESS_THAN
+    jmp GREATER_THAN
 
     +BACKLINK "max", 3
 MAX
