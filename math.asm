@@ -23,7 +23,7 @@
 ; UM/MOD by Garth Wilson
 ; http://6502.org/source/integers/ummodfix/ummodfix.htm
 
-; U< - UM* UM/MOD M+ INVERT NEGATE ABS * DNEGATE M*
+; U< - UM* UM/MOD M+ INVERT NEGATE ABS * DNEGATE M* 0< S>D FM/MOD /MOD UD/MOD
 
     +BACKLINK "u<", 2
 U_LESS
@@ -99,6 +99,7 @@ rotate_r
     +BACKLINK "um/mod", 6
 UM_DIV_MOD
 ; ( lsw msw divisor -- rem quot )
+; Wastes W, lo(W2)
         N = W
         SEC
         LDA     LSB+1,X     ; Subtract hi cell of dividend by
@@ -188,8 +189,8 @@ ABS
     rts
 
 DABS_STAR           ; ( n1 n2 -- ud1 )
-    lda MSB,x      ;   ud1 = abs(n1) * abs(n2)
-    eor MSB+1,x     ;  with final sign output in A register
+    lda MSB,x       ;   ud1 = abs(n1) * abs(n2)
+    eor MSB+1,x     ;   with final sign output in A register
     pha
     jsr ABS
     inx
@@ -257,7 +258,7 @@ FM_DIV_MOD
     jsr SWAP
 +   jsr UM_DIV_MOD
 DIVISOR_SIGN = * + 1
-    lda #$ff        // placeholder
+    lda #$ff        ; placeholder
     bpl +
     inx
     jsr NEGATE
@@ -273,3 +274,32 @@ DIVISOR_SIGN = * + 1
     jsr S_TO_D
     dex
     jmp FM_DIV_MOD
+
+    ; (ud1 u2 -- urem udquot)
+    +BACKLINK "ud/mod", 6
+    lda LSB,x
+    sta LSB - 1,x
+    sta W3
+    lda MSB,x
+    sta MSB - 1,x
+    sta W3 + 1		; cache the divisor
+    lda #0
+    sta LSB,x
+    sta MSB,x
+    dex
+    jsr UM_DIV_MOD	; divide the high word
+    lda LSB,x
+    pha
+    lda MSB,x
+    pha		        ; cache the high word of quotient
+    lda W3		    ; uncache the divisor
+    sta LSB,x
+    lda W3 + 1
+    sta MSB,x
+    jsr UM_DIV_MOD	; divide the low byte
+    dex
+    pla 		    ; push the high word of quotient
+    sta MSB,x
+    pla
+    sta LSB,x
+    rts

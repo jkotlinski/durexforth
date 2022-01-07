@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - REQUIRED now aborts with "too many" if 16 files are already INCLUDED.
  - V: Moved text buffer to $a000-$cbff.
  - Moved and shrunk PAD area.
- - Sped up * (signed multiply)
+ - Sped up signed multiply and divide
 ### Fixed
  - LOADB/SAVEB could change active device.
  - IOABORT did not print all error messages.
@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - V: Improved I/O error handling.
  - sid-demo broke in 2.0.0.
  - :NONAME did not work with RECURSE.
+ - Rewrote UD/MOD in assembly
 ### Removed
  - BYE.
  - HIDDEN word header flag.
