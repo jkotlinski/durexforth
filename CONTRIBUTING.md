@@ -47,7 +47,7 @@ system will be compiled in the Vice emulator.
 
 Once the system is saved to disk and the prompt is visible, the program has
 been successfully built.  At this point you may test the system by typing
-at the prompt.  You may wish to disable Vice Warp Mode before doing so by
+at the prompt.  You should disable Vice Warp Mode before doing so by
 pressing MOD-W or clicking on the green light next to 'Warp' on the status
 bar.  To completely test the system, you may use the command
 ```
