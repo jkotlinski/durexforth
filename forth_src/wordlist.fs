@@ -9,4 +9,4 @@ r> move then ;
 parse-name find-name ?dup 0=
 abort" not found."
 count $1f and + here swap ! ;
-: define defcode 0 ] ;
+: define defcode ] ;

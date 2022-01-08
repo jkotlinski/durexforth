@@ -36,7 +36,7 @@ c4e , d09 , dd0 , ea2 , f81 , 106d ,
 af68 , b9d6 , c4e3 , d098 , dd00 ,
 ea24 , f810 ,
 : note! ( i -- )
-2* [ swap ] literal + @ freq! ;
+2* literal + @ freq! ;
 
 : sid-demo
 f volume!

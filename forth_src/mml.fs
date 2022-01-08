@@ -30,9 +30,9 @@ sid 4 + 100/ lda,# w 1+ sta,
 .voice7* jsr,
 clc, sid 4 + ff and adc,# w sta,
 +branch bcc, w 1+ inc, :+ rts,
-code ctl 
+code ctl
 dex,
-.ctl jsr, 
+.ctl jsr,
 w lda, lsb sta,x
 w 1+ lda, msb sta,x
 ;code
@@ -42,32 +42,32 @@ w 1+ lda, msb sta,x
 : sid-vol! d418 c! ;
 
 ( write adsr )
-: srad! ( SR AD -- ) 
+: srad! ( SR AD -- )
 [ sid 5 + literal ] voice7+ ! ;
 
 here \ 95 notes from c0, pal
 116 , 127 , 138 , 14b , 15e , 173 ,
-189 , 1a1 , 1ba , 1d4 , 1f0 , 20d , 
-22c , 24e , 271 , 296 , 2bd , 2e7 , 
+189 , 1a1 , 1ba , 1d4 , 1f0 , 20d ,
+22c , 24e , 271 , 296 , 2bd , 2e7 ,
 313 , 342 , 374 , 3a8 , 3e0 , 41b ,
-459 , 49c , 4e2 , 52c , 57b , 5ce , 
-627 , 684 , 6e8 , 751 , 7c0 , 836 , 
-8b3 , 938 , 9c4 , a59 , af6 , b9d , 
+459 , 49c , 4e2 , 52c , 57b , 5ce ,
+627 , 684 , 6e8 , 751 , 7c0 , 836 ,
+8b3 , 938 , 9c4 , a59 , af6 , b9d ,
 c4e , d09 , dd0 , ea2 , f81 , 106d ,
-1167 , 1270 , 1388 , 14b2 , 15ed , 
-173a , 189c , 1a13 , 1ba0 , 1d44 , 
-1f02 , 20da , 22ce , 24e0 , 2711 , 
-2964 , 2bda , 2e75 , 3138 , 3426 , 
-3740 , 3a89 , 3e04 , 41b4 , 459c , 
-49c0 , 4e22 , 52c8 , 57b4 , 5ceb , 
-6271 , 684c , 6e80 , 7512 , 7c08 , 
+1167 , 1270 , 1388 , 14b2 , 15ed ,
+173a , 189c , 1a13 , 1ba0 , 1d44 ,
+1f02 , 20da , 22ce , 24e0 , 2711 ,
+2964 , 2bda , 2e75 , 3138 , 3426 ,
+3740 , 3a89 , 3e04 , 41b4 , 459c ,
+49c0 , 4e22 , 52c8 , 57b4 , 5ceb ,
+6271 , 684c , 6e80 , 7512 , 7c08 ,
 8368 , 8b38 , 9380 , 9c45 , a590 ,
-af68 , b9d6 , c4e3 , d098 , dd00 , 
+af68 , b9d6 , c4e3 , d098 , dd00 ,
 ea24 , f810 ,
 : note! ( i -- )
-2* [ swap ] literal + @ sid voice7+ ! ;
+2* literal + @ sid voice7+ ! ;
 
-code gate-on 
+code gate-on
 .ctl jsr, 0 ldy,#
 w lda,(y) 1 eor,#
 w sta,(y) ;code
@@ -88,7 +88,7 @@ code str-pop .str-pop jsr, ;code
 create .strget
 w stx, voice lda, asl,a tax,
 .str lda,(x) w ldx, rts,
-code strget 
+code strget
 dex, 0 lda,# msb sta,x
 .strget jsr, lsb sta,x ;code
 
@@ -131,29 +131,29 @@ dex, 0 lda,# msb sta,x
 '1' cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 '6' cmp,# +branch bne,
-.str-pop jsr, 60 10 / lda,# lsb sta,x 
+.str-pop jsr, 60 10 / lda,# lsb sta,x
 rts,
 :+ 60 lda,# lsb sta,x rts,
 :+ '2' cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 '4' cmp,# +branch bne,
-.str-pop jsr, 60 18 / lda,# lsb sta,x 
+.str-pop jsr, 60 18 / lda,# lsb sta,x
 rts,
 :+ 60 2 / lda,# lsb sta,x rts,
 :+ '3' cmp,# +branch bne,
 .str-pop jsr, .strget jsr,
 '2' cmp,# +branch bne,
-.str-pop jsr, 60 20 / lda,# lsb sta,x 
+.str-pop jsr, 60 20 / lda,# lsb sta,x
 rts,
 :+ 60 3 / lda,# lsb sta,x rts,
 :+ '4' cmp,# +branch bne,
-.str-pop jsr, 60 4 / lda,# lsb sta,x 
+.str-pop jsr, 60 4 / lda,# lsb sta,x
 rts,
 :+ '6' cmp,# +branch bne,
-.str-pop jsr, 60 6 / lda,# lsb sta,x 
+.str-pop jsr, 60 6 / lda,# lsb sta,x
 rts,
 :+ '8' cmp,# +branch bne,
-.str-pop jsr, 60 8 / lda,# lsb sta,x 
+.str-pop jsr, 60 8 / lda,# lsb sta,x
 rts,
 :+ 0 lda,# lsb sta,x rts,
 
@@ -161,18 +161,18 @@ code read-pause
 .read-pause jsr,
 lsb lda,x +branch bne,
 default-pause lda, lsb sta,x
-:+ 
+:+
 .strget jsr,
 '.' cmp,# +branch bne,
 .str-pop jsr,
-lsb lda,x lsr,a clc, 
+lsb lda,x lsr,a clc,
 lsb adc,x lsb sta,x
-:+ 
+:+
 lsb dec,x ;code
 
 code read-default-pause
 .read-pause jsr,
-lsb lda,x default-pause sta, 
+lsb lda,x default-pause sta,
 inx, ;code
 
 : play-note ( -- )
@@ -193,14 +193,14 @@ octave sta,
 
 : do-commands ( -- done )
 strget case
-'l' of str-pop 
+'l' of str-pop
 read-default-pause recurse endof
 'o' of o recurse endof
 '<' of str-pop fff4 octave +!
 recurse endof
-'>' of str-pop c octave +! 
+'>' of str-pop c octave +!
 recurse endof
-'&' of str-pop 1 tie c! 
+'&' of str-pop 1 tie c!
 recurse endof
 d of str-pop recurse endof
 bl of str-pop recurse endof
@@ -223,44 +223,44 @@ lsb sty,x msb sty,x ;code
 :+ iny, lsb sty,x ;code
 
 : voicetick
-pause>0 if decpause1= if 
-do-commands stop-note then 
+pause>0 if decpause1= if
+do-commands stop-note then
 else play-note then ;
 
-code voice0 
-0 lda,# voice sta, 
+code voice0
+0 lda,# voice sta,
 octave 1+ lda, octave sta,
 tie 1+ lda, tie sta,
 pause 1+ lda, pause sta,
-default-pause 1+ lda, 
+default-pause 1+ lda,
 default-pause sta,
 ;code
 
-code voice1 
+code voice1
 octave lda, octave 1+ sta,
 tie lda, tie 1+ sta,
 pause lda, pause 1+ sta,
-default-pause lda, 
+default-pause lda,
 default-pause 1+ sta,
-1 lda,# voice sta, 
+1 lda,# voice sta,
 octave 2+ lda, octave sta,
 tie 2+ lda, tie sta,
 pause 2+ lda, pause sta,
-default-pause 2+ lda, 
+default-pause 2+ lda,
 default-pause sta,
 ;code
 
-code voice2 
+code voice2
 octave lda, octave 2+ sta,
 tie lda, tie 2+ sta,
 pause lda, pause 2+ sta,
-default-pause lda, 
+default-pause lda,
 default-pause 2+ sta,
-2 lda,# voice sta, 
+2 lda,# voice sta,
 octave 3 + lda, octave sta,
 tie 3 + lda, tie sta,
 pause 3 + lda, pause sta,
-default-pause 3 + lda, 
+default-pause 3 + lda,
 default-pause sta,
 ;code
 
@@ -268,11 +268,11 @@ code voicedone
 octave lda, octave 3 + sta,
 tie lda, tie 3 + sta,
 pause lda, pause 3 + sta,
-default-pause lda, 
+default-pause lda,
 default-pause 3 + sta,
 ;code
 
-code wait 
+code wait
 \ visualize lag
 \ a2 lda, sec, lsb sbc,x d020 sta,
 lsb lda,x
@@ -296,14 +296,14 @@ voice inc,
 :+ :+ :+
 lsb sta,x ;code
 
-: play 
+: play
 voice0 do-commands
 voice1 do-commands
-voice2 do-commands voicedone 
+voice2 do-commands voicedone
 a2 c@ wait begin notdone while
 voice0 voicetick
 voice1 voicetick
-voice2 voicetick voicedone 
+voice2 voicetick voicedone
 wait apply-sid
 repeat drop ;
 

@@ -92,12 +92,15 @@ SEMICOLON
     jsr EXIT
 
     ; Unhides the word.
-    inx
-    lda MSB - 1, x
+PENDING_LATEST_MSB = * + 1
+    lda #0
     beq +
     sta	LATEST_MSB
-    lda	LSB - 1, x
+PENDING_LATEST_LSB = * + 1
+    lda	#0
     sta LATEST_LSB
+    lda #0
+    sta PENDING_LATEST_MSB
 +
 
     ; go back to IMMEDIATE mode.
@@ -136,11 +139,10 @@ COLON
     jsr HEADER ; makes the dictionary entry / header
 
     ; defer the LATEST update to ;
-    dex
     lda LATEST_LSB
-    sta LSB, x
+    sta PENDING_LATEST_LSB
     lda LATEST_MSB
-    sta MSB, x
+    sta PENDING_LATEST_MSB
 
     pla
     sta LATEST_MSB

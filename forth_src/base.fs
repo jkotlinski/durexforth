@@ -51,7 +51,7 @@ repeat ; immediate
  3. variable length data )
 here 60 c, ( rts )
 : create
-header postpone dodoes [ swap ] literal , ;
+header postpone dodoes literal , ;
 : does> r> 1+ latest >xt 1+ 2+ ! ;
 
 .( asm..)
@@ -178,7 +178,7 @@ does> dup @ to here
 
 : include parse-name included ;
 
-: :noname here here to latestxt 0 ] ;
+: :noname here here to latestxt ] ;
 
 marker ---modules---
 
