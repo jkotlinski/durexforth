@@ -23,18 +23,18 @@
 ; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE ' ABORT /STRING
 
 restore_handler
-   pha				; save a
-   txa				; copy x
-   pha				; save x
-   tya				; copy y
-   pha				; save y
-   lda	#$7f	    ; disable all CIA 2 interrupts
-   sta	$dd0d       ;
-   ldy	$dd0d       ; save CIA 2 interrupt control register for kernal_nmi
-   bpl brk_handler  ; CIA 2 is not the NMI source if the most significant bit is not set.
+    pha             ; save a
+    txa             ; copy x
+    pha             ; save x
+    tya             ; copy y
+    pha             ; save y
+    lda	#$7f        ; disable all CIA 2 interrupts
+    sta	$dd0d       ;
+    ldy	$dd0d       ; save CIA 2 interrupt control register for kernal_nmi
+    bpl brk_handler ; CIA 2 is not the NMI source if the most significant bit is not set.
 
 kernal_nmi
-   jmp $fe72        ; all CIA 2 NMI's fall through to the Kernals' RS-232 routines
+    jmp $fe72       ; all CIA 2 NMI's fall through to the Kernals' RS-232 routines
 
 
 brk_handler         ; all non-CIA NMI (RESTORE key) and brk instructions- via IRQ vector end up here.
