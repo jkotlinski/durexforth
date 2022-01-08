@@ -16,10 +16,16 @@ msb 3 + ldy,x
 lsb 3 + lda,x tax, pla, \ xy = nameptr
 $ffbd jsr, \ SETNAM
 
-$ffc0 jsr, \ OPEN
-+branch bcs, \ carry set = error
-0 lda,# \ A is only valid on error
-:+
+$ffc0 jsr,   \ OPEN
+'1' @@ bcc,  \ carry set = error or rs232
+$ba ldx, 2 cpx,# 
+'2' @@ bne,  \ rs232 ?
+$f0 cmp,     \ rs232 go on that error
+'3' @@ bne, 
+'1' @: clc,  \ carry clear or rs232 = $f0
+0 lda,#      \ A is only valid on error
+'2' @:       \ not rs232 and carry set
+'3' @:       \ carry set and rs232 <> $f0
 w ldx,
 inx, inx, inx,
 lsb sta,x
