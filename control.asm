@@ -108,6 +108,8 @@ ZBRANCH
 EXIT
     lda last_word_no_tail_call_elimination
     bne +
+    ; do tail call elimination: instead of adding a final rts,
+    ; replace the last jsr with a jmp.
     lda HERE_LSB
     sec
     sbc #3
