@@ -187,6 +187,7 @@ marker ---modules---
 \ hides private words
 hide 1mi hide 2mi hide 23mi hide 3mi
 hide curr hide end hide latestxt
+hide dodoes
 
 .( labels..) include labels
 .( doloop..) include doloop
