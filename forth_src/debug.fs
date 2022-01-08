@@ -1,13 +1,3 @@
-: name>string ( nametoken -- caddr u )
-count $1f and ;
-: (xt>) ( xt1 nt -- nt xt 0 | xt1 1 )
-2dup name>string + @
-< invert if swap drop 0
-exit then drop 1 ;
-: xt> ( codepointer -- nametoken )
-['] (xt>) dowords ;
-hide (xt>)
-
 :noname ( xt xt-1 nt -- xt xt-1 1 | xt xt-1 0 )
 >xt dup 3 pick
 > if ( xt xt-1 xt0 )
@@ -36,5 +26,7 @@ hide last-dump
 $d6 c@ $18 = if $12 emit
 ." more" $92 emit key drop page then ;
 
+: name>string ( nametoken -- caddr u )
+count $1f and ;
 :noname more name>string type space 1 ;
 : words page literal dowords ;

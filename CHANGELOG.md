@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - :NONAME did not work with RECURSE.
  - Rewrote UD/MOD in assembly
 ### Removed
- - BYE, SEE
+ - BYE, SEE, XT>
  - HIDDEN word header flag.
 
 ## [3.0.0] - 2021-05-14
