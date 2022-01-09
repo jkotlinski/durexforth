@@ -281,7 +281,7 @@ FIND ; ( xt -1 | xt 1 | caddr 0 )
     lda MSB, x
     beq +
     jsr DUP
-    jsr TO_XT
+    jsr TO_XT_W_CACHED
     jsr SWAP
     jsr GET_IMMED
     jsr R_TO
@@ -402,6 +402,7 @@ TO_XT
     sta W + 1
     lda LSB, x
     sta W
+TO_XT_W_CACHED
     ; W contains pointer to word
     ldy #0
     lda (W), y ; a contains string length + mask
