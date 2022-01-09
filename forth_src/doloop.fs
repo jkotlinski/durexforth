@@ -71,8 +71,3 @@ code j txa, tsx,
 $107 ldy,x w sty, $108 ldy,x
 tax, dex,
 msb sty,x w lda, lsb sta,x ;code
-
-hide lstk
-hide lsp
-hide >l
-hide resolve-leaves

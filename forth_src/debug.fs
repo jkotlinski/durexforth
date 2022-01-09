@@ -20,7 +20,6 @@ dup $7f and $20 < if drop '.' then
 emit 1+ loop cr loop
 last-dump ! base ! ;
 : n last-dump @ dump ;
-hide last-dump
 
 : more
 $d6 c@ $18 = if $12 emit

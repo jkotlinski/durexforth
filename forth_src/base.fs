@@ -182,17 +182,21 @@ does> dup @ to here
 
 marker ---modules---
 
+
+.( labels..) include labels
+.( doloop..) include doloop
+.( sys..) include sys
+.( debug..) include debug
 .( wordlist..) include wordlist
 
 \ hides private words
 hide 1mi hide 2mi hide 23mi hide 3mi
 hide curr hide end hide latestxt
 hide dodoes
+hide locs hide locp hide refs hide refp
+hide lstk hide lsp hide >l hide resolve-leaves
+hide last-dump
 
-.( labels..) include labels
-.( doloop..) include doloop
-.( sys..) include sys
-.( debug..) include debug
 .( ls..) include ls
 .( require..) include require
 .( open..) include open

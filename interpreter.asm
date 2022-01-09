@@ -192,13 +192,14 @@ INTERPRET
     inx
     inx
     rts
-+
-    jsr TWODUP
-    jsr FIND_NAME ; ( caddr u 0 | caddr u nt )
-    lda MSB, x
++   sta .numlen + 1
+    jsr FIND ; ( caddr 0 | xt -1/1 )
+    lda LSB, x
     bne .found_word
 
-    inx
+.numlen
+    lda #$ff ; placeholder
+    sta LSB, x
     jsr READ_NUMBER
     beq .was_number
 
@@ -215,17 +216,6 @@ INTERPRET
 
 .found_word
     ; OK, we found a word...
-
-    lda MSB, x
-    ldy LSB, x
-    inx
-    sta MSB, x
-    sty LSB, x
-    sta MSB+1, x
-    sty LSB+1, x
-    jsr TO_XT
-    jsr SWAP
-    jsr GET_IMMED ; ( xt 1 | xt -1 )
     inx
 
     lda curr_word_no_tail_call_elimination
@@ -256,61 +246,38 @@ print_word_not_found_error ; ( caddr u -- )
 
     +BACKLINK "'", 1
     jsr PARSE_NAME
-    jsr TWODUP
-    jsr FIND_NAME
-    inx
-    lda MSB-1,x
-    beq print_word_not_found_error
-+   ldy LSB-1, x
-    sty LSB, x
-    sta MSB, x
-    sty LSB+1, x
-    sta MSB+1, x
-    jsr TO_XT
-    jsr SWAP
-    jsr GET_IMMED
-    inx
-    rts
-
-    +BACKLINK "find", 4
-FIND ; ( xt -1 | xt 1 | caddr 0 )
-    jsr DUP
-    jsr TO_R
-    jsr COUNT
-    jsr FIND_NAME
-    lda MSB, x
-    beq +
-    jsr DUP
-    jsr TO_XT
-    jsr SWAP
-    jsr GET_IMMED
-    jsr R_TO
-    inx
-    rts
+    lda LSB,x
+    pha
+    jsr FIND
+    lda LSB,x
+    bne +
+    pla
+    sta LSB,x
+    jmp print_word_not_found_error
 +   inx
-    jsr R_TO
-    jmp ZERO
+    pla
+    rts
 
 FIND_BUFFER = $33c
 FIND_BUFFER_SIZE = 31
 
-    +BACKLINK "find-name", 9
-FIND_NAME ; ( caddr u -- nt | 0 )
-    inx
-    lda LSB-1,x
+    +BACKLINK "find", 4
+    jsr COUNT
+FIND ; ( caddr u -- xt -1 | xt 1 | caddr 0 )
+    lda LSB,x
     tay
     beq .find_failed
     cmp #FIND_BUFFER_SIZE+1
     bcs .find_failed
     sta .findlen + 1
 
-    lda MSB,x
-    sta W2+1
-    lda LSB,x
-    sta W2
+    lda MSB + 1,x
+    sta W + 1
+    lda LSB + 1,x
+    sta W
 
     dey
--   lda (W2),y
+-   lda (W),y
     jsr CHAR_TO_LOWERCASE
     sta FIND_BUFFER,y
     dey
@@ -343,8 +310,10 @@ FIND_NAME ; ( caddr u -- nt | 0 )
 
     ; It is null - give up.
 .find_failed
-    inx
-    jmp ZERO
+    lda #0
+    sta LSB, x
+    sta MSB, x
+    rts
 
 .string_compare
     ; equal strlen, now compare strings...
@@ -356,17 +325,31 @@ FIND_NAME ; ( caddr u -- nt | 0 )
     bne -
 
     ; word is equal!
-    ; return address to dictionary word
-    ldy #0
     lda (W), y
+    pha
     ; Immediate words are exempt from TCE because custom compile-time behavior.
     ; (E.g. DROP compiles inx instead of jsr DROP.)
     and #F_NO_TAIL_CALL_ELIMINATION | F_IMMEDIATE
     sta FOUND_WORD_WITH_NO_TCE
-    lda W
-    sta LSB, x
-    lda W + 1
-    sta MSB, x
+    and #F_IMMEDIATE
+    beq +
+    sty MSB, x ; 0
+    iny
+    sty LSB, x ; 1
+    jmp .immed_set
++   dey
+    sty MSB, x ; -1
+    sty LSB, x ; -1
+.immed_set
+    pla
+    and #STRLEN_MASK
+    tay
+    iny
+    lda (W),y
+    sta LSB+1,x
+    iny
+    lda (W),y
+    sta MSB+1,x
     rts
 
 .word_not_equal
@@ -374,27 +357,6 @@ FIND_NAME ; ( caddr u -- nt | 0 )
     lda (W), y
     and #STRLEN_MASK
     jmp .string_compare_failed
-
-GET_IMMED ; ( nt -- 1 | -1 )
-    lda MSB, x
-    sta W + 1
-    lda LSB, x
-    sta W
-    ldy #0
-
-    lda (W), y ; a contains string length + mask
-    and #F_IMMEDIATE
-    beq .not_immed
-    sty MSB, x ; 0
-    iny
-    sty LSB, x ; 1
-    rts
-
-.not_immed
-    lda #$ff
-    sta LSB, x
-    sta MSB, x
-    rts
 
     +BACKLINK ">xt", 3
 TO_XT

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Moved and shrunk PAD area.
  - Sped up signed multiply and divide
  - Data stack effects of :/;/:NONAME/DEFINE. Starting with 2.0.0, :/:NONAME/DEFINE would put a value on the data stack, to be later consumed by ;. This is no longer the case.
+ - Refactored FIND
 ### Fixed
  - LOADB/SAVEB could change active device.
  - IOABORT did not print all error messages.
