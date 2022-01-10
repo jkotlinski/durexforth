@@ -45,6 +45,8 @@ then branch ;
 begin ?dup while postpone then
 repeat ; immediate
 
+: >xt dup c@ $3f and + 1+ @ ;
+
 ( dodoes words contain:
  1. jsr dodoes
  2. two-byte code pointer. default: rts

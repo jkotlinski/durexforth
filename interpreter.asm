@@ -363,25 +363,6 @@ FIND ; ( caddr u -- xt -1 | xt 1 | caddr 0 )
     and #STRLEN_MASK
     jmp .string_compare_failed
 
-    +BACKLINK ">xt", 3
-TO_XT
-    lda MSB, x
-    sta W + 1
-    lda LSB, x
-    sta W
-    ; W contains pointer to word
-    ldy #0
-    lda (W), y ; a contains string length + mask
-    and #STRLEN_MASK
-    clc
-    adc #1 ; offset for char + string length
-    adc LSB, x
-    sta LSB, x
-    bcc +
-    inc MSB, x
-+   jsr FETCH
-    rts
-
 IS_SPACE ; ( c -- f )
     ldy #1
     lda LSB,x
