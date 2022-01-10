@@ -263,6 +263,9 @@ FIND_BUFFER_SIZE = 31
 
     +BACKLINK "find", 4
     jsr COUNT
+    ; The standard requires find to take a counted string
+    ; but that isn't as available as a caddr u
+    ; so the ASM entry point is here
 FIND ; ( caddr u -- xt -1 | xt 1 | caddr 0 )
     lda LSB,x
     tay
@@ -310,7 +313,9 @@ FIND ; ( caddr u -- xt -1 | xt 1 | caddr 0 )
 
     ; It is null - give up.
 .find_failed
-    lda #0
+    ; Technically, the caddr breaks the standard
+    ; as it does not contain a counted string
+    lda #0  ; might be superfluous
     sta LSB, x
     sta MSB, x
     rts
