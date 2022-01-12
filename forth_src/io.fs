@@ -48,3 +48,11 @@ dex, w stx, 0 lda,# msb sta,x
 $ffcf jsr, \ CHRIN
 w ldx, lsb sta,x
 ;code
+
+\ Get a byte or a null from
+\ keyboard buffer or rs232
+code getin ( -- chr )
+dex, w stx, 0 lda,# msb sta,x
+$ffe4 jsr, \ GETIN
+w ldx, lsb sta,x
+;code
