@@ -663,10 +663,12 @@ READ_NUMBER
 
     ldy #0
     sty .negate
+    sty .is_double
     dex
     dex
     sty LSB+1,x
     sty MSB+1,x
+    sty LSB,x
     sty MSB,x
 
     lda (W3), y
@@ -696,13 +698,42 @@ READ_NUMBER
     inc .negate
     jmp .prepare_next_char
 
+.parse_char
+    lda .chars_to_process
+    cmp #3
+    bne .parse_failed
+    ldy #2
+    lda (W3),y
+    cmp #"'"
+    bne .parse_failed
+    dey
+    lda (W3),y
+    sta LSB+1,x
+    lda #0
+    sta MSB+1,x
+    jmp .parse_done
+
+.parse_failed
+    inx
+    inx ; Z flag set
+    rts
+
 .next_digit
     ; number *= BASE
+    iny     ; lookahead for .
+    lda (W3), y
+    dey
+    cmp #"."
+    bne +
+    sta .is_double
+    beq .parse_done
++   dex
+    lda #0
+    sta MSB,x
     lda BASE
     sta LSB,x
-    jsr U_M_STAR
-    lda LSB,x
-    bne .parse_failed ; overflow!
+    jsr ONE
+    jsr M_STAR_SLASH
 
     inc W3
     bne +
@@ -731,6 +762,10 @@ READ_NUMBER
     sta LSB+1,x
     bcc .prepare_next_char
     inc MSB+1,x
+    bne .prepare_next_char
+    inc LSB,x
+    bne .prepare_next_char
+    inc MSB,x
     beq .parse_failed
 .prepare_next_char
     dec .chars_to_process
@@ -747,6 +782,20 @@ OLD_BASE = * + 1
     sta MSB+3,x
     inx
     inx
+.is_double = * + 1
+    lda #0 ; placeholder
+    beq .single
+    lda LSB-2,x
+    sta LSB,x
+    lda MSB-2,x
+    sta MSB,x
+    lda .negate
+    beq +
+    jsr DNEGATE
+    tya
+    rts
+
+.single
     inx
 .negate = * + 1
     lda #0
@@ -754,26 +803,6 @@ OLD_BASE = * + 1
     jsr NEGATE
     tya ; clear Z flag
 +   rts
-
-.parse_char
-    lda .chars_to_process
-    cmp #3
-    bne .parse_failed
-    ldy #2
-    lda (W3),y
-    cmp #"'"
-    bne .parse_failed
-    dey
-    lda (W3),y
-    sta LSB+1,x
-    lda #0
-    sta MSB+1,x
-    jmp .parse_done
-
-.parse_failed
-    inx
-    inx ; Z flag set
-    rts
 
 .chars_to_process
     !byte 0

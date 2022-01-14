@@ -24,6 +24,7 @@
 ; http://6502.org/source/integers/ummodfix/ummodfix.htm
 
 ; U< - UM* UM/MOD M+ INVERT NEGATE ABS * DNEGATE M* 0< S>D FM/MOD /MOD UD/MOD
+; DABS M*/
 
     +BACKLINK "u<", 2
 U_LESS
@@ -207,21 +208,6 @@ DABS_STAR           ; ( n1 n2 -- ud1 )
     bmi NEGATE
     rts
 
-    +BACKLINK "dnegate", 7
-DNEGATE
-    jsr INVERT
-    inx
-    jsr INVERT
-    dex
-    inc LSB+1,x
-    bne +
-    inc MSB+1,x
-    bne +
-    inc LSB,x
-    bne +
-    inc MSB,x
-+   rts
-
     +BACKLINK "m*", 2
     jsr DABS_STAR
     bmi DNEGATE
@@ -277,26 +263,163 @@ DIVISOR_SIGN = * + 1
 
     ; (ud1 u2 -- urem udquot)
     +BACKLINK "ud/mod", 6
+UD_DIV_MOD
+    jsr ZERO
+    jsr SWAP
+    jmp UT_DIV_MOD
+
+    +BACKLINK "dnegate", 7
+DNEGATE
+    jsr INVERT
+    inx
+    jsr INVERT
+    dex
+    inc LSB+1,x
+    bne +
+    inc MSB+1,x
+    bne +
+    inc LSB,x
+    bne +
+    inc MSB,x
++   rts
+
+
+    +BACKLINK "dabs", 4
+DABS
+    lda MSB, x
+    bmi DNEGATE
+    rts
+
+product_lo
+    !word 0
+product_hi
+    !word 0
+    !word 0
+
+;    ( d1 n1 +n2 -- d2 )
+    +BACKLINK "m*/", 3
+; wastes W, W2, y, W3 if +n2 != 1
+M_STAR_SLASH
+    lda MSB + 2,x
+    eor MSB + 1,x
+    sta .negateprod
+    inx
+    jsr ABS
+    inx
+    jsr DABS
+    dex
+    dex
+    lda MSB, x      ; skip division if divisor = 1
+    bne +           ; saves W3 from being wasted if division not required
+    lda LSB, x
+    cmp #1
+    bne +
+    sta .no_divide
+    inx
+    bne .do_mult
++   jsr TO_R
+    lda #0
+    sta .no_divide
+.do_mult
+    jsr ZERO
+    lda #$00
+    sta product_lo ; clear upper bits of product
+    sta product_lo+1
+    sta product_hi
+    sta product_hi+1
+    sta product_hi+2
+    sta product_hi+3
+    ldy #$20 ; set binary count to 32
+    ; ( muld mul )
+.dshift_r
+    lsr MSB + 2, x
+    ror LSB + 2, x
+    ror MSB + 3, x ; multiplier+1 ; divide multiplier by 2
+    ror LSB + 3, x ; multiplier
+    bcc .drotate_r
+    lda product_hi ; get upper half of product and add multiplicand
+    clc
+    adc LSB+1, x ; multiplicand
+    sta product_hi
+    lda product_hi+1
+    adc MSB+1, x
+    sta product_hi+1
+    lda product_hi+2
+    adc LSB, x
+    sta product_hi+2
+    lda product_hi+3
+    adc MSB, x
+.drotate_r
+    ror ; rotate partial product
+
+    ror product_hi+3
+    ror product_hi+2
+    ror product_hi+1
+    ror product_hi
+    ror product_lo+1
+    ror product_lo
+    ror product+1
+    ror product
+    dey
+    bne .dshift_r
+
+    inx
+
+    lda	product
+    sta	LSB + 2, x
+    lda	product + 1
+    sta	MSB + 2, x
+    lda	product_lo
+    sta	LSB + 1, x
+    lda	product_lo + 1
+    sta	MSB + 1, x
+.no_divide = * + 1
+    lda #0 ; placeholder
+    beq .divide
+    inx
+    bne .divided
+.divide
+    lda	product_hi
+    sta	LSB, x
+    lda	product_hi + 1
+    sta	MSB, x
+    jsr R_TO
++   jsr UT_DIV_MOD ; ( umod udquot )
+    inx
+    lda MSB, x
+    sta MSB + 1, x
+    lda LSB, x
+    sta LSB + 1, x
+    lda MSB - 1, x
+    sta MSB, x
+    lda LSB - 1, x
+    sta LSB, x
+.divided
+
+.negateprod = * + 1
+    lda #$ff  ; placeholder
+    bpl +
+    jmp DNEGATE
++   rts
+
+UT_DIV_MOD ; (ut1 u2 -- urem udquot )
+; wastes W3
     lda LSB,x
-    sta LSB - 1,x
     sta W3
     lda MSB,x
-    sta MSB - 1,x
     sta W3 + 1		; cache the divisor
-    lda #0
-    sta LSB,x
-    sta MSB,x
-    dex
-    jsr UM_DIV_MOD	; divide the high word
+    jsr UM_DIV_MOD	; divide the highest word
+    ; ( u urem uquot )
     lda LSB,x
     pha
     lda MSB,x
     pha		        ; cache the high word of quotient
+
     lda W3		    ; uncache the divisor
     sta LSB,x
     lda W3 + 1
     sta MSB,x
-    jsr UM_DIV_MOD	; divide the low byte
+    jsr UM_DIV_MOD	; divide the low word
     dex
     pla 		    ; push the high word of quotient
     sta MSB,x
