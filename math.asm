@@ -296,20 +296,20 @@ product_hi
     !word 0
     !word 0
 
-;    ( d1 u1 u2 -- d2 )
+;    ( d1 n1 +n2 -- d2 )
     +BACKLINK "m*/", 3
-; wastes W, W2, y, W3 if u2 != 1 or -1
+; wastes W, W2, y, W3 if +n2 != 1
 M_STAR_SLASH
     lda MSB + 2,x
-    eor MSB,x
+    eor MSB + 1,x
     sta .negateprod
-    jsr ABS
     inx
+    jsr ABS
     inx
     jsr DABS
     dex
     dex
-    lda MSB, x      ; skip division if divisor = 1 or -1
+    lda MSB, x      ; skip division if divisor = 1
     bne +           ; saves W3 from being wasted if division not required
     lda LSB, x
     cmp #1
