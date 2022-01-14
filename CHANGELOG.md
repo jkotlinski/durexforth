@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Data stack effects of :/;/:NONAME/DEFINE. Starting with 2.0.0, :/:NONAME/DEFINE would put a value on the data stack, to be later consumed by ;. This is no longer the case.
 ### Added
  - GETIN in IO:
+ - M*/
+ - Literal doubles with a trailing period, e.g.: -100000.
 ### Fixed
  - LOADB/SAVEB could change active device.
  - IOABORT did not print all error messages.
