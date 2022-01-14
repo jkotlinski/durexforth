@@ -284,30 +284,47 @@ DNEGATE
 +   rts
 
 
+    +BACKLINK "dabs", 4
+DABS
+    lda MSB, x
+    bmi DNEGATE
+    rts
+
+product_lo
+    !word 0
 product_hi
     !word 0
     !word 0
 
 ;    ( d1 u1 u2 -- d2 )
     +BACKLINK "m*/", 3
-; wastes W, W2, W3, y
+; wastes W, W2, y, W3 if u2 != 1 or -1
 M_STAR_SLASH
-    jsr TO_R
     lda MSB + 2,x
     eor MSB,x
     sta .negateprod
-    bpl +
     jsr ABS
     inx
-    jsr ABS
     inx
-    jsr ABS
+    jsr DABS
     dex
     dex
-+   jsr ZERO
+    lda MSB, x      ; skip division if divisor = 1 or -1
+    bne +           ; saves W3 from being wasted if division not required
+    lda LSB, x
+    cmp #1
+    bne +
+    sta .no_divide
+    inx
+    bne .do_mult
++   jsr TO_R
+    lda #0
+    sta .no_divide
+.do_mult
+    jsr ZERO
     lda #$00
-    sta product+2 ; clear upper bits of product
-    sta product+3
+    sta product_lo ; clear upper bits of product
+    sta product_lo+1
     sta product_hi
     sta product_hi+1
     sta product_hi+2
@@ -339,8 +356,8 @@ M_STAR_SLASH
     ror product_hi+2
     ror product_hi+1
     ror product_hi
-    ror product+3
-    ror product+2
+    ror product_lo+1
+    ror product_lo
     ror product+1
     ror product
     dey
@@ -352,16 +369,22 @@ M_STAR_SLASH
     sta	LSB + 2, x
     lda	product + 1
     sta	MSB + 2, x
-    lda	product + 2
+    lda	product_lo
     sta	LSB + 1, x
-    lda	product + 3
+    lda	product_lo + 1
     sta	MSB + 1, x
+.no_divide = * + 1
+    lda #0 ; placeholder
+    beq .divide
+    inx
+    bne .divided
+.divide
     lda	product_hi
     sta	LSB, x
     lda	product_hi + 1
     sta	MSB, x
     jsr R_TO
-    jsr UT_DIV_MOD ; ( umod udquot )
++   jsr UT_DIV_MOD ; ( umod udquot )
     inx
     lda MSB, x
     sta MSB + 1, x
@@ -371,6 +394,7 @@ M_STAR_SLASH
     sta MSB, x
     lda LSB - 1, x
     sta LSB, x
+.divided
 
 .negateprod = * + 1
     lda #$ff  ; placeholder
@@ -379,6 +403,7 @@ M_STAR_SLASH
 +   rts
 
 UT_DIV_MOD ; (ut1 u2 -- urem udquot )
+; wastes W3
     lda LSB,x
     sta W3
     lda MSB,x
@@ -401,4 +426,5 @@ UT_DIV_MOD ; (ut1 u2 -- urem udquot )
     pla
     sta LSB,x
     rts
+
 
