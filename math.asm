@@ -24,6 +24,7 @@
 ; http://6502.org/source/integers/ummodfix/ummodfix.htm
 
 ; U< - UM* UM/MOD M+ INVERT NEGATE ABS * DNEGATE M* 0< S>D FM/MOD /MOD UD/MOD
+; DABS M*/
 
     +BACKLINK "u<", 2
 U_LESS
@@ -208,7 +209,6 @@ DABS_STAR           ; ( n1 n2 -- ud1 )
     rts
 
     +BACKLINK "m*", 2
-M_STAR
     jsr DABS_STAR
     bmi DNEGATE
     rts
@@ -411,7 +411,7 @@ UT_DIV_MOD ; (ut1 u2 -- urem udquot )
     jsr UM_DIV_MOD	; divide the highest word
     ; ( u urem uquot )
     lda LSB,x
-    pha           ; throw the result away
+    pha
     lda MSB,x
     pha		        ; cache the high word of quotient
 
@@ -426,5 +426,3 @@ UT_DIV_MOD ; (ut1 u2 -- urem udquot )
     pla
     sta LSB,x
     rts
-
-
