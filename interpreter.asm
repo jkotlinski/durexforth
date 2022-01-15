@@ -653,6 +653,8 @@ apply_base
 READ_NUMBER
     lda LSB,x
     sta .chars_to_process
+    tay
+    dey
     lda MSB+1,x
     sta W3+1
     lda LSB+1,x
@@ -661,9 +663,18 @@ READ_NUMBER
     lda BASE
     sta OLD_BASE
 
+    lda (W3), y
+    cmp #"."
+    bne .is_single
+    dec .chars_to_process
+    sta .is_double
     ldy #0
-    sty .negate
+    beq +
+.is_single
+    ldy #0
     sty .is_double
+
++   sty .negate
     dex
     dex
     sty LSB+1,x
@@ -671,6 +682,11 @@ READ_NUMBER
     sty LSB,x
     sty MSB,x
 
+    ldy .chars_to_process
+    dey
+
+.check_char
+    ldy #0
     lda (W3), y
     cmp #"'"
     beq .parse_char
@@ -720,16 +736,7 @@ READ_NUMBER
 
 .next_digit
     ; number *= BASE
-    iny     ; lookahead for .
-    lda (W3), y
-    dey
-    cmp #"."
-    bne +
-    sta .is_double
-    dec .chars_to_process
-    beq .parse_done
-    bne .parse_failed
-+   dex
+    dex
     lda #0
     sta MSB,x
     lda BASE
