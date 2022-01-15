@@ -726,7 +726,9 @@ READ_NUMBER
     cmp #"."
     bne +
     sta .is_double
+    dec .chars_to_process
     beq .parse_done
+    bne .parse_failed
 +   dex
     lda #0
     sta MSB,x
