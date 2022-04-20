@@ -68,7 +68,8 @@ K_CLRSCR = $93
 K_SPACE = ' '
 
 ; PLACEHOLDER_ADDRESS instances are overwritten using self-modifying code.
-PLACEHOLDER_ADDRESS = $1234
+; It must end in 00 for situations where the Y register is used as the LSB of the address.
+PLACEHOLDER_ADDRESS = $1200
 
 !ct pet
 
