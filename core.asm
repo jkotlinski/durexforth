@@ -123,9 +123,9 @@ EQUAL
     +BACKLINK "0=", 2
 ZEQU
     ldy #0
-    lda MSB, x
-    bne +
     lda LSB, x
+    bne +
+    lda MSB, x
     bne +
     dey
 +   sty MSB, x
@@ -179,23 +179,21 @@ FETCH
 
     +BACKLINK "c!", 2
 STOREBYTE
-    lda LSB,x
-    sta + + 1
+    ldy LSB,x
     lda MSB,x
     sta + + 2
     lda	LSB+1,x
-+   sta PLACEHOLDER_ADDRESS ; replaced with addr
++   sta PLACEHOLDER_ADDRESS,y ; replaced with addr
     inx
     inx
     rts
 
     +BACKLINK "c@", 2
 FETCHBYTE
-    lda LSB,x
-    sta + + 1
+    ldy LSB,x
     lda MSB,x
     sta + + 2
-+   lda PLACEHOLDER_ADDRESS ; replaced with addr
++   lda PLACEHOLDER_ADDRESS,y ; replaced with addr
     sta LSB,x
     lda #0
     sta MSB,x

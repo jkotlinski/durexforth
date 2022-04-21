@@ -113,13 +113,13 @@ EXIT
     lda HERE_LSB
     sec
     sbc #3
-    sta .instr_ptr
+    tay
     lda HERE_MSB
     sbc #0
     sta .instr_ptr + 1
     lda #OP_JMP
 .instr_ptr = * + 1
-    sta PLACEHOLDER_ADDRESS ; replaced with instruction pointer
+    sta PLACEHOLDER_ADDRESS,y ; replaced with instruction pointer
     rts
 +
     lda #OP_RTS
