@@ -6,13 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
- - OPEN/CHKIN/CHKOUT no longer returns a file number.
+ - OPEN/CHKIN/CHKOUT no longer return a file number.
  - IOABORT no longer accepts a file number.
  - INCLUDED now prints error message on failed OPEN.
  - REQUIRED now aborts with "too many" if 16 files are already INCLUDED.
  - V: Moved text buffer to $a000-$cbff.
  - Moved and shrunk PAD area.
- - Sped up signed multiply and divide
+ - Optimized * / EXIT C! C@ 0=
  - Data stack effects of :/;/:NONAME/DEFINE. Starting with 2.0.0, :/:NONAME/DEFINE would put a value on the data stack, to be later consumed by ;. This is no longer the case.
 ### Fixed
  - LOADB/SAVEB could change active device.
