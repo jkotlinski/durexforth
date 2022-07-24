@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
- - Missing error handling on POSTPONE word not found.
+ - POSTPONE error handling.
 
 ## [4.0.0] - 2022-07-20
 ### Changed
