@@ -285,7 +285,7 @@ endcase
 
 \index{abort}\item[abort] Empties the data stack and performs \texttt{quit}.
 
-\index{abort{"}}\item[abort" ccc" ( f -- ) ] If \texttt{f} is true, print \texttt{ccc} and abort.
+\index{abort""}\item[abort" ccc" ( f -- ) ] If \texttt{f} is true, print \texttt{ccc} and abort.
 
     Typical use: \texttt{: x ... test abort" error" ... ;}
 
@@ -311,11 +311,11 @@ Otherwise, an untitled buffer will be created.
 
 Print a string. Example: \texttt{.( foo)}
 
-\index{."}\item[."]
+\index{.""}\item[."]
 
 Compile-time version of "\texttt{.(}". Example: \texttt{: foo ." bar" ;}
 
-\index{s"}\item[s" ( -- caddr u )] Define a string. Compile-time only! Example: \texttt{s" foo"}.
+\index{s""}\item[s" ( -- caddr u )] Define a string. Compile-time only! Example: \texttt{s" foo"}.
 
 \index{count}\item[count ( str -- caddr u )] Returns data address and length of the counted string str.
 
@@ -457,7 +457,7 @@ The \texttt{compat} module contains various words that are not deemed necessary 
     \index{align}\item[align ( -- )] No-op
     \index{aligned}\item[aligned ( -- )] No-op
     \index{chars}\item[chars ( -- )] No-op
-    \index{2@}\item[2@ ( address -- x1 x2 )] Fetch 32-bit value from address. x2 is stored at address, and x1 is stored at address + 2.
+    \index{2"@}\item[2@ ( address -- x1 x2 )] Fetch 32-bit value from address. x2 is stored at address, and x1 is stored at address + 2.
     \index{2!}\item[2! ( x1 x2 address -- )] Store 32-bit value to address. x2 is stored at address, and x1 is stored at address + 2.
     \index{2over}\item[2over ( a b c d -- a b c d a b )] Copies cell pair a b to top of stack.
     \index{2swap}\item[2swap ( a b c d -- c d a b )] Exchanges the top two cell pairs.
