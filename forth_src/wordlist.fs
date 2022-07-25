@@ -7,6 +7,6 @@ dup to latest
 r> move then ;
 : defcode ( "name" -- )
 parse-name 2dup find-name ?dup 0=
-if notfound then 2drop
+if notfound then nip nip
 count $1f and + here swap ! ;
 : define defcode ] ;
