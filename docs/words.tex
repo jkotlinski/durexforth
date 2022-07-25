@@ -53,7 +53,7 @@ Pick from stack element with depth u to top of stack.
 \index{2*}\item[2* ( a -- b )] Multiply top of stack value by 2.
 \index{2/}\item[2/ ( a -- b )] Divide top of stack value by 2.
 \index{100/}\item[100/ ( a -- b )] Divides top of stack value by \$100.
-\index{+!}\item[+! ( n a -- )] Add n to memory address a.
+\index{+"!}\item[+! ( n a -- )] Add n to memory address a.
 \index{+}\item[+ ( a b -- c )] Add a and b.
 \index{-}\item[- ( a b -- c )] Subtract b from a.
 \index{*}\item[* ( a b -- c )] Multiply a with b.
@@ -111,10 +111,10 @@ The following words use double-cell integers. On the stack, the cell containing 
 \section{Memory}
 
 \begin{description}
-\index{!}\item[! ( value address -- )] Store 16-bit value at address.
-\index{@}\item[@ ( address -- value )] Fetch 16-bit value from address.
-\index{c!}\item[c! ( value address -- )] Store 8-bit value at address.
-\index{c@}\item[c@ ( address -- value )] Fetch 8-bit value from address.
+\index{"!}\item[! ( value address -- )] Store 16-bit value at address.
+\index{"@}\item[@ ( address -- value )] Fetch 16-bit value from address.
+\index{c"!}\item[c! ( value address -- )] Store 8-bit value at address.
+\index{c"@}\item[c@ ( address -- value )] Fetch 8-bit value from address.
 \index{fill}\item[fill ( addr len char -- )] Fill range [addr, len + addr) with char.
 \index{move}\item[move ( src dst len -- )]
 Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to emory beginning at \texttt{dst}.
@@ -179,8 +179,8 @@ Variables are faster to write to than values.
 
 \begin{description}
 \index{variable}\item[variable bar] Define variable bar.
-\index{@}\item[bar @] Fetch value of bar.
-\index{!}\item[1 bar !] Set bar to 1.
+\index{"@}\item[bar @] Fetch value of bar.
+\index{"!}\item[1 bar !] Set bar to 1.
 \end{description}
 
 \section{Control Flow}
@@ -209,7 +209,7 @@ condition IF true-part ELSE false-part THEN rest
 : printoddnumbers (n -- ) 1 do i . 2 +loop ;
 \end{verbatim}
 
-\index{i,}\item[i, j] Variables are to be used inside \texttt{do} .. \texttt{loop} constructs.
+\index{i}\index{j}\item[i, j] Variables are to be used inside \texttt{do} .. \texttt{loop} constructs.
 \texttt{i} gives inner loop index, \texttt{j} gives outer loop index.
 
 \index{leave}\item[leave] Leaves the innermost loop.
@@ -458,7 +458,7 @@ The \texttt{compat} module contains various words that are not deemed necessary 
     \index{aligned}\item[aligned ( -- )] No-op
     \index{chars}\item[chars ( -- )] No-op
     \index{2"@}\item[2@ ( address -- x1 x2 )] Fetch 32-bit value from address. x2 is stored at address, and x1 is stored at address + 2.
-    \index{2!}\item[2! ( x1 x2 address -- )] Store 32-bit value to address. x2 is stored at address, and x1 is stored at address + 2.
+    \index{2"!}\item[2! ( x1 x2 address -- )] Store 32-bit value to address. x2 is stored at address, and x1 is stored at address + 2.
     \index{2over}\item[2over ( a b c d -- a b c d a b )] Copies cell pair a b to top of stack.
     \index{2swap}\item[2swap ( a b c d -- c d a b )] Exchanges the top two cell pairs.
     \index{$>$number}\item[$>$number ( ud addr u -- ud addr2 u2 )] Converts the string in \texttt{addr u} to digits, using \texttt{BASE}, and adds each digit into ud after multiplying it with \texttt{BASE}. \texttt{addr2 u2} contains the part of the string that was not converted.
@@ -478,7 +478,7 @@ These words are available by including \texttt{turnkey}.
 \begin{description}
 \index{top}\item[top ( -- addr )] Address of the top of the dictionary, default: \$9fff.
 
-\index{top!}\item[top! ( addr -- )] Relocates the dictionary to \texttt{addr}. Example:
+\index{top"!}\item[top! ( addr -- )] Relocates the dictionary to \texttt{addr}. Example:
 
 \begin{verbatim}
 \ not using $a000 block, give all memory to dictionary
