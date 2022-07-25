@@ -2,9 +2,10 @@
 : nip swap drop ;
 : jmp, 4c c, ;
 : postpone bl word dup find ?dup 0= if
-count notfound then rot drop -1 = if [
-' literal compile, ' compile, literal
-] then compile, ; immediate
+count notfound then
+rot drop -1 = if [ ' literal compile,
+' compile, literal ] then compile,
+; immediate
 : ['] ' postpone literal ; immediate
 : [char] char postpone literal
 ; immediate
