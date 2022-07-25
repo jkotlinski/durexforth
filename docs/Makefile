@@ -14,7 +14,13 @@ SECTIONS = release_license.tex \
         asm.tex mnemonics.tex memmap.tex anatomy.tex
 GENERATED = params-g.tex
 
-durexforth.pdf:	manual.tex $(SECTIONS)
+%.ind: %.idx
+	makeindex $<
+
+durexforth.idx: manual.tex $(SECTIONS)
+	pdflatex -jobname=durexforth manual.tex
+
+durexforth.pdf:	manual.tex $(SECTIONS) durexforth.ind
 	pdflatex -jobname=durexforth manual.tex
 
 release_license.tex: params-g.tex

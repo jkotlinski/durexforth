@@ -1,5 +1,6 @@
 \documentclass[a4paper]{report}
 \usepackage{microtype}
+\usepackage{imakeidx}
 \usepackage{hyperref}
 \usepackage{color}
 \usepackage{graphicx}
@@ -7,6 +8,7 @@
 \usepackage{multicol}
 \usepackage{alltt}
 
+\makeindex[intoc,columns=3]
 \hypersetup{pdfauthor="Ravelli/Durex", pdftitle="durexForth: Operators Manual", colorlinks=true}
 \begin{document}
 \author{Ravelli/Durex}
@@ -37,4 +39,5 @@
 \input{memmap.tex}
 \input{anatomy.tex}
 
+\printindex
 \end{document}
