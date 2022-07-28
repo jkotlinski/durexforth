@@ -7,21 +7,25 @@ REV_DATE := $(shell git log -1 --format=%ai)
 
 # generic rules
 
-all:	durexforth.pdf
+all:	durexforth.pdf durexforth.html durexforth.epub
 
 SECTIONS = release_license.tex \
         intro.tex tutorial.tex editor.tex words.tex gfx.tex sid.tex mml.tex \
         asm.tex mnemonics.tex memmap.tex anatomy.tex
 GENERATED = params-g.tex
 
-%.ind: %.idx
-	makeindex $<
-
-durexforth.idx: manual.tex $(SECTIONS)
+durexforth.pdf:	manual.tex $(SECTIONS) manual.ist
+	cp manual.ist durexforth.mst
 	pdflatex -jobname=durexforth manual.tex
-
-durexforth.pdf:	manual.tex $(SECTIONS) durexforth.ind
 	pdflatex -jobname=durexforth manual.tex
+	pdflatex -jobname=durexforth manual.tex
+	rm durexforth.mst
+
+durexforth.html durexforth.css: manual.tex $(SECTIONS)
+	make4ht -e manual.mk4 -j durexforth $<
+
+durexforth.epub: manual.tex $(SECTIONS)
+	tex4ebook -f epub3 -e manual.mk4 -j durexforth $<
 
 release_license.tex: params-g.tex
 	diff -q $^ $^.tmp; if [ $$? -eq 1 ]; then touch $@; fi
