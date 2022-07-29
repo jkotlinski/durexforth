@@ -22,7 +22,6 @@ SRC_NAMES = base debug v asm gfx gfxdemo rnd sin ls turtle fractals \
     wordlist io open dos
 SRCS = $(addprefix $(SRC_DIR)/,$(addsuffix .fs,$(SRC_NAMES)))
 
-EMPTY_FILE = _empty.txt
 SEPARATOR_NAME1 = '=-=-=-=-=-=-=-=,s'
 SEPARATOR_NAME2 = '=-------------=,s'
 SEPARATOR_NAME3 = '=-=---=-=---=-=,s'
@@ -46,23 +45,21 @@ durexforth.prg: *.asm
 	@$(AS) durexforth.asm
 
 $(DISK_IMAGE): durexforth.prg Makefile ext/petcom $(SRCS)
-	touch $(EMPTY_FILE)
-	echo  >c1541.script format "durexforth,DF" $(DISK_SUF) $@
-	echo >>c1541.script write durexforth.prg durexforth
-	echo >>c1541.script write $(EMPTY_FILE) $(SEPARATOR_NAME1)
-	echo >>c1541.script write $(EMPTY_FILE) $(TAG_DEPLOY_DOT),s
-	echo >>c1541.script write $(EMPTY_FILE) '  '$(GIT_HASH),s
-	echo >>c1541.script write $(EMPTY_FILE) $(SEPARATOR_NAME2)
-# $(C1541) -attach $@ -write debug.bak
 	mkdir -p build
+	touch build/empty
+	echo  >build/c1541.script format "durexforth,DF" $(DISK_SUF) $@
+	echo >>build/c1541.script write durexforth.prg durexforth
+	echo >>build/c1541.script write build/empty $(SEPARATOR_NAME1)
+	echo >>build/c1541.script write build/empty $(TAG_DEPLOY_DOT),s
+	echo >>build/c1541.script write build/empty '  '$(GIT_HASH),s
+	echo >>build/c1541.script write build/empty $(SEPARATOR_NAME2)
 	echo -n "aa" > build/header
 	@for forth in $(SRC_NAMES); do\
-        cat build/header $(SRC_DIR)/$$forth.fs | ext/petcom - > build/$$forth.pet; \
-        echo >>c1541.script write build/$$forth.pet $$forth; \
-    done;
-	echo >>c1541.script write $(EMPTY_FILE) $(SEPARATOR_NAME3)
-	c1541 <c1541.script
-	rm -f $(EMPTY_FILE)
+		cat build/header $(SRC_DIR)/$$forth.fs | ext/petcom - > build/$$forth.pet; \
+		echo >>build/c1541.script write build/$$forth.pet $$forth; \
+	done;
+	echo >>build/c1541.script write build/empty $(SEPARATOR_NAME3)
+	c1541 <build/c1541.script
 
 clean:
 	$(MAKE) -C docs clean
