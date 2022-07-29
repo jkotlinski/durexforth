@@ -47,20 +47,21 @@ durexforth.prg: *.asm
 
 $(DISK_IMAGE): durexforth.prg Makefile ext/petcom $(SRCS)
 	touch $(EMPTY_FILE)
-	$(C1541) -format "durexforth,DF" $(DISK_SUF) $@ # > /dev/null
-	$(C1541) -attach $@ -write durexforth.prg durexforth # > /dev/null
-	$(C1541) -attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME1) # > /dev/null
-	$(C1541) -attach $@ -write $(EMPTY_FILE) $(TAG_DEPLOY_DOT),s # > /dev/null
-	$(C1541) -attach $@ -write $(EMPTY_FILE) '  '$(GIT_HASH),s # > /dev/null
-	$(C1541) -attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME2) # > /dev/null
+	echo  >c1541.script format "durexforth,DF" $(DISK_SUF) $@
+	echo >>c1541.script write durexforth.prg durexforth
+	echo >>c1541.script write $(EMPTY_FILE) $(SEPARATOR_NAME1)
+	echo >>c1541.script write $(EMPTY_FILE) $(TAG_DEPLOY_DOT),s
+	echo >>c1541.script write $(EMPTY_FILE) '  '$(GIT_HASH),s
+	echo >>c1541.script write $(EMPTY_FILE) $(SEPARATOR_NAME2)
 # $(C1541) -attach $@ -write debug.bak
 	mkdir -p build
 	echo -n "aa" > build/header
 	@for forth in $(SRC_NAMES); do\
         cat build/header $(SRC_DIR)/$$forth.fs | ext/petcom - > build/$$forth.pet; \
-        $(C1541) -attach $@ -write build/$$forth.pet $$forth; \
+        echo >>c1541.script write build/$$forth.pet $$forth; \
     done;
-	$(C1541) -attach $@ -write $(EMPTY_FILE) $(SEPARATOR_NAME3) # > /dev/null
+	echo >>c1541.script write $(EMPTY_FILE) $(SEPARATOR_NAME3)
+	c1541 <c1541.script
 	rm -f $(EMPTY_FILE)
 
 clean:
