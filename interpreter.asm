@@ -242,6 +242,7 @@ FOUND_WORD_WITH_NO_TCE = * + 1
     ; OK, this word should be compiled...
     jmp COMPILE_COMMA
 
+    +BACKLINK "notfound",8
 print_word_not_found_error ; ( caddr u -- )
     lda #$12 ; reverse on
     jsr PUTCHR

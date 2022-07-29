@@ -2,7 +2,7 @@
 : nip swap drop ;
 : jmp, 4c c, ;
 : postpone bl word dup find ?dup 0= if
-count rvs type '?' emit cr abort then
+count notfound then
 rot drop -1 = if [ ' literal compile,
 ' compile, literal ] then compile,
 ; immediate
