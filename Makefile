@@ -44,6 +44,7 @@ deploy: $(DISK_IMAGE) cart.asm
 durexforth.prg: *.asm
 	@$(AS) durexforth.asm
 
+.ONESHELL:
 $(DISK_IMAGE): durexforth.prg Makefile ext/petcom $(SRCS)
 	mkdir -p build
 	touch build/empty
