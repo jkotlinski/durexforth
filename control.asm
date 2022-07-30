@@ -123,8 +123,4 @@ EXIT
     rts
 +
     lda #OP_RTS
-compile_a
-    dex
-    sta LSB, x
-    jmp CCOMMA
-
+    jmp compile_a

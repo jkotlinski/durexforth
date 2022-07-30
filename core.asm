@@ -30,7 +30,10 @@ DROP
     inx
     rts
 +   lda #OP_INX
-    jmp compile_a
+compile_a
+    dex
+    sta LSB, x
+    jmp CCOMMA
 
     +BACKLINK "swap", 4
 SWAP
