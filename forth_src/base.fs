@@ -1,15 +1,16 @@
 : 2+ 1+ 1+ ;
 : nip swap drop ;
 : jmp, 4c c, ;
-: ['] ' [ ' literal compile, ]
+: postpone bl word dup find ?dup 0= if
+count notfound then
+rot drop -1 = if [ ' literal compile,
+' compile, literal ] then compile,
 ; immediate
-: [char] char [ ' literal compile, ]
+: ['] ' postpone literal ; immediate
+: [char] char postpone literal
 ; immediate
 : else jmp, here 0 ,
 swap here swap ! ; immediate
-: postpone bl word find -1 = if
-[ ' literal compile, ] ['] compile,
-then compile, ; immediate
 : until postpone 0branch , ; immediate
 : again jmp, , ; immediate
 : recurse
@@ -57,13 +58,6 @@ header postpone dodoes literal , ;
 .( asm..)
 parse-name asm included
 
-code rot ( a b c -- b c a )
-msb 2+ ldy,x msb 1+ lda,x
-msb 2+ sta,x msb    lda,x
-msb 1+ sta,x msb    sty,x
-lsb 2+ ldy,x lsb 1+ lda,x
-lsb 2+ sta,x lsb    lda,x
-lsb 1+ sta,x lsb    sty,x ;code
 : -rot rot rot ;
 
 code 100/
