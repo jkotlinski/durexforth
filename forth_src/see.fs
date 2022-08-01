@@ -53,8 +53,7 @@ endcase
 nip then 1 exit then drop 1 ;
 
 : see
-bl word find 0= if
-rvs count type '?' emit abort then
+bl word find 0= if notfound then
 here ['] (see) dowords
 swap
 
