@@ -189,7 +189,7 @@ HEADER
     jsr TYPE
     jsr TWODUP
     jsr TYPE
-    jsr CR
+    jsr SPACE
 +
 
     ; update dictionary pointer
