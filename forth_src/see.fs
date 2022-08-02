@@ -25,7 +25,7 @@ variable nt
 2dup dup c@ 1f and 1+ + @ = if
 nt ! 0 else drop 1 then ;
 : xt>nt ( xt -- nt | 0 )
-0 nt ! literal dowords nt @ ;
+0 nt ! literal dowords drop nt @ ;
 
 : scan-jsr ( addr -- addr+3 )
 1+ dup @
@@ -51,7 +51,7 @@ again ;
 1+ dup @
 case
 ['] 0branch of 2+ endof
-xt>nt count 1f and type space
+dup xt>nt count 1f and type space
 endcase 2+ ;
 
 : print-jmp ( addr -- addr+3 )
