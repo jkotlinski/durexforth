@@ -1,36 +1,36 @@
-( decompile forth word and print to
-screen. try "see see". watch out:
-hidden words are not supported! )
+( decompiles colon definitions
+to screen. try "see see". )
 
-( addr + target type )
-0 value targets
+( points to a list with format
+ src, dst, code )
+variable branchptr
 
-1 constant br-then
-2 constant br-begin
+\ codes (branch types)
+1 constant RepeatCode
+2 constant AgainCode
+3 constant UntilCode
+4 constant ElseCode
+5 constant WhileCode
+6 constant LeaveCode
 
-: branch, ( dst type -- )
-swap targets !
-targets 2+ to targets
-targets c!
-targets 1+ to targets ;
+: ,branch ( val -- )
+branchptr @ ! 2 branchptr +! ;
+: branch! ( src dst -- src )
+over ,branch ,branch 0 ,branch ;
+: type! ( u -- )
+branchptr @ 2 - ! ;
 
-: scan-jsr
+: scan-jsr ( addr -- addr+3 )
 1+ dup @
 case
 ['] 0branch of 2+ endof
 endcase 2+ ;
 
-: scan-jmp ( xt -- xt+3 )
-dup 1+ @
-2dup < if \ back-branch
-br-begin branch,
-else \ fwd-branch
-br-then branch,
-then
+: scan-jmp ( addr -- addr+3 )
 3 + ;
 
 : scan ( nt -- )
-here to targets
+here branchptr !
 >xt begin
 dup c@ case
 $20 of scan-jsr endof
@@ -40,12 +40,13 @@ $60 of drop exit endof \ rts
 endcase
 again ;
 
-: print-jsr
+: print-jsr ( addr -- addr+3 )
 1+ dup @
 case
 ['] 0branch of 2+ endof
 endcase 2+ ;
-: print-jmp
+
+: print-jmp ( addr -- addr+3 )
 3 + ;
 
 : print ( nt -- )
@@ -71,24 +72,3 @@ dup scan print ;
 : test if 1 then ;
 
 see test
-
-(
-dup xt> dup
-name>string type space
-
-scan
-print ;
-
-begin
- 2dup >
-while
- dup c@ case
- $20 of see-jsr endof
- $4c of see-jmp endof
- $e8 of 1+ ." drop " endof \ inx
- $60 of 1+ ." exit " endof \ rts
- ." ? " swap 1+ swap
- endcase
-repeat
-';' emit cr 2drop ;
-)
