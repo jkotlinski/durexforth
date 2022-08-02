@@ -5,11 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Added
+ - Warning when redefining a word.
 ### Fixed
  - POSTPONE error handling.
  - Documented DEFCODE.
 
 ## [4.0.0] - 2022-07-20
+
 ### Changed
  - OPEN/CHKIN/CHKOUT no longer return a file number.
  - IOABORT no longer accepts a file number.

@@ -156,6 +156,9 @@ COLON
 
     jmp RBRAC ; enter compile mode
 
+replaced_str
+    !byte 9
+    !text "replaced "
 
 ; --- HEADER ( name -- )
     +BACKLINK "header", 6
@@ -170,6 +173,25 @@ HEADER
     jsr REFILL
     jmp -
 +
+
+    ; prints replaced warning
+    jsr TWODUP
+    jsr FIND_NAME
+    inx
+    lda MSB-1, x
+    beq +
+    dex
+    lda #<replaced_str
+    sta LSB,x
+    lda #>replaced_str
+    sta MSB,x
+    jsr COUNT
+    jsr TYPE
+    jsr TWODUP
+    jsr TYPE
+    jsr CR
++
+
     ; update dictionary pointer
     lda LSB, x
     sta .putlen+1
