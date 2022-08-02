@@ -187,6 +187,9 @@ hide dodoes
 .( doloop..) include doloop
 .( sys..) include sys
 .( debug..) include debug
+
+.( see..) include see
+
 .( ls..) include ls
 .( require..) include require
 .( open..) include open
