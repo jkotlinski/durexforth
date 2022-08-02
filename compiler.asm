@@ -156,9 +156,9 @@ COLON
 
     jmp RBRAC ; enter compile mode
 
-replaced_str
-    !byte 9
-    !text "replaced "
+redefined_str
+    !byte 10
+    !text "redefined "
 
 ; --- HEADER ( name -- )
     +BACKLINK "header", 6
@@ -174,16 +174,16 @@ HEADER
     jmp -
 +
 
-    ; prints replaced warning
+    ; prints warning when redefining a word
     jsr TWODUP
     jsr FIND_NAME
     inx
     lda MSB-1, x
     beq +
     dex
-    lda #<replaced_str
+    lda #<redefined_str
     sta LSB,x
-    lda #>replaced_str
+    lda #>redefined_str
     sta MSB,x
     jsr COUNT
     jsr TYPE
