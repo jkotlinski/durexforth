@@ -40,12 +40,28 @@ $60 of drop exit endof \ rts
 endcase
 again ;
 
+: print-jsr
+1+ dup @
+case
+['] 0branch of 2+ endof
+endcase 2+ ;
+: print-jmp
+3 + ;
+
 : print ( nt -- )
 ':' emit space
 dup name>string type space
-c@ $80 and if ." immediate " then
-';' emit cr
-;
+dup c@ $80 and if ." immediate " then
+>xt begin
+dup c@ case
+$20 of print-jsr endof
+$4c of print-jmp endof
+$e8 of ." drop " 1+ endof \ inx
+$60 of \ rts
+." exit " drop ';' emit cr exit
+endof
+endcase
+again ;
 
 : see
 parse-name 2dup find-name \ c-addr u nt
