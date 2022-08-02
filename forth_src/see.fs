@@ -2,8 +2,20 @@
 screen. try "see see". watch out:
 hidden words are not supported! )
 
+: scan-jsr
+3 + ;
+: scan-jmp
+3 + ;
+
 : scan ( nt -- )
-drop ;
+>xt begin
+dup c@ case
+$20 of scan-jsr endof
+$4c of scan-jmp endof
+$e8 of 1+ endof \ inx
+$60 of drop exit endof \ rts
+endcase
+again ;
 
 : print ( nt -- )
 ':' emit space
@@ -17,12 +29,9 @@ parse-name 2dup find-name \ c-addr u nt
 ?dup 0= if notfound then nip nip \ nt
 dup scan print ;
 
-: test ;
-: test2 ; immediate
+: test begin 1 again ;
 
 see test
-see test2
-see test3
 
 (
 dup xt> dup
