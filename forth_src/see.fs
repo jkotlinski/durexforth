@@ -34,7 +34,9 @@ case
 endcase 2+ ;
 
 : scan-jmp ( addr -- addr+3 )
-3 + ;
+3 +
+\ TODO handle tail call elimination
+;
 
 : scan ( nt -- )
 here branchptr !
@@ -55,7 +57,9 @@ dup xt>nt count 1f and type space
 endcase 2+ ;
 
 : print-jmp ( addr -- addr+3 )
-3 + ;
+3 +
+\ TODO handle tail call elimination
+;
 
 : print ( nt -- )
 ':' emit space
@@ -77,6 +81,8 @@ parse-name 2dup find-name \ c-addr u nt
 ?dup 0= if notfound then nip nip \ nt
 dup scan print ;
 
-: test if 1 then ;
+: x ;
+: y ;
+: test x y ;
 
 see test
