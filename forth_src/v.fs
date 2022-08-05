@@ -362,7 +362,6 @@ while 1+ repeat ;
 
 rom-kernal
 page
-$9d c@ $ff $9d c! \ kernal log on
 
 \ scratch old file
 here
@@ -376,7 +375,6 @@ $f $f open ioabort $f close
 
 bufstart eof @
 filename count saveb
-$9d c! \ restore kernal log
 key to need-refresh ;
 
 : open-line
