@@ -161,10 +161,14 @@ load_binary_laddr_hi = *+1
 SAVEB
     stx W
 
-    lda	$ae
+    lda $ae
     pha
-    lda	$af
+    lda $af
     pha
+    lda $9d             ; enable kernal logging
+    pha
+    lda #$ff
+    sta $9d
 
     lda LSB+3, x		; range begin lo
     sta $c1
@@ -192,12 +196,16 @@ save_binary_srange_end_hi = *+1
     ldy #$ff	;load_address hi
     lda #$c1	;tell routine that start address is located in $c1/$c2
     jsr SAVE
+    lda #' '
+    jsr CHROUT
     jsr _errorchread
 
+    pla                 ; restore kernal logging
+    sta $9d
     pla
-    sta	$af
+    sta $af
     pla
-    sta	$ae
+    sta $ae
 
     ldx W
     inx
