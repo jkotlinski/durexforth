@@ -20,6 +20,9 @@ over ,branch ,branch 0 ,branch ;
 : type! ( u -- )
 branchptr @ 2 - ! ;
 
+\ TODO implement me
+: all-branches-done 1 ;
+
 variable nt
 :noname ( xt nt -- xt 1|0 )
 2dup dup c@ 1f and 1+ + @ = if
@@ -34,18 +37,19 @@ case
 endcase 2+ ;
 
 : scan-jmp ( addr -- addr+3 )
-3 +
-\ TODO handle tail call elimination
-;
+3 + ;
 
 : scan ( nt -- )
 here branchptr !
 >xt begin
 dup c@ case
 $20 of scan-jsr endof
-$4c of scan-jmp endof
+$4c of scan-jmp all-branches-done if
+drop exit then endof
 $e8 of 1+ endof \ inx
-$60 of drop exit endof \ rts
+$60 of \ rts
+all-branches-done if
+drop exit then endof
 endcase
 again ;
 
@@ -57,9 +61,7 @@ dup xt>nt count 1f and type space
 endcase 2+ ;
 
 : print-jmp ( addr -- addr+3 )
-3 +
-\ TODO handle tail call elimination
-;
+3 + ;
 
 : print ( nt -- )
 ':' emit space
@@ -68,11 +70,13 @@ dup c@ $80 and if ." immediate " then
 >xt begin
 dup c@ case
 $20 of print-jsr endof
-$4c of print-jmp endof
+$4c of print-jmp all-branches-done if
+drop ';' emit cr exit then endof
 $e8 of ." drop " 1+ endof \ inx
 $60 of \ rts
-." exit " drop ';' emit cr exit
-endof
+all-branches-done if
+drop ';' emit cr exit else
+." exit " then endof
 endcase
 again ;
 
