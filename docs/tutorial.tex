@@ -151,14 +151,14 @@ By default, durexForth boots up with these modules pre-compiled in RAM:
 To reduce RAM usage, you may make a stripped-down version of durexForth. Do this by following these steps:
 
 \begin{enumerate}
-\item Issue \texttt{---modules---} to unload all modules, or \texttt{---editor---} to unload the editor only.
+\item Issue \index{-{-}-modules-{-}-}\texttt{---modules---} to unload all modules, or \index{-{-}-editor-{-}-}\texttt{---editor---} to unload the editor only.
 \item One by one, load the modules you want included with your new Forth. (E.g. \texttt{include labels})
 \item Save the new system with e.g. \texttt{save-forth acmeforth}.
 \end{enumerate}
 
 \subsection{Custom Start-Up}
 
-You may launch a word automatically at start-up by setting the variable \texttt{start} to the execution token of the word.  Example: \texttt{' megademo start !} To save the new configuration to disk, type e.g. \texttt{save-forth megademo}.
+You may launch a word automatically at start-up by setting the variable \index{start}\texttt{start} to the execution token of the word.  Example: \texttt{' megademo start !} To save the new configuration to disk, type e.g. \texttt{save-forth megademo}.
 
 When writing a new program using a PC text editor, it is practical to configure durexForth to compile and execute the program at startup. That can be set up using the following snippet:
 
@@ -170,7 +170,7 @@ loadb buf - evaluate ;
 save-forth @0:durexforth
 \end{verbatim}
 
-\subsection{Turn-key Operation}
+\subsection{Turn-key Operation}\label{Turn-key Operation}
 
 Durexforth offers utilities to save your program in a turn-key fashion by including the \texttt{turnkey} module once the program is ready to be saved.
 

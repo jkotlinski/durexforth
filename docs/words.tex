@@ -4,79 +4,79 @@
 
 \begin{description}
 
-\item[drop ( a -- )] Drop top of stack.
-\item[dup ( a -- a a )] Duplicate top of stack.
-\item[swap ( a b -- b a )] Swap top stack elements.
-\item[over ( a b -- a b a )] Make a copy of the second item and push it on top.
-\item[rot ( a b c -- b c a )] Rotate the third item to the top.
-\item[-rot ( a b c -- c a b )] rot rot
-\item[2drop ( a b -- )] Drop two topmost stack elements.
-\item[2dup ( a b -- a b a b )] Duplicate two topmost stack elements.
-\item[?dup ( a -- a a? )] Dup a if a differs from 0.
-\item[nip ( a b -- b )] swap drop
-\item[tuck ( a b -- b a b )] dup -rot
-\item[pick ( $x_u$ ... $x_1$ $x_0$ $u$ -- $x_u$ ... $x_1$ $x_0$ $x_u$ )]
+\item[\index{drop}drop ( a -- )] Drop top of stack.
+\item[\index{dup}dup ( a -- a a )] Duplicate top of stack.
+\item[\index{swap}swap ( a b -- b a )] Swap top stack elements.
+\item[\index{over}over ( a b -- a b a )] Make a copy of the second item and push it on top.
+\item[\index{rot}rot ( a b c -- b c a )] Rotate the third item to the top.
+\item[\index{-rot}-rot ( a b c -- c a b )] rot rot
+\item[\index{2drop}2drop ( a b -- )] Drop two topmost stack elements.
+\item[\index{2dup}2dup ( a b -- a b a b )] Duplicate two topmost stack elements.
+\item[\index{?dup}?dup ( a -- a a? )] Dup a if a differs from 0.
+\item[\index{nip}nip ( a b -- b )] swap drop
+\item[\index{tuck}tuck ( a b -- b a b )] dup -rot
+\item[\index{pick}pick ( $x_u$ ... $x_1$ $x_0$ $u$ -- $x_u$ ... $x_1$ $x_0$ $x_u$ )]
 Pick from stack element with depth u to top of stack.
-\item[$>$r ( a -- )] Move value from top of parameter stack to top of return stack.
-\item[r$>$ ( -- a )] Move value from top of return stack to top of parameter stack.
-\item[r@ ( -- a )] Copy value from top of return stack to top of parameter stack.
-\item[depth ( -- n)] \texttt{n} is the number of single-cell values contained in the data stack before \texttt{n} was placed on the stack.
+\item[\index{$>$r}$>$r ( a -- )] Move value from top of parameter stack to top of return stack.
+\item[\index{r$>$}r$>$ ( -- a )] Move value from top of return stack to top of parameter stack.
+\item[\index{r"@}r@ ( -- a )] Copy value from top of return stack to top of parameter stack.
+\item[\index{depth}depth ( -- n)] \texttt{n} is the number of single-cell values contained in the data stack before \texttt{n} was placed on the stack.
 
-\item[lsb ( -- addr)] The top address of the LSB parameter stack.
-\item[msb ( -- addr)] The top address of the MSB parameter stack.
+\item[\index{lsb}lsb ( -- addr)] The top address of the LSB parameter stack.
+\item[\index{msb}msb ( -- addr)] The top address of the MSB parameter stack.
 
 \end{description}
 
 \section{Utility}
 
 \begin{description}
-\item[. ( n -- )] Prints top value of stack as signed number.
-\item[u. ( u -- )] Prints top value of stack as unsigned number.
-\item[.s] See stack contents.
-\item[emit ( a -- )] Prints top value of stack as a PETSCII character. Example: \texttt{'q' emit}
-\item[\pounds] Comment to end of line. (Used on C64/PETSCII.)
-\item[\textbackslash] Comment to end of line. (Used when cross-compiling from PC/ASCII.)
-\item[(] Multiline comment. Ignores everything until a ).
-\item[bl ( -- char )] Gives the PETSCII character for a space.
-\item[space] Displays one space.
-\item[spaces ( n -- )] Displays n spaces.
-\item[page] Clears the screen.
-\item[rvs] Reverse screen output.
+\item[\index{.}. ( n -- )] Prints top value of stack as signed number.
+\item[\index{u.}u. ( u -- )] Prints top value of stack as unsigned number.
+\item[\index{.s}.s] See stack contents.
+\item[\index{emit}emit ( a -- )] Prints top value of stack as a PETSCII character. Example: \texttt{'q' emit}
+\item[\index{\pounds}\pounds] Comment to end of line. (Used on C64/PETSCII.)
+\item[\index{\textbackslash}\textbackslash] Comment to end of line. (Used when cross-compiling from PC/ASCII.)
+\item[\index{(}(] Multiline comment. Ignores everything until a ).
+\item[\index{bl}bl ( -- char )] Gives the PETSCII character for a space.
+\item[\index{space}space] Displays one space.
+\item[\index{spaces}spaces ( n -- )] Displays n spaces.
+\item[\index{page}page] Clears the screen.
+\item[\index{rvs}rvs] Reverse screen output.
 \end{description}
 
 \section{Mathematics}
 
 \begin{description}
-\item[1+ ( a -- b )] Increase top of stack value by 1.
-\item[1- ( a -- b )] Decrease top of stack value by 1.
-\item[2+ ( a -- b )] Increase top of stack value by 2.
-\item[2* ( a -- b )] Multiply top of stack value by 2.
-\item[2/ ( a -- b )] Divide top of stack value by 2.
-\item[100/ ( a -- b )] Divides top of stack value by \$100.
-\item[+! ( n a -- )] Add n to memory address a.
-\item[+ ( a b -- c )] Add a and b.
-\item[- ( a b -- c )] Subtract b from a.
-\item[* ( a b -- c )] Multiply a with b.
-\item[/ ( a b -- q )] Divide a with b using floored division.
-\item[/mod ( a b -- r q )] Divide a with b, giving remainder r and quotient q.
-\item[mod ( a b -- r )] Remainder of a divided by b.
-\item[*/ ( a b c -- q )] Multiply a with b, then divide by c, using a 32-bit intermediary.
-\item[*/mod ( a b c -- r q )] Like */, but also keeping remainder r.
-\item[0$<$ ( a -- b )] Is a negative?
-\item[negate ( a -- b )] Negates a.
-\item[abs ( a -- b )] Gives absolute value of a.
-\item[min ( a b -- c )] Gives the lesser of a and b.
-\item[max ( a b -- c )] Gives the greater of a and b.
-\item[within ( n lo hi -- flag )] Returns true if lo $<=$ n $<$ hi.
-\item[$<$ ( n1 n2 -- flag )] Is n1 less than n2? (Signed.)
-\item[$>$ ( n1 n2 -- flag )] Is n1 greater than n2? (Signed.)
-\item[u$<$ ( u1 u2 -- flag )] Is u1 less than u2? (Unsigned.)
-\item[u$>$ ( u1 u2 -- flag )] Is u1 greater than u2? (Unsigned.)
-\item[lshift ( a b -- c )] Binary shift a left by b.
-\item[rshift ( a b -- c )] Binary shift a right by b.
-\item[base (variable)] Points to the cell that holds the numerical base.
-\item[decimal] Sets the numerical base to 10.
-\item[hex] Sets the numerical base to 16.
+\item[\index{1+}1+ ( a -- b )] Increase top of stack value by 1.
+\item[\index{1-}1- ( a -- b )] Decrease top of stack value by 1.
+\item[\index{2+}2+ ( a -- b )] Increase top of stack value by 2.
+\item[\index{2*}2* ( a -- b )] Multiply top of stack value by 2.
+\item[\index{2/}2/ ( a -- b )] Divide top of stack value by 2.
+\item[\index{100/}100/ ( a -- b )] Divides top of stack value by \$100.
+\item[\index{+"!}+! ( n a -- )] Add n to memory address a.
+\item[\index{+}+ ( a b -- c )] Add a and b.
+\item[\index{-}- ( a b -- c )] Subtract b from a.
+\item[\index{*}* ( a b -- c )] Multiply a with b.
+\item[\index{/}/ ( a b -- q )] Divide a with b using floored division.
+\item[\index{/mod}/mod ( a b -- r q )] Divide a with b, giving remainder r and quotient q.
+\item[\index{mod}mod ( a b -- r )] Remainder of a divided by b.
+\item[\index{*/}*/ ( a b c -- q )] Multiply a with b, then divide by c, using a 32-bit intermediary.
+\item[\index{*/mod}*/mod ( a b c -- r q )] Like */, but also keeping remainder r.
+\item[\index{0$<$}0$<$ ( a -- b )] Is a negative?
+\item[\index{negate}negate ( a -- b )] Negates a.
+\item[\index{abs}abs ( a -- b )] Gives absolute value of a.
+\item[\index{min}min ( a b -- c )] Gives the lesser of a and b.
+\item[\index{max}max ( a b -- c )] Gives the greater of a and b.
+\item[\index{within}within ( n lo hi -- flag )] Returns true if lo $<=$ n $<$ hi.
+\item[\index{$<$}$<$ ( n1 n2 -- flag )] Is n1 less than n2? (Signed.)
+\item[\index{$>$}$>$ ( n1 n2 -- flag )] Is n1 greater than n2? (Signed.)
+\item[\index{u$<$}u$<$ ( u1 u2 -- flag )] Is u1 less than u2? (Unsigned.)
+\item[\index{u$>$}u$>$ ( u1 u2 -- flag )] Is u1 greater than u2? (Unsigned.)
+\item[\index{lshift}lshift ( a b -- c )] Binary shift a left by b.
+\item[\index{rshift}rshift ( a b -- c )] Binary shift a right by b.
+\item[\index{base}base (variable)] Points to the cell that holds the numerical base.
+\item[\index{decimal}decimal] Sets the numerical base to 10.
+\item[\index{hex}hex] Sets the numerical base to 16.
 
 \end{description}
 
@@ -85,77 +85,77 @@ Pick from stack element with depth u to top of stack.
 The following words use double-cell integers. On the stack, the cell containing the most significant part of a double-cell integer is above the cell containing the least significant part.
 
 \begin{description}
-\item[dabs ( d -- ud )] Produces the absolute value of d.
-\item[dnegate ( d -- d )] Negates the double-cell integer d.
-\item[s$>$d ( n -- d )] Converts the number n to the double-cell number d.
-\item[m+ ( d n -- d )] Add n to double-cell number d.
-\item[m* ( a b -- d )] Multiply a with b, producing a double-cell value.
-\item[um* ( a b -- ud )] Multiply a with b, giving the unsigned double-cell number ud.
-\item[um/mod ( ud n -- r q )] Divide double-cell number ud by n, giving remainder r and quotient q. Values are unsigned.
-\item[fm/mod ( d n -- r q )] Divide double-cell number d by n, giving the floored quotient q and the remainder r. Values are signed.
+\item[\index{dabs}dabs ( d -- ud )] Produces the absolute value of d.
+\item[\index{dnegate}dnegate ( d -- d )] Negates the double-cell integer d.
+\item[\index{s$>$d}s$>$d ( n -- d )] Converts the number n to the double-cell number d.
+\item[\index{m"+}m+ ( d n -- d )] Add n to double-cell number d.
+\item[\index{m*}m* ( a b -- d )] Multiply a with b, producing a double-cell value.
+\item[\index{um*}um* ( a b -- ud )] Multiply a with b, giving the unsigned double-cell number ud.
+\item[\index{um/mod}um/mod ( ud n -- r q )] Divide double-cell number ud by n, giving remainder r and quotient q. Values are unsigned.
+\item[\index{fm/mod}fm/mod ( d n -- r q )] Divide double-cell number d by n, giving the floored quotient q and the remainder r. Values are signed.
 \end{description}
 
 \section{Logic}
 
 \begin{description}
-\item[0= ( a -- flag)] Is a equal to zero?
-\item[0$<>$ ( a -- flag )] Is a not equal to 0?
-\item[= ( a b -- flag )] Is a equal to b?
-\item[$<>$ ( a b -- flag )] Does a differ from b?
-\item[and ( a b -- c )] Binary and.
-\item[or ( a b -- c )] Binary or.
-\item[xor ( a b -- c )] Binary exclusive or.
-\item[invert ( a -- b )] Flip all bits of a.
+\item[\index{0=}0= ( a -- flag)] Is a equal to zero?
+\item[\index{0$<>$}0$<>$ ( a -- flag )] Is a not equal to 0?
+\item[\index{=}= ( a b -- flag )] Is a equal to b?
+\item[\index{$<>$}$<>$ ( a b -- flag )] Does a differ from b?
+\item[\index{and}and ( a b -- c )] Binary and.
+\item[\index{or}or ( a b -- c )] Binary or.
+\item[\index{xor}xor ( a b -- c )] Binary exclusive or.
+\item[\index{invert}invert ( a -- b )] Flip all bits of a.
 \end{description}
 
 \section{Memory}
 
 \begin{description}
-\item[! ( value address -- )] Store 16-bit value at address.
-\item[@ ( address -- value )] Fetch 16-bit value from address.
-\item[c! ( value address -- )] Store 8-bit value at address.
-\item[c@ ( address -- value )] Fetch 8-bit value from address.
-\item[fill ( addr len char -- )] Fill range [addr, len + addr) with char.
-\item[move ( src dst len -- )]
+\item[\index{"!}! ( value address -- )] Store 16-bit value at address.
+\item[\index{"@}@ ( address -- value )] Fetch 16-bit value from address.
+\item[\index{c"!}c! ( value address -- )] Store 8-bit value at address.
+\item[\index{c"@}c@ ( address -- value )] Fetch 8-bit value from address.
+\item[\index{fill}fill ( addr len char -- )] Fill range [addr, len + addr) with char.
+\item[\index{move}move ( src dst len -- )]
 Copies a region of memory \texttt{len} bytes long, starting at \texttt{src}, to emory beginning at \texttt{dst}.
 
 \end{description}
 \section{Compiling}
 
 \begin{description}
-\item[: (C: "$<$spaces$>$name" -- )] Define the word with the given name and enter compilation state.
-\item[:noname ( -- xt )] Create an execution token and enter compilation state.
-\item[; ( -- ) ] End the current definition, allow it to be found in the dictionary and go back to interpretation state.
-\item[code ( "$<$spaces$>$name" -- )] Start assembling a new word.
-\item[;code] End assembler.
-\item[, ( n -- )] Write word on stack to \texttt{here} position and increase \texttt{here} by 2.
-\item[c, ( n -- )] Write byte on stack to \texttt{here} position and increase \texttt{here} by 1.
-\item[allot ( n -- )] Add n bytes to the body of the most recently defined word.
-\item[literal ( n -- )] Compile a value from the stack as a literal value. Typical use: \texttt{: x ... [ a b * ] literal ... ;}
-\item[[char{]} c] Compile character \texttt{c} as a literal value.
-\item[[ ( -- )] Leave compile mode. Execute the following words immediately instead of compiling them.
-\item[{]} ( -- )] Return to compile mode.
-\item[immediate] Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
-\item[{[']} name ( -- xt )] Place name's execution token xt on the stack. The execution token returned by the compiled phrase \texttt{['] x} is the same value returned by \texttt{' x} outside of compilation state. Typical use: \texttt{: x ... {[}'{]} name ... ;}
-\item[compile, ( xt -- )] Append \texttt{jsr xt} to the word being compiled. Typical use: \texttt{: recurse immed latest >xt compile, ;}
-\item[postpone xxx] Compile the compilation semantics (instead of interpretation semantics) of xxx. Typical use:
+\item[\index{:}: (C: "$<$spaces$>$name" -- )] Define the word with the given name and enter compilation state.
+\item[\index{:noname}:noname ( -- xt )] Create an execution token and enter compilation state.
+\item[\index{;}; ( -- ) ] End the current definition, allow it to be found in the dictionary and go back to interpretation state.
+\item[\index{code}code ( "$<$spaces$>$name" -- )] Start assembling a new word.
+\item[\index{;code};code] End assembler.
+\item[\index{,}, ( n -- )] Write word on stack to \texttt{here} position and increase \texttt{here} by 2.
+\item[\index{c,}c, ( n -- )] Write byte on stack to \texttt{here} position and increase \texttt{here} by 1.
+\item[\index{allot}allot ( n -- )] Add n bytes to the body of the most recently defined word.
+\item[\index{literal}literal ( n -- )] Compile a value from the stack as a literal value. Typical use: \texttt{: x ... [ a b * ] literal ... ;}
+\index{{[char]}}\item[[char{]} c] Compile character \texttt{c} as a literal value.
+\index{{[}}\item[[ ( -- )] Leave compile mode. Execute the following words immediately instead of compiling them.
+\index{{]}}\item[{]} ( -- )] Return to compile mode.
+\item[\index{immediate}immediate] Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
+\index{{[']}}\item[{[']} name ( -- xt )] Place name's execution token xt on the stack. The execution token returned by the compiled phrase \texttt{['] x} is the same value returned by \texttt{' x} outside of compilation state. Typical use: \texttt{: x ... {[}'{]} name ... ;}
+\item[\index{compile,}compile, ( xt -- )] Append \texttt{jsr xt} to the word being compiled. Typical use: \texttt{: recurse immed latest >xt compile, ;}
+\item[\index{postpone}postpone xxx] Compile the compilation semantics (instead of interpretation semantics) of xxx. Typical use:
 \begin{verbatim}
 : endif postpone then ; immediate
 : x ... if ... endif ... ;
 \end{verbatim}
-\item[header xxx] Create a dictionary header with name \texttt{xxx}.
-\item[create xxx/does$>$] Create a word creating word \texttt{xxx} with custom behavior
+\item[\index{header}header xxx] Create a dictionary header with name \texttt{xxx}.
+\item[\index{create}create xxx/does$>$] Create a word creating word \texttt{xxx} with custom behavior
 specified after \texttt{does$>$}. For further description, see "Starting Forth."
-\item[state ( -- addr)] addr is the address of a cell containing the compilation-state flag. It is 1 when compiling, otherwise 0.
+\item[\index{state}state ( -- addr)] addr is the address of a cell containing the compilation-state flag. It is 1 when compiling, otherwise 0.
 \end{description}
 
 \section{Word List}
 
 \begin{description}
 
-\item[hide xxx] Removes \texttt{xxx} from the word list, while leaving its definition in place.
-\item[define ( "name" -- ) ] Assign \texttt{here} as the execution token of word \texttt{name} and enter the compilation state.
-\item[defcode ( "name" -- ) ] Like \texttt{define}, but starts a \texttt{code} segment instead.
+\item[\index{hide}hide xxx] Removes \texttt{xxx} from the word list, while leaving its definition in place.
+\item[\index{define}define ( "name" -- ) ] Assign \texttt{here} as the execution token of word \texttt{name} and enter the compilation state.
+\item[\index{defcode}defcode ( "name" -- ) ] Like \texttt{define}, but starts a \texttt{code} segment instead.
 
 \end{description}
 
@@ -167,10 +167,10 @@ Values are fast to read, slow to write. Use values for variables
 that are rarely changed.
 
 \begin{description}
-\item[1 value foo] Create value foo and set it to 1.
-\item[2 constant bar] Create constant value bar and set it to 2.
+\item[\index{value}1 value foo] Create value foo and set it to 1.
+\item[\index{constant}2 constant bar] Create constant value bar and set it to 2.
 \item[foo] Fetch value of foo.
-\item[0 to foo] Set foo to 0.
+\item[\index{to}0 to foo] Set foo to 0.
 \end{description}
 
 \subsection{Variables}
@@ -178,9 +178,9 @@ that are rarely changed.
 Variables are faster to write to than values.
 
 \begin{description}
-\item[variable bar] Define variable bar.
-\item[bar @] Fetch value of bar.
-\item[1 bar !] Set bar to 1.
+\item[\index{variable}variable bar] Define variable bar.
+\item[\index{"@}bar @] Fetch value of bar.
+\item[\index{"!}1 bar !] Set bar to 1.
 \end{description}
 
 \section{Control Flow}
@@ -188,61 +188,61 @@ Variables are faster to write to than values.
 Control functions only work in compile mode, not in interpreter.
 
 \begin{description}
-\item[if ... then]
+\index{if}\item[\index{then}if ... then]
 
 condition IF true-part THEN rest
 
-\item[if ... else ... then]
+\item[\index{else}if ... else ... then]
 
 condition IF true-part ELSE false-part THEN rest
 
-\item[do ... loop] Start a loop with index \texttt{i} and limit. Example:
+\index{do}\item[\index{loop}do ... loop] Start a loop with index \texttt{i} and limit. Example:
 
 \begin{verbatim}
 : print0to7 8 0 do i . loop ;
 \end{verbatim}
 
-\item[do ... +loop] Start a loop with a custom increment. Example:
+\item[\index{+loop}do ... +loop] Start a loop with a custom increment. Example:
 
 \begin{verbatim}
 ( prints odd numbers from 1 to n )
 : printoddnumbers (n -- ) 1 do i . 2 +loop ;
 \end{verbatim}
 
-\item[i, j] Variables are to be used inside \texttt{do} .. \texttt{loop} constructs.
+\index{i}\item[\index{j}i, j] Variables are to be used inside \texttt{do} .. \texttt{loop} constructs.
 \texttt{i} gives inner loop index, \texttt{j} gives outer loop index.
 
-\item[leave] Leaves the innermost loop.
+\item[\index{leave}leave] Leaves the innermost loop.
 
-\item[unloop] Discards the loop-control parameters. Allows clean \texttt{exit} from within a loop.
+\item[\index{unloop}unloop] Discards the loop-control parameters. Allows clean \texttt{exit} from within a loop.
 
 \begin{verbatim}
 : xx 0 0 do unloop exit loop ;
 \end{verbatim}
 
-\item[begin ... again]
+\item[\index{begin}\index{again}begin ... again]
 
 Infinite loop.
 
-\item[begin ... until]
+\item[\index{until}begin ... until]
 
 BEGIN loop-part condition UNTIL.
 
 Loop until condition is true.
 
-\item[begin ... while ... repeat]
+\item[\index{while}\index{repeat}begin ... while ... repeat]
 
 BEGIN condition WHILE loop-part REPEAT.
 
 Repeat loop-part while condition is true.
 
-\item[exit]
+\item[\index{exit}exit]
 
 Exit function. Typical use: \texttt{: X test IF EXIT THEN ... ;}
 
-\item[recurse] Jump to the start of the word being compiled.
+\item[\index{recurse}recurse] Jump to the start of the word being compiled.
 
-\item[case ... endcase, of ... endof] Switch statements.
+\item[\index{case}\index{endcase}case ... endcase, \index{of}of ... \index{endof}endof] Switch statements.
 
 \begin{verbatim}
 : tellno ( n -- )
@@ -260,43 +260,43 @@ endcase
 
 \begin{description}
 
-\item[key ( -- c )] Gets one character from the keyboard.
-\item[key? ( -- flag )] Returns true if a character is available for \texttt{key}.
-\item[getc ( -- c )] Consumes the next character from the input buffer and increases \texttt{$>$in} by one. If no characters are available, the input buffer is refilled as needed.
+\item[\index{key}key ( -- c )] Gets one character from the keyboard.
+\item[\index{key?}key? ( -- flag )] Returns true if a character is available for \texttt{key}.
+\item[\index{getc}getc ( -- c )] Consumes the next character from the input buffer and increases \texttt{$>$in} by one. If no characters are available, the input buffer is refilled as needed.
 
-\item[char ( -- c )] Parses the next word, delimited by a space, and puts its first character on the stack.
+\item[\index{char}char ( -- c )] Parses the next word, delimited by a space, and puts its first character on the stack.
 
-\item[$>$in ( -- addr)] Gives the address of a cell containing the offset in characters from the start of the input buffer to the start of the parse area.
+\item[\index{$>$in}$>$in ( -- addr)] Gives the address of a cell containing the offset in characters from the start of the input buffer to the start of the parse area.
 
-\item[refill ( -- )] Attempts to fill the input buffer from the input source.
+\item[\index{refill}refill ( -- )] Attempts to fill the input buffer from the input source.
 
-\item[source ( -- caddr u)] Gives the address of, and number of characters in, the input buffer.
-\item[source-id ( -- n )] Returns 0 if current input is keyboard, -1 if it is a string from \texttt{evaluate}, or the current file id.
+\item[\index{source}source ( -- caddr u)] Gives the address of, and number of characters in, the input buffer.
+\item[\index{source-id}source-id ( -- n )] Returns 0 if current input is keyboard, -1 if it is a string from \texttt{evaluate}, or the current file id.
 
-\item[word ( delim -- addr )] Reads a word from input, using delimiter \texttt{delim}, and puts the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.
+\item[\index{word}word ( delim -- addr )] Reads a word from input, using delimiter \texttt{delim}, and puts the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.
 
-\item[parse-name ( name -- caddr u )] Reads a word from input, delimited by whitespace. Skips leading spaces.
+\item[\index{parse-name}parse-name ( name -- caddr u )] Reads a word from input, delimited by whitespace. Skips leading spaces.
 
-\item[interpret ( -- value )] Interprets a word from input and puts it on the stack.
+\item[\index{interpret}interpret ( -- value )] Interprets a word from input and puts it on the stack.
 
-\item[accept ( addr u -- u )] Receive a string of at most u characters into the buffer that starts at addr. Returns how many characters were received.
+\item[\index{accept}accept ( addr u -- u )] Receive a string of at most u characters into the buffer that starts at addr. Returns how many characters were received.
 
-\item[evaluate ( addr len -- )] Makes DurexForth evaluate the given string.
+\item[\index{evaluate}evaluate ( addr len -- )] Makes DurexForth evaluate the given string.
 
-\item[abort] Empties the data stack and performs \texttt{quit}.
+\item[\index{abort}abort] Empties the data stack and performs \texttt{quit}.
 
-\item[abort" ccc" ( f -- ) ] If \texttt{f} is true, print \texttt{ccc} and abort.
+\item[\index{abort""}abort" ccc" ( f -- ) ] If \texttt{f} is true, print \texttt{ccc} and abort.
 
     Typical use: \texttt{: x ... test abort" error" ... ;}
 
-\item[quit] Enters an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting I/O.
+\item[\index{quit}quit] Enters an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting I/O.
 
 \end{description}
 
 \section{Editing}
 
 \begin{description}
-\item[v filename]
+\item[\index{v}v filename]
 
 Opens text editor and starts editing the file named "filename".
 If filename is empty and a buffer is already open, editor will pick up where it left.
@@ -307,21 +307,21 @@ Otherwise, an untitled buffer will be created.
 \section{Strings}
 
 \begin{description}
-\item[.(]
+\item[\index{.(}.(]
 
 Print a string. Example: \texttt{.( foo)}
 
-\item[."]
+\item[\index{.""}."]
 
 Compile-time version of "\texttt{.(}". Example: \texttt{: foo ." bar" ;}
 
-\item[s" ( -- caddr u )] Define a string. Compile-time only! Example: \texttt{s" foo"}.
+\item[\index{s""}s" ( -- caddr u )] Define a string. Compile-time only! Example: \texttt{s" foo"}.
 
-\item[count ( str -- caddr u )] Returns data address and length of the counted string str.
+\item[\index{count}count ( str -- caddr u )] Returns data address and length of the counted string str.
 
-\item[type ( caddr u -- )] Prints a string.
+\item[\index{type}type ( caddr u -- )] Prints a string.
 
-\item[/string ( caddr u n -- caddr+n u-n )] Adjusts the string by n characters.
+\item[\index{/string}/string ( caddr u n -- caddr+n u-n )] Adjusts the string by n characters.
 
 \end{description}
 
@@ -331,33 +331,36 @@ For more info about number formatting, read Starting Forth!
 
 \begin{description}
 
-\item[$<$\#] Begins the number conversion process.
-\item[\# ( ud -- ud )] Converts one digit and puts it in the start of the output string.
-\item[s\# ( ud -- ud )] Calls \# once, and repeats until the number is zero.
-\item[hold ( ch -- )] Inserts the char at the start of the output string.
-\item[sign ( a -- )] If \texttt{a} is negative, inserts a minus sign at the start of the output string.
-\item[\#$>$ ( xd -- addr u )] Drops xd and returns the output string.
+\item[$<$\#]\index{$<$\#} Begins the number conversion process.
+\item[\# ( ud -- ud )]\index{\#} Converts one digit and puts it in the start of the output string.
+\item[s\# ( ud -- ud )]\index{s\#} Calls \# once, and repeats until the number is zero.
+\item[\index{hold}hold ( ch -- )] Inserts the char at the start of the output string.
+\item[\index{sign}sign ( a -- )] If \texttt{a} is negative, inserts a minus sign at the start of the output string.
+\item[\#$>$ ( xd -- addr u )]\index{\#$>$} Drops xd and returns the output string.
 
 \end{description}
 
 \section{Vectored Execution}
 
 \begin{description}
-\item[' xxx ( -- addr )] Find execution token of word \texttt{xxx}.
-\item[find ( cstr -- cstr 0 $\vert$ xt -1 $\vert$ xt 1 )] Find the definition named in the counted string cstr. If the definition is not found, return cstr and 0, otherwise return the execution token. If the definition is immediate, also return 1, otherwise also return -1.
-\item[find-name ( caddr u -- 0 $\vert$ nt )] Get the name token (dictionary pointer) of word named in the string, or 0 if the word is not found.
-\item[execute ( xt -- )] Execute the execution token on top of stack.
-\item[$>$xt ( addr -- xt )] Get execution token of word at adress \texttt{addr}.
+  % The ASCII/PETSCII ' character is replaced by TeX. \textquotesingle renders as one,
+  % but then it eats the space next to it, and disappears from the index.
+  % So, {} to prevent space eating and @ to customize index look.
+\item[\index{'@\textquotesingle}\textquotesingle{} xxx ( -- addr )] Find execution token of word \texttt{xxx}.
+\item[\index{find}find ( cstr -- cstr 0 $\vert$ xt -1 $\vert$ xt 1 )] Find the definition named in the counted string cstr. If the definition is not found, return cstr and 0, otherwise return the execution token. If the definition is immediate, also return 1, otherwise also return -1.
+\item[\index{find-name}find-name ( caddr u -- 0 $\vert$ nt )] Get the name token (dictionary pointer) of word named in the string, or 0 if the word is not found.
+\item[\index{execute}execute ( xt -- )] Execute the execution token on top of stack.
+\item[\index{$>$xt}$>$xt ( addr -- xt )] Get execution token of word at adress \texttt{addr}.
 
 \end{description}
 
 \section{Debugging}
 
 \begin{description}
-\item[words] List all defined words.
-\item[size] \texttt{size foo} prints size of \texttt{foo}.
-\item[dump ( n -- )] Memory dump starting at address n.
-\item[n] Continue memory dump where last one stopped.
+\item[\index{words}words] List all defined words.
+\item[\index{size}size] \texttt{size foo} prints size of \texttt{foo}.
+\item[\index{dump}dump ( n -- )] Memory dump starting at address n.
+\item[n] \index{n}Continue memory dump where last one stopped.
 \end{description}
 
 \section{System State}
@@ -365,13 +368,13 @@ For more info about number formatting, read Starting Forth!
 \begin{description}
 
 
-\item[latest (value)] Address of latest defined header.
+\item[\index{latest}latest (value)] Address of latest defined header.
 
-\item[here (value)] Write position of the Forth compiler (usually first unused byte of code space). Many C64 assemblers refer to this as program counter or \texttt{*}.
+\item[\index{here}here (value)] Write position of the Forth compiler (usually first unused byte of code space). Many C64 assemblers refer to this as program counter or \texttt{*}.
 
-\item[pad ( -- addr )] Address of the \texttt{pad}, a 161-byte memory region that can be used freely by user words. No built-in words will modify this region.
+\item[\index{pad}pad ( -- addr )] Address of the \texttt{pad}, a 161-byte memory region that can be used freely by user words. No built-in words will modify this region.
 
-\item[marker name ( -- )] Creates a word that when called, forgets itself and all words that were defined after it. Example:
+\item[\index{marker}marker name ( -- )] Creates a word that when called, forgets itself and all words that were defined after it. Example:
 
 \begin{verbatim}
 marker forget
@@ -379,7 +382,7 @@ marker forget
 forget
 \end{verbatim}
 
-\item[dowords ( xt -- )] Remove \texttt{xt} from the stack. Execute \texttt{xt} once for every word in the wordlist, passing the name token \texttt{nt} of the word to \texttt{xt}, until the wordlist is exhausted or until \texttt{xt} returns false. The invoked \texttt{xt} has the stack effect \texttt{( k * x nt -- l * x flag)}. If \texttt{flag} is true, \texttt{dowords} will continue on to the next name, otherwise it will return.
+\item[\index{dowords}dowords ( xt -- )] Remove \texttt{xt} from the stack. Execute \texttt{xt} once for every word in the wordlist, passing the name token \texttt{nt} of the word to \texttt{xt}, until the wordlist is exhausted or until \texttt{xt} returns false. The invoked \texttt{xt} has the stack effect \texttt{( k * x nt -- l * x flag)}. If \texttt{flag} is true, \texttt{dowords} will continue on to the next name, otherwise it will return.
 
 \begin{verbatim}
 \ from debug.fs
@@ -391,16 +394,16 @@ forget
 \section{Disk I/O}
 
 \begin{description}
-\item[include filename ( -- )] Load and parse file. Example: \texttt{include test}
-\item[included ( filenameptr filenamelength -- )] Load and parse file.
-\item[require filename ( -- )] Like include, except that load is skipped if the file is already loaded.
-\item[required ( filenameptr filenamelength -- )] Like included, except that load is skipped if the file is already loaded.
-\item[loadb ( filenameptr filenamelength dst -- endaddr )] Load binary block to dst. Returns 0 on failure, otherwise address after last written byte.
-\item[saveb ( start end filenameptr filenamelength -- )] Save binary block.
-\item[device ( device\# -- )] Switches the active device.
-\item[save-forth filename ( -- )] Saves the forth to the given filename.
-\item[ls ( -- )] Load disk directory to here and display, with optional drive \# and wildcards. Example: \texttt{ls \$1:*=p} Load directory, drive 1 only prg files.
-\item[rdir ( addr -- )] Display disk directory previously loaded to addr.
+\item[\index{include}include filename ( -- )] Load and parse file. Example: \texttt{include test}
+\item[\index{included}included ( filenameptr filenamelength -- )] Load and parse file.
+\item[\index{require}require filename ( -- )] Like include, except that load is skipped if the file is already loaded.
+\item[\index{required}required ( filenameptr filenamelength -- )] Like included, except that load is skipped if the file is already loaded.
+\item[\index{loadb}loadb ( filenameptr filenamelength dst -- endaddr )] Load binary block to dst. Returns 0 on failure, otherwise address after last written byte.
+\item[\index{saveb}saveb ( start end filenameptr filenamelength -- )] Save binary block.
+\item[\index{device}device ( device\# -- )] Switches the active device.
+\item[\index{save-forth}save-forth filename ( -- )] Saves the forth to the given filename.
+\item[\index{ls}ls ( -- )] Load disk directory to here and display, with optional drive \# and wildcards. Example: \texttt{ls \$1:*=p} Load directory, drive 1 only prg files.
+\item[\index{rdir}rdir ( addr -- )] Display disk directory previously loaded to addr.
 \end{description}
 
 \subsection{DOS Commands}
@@ -408,13 +411,13 @@ forget
 Words for sending DOS commands to drives and reading drive status are available by including \texttt{dos}.
 
 \begin{description}
-    \item[send-cmd ( addr length -- )] Writes the given string to secondary address 15 on the current device, and prints the drive's response. The following example defines a word, \texttt{backup} that creates a copy of \texttt{durexforth} called \texttt{backup}:
+    \item[\index{send-cmd}send-cmd ( addr length -- )] Writes the given string to secondary address 15 on the current device, and prints the drive's response. The following example defines a word, \texttt{backup} that creates a copy of \texttt{durexforth} called \texttt{backup}:
     \begin{verbatim}
         : backup s" copy0:backup=durexforth" send-cmd ;
         backup
     \end{verbatim}
 
-    \item[dos command ( -- )] Sends \texttt{command} to the current device's command channel, and prints the response. Note that the remainder of the line is treated as part of the command. This makes it possible to refer to file names that contain spaces, but means that \texttt{dos} and its command should be on their own line, or the last words on a line. Example: \texttt{dos scratch0:old file} will delete a file named ``\texttt{old file}''.
+    \item[\index{dos}dos command ( -- )] Sends \texttt{command} to the current device's command channel, and prints the response. Note that the remainder of the line is treated as part of the command. This makes it possible to refer to file names that contain spaces, but means that \texttt{dos} and its command should be on their own line, or the last words on a line. Example: \texttt{dos scratch0:old file} will delete a file named ``\texttt{old file}''.
 \end{description}
 
 \subsection{Low-Level Device I/O}
@@ -422,14 +425,14 @@ Words for sending DOS commands to drives and reading drive status are available 
 For more advanced uses, words corresponding to the standard Commodore Kernal IO routines are available by including \texttt{io}.
 
 \begin{description}
-    \item[open ( filenameptr filenamelength file\# secondary-addr -- ioresult )] Open a logical file.
-    \item[chkin ( file\# -- ioresult )] Use a logical file as input device.
-    \item[chkout ( file\# -- ioresult )] Use a logical file as output device.
-    \item[clrchn ( -- )] Resets input and output to the keyboard and screen.
-    \item[close ( file\# -- )] Close a logical file.
-    \item[readst ( -- status )] Returns the status of the last IO operation. For serial-bus devices, \texttt{\$01} = write timeout, \texttt{\$02} = read timeout, \texttt{\$40} = end of file (EOI), \texttt{\$80} = device not present.
-    \item[chrin ( -- char)] Reads a character from the current input device.
-    \item[ioabort ( ioresult -- )] Handles error conditions for \texttt{open}, \texttt{chkin} and \texttt{chkout}. On failure, print error message and abort.
+    \item[\index{open}open ( filenameptr filenamelength file\# secondary-addr -- ioresult )] Open a logical file.
+    \item[\index{chkin}chkin ( file\# -- ioresult )] Use a logical file as input device.
+    \item[\index{chkout}chkout ( file\# -- ioresult )] Use a logical file as output device.
+    \item[\index{clrchn}clrchn ( -- )] Resets input and output to the keyboard and screen.
+    \item[\index{close}close ( file\# -- )] Close a logical file.
+    \item[\index{readst}readst ( -- status )] Returns the status of the last IO operation. For serial-bus devices, \texttt{\$01} = write timeout, \texttt{\$02} = read timeout, \texttt{\$40} = end of file (EOI), \texttt{\$80} = device not present.
+    \item[\index{chrin}chrin ( -- char)] Reads a character from the current input device.
+    \item[\index{ioabort}ioabort ( ioresult -- )] Handles error conditions for \texttt{open}, \texttt{chkin} and \texttt{chkout}. On failure, print error message and abort.
 \end{description}
 
 As per the underlying Kernal routines, \texttt{chrin} does not check for end-of-file or any other error condition. \texttt{readst} should be called to ensure that the returned character is valid.
@@ -450,20 +453,20 @@ Note that use of low-level device I/O may interfere with disk accesses done by d
 The \texttt{compat} module contains various words that are not deemed necessary for enjoyable DurexForth operation, but still must be provided to comply with the Forth 2012 core standard.
 
 \begin{description}
-    \item[environment? ( addr u -- 0 )] Environmental query.
-    \item[cell+ ( n -- n+2 )] 2+
-    \item[cells ( n -- n*2 )] 2*
-    \item[char+ ( n -- n+1 )] 1+
-    \item[align ( -- )] No-op
-    \item[aligned ( -- )] No-op
-    \item[chars ( -- )] No-op
-    \item[2@ ( address -- x1 x2 )] Fetch 32-bit value from address. x2 is stored at address, and x1 is stored at address + 2.
-    \item[2! ( x1 x2 address -- )] Store 32-bit value to address. x2 is stored at address, and x1 is stored at address + 2.
-    \item[2over ( a b c d -- a b c d a b )] Copies cell pair a b to top of stack.
-    \item[2swap ( a b c d -- c d a b )] Exchanges the top two cell pairs.
-    \item[$>$number ( ud addr u -- ud addr2 u2 )] Converts the string in \texttt{addr u} to digits, using \texttt{BASE}, and adds each digit into ud after multiplying it with \texttt{BASE}. \texttt{addr2 u2} contains the part of the string that was not converted.
-    \item[$>$body ( xt -- addr )] Returns the data field address that belongs to the execution token. Example use: \texttt{' foo >body}
-    \item[sm/rem ( d n -- r q )] Divide double-cell number d by n, giving the symmetric quotient q and the remainder r. Values are signed.
+    \item[\index{environment?}environment? ( addr u -- 0 )] Environmental query.
+    \item[\index{cell+}cell+ ( n -- n+2 )] 2+
+    \item[\index{cells}cells ( n -- n*2 )] 2*
+    \item[\index{char+}char+ ( n -- n+1 )] 1+
+    \item[\index{align}align ( -- )] No-op
+    \item[\index{aligned}aligned ( -- )] No-op
+    \item[\index{chars}chars ( -- )] No-op
+    \item[\index{2"@}2@ ( address -- x1 x2 )] Fetch 32-bit value from address. x2 is stored at address, and x1 is stored at address + 2.
+    \item[\index{2"!}2! ( x1 x2 address -- )] Store 32-bit value to address. x2 is stored at address, and x1 is stored at address + 2.
+    \item[\index{2over}2over ( a b c d -- a b c d a b )] Copies cell pair a b to top of stack.
+    \item[\index{2swap}2swap ( a b c d -- c d a b )] Exchanges the top two cell pairs.
+    \item[\index{$>$number}$>$number ( ud addr u -- ud addr2 u2 )] Converts the string in \texttt{addr u} to digits, using \texttt{BASE}, and adds each digit into ud after multiplying it with \texttt{BASE}. \texttt{addr2 u2} contains the part of the string that was not converted.
+    \item[\index{$>$body}$>$body ( xt -- addr )] Returns the data field address that belongs to the execution token. Example use: \texttt{' foo >body}
+    \item[\index{sm/rem}sm/rem ( d n -- r q )] Divide double-cell number d by n, giving the symmetric quotient q and the remainder r. Values are signed.
 
 \end{description}
 
@@ -476,17 +479,17 @@ Example: \texttt{'0' ar c! \$ffd2 sys} calls the CHROUT routine, which prints \t
 \section{Turn-key Utilities}
 These words are available by including \texttt{turnkey}.
 \begin{description}
-\item[top ( -- addr )] Address of the top of the dictionary, default: \$9fff.
+\item[\index{top}top ( -- addr )] Address of the top of the dictionary, default: \$9fff.
 
-\item[top! ( addr -- )] Relocates the dictionary to \texttt{addr}. Example:
+\item[\index{top"!}top! ( addr -- )] Relocates the dictionary to \texttt{addr}. Example:
 
 \begin{verbatim}
 \ not using $a000 block, give all memory to dictionary
 $cbff top!
 \end{verbatim}
 
-\item[save-pack filename ( -- )] Saves a compact version of forth to the given filename.
-\item[save-prg filename ( -- )] Saves a forth program with no dictionary to filename.
+\item[\index{save-pack}save-pack filename ( -- )] Saves a compact version of forth to the given filename.
+\item[\index{save-prg}save-prg filename ( -- )] Saves a forth program with no dictionary to filename.
 \end{description}
 
-	Further details on use of these words outlined in the Turn-key Operation section of the tutorial.
+	Further details on use of these words outlined in the \hyperref[Turn-key Operation]{Turn-key Operation} section of the tutorial.

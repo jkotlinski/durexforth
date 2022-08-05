@@ -1,5 +1,6 @@
 \documentclass[a4paper]{report}
 \usepackage{microtype}
+\usepackage{imakeidx}
 \usepackage{hyperref}
 \usepackage{color}
 \usepackage{graphicx}
@@ -7,10 +8,27 @@
 \usepackage{multicol}
 \usepackage{alltt}
 
+\makeindex[intoc, columns=3]
+
 \hypersetup{pdfauthor="Ravelli/Durex", pdftitle="durexForth: Operators Manual", colorlinks=true}
 \begin{document}
 \author{Ravelli/Durex}
 \title{durexForth: Operators Manual}
+% maketitle is necessary to populate html metadata.
+\ifdef{\Css}{
+  % This CSS mess creates a new set of columns at each heading.
+  % In theory a (better!) effect could be achieved by moving the
+  % heading out so it could span the columns.
+  % The current variant has the heading in line with the top
+  % of its group.
+  % Ideally we'd break columns at page breaks, like print does.
+  \Css{
+    div.theindex {column-width: 9em; column-gap: 2em}
+    p.theindex {column-span: all; column-width: 9em; column-gap: 2em}
+    .index-item, .index-subitem, .index-subsubitem {display: block flex; justify-content: space-between; margin-top:0.2em}
+  }
+  \maketitle
+}
 
 \pagestyle{empty} % No page number on first page!
 \AddToShipoutPicture*{
@@ -37,4 +55,5 @@
 \input{memmap.tex}
 \input{anatomy.tex}
 
+\printindex
 \end{document}
