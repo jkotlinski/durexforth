@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
  - POSTPONE error handling.
- - Documented DEFCODE.
+ - Documented DEFCODE, #S
  - V: visual bug when saving.
 
 ## [4.0.0] - 2022-07-20

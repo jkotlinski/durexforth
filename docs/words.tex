@@ -333,7 +333,7 @@ For more info about number formatting, read Starting Forth!
 
 \item[$<$\#]\index{$<$\#} Begins the number conversion process.
 \item[\# ( ud -- ud )]\index{\#} Converts one digit and puts it in the start of the output string.
-\item[s\# ( ud -- ud )]\index{s\#} Calls \# once, and repeats until the number is zero.
+\item[\#s ( ud -- ud )]\index{\#s} Calls \# once, and repeats until the number is zero.
 \item[\index{hold}hold ( ch -- )] Inserts the char at the start of the output string.
 \item[\index{sign}sign ( a -- )] If \texttt{a} is negative, inserts a minus sign at the start of the output string.
 \item[\#$>$ ( xd -- addr u )]\index{\#$>$} Drops xd and returns the output string.
