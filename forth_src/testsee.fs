@@ -27,6 +27,11 @@ verify test
 verify test
 : test 0 if 1 then 2 ;
 
+\ begin .. again
+: test 0 begin 1 again 2 ;
+verify test
+: test 0 begin 1 again 2 ;
+
 page .( see ok) cr
 
 ---testsee---

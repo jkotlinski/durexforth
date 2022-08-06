@@ -62,7 +62,8 @@ endcase
 again ;
 
 : print-xt ( xt -- )
-xt>nt count 1f and type space ;
+xt>nt ?dup if count 1f and type space
+else ." ?? " then ; \ todo
 
 : print-jsr ( addr -- addr+3 )
 dup 1 + @
