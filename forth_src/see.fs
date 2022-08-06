@@ -63,11 +63,13 @@ again ;
 xt>nt count 1f and type space ;
 
 : print-jsr ( addr -- addr+3 )
-1+ dup @
+dup 1 + @
 case
-['] 0branch of 2+ endof
-dup print-xt
-endcase 2+ ;
+['] 0branch of
+\ todo while, until
+." if " 5 + endof
+print-xt 3 + dup
+endcase ;
 
 : print-jmp ( addr -- addr+3 )
 1+ dup @ print-xt 2 + ;
