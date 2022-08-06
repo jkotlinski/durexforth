@@ -1,0 +1,4 @@
+% The default delimiter puts a comma at the end of the entries,
+% which is confusing when looking at Forth words, many of which 
+% are or end in punctuation. This instead lines the columns up. 
+        delim_0 " \\hfill "
