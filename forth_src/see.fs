@@ -74,11 +74,18 @@ endcase ;
 : print-jmp ( addr -- addr+3 )
 1+ dup @ print-xt 2 + ;
 
+: print-to-branch ( addr -- addr )
+\ todo begin
+branchptr @ here ?do
+dup i 2 + @ = if
+." then " then 6 +loop ;
+
 : print ( nt -- )
 ':' emit space
 dup name>string type space
 dup c@ $80 and if ." immediate " then
 >xt begin
+print-to-branch
 dup c@ case
 $20 of print-jsr endof
 $4c of print-jmp reached-end if
