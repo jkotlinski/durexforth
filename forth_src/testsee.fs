@@ -8,9 +8,19 @@ $400 i + c@ $428 i + c@ <>
 abort" ko" loop ." ok"
 ; immediate
 
-: x ; : y ;
-: test 0 if x then y ;
+\ litc
+: test 1234 ;
 verify test
-: test 0 if x then y ;
+: test 1234 ;
+
+\ lit
+: test 1234 ;
+verify test
+: test 1234 ;
+
+\ if .. then
+: test 0 if 1 then 2 ;
+verify test
+: test 0 if 1 then 2 ;
 
 ---testsee---

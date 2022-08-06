@@ -35,6 +35,8 @@ nt ! 0 else drop 1 then ;
 : scan-jsr ( addr -- addr+3 )
 dup 1+ @
 case
+['] litc of 4 + endof
+['] lit of 5 + endof
 ['] 0branch of
 dup 3 + @ 2dup branch! \ src dst src
 u< if \ back
@@ -65,6 +67,8 @@ xt>nt count 1f and type space ;
 : print-jsr ( addr -- addr+3 )
 dup 1 + @
 case
+['] lit of 3 + dup @ . 2+ endof
+['] litc of 3 + dup c@ . 1+ endof
 ['] 0branch of
 \ todo while, until
 ." if " 5 + endof
