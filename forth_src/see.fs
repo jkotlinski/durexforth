@@ -20,8 +20,10 @@ over ,branch ,branch 0 ,branch ;
 : type! ( u -- )
 branchptr @ 2 - ! ;
 
-\ TODO implement me
-: all-branches-done 1 ;
+: all-branches-done
+branchptr @ here ?do
+i 2+ @ here > if 0 unloop exit then
+6 +loop 1 ;
 
 variable nt
 :noname ( xt nt -- xt 1|0 )
