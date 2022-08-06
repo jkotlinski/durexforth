@@ -20,7 +20,7 @@ over ,branch ,branch 0 ,branch ;
 : type! ( u -- )
 branchptr @ 2 - ! ;
 
-: all-branches-done
+: reached-end
 branchptr @ here ?do
 i 2+ @ here > if 0 unloop exit then
 6 +loop 1 ;
@@ -33,10 +33,14 @@ nt ! 0 else drop 1 then ;
 0 nt ! literal dowords drop nt @ ;
 
 : scan-jsr ( addr -- addr+3 )
-1+ dup @
+dup 1+ @
 case
-['] 0branch of 2+ endof
-endcase 2+ ;
+['] 0branch of
+dup 3 + @ 2dup branch! \ src dst src
+u< if \ back
+UntilCode type! then 5 + endof
+drop 3 + dup
+endcase ;
 
 : scan-jmp ( addr -- addr+3 )
 3 + ;
@@ -46,11 +50,11 @@ here branchptr !
 >xt begin
 dup c@ case
 $20 of scan-jsr endof
-$4c of scan-jmp all-branches-done if
+$4c of scan-jmp reached-end if
 drop exit then endof
 $e8 of 1+ endof \ inx
 $60 of \ rts
-all-branches-done if
+reached-end if
 drop exit then endof
 endcase
 again ;
@@ -75,11 +79,11 @@ dup c@ $80 and if ." immediate " then
 >xt begin
 dup c@ case
 $20 of print-jsr endof
-$4c of print-jmp all-branches-done if
+$4c of print-jmp reached-end if
 drop ';' emit cr exit then endof
 $e8 of ." drop " 1+ endof \ inx
 $60 of \ rts
-all-branches-done if
+reached-end if
 drop ';' emit cr exit else
 ." exit " then endof
 endcase
@@ -92,6 +96,6 @@ dup scan print ;
 
 : x ;
 : y ;
-: test x y ;
+: test 0 if y then x ;
 
 see test
