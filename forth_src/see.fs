@@ -102,9 +102,3 @@ again ;
 parse-name 2dup find-name \ c-addr u nt
 ?dup 0= if notfound then nip nip \ nt
 dup scan print ;
-
-: x ;
-: y ;
-: test 0 if y then x ;
-
-see test

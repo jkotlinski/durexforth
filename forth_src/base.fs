@@ -188,7 +188,7 @@ hide dodoes
 .( sys..) include sys
 .( debug..) include debug
 
-.( see..) include see
+.( see..) include testsee
 
 .( ls..) include ls
 .( require..) include require
