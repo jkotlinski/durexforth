@@ -55,15 +55,18 @@ drop exit then endof
 endcase
 again ;
 
+: print-xt ( xt -- )
+xt>nt count 1f and type space ;
+
 : print-jsr ( addr -- addr+3 )
 1+ dup @
 case
 ['] 0branch of 2+ endof
-dup xt>nt count 1f and type space
+dup print-xt
 endcase 2+ ;
 
 : print-jmp ( addr -- addr+3 )
-3 + ;
+1+ dup @ print-xt 2 + ;
 
 : print ( nt -- )
 ':' emit space
