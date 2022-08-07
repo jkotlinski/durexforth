@@ -37,7 +37,7 @@ nt ! 0 else drop 1 then ;
 
 : scan-0branch ( addr -- addr+5 )
 dup 3 + @ 2dup branch! \ src dst src
-u< if \ back
+u> 0= if \ back
 #until type! then 5 + ;
 
 : scan-jsr ( addr -- addr )
@@ -74,7 +74,12 @@ else ." again " drop then ;
 
 : print-0branch ( addr -- addr+5 )
 \ todo while, until
-." if " 5 + ;
+branchptr @ here do
+i @ over = if
+i 4 + @ 10 > if ." until "
+else ." if " then
+unloop 5 + exit then
+6 +loop abort ;
 
 : print-jsr ( addr -- addr )
 dup 1 + @
@@ -92,10 +97,8 @@ endcase ;
 \ todo begin
 branchptr @ here ?do
 dup i 2 + @ = if
-i 4 + @ case
-#again of ." begin " endof
-." then " endcase
-then 6 +loop ;
+i 4 + @ 10 > if ." begin " else
+." then " then then 6 +loop ;
 
 : print ( nt -- )
 ':' emit space
