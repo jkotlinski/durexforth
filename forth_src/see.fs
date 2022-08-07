@@ -23,9 +23,9 @@ over ,branch ,branch 0 ,branch ;
 : type! ( u -- )
 branchptr @ 2 - ! ;
 
-: reached-end
+: reached-end ( addr -- addr flag )
 branchptr @ here ?do
-i 2+ @ here u> if 0 unloop exit then
+dup i 2+ @ u< if 0 unloop exit then
 6 +loop 1 ;
 
 :noname ( 0 xt nt -- nt? xt flag )
@@ -63,7 +63,7 @@ drop exit then endof
 $e8 of 1+ endof \ inx
 $60 of \ rts
 reached-end if
-drop exit then endof
+drop exit else 1+ then endof
 endcase again ;
 
 : print-xt ( xt -- )
@@ -120,7 +120,7 @@ $e8 of ." drop " 1+ endof \ inx
 $60 of \ rts
 reached-end if
 drop ';' emit cr exit else
-." exit " then endof
+." exit " 1+ then endof
 endcase
 again ;
 

@@ -37,6 +37,11 @@ verify test
 verify test
 : test if then ;
 
+\ exit
+: test if exit then ;
+verify test
+: test if exit then ;
+
 \ begin .. again
 : test begin again ;
 verify test
