@@ -18,6 +18,9 @@ type 0 do $400 i + c@ $428 i + c@
 : x 1234 ; gives x
 : x 1234 ;
 
+: x drop ; gives x
+: x drop ;
+
 : x s" hai" ; gives x
 : x s" hai" ;
 
