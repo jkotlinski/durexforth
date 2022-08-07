@@ -23,14 +23,14 @@ verify test
 : test 1234 ;
 
 \ if .. then
-: test 0 if 1 then 2 ;
+: test if then ;
 verify test
-: test 0 if 1 then 2 ;
+: test if then ;
 
 \ begin .. again
-: test 0 begin 1 again 2 ;
+: test begin again ;
 verify test
-: test 0 begin 1 again 2 ;
+: test begin again ;
 
 page .( see ok) cr
 

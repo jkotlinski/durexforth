@@ -5,13 +5,15 @@ to screen. try "see see". )
  src, dst, code )
 variable branchptr
 
+variable my-xt
+
 \ codes (branch types)
-1 constant RepeatCode
-2 constant AgainCode
-3 constant UntilCode
-4 constant ElseCode
-5 constant WhileCode
-6 constant LeaveCode
+1 constant #repeat
+2 constant #again
+3 constant #until
+4 constant #else
+5 constant #while
+6 constant #leave
 
 : ,branch ( val -- )
 branchptr @ ! 2 branchptr +! ;
@@ -40,12 +42,13 @@ case
 ['] 0branch of
 dup 3 + @ 2dup branch! \ src dst src
 u< if \ back
-UntilCode type! then 5 + endof
+#until type! then 5 + endof
 drop 3 + dup
 endcase ;
 
 : scan-jmp ( addr -- addr+3 )
-3 + ;
+dup 1 + @ dup my-xt @ < if drop else
+branch! #again type! then 3 + ;
 
 : scan ( nt -- )
 here branchptr !
@@ -62,8 +65,9 @@ endcase
 again ;
 
 : print-xt ( xt -- )
-xt>nt ?dup if count 1f and type space
-else ." ?? " then ; \ todo
+dup my-xt @ < if
+xt>nt count 1f and type space
+else ." again " drop then ;
 
 : print-jsr ( addr -- addr+3 )
 dup 1 + @
@@ -83,13 +87,16 @@ endcase ;
 \ todo begin
 branchptr @ here ?do
 dup i 2 + @ = if
-." then " then 6 +loop ;
+i 4 + @ case
+#again of ." begin " endof
+." then " endcase
+then 6 +loop ;
 
 : print ( nt -- )
 ':' emit space
 dup name>string type space
 dup c@ $80 and if ." immediate " then
->xt begin
+>xt dup my-xt ! begin
 print-to-branch
 dup c@ case
 $20 of print-jsr endof
