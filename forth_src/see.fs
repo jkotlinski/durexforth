@@ -28,12 +28,11 @@ branchptr @ here ?do
 i 2+ @ here > if 0 unloop exit then
 6 +loop 1 ;
 
-variable nt \ fixme remove nt
-:noname ( xt nt -- xt 1|0 )
+:noname ( 0 xt nt -- nt? xt flag )
 2dup dup c@ 1f and 1+ + @ = if
-nt ! 0 else drop 1 then ;
+swap rot then ;
 : xt>nt ( xt -- nt | 0 )
-0 nt ! literal dowords drop nt @ ;
+0 swap literal dowords drop ;
 
 : scan-0branch ( addr -- addr+5 )
 dup 3 + @ 2dup branch! \ src dst src
