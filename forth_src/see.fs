@@ -25,7 +25,7 @@ branchptr @ 2 - ! ;
 
 : reached-end
 branchptr @ here ?do
-i 2+ @ here >u if 0 unloop exit then
+i 2+ @ here u> if 0 unloop exit then
 6 +loop 1 ;
 
 :noname ( 0 xt nt -- nt? xt flag )
