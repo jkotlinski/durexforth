@@ -2,55 +2,36 @@ marker ---testsee---
 
 include see
 
-: verify page see refill
-source tuck type 0 do
-$400 i + c@ $428 i + c@ <>
-abort" ko" loop ; immediate
+: gives page see refill source tuck
+type 0 do $400 i + c@ $428 i + c@
+<> abort" ko" loop ; immediate
 
-\ immediate
-: test ; immediate
-verify test
-: test immediate ;
+: x ; immediate gives x
+: x immediate ;
 
-\ jsr+jmp
-: test , . ;
-verify test
-: test , . ;
+: x , . ; gives x
+: x , . ;
 
-\ litc
-: test 1234 ;
-verify test
-: test 1234 ;
+: x 12 ; gives x
+: x 12 ;
 
-\ lit
-: test 1234 ;
-verify test
-: test 1234 ;
+: x 1234 ; gives x
+: x 1234 ;
 
-\ lits
-: test s" hai" ;
-verify test
-: test s" hai" ;
+: x s" hai" ; gives x
+: x s" hai" ;
 
-\ if .. then
-: test if then ;
-verify test
-: test if then ;
+: x if then ; gives x
+: x if then ;
 
-\ exit
-: test if exit then ;
-verify test
-: test if exit then ;
+: x if exit then ; gives x
+: x if exit then ;
 
-\ begin .. again
-: test begin again ;
-verify test
-: test begin again ;
+: x begin again ; gives x
+: x begin again ;
 
-\ begin .. until
-: test begin until ;
-verify test
-: test begin until ;
+: x begin until ; gives x
+: x begin until ;
 
 page .( see ok) cr
 
