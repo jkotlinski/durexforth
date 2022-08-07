@@ -47,6 +47,7 @@ dup 1+ @ case
 ['] litc of 4 + endof
 ['] lit of 5 + endof
 ['] lits of skip-lits endof
+['] (loop) of 5 + endof
 ['] 0branch of scan-0branch endof
 drop 3 + dup endcase ;
 
@@ -92,6 +93,8 @@ case
 ['] lit of 3 + dup @ . 2+ endof
 ['] litc of 3 + dup c@ . 1+ endof
 ['] lits of print-lits endof
+['] (do) of 3 + ." do " endof
+['] (loop) of 5 + ." loop " endof
 ['] 0branch of print-0branch endof
 print-xt 3 + dup
 endcase ;
