@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - V: visual bug when saving.
 ### Added
  - Revived SEE which was removed in 4.0.0. To load it, INCLUDE SEE.
+### Changed
+ - #> (the pictured numeric output string buffer) now uses its own buffer, separate from HERE.
 
 ## [4.0.0] - 2022-07-20
 ### Changed
