@@ -25,7 +25,7 @@ branchptr @ 2 - ! ;
 
 : reached-end
 branchptr @ here ?do
-i 2+ @ here > if 0 unloop exit then
+i 2+ @ here >u if 0 unloop exit then
 6 +loop 1 ;
 
 :noname ( 0 xt nt -- nt? xt flag )
@@ -51,7 +51,7 @@ dup 1+ @ case
 drop 3 + dup endcase ;
 
 : scan-jmp ( addr -- addr+3 )
-dup 1 + @ dup my-xt @ < if drop else
+dup 1 + @ dup my-xt @ u< if drop else
 branch! #again type! then 3 + ;
 
 : scan ( nt -- )
@@ -67,7 +67,7 @@ drop exit then endof
 endcase again ;
 
 : print-xt ( xt -- )
-dup my-xt @ < if
+dup my-xt @ u< if
 xt>nt count 1f and type space
 else ." again " drop then ;
 
