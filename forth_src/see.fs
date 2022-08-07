@@ -28,7 +28,7 @@ branchptr @ here ?do
 i 2+ @ here > if 0 unloop exit then
 6 +loop 1 ;
 
-variable nt
+variable nt \ fixme remove nt
 :noname ( xt nt -- xt 1|0 )
 2dup dup c@ 1f and 1+ + @ = if
 nt ! 0 else drop 1 then ;
@@ -40,14 +40,16 @@ dup 3 + @ 2dup branch! \ src dst src
 u> 0= if \ back
 #until type! then 5 + ;
 
+: skip-lits ( addr -- addr )
+3 + dup @ + 2+ ;
+
 : scan-jsr ( addr -- addr )
-dup 1+ @
-case
+dup 1+ @ case
 ['] litc of 4 + endof
 ['] lit of 5 + endof
+['] lits of skip-lits endof
 ['] 0branch of scan-0branch endof
-drop 3 + dup
-endcase ;
+drop 3 + dup endcase ;
 
 : scan-jmp ( addr -- addr+3 )
 dup 1 + @ dup my-xt @ < if drop else
@@ -55,8 +57,7 @@ branch! #again type! then 3 + ;
 
 : scan ( nt -- )
 here branchptr !
->xt begin
-dup c@ case
+>xt begin dup c@ case
 $20 of scan-jsr endof
 $4c of scan-jmp reached-end if
 drop exit then endof
@@ -64,8 +65,7 @@ $e8 of 1+ endof \ inx
 $60 of \ rts
 reached-end if
 drop exit then endof
-endcase
-again ;
+endcase again ;
 
 : print-xt ( xt -- )
 dup my-xt @ < if
@@ -81,11 +81,18 @@ else ." if " then
 unloop 5 + exit then
 6 +loop abort ;
 
+: print-lits ( addr -- addr )
+'s' emit '"' emit space
+5 + dup 2 - @ begin ?dup while
+over c@ emit 1 /string repeat
+'"' emit space ;
+
 : print-jsr ( addr -- addr )
 dup 1 + @
 case
 ['] lit of 3 + dup @ . 2+ endof
 ['] litc of 3 + dup c@ . 1+ endof
+['] lits of print-lits endof
 ['] 0branch of print-0branch endof
 print-xt 3 + dup
 endcase ;

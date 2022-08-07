@@ -27,6 +27,11 @@ verify test
 verify test
 : test 1234 ;
 
+\ lits
+: test s" hai" ;
+verify test
+: test s" hai" ;
+
 \ if .. then
 : test if then ;
 verify test
