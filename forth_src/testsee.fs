@@ -6,6 +6,9 @@ include see
 type 0 do $400 i + c@ $428 i + c@
 <> abort" ko" loop ; immediate
 
+: x if else then ; gives x
+: x if else then ;
+
 : x ; immediate gives x
 : x immediate ;
 

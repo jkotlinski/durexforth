@@ -24,9 +24,9 @@ over ,branch ,branch 0 ,branch ;
 branchptr @ 2 - ! ;
 
 : reached-end ( addr -- addr flag )
-branchptr @ here ?do
-dup i 2+ @ u< if 0 unloop exit then
-6 +loop 1 ;
+1 branchptr @ here ?do
+over i 2+ @ u< if drop 0 leave then
+6 +loop ;
 
 :noname ( 0 xt nt -- nt? xt flag )
 2dup dup c@ 1f and 1+ + @ = if
@@ -52,15 +52,16 @@ dup 1+ @ case
 drop 3 + dup endcase ;
 
 : scan-jmp ( addr -- addr+3 )
-dup 1 + @ dup my-xt @ u< if drop else
-branch! #again type! then 3 + ;
+dup 1+ @ dup my-xt @ u< if drop else
+2dup branch! u> if #else else #again
+then type! then ;
 
 : scan ( nt -- )
 here branchptr !
 >xt begin dup c@ case
 $20 of scan-jsr endof
 $4c of scan-jmp reached-end if
-drop exit then endof
+drop exit then 3 + endof
 $e8 of 1+ endof \ inx
 $60 of \ rts
 reached-end if
@@ -68,9 +69,7 @@ drop exit else 1+ then endof
 endcase again ;
 
 : print-xt ( xt -- )
-dup my-xt @ u< if
-xt>nt count 1f and type space
-else ." again " drop then ;
+xt>nt name>string type space ;
 
 : print-0branch ( addr -- addr+5 )
 \ todo while, until
@@ -99,26 +98,27 @@ case
 print-xt 3 + dup
 endcase ;
 
-: print-jmp ( addr -- addr+3 )
-1+ dup @ print-xt 2 + ;
+: print-jmp ( addr -- addr )
+dup 1+ @
+dup my-xt @ u< if print-xt else
+over u> if ." else " else ." again "
+then then ;
 
 : print-to-branch ( addr -- addr )
-\ todo begin
 branchptr @ here ?do
 dup i 2 + @ = if
 i 4 + @ 10 > if ." begin " else
-." then " then then 6 +loop ;
+." then " then leave then 6 +loop ;
 
 : print ( nt -- )
 ':' emit space
 dup name>string type space
 dup c@ $80 and if ." immediate " then
 >xt dup my-xt ! begin
-print-to-branch
-dup c@ case
+print-to-branch dup c@ case
 $20 of print-jsr endof
 $4c of print-jmp reached-end if
-drop ';' emit cr exit then endof
+drop ';' emit cr exit then 3 + endof
 $e8 of ." drop " 1+ endof \ inx
 $60 of \ rts
 reached-end if
