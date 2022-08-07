@@ -29,7 +29,7 @@ over i 2+ @ u< if drop 0 leave then
 6 +loop ;
 
 :noname ( 0 xt nt -- nt? xt flag )
-2dup dup c@ 1f and 1+ + @ = if
+2dup dup c@ $1f and 1+ + @ = if
 swap rot then ;
 : xt>nt ( xt -- nt | 0 )
 0 swap literal dowords drop ;
