@@ -1,11 +1,12 @@
 variable end
-: <# here end ! ;
-: #> 2drop here end @ over - ;
+create buf #34 allot
+: <# buf end ! ;
+: #> 2drop buf end @ over - ;
 : hold
 \ reserve space for char at start
-here dup 1+ end @ here - move
+buf dup 1+ end @ buf - move
 1 end +!
-here c! ;
+buf c! ;
 : sign 0< if '-' hold then ;
 : # base @ ud/mod rot
 dup a < if 7 - then $37 + hold ;
@@ -13,8 +14,7 @@ dup a < if 7 - then $37 + hold ;
 
 : u. 0 <# #s #> type space ;
 
-\ this implementation of . is super
-\ slow and messes up HERE area :(
+\ this is slow :(
 : . dup abs 0 <# #s rot sign #>
 type space ;
 

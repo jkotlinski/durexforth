@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - POSTPONE error handling.
  - Documented DEFCODE, #S
  - V: visual bug when saving.
+### Changed
+ - #> (the pictured numeric output string buffer) now uses its own buffer, separate from HERE.
 
 ## [4.0.0] - 2022-07-20
 ### Changed
