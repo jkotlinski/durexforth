@@ -37,6 +37,13 @@ verify test
 verify test
 : test begin again ;
 
+(
+\ begin .. until
+: test begin until ;
+verify test
+: test begin until ;
+)
+
 page .( see ok) cr
 
 ---testsee---

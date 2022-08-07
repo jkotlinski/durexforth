@@ -7,13 +7,14 @@ variable branchptr
 
 variable my-xt
 
-\ codes (branch types)
-1 constant #repeat
-2 constant #again
-3 constant #until
-4 constant #else
-5 constant #while
-6 constant #leave
+\ branch types
+1 constant #else
+2 constant #while
+3 constant #leave
+\ codes > 10 match begin
+11 constant #repeat
+12 constant #again
+13 constant #until
 
 : ,branch ( val -- )
 branchptr @ ! 2 branchptr +! ;
@@ -34,15 +35,17 @@ nt ! 0 else drop 1 then ;
 : xt>nt ( xt -- nt | 0 )
 0 nt ! literal dowords drop nt @ ;
 
-: scan-jsr ( addr -- addr+3 )
+: scan-0branch ( addr -- addr+5 )
+dup 3 + @ 2dup branch! \ src dst src
+u< if \ back
+#until type! then 5 + ;
+
+: scan-jsr ( addr -- addr )
 dup 1+ @
 case
 ['] litc of 4 + endof
 ['] lit of 5 + endof
-['] 0branch of
-dup 3 + @ 2dup branch! \ src dst src
-u< if \ back
-#until type! then 5 + endof
+['] 0branch of scan-0branch endof
 drop 3 + dup
 endcase ;
 
@@ -69,14 +72,16 @@ dup my-xt @ < if
 xt>nt count 1f and type space
 else ." again " drop then ;
 
-: print-jsr ( addr -- addr+3 )
+: print-0branch ( addr -- addr+5 )
+\ todo while, until
+." if " 5 + ;
+
+: print-jsr ( addr -- addr )
 dup 1 + @
 case
 ['] lit of 3 + dup @ . 2+ endof
 ['] litc of 3 + dup c@ . 1+ endof
-['] 0branch of
-\ todo while, until
-." if " 5 + endof
+['] 0branch of print-0branch endof
 print-xt 3 + dup
 endcase ;
 
