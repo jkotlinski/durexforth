@@ -815,7 +815,7 @@ OLD_BASE = * + 1
     jsr PLACEHOLDER_ADDRESS
     inx
     pla
-    ldy LSB-1, x
+    ldy MSB-1, x
     beq -
     clc
     adc #3 ; guaranteed carry clear
