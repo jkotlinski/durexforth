@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - V: visual bug when saving.
 ### Changed
  - #> (the pictured numeric output string buffer) now uses its own buffer, separate from HERE.
+ - Do not print "ok" while compiling. Makes it easier to re-enter multi-line word definitions in interpreter.
 
 ## [4.0.0] - 2022-07-20
 ### Changed
