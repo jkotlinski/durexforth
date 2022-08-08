@@ -146,12 +146,15 @@ interpret_tib
     lda LATEST_MSB
     sbc HERE_MSB
     beq .on_data_underflow
+    lda STATE
+    bne +
     lda #'o'
     jsr PUTCHR
     lda #'k'
     jsr PUTCHR
     lda #$d
     jmp PUTCHR
++   rts
 
 .on_stack_underflow
     lda #$12 ; reverse on
