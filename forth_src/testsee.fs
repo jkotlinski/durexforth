@@ -42,6 +42,10 @@ type 0 do $400 i + c@ $428 i + c@
 : x do loop ; gives x
 : x do loop ;
 
+\ looks a little odd, but maybe ok?
+: x case 1 of endof endcase ; gives x
+: x 1 of else drop then ;
+
 page .( see ok) cr
 
 ---testsee---

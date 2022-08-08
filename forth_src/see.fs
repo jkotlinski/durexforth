@@ -34,10 +34,12 @@ swap rot then ;
 : xt>nt ( xt -- nt | 0 )
 0 swap literal dowords drop ;
 
+: 5+ 5 + ;
+
 : scan-0branch ( addr -- addr+5 )
 dup 3 + @ 2dup branch! \ src dst src
 u> 0= if \ back
-#until type! then 5 + ;
+#until type! then 5+ ;
 
 : skip-lits ( addr -- addr )
 3 + dup @ + 2+ ;
@@ -45,9 +47,10 @@ u> 0= if \ back
 : scan-jsr ( addr -- addr )
 dup 1+ @ case
 ['] litc of 4 + endof
-['] lit of 5 + endof
+['] lit of 5+ endof
 ['] lits of skip-lits endof
-['] (loop) of 5 + endof
+['] (loop) of 5+ endof
+['] (of) of 5+ endof
 ['] 0branch of scan-0branch endof
 drop 3 + dup endcase ;
 
@@ -77,23 +80,23 @@ branchptr @ here do
 i @ over = if
 i 4 + @ 10 > if ." until "
 else ." if " then
-unloop 5 + exit then
+unloop 5+ exit then
 6 +loop abort ;
 
 : print-lits ( addr -- addr )
 's' emit '"' emit space
-5 + dup 2 - @ begin ?dup while
+5+ dup 2 - @ begin ?dup while
 over c@ emit 1 /string repeat
 '"' emit space ;
 
 : print-jsr ( addr -- addr )
-dup 1 + @
-case
+dup 1 + @ case
 ['] lit of 3 + dup @ . 2+ endof
 ['] litc of 3 + dup c@ . 1+ endof
 ['] lits of print-lits endof
 ['] (do) of 3 + ." do " endof
-['] (loop) of 5 + ." loop " endof
+['] (loop) of 5+ ." loop " endof
+['] (of) of 5+ ." of " endof
 ['] 0branch of print-0branch endof
 print-xt 3 + dup
 endcase ;
