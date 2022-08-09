@@ -30,6 +30,9 @@ type 0 do $400 i + c@ $428 i + c@
 : x if else then ; gives x
 : x if else then ;
 
+: x if else 1 then ; gives x
+: x if else 1 then ;
+
 : x if exit then ; gives x
 : x if exit then ;
 
@@ -42,7 +45,6 @@ type 0 do $400 i + c@ $428 i + c@
 : x do loop ; gives x
 : x do loop ;
 
-\ looks a little odd, but maybe ok?
 : x case 1 of endof endcase ; gives x
 : x 1 of else drop then ;
 

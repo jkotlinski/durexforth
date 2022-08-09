@@ -54,7 +54,12 @@ dup 1+ @ case
 ['] 0branch of scan-0branch endof
 drop 3 + dup endcase ;
 
-: scan-jmp ( addr -- addr+3 )
+: merge-else-then ( dstaddr -- )
+branchptr @ here do i 2+ @ over =
+i 4 + @ 0= and if
+0 i 2+ ! then 6 +loop drop ;
+
+: scan-jmp ( addr -- addr )
 dup 1+ @ dup my-xt @ u< if drop else
 2dup branch! u> if #else else #again
 then type! then ;
@@ -72,7 +77,8 @@ drop exit else 1+ then endof
 endcase again ;
 
 : print-xt ( xt -- )
-xt>nt name>string type space ;
+xt>nt ?dup if name>string type
+else ." ??" then space ;
 
 : print-0branch ( addr -- addr+5 )
 \ todo while, until
@@ -102,14 +108,13 @@ print-xt 3 + dup
 endcase ;
 
 : print-jmp ( addr -- addr )
-dup 1+ @
-dup my-xt @ u< if print-xt else
-over u> if ." else " else ." again "
-then then ;
+dup 1+ @ dup my-xt @ u< if print-xt
+else over u> if dup 3 + merge-else-then
+." else " else ." again " then then ;
 
 : print-to-branch ( addr -- addr )
 branchptr @ here ?do
-dup i 2 + @ = if
+dup i 2+ @ = if
 i 4 + @ 10 > if ." begin " else
 ." then " then leave then 6 +loop ;
 
