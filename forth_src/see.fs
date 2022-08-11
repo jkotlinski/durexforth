@@ -85,7 +85,7 @@ $e8 of 1+ endof \ inx
 $60 of \ rts
 reached-end if
 drop exit else 1+ then endof
-endcase again ;
+abort endcase again ;
 
 : print-xt ( xt -- )
 xt>nt ?dup if name>string type
@@ -122,7 +122,6 @@ endcase ;
 branchptr @ here do i 2+ @ over =
 i 4 + @ #if = and if
 0 i 2+ ! then 6 +loop drop ;
-
 
 : print-jmp ( addr -- addr )
 dup 1+ @ dup my-xt @ u< if print-xt
