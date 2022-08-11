@@ -45,12 +45,18 @@ u> 0= if \ back
 : skip-lits ( addr -- addr )
 3 + dup @ + 2+ ;
 
+: scan-loop ( addr -- addr+5 )
+\ correct #else to #leave
+5+ branchptr @ here ?do
+dup i 2+ @ = if #leave i 4 + ! then
+6 +loop ;
+
 : scan-jsr ( addr -- addr )
 dup 1+ @ case
 ['] litc of 4 + endof
 ['] lit of 5+ endof
 ['] lits of skip-lits endof
-['] (loop) of 5+ endof
+['] (loop) of scan-loop endof
 ['] (of) of 5+ endof
 ['] 0branch of scan-0branch endof
 drop 3 + dup endcase ;
@@ -105,6 +111,12 @@ then unloop 5+ exit then
 over c@ emit 1 /string repeat
 '"' emit space ;
 
+: print-unloop ( addr -- addr+3 )
+\ if followed by a leave, skip
+3 + branchptr @ here do
+dup i @ = i 4 + @ #leave = and if
+unloop exit then 6 +loop ." unloop " ;
+
 : print-jsr ( addr -- addr )
 dup 1 + @ case
 ['] lit of 3 + dup @ . 2+ endof
@@ -114,6 +126,7 @@ dup 1 + @ case
 ['] (loop) of 5+ ." loop " endof
 ['] (of) of 5+ ." of " endof
 ['] 0branch of print-0branch endof
+['] unloop of print-unloop endof
 print-xt 3 + dup
 endcase ;
 
@@ -130,6 +143,7 @@ i @ over = if i 4 + @ case
 dup 3 + remove-then endof
 #repeat of ." repeat " endof
 #again of ." again " endof
+#leave of ." leave " endof
 abort endcase then 6 +loop then ;
 
 : .then ." then " ;
@@ -143,6 +157,7 @@ i 4 + @ case
 #again of .begin endof
 #until of .begin endof
 #while of endof
+#leave of endof
 #else of .then endof
 #if of .then endof
 abort endcase leave then 6 +loop ;
@@ -161,8 +176,7 @@ $60 of \ rts
 reached-end if
 drop ';' emit cr exit else
 ." exit " 1+ then endof
-endcase
-again ;
+endcase again ;
 
 : see
 parse-name 2dup find-name \ c-addr u nt
