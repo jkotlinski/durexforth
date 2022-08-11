@@ -64,8 +64,7 @@ drop 3 + dup endcase ;
 dup dup 1+ @ u> 0= if 0 exit then
 \ 0branch fwd dst?
 0 branchptr @ here ?do
-over 3 + i 2+ @ = \ dst?
-i @ i 2+ @ u< and if \ fwd?
+over 3 + i 2+ @ = if \ dst?
 #while i 4 + !
 drop 1 leave then 6 +loop ;
 
