@@ -42,6 +42,9 @@ type 0 do $400 i + c@ $428 i + c@
 : x begin until ; gives x
 : x begin until ;
 
+: x begin 1 while 2 repeat ; gives x
+: x begin 1 while 2 repeat ;
+
 : x do loop ; gives x
 : x do loop ;
 

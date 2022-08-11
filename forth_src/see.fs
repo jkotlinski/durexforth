@@ -8,6 +8,7 @@ variable branchptr
 variable my-xt
 
 \ branch types
+0 constant #if
 1 constant #else
 2 constant #while
 3 constant #leave
@@ -54,14 +55,24 @@ dup 1+ @ case
 ['] 0branch of scan-0branch endof
 drop 3 + dup endcase ;
 
-: merge-else-then ( dstaddr -- )
-branchptr @ here do i 2+ @ over =
-i 4 + @ 0= and if
-0 i 2+ ! then 6 +loop drop ;
+\ it's a while-repeat if...
+\ 1) it's a backjump (repeat)
+\ 2) followed by dst of a fwd 0branch
+\    (while target)
+: while? ( jmpaddr -- jmpaddr flag )
+\ backjump?
+dup dup 1+ @ u> 0= if 0 exit then
+\ 0branch fwd dst?
+0 branchptr @ here ?do
+over 3 + i 2+ @ = \ dst?
+i @ i 2+ @ u< and if \ fwd?
+#while i 4 + !
+drop 1 leave then 6 +loop ;
 
 : scan-jmp ( addr -- addr )
 dup 1+ @ dup my-xt @ u< if drop else
-2dup branch! u> if #else else #again
+2dup branch! u> if #else else
+while? if #repeat else #again then
 then type! then ;
 
 : scan ( nt -- )
@@ -81,12 +92,12 @@ xt>nt ?dup if name>string type
 else ." ??" then space ;
 
 : print-0branch ( addr -- addr+5 )
-\ todo while, until
 branchptr @ here do
 i @ over = if
 i 4 + @ 10 > if ." until "
-else ." if " then
-unloop 5+ exit then
+else i 4 + @ #while = if
+." while " else ." if " then
+then unloop 5+ exit then
 6 +loop abort ;
 
 : print-lits ( addr -- addr )
@@ -107,16 +118,36 @@ dup 1 + @ case
 print-xt 3 + dup
 endcase ;
 
+: remove-then ( addr -- )
+branchptr @ here do i 2+ @ over =
+i 4 + @ #if = and if
+0 i 2+ ! then 6 +loop drop ;
+
+
 : print-jmp ( addr -- addr )
 dup 1+ @ dup my-xt @ u< if print-xt
-else over u> if dup 3 + merge-else-then
-." else " else ." again " then then ;
+else drop branchptr @ here do
+i @ over = if i 4 + @ case
+#else of ." else "
+dup 3 + remove-then endof
+#repeat of ." repeat " endof
+#again of ." again " endof
+abort endcase then 6 +loop then ;
+
+: .then ." then " ;
+: .begin ." begin " ;
 
 : print-to-branch ( addr -- addr )
 branchptr @ here ?do
 dup i 2+ @ = if
-i 4 + @ 10 > if ." begin " else
-." then " then leave then 6 +loop ;
+i 4 + @ case
+#repeat of .begin endof
+#again of .begin endof
+#until of .begin endof
+#while of endof
+#else of .then endof
+#if of .then endof
+abort endcase leave then 6 +loop ;
 
 : print ( nt -- )
 ':' emit space
