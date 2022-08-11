@@ -2,8 +2,10 @@ marker ---testsee---
 
 include see
 
-: gives page see refill source tuck
-type 0 do $400 i + c@ $428 i + c@
+: gives page see
+4 $d6 c@ do cr loop \ move to row 4
+refill source tuck
+type 0 do $400 i + c@ $4a0 i + c@
 <> abort" ko" loop ; immediate
 
 : x ; immediate gives x
@@ -51,8 +53,8 @@ type 0 do $400 i + c@ $428 i + c@
 : x do leave loop ; gives x
 : x do leave loop ;
 
-: x case 1 of endof endcase ; gives x
-: x 1 of else drop then ;
+: x case 1 of 2 endof 3 of 4 endof 5 endcase ; gives x
+: x 1 over = if drop 2 else 3 over = if drop 4 else 5 drop then then ;
 
 page .( see ok) cr
 
