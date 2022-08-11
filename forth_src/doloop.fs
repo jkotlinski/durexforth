@@ -26,7 +26,7 @@ postpone (do) here dup >l ; immediate
 
 : leave
 postpone unloop
-postpone branch here >l 0 , ; immediate
+here 1+ >l 0 jmp, ; immediate
 
 : resolve-leaves ( ?dopos dopos -- )
 begin -2 lsp +!
