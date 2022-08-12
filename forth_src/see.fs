@@ -117,6 +117,9 @@ over c@ emit 1 /string repeat
 dup i @ = i 4 + @ #leave = and if
 unloop exit then 6 +loop ." unloop " ;
 
+: print-of ( addr -- addr+5 )
+5+ ." over = if drop " ;
+
 : print-jsr ( addr -- addr )
 dup 1 + @ case
 ['] lit of 3 + dup @ . 2+ endof
@@ -124,7 +127,7 @@ dup 1 + @ case
 ['] lits of print-lits endof
 ['] (do) of 3 + ." do " endof
 ['] (loop) of 5+ ." loop " endof
-['] (of) of 5+ ." of " endof
+['] (of) of print-of endof
 ['] 0branch of print-0branch endof
 ['] unloop of print-unloop endof
 print-xt 3 + dup
@@ -160,7 +163,7 @@ i 4 + @ case
 #leave of endof
 #else of .then endof
 #if of .then endof
-abort endcase leave then 6 +loop ;
+abort endcase then 6 +loop ;
 
 : print ( nt -- )
 ':' emit space
