@@ -50,6 +50,9 @@ type 0 do $400 i + c@ $4a0 i + c@
 : x do loop ; gives x
 : x do loop ;
 
+: x do +loop ; gives x
+: x do +loop ;
+
 : x do leave loop ; gives x
 : x do leave loop ;
 
