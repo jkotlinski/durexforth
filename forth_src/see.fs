@@ -56,6 +56,7 @@ dup 1+ @ case
 ['] litc of 4 + endof
 ['] lit of 5+ endof
 ['] lits of skip-lits endof
+['] (?do) of 5+ endof
 ['] (loop) of scan-loop endof
 ['] (+loop) of scan-loop endof
 ['] (of) of 5+ endof
@@ -127,6 +128,7 @@ dup 1 + @ case
 ['] litc of 3 + dup c@ . 1+ endof
 ['] lits of print-lits endof
 ['] (do) of 3 + ." do " endof
+['] (?do) of 5+ ." ?do " endof
 ['] (loop) of 5+ ." loop " endof
 ['] (+loop) of 5+ ." +loop " endof
 ['] (of) of print-of endof
