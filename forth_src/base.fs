@@ -23,7 +23,7 @@ latestxt compile, ; immediate
 : 0<> ( x -- flag ) 0= 0= ;
 
 : lits ( -- addr len )
-r> 1+ dup 1+ swap c@ 2dup + 1- >r ;
+r> 1+ count 2dup + 1- >r ;
 
 : s" ( -- addr len )
 postpone lits here 0 c, 0
