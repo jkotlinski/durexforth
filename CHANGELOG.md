@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - POSTPONE error handling.
  - Documented DEFCODE, #S
  - V: visual bug when saving.
+### Added
+ - An improved SEE which should decode most colon words.
 ### Changed
  - #> (the pictured numeric output string buffer) now uses its own buffer, separate from HERE.
  - Do not print "ok" while compiling. Makes it easier to re-enter multi-line word definitions in interpreter.

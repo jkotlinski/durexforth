@@ -21,6 +21,9 @@ parse-name sid included sid-demo
 1 fakekeys \ exits demo
 parse-name spritedemo included
 
+.( see )
+parse-name testsee included
+
 ---test---
 
 : x depth abort" depth" ; x
