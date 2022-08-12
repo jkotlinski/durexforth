@@ -143,7 +143,7 @@ i 4+ c@ #if = and if
 
 : print-jmp ( addr -- addr )
 dup 1+ @ dup my-xt @ u< if print-xt
-else drop branchptr @ here do
+else drop branchptr @ here ?do
 i @ over = if i 4+ c@ case
 #else of ." else "
 dup 3+ remove-then endof
