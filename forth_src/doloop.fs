@@ -20,8 +20,8 @@ postpone (do) here dup >l ; immediate
 
 : ?do
 postpone 2dup postpone = postpone if
-postpone 2drop postpone branch
-here swap 0 , postpone then
+postpone 2drop
+here 1+ swap 0 jmp, postpone then
 postpone (do) here dup >l ; immediate
 
 : leave
