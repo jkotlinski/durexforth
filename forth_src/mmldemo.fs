@@ -1,5 +1,5 @@
 require mml
-cr .( Frere Jaques) 
+cr .( Frere Jaques)
 : frere-jaques
 s" o3l4fgaffgafab->c&c<ab->c&cl8cdc<b-
 l4af>l8cdc<b-l4affcf&ffcf&f"
@@ -8,9 +8,19 @@ c<b-l4af>l8cdc<b-l4affcf&ffcf&f"
 s" " play-mml ;
 frere-jaques
 
-cr .( Sarias Song) 
+\ l" is like s", but supports strings
+\ longer than 255 bytes.
+: litl ( -- addr len )
+r> 1+ dup 2+ swap @ 2dup + 1- >r ;
+: l" ( -- addr len )
+postpone litl here 0 , 0
+begin getc dup '"' <>
+while c, 1+ repeat
+drop swap ! ; immediate
+
+cr .( Sarias Song)
 : sarias-song
-s" l16o3f8o4crcrcro3f8o4crcrcro3f8o4crc
+l" l16o3f8o4crcrcro3f8o4crcrcro3f8o4crc
 rcro3f8o4crcro3cre8o4crcrcro3e8o4
 crcrcro3e8o4crcrcro3e8o4crcro3c8f8o4crc
 rcro3f8o4crcrcro3f8o4crcrcro3f8o4
