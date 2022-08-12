@@ -19,8 +19,8 @@ variable lsp lstk lsp !
 postpone (do) here dup >l ; immediate
 
 : (?do)
-2dup = if 2drop branch else
-r> 2+ >r (do) then ;
+2dup = if 2drop [ ' branch jmp, ] else
+r> 2+ >r [ ' (do) jmp, ] then ;
 
 : ?do
 postpone (?do) here 0 ,
