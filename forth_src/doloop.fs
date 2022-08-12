@@ -18,11 +18,13 @@ variable lsp lstk lsp !
 : do 0
 postpone (do) here dup >l ; immediate
 
+: (?do)
+2dup = if 2drop branch else
+r> 2+ >r (do) then ;
+
 : ?do
-postpone 2dup postpone = postpone if
-postpone 2drop
-here 1+ swap 0 jmp, postpone then
-postpone (do) here dup >l ; immediate
+postpone (?do) here 0 ,
+here dup >l ; immediate
 
 : leave
 postpone unloop
