@@ -1,6 +1,10 @@
 ( decompiles colon definitions
 to screen. try "see see". )
 
+marker ---see---
+
+header see latest
+
 ( points to a list with format
  src, dst, code )
 variable branchptr
@@ -184,7 +188,9 @@ drop ';' emit cr exit else
 ." exit " 1+ then endof
 endcase again ;
 
-: see
+define see
 parse-name 2dup find-name \ c-addr u nt
 ?dup 0= if notfound then nip nip \ nt
 dup scan print ;
+
+to latest
