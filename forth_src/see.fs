@@ -18,10 +18,9 @@ variable my-xt
 
 : ,branch ( val -- )
 branchptr @ ! 2 branchptr +! ;
-: ,cbranch ( val -- )
-branchptr @ c! 1 branchptr +! ;
 : branch! ( src dst -- src )
-over ,branch ,branch 0 ,cbranch ;
+over ,branch ,branch
+0 branchptr @ c! 1 branchptr +! ;
 : type! ( u -- )
 branchptr @ 1 - c! ;
 
