@@ -96,8 +96,8 @@ drop exit else 1+ then endof
 abort endcase again ;
 
 : print-xt ( xt -- )
-xt>nt ?dup if name>string type
-else ." ??" then space ;
+dup xt>nt ?dup if name>string type drop
+else u. ." execute" then space ;
 
 : print-0branch ( addr -- addr+5 )
 branchptr @ here do
