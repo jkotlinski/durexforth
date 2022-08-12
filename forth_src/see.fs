@@ -90,8 +90,7 @@ $20 of scan-jsr endof
 $4c of scan-jmp reached-end if
 drop exit then 3+ endof
 $e8 of 1+ endof \ inx
-$60 of \ rts
-reached-end if
+$60 of reached-end if \ rts
 drop exit else 1+ then endof
 abort endcase again ;
 
