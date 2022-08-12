@@ -47,7 +47,7 @@ u> 0= if \ back
 #until type! then 5+ ;
 
 : skip-lits ( addr -- addr )
-3+ dup @ + 2+ ;
+3+ dup c@ + 1+ ;
 
 : scan-loop ( addr -- addr+5 )
 \ correct #else to #leave
@@ -112,7 +112,7 @@ endcase leave then
 
 : print-lits ( addr -- addr )
 's' emit '"' emit space
-5+ dup 2 - @ begin ?dup while
+4+ dup 1- c@ begin ?dup while
 over c@ emit 1 /string repeat
 '"' emit space ;
 
