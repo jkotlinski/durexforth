@@ -8,6 +8,9 @@ refill source tuck
 type 0 do $400 i + c@ $4a0 i + c@
 <> abort" ko" loop ; immediate
 
+: x ?do loop ; gives x
+: x ?do loop ;
+
 : x ; immediate gives x
 : x immediate ;
 
