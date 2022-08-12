@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
- - DOWORDS failed if a name token was placed on a page boundary.
+ - DOWORDS incorrectly quit for some non-false xt return values.
  - POSTPONE error handling.
  - Documented DEFCODE, #S
  - V: visual bug when saving.

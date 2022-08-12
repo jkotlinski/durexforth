@@ -814,9 +814,10 @@ OLD_BASE = * + 1
 .xt = * + 1
     jsr PLACEHOLDER_ADDRESS
     inx
+    lda MSB-1, x
+    ora LSB-1, x
+    beq .cancel
     pla
-    ldy MSB-1, x
-    beq -
     clc
     adc #3 ; guaranteed carry clear
     adc .dowords_nametoken
@@ -828,3 +829,6 @@ OLD_BASE = * + 1
 ; using a word here in case the lambda trashes Ws
 .dowords_nametoken
     !word 0
+.cancel
+    pla
+    rts
