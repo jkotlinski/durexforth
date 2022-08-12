@@ -102,9 +102,9 @@ else ." ??" then space ;
 : print-0branch ( addr -- addr+5 )
 branchptr @ here do
 i @ over = if i 4+ c@ case
-#until of ." until " endof
-#while of ." while " endof
 #if of ." if " endof
+#while of ." while " endof
+#until of ." until " endof
 endcase leave then
 5 +loop 5+ ;
 
@@ -149,9 +149,9 @@ else drop branchptr @ here do
 i @ over = if i 4+ c@ case
 #else of ." else "
 dup 3+ remove-then endof
+#leave of ." leave " endof
 #repeat of ." repeat " endof
 #again of ." again " endof
-#leave of ." leave " endof
 abort endcase then 5 +loop then ;
 
 : .then ." then " ;
@@ -161,13 +161,13 @@ abort endcase then 5 +loop then ;
 branchptr @ here ?do
 dup i 2+ @ = if
 i 4+ c@ case
+#if of .then endof
+#else of .then endof
+#while of endof
+#leave of endof
 #repeat of .begin endof
 #again of .begin endof
 #until of .begin endof
-#while of endof
-#leave of endof
-#else of .then endof
-#if of .then endof
 abort endcase then 5 +loop ;
 
 : print ( nt -- )
