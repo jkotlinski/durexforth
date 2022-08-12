@@ -84,7 +84,7 @@ then type! then ;
 
 : scan ( nt -- )
 here branchptr !
->xt begin dup c@ case
+>xt dup my-xt ! begin dup c@ case
 $20 of scan-jsr endof
 $4c of scan-jmp reached-end if
 drop exit then 3+ endof
@@ -172,7 +172,7 @@ abort endcase then 5 +loop ;
 ':' emit space
 dup name>string type space
 dup c@ $80 and if ." immediate " then
->xt dup my-xt ! begin
+>xt begin
 print-to-branch dup c@ case
 $20 of print-jsr endof
 $4c of print-jmp reached-end if
