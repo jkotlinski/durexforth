@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Documented DEFCODE, #S
  - V: visual bug when saving.
 ### Added
- - Revived SEE which was removed in 4.0.0. To load it, INCLUDE SEE.
+ - An improved SEE which should decode most colon words.
 ### Changed
  - #> (the pictured numeric output string buffer) now uses its own buffer, separate from HERE.
  - Do not print "ok" while compiling. Makes it easier to re-enter multi-line word definitions in interpreter.
