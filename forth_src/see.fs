@@ -19,15 +19,17 @@ variable my-xt
 
 : ,branch ( val -- )
 branchptr @ ! 2 branchptr +! ;
+: ,cbranch ( val -- )
+branchptr @ c! 1 branchptr +! ;
 : branch! ( src dst -- src )
-over ,branch ,branch 0 ,branch ;
+over ,branch ,branch 0 ,cbranch ;
 : type! ( u -- )
-branchptr @ 2 - ! ;
+branchptr @ 1 - c! ;
 
 : reached-end ( addr -- addr flag )
 1 branchptr @ here ?do
 over i 2+ @ u< if drop 0 leave then
-6 +loop ;
+5 +loop ;
 
 :noname ( 0 xt nt -- nt? xt flag )
 2dup dup c@ $1f and 1+ + @ = if
@@ -48,8 +50,8 @@ u> 0= if \ back
 : scan-loop ( addr -- addr+5 )
 \ correct #else to #leave
 5+ branchptr @ here ?do
-dup i 2+ @ = if #leave i 4+ ! then
-6 +loop ;
+dup i 2+ @ = if #leave i 4+ c! then
+5 +loop ;
 
 : scan-jsr ( addr -- addr )
 dup 1+ @ case
@@ -73,8 +75,8 @@ dup dup 1+ @ u> 0= if 0 exit then
 \ 0branch fwd dst?
 0 branchptr @ here ?do
 over 3+ i 2+ @ = if \ dst?
-#while i 4+ !
-drop 1 leave then 6 +loop ;
+#while i 4+ c!
+drop 1 leave then 5 +loop ;
 
 : scan-jmp ( addr -- addr )
 dup 1+ @ dup my-xt @ u< if drop else
@@ -101,11 +103,11 @@ else ." ??" then space ;
 : print-0branch ( addr -- addr+5 )
 branchptr @ here do
 i @ over = if
-i 4+ @ 10 > if ." until "
-else i 4+ @ #while = if
+i 4+ c@ 10 > if ." until "
+else i 4+ c@ #while = if
 ." while " else ." if " then
 then unloop 5+ exit then
-6 +loop abort ;
+5 +loop abort ;
 
 : print-lits ( addr -- addr )
 's' emit '"' emit space
@@ -116,8 +118,8 @@ over c@ emit 1 /string repeat
 : print-unloop ( addr -- addr+3 )
 \ if followed by a leave, skip
 3+ branchptr @ here do
-dup i @ = i 4+ @ #leave = and if
-unloop exit then 6 +loop ." unloop " ;
+dup i @ = i 4+ c@ #leave = and if
+unloop exit then 5 +loop ." unloop " ;
 
 : print-of ( addr -- addr+5 )
 5+ ." over = if drop " ;
@@ -139,19 +141,19 @@ endcase ;
 
 : remove-then ( addr -- )
 branchptr @ here do i 2+ @ over =
-i 4+ @ #if = and if
-0 i 2+ ! then 6 +loop drop ;
+i 4+ c@ #if = and if
+0 i 2+ ! then 5 +loop drop ;
 
 : print-jmp ( addr -- addr )
 dup 1+ @ dup my-xt @ u< if print-xt
 else drop branchptr @ here do
-i @ over = if i 4+ @ case
+i @ over = if i 4+ c@ case
 #else of ." else "
 dup 3+ remove-then endof
 #repeat of ." repeat " endof
 #again of ." again " endof
 #leave of ." leave " endof
-abort endcase then 6 +loop then ;
+abort endcase then 5 +loop then ;
 
 : .then ." then " ;
 : .begin ." begin " ;
@@ -159,7 +161,7 @@ abort endcase then 6 +loop then ;
 : print-to-branch ( addr -- addr )
 branchptr @ here ?do
 dup i 2+ @ = if
-i 4+ @ case
+i 4+ c@ case
 #repeat of .begin endof
 #again of .begin endof
 #until of .begin endof
@@ -167,7 +169,7 @@ i 4+ @ case
 #leave of endof
 #else of .then endof
 #if of .then endof
-abort endcase then 6 +loop ;
+abort endcase then 5 +loop ;
 
 : print ( nt -- )
 ':' emit space
