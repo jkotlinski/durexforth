@@ -12,10 +12,9 @@ variable my-xt
 1 constant #else
 2 constant #while
 3 constant #leave
-\ codes > 10 match begin
-11 constant #repeat
-12 constant #again
-13 constant #until
+4 constant #repeat
+5 constant #again
+6 constant #until
 
 : ,branch ( val -- )
 branchptr @ ! 2 branchptr +! ;
@@ -102,12 +101,12 @@ else ." ??" then space ;
 
 : print-0branch ( addr -- addr+5 )
 branchptr @ here do
-i @ over = if
-i 4+ c@ 10 > if ." until "
-else i 4+ c@ #while = if
-." while " else ." if " then
-then unloop 5+ exit then
-5 +loop abort ;
+i @ over = if i 4+ c@ case
+#until of ." until " endof
+#while of ." while " endof
+#if of ." if " endof
+endcase leave then
+5 +loop 5+ ;
 
 : print-lits ( addr -- addr )
 's' emit '"' emit space
