@@ -77,14 +77,12 @@ TYPE ; ( caddr u -- )
     ldy #0
     jmp pushya
 
-    ; Calls REFILL. Closes active input source in case of error.
 GETLINE ; ( -- )
     jsr REFILL
     inx
     lda MSB-1,x
-    beq +
-    rts
-+   ; handle EOF
+    bne .ret
+    ; REFILL failed. Close the active input source.
     stx W
     lda	SOURCE_ID_LSB
     jsr	CLOSE
@@ -95,6 +93,7 @@ GETLINE ; ( -- )
     jmp ++
 +   jsr CLRCHN
 ++  ldx W
+.ret
     rts
 
     +BACKLINK "refill", 6
