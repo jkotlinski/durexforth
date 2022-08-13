@@ -4,7 +4,7 @@ include see
 
 : gives page see
 4 $d6 c@ do cr loop \ move to row 4
-refill source tuck
+refill drop source tuck
 type 0 do $400 i + c@ $4a0 i + c@
 <> abort" ko" loop ; immediate
 

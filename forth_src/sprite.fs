@@ -40,4 +40,5 @@ over c! 1+ ;
 
 ( read sprite to address )
 : sp-data ( addr -- )
-#21 0 do refill rdb rdb rdb loop drop ;
+#21 0 do refill drop
+rdb rdb rdb loop drop ;

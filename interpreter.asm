@@ -120,7 +120,7 @@ INIT_S = * + 1
     tax
 
 interpret_loop
-    jsr REFILL
+    jsr GETLINE
 
     jsr interpret_tib
     jmp interpret_loop
@@ -552,25 +552,6 @@ EVALUATE
     sta .bufend + 1
     inx
 
-    jsr evaluate_get_new_line
-    ldy #$ff
-    sty SOURCE_ID_LSB
-    sty SOURCE_ID_MSB
-
-.eval_loop
-    lda TIB_PTR + 1
-    cmp .bufend + 1
-    bcc +
-    lda TIB_PTR
-    cmp .bufend
-    bcc +
-    jmp RESTORE_INPUT ; exit
-+
-    jsr interpret_tib
-    jsr REFILL
-    jmp .eval_loop
-
-evaluate_get_new_line
     ldy #0
     sty TO_IN_W
     sty TO_IN_W + 1
@@ -608,21 +589,12 @@ evaluate_get_new_line
     lda W + 1
     sbc TIB_PTR + 1
     sta TIB_SIZE + 1
-    rts
 
-evaluate_consume_tib
-    lda TIB_PTR
-    clc
-    adc TIB_SIZE
-    sta TIB_PTR
-    lda TIB_PTR + 1
-    adc TIB_SIZE + 1
-    sta TIB_PTR + 1
-
-    inc TIB_PTR ; skip cr
-    bne +
-    inc TIB_PTR + 1
-+   rts
+    ldy #$ff
+    sty SOURCE_ID_LSB
+    sty SOURCE_ID_MSB
+    jsr interpret_tib
+    jmp RESTORE_INPUT
 
 .bufend
     !word 0

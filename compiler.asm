@@ -167,7 +167,7 @@ HEADER
 -   jsr PARSE_NAME
     lda LSB,x
     bne +
-    jsr REFILL
+    jsr GETLINE
     jmp -
 +
     ; update dictionary pointer
