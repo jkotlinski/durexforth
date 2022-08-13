@@ -77,6 +77,7 @@ TYPE ; ( caddr u -- )
     ldy #0
     jmp pushya
 
+    ; Calls REFILL. Closes active input source in case of error.
 GETLINE ; ( -- )
     jsr REFILL
     inx
