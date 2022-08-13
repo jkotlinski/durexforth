@@ -545,50 +545,16 @@ EVALUATE
     sta TIB_PTR
     lda MSB + 1, x
     sta TIB_PTR + 1
-    jsr PLUS
     lda LSB, x
-    sta .bufend
+    sta TIB_SIZE
     lda MSB, x
-    sta .bufend + 1
+    sta TIB_SIZE + 1
+    inx
     inx
 
     ldy #0
     sty TO_IN_W
     sty TO_IN_W + 1
-
-    ; Determines TIB_SIZE.
-    lda TIB_PTR
-    sta W
-    lda TIB_PTR + 1
-    sta W + 1
-.findtibsizeloop
-    lda .bufend + 1
-    cmp W + 1
-    bcc .foundeol
-    bne +
-    lda W
-    cmp .bufend
-    bcs .foundeol
-+
-    ldy #0
-    lda (W),y
-    cmp #K_RETURN
-    beq .foundeol
-
-    inc W
-    bne +
-    inc W + 1
-+
-    jmp .findtibsizeloop
-
-.foundeol
-    lda W
-    sec
-    sbc TIB_PTR
-    sta TIB_SIZE
-    lda W + 1
-    sbc TIB_PTR + 1
-    sta TIB_SIZE + 1
 
     ldy #$ff
     sty SOURCE_ID_LSB
