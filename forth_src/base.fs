@@ -15,9 +15,7 @@ swap here swap ! ; immediate
 : again jmp, , ; immediate
 : recurse
 latestxt compile, ; immediate
-: ( begin getc dup 0= if refill drop
-then ')' = if exit then again
-; immediate
+: ( begin getc ')' = until ; immediate
 : \ source >in ! drop ; immediate
 : <> ( a b -- c ) = 0= ;
 : u> ( n -- b ) swap u< ;
