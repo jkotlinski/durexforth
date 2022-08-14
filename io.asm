@@ -77,7 +77,7 @@ TYPE ; ( caddr u -- )
     ldy #0
     jmp pushya
 
-GETLINE ; ( -- )
+REFILL_OR_CLOSE ; ( -- )
     jsr REFILL
     inx
     lda MSB-1,x
@@ -231,7 +231,7 @@ TO_IN_W
     +BACKLINK "getc", 4
     jsr GET_CHAR_FROM_TIB
     bne +
-    jsr GETLINE
+    jsr REFILL_OR_CLOSE
     lda #K_RETURN
 +   ldy #0
     jmp pushya
@@ -243,7 +243,7 @@ CHAR ; ( name -- char )
     bne +
     inx
     inx
-    jsr GETLINE
+    jsr REFILL_OR_CLOSE
     jmp -
 +   inx
     jmp FETCHBYTE

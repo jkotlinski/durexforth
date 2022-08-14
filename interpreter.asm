@@ -120,7 +120,7 @@ INIT_S = * + 1
     tax
 
 interpret_loop
-    jsr GETLINE
+    jsr REFILL_OR_CLOSE
 
     jsr interpret_tib
     jmp interpret_loop
