@@ -8,25 +8,8 @@
 \ but WITHOUT ANY WARRANTY; without even the implied warranty of
 \ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-\ The tests are not claimed to be comprehensive or correct 
+\ The tests are not claimed to be comprehensive or correct
 
-\ ------------------------------------------------------------------------------
-\ Version 0.13 TRUE changed to <TRUE> as defined in core.fr
-\         0.12 22 July 2015, >IN Manipulation test modified to work on 16 bit
-\              Forth systems
-\         0.11 25 April 2015 Number prefixes # $ % and 'c' character input tested
-\         0.10 3 August 2014 Test IMMEDIATE doesn't toggle an immediate flag
-\         0.3  1 April 2012 Tests placed in the public domain.
-\              Testing multiple ELSE's.
-\              Further tests on DO +LOOPs.
-\              Ackermann function added to test RECURSE.
-\              >IN manipulation in interpreter mode
-\              Immediate CONSTANTs, VARIABLEs and CREATEd words tests.
-\              :NONAME with RECURSE moved to core extension tests.
-\              Parsing behaviour of S" ." and ( tested
-\         0.2  6 March 2009 { and } replaced with T{ and }T
-\              Added extra RECURSE tests
-\         0.1  20 April 2007 Created
 \ ------------------------------------------------------------------------------
 \ The tests are based on John Hayes test program for the core word set
 \
@@ -34,7 +17,11 @@
 \ tests are thought to be incomplete
 \
 \ Words tested in this file are:
-\     DO +LOOP RECURSE ELSE >IN IMMEDIATE
+\     DO I +LOOP RECURSE ELSE >IN IMMEDIATE FIND IF...BEGIN...REPEAT ALLOT DOES>
+\ and
+\     Parsing behaviour
+\     Number prefixes # $ % and 'A' character input
+\     Definition names
 \ ------------------------------------------------------------------------------
 \ Assumptions and dependencies:
 \     - tester.fr or ttester.fs has been loaded prior to this file
@@ -137,6 +124,41 @@ T{ 0 MIN-INT 1+   1 MIN-INT GD8  -> 2 }T
 T{ 0 MIN-INT 1+ DUP MIN-INT GD8  -> 1 }T
 
 \ ------------------------------------------------------------------------------
+\ TESTING +LOOP setting I to an arbitrary value
+
+\ The specification for +LOOP permits the loop index I to be set to any value
+\ including a value outside the range given to the corresponding  DO.
+
+\ SET-I is a helper to set I in a DO ... +LOOP to a given value
+\ n2 is the value of I in a DO ... +LOOP
+\ n3 is a test value
+\ If n2=n3 then return n1-n2 else return 1
+: SET-I  ( n1 n2 n3 -- n1-n2 | 1 )
+   OVER = IF - ELSE 2DROP 1 THEN
+;
+
+: -SET-I ( n1 n2 n3 -- n1-n2 | -1 )
+   SET-I DUP 1 = IF NEGATE THEN
+;
+
+: PL1 20 1 DO I 18 I 3 SET-I +LOOP ;
+T{ PL1 -> 1 2 3 18 19 }T
+: PL2 20 1 DO I 20 I 2 SET-I +LOOP ;
+T{ PL2 -> 1 2 }T
+: PL3 20 5 DO I 19 I 2 SET-I DUP 1 = IF DROP 0 I 6 SET-I THEN +LOOP ;
+T{ PL3 -> 5 6 0 1 2 19 }T
+: PL4 20 1 DO I MAX-INT I 4 SET-I +LOOP ;
+T{ PL4 -> 1 2 3 4 }T
+: PL5 -20 -1 DO I -19 I -3 -SET-I +LOOP ;
+T{ PL5 -> -1 -2 -3 -19 -20 }T
+: PL6 -20 -1 DO I -21 I -4 -SET-I +LOOP ;
+T{ PL6 -> -1 -2 -3 -4 }T
+: PL7 -20 -1 DO I MIN-INT I -5 -SET-I +LOOP ;
+T{ PL7 -> -1 -2 -3 -4 -5 }T
+: PL8 -20 -5 DO I -20 I -2 -SET-I DUP -1 = IF DROP 0 I -6 -SET-I THEN +LOOP ;
+T{ PL8 -> -5 -6 0 -1 -2 -20 }T
+
+\ ------------------------------------------------------------------------------
 TESTING multiple RECURSEs in one colon definition
 
 : ACK ( m n -- u )    \ Ackermann function, from Rosetta Code
@@ -171,9 +193,9 @@ T{ 123 CONSTANT IW1 IMMEDIATE IW1 -> 123 }T
 T{ : IW2 IW1 LITERAL ; IW2 -> 123 }T
 T{ VARIABLE IW3 IMMEDIATE 234 IW3 ! IW3 @ -> 234 }T
 T{ : IW4 IW3 [ @ ] LITERAL ; IW4 -> 234 }T
-\ T{ :NONAME [ 345 ] IW3 [ ! ] ; DROP IW3 @ -> 345 }T
+T{ :NONAME [ 345 ] IW3 [ ! ] ; DROP IW3 @ -> 345 }T
 T{ CREATE IW5 456 , IMMEDIATE -> }T
-\ T{ :NONAME IW5 [ @ IW3 ! ] ; DROP IW3 @ -> 456 }T
+T{ :NONAME IW5 [ @ IW3 ! ] ; DROP IW3 @ -> 456 }T
 T{ : IW6 CREATE , IMMEDIATE DOES> @ 1+ ; -> }T
 T{ 111 IW6 IW7 IW7 -> 112 }T
 T{ : IW8 IW7 LITERAL 1+ ; IW8 -> 113 }T
@@ -196,7 +218,7 @@ TESTING parsing behaviour of S" ." and (
 T{ : GC5 S" A string"2DROP ; GC5 -> }T
 T{ ( A comment)1234 -> 1234 }T
 T{ : PB1 CR ." You should see 2345: "." 2345"( A comment) CR ; PB1 -> }T
- 
+
 \ ------------------------------------------------------------------------------
 TESTING number prefixes # $ % and 'c' character input
 \ Adapted from the Forth 200X Draft 14.5 document
@@ -204,38 +226,26 @@ TESTING number prefixes # $ % and 'c' character input
 VARIABLE OLD-BASE
 DECIMAL BASE @ OLD-BASE !
 T{ #1289 -> 1289 }T
-\ T{ #12346789. -> 12346789. }T
 T{ #-1289 -> -1289 }T
-\ T{ #-12346789. -> -12346789. }T
 T{ $12eF -> 4847 }T
-\ T{ $12aBcDeF. -> 313249263. }T
 T{ $-12eF -> -4847 }T
-\ T{ $-12AbCdEf. -> -313249263. }T
 T{ %10010110 -> 150 }T
-\ T{ %10010110. -> 150. }T
 T{ %-10010110 -> -150 }T
-\ T{ %-10010110. -> -150. }T
-T{ 'z' -> char z }T
-T{ 'Z' -> char Z }T
+T{ 'z' -> 90 }T \ PETSCII
+T{ 'Z' -> 218 }T \ PETSCII
 \ Check BASE is unchanged
 T{ BASE @ OLD-BASE @ = -> <TRUE> }T
 
 \ Repeat in Hex mode
 16 OLD-BASE ! 16 BASE !
 T{ #1289 -> 509 }T
-\ { #12346789. -> BC65A5. }T
 T{ #-1289 -> -509 }T
-\ T{ #-12346789. -> -BC65A5. }T
 T{ $12eF -> 12EF }T
-\ T{ $12aBcDeF. -> 12AbCdeF. }T
 T{ $-12eF -> -12EF }T
-\ T{ $-12AbCdEf. -> -12ABCDef. }T
 T{ %10010110 -> 96 }T
-\ T{ %10010110. -> 96. }T
 T{ %-10010110 -> -96 }T
-\ T{ %-10010110. -> -96. }T
-T{ 'z' -> char z }T
-T{ 'Z' -> char Z }T
+T{ 'z' -> 5a }T \ PETSCII
+T{ 'Z' -> da }T \ PETSCII
 \ Check BASE is unchanged
 T{ BASE @ OLD-BASE @ = -> <TRUE> }T   \ 2
 
@@ -243,7 +253,54 @@ DECIMAL
 \ Check number prefixes in compile mode
 T{ : nmp  #8327 $-2cbe %011010111 ''' ; nmp -> 8327 -11454 215 39 }T
 
+\ ------------------------------------------------------------------------------
+TESTING definition names
+\ should support {1..31} graphical characters
+: !"#$%&'()*+,-./0123456789:;<=>? 1 ;
+T{ !"#$%&'()*+,-./0123456789:;<=>? -> 1 }T
+: @ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^ 2 ;
+T{ @ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^ -> 2 }T
+: _`abcdefghijklmnopqrstuvwxyz{|} 3 ;
+T{ _`abcdefghijklmnopqrstuvwxyz{|} -> 3 }T
+: _`abcdefghijklmnopqrstuvwxyz{|~ 4 ;     \ Last character different
+T{ _`abcdefghijklmnopqrstuvwxyz{|~ -> 4 }T
+T{ _`abcdefghijklmnopqrstuvwxyz{|} -> 3 }T
+
+\ ------------------------------------------------------------------------------
+TESTING FIND with a zero length string and a non-existent word
+
+CREATE EMPTYSTRING 0 C,
+: EMPTYSTRING-FIND-CHECK ( c-addr 0 | xt 1 | xt -1 -- t|f )
+    DUP IF ." FIND returns a TRUE value for an empty string!" CR THEN
+    0= SWAP EMPTYSTRING = = ;
+T{ EMPTYSTRING FIND EMPTYSTRING-FIND-CHECK -> <TRUE> }T
+
+CREATE NON-EXISTENT-WORD   \ Same as in exceptiontest.fth
+       15 C, CHAR $ C, CHAR $ C, CHAR Q C, CHAR W C, CHAR E C, CHAR Q C,
+   CHAR W C, CHAR E C, CHAR Q C, CHAR W C, CHAR E C, CHAR R C, CHAR T C,
+   CHAR $ C, CHAR $ C,
+T{ NON-EXISTENT-WORD FIND -> NON-EXISTENT-WORD 0 }T
+
+\ ------------------------------------------------------------------------------
+TESTING IF ... BEGIN ... REPEAT (unstructured)
+
+T{ : UNS1 DUP 0 > IF 9 SWAP BEGIN 1+ DUP 3 > IF EXIT THEN REPEAT ; -> }T
+T{ -6 UNS1 -> -6 }T
+T{  1 UNS1 -> 9 4 }T
+
+\ ------------------------------------------------------------------------------
+TESTING DOES> doesn't cause a problem with a CREATEd address
+
+: MAKE-2CONST DOES> 2@ ;
+T{ CREATE 2K 3 , 2K , MAKE-2CONST 2K -> ' 2K >BODY 3 }T
+
+\ ------------------------------------------------------------------------------
+TESTING ALLOT ( n -- ) where n <= 0
+
+T{ HERE 5 ALLOT -5 ALLOT HERE = -> <TRUE> }T
+T{ HERE 0 ALLOT HERE = -> <TRUE> }T
 
 \ ------------------------------------------------------------------------------
 
 CR .( End of additional Core tests) CR
+
