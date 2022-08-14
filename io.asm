@@ -77,12 +77,12 @@ TYPE ; ( caddr u -- )
     ldy #0
     jmp pushya
 
-    +BACKLINK "refill", 6
-REFILL
-
-READ_EOF = * + 1
-    lda #0
-    beq .not_eof
+GETLINE ; ( -- )
+    jsr REFILL
+    inx
+    lda MSB-1,x
+    bne .ret
+    ; REFILL failed. Close the active input source.
     stx W
     lda	SOURCE_ID_LSB
     jsr	CLOSE
@@ -93,13 +93,26 @@ READ_EOF = * + 1
     jmp ++
 +   jsr CLRCHN
 ++  ldx W
+.ret
     rts
+
+    +BACKLINK "refill", 6
+REFILL ; ( -- flag )
+
+READ_EOF = * + 1
+    lda #0
+    beq .not_eof
+.return_false
+    dex
+    lda #0
+    sta MSB,x
+    sta LSB,x
+    rts
+
 .not_eof
     lda SOURCE_ID_MSB
-    beq +
-    jsr evaluate_consume_tib
-    jmp evaluate_get_new_line
-+
+    bne .return_false ; evaluate = fail
+
     ldy #0
     sty TO_IN_W
     sty TO_IN_W + 1
@@ -127,6 +140,11 @@ READ_EOF = * + 1
     ; Set TIB_SIZE to number of chars fetched.
     stx TIB_SIZE
     ldx W
+.return_true
+    dex
+    lda #$ff
+    sta LSB,x
+    sta MSB,x
     rts
 
 .getLineFromDisk
@@ -142,16 +160,15 @@ READ_EOF = * + 1
     sta READ_EOF
     pla
     ora #0
-    beq -
+    beq .return_true
     cmp #K_RETURN
-    beq +
+    beq .return_true
     inc $d020
     ldy TIB_SIZE
     sta (W),y
     inc TIB_SIZE
     dec $d020
     jmp -
-+   rts
 
 GET_CHAR_FROM_TIB
     lda TO_IN_W
@@ -214,7 +231,7 @@ TO_IN_W
     +BACKLINK "getc", 4
     jsr GET_CHAR_FROM_TIB
     bne +
-    jsr REFILL
+    jsr GETLINE
     lda #K_RETURN
 +   ldy #0
     jmp pushya
@@ -226,7 +243,7 @@ CHAR ; ( name -- char )
     bne +
     inx
     inx
-    jsr REFILL
+    jsr GETLINE
     jmp -
 +   inx
     jmp FETCHBYTE

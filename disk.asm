@@ -300,7 +300,7 @@ INCLUDED
     tax
 
     ; interpret until EOF
--   jsr REFILL
+-   jsr GETLINE
     lda READ_EOF
     bne +
     jsr interpret_tib
