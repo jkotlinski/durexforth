@@ -1,6 +1,6 @@
 DurexForth: Operators Manual
 ============================
-Johan Kotlinski <kotlinski@gmail.com>
+
 :toc2:
 
 == Introduction
