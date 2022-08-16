@@ -1,0 +1,27 @@
+=== Stack Manipulation ===
+
+drop ( a -- ):: Drop top of stack. (((drop)))
+dup ( a -- a a ):: Duplicate top of stack. (((dup)))
+
+/////
+\item[\index{swap}swap ( a b -- b a )] Swap top stack elements.
+\item[\index{over}over ( a b -- a b a )] Make a copy of the second item and push it on top.
+\item[\index{rot}rot ( a b c -- b c a )] Rotate the third item to the top.
+\item[\index{-rot}-rot ( a b c -- c a b )] rot rot
+\item[\index{2drop}2drop ( a b -- )] Drop two topmost stack elements.
+\item[\index{2dup}2dup ( a b -- a b a b )] Duplicate two topmost stack elements.
+\item[\index{?dup}?dup ( a -- a a? )] Dup a if a differs from 0.
+\item[\index{nip}nip ( a b -- b )] swap drop
+\item[\index{tuck}tuck ( a b -- b a b )] dup -rot
+\item[\index{pick}pick ( $x_u$ ... $x_1$ $x_0$ $u$ -- $x_u$ ... $x_1$ $x_0$ $x_u$ )]
+Pick from stack element with depth u to top of stack.
+\item[\index{$>$r}$>$r ( a -- )] Move value from top of parameter stack to top of return stack.
+\item[\index{r$>$}r$>$ ( -- a )] Move value from top of return stack to top of parameter stack.
+\item[\index{r"@}r@ ( -- a )] Copy value from top of return stack to top of parameter stack.
+\item[\index{depth}depth ( -- n)] \texttt{n} is the number of single-cell values contained in the data stack before \texttt{n} was placed on the stack.
+
+\item[\index{lsb}lsb ( -- addr)] The top address of the LSB parameter stack.
+\item[\index{msb}msb ( -- addr)] The top address of the MSB parameter stack.
+
+\end{description}
+/////

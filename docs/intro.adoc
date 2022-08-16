@@ -1,0 +1,63 @@
+=== Forth, the Language ===
+
+==== Why Forth? ====
+
+Forth is a unique language. What is so special about it? It is a small, low-level language, which can easily be extended to a high-level, domain-specific language that does anything you want it to do. Compared to C64 Basic, Forth is more attractive in almost every way. It is a lot faster, more memory effective, and more powerful.
+
+Compared to C, the nice thing about Forth is that you can run the full development environment on your C64,
+with text editor, compiler, assembler and debugger. It makes for a more interactive and fun experience than running a cross-compiler on PC.
+
+For a Forth introduction, please refer to the excellent
+http://www.forth.com/starting-forth/[Starting Forth] by Leo Brodie. As a follow-up, I
+recommend http://thinking-forth.sourceforge.net/[Thinking Forth] by the same author.
+
+==== Comparing to other Forths ====
+
+There are other Forths for C64, most notably Blazin' Forth. Blazin' Forth is excellent, but durexForth has some advantages:
+
+- durexForth uses text files instead of a custom block file system.
+- durexForth is smaller.
+- durexForth is faster.
+- durexForth can boot from cartridge.
+- durexForth implements the Forth 2012 core standard.
+- The durexForth editor is a vi clone.
+- durexForth is open source (available at https://github.com/jkotlinski/durexforth[Github]).
+
+=== Contents ===
+
+durexForth is packaged as a 16-kByte cartridge file and a system disk image. Using the cartridge is equivalent to loading durexForth from disk, but of course the cartridge boots a lot faster. The disk image also contains optional Forth modules that can be loaded at will.
+
+=== Appetizers ===
+
+Some demonstration files are included on the disk as appetizers.
+
+==== Graphics ====
+
+The gfxdemo package demonstrates the high-resolution graphics, with some examples adapted from the book "Step-By-Step Programming C64 Graphics" by Phil Cornes.
+Show the demos by entering:
+
++include gfxdemo+
+
+When a demo has finished drawing, press any key to continue.
+
+==== Fractals ====
+
+The fractals package demonstrates turtle graphics by generating fractal images. Run it by entering:
+
++include fractals+
+
+When an image has finished drawing, press any key to continue.
+
+==== Music ====
+
+The mmldemo package demonstrates the MML music capabilities. To play some music:
+
++include mmldemo+
+
+==== Sprites ====
+
+The sprite package adds functionality for defining and displaying sprites. To run the demo:
+
++include spritedemo+
+
+Exit the demo by pressing any key.
