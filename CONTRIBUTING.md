@@ -31,7 +31,7 @@ We welcome new features and bug fixes!  To keep things sane, we suggest:
 
 Compiling the Durexforth source requires the following software:
 
-* acme - the cross-assembler
+* acme - the cross-assembler (v0.97 or greater)
 * vice - the c64 emulator
 * pdflatex - provided by a TeX installation
 * make - the build system
