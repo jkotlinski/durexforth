@@ -1,4 +1,4 @@
-=== Stack Manipulation ===
+=== Stack Manipulation
 
 drop ( a -- ):: Drop top of stack.
 dup ( a -- a a ):: Duplicate top of stack.
@@ -18,3 +18,51 @@ r@ ( -- a ):: Copy value from top of return stack to top of parameter stack.
 depth ( -- n):: +n+ is the number of single-cell values contained in the data stack before +n+ was placed on the stack.
 lsb ( -- addr):: The top address of the LSB parameter stack.
 msb ( -- addr):: The top address of the MSB parameter stack.
+
+=== Utility
+
+pass:[.] ( n -- ):: Prints top value of stack as signed number.
+pass:[u.] ( u -- ):: Prints top value of stack as unsigned number.
+pass:[.s]:: See stack contents.
+emit ( a -- ):: Prints top value of stack as a PETSCII character. Example: +'q' emit+
+&pound;:: Comment to end of line. (Used on C64/PETSCII.)
+\:: Comment to end of line. (Used when cross-compiling from PC/ASCII.)
+(:: Multiline comment. Ignores everything until a ).
+bl ( -- char ):: Gives the PETSCII character for a space.
+space:: Displays one space.
+spaces ( n -- ):: Displays n spaces.
+page:: Clears the screen.
+rvs:: Reverse screen output.
+
+=== Mathematics
+
+1+ ( a -- b ):: Increase top of stack value by 1.
+1- ( a -- b ):: Decrease top of stack value by 1.
+2+ ( a -- b ):: Increase top of stack value by 2.
+2* ( a -- b ):: Multiply top of stack value by 2.
+2/ ( a -- b ):: Divide top of stack value by 2.
+100/ ( a -- b ):: Divides top of stack value by $100.
+++!+ ( n a -- ):: Add n to memory address a.
++ ( a b -- c ):: Add a and b.
+pass:[-] ( a b -- c ):: Subtract b from a.
+pass:[*] ( a b -- c ):: Multiply a with b.
+/ ( a b -- q ):: Divide a with b using floored division.
+/mod ( a b -- r q ):: Divide a with b, giving remainder r and quotient q.
+mod ( a b -- r ):: Remainder of a divided by b.
+*/ ( a b c -- q ):: Multiply a with b, then divide by c, using a 32-bit intermediary.
+*/mod ( a b c -- r q ):: Like */, but also keeping remainder r.
+0< ( a -- b ):: Is a negative?
+negate ( a -- b ):: Negates a.
+abs ( a -- b ):: Gives absolute value of a.
+min ( a b -- c ):: Gives the lesser of a and b.
+max ( a b -- c ):: Gives the greater of a and b.
+within ( n lo hi -- flag ):: Returns true if lo <= n < hi.
+< ( n1 n2 -- flag ):: Is n1 less than n2? (Signed.)
+> ( n1 n2 -- flag ):: Is n1 greater than n2? (Signed.)
+u< ( u1 u2 -- flag ):: Is u1 less than u2? (Unsigned.)
+u> ( u1 u2 -- flag ):: Is u1 greater than u2? (Unsigned.)
+lshift ( a b -- c ):: Binary shift a left by b.
+rshift ( a b -- c ):: Binary shift a right by b.
+base (variable):: Points to the cell that holds the numerical base.
+decimal:: Sets the numerical base to 10.
+hex:: Sets the numerical base to 16.

@@ -10,19 +10,24 @@ include::tutorial.adoc[Tutorial]
 == Editor
 include::editor.adoc[Editor]
 
-== Configuring durexForth
-include::config.adoc[Configuring durexForth]
-
 == Forth Words
 include::words.adoc[Forth Words]
 
-== Authors
-
-Johan Kotlinski:: Project initiator and maintainer.
-Mats Andr&eacute;n:: Contributed disk I/O primitives.
-
-_This list is incomplete. If you think you should be on this list, please add yourself._
+== Configuring durexForth
+include::config.adoc[Configuring durexForth]
 
 [appendix]
 == Internet Resources
 include::links.adoc[Internet Resources]
+
+[appendix]
+== Authors and Contributors
+
+Johan Kotlinski:: Project initiator and maintainer.
+Mats Andr&eacute;n:: Contributed disk I/O primitives.
+
+_This list is incomplete._
+
+[appendix]
+== License
+include::license.adoc[License]

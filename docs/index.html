@@ -1324,141 +1324,6 @@ Join lines.
 </div>
 </div>
 <div class="sect1">
-<h2 id="_configuring_durexforth">Configuring durexForth</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_stripping_modules">Stripping Modules</h3>
-<div class="paragraph"><p>By default, durexForth boots up with these modules pre-compiled in RAM:</p></div>
-<div class="dlist"><dl>
-<dt class="hdlist1">
-asm
-</dt>
-<dd>
-<p>
-The assembler. (Required and may not be stripped.)
-</p>
-</dd>
-<dt class="hdlist1">
-format
-</dt>
-<dd>
-<p>
-Numerical formatting words. (Also required.)
-</p>
-</dd>
-<dt class="hdlist1">
-wordlist
-</dt>
-<dd>
-<p>
-Wordlist manipulation. (Required by some modules.)
-</p>
-</dd>
-<dt class="hdlist1">
-labels
-</dt>
-<dd>
-<p>
-Assembler labels.
-</p>
-</dd>
-<dt class="hdlist1">
-doloop
-</dt>
-<dd>
-<p>
-Do-loop words.
-</p>
-</dd>
-<dt class="hdlist1">
-sys
-</dt>
-<dd>
-<p>
-System calls.
-</p>
-</dd>
-<dt class="hdlist1">
-debug
-</dt>
-<dd>
-<p>
-Words for debugging.
-</p>
-</dd>
-<dt class="hdlist1">
-ls
-</dt>
-<dd>
-<p>
-List disk contents.
-</p>
-</dd>
-<dt class="hdlist1">
-require
-</dt>
-<dd>
-<p>
-The words require and required.
-</p>
-</dd>
-<dt class="hdlist1">
-v
-</dt>
-<dd>
-<p>
-The text editor.
-</p>
-</dd>
-</dl></div>
-<div class="paragraph"><p>To reduce RAM usage, you may make a stripped-down version of durexForth. Do this by following these steps:</p></div>
-<div class="olist arabic"><ol class="arabic">
-<li>
-<p>
-Issue <code>---modules---</code> to unload all modules, or <code>---editor---</code> to unload the editor only.
-</p>
-</li>
-<li>
-<p>
-One by one, load the modules you want included with your new Forth. (E.g. <code>include labels</code>)
-</p>
-</li>
-<li>
-<p>
-Save the new system with e.g. <code>save-forth acmeforth</code>.
-</p>
-</li>
-</ol></div>
-</div>
-<div class="sect2">
-<h3 id="_custom_start_up">Custom Start-Up</h3>
-<div class="paragraph"><p>You may launch a word automatically at start-up by setting the variable <code>start</code> to the execution token of the word.  Example: <code>' megademo start !</code> To save the new configuration to disk, type e.g. <code>save-forth megademo</code>.</p></div>
-<div class="paragraph"><p>When writing a new program using a PC text editor, it is practical to configure durexForth to compile and execute the program at startup. That can be set up using the following snippet:</p></div>
-<div class="listingblock">
-<div class="content">
-<pre><code>$a000 value buf
-: go buf s" myprogramfile" buf
-loadb buf - evaluate ;
-' go start !
-save-forth @0:durexforth</code></pre>
-</div></div>
-</div>
-<div class="sect2">
-<h3 id="_turn_key_operation">Turn-key Operation</h3>
-<div class="paragraph"><p>Durexforth offers utilities to save your program in a turn-key fashion by including the <code>turnkey</code> module once the program is ready to be saved.</p></div>
-<div class="paragraph"><p>Programs can be saved in a compacted state using <code>save-pack</code>. These programs are stored with 32 bytes between <code>here</code> and <code>latest</code>. When they are first loaded, they will restore the header space to its original <code>top</code>.</p></div>
-<div class="paragraph"><p>If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary headers entirely when saving with <code>save-prg</code>. This allows your program to use memory down to <code>here</code> plus 32 bytes for safety.</p></div>
-<div class="paragraph"><p>After either of these words have saved the file to disk, they will restore forth to the unpacked state, and strip the <code>turnkey</code> module from the dictionary. This allows you to continue to use forth interactively in the case of <code>save-pack</code>. As <code>save-prg</code> has stripped the dictionary headers from the system, it will no longer be usable. If you wish to test your program after saving, you can compile a call to <code>save-prg</code> instead:</p></div>
-<div class="listingblock">
-<div class="content">
-<pre><code>: build save-prg mydemo start @ execute ;
-build</code></pre>
-</div></div>
-<div class="paragraph"><p>This will simulate the start-up sequence after saving the packed program.</p></div>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="_forth_words">Forth Words</h2>
 <div class="sectionbody">
 <div class="sect2">
@@ -1610,30 +1475,487 @@ The top address of the MSB parameter stack.
 </dd>
 </dl></div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_authors">Authors</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_utility">Utility</h3>
 <div class="dlist"><dl>
 <dt class="hdlist1">
-Johan Kotlinski
+. ( n&#8201;&#8212;&#8201;)
 </dt>
 <dd>
 <p>
-Project initiator and maintainer.
+Prints top value of stack as signed number.
 </p>
 </dd>
 <dt class="hdlist1">
-Mats Andr&eacute;n
+u. ( u&#8201;&#8212;&#8201;)
 </dt>
 <dd>
 <p>
-Contributed disk I/O primitives.
+Prints top value of stack as unsigned number.
+</p>
+</dd>
+<dt class="hdlist1">
+.s
+</dt>
+<dd>
+<p>
+See stack contents.
+</p>
+</dd>
+<dt class="hdlist1">
+emit ( a&#8201;&#8212;&#8201;)
+</dt>
+<dd>
+<p>
+Prints top value of stack as a PETSCII character. Example: <code><em>q</em> emit</code>
+</p>
+</dd>
+<dt class="hdlist1">
+&pound;
+</dt>
+<dd>
+<p>
+Comment to end of line. (Used on C64/PETSCII.)
+</p>
+</dd>
+<dt class="hdlist1">
+\
+</dt>
+<dd>
+<p>
+Comment to end of line. (Used when cross-compiling from PC/ASCII.)
+</p>
+</dd>
+<dt class="hdlist1">
+(
+</dt>
+<dd>
+<p>
+Multiline comment. Ignores everything until a ).
+</p>
+</dd>
+<dt class="hdlist1">
+bl (&#8201;&#8212;&#8201;char )
+</dt>
+<dd>
+<p>
+Gives the PETSCII character for a space.
+</p>
+</dd>
+<dt class="hdlist1">
+space
+</dt>
+<dd>
+<p>
+Displays one space.
+</p>
+</dd>
+<dt class="hdlist1">
+spaces ( n&#8201;&#8212;&#8201;)
+</dt>
+<dd>
+<p>
+Displays n spaces.
+</p>
+</dd>
+<dt class="hdlist1">
+page
+</dt>
+<dd>
+<p>
+Clears the screen.
+</p>
+</dd>
+<dt class="hdlist1">
+rvs
+</dt>
+<dd>
+<p>
+Reverse screen output.
 </p>
 </dd>
 </dl></div>
-<div class="paragraph"><p><em>This list is incomplete. If you think you should be on this list, please add yourself.</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="_mathematics">Mathematics</h3>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+1+ ( a&#8201;&#8212;&#8201;b )
+</dt>
+<dd>
+<p>
+Increase top of stack value by 1.
+</p>
+</dd>
+<dt class="hdlist1">
+1- ( a&#8201;&#8212;&#8201;b )
+</dt>
+<dd>
+<p>
+Decrease top of stack value by 1.
+</p>
+</dd>
+<dt class="hdlist1">
+2+ ( a&#8201;&#8212;&#8201;b )
+</dt>
+<dd>
+<p>
+Increase top of stack value by 2.
+</p>
+</dd>
+<dt class="hdlist1">
+2* ( a&#8201;&#8212;&#8201;b )
+</dt>
+<dd>
+<p>
+Multiply top of stack value by 2.
+</p>
+</dd>
+<dt class="hdlist1">
+2/ ( a&#8201;&#8212;&#8201;b )
+</dt>
+<dd>
+<p>
+Divide top of stack value by 2.
+</p>
+</dd>
+<dt class="hdlist1">
+100/ ( a&#8201;&#8212;&#8201;b )
+</dt>
+<dd>
+<p>
+Divides top of stack value by $100.
+</p>
+</dd>
+<dt class="hdlist1">
+<code>+!</code> ( n a&#8201;&#8212;&#8201;)
+</dt>
+<dd>
+<p>
+Add n to memory address a.
+</p>
+</dd>
+<dt class="hdlist1">
++ ( a b&#8201;&#8212;&#8201;c )
+</dt>
+<dd>
+<p>
+Add a and b.
+</p>
+</dd>
+<dt class="hdlist1">
+- ( a b&#8201;&#8212;&#8201;c )
+</dt>
+<dd>
+<p>
+Subtract b from a.
+</p>
+</dd>
+<dt class="hdlist1">
+* ( a b&#8201;&#8212;&#8201;c )
+</dt>
+<dd>
+<p>
+Multiply a with b.
+</p>
+</dd>
+<dt class="hdlist1">
+/ ( a b&#8201;&#8212;&#8201;q )
+</dt>
+<dd>
+<p>
+Divide a with b using floored division.
+</p>
+</dd>
+<dt class="hdlist1">
+/mod ( a b&#8201;&#8212;&#8201;r q )
+</dt>
+<dd>
+<p>
+Divide a with b, giving remainder r and quotient q.
+</p>
+</dd>
+<dt class="hdlist1">
+mod ( a b&#8201;&#8212;&#8201;r )
+</dt>
+<dd>
+<p>
+Remainder of a divided by b.
+</p>
+</dd>
+<dt class="hdlist1">
+*/ ( a b c&#8201;&#8212;&#8201;q )
+</dt>
+<dd>
+<p>
+Multiply a with b, then divide by c, using a 32-bit intermediary.
+</p>
+</dd>
+<dt class="hdlist1">
+*/mod ( a b c&#8201;&#8212;&#8201;r q )
+</dt>
+<dd>
+<p>
+Like */, but also keeping remainder r.
+</p>
+</dd>
+<dt class="hdlist1">
+0&lt; ( a&#8201;&#8212;&#8201;b )
+</dt>
+<dd>
+<p>
+Is a negative?
+</p>
+</dd>
+<dt class="hdlist1">
+negate ( a&#8201;&#8212;&#8201;b )
+</dt>
+<dd>
+<p>
+Negates a.
+</p>
+</dd>
+<dt class="hdlist1">
+abs ( a&#8201;&#8212;&#8201;b )
+</dt>
+<dd>
+<p>
+Gives absolute value of a.
+</p>
+</dd>
+<dt class="hdlist1">
+min ( a b&#8201;&#8212;&#8201;c )
+</dt>
+<dd>
+<p>
+Gives the lesser of a and b.
+</p>
+</dd>
+<dt class="hdlist1">
+max ( a b&#8201;&#8212;&#8201;c )
+</dt>
+<dd>
+<p>
+Gives the greater of a and b.
+</p>
+</dd>
+<dt class="hdlist1">
+within ( n lo hi&#8201;&#8212;&#8201;flag )
+</dt>
+<dd>
+<p>
+Returns true if lo &#8656; n &lt; hi.
+</p>
+</dd>
+<dt class="hdlist1">
+&lt; ( n1 n2&#8201;&#8212;&#8201;flag )
+</dt>
+<dd>
+<p>
+Is n1 less than n2? (Signed.)
+</p>
+</dd>
+<dt class="hdlist1">
+&gt; ( n1 n2&#8201;&#8212;&#8201;flag )
+</dt>
+<dd>
+<p>
+Is n1 greater than n2? (Signed.)
+</p>
+</dd>
+<dt class="hdlist1">
+u&lt; ( u1 u2&#8201;&#8212;&#8201;flag )
+</dt>
+<dd>
+<p>
+Is u1 less than u2? (Unsigned.)
+</p>
+</dd>
+<dt class="hdlist1">
+u&gt; ( u1 u2&#8201;&#8212;&#8201;flag )
+</dt>
+<dd>
+<p>
+Is u1 greater than u2? (Unsigned.)
+</p>
+</dd>
+<dt class="hdlist1">
+lshift ( a b&#8201;&#8212;&#8201;c )
+</dt>
+<dd>
+<p>
+Binary shift a left by b.
+</p>
+</dd>
+<dt class="hdlist1">
+rshift ( a b&#8201;&#8212;&#8201;c )
+</dt>
+<dd>
+<p>
+Binary shift a right by b.
+</p>
+</dd>
+<dt class="hdlist1">
+base (variable)
+</dt>
+<dd>
+<p>
+Points to the cell that holds the numerical base.
+</p>
+</dd>
+<dt class="hdlist1">
+decimal
+</dt>
+<dd>
+<p>
+Sets the numerical base to 10.
+</p>
+</dd>
+<dt class="hdlist1">
+hex
+</dt>
+<dd>
+<p>
+Sets the numerical base to 16.
+</p>
+</dd>
+</dl></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuring_durexforth">Configuring durexForth</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_stripping_modules">Stripping Modules</h3>
+<div class="paragraph"><p>By default, durexForth boots up with these modules pre-compiled in RAM:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+asm
+</dt>
+<dd>
+<p>
+The assembler. (Required and may not be stripped.)
+</p>
+</dd>
+<dt class="hdlist1">
+format
+</dt>
+<dd>
+<p>
+Numerical formatting words. (Also required.)
+</p>
+</dd>
+<dt class="hdlist1">
+wordlist
+</dt>
+<dd>
+<p>
+Wordlist manipulation. (Required by some modules.)
+</p>
+</dd>
+<dt class="hdlist1">
+labels
+</dt>
+<dd>
+<p>
+Assembler labels.
+</p>
+</dd>
+<dt class="hdlist1">
+doloop
+</dt>
+<dd>
+<p>
+Do-loop words.
+</p>
+</dd>
+<dt class="hdlist1">
+sys
+</dt>
+<dd>
+<p>
+System calls.
+</p>
+</dd>
+<dt class="hdlist1">
+debug
+</dt>
+<dd>
+<p>
+Words for debugging.
+</p>
+</dd>
+<dt class="hdlist1">
+ls
+</dt>
+<dd>
+<p>
+List disk contents.
+</p>
+</dd>
+<dt class="hdlist1">
+require
+</dt>
+<dd>
+<p>
+The words require and required.
+</p>
+</dd>
+<dt class="hdlist1">
+v
+</dt>
+<dd>
+<p>
+The text editor.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>To reduce RAM usage, you may make a stripped-down version of durexForth. Do this by following these steps:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Issue <code>---modules---</code> to unload all modules, or <code>---editor---</code> to unload the editor only.
+</p>
+</li>
+<li>
+<p>
+One by one, load the modules you want included with your new Forth. (E.g. <code>include labels</code>)
+</p>
+</li>
+<li>
+<p>
+Save the new system with e.g. <code>save-forth acmeforth</code>.
+</p>
+</li>
+</ol></div>
+</div>
+<div class="sect2">
+<h3 id="_custom_start_up">Custom Start-Up</h3>
+<div class="paragraph"><p>You may launch a word automatically at start-up by setting the variable <code>start</code> to the execution token of the word.  Example: <code>' megademo start !</code> To save the new configuration to disk, type e.g. <code>save-forth megademo</code>.</p></div>
+<div class="paragraph"><p>When writing a new program using a PC text editor, it is practical to configure durexForth to compile and execute the program at startup. That can be set up using the following snippet:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$a000 value buf
+: go buf s" myprogramfile" buf
+loadb buf - evaluate ;
+' go start !
+save-forth @0:durexforth</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_turn_key_operation">Turn-key Operation</h3>
+<div class="paragraph"><p>Durexforth offers utilities to save your program in a turn-key fashion by including the <code>turnkey</code> module once the program is ready to be saved.</p></div>
+<div class="paragraph"><p>Programs can be saved in a compacted state using <code>save-pack</code>. These programs are stored with 32 bytes between <code>here</code> and <code>latest</code>. When they are first loaded, they will restore the header space to its original <code>top</code>.</p></div>
+<div class="paragraph"><p>If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary headers entirely when saving with <code>save-prg</code>. This allows your program to use memory down to <code>here</code> plus 32 bytes for safety.</p></div>
+<div class="paragraph"><p>After either of these words have saved the file to disk, they will restore forth to the unpacked state, and strip the <code>turnkey</code> module from the dictionary. This allows you to continue to use forth interactively in the case of <code>save-pack</code>. As <code>save-prg</code> has stripped the dictionary headers from the system, it will no longer be usable. If you wish to test your program after saving, you can compile a call to <code>save-prg</code> instead:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>: build save-prg mydemo start @ execute ;
+build</code></pre>
+</div></div>
+<div class="paragraph"><p>This will simulate the start-up sequence after saving the packed program.</p></div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1736,12 +2058,58 @@ Contributed disk I/O primitives.
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_authors_and_contributors">Appendix B: Authors and Contributors</h2>
+<div class="sectionbody">
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Johan Kotlinski
+</dt>
+<dd>
+<p>
+Project initiator and maintainer.
+</p>
+</dd>
+<dt class="hdlist1">
+Mats Andr&eacute;n
+</dt>
+<dd>
+<p>
+Contributed disk I/O primitives.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p><em>This list is incomplete.</em></p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_license">Appendix C: License</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The MIT License</p></div>
+<div class="paragraph"><p>Copyright &copy; 2008 Johan Kotlinski</p></div>
+<div class="paragraph"><p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p></div>
+<div class="paragraph"><p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p></div>
+<div class="paragraph"><p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p></div>
+</div>
+</div>
 </div>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2022-08-18 00:22:51 CEST
+ 2022-08-18 00:56:18 CEST
 </div>
 </div>
 </body>
