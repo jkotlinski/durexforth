@@ -1,10 +1,14 @@
-DurexForth: Operators Manual
-============================
+= durexForth: Operators Manual
 Johan Kotlinski <kotlinski@gmail.com>
-:toc2:
+:toc:
 
 == Introduction
 include::intro.adoc[Introduction]
+
+== Tutorial
+include::tutorial.adoc[Tutorial]
+
+== Editor [[editor]]
 
 == Forth Words
 include::words.adoc[Forth Words]

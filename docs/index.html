@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 <meta name="generator" content="AsciiDoc 9.1.1" />
-<title>DurexForth: Operators Manual</title>
+<title>durexForth: Operators Manual</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -536,40 +536,6 @@ body.manpage div.sectionbody {
 }
 
 
-@media screen {
-  body {
-    max-width: 50em; /* approximately 80 characters wide */
-    margin-left: 16em;
-  }
-
-  #toc {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 13em;
-    padding: 0.5em;
-    padding-bottom: 1.5em;
-    margin: 0;
-    overflow: auto;
-    border-right: 3px solid #f8f8f8;
-    background-color: white;
-  }
-
-  #toc .toclevel1 {
-    margin-top: 0.5em;
-  }
-
-  #toc .toclevel2 {
-    margin-top: 0.25em;
-    display: list-item;
-    color: #aaaaaa;
-  }
-
-  #toctitle {
-    margin-top: 0.5em;
-  }
-}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -768,7 +734,7 @@ asciidoc.install(2);
 </head>
 <body class="article">
 <div id="header">
-<h1>DurexForth: Operators Manual</h1>
+<h1>durexForth: Operators Manual</h1>
 <span id="author">Johan Kotlinski</span><br />
 <span id="email"><code>&lt;<a href="mailto:kotlinski@gmail.com">kotlinski@gmail.com</a>&gt;</code></span><br />
 <div id="toc">
@@ -784,7 +750,7 @@ asciidoc.install(2);
 <h3 id="_forth_the_language">Forth, the Language</h3>
 <div class="sect3">
 <h4 id="_why_forth">Why Forth?</h4>
-<div class="paragraph"><p>Forth is a unique language. What is so special about it? It is a small, low-level language, which can easily be extended to a high-level, domain-specific language that does anything you want it to do. Compared to C64 Basic, Forth is more attractive in almost every way. It is a lot faster, more memory effective, and more powerful.</p></div>
+<div class="paragraph"><p>Forth is a unique language. What is so special about it? It is a small, low-level language, which can easily be extended to a high-level, domain-specific language that does anything you want it to. Compared to C64 Basic, Forth is more attractive in almost every way. It is a lot faster, more memory effective, and more powerful.</p></div>
 <div class="paragraph"><p>Compared to C, the nice thing about Forth is that you can run the full development environment on your C64,
 with text editor, compiler, assembler and debugger. It makes for a more interactive and fun experience than running a cross-compiler on PC.</p></div>
 <div class="paragraph"><p>For a Forth introduction, please refer to the excellent
@@ -834,37 +800,400 @@ durexForth is open source (available at <a href="https://github.com/jkotlinski/d
 </div>
 </div>
 <div class="sect2">
-<h3 id="_contents">Contents</h3>
-<div class="paragraph"><p>durexForth is packaged as a 16-kByte cartridge file and a system disk image. Using the cartridge is equivalent to loading durexForth from disk, but of course the cartridge boots a lot faster. The disk image also contains optional Forth modules that can be loaded at will.</p></div>
-</div>
-<div class="sect2">
-<h3 id="_appetizers">Appetizers</h3>
-<div class="paragraph"><p>Some demonstration files are included on the disk as appetizers.</p></div>
+<h3 id="_package_contents">Package Contents</h3>
+<div class="paragraph"><p>durexForth is packaged as a 16-kByte .crt cartridge file and a .d64 disk image. Using the cartridge is equivalent to booting from disk, except that it boots faster. The disk contains various optional Forth modules, as well as some appetizer demonstration programs, as follows:</p></div>
 <div class="sect3">
 <h4 id="_graphics">Graphics</h4>
 <div class="paragraph"><p>The gfxdemo package demonstrates the high-resolution graphics, with some examples adapted from the book "Step-By-Step Programming C64 Graphics" by Phil Cornes.
 Show the demos by entering:</p></div>
-<div class="paragraph"><p><code>include gfxdemo</code></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>include gfxdemo</code></pre>
+</div></div>
 <div class="paragraph"><p>When a demo has finished drawing, press any key to continue.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_fractals">Fractals</h4>
 <div class="paragraph"><p>The fractals package demonstrates turtle graphics by generating fractal images. Run it by entering:</p></div>
-<div class="paragraph"><p><code>include fractals</code></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>include fractals</code></pre>
+</div></div>
 <div class="paragraph"><p>When an image has finished drawing, press any key to continue.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_music">Music</h4>
 <div class="paragraph"><p>The mmldemo package demonstrates the MML music capabilities. To play some music:</p></div>
-<div class="paragraph"><p><code>include mmldemo</code></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>include mmldemo</code></pre>
+</div></div>
 </div>
 <div class="sect3">
 <h4 id="_sprites">Sprites</h4>
 <div class="paragraph"><p>The sprite package adds functionality for defining and displaying sprites. To run the demo:</p></div>
-<div class="paragraph"><p><code>include spritedemo</code></p></div>
-<div class="paragraph"><p>Exit the demo by pressing any key.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>include spritedemo</code></pre>
+</div></div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tutorial">Tutorial</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_interpreter">Interpreter</h3>
+<div class="paragraph"><p>Start up durexForth. When loaded, it will greet you with a blinking yellow cursor, waiting for your input. You have landed in the interpreter!</p></div>
+<div class="paragraph"><p>Let&#8217;s warm it up a little. Enter <code>1</code> (followed by return). You have now put a digit on the stack. This can be verified by the command <code>.s</code>, which will print the stack contents without modifying it. Now enter <code>.</code> to pop the digit and print it to screen, followed by <code>.s</code> to verify that the stack is empty.</p></div>
+<div class="paragraph"><p>Let&#8217;s define a word <code>bg!</code> for setting the border color&#8230;</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>: bg! $d020 c! ;</code></pre>
+</div></div>
+<div class="paragraph"><p>Now try entering <code>1 bg!</code> to change the border color to white.
+Then, try changing it back again with <code>0 bg!</code>.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_introducing_the_editor">Introducing the Editor</h3>
+<div class="paragraph"><p>The v editor is convenient for editing larger pieces of code. With it, you keep an entire source file loaded in RAM, and you can recompile and test it easily.</p></div>
+<div class="paragraph"><p>Start the editor by typing <code>v</code>. You will enter the red editor screen. To enter text, first press <code>i</code> to enter insert mode. This mode allows you to insert text into the buffer. You can see that it&#8217;s active on the <code>I</code> that appears in the lower left corner. This is a good start for creating a program!</p></div>
+<div class="paragraph"><p>Now, enter the following lines&#8230;</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>: flash begin 1 $d020 +! again ; flash</code></pre>
+</div></div>
+<div class="paragraph"><p>&#8230;and then press &larr; to leave insert mode.
+Press <em>F7</em> to compile and run. If everything is entered right, you will be facing a beautiful color cycle.</p></div>
+<div class="paragraph"><p>When you finished watching, press <em>RESTORE</em> to quit your program, then enter <code>v</code> to reopen the editor.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_assembler">Assembler</h3>
+<div class="paragraph"><p>If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. <code>code</code> and <code>;code</code> define a code word, just like <code>:</code> and <code>;</code> define Forth words. Within a code word, you can use assembler mnemonics.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>code flash
+here ( push current addr )
+$d020 inc,
+jmp, ( jump to pushed addr )
+;code
+flash</code></pre>
+</div></div>
+<div class="paragraph"><p>It is also possible to use inline assembly within regular Forth words:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>: flash begin [ $d020 inc, ] again ;
+flash</code></pre>
+</div></div>
+<div class="paragraph"><p>Note: As the <code>x</code> register contains the parameter stack depth, it is important that your assembly code leaves it unchanged.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_console_i_o_example">Console I/O Example</h3>
+<div class="paragraph"><p>This piece of code reads from keyboard and sends back the chars to screen:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>: foo key emit recurse ;
+foo</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_printer_example">Printer Example</h3>
+<div class="paragraph"><p>This piece of code prints a message to a printer on device #4, and then prints a message to the screen:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>include io
+
+: print-hello
+4 device ( use device 4 )
+0 0 47 7 open ioabort ( open address 7 as file 47, abort on failure )
+47 chkout ioabort ( redirect output to file 47, abort on failure )
+." Hello, printer!" cr
+clrchn ( stop input and output redirection )
+." Hello, screen!" cr
+47 close ( close file 47 ) ;
+
+print-hello</code></pre>
+</div></div>
+<div class="paragraph"><p>The device number and address may differ between printer models. Commodore MPS series printers use address 0 to print in their uppercase/graphics font, and address 7 to print in their lowercase/uppercase font.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_avoiding_stack_crashes">Avoiding Stack Crashes</h3>
+<div class="paragraph"><p>Stack overflow and underflow are common causes for errors and crashes.
+Simply put, the data stack must not contain too many or too few items.
+This section describes some techniques to avoid such errors.</p></div>
+<div class="sect3">
+<h4 id="_commenting">Commenting</h4>
+<div class="paragraph"><p>One helpful technique to avoid stack crashes is to add comments about stack usage.
+In this example, we imagine a graphics word "drawbox" that draws a black box.
+<code>( color&#8201;&#8212;&#8201;)</code> indicates that it takes one argument on stack, and on exit it should
+leave nothing on the stack. The comments inside the word (starting with &pound;) indicate what the stack
+looks like after the line has executed.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>: drawbox ( color -- )
+10 begin dup 20 &lt; while £ color x
+10 begin dup 20 &lt; while £ color x y
+2dup £ color x y x y
+4 pick £ color x y x y color
+blkcol £ color x y
+1+ repeat drop £ color x
+1+ repeat 2drop ;</code></pre>
+</div></div>
+<div class="paragraph"><p>Once the word is working as supposed, it may be nice to again remove the comments, as
+they are no longer very interesting to read.</p></div>
+<div class="paragraph"><p>Note: The Forth standard defines backslash (\) as the line comment character, but the C64 lacks a real backslash. Moreover, ASCII \ and PETSCII &pound; both map to $5c. Therefore, the &pound; character is used as a substitution on the C64.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_stack_checks">Stack Checks</h4>
+<div class="paragraph"><p>Another useful technique during development is to check at the end of your main loop
+that the stack depth is what you expect it to. This will catch stack underflows
+and overflows.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>: mainloop begin
+( do stuff here... )
+depth abort" depth not 0"
+again ;</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_durexforth">Configuring durexForth</h3>
+<div class="sect3">
+<h4 id="_stripping_modules">Stripping Modules</h4>
+<div class="paragraph"><p>By default, durexForth boots up with these modules pre-compiled in RAM:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+asm
+</dt>
+<dd>
+<p>
+The assembler. (Required and may not be stripped.)
+</p>
+</dd>
+<dt class="hdlist1">
+format
+</dt>
+<dd>
+<p>
+Numerical formatting words. (Also required.)
+</p>
+</dd>
+<dt class="hdlist1">
+wordlist
+</dt>
+<dd>
+<p>
+Wordlist manipulation. (Required by some modules.)
+</p>
+</dd>
+<dt class="hdlist1">
+labels
+</dt>
+<dd>
+<p>
+Assembler labels.
+</p>
+</dd>
+<dt class="hdlist1">
+doloop
+</dt>
+<dd>
+<p>
+Do-loop words.
+</p>
+</dd>
+<dt class="hdlist1">
+sys
+</dt>
+<dd>
+<p>
+System calls.
+</p>
+</dd>
+<dt class="hdlist1">
+debug
+</dt>
+<dd>
+<p>
+Words for debugging.
+</p>
+</dd>
+<dt class="hdlist1">
+ls
+</dt>
+<dd>
+<p>
+List disk contents.
+</p>
+</dd>
+<dt class="hdlist1">
+require
+</dt>
+<dd>
+<p>
+The words require and required.
+</p>
+</dd>
+<dt class="hdlist1">
+v
+</dt>
+<dd>
+<p>
+The text editor.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>To reduce RAM usage, you may make a stripped-down version of durexForth. Do this by following these steps:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Issue <code>---modules---</code> to unload all modules, or <code>---editor---</code> to unload the editor only.
+</p>
+</li>
+<li>
+<p>
+One by one, load the modules you want included with your new Forth. (E.g. <code>include labels</code>)
+</p>
+</li>
+<li>
+<p>
+Save the new system with e.g. <code>save-forth acmeforth</code>.
+</p>
+</li>
+</ol></div>
+</div>
+<div class="sect3">
+<h4 id="_custom_start_up">Custom Start-Up</h4>
+<div class="paragraph"><p>You may launch a word automatically at start-up by setting the variable <code>start</code> to the execution token of the word.  Example: <code>' megademo start !</code> To save the new configuration to disk, type e.g. <code>save-forth megademo</code>.</p></div>
+<div class="paragraph"><p>When writing a new program using a PC text editor, it is practical to configure durexForth to compile and execute the program at startup. That can be set up using the following snippet:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$7000 value buf
+: go buf s" myprogramfile" buf
+loadb buf - evaluate ;
+' go start !
+save-forth @0:durexforth</code></pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_turn_key_operation">Turn-key Operation</h4>
+<div class="paragraph"><p>Durexforth offers utilities to save your program in a turn-key fashion by including the <code>turnkey</code> module once the program is ready to be saved.</p></div>
+<div class="paragraph"><p>Programs can be saved in a compacted state using <code>save-pack</code>. These programs are stored with 32 bytes between <code>here</code> and <code>latest</code>. When they are first loaded, they will restore the header space to its original <code>top</code>.</p></div>
+<div class="paragraph"><p>If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary headers entirely when saving with <code>save-prg</code>. This allows your program to use memory down to <code>here</code> plus 32 bytes for safety.</p></div>
+<div class="paragraph"><p>After either of these words have saved the file to disk, they will restore forth to the unpacked state, and strip the <code>turnkey</code> module from the dictionary. This allows you to continue to use forth interactively in the case of <code>save-pack</code>. As <code>save-prg</code> has stripped the dictionary headers from the system, it will no longer be usable. If you wish to test your program after saving, you can compile a call to <code>save-prg</code> instead:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>: build save-prg mydemo start @ execute ;
+build</code></pre>
+</div></div>
+<div class="paragraph"><p>This will simulate the start-up sequence after saving the packed program.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_internet_resources">Internet Resources</h3>
+<div class="sect3">
+<h4 id="_books_and_papers">Books and Papers</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://www.forth.com/starting-forth/">Starting Forth</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://thinking-forth.sourceforge.net/">Thinking Forth</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://www.bradrodriguez.com/papers/">Moving Forth: a series on writing Forth kernels</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://forth.org/">Forth Interest Group</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://archive.org/details/transactor-magazines-v7-i05/page/n59/mode/2up">Blazin' Forth --- An inside look at the Blazin' Forth compiler</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://www.drdobbs.com/architecture-and-design/the-evolution-of-forth-an-unusual-langua/228700557">The Evolution of FORTH, an unusual language</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm">A Beginner&#8217;s Guide to Forth</a>
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_other_forths">Other Forths</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://colorforth.github.io/">colorForth</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://gforth.org/">Gforth</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://github.com/nornagon/jonesforth">jonesforth</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://github.com/chitselb/pettil">PETTIL</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://github.com/forth-ev/VolksForth">volksFORTH</a>
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_standards">Standards</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="https://forth-standard.org/">Forth 2012 Standard</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://www.taygeta.com/forth/dpans.html">ANS Forth</a>
+</p>
+</li>
+<li>
+<p>
+<a href="http://forth.sourceforge.net/standard/fst83/">FORTH-83 STANDARD</a>
+</p>
+</li>
+<li>
+<p>
+<a href="https://atariwiki.org/wiki/attach/Forth79/Forth-79-OCR.pdf">FORTH-79 STANDARD</a>
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_editor_a_id_editor_a">Editor <a id="editor"></a></h2>
+<div class="sectionbody">
 </div>
 </div>
 <div class="sect1">
@@ -1026,7 +1355,7 @@ The top address of the MSB parameter stack.
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2022-08-17 00:15:58 CEST
+ 2022-08-17 23:33:32 CEST
 </div>
 </div>
 </body>

@@ -1,0 +1,206 @@
+=== Interpreter
+
+Start up durexForth. When loaded, it will greet you with a blinking yellow cursor, waiting for your input. You have landed in the interpreter!
+
+Let's warm it up a little. Enter +1+ (followed by return). You have now put a digit on the stack. This can be verified by the command +.s+, which will print the stack contents without modifying it. Now enter +.+ to pop the digit and print it to screen, followed by +.s+ to verify that the stack is empty.
+
+Let's define a word +bg!+ for setting the border color...
+
+----
+: bg! $d020 c! ;
+----
+
+Now try entering +1 bg!+ to change the border color to white.
+Then, try changing it back again with +0 bg!+.
+
+=== Introducing the Editor
+
+The v editor is convenient for editing larger pieces of code. With it, you keep an entire source file loaded in RAM, and you can recompile and test it easily.
+
+Start the editor by typing +v+. You will enter the red editor screen. To enter text, first press +i+ to enter insert mode. This mode allows you to insert text into the buffer. You can see that it's active on the +I+ that appears in the lower left corner. This is a good start for creating a program!
+
+Now, enter the following lines...
+
+----
+: flash begin 1 $d020 +! again ; flash
+----
+
+...and then press &larr; to leave insert mode.
+Press _F7_ to compile and run. If everything is entered right, you will be facing a beautiful color cycle.
+
+When you finished watching, press _RESTORE_ to quit your program, then enter +v+ to reopen the editor.
+
+=== Assembler
+
+If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. +code+ and +;code+ define a code word, just like +:+ and +;+ define Forth words. Within a code word, you can use assembler mnemonics.
+
+----
+code flash
+here ( push current addr )
+$d020 inc,
+jmp, ( jump to pushed addr )
+;code
+flash
+----
+
+It is also possible to use inline assembly within regular Forth words:
+
+----
+: flash begin [ $d020 inc, ] again ;
+flash
+----
+
+Note: As the +x+ register contains the parameter stack depth, it is important that your assembly code leaves it unchanged.
+
+=== Console I/O Example
+
+This piece of code reads from keyboard and sends back the chars to screen:
+
+----
+: foo key emit recurse ;
+foo
+----
+
+=== Printer Example
+
+This piece of code prints a message to a printer on device #4, and then prints a message to the screen:
+
+----
+include io
+
+: print-hello
+4 device ( use device 4 )
+0 0 47 7 open ioabort ( open address 7 as file 47, abort on failure )
+47 chkout ioabort ( redirect output to file 47, abort on failure )
+." Hello, printer!" cr
+clrchn ( stop input and output redirection )
+." Hello, screen!" cr
+47 close ( close file 47 ) ;
+
+print-hello
+----
+
+The device number and address may differ between printer models. Commodore MPS series printers use address 0 to print in their uppercase/graphics font, and address 7 to print in their lowercase/uppercase font.
+
+=== Avoiding Stack Crashes
+
+Stack overflow and underflow are common causes for errors and crashes.
+Simply put, the data stack must not contain too many or too few items.
+This section describes some techniques to avoid such errors.
+
+==== Commenting
+
+One helpful technique to avoid stack crashes is to add comments about stack usage.
+In this example, we imagine a graphics word "drawbox" that draws a black box.
++( color -- )+ indicates that it takes one argument on stack, and on exit it should
+leave nothing on the stack. The comments inside the word (starting with &pound;) indicate what the stack
+looks like after the line has executed.
+
+----
+: drawbox ( color -- )
+10 begin dup 20 < while £ color x
+10 begin dup 20 < while £ color x y
+2dup £ color x y x y
+4 pick £ color x y x y color
+blkcol £ color x y
+1+ repeat drop £ color x
+1+ repeat 2drop ;
+----
+
+Once the word is working as supposed, it may be nice to again remove the comments, as
+they are no longer very interesting to read.
+
+Note: The Forth standard defines backslash (\) as the line comment character, but the C64 lacks a real backslash. Moreover, ASCII \ and PETSCII &pound; both map to $5c. Therefore, the &pound; character is used as a substitution on the C64.
+
+==== Stack Checks
+
+Another useful technique during development is to check at the end of your main loop
+that the stack depth is what you expect it to. This will catch stack underflows
+and overflows.
+
+----
+: mainloop begin
+( do stuff here... )
+depth abort" depth not 0"
+again ;
+----
+
+=== Configuring durexForth
+
+==== Stripping Modules
+
+By default, durexForth boots up with these modules pre-compiled in RAM:
+
+asm:: The assembler. (Required and may not be stripped.)
+format:: Numerical formatting words. (Also required.)
+wordlist:: Wordlist manipulation. (Required by some modules.)
+labels:: Assembler labels.
+doloop:: Do-loop words.
+sys:: System calls.
+debug:: Words for debugging.
+ls:: List disk contents.
+require:: The words require and required.
+v:: The text editor.
+
+To reduce RAM usage, you may make a stripped-down version of durexForth. Do this by following these steps:
+
+. Issue +---modules---+ to unload all modules, or +---editor---+ to unload the editor only.
+. One by one, load the modules you want included with your new Forth. (E.g. +include labels+)
+. Save the new system with e.g. +save-forth acmeforth+.
+
+==== Custom Start-Up
+
+You may launch a word automatically at start-up by setting the variable +start+ to the execution token of the word.  Example: +' megademo start !+ To save the new configuration to disk, type e.g. +save-forth megademo+.
+
+When writing a new program using a PC text editor, it is practical to configure durexForth to compile and execute the program at startup. That can be set up using the following snippet:
+
+----
+$7000 value buf
+: go buf s" myprogramfile" buf
+loadb buf - evaluate ;
+' go start !
+save-forth @0:durexforth
+----
+
+==== Turn-key Operation
+
+Durexforth offers utilities to save your program in a turn-key fashion by including the +turnkey+ module once the program is ready to be saved.
+
+Programs can be saved in a compacted state using +save-pack+. These programs are stored with 32 bytes between +here+ and +latest+. When they are first loaded, they will restore the header space to its original +top+.
+
+If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary headers entirely when saving with +save-prg+. This allows your program to use memory down to +here+ plus 32 bytes for safety.
+
+After either of these words have saved the file to disk, they will restore forth to the unpacked state, and strip the +turnkey+ module from the dictionary. This allows you to continue to use forth interactively in the case of +save-pack+. As +save-prg+ has stripped the dictionary headers from the system, it will no longer be usable. If you wish to test your program after saving, you can compile a call to +save-prg+ instead:
+----
+: build save-prg mydemo start @ execute ;
+build
+----
+This will simulate the start-up sequence after saving the packed program.
+
+=== Internet Resources
+
+==== Books and Papers
+
+- https://www.forth.com/starting-forth/[Starting Forth]
+- http://thinking-forth.sourceforge.net/[Thinking Forth]
+- https://www.bradrodriguez.com/papers/[Moving Forth: a series on writing Forth kernels]
+- http://forth.org/[Forth Interest Group]
+- https://archive.org/details/transactor-magazines-v7-i05/page/n59/mode/2up[Blazin' Forth --- An inside look at the Blazin' Forth compiler]
+- https://www.drdobbs.com/architecture-and-design/the-evolution-of-forth-an-unusual-langua/228700557[The Evolution of FORTH, an unusual language]
+- https://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm[A Beginner's Guide to Forth]
+
+==== Other Forths
+
+- https://colorforth.github.io/[colorForth]
+- https://gforth.org/[Gforth]
+- https://github.com/nornagon/jonesforth[jonesforth]
+- https://github.com/chitselb/pettil[PETTIL]
+- https://github.com/forth-ev/VolksForth[volksFORTH]
+
+==== Standards
+
+- https://forth-standard.org/[Forth 2012 Standard]
+- https://www.taygeta.com/forth/dpans.html[ANS Forth]
+- http://forth.sourceforge.net/standard/fst83/[FORTH-83 STANDARD]
+- https://atariwiki.org/wiki/attach/Forth79/Forth-79-OCR.pdf[FORTH-79 STANDARD]
+
