@@ -25,7 +25,7 @@ There are other Forths for C64, most notably Blazin' Forth. Blazin' Forth is exc
 
 === Package Contents ===
 
-durexForth is packaged as a 16-kByte .crt cartridge file and a .d64 disk image. Using the cartridge is equivalent to booting from disk, except that it boots faster. The disk contains various optional Forth modules, as well as some appetizer demonstration programs, as follows:
+durexForth is packaged as a 16-kByte .crt cartridge file and a .d64 disk image. Booting from cartridge is equivalent to booting from disk, except that cartridge is faster. The disk contains various optional Forth modules, as well as some appetizer demonstration programs, as follows:
 
 ==== Graphics ====
 
@@ -36,7 +36,7 @@ Show the demos by entering:
 include gfxdemo
 ----
 
-When a demo has finished drawing, press any key to continue.
+When an image has finished drawing, press space to continue.
 
 ==== Fractals ====
 
@@ -46,7 +46,7 @@ The fractals package demonstrates turtle graphics by generating fractal images. 
 include fractals
 ----
 
-When an image has finished drawing, press any key to continue.
+When an image has finished drawing, press space to continue.
 
 ==== Music ====
 

@@ -1,5 +1,4 @@
 = durexForth: Operators Manual
-Johan Kotlinski <kotlinski@gmail.com>
 :toc:
 
 == Introduction
@@ -8,33 +7,22 @@ include::intro.adoc[Introduction]
 == Tutorial
 include::tutorial.adoc[Tutorial]
 
-== Editor [[editor]]
+== Editor
+include::editor.adoc[Editor]
+
+== Configuring durexForth
+include::config.adoc[Configuring durexForth]
 
 == Forth Words
 include::words.adoc[Forth Words]
 
+== Authors
+
+Johan Kotlinski:: Project initiator and maintainer.
+Mats Andr&eacute;n:: Contributed disk I/O primitives.
+
+_This list is incomplete. If you think you should be on this list, please add yourself._
+
 [appendix]
 == Internet Resources
-
-=== Books and Papers
-- https://www.forth.com/starting-forth/[Starting Forth]
-- http://thinking-forth.sourceforge.net/[Thinking Forth]
-- https://www.bradrodriguez.com/papers/[Moving Forth: a series on writing Forth kernels]
-- http://forth.org/[Forth Interest Group]
-- https://archive.org/details/transactor-magazines-v7-i05/page/n59/mode/2up[Blazin' Forth --- An inside look at the Blazin' Forth compiler]
-- https://www.drdobbs.com/architecture-and-design/the-evolution-of-forth-an-unusual-langua/228700557[The Evolution of FORTH, an unusual language]
-- https://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm[A Beginner's Guide to Forth]
-
-=== Other Forths
-- https://colorforth.github.io/[colorForth]
-- https://gforth.org/[Gforth]
-- https://github.com/nornagon/jonesforth[jonesforth]
-- https://github.com/chitselb/pettil[PETTIL]
-- https://github.com/forth-ev/VolksForth[volksFORTH]
-
-=== Standards
-- https://forth-standard.org/[Forth 2012 Standard]
-- https://www.taygeta.com/forth/dpans.html[ANS Forth]
-- http://forth.sourceforge.net/standard/fst83/[FORTH-83 STANDARD]
-- https://atariwiki.org/wiki/attach/Forth79/Forth-79-OCR.pdf[FORTH-79 STANDARD]
-
+include::links.adoc[Internet Resources]
