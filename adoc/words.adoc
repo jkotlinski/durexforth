@@ -125,7 +125,7 @@ Typical use: +: x ... ['] name ... ;+
 : x ... if ... endif ... ;
 ----
 ((header)) _( "name" -- )_ :: Create a dictionary header named _name_.
-((create)) _( name" -- )_ ... does> :: Create a word-creating word named _name_ with custom behavior specified after `does>`.  For further description, see "Starting Forth."
+((create)) _( "name" -- )_ ... does> :: Create a word-creating word named _name_ with custom behavior specified after `does>`.  For further description, see "Starting Forth."
 ((state)) _( -- addr)_ :: _addr_ is the address of a cell containing the compilation-state flag. It is 1 when compiling, otherwise 0.
 
 === Word List
