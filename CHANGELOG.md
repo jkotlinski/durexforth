@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Added
+ - Warning when redefining a word.
 ### Fixed
  - DOWORDS incorrectly quit for some non-false xt return values.
  - POSTPONE error handling.
@@ -19,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Do not print "ok" while compiling. Makes it easier to re-enter multi-line word definitions in interpreter.
 
 ## [4.0.0] - 2022-07-20
+
 ### Changed
  - OPEN/CHKIN/CHKOUT no longer return a file number.
  - IOABORT no longer accepts a file number.

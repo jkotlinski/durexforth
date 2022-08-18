@@ -311,6 +311,11 @@ R_FETCH
 BL
     +VALUE	K_SPACE
 
+    +BACKLINK "space", 5
+SPACE
+    jsr BL
+    jmp EMIT
+
     +BACKLINK "pick", 4
     txa
     sta + + 1

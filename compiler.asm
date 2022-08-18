@@ -156,6 +156,9 @@ COLON
 
     jmp RBRAC ; enter compile mode
 
+redefined_str
+    !byte 10
+    !text "redefined "
 
 ; --- HEADER ( name -- )
     +BACKLINK "header", 6
@@ -170,6 +173,25 @@ HEADER
     jsr REFILL_OR_CLOSE
     jmp -
 +
+
+    ; prints warning when redefining a word
+    jsr TWODUP
+    jsr FIND_NAME
+    inx
+    lda MSB-1, x
+    beq +
+    dex
+    lda #<redefined_str
+    sta LSB,x
+    lda #>redefined_str
+    sta MSB,x
+    jsr COUNT
+    jsr TYPE
+    jsr TWODUP
+    jsr TYPE
+    jsr SPACE
++
+
     ; update dictionary pointer
     lda LSB, x
     sta .putlen+1
