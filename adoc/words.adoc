@@ -205,3 +205,22 @@ case
 3 of ." three" endof
      ." other" endcase ;
 ----
+
+=== Input
+
+((key)) _( -- c )_ :: Gets one character from the keyboard.
+((key?)) _( -- flag )_ :: Returns true if a character is available for `key`.
+((getc)) _( -- c )_ :: Consumes the next character from the input buffer and increases `>in` by one. If no characters are available, the input buffer is refilled as needed.
+((char)) _( -- c )_ :: Parses the next word, delimited by a space, and puts its first character on the stack.
+((>in)) _( -- addr )_ :: Gives the address of a cell containing the offset in characters from the start of the input buffer to the start of the parse area.
+((refill)) _( -- flag )_ :: Attempts to fill the input buffer from the input source, returning true if successful.
+((source)) _( -- caddr u )_ :: Gives the address of, and number of characters in, the input buffer.
+((source-id)) _( -- n )_ :: Returns 0 if current input is keyboard, -1 if it is a string from `evaluate`, or the current file id.
+((word)) _( delim -- addr )_ :: Reads a word from input, using delimiter _delim_, and puts the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.
+((parse-name)) _( name -- caddr u )_ :: Reads a word from input, delimited by whitespace. Skips leading spaces.
+((interpret)) _( -- value )_ :: Interprets a word from input and puts it on the stack.
+((accept)) _( addr u -- u )_ :: Receive a string of at most u characters into the buffer that starts at addr. Returns how many characters were received.
+((evaluate)) _( addr len -- )_ :: Evaluate the given string.
+((abort)) :: Empties the data stack and performs `quit`.
+((abort")) _ccc" ( f -- )_  :: If _f_ is true, print _ccc_ and `abort`. Typical use: `: x ... test abort" error" ... ;`
+((quit)) :: Enters an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting I/O.
