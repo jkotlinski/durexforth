@@ -26,7 +26,7 @@ SEPARATOR_NAME1 = '=-=-=-=-=-=-=-=,s'
 SEPARATOR_NAME2 = '=-------------=,s'
 SEPARATOR_NAME3 = '=-=---=-=---=-=,s'
 
-all: $(DISK_IMAGE) docs/index.html
+all: $(DISK_IMAGE) docs
 
 deploy: $(DISK_IMAGE) cart.asm
 	rm -rf deploy
@@ -62,9 +62,9 @@ $(DISK_IMAGE): durexforth.prg Makefile ext/petcom $(SRCS)
 	echo >>build/c1541.script write build/empty $(SEPARATOR_NAME3)
 	c1541 <build/c1541.script
 
-docs/index.html: docs-src/index.adoc
+docs: adoc/index.adoc
 	rm -rf docs/*
-	a2x --icons -f chunked docs-src/index.adoc -D .
+	a2x --icons -f chunked adoc/index.adoc -D .
 	mv index.chunked docs
 
 clean:
