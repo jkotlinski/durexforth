@@ -1,5 +1,5 @@
 = durexForth: Operators Manual
-:toc2:
+:toc:
 
 == Introduction
 include::intro.adoc[Introduction]
@@ -31,3 +31,6 @@ _This list is incomplete._
 [appendix]
 == License
 include::license.adoc[License]
+
+[index]
+== Word Index
