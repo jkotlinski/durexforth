@@ -26,7 +26,7 @@ include::links.adoc[Internet Resources]
 Johan Kotlinski:: Project initiator and maintainer.
 Mats Andr&eacute;n:: Contributed disk I/O primitives.
 
-_This list is incomplete._
+_This list is incomplete. Let me know if you want to be on this list._
 
 [appendix]
 == License
