@@ -24,7 +24,7 @@ msb ( -- addr):: The top address of the MSB parameter stack.
 pass:[.] ( n -- ):: Prints top value of stack as signed number.
 pass:[u.] ( u -- ):: Prints top value of stack as unsigned number.
 pass:[.s]:: See stack contents.
-emit ( a -- ):: Prints top value of stack as a PETSCII character. Example: +'q' emit+
+emit ( a -- ):: Prints top value of stack as a PETSCII character. Example: `q emit`
 &pound;:: Comment to end of line. (Used on C64/PETSCII.)
 \:: Comment to end of line. (Used when cross-compiling from PC/ASCII.)
 (:: Multiline comment. Ignores everything until a ).
@@ -56,7 +56,7 @@ negate ( a -- b ):: Negates a.
 abs ( a -- b ):: Gives absolute value of a.
 min ( a b -- c ):: Gives the lesser of a and b.
 max ( a b -- c ):: Gives the greater of a and b.
-within ( n lo hi -- flag ):: Returns true if lo <= n < hi.
+within ( n lo hi -- flag ):: Returns true if lo &leq; n < hi.
 < ( n1 n2 -- flag ):: Is n1 less than n2? (Signed.)
 > ( n1 n2 -- flag ):: Is n1 greater than n2? (Signed.)
 u< ( u1 u2 -- flag ):: Is u1 less than u2? (Unsigned.)
@@ -66,3 +66,66 @@ rshift ( a b -- c ):: Binary shift a right by b.
 base (variable):: Points to the cell that holds the numerical base.
 decimal:: Sets the numerical base to 10.
 hex:: Sets the numerical base to 16.
+
+=== Double
+
+The following words use double-cell integers. On the stack, the cell containing the most significant part of a double-cell integer is above the cell containing the least significant part.
+
+dabs _( d -- ud )_:: Produces the absolute value of _d_.
+dnegate _( d -- d )_:: Negates the double-cell integer _d_.
+s>d _( n -- d )_:: Converts the number n to the double-cell number _d_.
+m+ _( d n -- d )_:: Add _n_ to double-cell number _d_.
+m* _( a b -- d )_:: Multiply _a_ with _b_, producing a double-cell value.
+um* _( a b -- ud )_:: Multiply _a_ with _b_, giving the unsigned double-cell number _ud_.
+um/mod _( ud n -- r q )_:: Divide double-cell number ud by n, giving remainder r and quotient q. Values are unsigned.
+fm/mod _( d n -- r q )_:: Divide double-cell number d by n, giving the floored quotient q and the remainder r. Values are signed.
+
+=== Logic
+
+0= _( a -- flag)_:: Is _a_ equal to zero?
+0<> _( a -- flag )_:: Is _a_ not equal to 0?
+\= _( a b -- flag )_:: Is _a_ equal to _b_?
+<> _( a b -- flag )_:: Does _a_ differ from _b_?
+and _( a b -- c )_:: Binary and.
+or _( a b -- c )_:: Binary or.
+xor _( a b -- c )_:: Binary exclusive or.
+invert _( a -- b )_:: Flip all bits of _a_.
+
+=== Memory
+
+! _( value address -- )_:: Store 16-bit value at address.
+@ _( address -- value )_:: Fetch 16-bit value from address.
+c! _( value address -- )_:: Store 8-bit value at address.
+c@ _( address -- value )_:: Fetch 8-bit value from address.
+fill _( addr len char -- )_:: Fill range [addr, len + addr) with char.
+move _( src dst len -- )_:: Copies a region of memory `len` bytes long, starting at `src`, to memory beginning at `dst`.
+
+=== Compiling
+
+: _( "<spaces>name" -- )_:: Define the word with the given name and enter compilation state.
+:noname _( -- xt )_:: Create an execution token and enter compilation state.
+; _( -- )_:: End the current definition, allow it to be found in the dictionary and go back to interpretation state.
+code _( "<spaces>name" -- )_:: Start assembling a new word.
+;code:: End assembler.
+, _( n -- )_:: Write word on stack to `here` position and increase `here` by 2.
+c, _( n -- )_:: Write byte on stack to `here` position and increase `here` by 1.
+allot _( n -- )_:: Add _n_ bytes to the body of the most recently defined word.
+literal _( n -- )_:: Compile a value from the stack as a literal value. Typical use: `: x ... [ a b * ] literal ... ;`
+[char] _( "<spaces>c" -- )_:: Compile character _c_ as a literal value.
+[ _( -- )_:: Leave compile mode. Execute the following words immediately instead of compiling them.
+] _( -- )_:: Return to compile mode.
+immediate:: Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
+['] name _( -- xt )_:: Place name's execution token xt on the stack.
+The execution token returned by the compiled phrase +[\'] x+ is the same value returned by +' x+ outside of compilation state.
+Typical use: +: x ... ['] name ... ;+
+compile, ( xt -- ):: Append \texttt{jsr xt} to the word being compiled. Typical use: +: recurse immed latest >xt compile, ;+
+postpone _xxx_:: Compile the compilation semantics (instead of interpretation semantics) of xxx. Typical use:
+----
+: endif postpone then ; immediate
+: x ... if ... endif ... ;
+----
+header _xxx_:: Create a dictionary header with name `xxx`.
+create _xxx_ ... does>:: Create a word creating word `xxx` with custom behavior specified after `does>`.
+For further description, see "Starting Forth."
+state _( -- addr)_:: _addr_ is the address of a cell containing the compilation-state flag.
+It is 1 when compiling, otherwise 0.

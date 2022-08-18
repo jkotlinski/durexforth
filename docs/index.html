@@ -1507,7 +1507,7 @@ emit ( a&#8201;&#8212;&#8201;)
 </dt>
 <dd>
 <p>
-Prints top value of stack as a PETSCII character. Example: <code><em>q</em> emit</code>
+Prints top value of stack as a PETSCII character. Example: <code>q emit</code>
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1744,7 +1744,7 @@ within ( n lo hi&#8201;&#8212;&#8201;flag )
 </dt>
 <dd>
 <p>
-Returns true if lo &#8656; n &lt; hi.
+Returns true if lo &leq; n &lt; hi.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1817,6 +1817,360 @@ hex
 <dd>
 <p>
 Sets the numerical base to 16.
+</p>
+</dd>
+</dl></div>
+</div>
+<div class="sect2">
+<h3 id="_double">Double</h3>
+<div class="paragraph"><p>The following words use double-cell integers. On the stack, the cell containing the most significant part of a double-cell integer is above the cell containing the least significant part.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+dabs <em>( d&#8201;&#8212;&#8201;ud )</em>
+</dt>
+<dd>
+<p>
+Produces the absolute value of <em>d</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+dnegate <em>( d&#8201;&#8212;&#8201;d )</em>
+</dt>
+<dd>
+<p>
+Negates the double-cell integer <em>d</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+s&gt;d <em>( n&#8201;&#8212;&#8201;d )</em>
+</dt>
+<dd>
+<p>
+Converts the number n to the double-cell number <em>d</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+m+ <em>( d n&#8201;&#8212;&#8201;d )</em>
+</dt>
+<dd>
+<p>
+Add <em>n</em> to double-cell number <em>d</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+m* <em>( a b&#8201;&#8212;&#8201;d )</em>
+</dt>
+<dd>
+<p>
+Multiply <em>a</em> with <em>b</em>, producing a double-cell value.
+</p>
+</dd>
+<dt class="hdlist1">
+um* <em>( a b&#8201;&#8212;&#8201;ud )</em>
+</dt>
+<dd>
+<p>
+Multiply <em>a</em> with <em>b</em>, giving the unsigned double-cell number <em>ud</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+um/mod <em>( ud n&#8201;&#8212;&#8201;r q )</em>
+</dt>
+<dd>
+<p>
+Divide double-cell number ud by n, giving remainder r and quotient q. Values are unsigned.
+</p>
+</dd>
+<dt class="hdlist1">
+fm/mod <em>( d n&#8201;&#8212;&#8201;r q )</em>
+</dt>
+<dd>
+<p>
+Divide double-cell number d by n, giving the floored quotient q and the remainder r. Values are signed.
+</p>
+</dd>
+</dl></div>
+</div>
+<div class="sect2">
+<h3 id="_logic">Logic</h3>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+0= <em>( a&#8201;&#8212;&#8201;flag)</em>
+</dt>
+<dd>
+<p>
+Is <em>a</em> equal to zero?
+</p>
+</dd>
+<dt class="hdlist1">
+0&lt;&gt; <em>( a&#8201;&#8212;&#8201;flag )</em>
+</dt>
+<dd>
+<p>
+Is <em>a</em> not equal to 0?
+</p>
+</dd>
+<dt class="hdlist1">
+\= <em>( a b&#8201;&#8212;&#8201;flag )</em>
+</dt>
+<dd>
+<p>
+Is <em>a</em> equal to <em>b</em>?
+</p>
+</dd>
+<dt class="hdlist1">
+&lt;&gt; <em>( a b&#8201;&#8212;&#8201;flag )</em>
+</dt>
+<dd>
+<p>
+Does <em>a</em> differ from <em>b</em>?
+</p>
+</dd>
+<dt class="hdlist1">
+and <em>( a b&#8201;&#8212;&#8201;c )</em>
+</dt>
+<dd>
+<p>
+Binary and.
+</p>
+</dd>
+<dt class="hdlist1">
+or <em>( a b&#8201;&#8212;&#8201;c )</em>
+</dt>
+<dd>
+<p>
+Binary or.
+</p>
+</dd>
+<dt class="hdlist1">
+xor <em>( a b&#8201;&#8212;&#8201;c )</em>
+</dt>
+<dd>
+<p>
+Binary exclusive or.
+</p>
+</dd>
+<dt class="hdlist1">
+invert <em>( a&#8201;&#8212;&#8201;b )</em>
+</dt>
+<dd>
+<p>
+Flip all bits of <em>a</em>.
+</p>
+</dd>
+</dl></div>
+</div>
+<div class="sect2">
+<h3 id="_memory">Memory</h3>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+! <em>( value address&#8201;&#8212;&#8201;)</em>
+</dt>
+<dd>
+<p>
+Store 16-bit value at address.
+</p>
+</dd>
+<dt class="hdlist1">
+@ <em>( address&#8201;&#8212;&#8201;value )</em>
+</dt>
+<dd>
+<p>
+Fetch 16-bit value from address.
+</p>
+</dd>
+<dt class="hdlist1">
+c! <em>( value address&#8201;&#8212;&#8201;)</em>
+</dt>
+<dd>
+<p>
+Store 8-bit value at address.
+</p>
+</dd>
+<dt class="hdlist1">
+c@ <em>( address&#8201;&#8212;&#8201;value )</em>
+</dt>
+<dd>
+<p>
+Fetch 8-bit value from address.
+</p>
+</dd>
+<dt class="hdlist1">
+fill <em>( addr len char&#8201;&#8212;&#8201;)</em>
+</dt>
+<dd>
+<p>
+Fill range [addr, len + addr) with char.
+</p>
+</dd>
+<dt class="hdlist1">
+move <em>( src dst len&#8201;&#8212;&#8201;)</em>
+</dt>
+<dd>
+<p>
+Copies a region of memory <code>len</code> bytes long, starting at <code>src</code>, to memory beginning at <code>dst</code>.
+</p>
+</dd>
+</dl></div>
+</div>
+<div class="sect2">
+<h3 id="_compiling">Compiling</h3>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+: <em>( "&lt;spaces&gt;name"&#8201;&#8212;&#8201;)</em>
+</dt>
+<dd>
+<p>
+Define the word with the given name and enter compilation state.
+</p>
+</dd>
+</dl></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+; <em>(&#8201;&#8212;&#8201;)</em>
+</dt>
+<dd>
+<p>
+End the current definition, allow it to be found in the dictionary and go back to interpretation state.
+</p>
+</dd>
+<dt class="hdlist1">
+code <em>( "&lt;spaces&gt;name"&#8201;&#8212;&#8201;)</em>
+</dt>
+<dd>
+<p>
+Start assembling a new word.
+</p>
+</dd>
+<dt class="hdlist1">
+;code
+</dt>
+<dd>
+<p>
+End assembler.
+</p>
+</dd>
+<dt class="hdlist1">
+, <em>( n&#8201;&#8212;&#8201;)</em>
+</dt>
+<dd>
+<p>
+Write word on stack to <code>here</code> position and increase <code>here</code> by 2.
+</p>
+</dd>
+<dt class="hdlist1">
+c, <em>( n&#8201;&#8212;&#8201;)</em>
+</dt>
+<dd>
+<p>
+Write byte on stack to <code>here</code> position and increase <code>here</code> by 1.
+</p>
+</dd>
+<dt class="hdlist1">
+allot <em>( n&#8201;&#8212;&#8201;)</em>
+</dt>
+<dd>
+<p>
+Add <em>n</em> bytes to the body of the most recently defined word.
+</p>
+</dd>
+<dt class="hdlist1">
+literal <em>( n&#8201;&#8212;&#8201;)</em>
+</dt>
+<dd>
+<p>
+Compile a value from the stack as a literal value. Typical use: <code>: x ... [ a b * ] literal ... ;</code>
+</p>
+</dd>
+<dt class="hdlist1">
+[char] <em>( "&lt;spaces&gt;c"&#8201;&#8212;&#8201;)</em>
+</dt>
+<dd>
+<p>
+Compile character <em>c</em> as a literal value.
+</p>
+</dd>
+<dt class="hdlist1">
+[ <em>(&#8201;&#8212;&#8201;)</em>
+</dt>
+<dd>
+<p>
+Leave compile mode. Execute the following words immediately instead of compiling them.
+</p>
+</dd>
+<dt class="hdlist1">
+] <em>(&#8201;&#8212;&#8201;)</em>
+</dt>
+<dd>
+<p>
+Return to compile mode.
+</p>
+</dd>
+<dt class="hdlist1">
+immediate
+</dt>
+<dd>
+<p>
+Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
+</p>
+</dd>
+<dt class="hdlist1">
+['] name <em>(&#8201;&#8212;&#8201;xt )</em>
+</dt>
+<dd>
+<p>
+Place name&#8217;s execution token xt on the stack.
+The execution token returned by the compiled phrase <code>['] x</code> is the same value returned by <code>' x</code> outside of compilation state.
+Typical use: <code>: x &#8230; ['] name &#8230; ;</code>
+</p>
+</dd>
+<dt class="hdlist1">
+compile, ( xt&#8201;&#8212;&#8201;)
+</dt>
+<dd>
+<p>
+Append \texttt{jsr xt} to the word being compiled. Typical use: <code>: recurse immed latest &gt;xt compile, ;</code>
+</p>
+</dd>
+<dt class="hdlist1">
+postpone <em>xxx</em>
+</dt>
+<dd>
+<p>
+Compile the compilation semantics (instead of interpretation semantics) of xxx. Typical use:
+</p>
+</dd>
+</dl></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>: endif postpone then ; immediate
+: x ... if ... endif ... ;</code></pre>
+</div></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+header <em>xxx</em>
+</dt>
+<dd>
+<p>
+Create a dictionary header with name <code>xxx</code>.
+</p>
+</dd>
+<dt class="hdlist1">
+create <em>xxx</em> &#8230; does&gt;
+</dt>
+<dd>
+<p>
+Create a word creating word <code>xxx</code> with custom behavior specified after <code>does&gt;</code>.
+For further description, see "Starting Forth."
+</p>
+</dd>
+<dt class="hdlist1">
+state <em>(&#8201;&#8212;&#8201;addr)</em>
+</dt>
+<dd>
+<p>
+<em>addr</em> is the address of a cell containing the compilation-state flag.
+It is 1 when compiling, otherwise 0.
 </p>
 </dd>
 </dl></div>
