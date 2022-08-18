@@ -536,6 +536,40 @@ body.manpage div.sectionbody {
 }
 
 
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -2204,6 +2238,78 @@ Like <code>define</code>, but starts a <code>code</code> segment instead.
 </dd>
 </dl></div>
 </div>
+<div class="sect2">
+<h3 id="_variables">Variables</h3>
+<div class="sect3">
+<h4 id="_values">Values</h4>
+<div class="paragraph"><p>Values are fast to read, slow to write.
+Use values for variables that are rarely changed.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<em>1</em> value <em>foo</em>
+</dt>
+<dd>
+<p>
+Create value <em>foo</em> and set it to <em>1</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+<em>2</em> constant <em>bar</em>
+</dt>
+<dd>
+<p>
+Create constant value <em>bar</em> and set it to <em>2</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+<em>foo</em>
+</dt>
+<dd>
+<p>
+Fetch value of <em>foo</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+<em>0</em> to <em>foo</em>
+</dt>
+<dd>
+<p>
+Set <em>foo</em> to <em>0</em>.
+</p>
+</dd>
+</dl></div>
+</div>
+<div class="sect3">
+<h4 id="_variables_2">Variables</h4>
+<div class="paragraph"><p>Variables are faster to write to than values.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+variable <em>bar</em>
+</dt>
+<dd>
+<p>
+Define variable <em>bar</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+<em>bar</em> @
+</dt>
+<dd>
+<p>
+Fetch value of variable <em>bar</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+<em>1 bar</em> !
+</dt>
+<dd>
+<p>
+Set variable <em>bar</em> to <em>1</em>.
+</p>
+</dd>
+</dl></div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2492,7 +2598,7 @@ THE SOFTWARE.</p></div>
 <div id="footer">
 <div id="footer-text">
 Last updated
- 2022-08-18 00:56:18 CEST
+ 2022-08-18 21:14:38 CEST
 </div>
 </div>
 </body>

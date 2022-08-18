@@ -1,5 +1,5 @@
 = durexForth: Operators Manual
-:toc:
+:toc2:
 
 == Introduction
 include::intro.adoc[Introduction]

@@ -135,3 +135,23 @@ It is 1 when compiling, otherwise 0.
 hide _( "name" -- )_:: Remove _name_ from the word list, while leaving its definition in place.
 define _( "name" -- )_:: Assign `here` as the execution token of word _name_ and enter the compilation state.
 defcode _( "name" -- )_:: Like `define`, but starts a `code` segment instead.
+
+=== Variables
+
+==== Values
+
+Values are fast to read, slow to write.
+Use values for variables that are rarely changed.
+
+_1_ value _foo_:: Create value _foo_ and set it to _1_.
+_2_ constant _bar_:: Create constant value _bar_ and set it to _2_.
+_foo_:: Fetch value of _foo_.
+_0_ to _foo_:: Set _foo_ to _0_.
+
+==== Variables
+
+Variables are faster to write to than values.
+
+variable _bar_:: Define variable _bar_.
+_bar_ @:: Fetch value of variable _bar_.
+_1 bar_ !:: Set variable _bar_ to _1_.
