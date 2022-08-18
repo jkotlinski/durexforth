@@ -1,69 +1,69 @@
 === Stack Manipulation
 
-drop ( a -- ):: Drop top of stack.
-dup ( a -- a a ):: Duplicate top of stack.
-swap ( a b -- b a ):: Swap top stack elements.
-over ( a b -- a b a ):: Make a copy of the second item and push it on top.
-rot ( a b c -- b c a ):: Rotate the third item to the top.
--rot ( a b c -- c a b ):: rot rot
-2drop ( a b -- ):: Drop two topmost stack elements.
-2dup ( a b -- a b a b ):: Duplicate two topmost stack elements.
-?dup ( a -- a a? ):: Dup a if a differs from 0.
-nip ( a b -- b ):: swap drop
-tuck ( a b -- b a b ):: dup -rot
-pick ( x~u~ ... x~1~ x~0~ u -- x~u~ ... x~1~ x~0~ x~u~ ):: Pick from stack element with depth u to top of stack.
->r ( a -- ):: Move value from top of parameter stack to top of return stack.
-r> ( -- a ):: Move value from top of return stack to top of parameter stack.
-r@ ( -- a ):: Copy value from top of return stack to top of parameter stack.
-depth ( -- n):: +n+ is the number of single-cell values contained in the data stack before +n+ was placed on the stack.
-lsb ( -- addr):: The top address of the LSB parameter stack.
-msb ( -- addr):: The top address of the MSB parameter stack.
+drop _( a -- )_:: Drop top of stack.
+dup _( a -- a a )_:: Duplicate top of stack.
+swap _( a b -- b a )_:: Swap top stack elements.
+over _( a b -- a b a )_:: Make a copy of the second item and push it on top.
+rot _( a b c -- b c a )_:: Rotate the third item to the top.
+-rot _( a b c -- c a b )_:: rot rot
+2drop _( a b -- )_:: Drop two topmost stack elements.
+2dup _( a b -- a b a b )_:: Duplicate two topmost stack elements.
+?dup _( a -- a a? )_:: Dup a if a differs from 0.
+nip _( a b -- b )_:: swap drop
+tuck _( a b -- b a b )_:: dup -rot
+pick _( x~u~ ... x~1~ x~0~ u -- x~u~ ... x~1~ x~0~ x~u~ )_:: Pick from stack element with depth u to top of stack.
+>r _( a -- )_:: Move value from top of parameter stack to top of return stack.
+r> _( -- a )_:: Move value from top of return stack to top of parameter stack.
+r@ _( -- a )_:: Copy value from top of return stack to top of parameter stack.
+depth _( -- n)_:: +n+ is the number of single-cell values contained in the data stack before +n+ was placed on the stack.
+lsb _( -- addr)_:: The top address of the LSB parameter stack.
+msb _( -- addr)_:: The top address of the MSB parameter stack.
 
 === Utility
 
-pass:[.] ( n -- ):: Prints top value of stack as signed number.
-pass:[u.] ( u -- ):: Prints top value of stack as unsigned number.
+pass:[.] _( n -- )_:: Prints top value of stack as signed number.
+pass:[u.] _( u -- )_:: Prints top value of stack as unsigned number.
 pass:[.s]:: See stack contents.
-emit ( a -- ):: Prints top value of stack as a PETSCII character. Example: `q emit`
+emit _( a -- )_:: Prints top value of stack as a PETSCII character. Example: `q emit`
 &pound;:: Comment to end of line. (Used on C64/PETSCII.)
 \:: Comment to end of line. (Used when cross-compiling from PC/ASCII.)
 (:: Multiline comment. Ignores everything until a ).
-bl ( -- char ):: Gives the PETSCII character for a space.
+bl _( -- char )_:: Gives the PETSCII character for a space.
 space:: Displays one space.
-spaces ( n -- ):: Displays n spaces.
+spaces _( n -- )_:: Displays n spaces.
 page:: Clears the screen.
 rvs:: Reverse screen output.
 
 === Mathematics
 
-1+ ( a -- b ):: Increase top of stack value by 1.
-1- ( a -- b ):: Decrease top of stack value by 1.
-2+ ( a -- b ):: Increase top of stack value by 2.
-2* ( a -- b ):: Multiply top of stack value by 2.
-2/ ( a -- b ):: Divide top of stack value by 2.
-100/ ( a -- b ):: Divides top of stack value by $100.
-++!+ ( n a -- ):: Add n to memory address a.
-+ ( a b -- c ):: Add a and b.
-pass:[-] ( a b -- c ):: Subtract b from a.
-pass:[*] ( a b -- c ):: Multiply a with b.
-/ ( a b -- q ):: Divide a with b using floored division.
-/mod ( a b -- r q ):: Divide a with b, giving remainder r and quotient q.
-mod ( a b -- r ):: Remainder of a divided by b.
-*/ ( a b c -- q ):: Multiply a with b, then divide by c, using a 32-bit intermediary.
-*/mod ( a b c -- r q ):: Like */, but also keeping remainder r.
-0< ( a -- b ):: Is a negative?
-negate ( a -- b ):: Negates a.
-abs ( a -- b ):: Gives absolute value of a.
-min ( a b -- c ):: Gives the lesser of a and b.
-max ( a b -- c ):: Gives the greater of a and b.
-within ( n lo hi -- flag ):: Returns true if lo &leq; n < hi.
-< ( n1 n2 -- flag ):: Is n1 less than n2? (Signed.)
-> ( n1 n2 -- flag ):: Is n1 greater than n2? (Signed.)
-u< ( u1 u2 -- flag ):: Is u1 less than u2? (Unsigned.)
-u> ( u1 u2 -- flag ):: Is u1 greater than u2? (Unsigned.)
-lshift ( a b -- c ):: Binary shift a left by b.
-rshift ( a b -- c ):: Binary shift a right by b.
-base (variable):: Points to the cell that holds the numerical base.
+1+ _( a -- b )_:: Increase top of stack value by 1.
+1- _( a -- b )_:: Decrease top of stack value by 1.
+2+ _( a -- b )_:: Increase top of stack value by 2.
+2* _( a -- b )_:: Multiply top of stack value by 2.
+2/ _( a -- b )_:: Divide top of stack value by 2.
+100/ _( a -- b )_:: Divides top of stack value by $100.
+++!+ _( n a -- )_:: Add n to memory address a.
++ _( a b -- c )_:: Add a and b.
+pass:[-] _( a b -- c )_:: Subtract b from a.
+pass:[*] _( a b -- c )_:: Multiply a with b.
+/ _( a b -- q )_:: Divide a with b using floored division.
+/mod _( a b -- r q )_:: Divide a with b, giving remainder r and quotient q.
+mod _( a b -- r )_:: Remainder of a divided by b.
+*/ _( a b c -- q )_:: Multiply a with b, then divide by c, using a 32-bit intermediary.
+*/mod _( a b c -- r q )_:: Like */, but also keeping remainder r.
+0< _( a -- b )_:: Is a negative?
+negate _( a -- b )_:: Negates a.
+abs _( a -- b )_:: Gives absolute value of a.
+min _( a b -- c )_:: Gives the lesser of a and b.
+max _( a b -- c )_:: Gives the greater of a and b.
+within _( n lo hi -- flag )_:: Returns true if lo &leq; n < hi.
+< _( n1 n2 -- flag )_:: Is n1 less than n2? (Signed.)
+> _( n1 n2 -- flag )_:: Is n1 greater than n2? (Signed.)
+u< _( u1 u2 -- flag )_:: Is u1 less than u2? (Unsigned.)
+u> _( u1 u2 -- flag )_:: Is u1 greater than u2? (Unsigned.)
+lshift _( a b -- c )_:: Binary shift a left by b.
+rshift _( a b -- c )_:: Binary shift a right by b.
+base _(variable)_:: Points to the cell that holds the numerical base.
 decimal:: Sets the numerical base to 10.
 hex:: Sets the numerical base to 16.
 
@@ -102,16 +102,16 @@ move _( src dst len -- )_:: Copies a region of memory `len` bytes long, starting
 
 === Compiling
 
-: _( "<spaces>name" -- )_:: Define the word with the given name and enter compilation state.
+: _( "name" -- )_:: Define the word with the given name and enter compilation state.
 :noname _( -- xt )_:: Create an execution token and enter compilation state.
 ; _( -- )_:: End the current definition, allow it to be found in the dictionary and go back to interpretation state.
-code _( "<spaces>name" -- )_:: Start assembling a new word.
+code _( "name" -- )_:: Start assembling a new word.
 ;code:: End assembler.
 , _( n -- )_:: Write word on stack to `here` position and increase `here` by 2.
 c, _( n -- )_:: Write byte on stack to `here` position and increase `here` by 1.
 allot _( n -- )_:: Add _n_ bytes to the body of the most recently defined word.
 literal _( n -- )_:: Compile a value from the stack as a literal value. Typical use: `: x ... [ a b * ] literal ... ;`
-[char] _( "<spaces>c" -- )_:: Compile character _c_ as a literal value.
+[char] _( "c" -- )_:: Compile character _c_ as a literal value.
 [ _( -- )_:: Leave compile mode. Execute the following words immediately instead of compiling them.
 ] _( -- )_:: Return to compile mode.
 immediate:: Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
@@ -124,8 +124,14 @@ postpone _xxx_:: Compile the compilation semantics (instead of interpretation se
 : endif postpone then ; immediate
 : x ... if ... endif ... ;
 ----
-header _xxx_:: Create a dictionary header with name `xxx`.
-create _xxx_ ... does>:: Create a word creating word `xxx` with custom behavior specified after `does>`.
+header _( "name" -- )_:: Create a dictionary header named _name_.
+create _( name" -- )_ ... does>:: Create a word-creating word named _name_ with custom behavior specified after `does>`.
 For further description, see "Starting Forth."
 state _( -- addr)_:: _addr_ is the address of a cell containing the compilation-state flag.
 It is 1 when compiling, otherwise 0.
+
+=== Word List
+
+hide _( "name" -- )_:: Remove _name_ from the word list, while leaving its definition in place.
+define _( "name" -- )_:: Assign `here` as the execution token of word _name_ and enter the compilation state.
+defcode _( "name" -- )_:: Like `define`, but starts a `code` segment instead.
