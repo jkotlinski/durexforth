@@ -335,3 +335,46 @@ Note that use of low-level device I/O may interfere with disk accesses done by d
 - Only use input/output redirection (`chkin` and `chkout`) within word definitions, and ensure that `clrchn` is called before exit.
 - Close files as soon as they are no longer needed.
 - If multiple files are open, always call `clrchn` to end any serial bus transactions before calling `open` or switching between files with `chkin` or `chkout`.
+
+=== Compatibility
+
+The `compat` module contains various words that are not deemed necessary for enjoyable DurexForth operation, but still must be provided to comply with the Forth 2012 core standard.
+
+((environment?)) _( addr u -- 0 )_ :: Environmental query.
+((cell+)) _( n -- n+2 )_ :: 2+
+((cells)) _( n -- n*2 )_ :: 2*
+((char+)) _( n -- n+1 )_ :: 1+
+((align)) _( -- )_ :: No-op
+((aligned)) _( -- )_ :: No-op
+((chars)) _( -- )_ :: No-op
+((2@)) _( addr -- x1 x2 )_ :: Fetch 32-bit value from _addr_. _x2_ is stored at _addr_, and _x1_ is stored at _addr_ + 2.
+((2!)) _( x1 x2 addr -- )_ :: Store 32-bit value to _addr_. _x2_ is stored at _addr_, and _x1_ is stored at _addr_ + 2.
+((2over)) _( a b c d -- a b c d a b )_ :: Copies cell pair _a_ _b_ to top of stack.
+((2swap)) _( a b c d -- c d a b )_ :: Exchanges the top two cell pairs.
+((>number)) _( ud addr u -- ud addr2 u2 )_ :: Converts the string in _addr u_ to digits, using `base`, and adds each digit into _ud_ after multiplying it with `base`. _addr2 u2_ contains the part of the string that was not converted.
+((>body)) _( xt -- addr )_ :: Returns the data field address that belongs to the execution token. Example use: `' foo >body`
+((sm/rem)) _( d n -- r q )_ :: Divide double-cell number _d_ by _n_, giving the symmetric quotient _q_ and the remainder _r_. Values are signed.
+
+=== Kernel Calls
+
+Safe kernel calls may be done from Forth words using ((sys)) _( addr -- )_. The helper variables ((ar)), ((xr)), ((yr)) and ((sr)) can be used to set arguments and get results through the a, x, y and status registers.
+
+Example: `'0' ar c! $ffd2 sys` calls the CHROUT routine, which prints `0` on screen.
+
+=== Turn-key Utilities
+
+These words are available by including `turnkey`.
+
+((top)) _( -- addr )_ :: Address of the top of the dictionary, default: $9fff.
+
+((top!)) _( addr -- )_ :: Relocates the dictionary to _addr_. Example:
+
+----
+\ not using $a000 block, give all memory to dictionary
+$cbff top!
+----
+
+((save-pack)) _( "filename" -- )_ :: Saves a compact version of forth to the given _filename_.
+((save-prg)) _( "filename" -- )_ :: Saves a forth program with no dictionary to _filename_.
+
+Further details on the use of these words are outlined in <<_turn_key_operation>>.
