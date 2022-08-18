@@ -133,6 +133,20 @@ Typical use: +: x ... ['] name ... ;+
 ((hide)) _( "name" -- )_:: Remove _name_ from the word list, while leaving its definition in place.
 ((define)) _( "name" -- )_:: Assign `here` as the execution token of word _name_ and enter the compilation state.
 ((defcode)) _( "name" -- )_:: Like `define`, but starts a `code` segment instead.
+((dowords)) _( xt -- )_ :: Execute _xt_ once for every word in the word list, passing the name token of the word to _xt_, until the word list is exhausted or _xt_ returns false. The invoked _xt_ has the stack effect _( k * x nt -- l * x flag )_. If _flag_ is true, `dowords` will continue on to the next name, otherwise it will return.
+
+----
+\ from debug.fs
+: (words) more name>string space 1 ;
+: words ['] (words) dowords ;
+----
+
+((marker)) _( "name" -- )_ :: Creates a word that when called, forgets itself and all words that were defined after it. Example:
+
+----
+marker forget
+: x ; forget
+----
 
 === Variables
 
@@ -258,7 +272,29 @@ If the definition is immediate, also return 1, otherwise also return -1.
 === Debugging
 
 ((words)) :: List all defined words.
-((size)) _( "name" -- )_ :: Print size of \texttt{foo}.
-\item[\index{dump}dump ( n -- )] Memory dump starting at address n.
-\item[n] \index{n}Continue memory dump where last one stopped.
-\item[\index{see}see name ( -- )] Decompiles and prints the named word. Works on colon definitions only. Optionally included with \texttt{include see}.
+((size)) _( "name" -- )_ :: Print the size of the definition of the word named _name_.
+((dump)) _( n -- )_ :: Memory dump starting at address _n_.
+((n)) :: Continue memory dump where last one stopped.
+((see)) _( "name" -- )_ :: Print the definition of the word named _name_. Works on colon definitions only. Optionally included with `include see`.
+
+=== System State
+
+((latest)) _( -- value )_ :: Address of the latest defined header.
+((here)) _( -- value )_ :: Write position of the Forth compiler (usually first unused byte of code space).
+Many C64 assemblers refer to this as program counter or '*'.
+((pad)) _( -- addr )_ :: Address of the `pad`, a 161-byte memory region that can be used freely by user words.
+No built-in words will modify this region.
+
+=== Disk I/O
+
+((include)) _( "filename" -- )_ :: Load and parse file. Example: `include test`
+((included)) _( filenameptr filenamelen -- )_ :: Load and parse file.
+((require)) _( "filename" -- )_ :: Like include, except that load is skipped if the file is already loaded.
+((required)) _( filenameptr filenamelen -- )_ :: Like included, except that load is skipped if the file is already loaded.
+((loadb)) _( filenameptr filenamelen dst -- endaddr )_ :: Load binary data to _dst_.
+Returns 0 on failure, otherwise address after last written byte.
+((saveb)) _( start end filenameptr filenamelength -- )_ :: Save binary data.
+((device)) _( device# -- )_ :: Switches the active device.
+((save-forth)) _( "filename" -- )_ :: Saves the forth to the given filename.
+((ls)) :: Load and print disk directory with optional drive # and wildcards. Example: `ls $1:*=p` Load directory for drive 1, only prg files.
+((rdir)) _( addr -- )_ :: Display disk directory previously loaded to addr.

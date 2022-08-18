@@ -368,29 +368,12 @@ For more info about number formatting, read Starting Forth!
 
 \begin{description}
 
-
 \item[\index{latest}latest (value)] Address of latest defined header.
 
 \item[\index{here}here (value)] Write position of the Forth compiler (usually first unused byte of code space). Many C64 assemblers refer to this as program counter or \texttt{*}.
 
 \item[\index{pad}pad ( -- addr )] Address of the \texttt{pad}, a 161-byte memory region that can be used freely by user words. No built-in words will modify this region.
 
-\item[\index{marker}marker name ( -- )] Creates a word that when called, forgets itself and all words that were defined after it. Example:
-
-\begin{verbatim}
-marker forget
-: x ;
-forget
-\end{verbatim}
-
-\item[\index{dowords}dowords ( xt -- )] Remove \texttt{xt} from the stack. Execute \texttt{xt} once for every word in the wordlist, passing the name token \texttt{nt} of the word to \texttt{xt}, until the wordlist is exhausted or until \texttt{xt} returns false. The invoked \texttt{xt} has the stack effect \texttt{( k * x nt -- l * x flag)}. If \texttt{flag} is true, \texttt{dowords} will continue on to the next name, otherwise it will return.
-
-\begin{verbatim}
-\ from debug.fs
-: (words) more name>string space 1 ;
-: words ['] (words) dowords ;
-\end{verbatim}
-\end{description}
 
 \section{Disk I/O}
 
