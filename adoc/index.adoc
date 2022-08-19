@@ -33,6 +33,10 @@ include::config.adoc[]
 include::mnemonics.adoc[]
 
 [appendix]
+== Memory Map
+include::memmap.adoc[]
+
+[appendix]
 == Internet Resources
 include::links.adoc[]
 

@@ -65,7 +65,7 @@ $(DISK_IMAGE): durexforth.prg Makefile ext/petcom $(SRCS)
 	c1541 <build/c1541.script
 
 docs/index.html: adoc/index.adoc adoc/words.adoc adoc/links.adoc adoc/sid.adoc adoc/asm.adoc \
-	adoc/mnemonics.adoc
+	adoc/mnemonics.adoc adoc/memmap.adoc
 	rm -rf docs
 	a2x --icons -f chunked adoc/index.adoc -D .
 	mv index.chunked docs
