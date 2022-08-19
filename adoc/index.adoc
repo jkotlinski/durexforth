@@ -19,6 +19,9 @@ include::gfx.adoc[Graphics]
 == SID
 include::sid.adoc[SID]
 
+== Music
+include::mml.adoc[Music]
+
 == Configuring durexForth
 include::config.adoc[Configuring durexForth]
 
