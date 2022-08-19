@@ -1,0 +1,39 @@
+=== Turtle Graphics
+
+Turtle graphics are mostly known from LOGO, a 1970s programming language.
+It enables control of a turtle that can move and turn while holding a pen.
+The turtle graphics library is loaded with `include turtle`.
+
+((init)) _( -- )_ :: Initializes turtle graphics.
+((forward)) _( px -- )_ :: Moves the turtle `px` pixels forward.
+((back)) _( px -- )_ :: Moves the turtle `px` pixels back.
+((left)) _( deg -- )_ :: Rotates the turtle `deg` degrees left.
+((right)) _( deg -- )_ :: Rotates the turtle `deg` degrees right.
+((penup)) _( -- )_ :: Pen up (disables drawing).
+((pendown)) _( -- )_ :: Pen down (enables drawing).
+((turtle@)) _( -- state )_ :: Remembers turtle state.
+((turtle!)) _( state -- )_ :: Restores turtle state as earlier read by `turtle@`.
+((moveto)) _( x y deg -- )_ :: Moves turtle to _x y_ with angle _deg_.
+
+=== High-Resolution Graphics
+
+The high-resolution graphics library is loaded with `include gfx`.
+It is inspired by "Step-by-Step Programming Commodore 64: Graphics Book 3."
+Some demonstrations can be found in `gfxdemo`.
+
+((hires)) _( -- )_ :: Enters the high-resolution drawing mode.
+((lores)) _( -- )_ :: Switches back to low-resolution text mode.
+((clrcol)) _( colors -- )_ :: Clears the high-resolution display using _colors_.
+_Colors_ is a byte value with foreground color in high nibble, background color in low nibble.
+E.g. `15 clrcol` clears the screen with green background, white foreground.
+((blkcol)) _( col row colors -- )_ :: Changes colors of the 8x8 block at given position.
+((plot)) _( x y -- )_ :: Sets the pixel at _x_, _y_.
+((peek)) _( x y -- p )_ :: Gets the pixel at _x_, _y_.
+((line)) _( x y -- )_ :: Draws a line to _x_, _y_.
+((circle)) _( x y r -- )_ :: Draws a circle with radius _r_ around _x_, _y_.
+((erase)) _( mode -- )_ :: Changes blit method for line drawing.
+`1 erase` uses `xor` for line drawing, `0 erase` switches back to `or`.
+((paint)) _( x y -- )_ :: Paints the area at _x_, _y_.
+((text)) _( column row str strlen -- )_ :: Draws a text string at the given position.
+E.g. `10 8 parse-name hallo text` draws the message `hallo` at column 16, row 8.
+((drawchar)) _( column row addr -- )_ :: Draws a custom character at given column and row, using the 8 bytes long data starting at addr.
