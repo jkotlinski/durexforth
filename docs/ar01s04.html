@@ -1,350 +1,350 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>4. Forth Words</title><link rel="stylesheet" type="text/css" href="docbook-xsl.css" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot" /><link rel="home" href="index.html" title="durexForth: Operators Manual" /><link rel="up" href="index.html" title="durexForth: Operators Manual" /><link rel="prev" href="ar01s03.html" title="3. Editor" /><link rel="next" href="ar01s05.html" title="5. Configuring durexForth" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ar01s03.html"><img src="images/icons/prev.png" alt="Prev" /></a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ar01s05.html"><img src="images/icons/next.png" alt="Next" /></a></td></tr></table><hr /></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_forth_words"></a>4. Forth Words</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_stack_manipulation"></a>4.1. Stack Manipulation</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15058844880" class="indexterm"></a>drop <span class="emphasis"><em>( a — )</em></span> 
+<a id="idp15058781472" class="indexterm"></a>drop <span class="emphasis"><em>( a — )</em></span> 
 </span></dt><dd>
 Drop top of stack.
 </dd><dt><span class="term">
-<a id="idp15058847552" class="indexterm"></a>dup <span class="emphasis"><em>( a — a a )</em></span> 
+<a id="idp15058784144" class="indexterm"></a>dup <span class="emphasis"><em>( a — a a )</em></span> 
 </span></dt><dd>
 Duplicate top of stack.
 </dd><dt><span class="term">
-<a id="idp15058850224" class="indexterm"></a>swap <span class="emphasis"><em>( a b — b a )</em></span> 
+<a id="idp15058786816" class="indexterm"></a>swap <span class="emphasis"><em>( a b — b a )</em></span> 
 </span></dt><dd>
 Swap top stack elements.
 </dd><dt><span class="term">
-<a id="idp15058852896" class="indexterm"></a>over <span class="emphasis"><em>( a b — a b a )</em></span> 
+<a id="idp15058789488" class="indexterm"></a>over <span class="emphasis"><em>( a b — a b a )</em></span> 
 </span></dt><dd>
 Make a copy of the second item and push it on top.
 </dd><dt><span class="term">
-<a id="idp15058855696" class="indexterm"></a>rot <span class="emphasis"><em>( a b c — b c a )</em></span> 
+<a id="idp15058792288" class="indexterm"></a>rot <span class="emphasis"><em>( a b c — b c a )</em></span> 
 </span></dt><dd>
 Rotate the third item to the top.
 </dd><dt><span class="term">
-<a id="idp15058858528" class="indexterm"></a>-rot <span class="emphasis"><em>( a b c — c a b )</em></span> 
+<a id="idp15058795120" class="indexterm"></a>-rot <span class="emphasis"><em>( a b c — c a b )</em></span> 
 </span></dt><dd>
 rot rot
 </dd><dt><span class="term">
-<a id="idp15058861280" class="indexterm"></a>2drop <span class="emphasis"><em>( a b — )</em></span> 
+<a id="idp15058797872" class="indexterm"></a>2drop <span class="emphasis"><em>( a b — )</em></span> 
 </span></dt><dd>
 Drop two topmost stack elements.
 </dd><dt><span class="term">
-<a id="idp15058864032" class="indexterm"></a>2dup <span class="emphasis"><em>( a b — a b a b )</em></span> 
+<a id="idp15058800624" class="indexterm"></a>2dup <span class="emphasis"><em>( a b — a b a b )</em></span> 
 </span></dt><dd>
 Duplicate two topmost stack elements.
 </dd><dt><span class="term">
-<a id="idp15058866800" class="indexterm"></a>?dup <span class="emphasis"><em>( a — a a? )</em></span> 
+<a id="idp15058803392" class="indexterm"></a>?dup <span class="emphasis"><em>( a — a a? )</em></span> 
 </span></dt><dd>
 Dup a if a differs from 0.
 </dd><dt><span class="term">
-<a id="idp15058869552" class="indexterm"></a>nip <span class="emphasis"><em>( a b — b )</em></span> 
+<a id="idp15058806144" class="indexterm"></a>nip <span class="emphasis"><em>( a b — b )</em></span> 
 </span></dt><dd>
 swap drop
 </dd><dt><span class="term">
-<a id="idp15058872224" class="indexterm"></a>tuck <span class="emphasis"><em>( a b — b a b )</em></span> 
+<a id="idp15058808816" class="indexterm"></a>tuck <span class="emphasis"><em>( a b — b a b )</em></span> 
 </span></dt><dd>
 dup -rot
 </dd><dt><span class="term">
-<a id="idp15058874896" class="indexterm"></a>pick <span class="emphasis"><em>( x<sub>u</sub> … x<sub>1</sub> x<sub>0</sub> u — x<sub>u</sub> … x<sub>1</sub> x<sub>0</sub> x<sub>u</sub> )</em></span> 
+<a id="idp15058811488" class="indexterm"></a>pick <span class="emphasis"><em>( x<sub>u</sub> … x<sub>1</sub> x<sub>0</sub> u — x<sub>u</sub> … x<sub>1</sub> x<sub>0</sub> x<sub>u</sub> )</em></span> 
 </span></dt><dd>
 Pick from stack element with depth u to top of stack.
 </dd><dt><span class="term">
-<a id="idp15058880384" class="indexterm"></a>&gt;r <span class="emphasis"><em>( a — )</em></span> 
+<a id="idp15058816976" class="indexterm"></a>&gt;r <span class="emphasis"><em>( a — )</em></span> 
 </span></dt><dd>
 Move value from top of parameter stack to top of return stack.
 </dd><dt><span class="term">
-<a id="idp15058883200" class="indexterm"></a>r&gt; <span class="emphasis"><em>( — a )</em></span> 
+<a id="idp15058819792" class="indexterm"></a>r&gt; <span class="emphasis"><em>( — a )</em></span> 
 </span></dt><dd>
 Move value from top of return stack to top of parameter stack.
 </dd><dt><span class="term">
-<a id="idp15058886016" class="indexterm"></a>r@ <span class="emphasis"><em>( — a )</em></span> 
+<a id="idp15058822608" class="indexterm"></a>r@ <span class="emphasis"><em>( — a )</em></span> 
 </span></dt><dd>
 Copy value from top of return stack to top of parameter stack.
 </dd><dt><span class="term">
-<a id="idp15058888832" class="indexterm"></a>depth <span class="emphasis"><em>( — n)</em></span> 
+<a id="idp15058825424" class="indexterm"></a>depth <span class="emphasis"><em>( — n)</em></span> 
 </span></dt><dd>
 <code class="literal">n</code> is the number of single-cell values contained in the data stack before <code class="literal">n</code> was placed on the stack.
 </dd><dt><span class="term">
-<a id="idp15058892848" class="indexterm"></a>lsb <span class="emphasis"><em>( — addr)</em></span> 
+<a id="idp15058829440" class="indexterm"></a>lsb <span class="emphasis"><em>( — addr)</em></span> 
 </span></dt><dd>
 The top address of the LSB parameter stack.
 </dd><dt><span class="term">
-<a id="idp15058895632" class="indexterm"></a>msb <span class="emphasis"><em>( — addr)</em></span> 
+<a id="idp15058832224" class="indexterm"></a>msb <span class="emphasis"><em>( — addr)</em></span> 
 </span></dt><dd>
 The top address of the MSB parameter stack.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_utility"></a>4.2. Utility</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15058899808" class="indexterm"></a>. <span class="emphasis"><em>( n — )</em></span> 
+<a id="idp15058836400" class="indexterm"></a>. <span class="emphasis"><em>( n — )</em></span> 
 </span></dt><dd>
 Prints top value of stack as signed number.
 </dd><dt><span class="term">
-<a id="idp15058902592" class="indexterm"></a>u. <span class="emphasis"><em>( u — )</em></span> 
+<a id="idp15058839184" class="indexterm"></a>u. <span class="emphasis"><em>( u — )</em></span> 
 </span></dt><dd>
 Prints top value of stack as unsigned number.
 </dd><dt><span class="term">
-<a id="idp15058905376" class="indexterm"></a>.s 
+<a id="idp15058841968" class="indexterm"></a>.s 
 </span></dt><dd>
 See stack contents.
 </dd><dt><span class="term">
-<a id="idp15058907664" class="indexterm"></a>emit <span class="emphasis"><em>( a — )</em></span> 
+<a id="idp15058844256" class="indexterm"></a>emit <span class="emphasis"><em>( a — )</em></span> 
 </span></dt><dd>
 Prints top value of stack as a PETSCII character. Example: <code class="literal">q emit</code>
 </dd><dt><span class="term">
-<a id="idp15058911040" class="indexterm"></a>£ 
+<a id="idp15058847632" class="indexterm"></a>£ 
 </span></dt><dd>
 Comment to end of line. (Used on C64/PETSCII.)
 </dd><dt><span class="term">
-<a id="idp15058913440" class="indexterm"></a>\ 
+<a id="idp15058850032" class="indexterm"></a>\ 
 </span></dt><dd>
 Comment to end of line. (Used when cross-compiling from PC/ASCII.)
 </dd><dt><span class="term">
-<a id="idp15058915888" class="indexterm"></a>( 
+<a id="idp15058852480" class="indexterm"></a>( 
 </span></dt><dd>
 Multiline comment. Ignores everything until a ).
 </dd><dt><span class="term">
-<a id="idp15058918288" class="indexterm"></a>bl <span class="emphasis"><em>( — char )</em></span> 
+<a id="idp15058854880" class="indexterm"></a>bl <span class="emphasis"><em>( — char )</em></span> 
 </span></dt><dd>
 Gives the PETSCII character for a space.
 </dd><dt><span class="term">
-<a id="idp15058921056" class="indexterm"></a>space 
+<a id="idp15058857648" class="indexterm"></a>space 
 </span></dt><dd>
 Displays one space.
 </dd><dt><span class="term">
-<a id="idp15058923344" class="indexterm"></a>spaces <span class="emphasis"><em>( n — )</em></span> 
+<a id="idp15058859936" class="indexterm"></a>spaces <span class="emphasis"><em>( n — )</em></span> 
 </span></dt><dd>
 Displays n spaces.
 </dd><dt><span class="term">
-<a id="idp15058926016" class="indexterm"></a>page 
+<a id="idp15058862608" class="indexterm"></a>page 
 </span></dt><dd>
 Clears the screen.
 </dd><dt><span class="term">
-<a id="idp15058928304" class="indexterm"></a>rvs 
+<a id="idp15058864896" class="indexterm"></a>rvs 
 </span></dt><dd>
 Reverse screen output.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_mathematics"></a>4.3. Mathematics</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15058931984" class="indexterm"></a>1+ <span class="emphasis"><em>( a — b )</em></span> 
+<a id="idp15058868576" class="indexterm"></a>1+ <span class="emphasis"><em>( a — b )</em></span> 
 </span></dt><dd>
 Increase top of stack value by 1.
 </dd><dt><span class="term">
-<a id="idp15058934736" class="indexterm"></a>1- <span class="emphasis"><em>( a — b )</em></span> 
+<a id="idp15058871328" class="indexterm"></a>1- <span class="emphasis"><em>( a — b )</em></span> 
 </span></dt><dd>
 Decrease top of stack value by 1.
 </dd><dt><span class="term">
-<a id="idp15058937488" class="indexterm"></a>2+ <span class="emphasis"><em>( a — b )</em></span> 
+<a id="idp15058874080" class="indexterm"></a>2+ <span class="emphasis"><em>( a — b )</em></span> 
 </span></dt><dd>
 Increase top of stack value by 2.
 </dd><dt><span class="term">
-<a id="idp15058940240" class="indexterm"></a>2* <span class="emphasis"><em>( a — b )</em></span> 
+<a id="idp15058876832" class="indexterm"></a>2* <span class="emphasis"><em>( a — b )</em></span> 
 </span></dt><dd>
 Multiply top of stack value by 2.
 </dd><dt><span class="term">
-<a id="idp15058942992" class="indexterm"></a>2/ <span class="emphasis"><em>( a — b )</em></span> 
+<a id="idp15058879584" class="indexterm"></a>2/ <span class="emphasis"><em>( a — b )</em></span> 
 </span></dt><dd>
 Divide top of stack value by 2.
 </dd><dt><span class="term">
-<a id="idp15058945744" class="indexterm"></a>100/ <span class="emphasis"><em>( a — b )</em></span> 
+<a id="idp15058882336" class="indexterm"></a>100/ <span class="emphasis"><em>( a — b )</em></span> 
 </span></dt><dd>
 Divides top of stack value by $100.
 </dd><dt><span class="term">
-<a id="idp15058948512" class="indexterm"></a>+! <span class="emphasis"><em>( n a — )</em></span> 
+<a id="idp15058885104" class="indexterm"></a>+! <span class="emphasis"><em>( n a — )</em></span> 
 </span></dt><dd>
 Add n to memory address a.
 </dd><dt><span class="term">
-<a id="idp15058951264" class="indexterm"></a>+ <span class="emphasis"><em>( a b — c )</em></span> 
+<a id="idp15058887856" class="indexterm"></a>+ <span class="emphasis"><em>( a b — c )</em></span> 
 </span></dt><dd>
 Add a and b.
 </dd><dt><span class="term">
-<a id="idp15058953936" class="indexterm"></a>- <span class="emphasis"><em>( a b — c )</em></span> 
+<a id="idp15058890528" class="indexterm"></a>- <span class="emphasis"><em>( a b — c )</em></span> 
 </span></dt><dd>
 Subtract b from a.
 </dd><dt><span class="term">
-<a id="idp15058956608" class="indexterm"></a>* <span class="emphasis"><em>( a b — c )</em></span> 
+<a id="idp15058893200" class="indexterm"></a>* <span class="emphasis"><em>( a b — c )</em></span> 
 </span></dt><dd>
 Multiply a with b.
 </dd><dt><span class="term">
-<a id="idp15058959280" class="indexterm"></a>/ <span class="emphasis"><em>( a b — q )</em></span> 
+<a id="idp15058895872" class="indexterm"></a>/ <span class="emphasis"><em>( a b — q )</em></span> 
 </span></dt><dd>
 Divide a with b using floored division.
 </dd><dt><span class="term">
-<a id="idp15058962048" class="indexterm"></a>/mod <span class="emphasis"><em>( a b — r q )</em></span> 
+<a id="idp15058898640" class="indexterm"></a>/mod <span class="emphasis"><em>( a b — r q )</em></span> 
 </span></dt><dd>
 Divide a with b, giving remainder r and quotient q.
 </dd><dt><span class="term">
-<a id="idp15058964848" class="indexterm"></a>mod <span class="emphasis"><em>( a b — r )</em></span> 
+<a id="idp15058901440" class="indexterm"></a>mod <span class="emphasis"><em>( a b — r )</em></span> 
 </span></dt><dd>
 Remainder of a divided by b.
 </dd><dt><span class="term">
-<a id="idp15058967600" class="indexterm"></a>*/ <span class="emphasis"><em>( a b c — q )</em></span> 
+<a id="idp15058904192" class="indexterm"></a>*/ <span class="emphasis"><em>( a b c — q )</em></span> 
 </span></dt><dd>
 Multiply a with b, then divide by c, using a 32-bit intermediary.
 </dd><dt><span class="term">
-<a id="idp15058970416" class="indexterm"></a>*/mod <span class="emphasis"><em>( a b c — r q )</em></span> 
+<a id="idp15058907008" class="indexterm"></a>*/mod <span class="emphasis"><em>( a b c — r q )</em></span> 
 </span></dt><dd>
 Like */, but also keeping remainder r.
 </dd><dt><span class="term">
-<a id="idp15058973184" class="indexterm"></a>0&lt; <span class="emphasis"><em>( a — b )</em></span> 
+<a id="idp15058909776" class="indexterm"></a>0&lt; <span class="emphasis"><em>( a — b )</em></span> 
 </span></dt><dd>
 Is a negative?
 </dd><dt><span class="term">
-<a id="idp15058975856" class="indexterm"></a>negate <span class="emphasis"><em>( a — b )</em></span> 
+<a id="idp15058912448" class="indexterm"></a>negate <span class="emphasis"><em>( a — b )</em></span> 
 </span></dt><dd>
 Negates a.
 </dd><dt><span class="term">
-<a id="idp15058978528" class="indexterm"></a>abs <span class="emphasis"><em>( a — b )</em></span> 
+<a id="idp15058915120" class="indexterm"></a>abs <span class="emphasis"><em>( a — b )</em></span> 
 </span></dt><dd>
 Gives absolute value of a.
 </dd><dt><span class="term">
-<a id="idp15058981280" class="indexterm"></a>min <span class="emphasis"><em>( a b — c )</em></span> 
+<a id="idp15058917872" class="indexterm"></a>min <span class="emphasis"><em>( a b — c )</em></span> 
 </span></dt><dd>
 Gives the lesser of a and b.
 </dd><dt><span class="term">
-<a id="idp15058984032" class="indexterm"></a>max <span class="emphasis"><em>( a b — c )</em></span> 
+<a id="idp15058920624" class="indexterm"></a>max <span class="emphasis"><em>( a b — c )</em></span> 
 </span></dt><dd>
 Gives the greater of a and b.
 </dd><dt><span class="term">
-<a id="idp15058986784" class="indexterm"></a>within <span class="emphasis"><em>( n lo hi — flag )</em></span> 
+<a id="idp15058923376" class="indexterm"></a>within <span class="emphasis"><em>( n lo hi — flag )</em></span> 
 </span></dt><dd>
 Returns true if lo ≤ n &lt; hi.
 </dd><dt><span class="term">
-<a id="idp15058989616" class="indexterm"></a>&lt; <span class="emphasis"><em>( n1 n2 — flag )</em></span> 
+<a id="idp15058926208" class="indexterm"></a>&lt; <span class="emphasis"><em>( n1 n2 — flag )</em></span> 
 </span></dt><dd>
 Is n1 less than n2? (Signed.)
 </dd><dt><span class="term">
-<a id="idp15058992368" class="indexterm"></a>&gt; <span class="emphasis"><em>( n1 n2 — flag )</em></span> 
+<a id="idp15058928960" class="indexterm"></a>&gt; <span class="emphasis"><em>( n1 n2 — flag )</em></span> 
 </span></dt><dd>
 Is n1 greater than n2? (Signed.)
 </dd><dt><span class="term">
-<a id="idp15058995120" class="indexterm"></a>u&lt; <span class="emphasis"><em>( u1 u2 — flag )</em></span> 
+<a id="idp15058931712" class="indexterm"></a>u&lt; <span class="emphasis"><em>( u1 u2 — flag )</em></span> 
 </span></dt><dd>
 Is u1 less than u2? (Unsigned.)
 </dd><dt><span class="term">
-<a id="idp15058997872" class="indexterm"></a>u&gt; <span class="emphasis"><em>( u1 u2 — flag )</em></span> 
+<a id="idp15058934464" class="indexterm"></a>u&gt; <span class="emphasis"><em>( u1 u2 — flag )</em></span> 
 </span></dt><dd>
 Is u1 greater than u2? (Unsigned.)
 </dd><dt><span class="term">
-<a id="idp15059000640" class="indexterm"></a>lshift <span class="emphasis"><em>( a b — c )</em></span> 
+<a id="idp15058937232" class="indexterm"></a>lshift <span class="emphasis"><em>( a b — c )</em></span> 
 </span></dt><dd>
 Binary shift a left by b.
 </dd><dt><span class="term">
-<a id="idp15059003312" class="indexterm"></a>rshift <span class="emphasis"><em>( a b — c )</em></span> 
+<a id="idp15058939904" class="indexterm"></a>rshift <span class="emphasis"><em>( a b — c )</em></span> 
 </span></dt><dd>
 Binary shift a right by b.
 </dd><dt><span class="term">
-<a id="idp15059006064" class="indexterm"></a>base <span class="emphasis"><em>(variable)</em></span> 
+<a id="idp15058942656" class="indexterm"></a>base <span class="emphasis"><em>(variable)</em></span> 
 </span></dt><dd>
 Points to the cell that holds the numerical base.
 </dd><dt><span class="term">
-<a id="idp15059008848" class="indexterm"></a>decimal 
+<a id="idp15058945440" class="indexterm"></a>decimal 
 </span></dt><dd>
 Sets the numerical base to 10.
 </dd><dt><span class="term">
-<a id="idp15059011216" class="indexterm"></a>hex 
+<a id="idp15058947808" class="indexterm"></a>hex 
 </span></dt><dd>
 Sets the numerical base to 16.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_double"></a>4.4. Double</h3></div></div></div><p>The following words use double-cell integers. On the stack, the cell containing the most significant part of a double-cell integer is above the cell containing the least significant part.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059015568" class="indexterm"></a>dabs <span class="emphasis"><em>( d — ud )</em></span> 
+<a id="idp15058952160" class="indexterm"></a>dabs <span class="emphasis"><em>( d — ud )</em></span> 
 </span></dt><dd>
 Produces the absolute value of <span class="emphasis"><em>d</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059018624" class="indexterm"></a>dnegate <span class="emphasis"><em>( d — d )</em></span> 
+<a id="idp15058955216" class="indexterm"></a>dnegate <span class="emphasis"><em>( d — d )</em></span> 
 </span></dt><dd>
 Negates the double-cell integer <span class="emphasis"><em>d</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059021680" class="indexterm"></a>s&gt;d <span class="emphasis"><em>( n — d )</em></span> 
+<a id="idp15058958272" class="indexterm"></a>s&gt;d <span class="emphasis"><em>( n — d )</em></span> 
 </span></dt><dd>
 Converts the number n to the double-cell number <span class="emphasis"><em>d</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059024736" class="indexterm"></a>m+ <span class="emphasis"><em>( d n — d )</em></span> 
+<a id="idp15058961328" class="indexterm"></a>m+ <span class="emphasis"><em>( d n — d )</em></span> 
 </span></dt><dd>
 Add <span class="emphasis"><em>n</em></span> to double-cell number <span class="emphasis"><em>d</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059028176" class="indexterm"></a>m* <span class="emphasis"><em>( a b — d )</em></span> 
+<a id="idp15058964768" class="indexterm"></a>m* <span class="emphasis"><em>( a b — d )</em></span> 
 </span></dt><dd>
 Multiply <span class="emphasis"><em>a</em></span> with <span class="emphasis"><em>b</em></span>, producing a double-cell value.
 </dd><dt><span class="term">
-<a id="idp15059031696" class="indexterm"></a>um* <span class="emphasis"><em>( a b — ud )</em></span> 
+<a id="idp15058968288" class="indexterm"></a>um* <span class="emphasis"><em>( a b — ud )</em></span> 
 </span></dt><dd>
 Multiply <span class="emphasis"><em>a</em></span> with <span class="emphasis"><em>b</em></span>, giving the unsigned double-cell number <span class="emphasis"><em>ud</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059035520" class="indexterm"></a>um/mod <span class="emphasis"><em>( ud n — r q )</em></span> 
+<a id="idp15058972112" class="indexterm"></a>um/mod <span class="emphasis"><em>( ud n — r q )</em></span> 
 </span></dt><dd>
 Divide double-cell number ud by n, giving remainder r and quotient q. Values are unsigned.
 </dd><dt><span class="term">
-<a id="idp15059038400" class="indexterm"></a>fm/mod <span class="emphasis"><em>( d n — r q )</em></span> 
+<a id="idp15058974992" class="indexterm"></a>fm/mod <span class="emphasis"><em>( d n — r q )</em></span> 
 </span></dt><dd>
 Divide double-cell number d by n, giving the floored quotient q and the remainder r. Values are signed.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_logic"></a>4.5. Logic</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059042688" class="indexterm"></a>0= <span class="emphasis"><em>( a — flag)</em></span> 
+<a id="idp15058979280" class="indexterm"></a>0= <span class="emphasis"><em>( a — flag)</em></span> 
 </span></dt><dd>
 Is <span class="emphasis"><em>a</em></span> equal to zero?
 </dd><dt><span class="term">
-<a id="idp15059045744" class="indexterm"></a>0&lt;&gt; <span class="emphasis"><em>( a — flag )</em></span> 
+<a id="idp15058982336" class="indexterm"></a>0&lt;&gt; <span class="emphasis"><em>( a — flag )</em></span> 
 </span></dt><dd>
 Is <span class="emphasis"><em>a</em></span> not equal to 0?
 </dd><dt><span class="term">
-<a id="idp15059048800" class="indexterm"></a>\= <span class="emphasis"><em>( a b — flag )</em></span> 
+<a id="idp15058985392" class="indexterm"></a>\= <span class="emphasis"><em>( a b — flag )</em></span> 
 </span></dt><dd>
 Is <span class="emphasis"><em>a</em></span> equal to <span class="emphasis"><em>b</em></span>?
 </dd><dt><span class="term">
-<a id="idp15059052240" class="indexterm"></a>&lt;&gt; <span class="emphasis"><em>( a b — flag )</em></span> 
+<a id="idp15058988832" class="indexterm"></a>&lt;&gt; <span class="emphasis"><em>( a b — flag )</em></span> 
 </span></dt><dd>
 Does <span class="emphasis"><em>a</em></span> differ from <span class="emphasis"><em>b</em></span>?
 </dd><dt><span class="term">
-<a id="idp15059055680" class="indexterm"></a>and <span class="emphasis"><em>( a b — c )</em></span> 
+<a id="idp15058992272" class="indexterm"></a>and <span class="emphasis"><em>( a b — c )</em></span> 
 </span></dt><dd>
 Binary and.
 </dd><dt><span class="term">
-<a id="idp15059058352" class="indexterm"></a>or <span class="emphasis"><em>( a b — c )</em></span> 
+<a id="idp15058994944" class="indexterm"></a>or <span class="emphasis"><em>( a b — c )</em></span> 
 </span></dt><dd>
 Binary or.
 </dd><dt><span class="term">
-<a id="idp15059061024" class="indexterm"></a>xor <span class="emphasis"><em>( a b — c )</em></span> 
+<a id="idp15058997616" class="indexterm"></a>xor <span class="emphasis"><em>( a b — c )</em></span> 
 </span></dt><dd>
 Binary exclusive or.
 </dd><dt><span class="term">
-<a id="idp15059063696" class="indexterm"></a>invert <span class="emphasis"><em>( a — b )</em></span> 
+<a id="idp15059000288" class="indexterm"></a>invert <span class="emphasis"><em>( a — b )</em></span> 
 </span></dt><dd>
 Flip all bits of <span class="emphasis"><em>a</em></span>.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_memory"></a>4.6. Memory</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059068144" class="indexterm"></a>! <span class="emphasis"><em>( value address — )</em></span> 
+<a id="idp15059004736" class="indexterm"></a>! <span class="emphasis"><em>( value address — )</em></span> 
 </span></dt><dd>
 Store 16-bit value at address.
 </dd><dt><span class="term">
-<a id="idp15059070896" class="indexterm"></a>@ <span class="emphasis"><em>( address — value )</em></span> 
+<a id="idp15059007488" class="indexterm"></a>@ <span class="emphasis"><em>( address — value )</em></span> 
 </span></dt><dd>
 Fetch 16-bit value from address.
 </dd><dt><span class="term">
-<a id="idp15059073648" class="indexterm"></a>c! <span class="emphasis"><em>( value address — )</em></span> 
+<a id="idp15059010240" class="indexterm"></a>c! <span class="emphasis"><em>( value address — )</em></span> 
 </span></dt><dd>
 Store 8-bit value at address.
 </dd><dt><span class="term">
-<a id="idp15059076400" class="indexterm"></a>c@ <span class="emphasis"><em>( address — value )</em></span> 
+<a id="idp15059012992" class="indexterm"></a>c@ <span class="emphasis"><em>( address — value )</em></span> 
 </span></dt><dd>
 Fetch 8-bit value from address.
 </dd><dt><span class="term">
-<a id="idp15059079152" class="indexterm"></a>fill <span class="emphasis"><em>( addr len char — )</em></span> 
+<a id="idp15059015744" class="indexterm"></a>fill <span class="emphasis"><em>( addr len char — )</em></span> 
 </span></dt><dd>
 Fill range [addr, len + addr) with char.
 </dd><dt><span class="term">
-<a id="idp15059081920" class="indexterm"></a>move <span class="emphasis"><em>( src dst len — )</em></span> 
+<a id="idp15059018512" class="indexterm"></a>move <span class="emphasis"><em>( src dst len — )</em></span> 
 </span></dt><dd>
 Copies a region of memory <code class="literal">len</code> bytes long, starting at <code class="literal">src</code>, to memory beginning at <code class="literal">dst</code>.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_compiling"></a>4.7. Compiling</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059087856" class="indexterm"></a>: <span class="emphasis"><em>( "name" — )</em></span> 
+<a id="idp15059024448" class="indexterm"></a>: <span class="emphasis"><em>( "name" — )</em></span> 
 </span></dt><dd>
 Define the word with the given name and enter compilation state.
 </dd><dt><span class="term">
-<a id="idp15059090672" class="indexterm"></a>:noname <span class="emphasis"><em>( — xt )</em></span> 
+<a id="idp15059027264" class="indexterm"></a>:noname <span class="emphasis"><em>( — xt )</em></span> 
 </span></dt><dd>
 Create an execution token and enter compilation state.
 </dd><dt><span class="term">
-<a id="idp15059093472" class="indexterm"></a>; <span class="emphasis"><em>( — )</em></span> 
+<a id="idp15059030064" class="indexterm"></a>; <span class="emphasis"><em>( — )</em></span> 
 </span></dt><dd>
 End the current definition, allow it to be found in the dictionary and go back to interpretation state.
 </dd><dt><span class="term">
-<a id="idp15059096368" class="indexterm"></a>code <span class="emphasis"><em>( "name" — )</em></span> 
+<a id="idp15059032960" class="indexterm"></a>code <span class="emphasis"><em>( "name" — )</em></span> 
 </span></dt><dd>
 Start assembling a new word.
 </dd><dt><span class="term">
-<a id="idp15059099120" class="indexterm"></a>;code  
+<a id="idp15059035712" class="indexterm"></a>;code  
 </span></dt><dd>
 End assembler.
 </dd><dt><span class="term">
@@ -352,87 +352,87 @@ End assembler.
 </span></dt><dd>
 Write word on stack to <code class="literal">here</code> position and increase <code class="literal">here</code> by 2.
 </dd><dt><span class="term">
-<a id="idp15059104576" class="indexterm"></a>c <span class="emphasis"><em>( n — )</em></span> 
+<a id="idp15059041168" class="indexterm"></a>c <span class="emphasis"><em>( n — )</em></span> 
 </span></dt><dd>
 Write byte on stack to <code class="literal">here</code> position and increase <code class="literal">here</code> by 1.
 </dd><dt><span class="term">
-<a id="idp15059108496" class="indexterm"></a>allot <span class="emphasis"><em>( n — )</em></span> 
+<a id="idp15059045088" class="indexterm"></a>allot <span class="emphasis"><em>( n — )</em></span> 
 </span></dt><dd>
 Add <span class="emphasis"><em>n</em></span> bytes to the body of the most recently defined word.
 </dd><dt><span class="term">
-<a id="idp15059111680" class="indexterm"></a>literal <span class="emphasis"><em>( n — )</em></span> 
+<a id="idp15059048272" class="indexterm"></a>literal <span class="emphasis"><em>( n — )</em></span> 
 </span></dt><dd>
 Compile a value from the stack as a literal value. Typical use: <code class="literal">: x ... [ a b * ] literal ... ;</code>
 </dd><dt><span class="term">
-<a id="idp15059115056" class="indexterm"></a>[char] <span class="emphasis"><em>( "c" — )</em></span> 
+<a id="idp15059051648" class="indexterm"></a>[char] <span class="emphasis"><em>( "c" — )</em></span> 
 </span></dt><dd>
 Compile character <span class="emphasis"><em>c</em></span> as a literal value.
 </dd><dt><span class="term">
-<a id="idp15059118112" class="indexterm"></a>[ <span class="emphasis"><em>( — )</em></span> 
+<a id="idp15059054704" class="indexterm"></a>[ <span class="emphasis"><em>( — )</em></span> 
 </span></dt><dd>
 Leave compile mode. Execute the following words immediately instead of compiling them.
 </dd><dt><span class="term">
-<a id="idp15059120976" class="indexterm"></a>] <span class="emphasis"><em>( — )</em></span> 
+<a id="idp15059057568" class="indexterm"></a>] <span class="emphasis"><em>( — )</em></span> 
 </span></dt><dd>
 Return to compile mode.
-<a id="idp15059122752" class="indexterm"></a>immediate:: Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
+<a id="idp15059059344" class="indexterm"></a>immediate:: Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
 </dd><dt><span class="term">
-<a id="idp15059124704" class="indexterm"></a>['] name <span class="emphasis"><em>( — xt )</em></span>
+<a id="idp15059061296" class="indexterm"></a>['] name <span class="emphasis"><em>( — xt )</em></span>
 </span></dt><dd>
 Place name’s execution token xt on the stack.
 The execution token returned by the compiled phrase <code class="literal">['] x</code> is the same value returned by <code class="literal">' x</code> outside of compilation state.
 Typical use: <code class="literal">: x … ['] name … ;</code>
 </dd><dt><span class="term">
-<a id="idp15059129504" class="indexterm"></a>compile ( xt — ) 
+<a id="idp15059066096" class="indexterm"></a>compile ( xt — ) 
 </span></dt><dd>
 Append \texttt{jsr xt} to the word being compiled. Typical use: <code class="literal">: recurse immed latest &gt;xt compile, ;</code>
 </dd><dt><span class="term">
-<a id="idp15059132496" class="indexterm"></a>postpone <span class="emphasis"><em>xxx</em></span> 
+<a id="idp15059069088" class="indexterm"></a>postpone <span class="emphasis"><em>xxx</em></span> 
 </span></dt><dd>
 Compile the compilation semantics (instead of interpretation semantics) of xxx. Typical use:
 </dd></dl></div><pre class="screen">: endif postpone then ; immediate
 : x ... if ... endif ... ;</pre><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059136528" class="indexterm"></a>header <span class="emphasis"><em>( "name" — )</em></span> 
+<a id="idp15059073120" class="indexterm"></a>header <span class="emphasis"><em>( "name" — )</em></span> 
 </span></dt><dd>
 Create a dictionary header named <span class="emphasis"><em>name</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059139584" class="indexterm"></a>create <span class="emphasis"><em>( "name" — )</em></span> … does&gt; 
+<a id="idp15059076176" class="indexterm"></a>create <span class="emphasis"><em>( "name" — )</em></span> … does&gt; 
 </span></dt><dd>
 Create a word-creating word named <span class="emphasis"><em>name</em></span> with custom behavior specified after <code class="literal">does&gt;</code>.  For further description, see "Starting Forth."
 </dd><dt><span class="term">
-<a id="idp15059143376" class="indexterm"></a>state <span class="emphasis"><em>( — addr)</em></span> 
+<a id="idp15059079968" class="indexterm"></a>state <span class="emphasis"><em>( — addr)</em></span> 
 </span></dt><dd>
 <span class="emphasis"><em>addr</em></span> is the address of a cell containing the compilation-state flag. It is 1 when compiling, otherwise 0.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_word_list"></a>4.8. Word List</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059148048" class="indexterm"></a>hide <span class="emphasis"><em>( "name" — )</em></span>
+<a id="idp15059084640" class="indexterm"></a>hide <span class="emphasis"><em>( "name" — )</em></span>
 </span></dt><dd>
 Remove <span class="emphasis"><em>name</em></span> from the word list, while leaving its definition in place.
 </dd><dt><span class="term">
-<a id="idp15059151248" class="indexterm"></a>define <span class="emphasis"><em>( "name" — )</em></span>
+<a id="idp15059087840" class="indexterm"></a>define <span class="emphasis"><em>( "name" — )</em></span>
 </span></dt><dd>
 Assign <code class="literal">here</code> as the execution token of word <span class="emphasis"><em>name</em></span> and enter the compilation state.
 </dd><dt><span class="term">
-<a id="idp15059155008" class="indexterm"></a>defcode <span class="emphasis"><em>( "name" — )</em></span>
+<a id="idp15059091600" class="indexterm"></a>defcode <span class="emphasis"><em>( "name" — )</em></span>
 </span></dt><dd>
 Like <code class="literal">define</code>, but starts a <code class="literal">code</code> segment instead.
 </dd><dt><span class="term">
-<a id="idp15059158928" class="indexterm"></a>dowords <span class="emphasis"><em>( xt — )</em></span> 
+<a id="idp15059095520" class="indexterm"></a>dowords <span class="emphasis"><em>( xt — )</em></span> 
 </span></dt><dd>
 Execute <span class="emphasis"><em>xt</em></span> once for every word in the word list, passing the name token of the word to <span class="emphasis"><em>xt</em></span>, until the word list is exhausted or <span class="emphasis"><em>xt</em></span> returns false. The invoked <span class="emphasis"><em>xt</em></span> has the stack effect <span class="emphasis"><em>( k * x nt — l * x flag )</em></span>. If <span class="emphasis"><em>flag</em></span> is true, <code class="literal">dowords</code> will continue on to the next name, otherwise it will return.
 </dd></dl></div><pre class="screen">\ from debug.fs
 : (words) more name&gt;string space 1 ;
 : words ['] (words) dowords ;</pre><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059166096" class="indexterm"></a>marker <span class="emphasis"><em>( "name" — )</em></span> 
+<a id="idp15059102688" class="indexterm"></a>marker <span class="emphasis"><em>( "name" — )</em></span> 
 </span></dt><dd>
 Creates a word that when called, forgets itself and all words that were defined after it. Example:
 </dd></dl></div><pre class="screen">marker forget
 : x ; forget</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_variables"></a>4.9. Variables</h3></div></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a id="_values"></a>Values</h4></div></div></div><p>Values are fast to read, slow to write.
 Use values for variables that are rarely changed.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<span class="emphasis"><em>1</em></span> <a id="idp15059172848" class="indexterm"></a>value <span class="emphasis"><em>foo</em></span>
+<span class="emphasis"><em>1</em></span> <a id="idp15059109440" class="indexterm"></a>value <span class="emphasis"><em>foo</em></span>
 </span></dt><dd>
 Create value <span class="emphasis"><em>foo</em></span> and set it to <span class="emphasis"><em>1</em></span>.
 </dd><dt><span class="term">
-<span class="emphasis"><em>2</em></span> <a id="idp15059176672" class="indexterm"></a>constant <span class="emphasis"><em>bar</em></span>
+<span class="emphasis"><em>2</em></span> <a id="idp15059113264" class="indexterm"></a>constant <span class="emphasis"><em>bar</em></span>
 </span></dt><dd>
 Create constant value <span class="emphasis"><em>bar</em></span> and set it to <span class="emphasis"><em>2</em></span>.
 </dd><dt><span class="term">
@@ -440,72 +440,72 @@ Create constant value <span class="emphasis"><em>bar</em></span> and set it to <
 </span></dt><dd>
 Fetch value of <span class="emphasis"><em>foo</em></span>.
 </dd><dt><span class="term">
-<span class="emphasis"><em>0</em></span> <a id="idp15059182800" class="indexterm"></a>to <span class="emphasis"><em>foo</em></span>
+<span class="emphasis"><em>0</em></span> <a id="idp15059119392" class="indexterm"></a>to <span class="emphasis"><em>foo</em></span>
 </span></dt><dd>
 Set <span class="emphasis"><em>foo</em></span> to <span class="emphasis"><em>0</em></span>.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a id="_variables_2"></a>Variables</h4></div></div></div><p>Variables are faster to write to than values.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059188016" class="indexterm"></a>variable <span class="emphasis"><em>bar</em></span>
+<a id="idp15059124608" class="indexterm"></a>variable <span class="emphasis"><em>bar</em></span>
 </span></dt><dd>
 Define variable <span class="emphasis"><em>bar</em></span>.
 </dd><dt><span class="term">
-<span class="emphasis"><em>bar</em></span> <a id="idp15059191456" class="indexterm"></a>@
+<span class="emphasis"><em>bar</em></span> <a id="idp15059128048" class="indexterm"></a>@
 </span></dt><dd>
 Fetch value of variable <span class="emphasis"><em>bar</em></span>.
 </dd><dt><span class="term">
-<span class="emphasis"><em>1 bar</em></span> <a id="idp15059194512" class="indexterm"></a>!
+<span class="emphasis"><em>1 bar</em></span> <a id="idp15059131104" class="indexterm"></a>!
 </span></dt><dd>
 Set variable <span class="emphasis"><em>bar</em></span> to <span class="emphasis"><em>1</em></span>.
 </dd></dl></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_control_flow"></a>4.10. Control Flow</h3></div></div></div><p>Control functions only work in compile mode, not in interpreter.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059199552" class="indexterm"></a>if … <a id="idp15059200304" class="indexterm"></a>then 
+<a id="idp15059136144" class="indexterm"></a>if … <a id="idp15059136896" class="indexterm"></a>then 
 </span></dt><dd>
 condition IF true-part THEN rest
 </dd><dt><span class="term">
-if … <a id="idp15059202672" class="indexterm"></a>else … then 
+if … <a id="idp15059139264" class="indexterm"></a>else … then 
 </span></dt><dd>
 condition IF true-part ELSE false-part THEN rest
 </dd><dt><span class="term">
-<a id="idp15059205072" class="indexterm"></a>do .. <a id="idp15059205824" class="indexterm"></a>loop 
+<a id="idp15059141664" class="indexterm"></a>do .. <a id="idp15059142416" class="indexterm"></a>loop 
 </span></dt><dd>
 Start a loop with index and limit. Example:
 </dd></dl></div><pre class="screen">: print0to7 8 0 do i . loop ;</pre><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059209232" class="indexterm"></a>do .. <a id="idp15059209984" class="indexterm"></a>+loop 
+<a id="idp15059145824" class="indexterm"></a>do .. <a id="idp15059146576" class="indexterm"></a>+loop 
 </span></dt><dd>
 Start a loop with a custom increment. Example:
 </dd></dl></div><pre class="screen">( prints odd numbers from 1 to n )
 : printoddnumbers (n -- ) 1 do i . 2 +loop ;</pre><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059213568" class="indexterm"></a>i, <a id="idp15059214320" class="indexterm"></a>j 
+<a id="idp15059150160" class="indexterm"></a>i, <a id="idp15059150912" class="indexterm"></a>j 
 </span></dt><dd>
 Variables to be used inside <code class="literal">do</code> .. <code class="literal">loop</code> constructs. <code class="literal">i</code> gives inner loop index, <code class="literal">j</code> gives outer loop index.
 </dd><dt><span class="term">
-<a id="idp15059219104" class="indexterm"></a>leave 
+<a id="idp15059155696" class="indexterm"></a>leave 
 </span></dt><dd>
 Leaves the innermost loop.
 </dd><dt><span class="term">
-<a id="idp15059221472" class="indexterm"></a>unloop 
+<a id="idp15059158064" class="indexterm"></a>unloop 
 </span></dt><dd>
 Discards the loop-control parameters. Allows clean <a class="xref" href="ar01s04.html#exit">[exit]</a> from within a loop.
 </dd></dl></div><pre class="screen">: x 0 0 do unloop exit loop ;</pre><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059237568" class="indexterm"></a>begin .. <a id="idp15059238320" class="indexterm"></a>again 
+<a id="idp15059174160" class="indexterm"></a>begin .. <a id="idp15059174912" class="indexterm"></a>again 
 </span></dt><dd>
 Infinite loop.
 </dd><dt><span class="term">
-<a id="idp15059240608" class="indexterm"></a>begin .. <a id="idp15059241360" class="indexterm"></a>until 
+<a id="idp15059177200" class="indexterm"></a>begin .. <a id="idp15059177952" class="indexterm"></a>until 
 </span></dt><dd>
 BEGIN loop-part condition UNTIL. Loop until condition is true.
 </dd><dt><span class="term">
-<a id="idp15059243792" class="indexterm"></a>begin .. <a id="idp15059244544" class="indexterm"></a>while .. <a id="idp15059245296" class="indexterm"></a>repeat 
+<a id="idp15059180384" class="indexterm"></a>begin .. <a id="idp15059181136" class="indexterm"></a>while .. <a id="idp15059181888" class="indexterm"></a>repeat 
 </span></dt><dd>
 BEGIN condition WHILE loop-part REPEAT. Repeat loop-part while condition is true.
 </dd><dt><span class="term">
-<a id="exit"></a> <a id="idp15059248496" class="indexterm"></a>exit 
+<a id="exit"></a> <a id="idp15059185088" class="indexterm"></a>exit 
 </span></dt><dd>
 Exit function. Typical use: <code class="literal">: X test IF EXIT THEN ... ;</code>
 </dd><dt><span class="term">
-<a id="idp15059251408" class="indexterm"></a>recurse 
+<a id="idp15059188000" class="indexterm"></a>recurse 
 </span></dt><dd>
 Jump to the start of the word being compiled.
 </dd><dt><span class="term">
-<a id="idp15059253808" class="indexterm"></a>case .. <a id="idp15059254560" class="indexterm"></a>endcase, <a id="idp15059255312" class="indexterm"></a>of .. <a id="idp15059256064" class="indexterm"></a>endof 
+<a id="idp15059190400" class="indexterm"></a>case .. <a id="idp15059191152" class="indexterm"></a>endcase, <a id="idp15059191904" class="indexterm"></a>of .. <a id="idp15059192656" class="indexterm"></a>endof 
 </span></dt><dd>
 Switch statements.
 </dd></dl></div><pre class="screen">: tellno ( n -- )
@@ -514,249 +514,249 @@ case
 2 of ." two" endof
 3 of ." three" endof
      ." other" endcase ;</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_input"></a>4.11. Input</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059260512" class="indexterm"></a>key <span class="emphasis"><em>( — c )</em></span> 
+<a id="idp15059197104" class="indexterm"></a>key <span class="emphasis"><em>( — c )</em></span> 
 </span></dt><dd>
 Gets one character from the keyboard.
 </dd><dt><span class="term">
-<a id="idp15059263280" class="indexterm"></a>key? <span class="emphasis"><em>( — flag )</em></span> 
+<a id="idp15059199872" class="indexterm"></a>key? <span class="emphasis"><em>( — flag )</em></span> 
 </span></dt><dd>
 Returns true if a character is available for <code class="literal">key</code>.
 </dd><dt><span class="term">
-<a id="idp15059266576" class="indexterm"></a>getc <span class="emphasis"><em>( — c )</em></span> 
+<a id="idp15059203168" class="indexterm"></a>getc <span class="emphasis"><em>( — c )</em></span> 
 </span></dt><dd>
 Consumes the next character from the input buffer and increases <code class="literal">&gt;in</code> by one. If no characters are available, the input buffer is refilled as needed.
 </dd><dt><span class="term">
-<a id="idp15059270128" class="indexterm"></a>char <span class="emphasis"><em>( — c )</em></span> 
+<a id="idp15059206720" class="indexterm"></a>char <span class="emphasis"><em>( — c )</em></span> 
 </span></dt><dd>
 Parses the next word, delimited by a space, and puts its first character on the stack.
 </dd><dt><span class="term">
-<a id="idp15059272992" class="indexterm"></a>&gt;in <span class="emphasis"><em>( — addr )</em></span> 
+<a id="idp15059209584" class="indexterm"></a>&gt;in <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
 Gives the address of a cell containing the offset in characters from the start of the input buffer to the start of the parse area.
 </dd><dt><span class="term">
-<a id="idp15059275952" class="indexterm"></a>refill <span class="emphasis"><em>( — flag )</em></span> 
+<a id="idp15059212544" class="indexterm"></a>refill <span class="emphasis"><em>( — flag )</em></span> 
 </span></dt><dd>
 Attempts to fill the input buffer from the input source, returning true if successful.
 </dd><dt><span class="term">
-<a id="idp15059278816" class="indexterm"></a>source <span class="emphasis"><em>( — caddr u )</em></span> 
+<a id="idp15059215408" class="indexterm"></a>source <span class="emphasis"><em>( — caddr u )</em></span> 
 </span></dt><dd>
 Gives the address of, and number of characters in, the input buffer.
 </dd><dt><span class="term">
-<a id="idp15059281648" class="indexterm"></a>source-id <span class="emphasis"><em>( — n )</em></span> 
+<a id="idp15059218240" class="indexterm"></a>source-id <span class="emphasis"><em>( — n )</em></span> 
 </span></dt><dd>
 Returns 0 if current input is keyboard, -1 if it is a string from <code class="literal">evaluate</code>, or the current file id.
 </dd><dt><span class="term">
-<a id="idp15059285024" class="indexterm"></a>word <span class="emphasis"><em>( delim — addr )</em></span> 
+<a id="idp15059221616" class="indexterm"></a>word <span class="emphasis"><em>( delim — addr )</em></span> 
 </span></dt><dd>
 Reads a word from input, using delimiter <span class="emphasis"><em>delim</em></span>, and puts the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.
 </dd><dt><span class="term">
-<a id="idp15059288400" class="indexterm"></a>parse-name <span class="emphasis"><em>( name — caddr u )</em></span> 
+<a id="idp15059224992" class="indexterm"></a>parse-name <span class="emphasis"><em>( name — caddr u )</em></span> 
 </span></dt><dd>
 Reads a word from input, delimited by whitespace. Skips leading spaces.
 </dd><dt><span class="term">
-<a id="idp15059291312" class="indexterm"></a>interpret <span class="emphasis"><em>( — value )</em></span> 
+<a id="idp15059227904" class="indexterm"></a>interpret <span class="emphasis"><em>( — value )</em></span> 
 </span></dt><dd>
 Interprets a word from input and puts it on the stack.
 </dd><dt><span class="term">
-<a id="idp15059294112" class="indexterm"></a>accept <span class="emphasis"><em>( addr u — u )</em></span> 
+<a id="idp15059230704" class="indexterm"></a>accept <span class="emphasis"><em>( addr u — u )</em></span> 
 </span></dt><dd>
 Receive a string of at most u characters into the buffer that starts at addr. Returns how many characters were received.
 </dd><dt><span class="term">
-<a id="idp15059297040" class="indexterm"></a>evaluate <span class="emphasis"><em>( addr len — )</em></span> 
+<a id="idp15059233632" class="indexterm"></a>evaluate <span class="emphasis"><em>( addr len — )</em></span> 
 </span></dt><dd>
 Evaluate the given string.
 </dd><dt><span class="term">
-<a id="idp15059299792" class="indexterm"></a>abort 
+<a id="idp15059236384" class="indexterm"></a>abort 
 </span></dt><dd>
 Empties the data stack and performs <code class="literal">quit</code>.
 </dd><dt><span class="term">
-<a id="idp15059302704" class="indexterm"></a>abort" <span class="emphasis"><em>ccc" ( f — )</em></span>  
+<a id="idp15059239296" class="indexterm"></a>abort" <span class="emphasis"><em>ccc" ( f — )</em></span>  
 </span></dt><dd>
 If <span class="emphasis"><em>f</em></span> is true, print <span class="emphasis"><em>ccc</em></span> and <code class="literal">abort</code>. Typical use: <code class="literal">: x ... test abort" error" ... ;</code>
 </dd><dt><span class="term">
-<a id="idp15059307392" class="indexterm"></a>quit 
+<a id="idp15059243984" class="indexterm"></a>quit 
 </span></dt><dd>
 Enters an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting I/O.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_strings"></a>4.12. Strings</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059311488" class="indexterm"></a>.( 
+<a id="idp15059248080" class="indexterm"></a>.( 
 </span></dt><dd>
 Print a string. Example: <code class="literal">.( foo)</code>
 </dd><dt><span class="term">
-<a id="idp15059314400" class="indexterm"></a>." 
+<a id="idp15059250992" class="indexterm"></a>." 
 </span></dt><dd>
 Compile-time version of <code class="literal">.(</code>. Example: <code class="literal">: foo ." bar" ;</code>
 </dd><dt><span class="term">
-<a id="idp15059317936" class="indexterm"></a>s" <span class="emphasis"><em>( — caddr u )</em></span> 
+<a id="idp15059254528" class="indexterm"></a>s" <span class="emphasis"><em>( — caddr u )</em></span> 
 </span></dt><dd>
 Define a string. Compile-time only! Example: <code class="literal">s" foo"</code>.
 </dd><dt><span class="term">
-<a id="idp15059321232" class="indexterm"></a>count <span class="emphasis"><em>( str — caddr u )</em></span> 
+<a id="idp15059257824" class="indexterm"></a>count <span class="emphasis"><em>( str — caddr u )</em></span> 
 </span></dt><dd>
 Returns data address and length of the counted string <span class="emphasis"><em>str</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059324288" class="indexterm"></a>type <span class="emphasis"><em>( caddr u — )</em></span> 
+<a id="idp15059260880" class="indexterm"></a>type <span class="emphasis"><em>( caddr u — )</em></span> 
 </span></dt><dd>
 Prints a string.
 </dd><dt><span class="term">
-<a id="idp15059326960" class="indexterm"></a>/string <span class="emphasis"><em>( caddr u n — caddr+n u-n )</em></span> 
+<a id="idp15059263552" class="indexterm"></a>/string <span class="emphasis"><em>( caddr u n — caddr+n u-n )</em></span> 
 </span></dt><dd>
 Adjusts the string by <span class="emphasis"><em>n</em></span> characters.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_number_formatting"></a>4.13. Number Formatting</h3></div></div></div><p>For more info about number formatting, read Starting Forth.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059331968" class="indexterm"></a>&lt;# 
+<a id="idp15059268560" class="indexterm"></a>&lt;# 
 </span></dt><dd>
 Begins the number conversion process.
 </dd><dt><span class="term">
-<a id="idp15059334352" class="indexterm"></a># <span class="emphasis"><em>( ud — ud )</em></span> 
+<a id="idp15059270944" class="indexterm"></a># <span class="emphasis"><em>( ud — ud )</em></span> 
 </span></dt><dd>
 Converts one digit and puts it in the start of the output string.
 </dd><dt><span class="term">
-<a id="idp15059337168" class="indexterm"></a>#s <span class="emphasis"><em>( ud — ud )</em></span> 
+<a id="idp15059273760" class="indexterm"></a>#s <span class="emphasis"><em>( ud — ud )</em></span> 
 </span></dt><dd>
 Calls <code class="literal">#</code> and repeats until <span class="emphasis"><em>ud</em></span> is zero.
 </dd><dt><span class="term">
-<a id="idp15059340848" class="indexterm"></a>hold <span class="emphasis"><em>( ch — )</em></span> 
+<a id="idp15059277440" class="indexterm"></a>hold <span class="emphasis"><em>( ch — )</em></span> 
 </span></dt><dd>
 Inserts the character <code class="literal">ch</code> at the start of the output string.
 </dd><dt><span class="term">
-<a id="idp15059344240" class="indexterm"></a>sign <span class="emphasis"><em>( a — )</em></span> 
+<a id="idp15059280832" class="indexterm"></a>sign <span class="emphasis"><em>( a — )</em></span> 
 </span></dt><dd>
 If <span class="emphasis"><em>a</em></span> is negative, inserts a minus sign at the start of the output string.
 </dd><dt><span class="term">
-<a id="idp15059347456" class="indexterm"></a>#&gt; <span class="emphasis"><em>( xd — addr u )</em></span> 
+<a id="idp15059284048" class="indexterm"></a>#&gt; <span class="emphasis"><em>( xd — addr u )</em></span> 
 </span></dt><dd>
 Drops <span class="emphasis"><em>xd</em></span> and returns the output string.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_vectored_execution"></a>4.14. Vectored Execution</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059351984" class="indexterm"></a>' <span class="emphasis"><em>( "name" — addr )</em></span> 
+<a id="idp15059288576" class="indexterm"></a>' <span class="emphasis"><em>( "name" — addr )</em></span> 
 </span></dt><dd>
 Find execution token of the word named <span class="emphasis"><em>name</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059355040" class="indexterm"></a>find <span class="emphasis"><em>( cstr — cstr 0 | xt -1 | xt 1 )</em></span> 
+<a id="idp15059291632" class="indexterm"></a>find <span class="emphasis"><em>( cstr — cstr 0 | xt -1 | xt 1 )</em></span> 
 </span></dt><dd>
 Find the definition named in the counted string <span class="emphasis"><em>cstr</em></span>.
 If the definition is not found, return <span class="emphasis"><em>cstr</em></span> and 0, otherwise return the execution token.
 If the definition is immediate, also return 1, otherwise also return -1.
 </dd><dt><span class="term">
-<a id="idp15059358928" class="indexterm"></a>find-name <span class="emphasis"><em>( caddr u — 0 | nt )</em></span> 
+<a id="idp15059295520" class="indexterm"></a>find-name <span class="emphasis"><em>( caddr u — 0 | nt )</em></span> 
 </span></dt><dd>
 Get the name token (dictionary pointer) of the word named by <span class="emphasis"><em>caddr u</em></span>, or 0 if the word is not found.
 </dd><dt><span class="term">
-<a id="idp15059362224" class="indexterm"></a>execute <span class="emphasis"><em>( xt — )</em></span> 
+<a id="idp15059298816" class="indexterm"></a>execute <span class="emphasis"><em>( xt — )</em></span> 
 </span></dt><dd>
 Execute the execution token <span class="emphasis"><em>xt</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059365280" class="indexterm"></a>&gt;xt <span class="emphasis"><em>( addr — xt )</em></span> 
+<a id="idp15059301872" class="indexterm"></a>&gt;xt <span class="emphasis"><em>( addr — xt )</em></span> 
 </span></dt><dd>
 Get execution token of word at adress <span class="emphasis"><em>addr</em></span>.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_debugging"></a>4.15. Debugging</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059369728" class="indexterm"></a>words 
+<a id="idp15059306320" class="indexterm"></a>words 
 </span></dt><dd>
 List all defined words.
 </dd><dt><span class="term">
-<a id="idp15059372016" class="indexterm"></a>size <span class="emphasis"><em>( "name" — )</em></span> 
+<a id="idp15059308608" class="indexterm"></a>size <span class="emphasis"><em>( "name" — )</em></span> 
 </span></dt><dd>
 Print the size of the definition of the word named <span class="emphasis"><em>name</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059375072" class="indexterm"></a>dump <span class="emphasis"><em>( n — )</em></span> 
+<a id="idp15059311664" class="indexterm"></a>dump <span class="emphasis"><em>( n — )</em></span> 
 </span></dt><dd>
 Memory dump starting at address <span class="emphasis"><em>n</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059378128" class="indexterm"></a>n 
+<a id="idp15059314720" class="indexterm"></a>n 
 </span></dt><dd>
 Continue memory dump where last one stopped.
 </dd><dt><span class="term">
-<a id="idp15059380528" class="indexterm"></a>see <span class="emphasis"><em>( "name" — )</em></span> 
+<a id="idp15059317120" class="indexterm"></a>see <span class="emphasis"><em>( "name" — )</em></span> 
 </span></dt><dd>
 Print the definition of the word named <span class="emphasis"><em>name</em></span>. Works on colon definitions only. Optionally included with <code class="literal">include see</code>.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_system_state"></a>4.16. System State</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059385680" class="indexterm"></a>latest <span class="emphasis"><em>( — value )</em></span> 
+<a id="idp15059322272" class="indexterm"></a>latest <span class="emphasis"><em>( — value )</em></span> 
 </span></dt><dd>
 Address of the latest defined header.
 </dd><dt><span class="term">
-<a id="idp15059388448" class="indexterm"></a>here <span class="emphasis"><em>( — value )</em></span> 
+<a id="idp15059325040" class="indexterm"></a>here <span class="emphasis"><em>( — value )</em></span> 
 </span></dt><dd>
 Write position of the Forth compiler (usually first unused byte of code space).
 Many C64 assemblers refer to this as program counter or <span class="emphasis"><em>*</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059391792" class="indexterm"></a>pad <span class="emphasis"><em>( — addr )</em></span> 
+<a id="idp15059328384" class="indexterm"></a>pad <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
 Address of the <code class="literal">pad</code>, a 161-byte memory region that can be used freely by user words.
 No built-in words will modify this region.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_disk_i_o"></a>4.17. Disk I/O</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059396720" class="indexterm"></a>include <span class="emphasis"><em>( "filename" — )</em></span> 
+<a id="idp15059333312" class="indexterm"></a>include <span class="emphasis"><em>( "filename" — )</em></span> 
 </span></dt><dd>
 Load and parse file. Example: <code class="literal">include test</code>
 </dd><dt><span class="term">
-<a id="idp15059400016" class="indexterm"></a>included <span class="emphasis"><em>( filenameptr filenamelen — )</em></span> 
+<a id="idp15059336608" class="indexterm"></a>included <span class="emphasis"><em>( filenameptr filenamelen — )</em></span> 
 </span></dt><dd>
 Load and parse file.
 </dd><dt><span class="term">
-<a id="idp15059402768" class="indexterm"></a>require <span class="emphasis"><em>( "filename" — )</em></span> 
+<a id="idp15059339360" class="indexterm"></a>require <span class="emphasis"><em>( "filename" — )</em></span> 
 </span></dt><dd>
 Like include, except that load is skipped if the file is already loaded.
 </dd><dt><span class="term">
-<a id="idp15059405600" class="indexterm"></a>required <span class="emphasis"><em>( filenameptr filenamelen — )</em></span> 
+<a id="idp15059342192" class="indexterm"></a>required <span class="emphasis"><em>( filenameptr filenamelen — )</em></span> 
 </span></dt><dd>
 Like included, except that load is skipped if the file is already loaded.
 </dd><dt><span class="term">
-<a id="idp15059408512" class="indexterm"></a>loadb <span class="emphasis"><em>( filenameptr filenamelen dst — endaddr )</em></span> 
+<a id="idp15059345104" class="indexterm"></a>loadb <span class="emphasis"><em>( filenameptr filenamelen dst — endaddr )</em></span> 
 </span></dt><dd>
 Load binary data to <span class="emphasis"><em>dst</em></span>.
 Returns 0 on failure, otherwise address after last written byte.
 </dd><dt><span class="term">
-<a id="idp15059411792" class="indexterm"></a>saveb <span class="emphasis"><em>( start end filenameptr filenamelength — )</em></span> 
+<a id="idp15059348384" class="indexterm"></a>saveb <span class="emphasis"><em>( start end filenameptr filenamelength — )</em></span> 
 </span></dt><dd>
 Save binary data.
 </dd><dt><span class="term">
-<a id="idp15059414560" class="indexterm"></a>device <span class="emphasis"><em>( device# — )</em></span> 
+<a id="idp15059351152" class="indexterm"></a>device <span class="emphasis"><em>( device# — )</em></span> 
 </span></dt><dd>
 Switches the active device.
 </dd><dt><span class="term">
-<a id="idp15059417312" class="indexterm"></a>save-forth <span class="emphasis"><em>( "filename" — )</em></span> 
+<a id="idp15059353904" class="indexterm"></a>save-forth <span class="emphasis"><em>( "filename" — )</em></span> 
 </span></dt><dd>
 Saves the forth to the given filename.
 </dd><dt><span class="term">
-<a id="idp15059420080" class="indexterm"></a>ls 
+<a id="idp15059356672" class="indexterm"></a>ls 
 </span></dt><dd>
 Load and print disk directory with optional drive # and wildcards. Example: <code class="literal">ls $1:*=p</code> Load directory for drive 1, only prg files.
 </dd><dt><span class="term">
-<a id="idp15059423200" class="indexterm"></a>rdir <span class="emphasis"><em>( addr — )</em></span> 
+<a id="idp15059359792" class="indexterm"></a>rdir <span class="emphasis"><em>( addr — )</em></span> 
 </span></dt><dd>
 Display disk directory previously loaded to addr.
 </dd></dl></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a id="_dos_commands"></a>DOS Commands</h4></div></div></div><p>Words for sending DOS commands to drives and reading drive status are available by including the <code class="literal">dos</code> module.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059428368" class="indexterm"></a>send-cmd <span class="emphasis"><em>( c-addr u — )</em></span> 
+<a id="idp15059364960" class="indexterm"></a>send-cmd <span class="emphasis"><em>( c-addr u — )</em></span> 
 </span></dt><dd>
 Writes the given string to secondary address 15 on the current device, and prints the drive’s response. The following example defines a word, <code class="literal">backup</code> that creates a copy of <code class="literal">durexforth</code> called <code class="literal">backup</code>:
 </dd></dl></div><pre class="screen">: backup s" copy0:backup=durexforth" send-cmd ;
-backup</pre><p><a id="idp15059433616" class="indexterm"></a>dos ( "cmd" — )] Sends <span class="emphasis"><em>cmd</em></span> to the current device’s command channel, and prints the response. Note that the remainder of the line is treated as part of the command. This makes it possible to refer to file names that contain spaces, but means that <code class="literal">dos</code> and its command should be on their own line, or the last words on a line. Example: <code class="literal">dos scratch0:old file</code> will delete a file named <span class="emphasis"><em>old file</em></span>.</p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a id="_low_level_device_i_o"></a>Low-Level Device I/O</h4></div></div></div><p>For more advanced uses, words corresponding to the standard Commodore Kernal IO routines are available by including the <code class="literal">io</code> module.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059440048" class="indexterm"></a>open <span class="emphasis"><em>( filenameptr filenamelength file# secondary-addr — ioresult )</em></span> 
+backup</pre><p><a id="idp15059370208" class="indexterm"></a>dos ( "cmd" — )] Sends <span class="emphasis"><em>cmd</em></span> to the current device’s command channel, and prints the response. Note that the remainder of the line is treated as part of the command. This makes it possible to refer to file names that contain spaces, but means that <code class="literal">dos</code> and its command should be on their own line, or the last words on a line. Example: <code class="literal">dos scratch0:old file</code> will delete a file named <span class="emphasis"><em>old file</em></span>.</p></div><div class="section"><div class="titlepage"><div><div><h4 class="title"><a id="_low_level_device_i_o"></a>Low-Level Device I/O</h4></div></div></div><p>For more advanced uses, words corresponding to the standard Commodore Kernal IO routines are available by including the <code class="literal">io</code> module.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+<a id="idp15059376640" class="indexterm"></a>open <span class="emphasis"><em>( filenameptr filenamelength file# secondary-addr — ioresult )</em></span> 
 </span></dt><dd>
 Open a logical file.
 </dd><dt><span class="term">
-<a id="idp15059442848" class="indexterm"></a>chkin <span class="emphasis"><em>( file# — ioresult )</em></span> 
+<a id="idp15059379440" class="indexterm"></a>chkin <span class="emphasis"><em>( file# — ioresult )</em></span> 
 </span></dt><dd>
 Use a logical file as input device.
 </dd><dt><span class="term">
-<a id="idp15059445696" class="indexterm"></a>chkout <span class="emphasis"><em>( file# — ioresult )</em></span> 
+<a id="idp15059382288" class="indexterm"></a>chkout <span class="emphasis"><em>( file# — ioresult )</em></span> 
 </span></dt><dd>
 Use a logical file as output device.
 </dd><dt><span class="term">
-<a id="idp15059448544" class="indexterm"></a>clrchn <span class="emphasis"><em>( — )</em></span> 
+<a id="idp15059385136" class="indexterm"></a>clrchn <span class="emphasis"><em>( — )</em></span> 
 </span></dt><dd>
 Resets input and output to the keyboard and screen.
 </dd><dt><span class="term">
-<a id="idp15059451344" class="indexterm"></a>close <span class="emphasis"><em>( file# — )</em></span> 
+<a id="idp15059387936" class="indexterm"></a>close <span class="emphasis"><em>( file# — )</em></span> 
 </span></dt><dd>
 Close a logical file.
 </dd><dt><span class="term">
-<a id="idp15059454016" class="indexterm"></a>readst <span class="emphasis"><em>( — status )</em></span> 
+<a id="idp15059390608" class="indexterm"></a>readst <span class="emphasis"><em>( — status )</em></span> 
 </span></dt><dd>
 Returns the status of the last IO operation.
 For serial-bus devices, <code class="literal">$01</code> = write timeout, <code class="literal">$02</code> = read timeout, <code class="literal">$40</code> = end of file (EOI), <code class="literal">$80</code> = device not present.
 </dd><dt><span class="term">
-<a id="idp15059459344" class="indexterm"></a>chrin <span class="emphasis"><em>( — char)</em></span> 
+<a id="idp15059395936" class="indexterm"></a>chrin <span class="emphasis"><em>( — char)</em></span> 
 </span></dt><dd>
 Reads a character from the current input device.
-<a id="idp15059461232" class="indexterm"></a>ioabort <span class="emphasis"><em>( ioresult — )</em></span> Handles error conditions for <code class="literal">open</code>, <code class="literal">chkin</code> and <code class="literal">chkout</code>. On failure, print error message and abort.
+<a id="idp15059397824" class="indexterm"></a>ioabort <span class="emphasis"><em>( ioresult — )</em></span> Handles error conditions for <code class="literal">open</code>, <code class="literal">chkin</code> and <code class="literal">chkout</code>. On failure, print error message and abort.
 </dd></dl></div><p>As per the underlying Kernal routines, <code class="literal">chrin</code> does not check for end-of-file or any other error condition. <code class="literal">readst</code> should be called to ensure that the returned character is valid.</p><p>The <span class="emphasis"><em>ioresult</em></span> value returned by <code class="literal">open</code>, <code class="literal">chkin</code> and <code class="literal">chkout</code> is 0 on success, or a Kernal error number if an error occurred.</p><p>Note that use of low-level device I/O may interfere with disk accesses done by durexForth and the <code class="literal">v</code> editor. The following guidelines should be followed to avoid interference:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
 Avoid using file numbers 15 and below (remember, any number up to 127 can be used as a file number).
 </li><li class="listitem">
@@ -766,76 +766,76 @@ Close files as soon as they are no longer needed.
 </li><li class="listitem">
 If multiple files are open, always call <code class="literal">clrchn</code> to end any serial bus transactions before calling <code class="literal">open</code> or switching between files with <code class="literal">chkin</code> or <code class="literal">chkout</code>.
 </li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_compatibility"></a>4.18. Compatibility</h3></div></div></div><p>The <code class="literal">compat</code> module contains various words that are not deemed necessary for enjoyable DurexForth operation, but still must be provided to comply with the Forth 2012 core standard.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059481952" class="indexterm"></a>environment? <span class="emphasis"><em>( addr u — 0 )</em></span> 
+<a id="idp15059418544" class="indexterm"></a>environment? <span class="emphasis"><em>( addr u — 0 )</em></span> 
 </span></dt><dd>
 Environmental query.
 </dd><dt><span class="term">
-<a id="idp15059484624" class="indexterm"></a>cell+ <span class="emphasis"><em>( n — n+2 )</em></span> 
+<a id="idp15059421216" class="indexterm"></a>cell+ <span class="emphasis"><em>( n — n+2 )</em></span> 
 </span></dt><dd>
 2+
 </dd><dt><span class="term">
-<a id="idp15059487296" class="indexterm"></a>cells <span class="emphasis"><em>( n — n*2 )</em></span> 
+<a id="idp15059423888" class="indexterm"></a>cells <span class="emphasis"><em>( n — n*2 )</em></span> 
 </span></dt><dd>
 2*
 </dd><dt><span class="term">
-<a id="idp15059489968" class="indexterm"></a>char+ <span class="emphasis"><em>( n — n+1 )</em></span> 
+<a id="idp15059426560" class="indexterm"></a>char+ <span class="emphasis"><em>( n — n+1 )</em></span> 
 </span></dt><dd>
 1+
 </dd><dt><span class="term">
-<a id="idp15059492640" class="indexterm"></a>align <span class="emphasis"><em>( — )</em></span> 
+<a id="idp15059429232" class="indexterm"></a>align <span class="emphasis"><em>( — )</em></span> 
 </span></dt><dd>
 No-op
 </dd><dt><span class="term">
-<a id="idp15059495312" class="indexterm"></a>aligned <span class="emphasis"><em>( — )</em></span> 
+<a id="idp15059431904" class="indexterm"></a>aligned <span class="emphasis"><em>( — )</em></span> 
 </span></dt><dd>
 No-op
 </dd><dt><span class="term">
-<a id="idp15059497984" class="indexterm"></a>chars <span class="emphasis"><em>( — )</em></span> 
+<a id="idp15059434576" class="indexterm"></a>chars <span class="emphasis"><em>( — )</em></span> 
 </span></dt><dd>
 No-op
 </dd><dt><span class="term">
-<a id="idp15059500656" class="indexterm"></a>2@ <span class="emphasis"><em>( addr — x1 x2 )</em></span> 
+<a id="idp15059437248" class="indexterm"></a>2@ <span class="emphasis"><em>( addr — x1 x2 )</em></span> 
 </span></dt><dd>
 Fetch 32-bit value from <span class="emphasis"><em>addr</em></span>. <span class="emphasis"><em>x2</em></span> is stored at <span class="emphasis"><em>addr</em></span>, and <span class="emphasis"><em>x1</em></span> is stored at <span class="emphasis"><em>addr</em></span> + 2.
 </dd><dt><span class="term">
-<a id="idp15059505248" class="indexterm"></a>2! <span class="emphasis"><em>( x1 x2 addr — )</em></span> 
+<a id="idp15059441840" class="indexterm"></a>2! <span class="emphasis"><em>( x1 x2 addr — )</em></span> 
 </span></dt><dd>
 Store 32-bit value to <span class="emphasis"><em>addr</em></span>. <span class="emphasis"><em>x2</em></span> is stored at <span class="emphasis"><em>addr</em></span>, and <span class="emphasis"><em>x1</em></span> is stored at <span class="emphasis"><em>addr</em></span> + 2.
 </dd><dt><span class="term">
-<a id="idp15059509840" class="indexterm"></a>2over <span class="emphasis"><em>( a b c d — a b c d a b )</em></span> 
+<a id="idp15059446432" class="indexterm"></a>2over <span class="emphasis"><em>( a b c d — a b c d a b )</em></span> 
 </span></dt><dd>
 Copies cell pair <span class="emphasis"><em>a</em></span> <span class="emphasis"><em>b</em></span> to top of stack.
 </dd><dt><span class="term">
-<a id="idp15059513376" class="indexterm"></a>2swap <span class="emphasis"><em>( a b c d — c d a b )</em></span> 
+<a id="idp15059449968" class="indexterm"></a>2swap <span class="emphasis"><em>( a b c d — c d a b )</em></span> 
 </span></dt><dd>
 Exchanges the top two cell pairs.
 </dd><dt><span class="term">
-<a id="idp15059516208" class="indexterm"></a>&gt;number <span class="emphasis"><em>( ud addr u — ud addr2 u2 )</em></span> 
+<a id="idp15059452800" class="indexterm"></a>&gt;number <span class="emphasis"><em>( ud addr u — ud addr2 u2 )</em></span> 
 </span></dt><dd>
 Converts the string in <span class="emphasis"><em>addr u</em></span> to digits, using <code class="literal">base</code>, and adds each digit into <span class="emphasis"><em>ud</em></span> after multiplying it with <code class="literal">base</code>. <span class="emphasis"><em>addr2 u2</em></span> contains the part of the string that was not converted.
 </dd><dt><span class="term">
-<a id="idp15059521504" class="indexterm"></a>&gt;body <span class="emphasis"><em>( xt — addr )</em></span> 
+<a id="idp15059458096" class="indexterm"></a>&gt;body <span class="emphasis"><em>( xt — addr )</em></span> 
 </span></dt><dd>
 Returns the data field address that belongs to the execution token. Example use: <code class="literal">' foo &gt;body</code>
 </dd><dt><span class="term">
-<a id="idp15059524896" class="indexterm"></a>sm/rem <span class="emphasis"><em>( d n — r q )</em></span> 
+<a id="idp15059461488" class="indexterm"></a>sm/rem <span class="emphasis"><em>( d n — r q )</em></span> 
 </span></dt><dd>
 Divide double-cell number <span class="emphasis"><em>d</em></span> by <span class="emphasis"><em>n</em></span>, giving the symmetric quotient <span class="emphasis"><em>q</em></span> and the remainder <span class="emphasis"><em>r</em></span>. Values are signed.
-</dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_kernel_calls"></a>4.19. Kernel Calls</h3></div></div></div><p>Safe kernel calls may be done from Forth words using <a id="idp15059529984" class="indexterm"></a>sys <span class="emphasis"><em>( addr — )</em></span>. The helper variables <a id="idp15059531120" class="indexterm"></a>ar, <a id="idp15059531872" class="indexterm"></a>xr, <a id="idp15059532624" class="indexterm"></a>yr and <a id="idp15059533376" class="indexterm"></a>sr can be used to set arguments and get results through the a, x, y and status registers.</p><p>Example: <code class="literal">'0' ar c! $ffd2 sys</code> calls the CHROUT routine, which prints <code class="literal">0</code> on screen.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_turn_key_utilities"></a>4.20. Turn-key Utilities</h3></div></div></div><p>These words are available by including <code class="literal">turnkey</code>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059538784" class="indexterm"></a>top <span class="emphasis"><em>( — addr )</em></span> 
+</dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_kernel_calls"></a>4.19. Kernel Calls</h3></div></div></div><p>Safe kernel calls may be done from Forth words using <a id="idp15059466576" class="indexterm"></a>sys <span class="emphasis"><em>( addr — )</em></span>. The helper variables <a id="idp15059467712" class="indexterm"></a>ar, <a id="idp15059468464" class="indexterm"></a>xr, <a id="idp15059469216" class="indexterm"></a>yr and <a id="idp15059469968" class="indexterm"></a>sr can be used to set arguments and get results through the a, x, y and status registers.</p><p>Example: <code class="literal">'0' ar c! $ffd2 sys</code> calls the CHROUT routine, which prints <code class="literal">0</code> on screen.</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_turn_key_utilities"></a>4.20. Turn-key Utilities</h3></div></div></div><p>These words are available by including <code class="literal">turnkey</code>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+<a id="idp15059475376" class="indexterm"></a>top <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
 Address of the top of the dictionary, default: $9fff.
 </dd><dt><span class="term">
-<a id="idp15059541584" class="indexterm"></a>top! <span class="emphasis"><em>( addr — )</em></span> 
+<a id="idp15059478176" class="indexterm"></a>top! <span class="emphasis"><em>( addr — )</em></span> 
 </span></dt><dd>
 Relocates the dictionary to <span class="emphasis"><em>addr</em></span>. Example:
 </dd></dl></div><pre class="screen">\ not using $a000 block, give all memory to dictionary
 $cbff top!</pre><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059545792" class="indexterm"></a>save-pack <span class="emphasis"><em>( "filename" — )</em></span> 
+<a id="idp15059482384" class="indexterm"></a>save-pack <span class="emphasis"><em>( "filename" — )</em></span> 
 </span></dt><dd>
 Saves a compact version of forth to the given <span class="emphasis"><em>filename</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059548848" class="indexterm"></a>save-prg <span class="emphasis"><em>( "filename" — )</em></span> 
+<a id="idp15059485440" class="indexterm"></a>save-prg <span class="emphasis"><em>( "filename" — )</em></span> 
 </span></dt><dd>
 Saves a forth program with no dictionary to <span class="emphasis"><em>filename</em></span>.
 </dd></dl></div><p>Further details on the use of these words are outlined in <a class="xref" href="ar01s05.html#_turn_key_operation" title="5.3. Turn-key Operation">Section 5.3, “Turn-key Operation”</a>.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ar01s03.html"><img src="images/icons/prev.png" alt="Prev" /></a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ar01s05.html"><img src="images/icons/next.png" alt="Next" /></a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html"><img src="images/icons/home.png" alt="Home" /></a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>
