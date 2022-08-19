@@ -2,35 +2,39 @@
 :toc:
 
 == Introduction
-include::intro.adoc[Introduction]
+include::intro.adoc[]
 
 == Tutorial
-include::tutorial.adoc[Tutorial]
+include::tutorial.adoc[]
 
 == Editor
-include::editor.adoc[Editor]
+include::editor.adoc[]
 
 == Forth Words
-include::words.adoc[Forth Words]
+include::words.adoc[]
 
 == Graphics
-include::gfx.adoc[Graphics]
+include::gfx.adoc[]
 
 == SID
-include::sid.adoc[SID]
+include::sid.adoc[]
 
 == Music
-include::mml.adoc[Music]
+include::mml.adoc[]
 
 == Assembler
-include::asm.adoc[Assembler]
+include::asm.adoc[]
 
 == Configuring durexForth
-include::config.adoc[Configuring durexForth]
+include::config.adoc[]
+
+[appendix]
+== Assembler Mnemonics
+include::mnemonics.adoc[]
 
 [appendix]
 == Internet Resources
-include::links.adoc[Internet Resources]
+include::links.adoc[]
 
 [appendix]
 == Authors and Contributors
@@ -42,7 +46,7 @@ _This list is incomplete. Let me know if you want to be on this list._
 
 [appendix]
 == License
-include::license.adoc[License]
+include::license.adoc[]
 
 [index]
 == Word Index
