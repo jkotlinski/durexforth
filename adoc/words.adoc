@@ -130,6 +130,11 @@ Typical use: +: x ... ['] name ... ;+
 ((latest)) _( -- value )_ :: Address of the latest defined header.
 ((here)) _( -- value )_ :: Write position of the Forth compiler (usually first unused byte of code space).
 Many C64 assemblers refer to this as program counter or '*'.
+((marker)) _( "name" -- )_ :: Create a word that when called, forgets itself and all words that were defined after it. Example:
+----
+marker forget
+: x ; forget
+----
 
 === Word List
 
@@ -142,13 +147,6 @@ Many C64 assemblers refer to this as program counter or '*'.
 \ from debug.fs
 : (words) more name>string space 1 ;
 : words ['] (words) dowords ;
-----
-
-((marker)) _( "name" -- )_ :: Creates a word that when called, forgets itself and all words that were defined after it. Example:
-
-----
-marker forget
-: x ; forget
 ----
 
 === Variables
