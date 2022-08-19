@@ -37,6 +37,10 @@ include::mnemonics.adoc[]
 include::memmap.adoc[]
 
 [appendix]
+== Word Anatomy
+include::anatomy.adoc[]
+
+[appendix]
 == Internet Resources
 include::links.adoc[]
 
