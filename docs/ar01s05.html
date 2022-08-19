@@ -1,98 +1,98 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>5. Graphics</title><link rel="stylesheet" type="text/css" href="docbook-xsl.css" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot" /><link rel="home" href="index.html" title="durexForth: Operators Manual" /><link rel="up" href="index.html" title="durexForth: Operators Manual" /><link rel="prev" href="ar01s04.html" title="4. Forth Words" /><link rel="next" href="ar01s06.html" title="6. Configuring durexForth" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ar01s04.html"><img src="images/icons/prev.png" alt="Prev" /></a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ar01s06.html"><img src="images/icons/next.png" alt="Next" /></a></td></tr></table><hr /></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_graphics_2"></a>5. Graphics</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_turtle_graphics"></a>5.1. Turtle Graphics</h3></div></div></div><p>Turtle graphics are mostly known from LOGO, a 1970s programming language.
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>5. Graphics</title><link rel="stylesheet" type="text/css" href="docbook-xsl.css" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot" /><link rel="home" href="index.html" title="durexForth: Operators Manual" /><link rel="up" href="index.html" title="durexForth: Operators Manual" /><link rel="prev" href="ar01s04.html" title="4. Forth Words" /><link rel="next" href="ar01s06.html" title="6. SID" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ar01s04.html"><img src="images/icons/prev.png" alt="Prev" /></a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ar01s06.html"><img src="images/icons/next.png" alt="Next" /></a></td></tr></table><hr /></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_graphics_2"></a>5. Graphics</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_turtle_graphics"></a>5.1. Turtle Graphics</h3></div></div></div><p>Turtle graphics are mostly known from LOGO, a 1970s programming language.
 It enables control of a turtle that can move and turn while holding a pen.
 The turtle graphics library is loaded with <code class="literal">include turtle</code>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059486736" class="indexterm"></a>init <span class="emphasis"><em>( — )</em></span> 
+<a id="idp15059439840" class="indexterm"></a>init <span class="emphasis"><em>( — )</em></span> 
 </span></dt><dd>
 Initializes turtle graphics.
 </dd><dt><span class="term">
-<a id="idp15059489488" class="indexterm"></a>forward <span class="emphasis"><em>( px — )</em></span> 
+<a id="idp15059442592" class="indexterm"></a>forward <span class="emphasis"><em>( px — )</em></span> 
 </span></dt><dd>
 Moves the turtle <code class="literal">px</code> pixels forward.
 </dd><dt><span class="term">
-<a id="idp15059492784" class="indexterm"></a>back <span class="emphasis"><em>( px — )</em></span> 
+<a id="idp15059445888" class="indexterm"></a>back <span class="emphasis"><em>( px — )</em></span> 
 </span></dt><dd>
 Moves the turtle <code class="literal">px</code> pixels back.
 </dd><dt><span class="term">
-<a id="idp15059496080" class="indexterm"></a>left <span class="emphasis"><em>( deg — )</em></span> 
+<a id="idp15059449184" class="indexterm"></a>left <span class="emphasis"><em>( deg — )</em></span> 
 </span></dt><dd>
 Rotates the turtle <code class="literal">deg</code> degrees left.
 </dd><dt><span class="term">
-<a id="idp15059499376" class="indexterm"></a>right <span class="emphasis"><em>( deg — )</em></span> 
+<a id="idp15059452480" class="indexterm"></a>right <span class="emphasis"><em>( deg — )</em></span> 
 </span></dt><dd>
 Rotates the turtle <code class="literal">deg</code> degrees right.
 </dd><dt><span class="term">
-<a id="idp15059502672" class="indexterm"></a>penup <span class="emphasis"><em>( — )</em></span> 
+<a id="idp15059455776" class="indexterm"></a>penup <span class="emphasis"><em>( — )</em></span> 
 </span></dt><dd>
 Pen up (disables drawing).
 </dd><dt><span class="term">
-<a id="idp15059505424" class="indexterm"></a>pendown <span class="emphasis"><em>( — )</em></span> 
+<a id="idp15059458528" class="indexterm"></a>pendown <span class="emphasis"><em>( — )</em></span> 
 </span></dt><dd>
 Pen down (enables drawing).
 </dd><dt><span class="term">
-<a id="idp15059508176" class="indexterm"></a>turtle@ <span class="emphasis"><em>( — state )</em></span> 
+<a id="idp15059461280" class="indexterm"></a>turtle@ <span class="emphasis"><em>( — state )</em></span> 
 </span></dt><dd>
 Remembers turtle state.
 </dd><dt><span class="term">
-<a id="idp15059510848" class="indexterm"></a>turtle! <span class="emphasis"><em>( state — )</em></span> 
+<a id="idp15059463952" class="indexterm"></a>turtle! <span class="emphasis"><em>( state — )</em></span> 
 </span></dt><dd>
 Restores turtle state as earlier read by <code class="literal">turtle@</code>.
 </dd><dt><span class="term">
-<a id="idp15059514144" class="indexterm"></a>moveto <span class="emphasis"><em>( x y deg — )</em></span> 
+<a id="idp15059467248" class="indexterm"></a>moveto <span class="emphasis"><em>( x y deg — )</em></span> 
 </span></dt><dd>
 Moves turtle to <span class="emphasis"><em>x y</em></span> with angle <span class="emphasis"><em>deg</em></span>.
 </dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_high_resolution_graphics"></a>5.2. High-Resolution Graphics</h3></div></div></div><p>The high-resolution graphics library is loaded with <code class="literal">include gfx</code>.
 It is inspired by "Step-by-Step Programming Commodore 64: Graphics Book 3."
 Some demonstrations can be found in <code class="literal">gfxdemo</code>.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059520784" class="indexterm"></a>hires <span class="emphasis"><em>( — )</em></span> 
+<a id="idp15059473888" class="indexterm"></a>hires <span class="emphasis"><em>( — )</em></span> 
 </span></dt><dd>
 Enters the high-resolution drawing mode.
 </dd><dt><span class="term">
-<a id="idp15059523552" class="indexterm"></a>lores <span class="emphasis"><em>( — )</em></span> 
+<a id="idp15059476656" class="indexterm"></a>lores <span class="emphasis"><em>( — )</em></span> 
 </span></dt><dd>
 Switches back to low-resolution text mode.
 </dd><dt><span class="term">
-<a id="idp15059526336" class="indexterm"></a>clrcol <span class="emphasis"><em>( colors — )</em></span> 
+<a id="idp15059479440" class="indexterm"></a>clrcol <span class="emphasis"><em>( colors — )</em></span> 
 </span></dt><dd>
 Clears the high-resolution display using <span class="emphasis"><em>colors</em></span>.
 <span class="emphasis"><em>Colors</em></span> is a byte value with foreground color in high nibble, background color in low nibble.
 E.g. <code class="literal">15 clrcol</code> clears the screen with green background, white foreground.
 </dd><dt><span class="term">
-<a id="idp15059530752" class="indexterm"></a>blkcol <span class="emphasis"><em>( col row colors — )</em></span> 
+<a id="idp15059483856" class="indexterm"></a>blkcol <span class="emphasis"><em>( col row colors — )</em></span> 
 </span></dt><dd>
 Changes colors of the 8x8 block at given position.
 </dd><dt><span class="term">
-<a id="idp15059533552" class="indexterm"></a>plot <span class="emphasis"><em>( x y — )</em></span> 
+<a id="idp15059486656" class="indexterm"></a>plot <span class="emphasis"><em>( x y — )</em></span> 
 </span></dt><dd>
 Sets the pixel at <span class="emphasis"><em>x</em></span>, <span class="emphasis"><em>y</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059536992" class="indexterm"></a>peek <span class="emphasis"><em>( x y — p )</em></span> 
+<a id="idp15059490096" class="indexterm"></a>peek <span class="emphasis"><em>( x y — p )</em></span> 
 </span></dt><dd>
 Gets the pixel at <span class="emphasis"><em>x</em></span>, <span class="emphasis"><em>y</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059540432" class="indexterm"></a>line <span class="emphasis"><em>( x y — )</em></span> 
+<a id="idp15059493536" class="indexterm"></a>line <span class="emphasis"><em>( x y — )</em></span> 
 </span></dt><dd>
 Draws a line to <span class="emphasis"><em>x</em></span>, <span class="emphasis"><em>y</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059543872" class="indexterm"></a>circle <span class="emphasis"><em>( x y r — )</em></span> 
+<a id="idp15059496976" class="indexterm"></a>circle <span class="emphasis"><em>( x y r — )</em></span> 
 </span></dt><dd>
 Draws a circle with radius <span class="emphasis"><em>r</em></span> around <span class="emphasis"><em>x</em></span>, <span class="emphasis"><em>y</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059547696" class="indexterm"></a>erase <span class="emphasis"><em>( mode — )</em></span> 
+<a id="idp15059500800" class="indexterm"></a>erase <span class="emphasis"><em>( mode — )</em></span> 
 </span></dt><dd>
 Changes blit method for line drawing.
 <code class="literal">1 erase</code> uses <code class="literal">xor</code> for line drawing, <code class="literal">0 erase</code> switches back to <code class="literal">or</code>.
 </dd><dt><span class="term">
-<a id="idp15059552960" class="indexterm"></a>paint <span class="emphasis"><em>( x y — )</em></span> 
+<a id="idp15059506064" class="indexterm"></a>paint <span class="emphasis"><em>( x y — )</em></span> 
 </span></dt><dd>
 Paints the area at <span class="emphasis"><em>x</em></span>, <span class="emphasis"><em>y</em></span>.
 </dd><dt><span class="term">
-<a id="idp15059556400" class="indexterm"></a>text <span class="emphasis"><em>( column row str strlen — )</em></span> 
+<a id="idp15059509504" class="indexterm"></a>text <span class="emphasis"><em>( column row str strlen — )</em></span> 
 </span></dt><dd>
 Draws a text string at the given position.
 E.g. <code class="literal">10 8 parse-name hallo text</code> draws the message <code class="literal">hallo</code> at column 16, row 8.
 </dd><dt><span class="term">
-<a id="idp15059560432" class="indexterm"></a>drawchar <span class="emphasis"><em>( column row addr — )</em></span> 
+<a id="idp15059513536" class="indexterm"></a>drawchar <span class="emphasis"><em>( column row addr — )</em></span> 
 </span></dt><dd>
 Draws a custom character at given column and row, using the 8 bytes long data starting at addr.
 </dd></dl></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ar01s04.html"><img src="images/icons/prev.png" alt="Prev" /></a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ar01s06.html"><img src="images/icons/next.png" alt="Next" /></a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html"><img src="images/icons/home.png" alt="Home" /></a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>

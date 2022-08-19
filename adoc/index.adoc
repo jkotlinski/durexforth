@@ -13,6 +13,12 @@ include::editor.adoc[Editor]
 == Forth Words
 include::words.adoc[Forth Words]
 
+== Graphics
+include::gfx.adoc[Graphics]
+
+== SID
+include::sid.adoc[SID]
+
 == Configuring durexForth
 include::config.adoc[Configuring durexForth]
 
