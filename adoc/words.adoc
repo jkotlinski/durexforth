@@ -127,6 +127,9 @@ Typical use: +: x ... ['] name ... ;+
 ((header)) _( "name" -- )_ :: Create a dictionary header named _name_.
 ((create)) _( "name" -- )_ ... does> :: Create a word-creating word named _name_ with custom behavior specified after `does>`.  For further description, see "Starting Forth."
 ((state)) _( -- addr)_ :: _addr_ is the address of a cell containing the compilation-state flag. It is 1 when compiling, otherwise 0.
+((latest)) _( -- value )_ :: Address of the latest defined header.
+((here)) _( -- value )_ :: Write position of the Forth compiler (usually first unused byte of code space).
+Many C64 assemblers refer to this as program counter or '*'.
 
 === Word List
 
@@ -238,6 +241,8 @@ case
 ((abort)) :: Empties the data stack and performs `quit`.
 ((abort")) _ccc" ( f -- )_  :: If _f_ is true, print _ccc_ and `abort`. Typical use: `: x ... test abort" error" ... ;`
 ((quit)) :: Enters an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting I/O.
+((pad)) _( -- addr )_ :: Address of the `pad`, a 161-byte memory region that can be used freely by user words.
+No built-in words will modify this region.
 
 === Strings
 
@@ -276,14 +281,6 @@ If the definition is immediate, also return 1, otherwise also return -1.
 ((dump)) _( n -- )_ :: Memory dump starting at address _n_.
 ((n)) :: Continue memory dump where last one stopped.
 ((see)) _( "name" -- )_ :: Print the definition of the word named _name_. Works on colon definitions only. Optionally included with `include see`.
-
-=== System State
-
-((latest)) _( -- value )_ :: Address of the latest defined header.
-((here)) _( -- value )_ :: Write position of the Forth compiler (usually first unused byte of code space).
-Many C64 assemblers refer to this as program counter or '*'.
-((pad)) _( -- addr )_ :: Address of the `pad`, a 161-byte memory region that can be used freely by user words.
-No built-in words will modify this region.
 
 === Disk I/O
 
