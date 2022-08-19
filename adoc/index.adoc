@@ -22,6 +22,9 @@ include::sid.adoc[SID]
 == Music
 include::mml.adoc[Music]
 
+== Assembler
+include::asm.adoc[Assembler]
+
 == Configuring durexForth
 include::config.adoc[Configuring durexForth]
 

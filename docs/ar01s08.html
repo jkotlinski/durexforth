@@ -1,53 +1,66 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>8. Configuring durexForth</title><link rel="stylesheet" type="text/css" href="docbook-xsl.css" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot" /><link rel="home" href="index.html" title="durexForth: Operators Manual" /><link rel="up" href="index.html" title="durexForth: Operators Manual" /><link rel="prev" href="ar01s07.html" title="7. Music" /><link rel="next" href="apa.html" title="A. Internet Resources" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ar01s07.html"><img src="images/icons/prev.png" alt="Prev" /></a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="apa.html"><img src="images/icons/next.png" alt="Next" /></a></td></tr></table><hr /></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_configuring_durexforth"></a>8. Configuring durexForth</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_stripping_modules"></a>8.1. Stripping Modules</h3></div></div></div><p>By default, durexForth boots up with these modules pre-compiled in RAM:</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-asm
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>8. Assembler</title><link rel="stylesheet" type="text/css" href="docbook-xsl.css" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot" /><link rel="home" href="index.html" title="durexForth: Operators Manual" /><link rel="up" href="index.html" title="durexForth: Operators Manual" /><link rel="prev" href="ar01s07.html" title="7. Music" /><link rel="next" href="ar01s09.html" title="9. Configuring durexForth" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ar01s07.html"><img src="images/icons/prev.png" alt="Prev" /></a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ar01s09.html"><img src="images/icons/next.png" alt="Next" /></a></td></tr></table><hr /></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_assembler_2"></a>8. Assembler</h2></div></div></div><p>DurexForth features a simple but useful 6510 assembler with support for branches and labels. Assembly code is typically used within a <code class="literal">code</code> word, as in the tutorial example:</p><pre class="screen">code flash
+here        ( push current addr )
+$d020 inc,  ( inc $d020 )
+jmp,        ( jump to pushed addr )
+;code</pre><p>It is also possible to inline assembly code into a regular Forth word, as seen in the tutorial:</p><pre class="screen">: flash begin [ $d020 inc, ] again ;</pre><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_variables_3"></a>8.1. Variables</h3></div></div></div><p>DurexForth has a few variables that are specifically meant to be used within code words.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+<a id="idp15059621280" class="indexterm"></a>lsb <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
-The assembler. (Required and may not be stripped.)
+Points to the top of the LSB parameter stack. Together with the <code class="literal">x</code> register, it can be used to access stack contents.
 </dd><dt><span class="term">
-format
+<a id="idp15059624784" class="indexterm"></a>msb <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
-Numerical formatting words. (Also required.)
+Points to the top of the MSB parameter stack. Together with the <code class="literal">x</code> register, it can be used to access stack contents.
 </dd><dt><span class="term">
-wordlist
+<a id="idp15059628288" class="indexterm"></a>w <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
-Wordlist manipulation. (Required by some modules.)
+A zero-page cell that code words may use freely as work area.
 </dd><dt><span class="term">
-labels
+<a id="idp15059631104" class="indexterm"></a>w2 <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
-Assembler labels.
+Second zero-page work area cell.
 </dd><dt><span class="term">
-doloop
+<a id="idp15059633856" class="indexterm"></a>w3 <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
-Do-loop words.
+Third zero-page work area cell.
+</dd></dl></div><p>Example usage of <code class="literal">lsb</code> and <code class="literal">msb</code>:</p><pre class="screen">code + ( n1 n2 -- sum )
+clc,           ( clear carry )
+lsb 1+ lda,x   ( load n1 lsb )
+lsb adc,x      ( add n2 lsb )
+lsb 1+ sta,x   ( store to n1 lsb )
+msb 1+ lda,x   ( load n1 msb )
+msb adc,x      ( add n2 msb )
+msb 1+ sta,x   ( store to n2 msb )
+inx,           ( drop n2; n1 = sum )
+;code</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_branches"></a>8.2. Branches</h3></div></div></div><p>The assembler supports forward and backward branches. These branches cannot overlap each other, so their usage is limited to simple cases.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+<a id="idp15059641456" class="indexterm"></a>+branch <span class="emphasis"><em>( — addr )</em></span> 
+</span></dt><dd>
+Forward branch.
 </dd><dt><span class="term">
-sys
+<a id="idp15059644128" class="indexterm"></a>:+ <span class="emphasis"><em>( addr — )</em></span> 
 </span></dt><dd>
-System calls.
+Forward branch target.
 </dd><dt><span class="term">
-debug
+<a id="idp15059646800" class="indexterm"></a>:- <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
-Words for debugging.
+Backward branch target.
 </dd><dt><span class="term">
-ls
+<a id="idp15059649472" class="indexterm"></a>-branch <span class="emphasis"><em>( addr — )</em></span> 
 </span></dt><dd>
-List disk contents.
+Backward branch.
+</dd></dl></div><p>Example of a forward branch:</p><pre class="screen">foo lda,
++branch beq,
+bar inc, :+</pre><p>Example of a backward branch:</p><pre class="screen">:- $d014 lda, f4 cmp,#
+-branch bne,</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_labels"></a>8.3. Labels</h3></div></div></div><p>The <code class="literal">labels</code> module adds support for more complicated flows where branches can overlap freely. These branches are resolved by the <code class="literal">;code</code> word, so it is not possible to branch past it.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+<a id="idp15059657392" class="indexterm"></a>@: <span class="emphasis"><em>( n — )</em></span> 
+</span></dt><dd>
+Creates the assembly label <span class="emphasis"><em>n</em></span>, where <span class="emphasis"><em>n</em></span> is a number in range [0, 255].
 </dd><dt><span class="term">
-require
+<a id="idp15059660912" class="indexterm"></a>@@ <span class="emphasis"><em>( n — )</em></span> 
 </span></dt><dd>
-The words require and required.
-</dd><dt><span class="term">
-v
-</span></dt><dd>
-The text editor.
-</dd></dl></div><p>To reduce RAM usage, you may make a stripped-down version of durexForth. Do this by following these steps:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
-Issue <code class="literal">---modules---</code> to unload all modules, or <code class="literal">---editor---</code> to unload the editor only.
-</li><li class="listitem">
-One by one, load the modules you want included with your new Forth. (E.g. <code class="literal">include labels</code>)
-</li><li class="listitem">
-Save the new system with e.g. <code class="literal">save-forth acmeforth</code>.
-</li></ol></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_custom_start_up"></a>8.2. Custom Start-Up</h3></div></div></div><p>You may launch a word automatically at start-up by setting the variable <code class="literal">start</code> to the execution token of the word.  Example: <code class="literal">' megademo start !</code> To save the new configuration to disk, type e.g. <code class="literal">save-forth megademo</code>.</p><p>When writing a new program using a PC text editor, it is practical to configure durexForth to compile and execute the program at startup. That can be set up using the following snippet:</p><pre class="screen">$a000 value buf
-: go buf s" myprogramfile" buf
-loadb buf - evaluate ;
-' go start !
-save-forth @0:durexforth</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_turn_key_operation"></a>8.3. Turn-key Operation</h3></div></div></div><p>Durexforth offers utilities to save your program in a turn-key fashion by including the <code class="literal">turnkey</code> module once the program is ready to be saved.</p><p>Programs can be saved in a compacted state using <code class="literal">save-pack</code>. These programs are stored with 32 bytes between <code class="literal">here</code> and <code class="literal">latest</code>. When they are first loaded, they will restore the header space to its original <code class="literal">top</code>.</p><p>If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary headers entirely when saving with <code class="literal">save-prg</code>. This allows your program to use memory down to <code class="literal">here</code> plus 32 bytes for safety.</p><p>After either of these words have saved the file to disk, they will restore forth to the unpacked state, and strip the <code class="literal">turnkey</code> module from the dictionary. This allows you to continue to use forth interactively in the case of <code class="literal">save-pack</code>. As <code class="literal">save-prg</code> has stripped the dictionary headers from the system, it will no longer be usable. If you wish to test your program after saving, you can compile a call to <code class="literal">save-prg</code> instead:</p><pre class="screen">: build save-prg mydemo start @ execute ;
-build</pre><p>This will simulate the start-up sequence after saving the packed program.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ar01s07.html"><img src="images/icons/prev.png" alt="Prev" /></a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="apa.html"><img src="images/icons/next.png" alt="Next" /></a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html"><img src="images/icons/home.png" alt="Home" /></a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>
+Compiles a branch to the label <span class="emphasis"><em>n</em></span>.
+</dd></dl></div><p>Example:</p><pre class="screen">code checkers
+$7f lda,# 0 ldy,# 'l' @:
+$400 sta,y $500 sta,y
+$600 sta,y $700 sta,y
+dey, 'l' @@ bne, ;code</pre></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ar01s07.html"><img src="images/icons/prev.png" alt="Prev" /></a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ar01s09.html"><img src="images/icons/next.png" alt="Next" /></a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html"><img src="images/icons/home.png" alt="Home" /></a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>
