@@ -43,6 +43,10 @@ include::memmap.adoc[]
 include::anatomy.adoc[]
 
 [appendix]
+== Avoiding Stack Crashes
+include::stack.adoc[]
+
+[appendix]
 == Internet Resources
 include::links.adoc[]
 

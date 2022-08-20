@@ -324,12 +324,15 @@ As per the underlying Kernal routines, `chrin` does not check for end-of-file or
 
 The _ioresult_ value returned by `open`, `chkin` and `chkout` is 0 on success, or a Kernal error number if an error occurred.
 
-Note that use of low-level device I/O may interfere with disk accesses done by durexForth and the `v` editor. The following guidelines should be followed to avoid interference:
+[NOTE]
+====
+Low-level device I/O may interfere with disk accesses done by durexForth and the `v` editor. The following guidelines should be followed to avoid interference:
 
 - Avoid using file numbers 15 and below (remember, any number up to 127 can be used as a file number).
 - Only use input/output redirection (`chkin` and `chkout`) within word definitions, and ensure that `clrchn` is called before exit.
 - Close files as soon as they are no longer needed.
 - If multiple files are open, always call `clrchn` to end any serial bus transactions before calling `open` or switching between files with `chkin` or `chkout`.
+====
 
 === Compatibility
 
