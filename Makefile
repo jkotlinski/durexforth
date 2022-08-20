@@ -62,13 +62,13 @@ $(DISK_IMAGE): durexforth.prg Makefile ext/petcom $(SRCS)
 
 docs: docs/index.html
 
-docs/index.html: adoc/index.adoc adoc/words.adoc adoc/links.adoc adoc/sid.adoc adoc/asm.adoc \
-	adoc/mnemonics.adoc adoc/memmap.adoc adoc/anatomy.adoc LICENSE.md adoc/tutorial.adoc
+docs/index.html: docs_src/index.adoc docs_src/words.adoc docs_src/links.adoc docs_src/sid.adoc docs_src/asm.adoc \
+	docs_src/mnemonics.adoc docs_src/memmap.adoc docs_src/anatomy.adoc LICENSE.md docs_src/tutorial.adoc
 	mkdir -p build
 	git describe --tags --dirty | tr '\n' , > build/revision.adoc
 	git log -1 --format=%as >> build/revision.adoc
 	rm -rf docs
-	a2x --icons -f chunked adoc/index.adoc -D .
+	a2x --icons -f chunked docs_src/index.adoc -D .
 	mv index.chunked docs
 
 clean:
