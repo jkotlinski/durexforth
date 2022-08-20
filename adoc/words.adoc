@@ -239,7 +239,7 @@ case
 ((abort)) :: Clear the data stack and perform `quit`.
 ((abort")) _ccc" ( f -- )_  :: If _f_ is true, print _ccc_ and `abort`. Typical use: `: x ... test abort" error" ... ;`
 ((quit)) :: Enter an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting I/O.
-((pad)) _( -- addr )_ :: _addr_ is the address of the `pad`, a 161-byte memory region that can be used freely by user words.
+[[pad]] ((pad)) _( -- addr )_ :: _addr_ is the address of the `pad`, a 161-byte memory region that can be used freely by user words.
 No built-in words will modify this region.
 
 === Strings
@@ -265,7 +265,7 @@ For more info about number formatting, read Starting Forth.
 === Vectored Execution
 
 ((')) _( "name" -- addr )_ :: Find execution token of the word named _name_.
-((find)) _( cstr -- cstr 0 | xt -1 | xt 1 )_ :: Find the definition named in the counted string _cstr_.
+[[find]] ((find)) _( cstr -- cstr 0 | xt -1 | xt 1 )_ :: Find the definition named in the counted string _cstr_.
 If the definition is not found, return _cstr_ and 0, otherwise return the execution token.
 If the definition is immediate, also return 1, otherwise also return -1.
 ((find-name)) _( caddr u -- 0 | nt )_ :: Get the name token (dictionary pointer) of the word named by _caddr u_, or 0 if the word is not found.
