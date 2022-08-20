@@ -21,16 +21,16 @@
 
 === Utility
 
-((.)) _( n -- )_ :: Prints top value of stack as signed number.
-((u.)) _( u -- )_ :: Prints top value of stack as unsigned number.
+((.)) _( n -- )_ :: Print top value of stack as signed number.
+((u.)) _( u -- )_ :: Print top value of stack as unsigned number.
 ((.s)) :: See stack contents.
-((emit)) _( a -- )_ :: Prints top value of stack as a PETSCII character. Example: `q emit`
+((emit)) _( a -- )_ :: Print top value of stack as a PETSCII character. Example: `q emit`
 ((&pound;)) :: Comment to end of line. (Used on C64/PETSCII.)
 ((\\)) :: Comment to end of line. (Used when cross-compiling from PC/ASCII.)
-((pass:[(])) :: Multiline comment. Ignores everything until a ).
-((bl)) _( -- char )_ :: Gives the PETSCII character for a space.
-((space)) :: Displays one space.
-((spaces)) _( n -- )_ :: Displays n spaces.
+((pass:[(])) :: Multiline comment. Ignores everything until a `)`.
+((bl)) _( -- char )_ :: _char_ is the PETSCII character for a space.
+((space)) :: Display one space.
+((spaces)) _( n -- )_ :: Display _n_ spaces.
 ((page)) :: Clears the screen.
 ((rvs)) :: Reverse screen output.
 
@@ -52,28 +52,28 @@
 ((*/)) _( a b c -- q )_ :: Multiply a with b, then divide by c, using a 32-bit intermediary.
 ((*/mod)) _( a b c -- r q )_ :: Like */, but also keeping remainder r.
 ((0<)) _( a -- b )_ :: Is a negative?
-((negate)) _( a -- b )_ :: Negates a.
-((abs)) _( a -- b )_ :: Gives absolute value of a.
-((min)) _( a b -- c )_ :: Gives the lesser of a and b.
-((max)) _( a b -- c )_ :: Gives the greater of a and b.
-((within)) _( n lo hi -- flag )_ :: Returns true if lo &le; n < hi.
+((negate)) _( a -- b )_ :: Negate a.
+((abs)) _( a -- b )_ :: Give absolute value of a.
+((min)) _( a b -- c )_ :: Give the lesser of a and b.
+((max)) _( a b -- c )_ :: Give the greater of a and b.
+((within)) _( n lo hi -- flag )_ :: Return true if lo &le; n < hi.
 ((<)) _( n1 n2 -- flag )_ :: Is n1 less than n2? (Signed.)
 ((>)) _( n1 n2 -- flag )_ :: Is n1 greater than n2? (Signed.)
 ((u<)) _( u1 u2 -- flag )_ :: Is u1 less than u2? (Unsigned.)
 ((u>)) _( u1 u2 -- flag )_ :: Is u1 greater than u2? (Unsigned.)
 ((lshift)) _( a b -- c )_ :: Binary shift a left by b.
 ((rshift)) _( a b -- c )_ :: Binary shift a right by b.
-((base)) _(variable)_ :: Points to the cell that holds the numerical base.
-((decimal)) :: Sets the numerical base to 10.
-((hex)) :: Sets the numerical base to 16.
+((base)) _( -- addr )_ :: _addr_ is the address of a cell that holds the numerical base.
+((decimal)) :: Set the numerical base to 10.
+((hex)) :: Set the numerical base to 16.
 
 === Double
 
 The following words use double-cell integers. On the stack, the cell containing the most significant part of a double-cell integer is above the cell containing the least significant part.
 
-((dabs)) _( d -- ud )_ :: Produces the absolute value of _d_.
-((dnegate)) _( d -- d )_ :: Negates the double-cell integer _d_.
-((s>d)) _( n -- d )_ :: Converts the number n to the double-cell number _d_.
+((dabs)) _( d -- ud )_ :: Produce the absolute value of _d_.
+((dnegate)) _( d -- d )_ :: Negate the double-cell integer _d_.
+((s>d)) _( n -- d )_ :: Convert the number n to the double-cell number _d_.
 ((m+)) _( d n -- d )_ :: Add _n_ to double-cell number _d_.
 ((m*)) _( a b -- d )_ :: Multiply _a_ with _b_, producing a double-cell value.
 ((um*)) _( a b -- ud )_ :: Multiply _a_ with _b_, giving the unsigned double-cell number _ud_.
@@ -192,9 +192,9 @@ if ... ((else)) ... then :: condition IF true-part ELSE false-part THEN rest
 
 ((i)), ((j)) :: Variables to be used inside `do` .. `loop` constructs. `i` gives inner loop index, `j` gives outer loop index.
 
-((leave)) :: Leaves the innermost loop.
+((leave)) :: Leave the innermost loop.
 
-((unloop)) :: Discards the loop-control parameters. Allows clean <<exit>> from within a loop.
+((unloop)) :: Discard the loop-control parameters. Allows clean <<exit>> from within a loop.
 
 ----
 : x 0 0 do unloop exit loop ;
@@ -223,23 +223,23 @@ case
 
 === Input
 
-((key)) _( -- c )_ :: Gets one character from the keyboard.
-((key?)) _( -- flag )_ :: Returns true if a character is available for `key`.
-((getc)) _( -- c )_ :: Consumes the next character from the input buffer and increases `>in` by one. If no characters are available, the input buffer is refilled as needed.
-((char)) _( -- c )_ :: Parses the next word, delimited by a space, and puts its first character on the stack.
-((>in)) _( -- addr )_ :: Gives the address of a cell containing the offset in characters from the start of the input buffer to the start of the parse area.
-((refill)) _( -- flag )_ :: Attempts to fill the input buffer from the input source, returning true if successful.
-((source)) _( -- caddr u )_ :: Gives the address of, and number of characters in, the input buffer.
-((source-id)) _( -- n )_ :: Returns 0 if current input is keyboard, -1 if it is a string from `evaluate`, or the current file id.
-((word)) _( delim -- addr )_ :: Reads a word from input, using delimiter _delim_, and puts the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.
-((parse-name)) _( name -- caddr u )_ :: Reads a word from input, delimited by whitespace. Skips leading spaces.
-((interpret)) _( -- value )_ :: Interprets a word from input and puts it on the stack.
-((accept)) _( addr u -- u )_ :: Receive a string of at most u characters into the buffer that starts at addr. Returns how many characters were received.
+((key)) _( -- c )_ :: Get one character from the keyboard.
+((key?)) _( -- flag )_ :: Return true if a character is available for `key`.
+((getc)) _( -- c )_ :: Consume the next character from the input buffer and increases `>in` by one. If no characters are available, the input buffer is refilled as needed.
+((char)) _( -- c )_ :: Parse the next word, delimited by a space, and puts its first character on the stack.
+((>in)) _( -- addr )_ :: Give the address of a cell containing the offset in characters from the start of the input buffer to the start of the parse area.
+((refill)) _( -- flag )_ :: Attempt to fill the input buffer from the input source, returning true if successful.
+((source)) _( -- caddr u )_ :: Give the address of, and number of characters in, the input buffer.
+((source-id)) _( -- n )_ :: Return 0 if current input is keyboard, -1 if it is a string from `evaluate`, or the current file id.
+((word)) _( delim -- addr )_ :: Read a word from input, using delimiter _delim_, and puts the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.
+((parse-name)) _( name -- caddr u )_ :: Read a word from input, delimited by whitespace. Skips leading spaces.
+((interpret)) _( -- value )_ :: Interpret a word from input and puts it on the stack.
+((accept)) _( addr u -- u )_ :: Receive a string of at most u characters into the buffer that starts at addr. Return how many characters were received.
 ((evaluate)) _( addr len -- )_ :: Evaluate the given string.
-((abort)) :: Empties the data stack and performs `quit`.
+((abort)) :: Clear the data stack and perform `quit`.
 ((abort")) _ccc" ( f -- )_  :: If _f_ is true, print _ccc_ and `abort`. Typical use: `: x ... test abort" error" ... ;`
-((quit)) :: Enters an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting I/O.
-((pad)) _( -- addr )_ :: Address of the `pad`, a 161-byte memory region that can be used freely by user words.
+((quit)) :: Enter an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting I/O.
+((pad)) _( -- addr )_ :: _addr_ is the address of the `pad`, a 161-byte memory region that can be used freely by user words.
 No built-in words will modify this region.
 
 === Strings
@@ -247,20 +247,20 @@ No built-in words will modify this region.
 ((.()) :: Print a string. Example: `.( foo)`
 ((.")) :: Compile-time version of `.(`. Example: `: foo ." bar" ;`
 ((s")) _( -- caddr u )_ :: Define a string. Compile-time only! Example: `s" foo"`.
-((count)) _( str -- caddr u )_ :: Returns data address and length of the counted string _str_.
-((type)) _( caddr u -- )_ :: Prints a string.
-((/string)) _( caddr u n -- caddr+n u-n )_ :: Adjusts the string by _n_ characters.
+((count)) _( str -- caddr u )_ :: Return data address and length of the counted string _str_.
+((type)) _( caddr u -- )_ :: Print a string.
+((/string)) _( caddr u n -- caddr+n u-n )_ :: Adjust the string by _n_ characters.
 
 === Number Formatting
 
 For more info about number formatting, read Starting Forth.
 
-((<#)) :: Begins the number conversion process.
-((#)) _( ud -- ud )_ :: Converts one digit and puts it in the start of the output string.
-((#s)) _( ud -- ud )_ :: Calls `#` and repeats until _ud_ is zero.
-((hold)) _( ch -- )_ :: Inserts the character `ch` at the start of the output string.
-((sign)) _( a -- )_ :: If _a_ is negative, inserts a minus sign at the start of the output string.
-((#>)) _( xd -- addr u )_ :: Drops _xd_ and returns the output string.
+((<#)) :: Begin the number conversion process.
+((#)) _( ud -- ud )_ :: Convert one digit and puts it in the start of the output string.
+((#s)) _( ud -- ud )_ :: Call `#` and repeats until _ud_ is zero.
+((hold)) _( ch -- )_ :: Insert the character `ch` at the start of the output string.
+((sign)) _( a -- )_ :: If _a_ is negative, insert a minus sign at the start of the output string.
+((#>)) _( xd -- addr u )_ :: Drop _xd_ and returns the output string.
 
 === Vectored Execution
 
@@ -289,8 +289,8 @@ If the definition is immediate, also return 1, otherwise also return -1.
 ((loadb)) _( filenameptr filenamelen dst -- endaddr )_ :: Load binary data to _dst_.
 Returns 0 on failure, otherwise address after last written byte.
 ((saveb)) _( start end filenameptr filenamelength -- )_ :: Save binary data.
-((device)) _( device# -- )_ :: Switches the active device.
-((save-forth)) _( "filename" -- )_ :: Saves the forth to the given filename.
+((device)) _( device# -- )_ :: Switch the active device.
+((save-forth)) _( "filename" -- )_ :: Save the forth to the given filename.
 ((ls)) :: Load and print disk directory with optional drive # and wildcards. Example: `ls $1:*=p` Load directory for drive 1, only prg files.
 ((rdir)) _( addr -- )_ :: Display disk directory previously loaded to addr.
 
@@ -298,13 +298,13 @@ Returns 0 on failure, otherwise address after last written byte.
 
 Words for sending DOS commands to drives and reading drive status are available by including the `dos` module.
 
-((send-cmd)) _( c-addr u -- )_ :: Writes the given string to secondary address 15 on the current device, and prints the drive's response. The following example defines a word, `backup` that creates a copy of `durexforth` called `backup`:
+((send-cmd)) _( c-addr u -- )_ :: Write the given string to secondary address 15 on the current device, and print the drive's response. The following example defines a word, `backup` that creates a copy of `durexforth` called `backup`:
 ----
 : backup s" copy0:backup=durexforth" send-cmd ;
 backup
 ----
 
-((dos)) ( "cmd" -- )] Sends _cmd_ to the current device's command channel, and prints the response. Note that the remainder of the line is treated as part of the command. This makes it possible to refer to file names that contain spaces, but means that `dos` and its command should be on their own line, or the last words on a line. Example: `dos scratch0:old file` will delete a file named _old file_.
+((dos)) ( "cmd" -- )] Send _cmd_ to the current device's command channel, and print the response. Note that the remainder of the line is treated as part of the command. This makes it possible to refer to file names that contain spaces, but means that `dos` and its command should be on their own line, or the last words on a line. Example: `dos scratch0:old file` will delete a file named _old file_.
 
 ==== Low-Level Device I/O
 
@@ -313,12 +313,12 @@ For more advanced uses, words corresponding to the standard Commodore Kernal IO 
 ((open)) _( filenameptr filenamelength file# secondary-addr -- ioresult )_ :: Open a logical file.
 ((chkin)) _( file# -- ioresult )_ :: Use a logical file as input device.
 ((chkout)) _( file# -- ioresult )_ :: Use a logical file as output device.
-((clrchn)) _( -- )_ :: Resets input and output to the keyboard and screen.
+((clrchn)) _( -- )_ :: Reset input and output to the keyboard and screen.
 ((close)) _( file# -- )_ :: Close a logical file.
-((readst)) _( -- status )_ :: Returns the status of the last IO operation.
+((readst)) _( -- status )_ :: Return the status of the last IO operation.
 For serial-bus devices, `$01` = write timeout, `$02` = read timeout, `$40` = end of file (EOI), `$80` = device not present.
-((chrin)) _( -- char)_ :: Reads a character from the current input device.
-((ioabort)) _( ioresult -- )_ Handles error conditions for `open`, `chkin` and `chkout`. On failure, print error message and abort.
+((chrin)) _( -- char)_ :: Read a character from the current input device.
+((ioabort)) _( ioresult -- )_ Handle error conditions for `open`, `chkin` and `chkout`. On failure, print error message and abort.
 
 As per the underlying Kernal routines, `chrin` does not check for end-of-file or any other error condition. `readst` should be called to ensure that the returned character is valid.
 
@@ -344,10 +344,10 @@ The `compat` module contains various words that are not deemed necessary for enj
 ((chars)) _( -- )_ :: No-op
 ((2@)) _( addr -- x1 x2 )_ :: Fetch 32-bit value from _addr_. _x2_ is stored at _addr_, and _x1_ is stored at _addr_ + 2.
 ((2!)) _( x1 x2 addr -- )_ :: Store 32-bit value to _addr_. _x2_ is stored at _addr_, and _x1_ is stored at _addr_ + 2.
-((2over)) _( a b c d -- a b c d a b )_ :: Copies cell pair _a_ _b_ to top of stack.
-((2swap)) _( a b c d -- c d a b )_ :: Exchanges the top two cell pairs.
-((>number)) _( ud addr u -- ud addr2 u2 )_ :: Converts the string in _addr u_ to digits, using `base`, and adds each digit into _ud_ after multiplying it with `base`. _addr2 u2_ contains the part of the string that was not converted.
-((>body)) _( xt -- addr )_ :: Returns the data field address that belongs to the execution token. Example use: `' foo >body`
+((2over)) _( a b c d -- a b c d a b )_ :: Copy cell pair _a_ _b_ to top of stack.
+((2swap)) _( a b c d -- c d a b )_ :: Exchange the top two cell pairs.
+((>number)) _( ud addr u -- ud addr2 u2 )_ :: Convert the string in _addr u_ to digits, using `base`, and adds each digit into _ud_ after multiplying it with `base`. _addr2 u2_ contains the part of the string that was not converted.
+((>body)) _( xt -- addr )_ :: Return the data field address that belongs to the execution token. Example use: `' foo >body`
 ((sm/rem)) _( d n -- r q )_ :: Divide double-cell number _d_ by _n_, giving the symmetric quotient _q_ and the remainder _r_. Values are signed.
 
 === Kernel Calls
@@ -362,14 +362,14 @@ These words are available by including `turnkey`.
 
 ((top)) _( -- addr )_ :: Address of the top of the dictionary, default: $9fff.
 
-((top!)) _( addr -- )_ :: Relocates the dictionary to _addr_. Example:
+((top!)) _( addr -- )_ :: Relocate the dictionary to _addr_. Example:
 
 ----
 \ not using $a000 block, give all memory to dictionary
 $cbff top!
 ----
 
-((save-pack)) _( "filename" -- )_ :: Saves a compact version of forth to the given _filename_.
-((save-prg)) _( "filename" -- )_ :: Saves a forth program with no dictionary to _filename_.
+((save-pack)) _( "filename" -- )_ :: Save a compact version of forth to the given _filename_.
+((save-prg)) _( "filename" -- )_ :: Save a forth program with no dictionary to _filename_.
 
 Further details on the use of these words are outlined in <<_turn_key_operation>>.
