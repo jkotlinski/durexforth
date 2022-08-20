@@ -73,6 +73,5 @@ docs/index.html: adoc/index.adoc adoc/words.adoc adoc/links.adoc adoc/sid.adoc a
 	mv index.chunked docs
 
 clean:
-	$(MAKE) -C docs clean
 	rm -f *.lbl *.prg *.$(DISK_SUF)
 	rm -rf build deploy
