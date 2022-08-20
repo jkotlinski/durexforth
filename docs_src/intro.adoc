@@ -1,6 +1,8 @@
-=== Forth, the Language ===
+=== What is durexForth?
 
-==== Why Forth? ====
+durexForth is an interactive development environment that runs on the Commodore 64. It is based on the Forth programming language.
+
+=== Why Forth?
 
 Forth is a unique language. What is so special about it? It is a small, low-level language, which can easily be extended to a high-level, domain-specific language that does anything you want it to. Compared to C64 Basic, Forth is more attractive in almost every way. It is a lot faster, more memory effective, and more powerful.
 
@@ -9,7 +11,7 @@ with text editor, compiler, assembler and debugger. It makes for a more interact
 
 For a Forth introduction, refer to the excellent http://www.forth.com/starting-forth/[Starting Forth] by Leo Brodie.
 
-==== Comparing to other Forths ====
+=== Comparing to other Forths
 
 There are other Forths for C64, most notably Blazin' Forth. Blazin' Forth is excellent, but durexForth has some advantages:
 
