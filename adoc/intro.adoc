@@ -7,9 +7,7 @@ Forth is a unique language. What is so special about it? It is a small, low-leve
 Compared to C, the nice thing about Forth is that you can run the full development environment on your C64,
 with text editor, compiler, assembler and debugger. It makes for a more interactive and fun experience than running a cross-compiler on PC.
 
-For a Forth introduction, please refer to the excellent
-http://www.forth.com/starting-forth/[Starting Forth] by Leo Brodie. As a follow-up, I
-recommend http://thinking-forth.sourceforge.net/[Thinking Forth] by the same author.
+For a Forth introduction, refer to the excellent http://www.forth.com/starting-forth/[Starting Forth] by Leo Brodie.
 
 ==== Comparing to other Forths ====
 
