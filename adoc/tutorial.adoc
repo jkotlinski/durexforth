@@ -26,7 +26,7 @@ Now, enter the following lines...
 ----
 
 ...and then press &larr; to leave insert mode.
-Press _F7_ to compile and run. If everything is entered right, you will be facing a beautiful color cycle.
+Press _F7_ to compile and run. If everything is entered right, you will see a beautiful color cycle.
 
 When you finished watching, press _RESTORE_ to quit your program, then enter +v+ to reopen the editor.
 
