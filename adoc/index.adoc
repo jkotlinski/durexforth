@@ -1,4 +1,6 @@
 = durexForth: Operators Manual
+Johan Kotlinski; Kevin Lee Reno; Poindexter Frink; Richard Halkyard
+include::../build/revision.adoc[]
 :toc:
 
 == Introduction
@@ -45,16 +47,8 @@ include::anatomy.adoc[]
 include::links.adoc[]
 
 [appendix]
-== Authors and Contributors
-
-Johan Kotlinski:: Project initiator and maintainer.
-Mats Andr&eacute;n:: Contributed disk I/O primitives.
-
-_This list is incomplete. Let me know if you want to be on this list._
-
-[appendix]
 == License
-include::license.adoc[]
+include::../LICENSE.md[]
 
 [index]
 == Word Index
