@@ -31,8 +31,6 @@ all: $(DISK_IMAGE)
 deploy: $(DISK_IMAGE) cart.asm
 	rm -rf deploy
 	mkdir deploy
-	$(MAKE) -C docs
-	cp docs/durexforth.pdf deploy/$(DEPLOY_NAME).pdf
 	cp $(DISK_IMAGE) deploy/$(DEPLOY_NAME).$(DISK_SUF)
 	$(X64) $(X64_OPTS) deploy/$(DEPLOY_NAME).$(DISK_SUF)
 	# make cartridge
