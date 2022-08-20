@@ -32,3 +32,8 @@ Forth Interest Group UK. Public domain.
 UM/MOD
 Copyright (c) 2002 Garth Wilson. Public domain.
 ----
+
+----
+petcom.c
+Copyright (c) 1995 Craig Bruce. Public domain.
+----

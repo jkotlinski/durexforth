@@ -4,23 +4,23 @@ here        ( push current addr )
 $d020 inc,  ( inc $d020 )
 jmp,        ( jump to pushed addr )
 ;code</pre><p>It is also possible to inline assembly code into a regular Forth word, as seen in the tutorial:</p><pre class="screen">: flash begin [ $d020 inc, ] again ;</pre><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_variables_3"></a>8.1. Variables</h3></div></div></div><p>DurexForth has a few variables that are specifically meant to be used within code words.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059574976" class="indexterm"></a>lsb <span class="emphasis"><em>( — addr )</em></span> 
+<a id="idp15059573936" class="indexterm"></a>lsb <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
 Points to the top of the LSB parameter stack. Together with the <code class="literal">x</code> register, it can be used to access stack contents.
 </dd><dt><span class="term">
-<a id="idp15059578480" class="indexterm"></a>msb <span class="emphasis"><em>( — addr )</em></span> 
+<a id="idp15059577440" class="indexterm"></a>msb <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
 Points to the top of the MSB parameter stack. Together with the <code class="literal">x</code> register, it can be used to access stack contents.
 </dd><dt><span class="term">
-<a id="idp15059581984" class="indexterm"></a>w <span class="emphasis"><em>( — addr )</em></span> 
+<a id="idp15059580944" class="indexterm"></a>w <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
 A zero-page cell that code words may use freely as work area.
 </dd><dt><span class="term">
-<a id="idp15059584800" class="indexterm"></a>w2 <span class="emphasis"><em>( — addr )</em></span> 
+<a id="idp15059583760" class="indexterm"></a>w2 <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
 Second zero-page work area cell.
 </dd><dt><span class="term">
-<a id="idp15059587552" class="indexterm"></a>w3 <span class="emphasis"><em>( — addr )</em></span> 
+<a id="idp15059586512" class="indexterm"></a>w3 <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
 Third zero-page work area cell.
 </dd></dl></div><p>Example usage of <code class="literal">lsb</code> and <code class="literal">msb</code>:</p><pre class="screen">code + ( n1 n2 -- sum )
@@ -33,30 +33,30 @@ msb adc,x      ( add n2 msb )
 msb 1+ sta,x   ( store to n2 msb )
 inx,           ( drop n2; n1 = sum )
 ;code</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_branches"></a>8.2. Branches</h3></div></div></div><p>The assembler supports forward and backward branches. These branches cannot overlap each other, so their usage is limited to simple cases.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059595152" class="indexterm"></a>+branch <span class="emphasis"><em>( — addr )</em></span> 
+<a id="idp15059594112" class="indexterm"></a>+branch <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
 Forward branch.
 </dd><dt><span class="term">
-<a id="idp15059597824" class="indexterm"></a>:+ <span class="emphasis"><em>( addr — )</em></span> 
+<a id="idp15059596784" class="indexterm"></a>:+ <span class="emphasis"><em>( addr — )</em></span> 
 </span></dt><dd>
 Forward branch target.
 </dd><dt><span class="term">
-<a id="idp15059600496" class="indexterm"></a>:- <span class="emphasis"><em>( — addr )</em></span> 
+<a id="idp15059599456" class="indexterm"></a>:- <span class="emphasis"><em>( — addr )</em></span> 
 </span></dt><dd>
 Backward branch target.
 </dd><dt><span class="term">
-<a id="idp15059603168" class="indexterm"></a>-branch <span class="emphasis"><em>( addr — )</em></span> 
+<a id="idp15059602128" class="indexterm"></a>-branch <span class="emphasis"><em>( addr — )</em></span> 
 </span></dt><dd>
 Backward branch.
 </dd></dl></div><p>Example of a forward branch:</p><pre class="screen">foo lda,
 +branch beq,
 bar inc, :+</pre><p>Example of a backward branch:</p><pre class="screen">:- $d014 lda, f4 cmp,#
 -branch bne,</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_labels"></a>8.3. Labels</h3></div></div></div><p>The <code class="literal">labels</code> module adds support for more complicated flows where branches can overlap freely. These branches are resolved by the <code class="literal">;code</code> word, so it is not possible to branch past it.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
-<a id="idp15059611088" class="indexterm"></a>@: <span class="emphasis"><em>( n — )</em></span> 
+<a id="idp15059610048" class="indexterm"></a>@: <span class="emphasis"><em>( n — )</em></span> 
 </span></dt><dd>
 Creates the assembly label <span class="emphasis"><em>n</em></span>, where <span class="emphasis"><em>n</em></span> is a number in range [0, 255].
 </dd><dt><span class="term">
-<a id="idp15059614608" class="indexterm"></a>@@ <span class="emphasis"><em>( n — )</em></span> 
+<a id="idp15059613568" class="indexterm"></a>@@ <span class="emphasis"><em>( n — )</em></span> 
 </span></dt><dd>
 Compiles a branch to the label <span class="emphasis"><em>n</em></span>.
 </dd></dl></div><p>Example:</p><pre class="screen">code checkers
