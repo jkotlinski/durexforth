@@ -18,8 +18,8 @@ It is also possible to inline assembly code into a regular Forth word, as seen i
 
 DurexForth has a few variables that are specifically meant to be used within code words.
 
-((lsb)) _( -- addr )_ :: Points to the top of the LSB parameter stack. Together with the `x` register, it can be used to access stack contents.
-((msb)) _( -- addr )_ :: Points to the top of the MSB parameter stack. Together with the `x` register, it can be used to access stack contents.
+((lsb)) _( -- addr )_ :: _addr_ points to the top of the LSB parameter stack. Together with the `x` register, it can be used to access stack contents.
+((msb)) _( -- addr )_ :: _addr_ points to the top of the MSB parameter stack. Together with the `x` register, it can be used to access stack contents.
 ((w)) _( -- addr )_ :: A zero-page cell that code words may use freely as work area.
 ((w2)) _( -- addr )_ :: Second zero-page work area cell.
 ((w3)) _( -- addr )_ :: Third zero-page work area cell.
@@ -67,8 +67,8 @@ Example of a backward branch:
 
 The `labels` module adds support for more complicated flows where branches can overlap freely. These branches are resolved by the `;code` word, so it is not possible to branch past it.
 
-((@:)) _( n -- )_ :: Creates the assembly label _n_, where _n_ is a number in range [0, 255].
-((@@)) _( n -- )_ :: Compiles a branch to the label _n_.
+((@:)) _( n -- )_ :: Create the assembly label _n_, where _n_ is a number in range [0, 255].
+((@@)) _( n -- )_ :: Compile a branch to the label _n_.
 
 Example:
 
