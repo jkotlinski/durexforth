@@ -1,0 +1,81 @@
+DurexForth features a simple but useful 6510 assembler with support for branches and labels. Assembly code is typically used within a `code` word, as in the tutorial example:
+
+----
+code flash
+here        ( push current addr )
+$d020 inc,  ( inc $d020 )
+jmp,        ( jump to pushed addr )
+;code
+----
+
+It is also possible to inline assembly code into a regular Forth word, as seen in the tutorial:
+
+----
+: flash begin [ $d020 inc, ] again ;
+----
+
+=== Variables
+
+DurexForth has a few variables that are specifically meant to be used within code words.
+
+[[lsb]] ((lsb)) _( -- addr )_ :: _addr_ points to the top of the LSB parameter stack. Together with the `x` register, it can be used to access stack contents.
+[[msb]] ((msb)) _( -- addr )_ :: _addr_ points to the top of the MSB parameter stack. Together with the `x` register, it can be used to access stack contents.
+[[w]] ((w)) _( -- addr )_ :: A zero-page cell that code words may use freely as work area.
+[[w2]] ((w2)) _( -- addr )_ :: Second zero-page work area cell.
+[[w3]] ((w3)) _( -- addr )_ :: Third zero-page work area cell.
+
+Example usage of `lsb` and `msb`:
+
+----
+code + ( n1 n2 -- sum )
+clc,           ( clear carry )
+lsb 1+ lda,x   ( load n1 lsb )
+lsb adc,x      ( add n2 lsb )
+lsb 1+ sta,x   ( store to n1 lsb )
+msb 1+ lda,x   ( load n1 msb )
+msb adc,x      ( add n2 msb )
+msb 1+ sta,x   ( store to n2 msb )
+inx,           ( drop n2; n1 = sum )
+;code
+----
+
+=== Branches
+
+The assembler supports forward and backward branches. These branches cannot overlap each other, so their usage is limited to simple cases.
+
+((+branch)) _( -- addr )_ :: Forward branch.
+((:+)) _( addr -- )_ :: Forward branch target.
+((:-)) _( -- addr )_ :: Backward branch target.
+((-branch)) _( addr -- )_ :: Backward branch.
+
+Example of a forward branch:
+
+----
+foo lda,
++branch beq,
+bar inc, :+
+----
+
+Example of a backward branch:
+
+----
+:- $d014 lda, f4 cmp,#
+-branch bne,
+----
+
+=== Labels
+
+The `labels` module adds support for more complicated flows where branches can overlap freely. These branches are resolved by the `;code` word, so it is not possible to branch past it.
+
+((@:)) _( n -- )_ :: Create the assembly label _n_, where _n_ is a number in range [0, 255].
+((@@)) _( n -- )_ :: Compile a branch to the label _n_.
+
+Example:
+
+----
+code checkers
+$7f lda,# 0 ldy,# 'l' @:
+$400 sta,y $500 sta,y
+$600 sta,y $700 sta,y
+dey, 'l' @@ bne, ;code
+----

@@ -1,0 +1,37 @@
+Stack overflow and underflow are common causes for errors and crashes.
+Simply put, the data stack must not contain too many or too few items.
+This section describes some techniques to avoid such errors.
+
+One helpful technique to avoid stack crashes is to add comments about stack usage.
+In this example, we imagine a graphics word "drawbox" that draws a black box.
++( color -- )+ indicates that it takes one argument on stack, and on exit it should
+leave nothing on the stack.
+The comments inside the word (starting with &pound;) indicate what the stack
+looks like after the line has executed.
+
+----
+: drawbox ( color -- )
+10 begin dup 20 < while £ color x
+10 begin dup 20 < while £ color x y
+2dup £ color x y x y
+4 pick £ color x y x y color
+blkcol £ color x y
+1+ repeat drop £ color x
+1+ repeat 2drop ;
+----
+
+Once the word is working as supposed, it may be nice to again remove the comments, as
+they are no longer very interesting to read.
+
+NOTE: The Forth standard defines backslash (\) as the line comment character, but the C64 lacks a real backslash. Moreover, ASCII \ and PETSCII &pound; both map to $5c. Therefore, the &pound; character is used as a substitution on the C64.
+
+Another useful technique during development is to check at the end of your main loop
+that the stack depth is what you expect it to. This will catch stack underflows
+and overflows.
+
+----
+: mainloop begin
+( do stuff here... )
+depth abort" depth not 0"
+again ;
+----

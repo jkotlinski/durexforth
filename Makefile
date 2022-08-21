@@ -31,8 +31,6 @@ all: $(DISK_IMAGE)
 deploy: $(DISK_IMAGE) cart.asm
 	rm -rf deploy
 	mkdir deploy
-	$(MAKE) -C docs
-	cp docs/durexforth.pdf deploy/$(DEPLOY_NAME).pdf
 	cp $(DISK_IMAGE) deploy/$(DEPLOY_NAME).$(DISK_SUF)
 	$(X64) $(X64_OPTS) deploy/$(DEPLOY_NAME).$(DISK_SUF)
 	# make cartridge
@@ -62,7 +60,18 @@ $(DISK_IMAGE): durexforth.prg Makefile ext/petcom $(SRCS)
 	echo >>build/c1541.script write build/empty $(SEPARATOR_NAME3)
 	c1541 <build/c1541.script
 
+docs: docs/index.html
+
+docs/index.html: docs_src/index.adoc docs_src/words.adoc docs_src/links.adoc docs_src/sid.adoc docs_src/asm.adoc \
+	docs_src/mnemonics.adoc docs_src/memmap.adoc docs_src/anatomy.adoc LICENSE.md docs_src/tutorial.adoc \
+	docs_src/intro.adoc
+	mkdir -p build
+	git describe --tags --dirty | tr '\n' , > build/revision.adoc
+	git log -1 --format=%as >> build/revision.adoc
+	rm -rf docs
+	a2x --icons -f chunked docs_src/index.adoc -D .
+	mv index.chunked docs
+
 clean:
-	$(MAKE) -C docs clean
 	rm -f *.lbl *.prg *.$(DISK_SUF)
 	rm -rf build deploy

@@ -1,0 +1,26 @@
+Forth Books and Papers::
+- https://www.forth.com/starting-forth/[Starting Forth]
+- http://thinking-forth.sourceforge.net/[Thinking Forth]
+- https://www.bradrodriguez.com/papers/[Moving Forth: a series on writing Forth kernels]
+- http://forth.org/[Forth Interest Group]
+- https://archive.org/details/transactor-magazines-v7-i05/page/n59/mode/2up[Blazin' Forth --- An inside look at the Blazin' Forth compiler]
+- https://www.drdobbs.com/architecture-and-design/the-evolution-of-forth-an-unusual-langua/228700557[The Evolution of FORTH, an unusual language]
+- https://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm[A Beginner's Guide to Forth]
+
+Other Forths::
+- https://colorforth.github.io/[colorForth]
+- https://gforth.org/[Gforth]
+- https://github.com/nornagon/jonesforth[jonesforth]
+- https://github.com/chitselb/pettil[PETTIL]
+- https://github.com/forth-ev/VolksForth[volksFORTH]
+
+Forth Standards::
+- https://forth-standard.org/[Forth 2012 Standard]
+- https://www.taygeta.com/forth/dpans.html[ANS Forth]
+- http://forth.sourceforge.net/standard/fst83/[FORTH-83 STANDARD]
+- https://atariwiki.org/wiki/attach/Forth79/Forth-79-OCR.pdf[FORTH-79 STANDARD]
+
+C64 References::
+- https://codebase64.org/[Codebase 64]
+- http://unusedino.de/ec64/technical/aay/c64/[All About Your C64]
+- https://project64.c64.org/Software/mapc6411.txt[Mapping the Commodore 64]
