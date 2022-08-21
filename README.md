@@ -2,15 +2,15 @@
 
 Modern C64 Forth. Includes a vi clone written in Forth, a high-resolution graphics library, plus MML music support.
 
+### Download
+
+[Latest Release](https://github.com/jkotlinski/durexforth/releases) :: [Manual](https://jkotlinski.github.io/durexforth/)
+
 ### Goals
 
 * Fun. The system should be nice to work with on the real machine.
 * Fast. DurexForth is the <a href=https://theultimatebenchmark.org/>fastest</a> C64 Forth, running at ~50x the speed of Basic V2!
 * Easy to use. Implements the <a href=http://forth-standard.org/standard/words>Forth 2012</a> core standard, learn it with <a href=https://www.forth.com/starting-forth/>Starting Forth</a>!
-
-### Download
-
-[Latest Release](https://github.com/jkotlinski/durexforth/releases) :: [Manual](https://jkotlinski.github.io/durexforth/)
 
 ### Testimonials
 
