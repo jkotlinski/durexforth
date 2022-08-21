@@ -38,7 +38,7 @@ deploy: $(DISK_IMAGE) cart.asm
 	mv durexforth build/durexforth
 	@$(AS) cart.asm
 	cartconv -t simon -i build/cart.bin -o deploy/$(DEPLOY_NAME).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
-	asciidoctor-pdf -a revnumber=$(shell git describe --tags --dirty) -a revdate=$(shell git log -1 --format=%as) -o deploy/$(DEPLOY_NAME).pdf docs_src/index.adoc
+	asciidoctor-pdf -o deploy/$(DEPLOY_NAME).pdf docs_src/index.adoc
 
 durexforth.prg: *.asm
 	@$(AS) durexforth.asm
