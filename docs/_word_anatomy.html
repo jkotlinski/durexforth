@@ -442,7 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
              .nav-footer{text-align: center; margin-top: auto;}
              .nav-footer > p > a {white-space: nowrap;}</style>
 </head>
-<body id="index" class="article">
+<body id="_word_anatomy" class="article">
 <div id="header">
 <h1>durexForth: Operators Manual</h1>
 <div class="details">
@@ -455,99 +455,67 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="_word_anatomy">Appendix C: Word Anatomy</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This manual is for durexForth, a modern Forth system for the Commodore 64.</p>
+<p>Let us define a word and see what it gets compiled to.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: bg $d020 c! ;</pre>
 </div>
 </div>
-<div id="toc" class="toc">
-<div id="toctitle">Table of Contents</div>
-<p><span class="toc-root toc-current"><a href="index.html">durexForth: Operators Manual</a></span></p><ul class="sectlevel1">
-<li><a href="_introduction.html">Introduction</a>
-</li>
-<li><a href="_tutorial.html">Tutorial</a>
-</li>
-<li><a href="_editor.html">Editor</a>
-</li>
-<li><a href="_forth_words.html">Forth Words</a>
-</li>
-<li><a href="_graphics_2.html">Graphics</a>
-</li>
-<li><a href="_sid.html">SID</a>
-</li>
-<li><a href="_music_2.html">Music</a>
-</li>
-<li><a href="_assembler_2.html">Assembler</a>
-</li>
-<li><a href="_configuring_durexforth.html">Configuring durexForth</a>
-</li>
-<li><a href="_assembler_mnemonics.html">Appendix G: Assembler Mnemonics</a>
-</li>
-<li><a href="_memory_map.html">Appendix H: Memory Map</a>
-</li>
-<li><a href="_word_anatomy.html">Appendix I: Word Anatomy</a>
-</li>
-<li><a href="_avoiding_stack_crashes.html">Appendix J: Avoiding Stack Crashes</a>
-</li>
-<li><a href="_internet_resources.html">Appendix K: Internet Resources</a>
-</li>
-<li><a href="_license.html">Appendix L: License</a>
-</li>
-</ul>
+<div class="paragraph">
+<p>Information about the word is split into two areas of memory, the dictionary and the code/data space. Code and data are placed in an upward-growing segment starting at $801, and the dictionary grows downward from <code>top</code>. <code>latest</code> points to the last dictionary record. A dictionary record consists of a counted string with flags, and an execution token (<em>xt</em>).</p>
+</div>
+<div class="paragraph">
+<p>To inspect the dictionary entry, type <code>latest dump</code>. You should see something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>6228  02 42 47 fd 39 28 39 01 .bg.9(9.
+...</pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="_introduction.html">Introduction</a></p>
-</li>
-<li>
-<p><a href="_tutorial.html">Tutorial</a></p>
-</li>
-<li>
-<p><a href="_editor.html">Editor</a></p>
-</li>
-<li>
-<p><a href="_forth_words.html">Forth Words</a></p>
-</li>
-<li>
-<p><a href="_graphics_2.html">Graphics</a></p>
-</li>
-<li>
-<p><a href="_sid.html">SID</a></p>
-</li>
-<li>
-<p><a href="_music_2.html">Music</a></p>
-</li>
-<li>
-<p><a href="_assembler_2.html">Assembler</a></p>
-</li>
-<li>
-<p><a href="_configuring_durexforth.html">Configuring durexForth</a></p>
-</li>
-<li>
-<p><a href="_assembler_mnemonics.html">Appendix A: Assembler Mnemonics</a></p>
-</li>
-<li>
-<p><a href="_memory_map.html">Appendix B: Memory Map</a></p>
-</li>
-<li>
-<p><a href="_word_anatomy.html">Appendix C: Word Anatomy</a></p>
-</li>
-<li>
-<p><a href="_avoiding_stack_crashes.html">Appendix D: Avoiding Stack Crashes</a></p>
-</li>
-<li>
-<p><a href="_internet_resources.html">Appendix E: Internet Resources</a></p>
-</li>
-<li>
-<p><a href="_license.html">Appendix F: License</a></p>
-</li>
-</ul>
+<div class="paragraph">
+<p>For this run, the name token of <code>bg</code> is placed at address $6228. The first byte, <code>02</code>, is the name length (<code>bg</code> has two characters). After that, the string <code>bg</code> follows. ($42 = <code>b</code>, $47 = <code>g</code>). The final two bytes contain the execution token of <code>bg</code>, starting at $39fd.</p>
+</div>
+<div class="paragraph">
+<p>The name length byte is also used to store special attributes of the word. Bit 7 is "immediate" flag, which means that the word should execute immediately instead of being compiled into word definitions. (<code>(</code> is such an example of an immediate word that does not get compiled.) Bit 6 is the "no-tail-call-elimination" flag, which makes sure that tail call elimination (the practice of replacing jsr/rts with jmp) is not performed if this word is the jsr target. Since <code>bg</code> does not have these flags set, bits 7 and 6 are both clear.</p>
+</div>
+<div class="paragraph">
+<p>We saw that the <code>bg</code> execution token is $39fd. To inspect the code, type <code>$39fd dump</code> or <code>latest &gt;xt dump</code>.</p>
+</div>
+<div class="paragraph">
+<p>The code section contains pure 6502 machine code.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>39fd  20 15 11 20 d0 4c 0e 09  .. Pl..
+...</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">20 15 11 </dt>
+<dd>
+<p><code>jsr $1115</code>. $1115 is the address of the <code>lit</code> code. <code>lit</code> copies the two following bytes to parameter stack.</p>
+</dd>
+<dt class="hdlist1">20 d0 </dt>
+<dd>
+<p><code>$d020</code>. The parameter to the <code>lit</code> word. When executed, <code>lit</code> will add $d020 to the parameter stack.</p>
+</dd>
+<dt class="hdlist1">4c 0e 09 </dt>
+<dd>
+<p><code>jmp $90e</code>. $90e is the address of the <code>c!</code> code.</p>
+</dd>
+</dl>
+</div>
+</div>
 </div>
 <div class="paragraph nav-footer">
-<p>Next: <a href="_introduction.html">Introduction</a> →</p>
+<p>← Previous: <a href="_memory_map.html">Appendix B: Memory Map</a> | ↑ Up: <a href="index.html">durexForth: Operators Manual</a> | Next: <a href="_avoiding_stack_crashes.html">Appendix D: Avoiding Stack Crashes</a> →</p>
 </div>
 </div>
 <div id="footer">

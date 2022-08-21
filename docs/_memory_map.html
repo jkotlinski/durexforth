@@ -442,7 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
              .nav-footer{text-align: center; margin-top: auto;}
              .nav-footer > p > a {white-space: nowrap;}</style>
 </head>
-<body id="index" class="article">
+<body id="_memory_map" class="article">
 <div id="header">
 <h1>durexForth: Operators Manual</h1>
 <div class="details">
@@ -455,99 +455,77 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="_memory_map">Appendix B: Memory Map</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This manual is for durexForth, a modern Forth system for the Commodore 64.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">3 - $3a </dt>
+<dd>
+<p>Parameter stack, <a href="#lsb">[lsb]</a> section.</p>
+</dd>
+<dt class="hdlist1">$3b - $72 </dt>
+<dd>
+<p>Parameter stack, <a href="#msb">[msb]</a> section.</p>
+</dd>
+<dt class="hdlist1">$8b - $8c </dt>
+<dd>
+<p><a href="#w">[w]</a> (work area for code words).</p>
+</dd>
+<dt class="hdlist1">$8d - $8e </dt>
+<dd>
+<p><a href="#w2">[w2]</a> (work area for code words).</p>
+</dd>
+<dt class="hdlist1">$9e - $9f </dt>
+<dd>
+<p><a href="#w3">[w3]</a> (work area for code words).</p>
+</dd>
+<dt class="hdlist1">$100 - $1ff </dt>
+<dd>
+<p>Return stack.</p>
+</dd>
+<dt class="hdlist1">$200 - $258 </dt>
+<dd>
+<p>Text input buffer.</p>
+</dd>
+<dt class="hdlist1">$33C - $35A </dt>
+<dd>
+<p><a href="#find">[find]</a> buffer.</p>
+</dd>
+<dt class="hdlist1">$35B - $3FB </dt>
+<dd>
+<p><a href="#pad">[pad]</a> Scratch pad memory, Cassette Buffer, untouched by DurexForth.</p>
+</dd>
+<dt class="hdlist1">$801 - here </dt>
+<dd>
+<p>Forth Kernel followed by code and data space.</p>
+</dd>
+<dt class="hdlist1">latest - $9fff </dt>
+<dd>
+<p>Dictionary. Grows downwards as needed.</p>
+</dd>
+<dt class="hdlist1">$a000 - $cbff </dt>
+<dd>
+<p>Editor text buffer.</p>
+</dd>
+<dt class="hdlist1">$cc00 - $cfff </dt>
+<dd>
+<p>Hi-res graphics colors.</p>
+</dd>
+<dt class="hdlist1">$d000 - $dfff </dt>
+<dd>
+<p>I/O area.</p>
+</dd>
+<dt class="hdlist1">$e000 - $ffff </dt>
+<dd>
+<p>Kernal / hi-res graphics bitmap.</p>
+</dd>
+</dl>
 </div>
 </div>
-<div id="toc" class="toc">
-<div id="toctitle">Table of Contents</div>
-<p><span class="toc-root toc-current"><a href="index.html">durexForth: Operators Manual</a></span></p><ul class="sectlevel1">
-<li><a href="_introduction.html">Introduction</a>
-</li>
-<li><a href="_tutorial.html">Tutorial</a>
-</li>
-<li><a href="_editor.html">Editor</a>
-</li>
-<li><a href="_forth_words.html">Forth Words</a>
-</li>
-<li><a href="_graphics_2.html">Graphics</a>
-</li>
-<li><a href="_sid.html">SID</a>
-</li>
-<li><a href="_music_2.html">Music</a>
-</li>
-<li><a href="_assembler_2.html">Assembler</a>
-</li>
-<li><a href="_configuring_durexforth.html">Configuring durexForth</a>
-</li>
-<li><a href="_assembler_mnemonics.html">Appendix G: Assembler Mnemonics</a>
-</li>
-<li><a href="_memory_map.html">Appendix H: Memory Map</a>
-</li>
-<li><a href="_word_anatomy.html">Appendix I: Word Anatomy</a>
-</li>
-<li><a href="_avoiding_stack_crashes.html">Appendix J: Avoiding Stack Crashes</a>
-</li>
-<li><a href="_internet_resources.html">Appendix K: Internet Resources</a>
-</li>
-<li><a href="_license.html">Appendix L: License</a>
-</li>
-</ul>
-</div>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="_introduction.html">Introduction</a></p>
-</li>
-<li>
-<p><a href="_tutorial.html">Tutorial</a></p>
-</li>
-<li>
-<p><a href="_editor.html">Editor</a></p>
-</li>
-<li>
-<p><a href="_forth_words.html">Forth Words</a></p>
-</li>
-<li>
-<p><a href="_graphics_2.html">Graphics</a></p>
-</li>
-<li>
-<p><a href="_sid.html">SID</a></p>
-</li>
-<li>
-<p><a href="_music_2.html">Music</a></p>
-</li>
-<li>
-<p><a href="_assembler_2.html">Assembler</a></p>
-</li>
-<li>
-<p><a href="_configuring_durexforth.html">Configuring durexForth</a></p>
-</li>
-<li>
-<p><a href="_assembler_mnemonics.html">Appendix A: Assembler Mnemonics</a></p>
-</li>
-<li>
-<p><a href="_memory_map.html">Appendix B: Memory Map</a></p>
-</li>
-<li>
-<p><a href="_word_anatomy.html">Appendix C: Word Anatomy</a></p>
-</li>
-<li>
-<p><a href="_avoiding_stack_crashes.html">Appendix D: Avoiding Stack Crashes</a></p>
-</li>
-<li>
-<p><a href="_internet_resources.html">Appendix E: Internet Resources</a></p>
-</li>
-<li>
-<p><a href="_license.html">Appendix F: License</a></p>
-</li>
-</ul>
 </div>
 <div class="paragraph nav-footer">
-<p>Next: <a href="_introduction.html">Introduction</a> →</p>
+<p>← Previous: <a href="_assembler_mnemonics.html">Appendix A: Assembler Mnemonics</a> | ↑ Up: <a href="index.html">durexForth: Operators Manual</a> | Next: <a href="_word_anatomy.html">Appendix C: Word Anatomy</a> →</p>
 </div>
 </div>
 <div id="footer">

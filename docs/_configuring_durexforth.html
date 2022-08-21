@@ -442,7 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
              .nav-footer{text-align: center; margin-top: auto;}
              .nav-footer > p > a {white-space: nowrap;}</style>
 </head>
-<body id="index" class="article">
+<body id="_configuring_durexforth" class="article">
 <div id="header">
 <h1>durexForth: Operators Manual</h1>
 <div class="details">
@@ -455,99 +455,121 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="_configuring_durexforth">Configuring durexForth</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_stripping_modules">Stripping Modules</h3>
 <div class="paragraph">
-<p>This manual is for durexForth, a modern Forth system for the Commodore 64.</p>
+<p>By default, durexForth boots up with these modules pre-compiled in RAM:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">asm</dt>
+<dd>
+<p>The assembler. (Required and may not be stripped.)</p>
+</dd>
+<dt class="hdlist1">format</dt>
+<dd>
+<p>Numerical formatting words. (Also required.)</p>
+</dd>
+<dt class="hdlist1">wordlist</dt>
+<dd>
+<p>Wordlist manipulation. (Required by some modules.)</p>
+</dd>
+<dt class="hdlist1">labels</dt>
+<dd>
+<p>Assembler labels.</p>
+</dd>
+<dt class="hdlist1">doloop</dt>
+<dd>
+<p>Do-loop words.</p>
+</dd>
+<dt class="hdlist1">sys</dt>
+<dd>
+<p>System calls.</p>
+</dd>
+<dt class="hdlist1">debug</dt>
+<dd>
+<p>Words for debugging.</p>
+</dd>
+<dt class="hdlist1">ls</dt>
+<dd>
+<p>List disk contents.</p>
+</dd>
+<dt class="hdlist1">require</dt>
+<dd>
+<p>The words require and required.</p>
+</dd>
+<dt class="hdlist1">v</dt>
+<dd>
+<p>The text editor.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>To reduce RAM usage, you may make a stripped-down version of durexForth. Do this by following these steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Issue ---modules--- to unload all modules, or ---editor--- to unload the editor only.</p>
+</li>
+<li>
+<p>One by one, load the modules you want included with your new Forth. (E.g. include labels)</p>
+</li>
+<li>
+<p>Save the new system with e.g. save-forth acmeforth.</p>
+</li>
+</ol>
 </div>
 </div>
-<div id="toc" class="toc">
-<div id="toctitle">Table of Contents</div>
-<p><span class="toc-root toc-current"><a href="index.html">durexForth: Operators Manual</a></span></p><ul class="sectlevel1">
-<li><a href="_introduction.html">Introduction</a>
-</li>
-<li><a href="_tutorial.html">Tutorial</a>
-</li>
-<li><a href="_editor.html">Editor</a>
-</li>
-<li><a href="_forth_words.html">Forth Words</a>
-</li>
-<li><a href="_graphics_2.html">Graphics</a>
-</li>
-<li><a href="_sid.html">SID</a>
-</li>
-<li><a href="_music_2.html">Music</a>
-</li>
-<li><a href="_assembler_2.html">Assembler</a>
-</li>
-<li><a href="_configuring_durexforth.html">Configuring durexForth</a>
-</li>
-<li><a href="_assembler_mnemonics.html">Appendix G: Assembler Mnemonics</a>
-</li>
-<li><a href="_memory_map.html">Appendix H: Memory Map</a>
-</li>
-<li><a href="_word_anatomy.html">Appendix I: Word Anatomy</a>
-</li>
-<li><a href="_avoiding_stack_crashes.html">Appendix J: Avoiding Stack Crashes</a>
-</li>
-<li><a href="_internet_resources.html">Appendix K: Internet Resources</a>
-</li>
-<li><a href="_license.html">Appendix L: License</a>
-</li>
-</ul>
+<div class="sect2">
+<h3 id="_custom_start_up">Custom Start-Up</h3>
+<div class="paragraph">
+<p>You may launch a word automatically at start-up by setting the variable start to the execution token of the word.  Example: ' megademo start ! To save the new configuration to disk, type e.g. save-forth megademo.</p>
+</div>
+<div class="paragraph">
+<p>When writing a new program using a PC text editor, it is practical to configure durexForth to compile and execute the program at startup. That can be set up using the following snippet:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$a000 value buf
+: go buf s" myprogramfile" buf
+loadb buf - evaluate ;
+' go start !
+save-forth @0:durexforth</pre>
 </div>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="_introduction.html">Introduction</a></p>
-</li>
-<li>
-<p><a href="_tutorial.html">Tutorial</a></p>
-</li>
-<li>
-<p><a href="_editor.html">Editor</a></p>
-</li>
-<li>
-<p><a href="_forth_words.html">Forth Words</a></p>
-</li>
-<li>
-<p><a href="_graphics_2.html">Graphics</a></p>
-</li>
-<li>
-<p><a href="_sid.html">SID</a></p>
-</li>
-<li>
-<p><a href="_music_2.html">Music</a></p>
-</li>
-<li>
-<p><a href="_assembler_2.html">Assembler</a></p>
-</li>
-<li>
-<p><a href="_configuring_durexforth.html">Configuring durexForth</a></p>
-</li>
-<li>
-<p><a href="_assembler_mnemonics.html">Appendix A: Assembler Mnemonics</a></p>
-</li>
-<li>
-<p><a href="_memory_map.html">Appendix B: Memory Map</a></p>
-</li>
-<li>
-<p><a href="_word_anatomy.html">Appendix C: Word Anatomy</a></p>
-</li>
-<li>
-<p><a href="_avoiding_stack_crashes.html">Appendix D: Avoiding Stack Crashes</a></p>
-</li>
-<li>
-<p><a href="_internet_resources.html">Appendix E: Internet Resources</a></p>
-</li>
-<li>
-<p><a href="_license.html">Appendix F: License</a></p>
-</li>
-</ul>
+</div>
+<div class="sect2">
+<h3 id="_turn_key_operation">Turn-key Operation</h3>
+<div class="paragraph">
+<p>Durexforth offers utilities to save your program in a turn-key fashion by including the turnkey module once the program is ready to be saved.</p>
+</div>
+<div class="paragraph">
+<p>Programs can be saved in a compacted state using save-pack. These programs are stored with 32 bytes between here and latest. When they are first loaded, they will restore the header space to its original top.</p>
+</div>
+<div class="paragraph">
+<p>If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary headers entirely when saving with save-prg. This allows your program to use memory down to here plus 32 bytes for safety.</p>
+</div>
+<div class="paragraph">
+<p>After either of these words have saved the file to disk, they will restore forth to the unpacked state, and strip the turnkey module from the dictionary. This allows you to continue to use forth interactively in the case of save-pack. As save-prg has stripped the dictionary headers from the system, it will no longer be usable. If you wish to test your program after saving, you can compile a call to save-prg instead:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: build save-prg mydemo start @ execute ;
+build</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will simulate the start-up sequence after saving the packed program.</p>
+</div>
+</div>
+</div>
 </div>
 <div class="paragraph nav-footer">
-<p>Next: <a href="_introduction.html">Introduction</a> →</p>
+<p>← Previous: <a href="_assembler_2.html">Assembler</a> | ↑ Up: <a href="index.html">durexForth: Operators Manual</a> | Next: <a href="_assembler_mnemonics.html">Appendix A: Assembler Mnemonics</a> →</p>
 </div>
 </div>
 <div id="footer">

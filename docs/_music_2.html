@@ -442,7 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
              .nav-footer{text-align: center; margin-top: auto;}
              .nav-footer > p > a {white-space: nowrap;}</style>
 </head>
-<body id="index" class="article">
+<body id="_music_2" class="article">
 <div id="header">
 <h1>durexForth: Operators Manual</h1>
 <div class="details">
@@ -455,99 +455,66 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="_music_2">Music</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_music_macro_language">Music Macro Language</h3>
 <div class="paragraph">
-<p>This manual is for durexForth, a modern Forth system for the Commodore 64.</p>
+<p>Music Macro Language (MML) has been used since the 1970s to sequence music on computer and video game systems. The MML package is loaded with <code>include mml</code>. Two demonstration songs can be found in the <code>mmldemo</code> package.</p>
+</div>
+<div class="paragraph">
+<p>MML songs are played using the Forth word play-mml which takes three strings, one MML melody for each of the three SID voices. An example song is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: frere-jaques
+s" o3l4fgaffgafab-&gt;c&amp;c&lt;ab-&gt;c&amp;cl8cdc&lt;b-l4af&gt;l8cdc&lt;b-l4affcf&amp;ffcf&amp;f"
+s" r1o3l4fgaffgafab-&gt;c&amp;c&lt;ab-&gt;c&amp;cl8cdc&lt;b-l4af&gt;l8cdc&lt;b-l4affcf&amp;ffcf&amp;f"
+s" " play-mml ;</pre>
 </div>
 </div>
-<div id="toc" class="toc">
-<div id="toctitle">Table of Contents</div>
-<p><span class="toc-root toc-current"><a href="index.html">durexForth: Operators Manual</a></span></p><ul class="sectlevel1">
-<li><a href="_introduction.html">Introduction</a>
-</li>
-<li><a href="_tutorial.html">Tutorial</a>
-</li>
-<li><a href="_editor.html">Editor</a>
-</li>
-<li><a href="_forth_words.html">Forth Words</a>
-</li>
-<li><a href="_graphics_2.html">Graphics</a>
-</li>
-<li><a href="_sid.html">SID</a>
-</li>
-<li><a href="_music_2.html">Music</a>
-</li>
-<li><a href="_assembler_2.html">Assembler</a>
-</li>
-<li><a href="_configuring_durexforth.html">Configuring durexForth</a>
-</li>
-<li><a href="_assembler_mnemonics.html">Appendix G: Assembler Mnemonics</a>
-</li>
-<li><a href="_memory_map.html">Appendix H: Memory Map</a>
-</li>
-<li><a href="_word_anatomy.html">Appendix I: Word Anatomy</a>
-</li>
-<li><a href="_avoiding_stack_crashes.html">Appendix J: Avoiding Stack Crashes</a>
-</li>
-<li><a href="_internet_resources.html">Appendix K: Internet Resources</a>
-</li>
-<li><a href="_license.html">Appendix L: License</a>
-</li>
-</ul>
+<div class="sect3">
+<h4 id="_commands">Commands</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">cdefgab </dt>
+<dd>
+<p>The letters <code>c</code> to <code>b</code> represent musical notes.
+Sharp notes are produced by appending a <code>+</code>, flat notes are produced by appending a <code>-</code>.
+The length of a note is specified by appending a number representing its length as a fraction of a whole note.
+For example, <code>c8</code> represents a C eight note, and <code>f+2</code> an F# half note.
+Valid note lengths are 1, 2, 3, 4, 6, 8, 16, 24 and 32.
+Appending a <code>.</code> increases the duration of the note by half of its value.</p>
+</dd>
+<dt class="hdlist1">o </dt>
+<dd>
+<p>Followed by a number, <code>o</code> selects the octave the instrument will play in.</p>
+</dd>
+<dt class="hdlist1">r </dt>
+<dd>
+<p>A rest. The length of the rest is specified in the same manner as the length of a note.</p>
+</dd>
+<dt class="hdlist1">&lt; &gt; </dt>
+<dd>
+<p>Used to step down or up one octave.</p>
+</dd>
+<dt class="hdlist1">l </dt>
+<dd>
+<p>Followed by a number, specifies the default length used by notes or rests which do not explicitly specify one.</p>
+</dd>
+<dt class="hdlist1">&amp; </dt>
+<dd>
+<p>Ties two notes together.</p>
+</dd>
+</dl>
 </div>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="_introduction.html">Introduction</a></p>
-</li>
-<li>
-<p><a href="_tutorial.html">Tutorial</a></p>
-</li>
-<li>
-<p><a href="_editor.html">Editor</a></p>
-</li>
-<li>
-<p><a href="_forth_words.html">Forth Words</a></p>
-</li>
-<li>
-<p><a href="_graphics_2.html">Graphics</a></p>
-</li>
-<li>
-<p><a href="_sid.html">SID</a></p>
-</li>
-<li>
-<p><a href="_music_2.html">Music</a></p>
-</li>
-<li>
-<p><a href="_assembler_2.html">Assembler</a></p>
-</li>
-<li>
-<p><a href="_configuring_durexforth.html">Configuring durexForth</a></p>
-</li>
-<li>
-<p><a href="_assembler_mnemonics.html">Appendix A: Assembler Mnemonics</a></p>
-</li>
-<li>
-<p><a href="_memory_map.html">Appendix B: Memory Map</a></p>
-</li>
-<li>
-<p><a href="_word_anatomy.html">Appendix C: Word Anatomy</a></p>
-</li>
-<li>
-<p><a href="_avoiding_stack_crashes.html">Appendix D: Avoiding Stack Crashes</a></p>
-</li>
-<li>
-<p><a href="_internet_resources.html">Appendix E: Internet Resources</a></p>
-</li>
-<li>
-<p><a href="_license.html">Appendix F: License</a></p>
-</li>
-</ul>
+</div>
+</div>
 </div>
 <div class="paragraph nav-footer">
-<p>Next: <a href="_introduction.html">Introduction</a> →</p>
+<p>← Previous: <a href="_sid.html">SID</a> | ↑ Up: <a href="index.html">durexForth: Operators Manual</a> | Next: <a href="_assembler_2.html">Assembler</a> →</p>
 </div>
 </div>
 <div id="footer">

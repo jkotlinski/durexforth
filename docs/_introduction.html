@@ -442,7 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
              .nav-footer{text-align: center; margin-top: auto;}
              .nav-footer > p > a {white-space: nowrap;}</style>
 </head>
-<body id="index" class="article">
+<body id="_introduction" class="article">
 <div id="header">
 <h1>durexForth: Operators Manual</h1>
 <div class="details">
@@ -455,99 +455,114 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_why_forth">Why Forth?</h3>
 <div class="paragraph">
-<p>This manual is for durexForth, a modern Forth system for the Commodore 64.</p>
+<p>Forth is a unique language. What is so special about it? It is a small, low-level language, which can easily be extended to a high-level, domain-specific language that does anything you want it to. Compared to C64 Basic, Forth is more attractive in almost every way. It is a lot faster, more memory effective, and more powerful.</p>
+</div>
+<div class="paragraph">
+<p>Compared to C, the nice thing about Forth is that you can run the full development environment on your C64,
+with text editor, compiler, assembler and debugger. It makes for a more interactive and fun experience than running a cross-compiler on PC.</p>
+</div>
+<div class="paragraph">
+<p>For a Forth introduction, refer to the excellent <a href="http://www.forth.com/starting-forth/">Starting Forth</a> by Leo Brodie.</p>
 </div>
 </div>
-<div id="toc" class="toc">
-<div id="toctitle">Table of Contents</div>
-<p><span class="toc-root toc-current"><a href="index.html">durexForth: Operators Manual</a></span></p><ul class="sectlevel1">
-<li><a href="_introduction.html">Introduction</a>
-</li>
-<li><a href="_tutorial.html">Tutorial</a>
-</li>
-<li><a href="_editor.html">Editor</a>
-</li>
-<li><a href="_forth_words.html">Forth Words</a>
-</li>
-<li><a href="_graphics_2.html">Graphics</a>
-</li>
-<li><a href="_sid.html">SID</a>
-</li>
-<li><a href="_music_2.html">Music</a>
-</li>
-<li><a href="_assembler_2.html">Assembler</a>
-</li>
-<li><a href="_configuring_durexforth.html">Configuring durexForth</a>
-</li>
-<li><a href="_assembler_mnemonics.html">Appendix G: Assembler Mnemonics</a>
-</li>
-<li><a href="_memory_map.html">Appendix H: Memory Map</a>
-</li>
-<li><a href="_word_anatomy.html">Appendix I: Word Anatomy</a>
-</li>
-<li><a href="_avoiding_stack_crashes.html">Appendix J: Avoiding Stack Crashes</a>
-</li>
-<li><a href="_internet_resources.html">Appendix K: Internet Resources</a>
-</li>
-<li><a href="_license.html">Appendix L: License</a>
-</li>
-</ul>
-</div>
+<div class="sect2">
+<h3 id="_comparing_to_other_forths">Comparing to other Forths</h3>
+<div class="paragraph">
+<p>There are other Forths for C64, most notably Blazin' Forth. Blazin' Forth is excellent, but durexForth has some advantages:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="_introduction.html">Introduction</a></p>
+<p>durexForth uses text files instead of a custom block file system.</p>
 </li>
 <li>
-<p><a href="_tutorial.html">Tutorial</a></p>
+<p>durexForth is smaller.</p>
 </li>
 <li>
-<p><a href="_editor.html">Editor</a></p>
+<p>durexForth is faster.</p>
 </li>
 <li>
-<p><a href="_forth_words.html">Forth Words</a></p>
+<p>durexForth can boot from cartridge.</p>
 </li>
 <li>
-<p><a href="_graphics_2.html">Graphics</a></p>
+<p>durexForth implements the Forth 2012 core standard.</p>
 </li>
 <li>
-<p><a href="_sid.html">SID</a></p>
+<p>The durexForth editor is a vi clone.</p>
 </li>
 <li>
-<p><a href="_music_2.html">Music</a></p>
-</li>
-<li>
-<p><a href="_assembler_2.html">Assembler</a></p>
-</li>
-<li>
-<p><a href="_configuring_durexforth.html">Configuring durexForth</a></p>
-</li>
-<li>
-<p><a href="_assembler_mnemonics.html">Appendix A: Assembler Mnemonics</a></p>
-</li>
-<li>
-<p><a href="_memory_map.html">Appendix B: Memory Map</a></p>
-</li>
-<li>
-<p><a href="_word_anatomy.html">Appendix C: Word Anatomy</a></p>
-</li>
-<li>
-<p><a href="_avoiding_stack_crashes.html">Appendix D: Avoiding Stack Crashes</a></p>
-</li>
-<li>
-<p><a href="_internet_resources.html">Appendix E: Internet Resources</a></p>
-</li>
-<li>
-<p><a href="_license.html">Appendix F: License</a></p>
+<p>durexForth is open source (available at <a href="https://github.com/jkotlinski/durexforth">Github</a>).</p>
 </li>
 </ul>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_package_contents">Package Contents</h3>
+<div class="paragraph">
+<p>durexForth is packaged as a 16-kByte .crt cartridge file and a .d64 disk image. Booting from cartridge is equivalent to booting from disk, except that cartridge is faster. The disk contains various optional Forth modules, as well as some appetizer demonstration programs, as follows:</p>
+</div>
+<div class="sect3">
+<h4 id="_graphics">Graphics</h4>
+<div class="paragraph">
+<p>The gfxdemo package demonstrates the high-resolution graphics, with some examples adapted from the book "Step-By-Step Programming C64 Graphics" by Phil Cornes.
+Show the demos by entering:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>include gfxdemo</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When an image has finished drawing, press space to continue.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fractals">Fractals</h4>
+<div class="paragraph">
+<p>The fractals package demonstrates turtle graphics by generating fractal images. Run it by entering:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>include fractals</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When an image has finished drawing, press space to continue.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_music">Music</h4>
+<div class="paragraph">
+<p>The mmldemo package demonstrates the MML music capabilities. To play some music:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>include mmldemo</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sprites">Sprites</h4>
+<div class="paragraph">
+<p>The sprite package adds functionality for defining and displaying sprites. To run the demo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>include spritedemo</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <div class="paragraph nav-footer">
-<p>Next: <a href="_introduction.html">Introduction</a> →</p>
+<p>↑ Up: <a href="index.html">durexForth: Operators Manual</a> | Next: <a href="_tutorial.html">Tutorial</a> →</p>
 </div>
 </div>
 <div id="footer">

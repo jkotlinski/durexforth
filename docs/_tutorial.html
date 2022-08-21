@@ -442,7 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
              .nav-footer{text-align: center; margin-top: auto;}
              .nav-footer > p > a {white-space: nowrap;}</style>
 </head>
-<body id="index" class="article">
+<body id="_tutorial" class="article">
 <div id="header">
 <h1>durexForth: Operators Manual</h1>
 <div class="details">
@@ -455,99 +455,132 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="_tutorial">Tutorial</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_interpreter">Interpreter</h3>
 <div class="paragraph">
-<p>This manual is for durexForth, a modern Forth system for the Commodore 64.</p>
+<p>Start up durexForth. When loaded, it will greet you with a blinking yellow cursor, waiting for your input. You have landed in the interpreter!</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s warm it up a little. Enter 1 (followed by return). You have now put a digit on the stack. This can be verified by the command .s, which will print the stack contents without modifying it. Now enter . to pop the digit and print it to screen, followed by .s to verify that the stack is empty.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s define a word bg! for setting the border color&#8230;&#8203;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: bg! $d020 c! ;</pre>
 </div>
 </div>
-<div id="toc" class="toc">
-<div id="toctitle">Table of Contents</div>
-<p><span class="toc-root toc-current"><a href="index.html">durexForth: Operators Manual</a></span></p><ul class="sectlevel1">
-<li><a href="_introduction.html">Introduction</a>
-</li>
-<li><a href="_tutorial.html">Tutorial</a>
-</li>
-<li><a href="_editor.html">Editor</a>
-</li>
-<li><a href="_forth_words.html">Forth Words</a>
-</li>
-<li><a href="_graphics_2.html">Graphics</a>
-</li>
-<li><a href="_sid.html">SID</a>
-</li>
-<li><a href="_music_2.html">Music</a>
-</li>
-<li><a href="_assembler_2.html">Assembler</a>
-</li>
-<li><a href="_configuring_durexforth.html">Configuring durexForth</a>
-</li>
-<li><a href="_assembler_mnemonics.html">Appendix G: Assembler Mnemonics</a>
-</li>
-<li><a href="_memory_map.html">Appendix H: Memory Map</a>
-</li>
-<li><a href="_word_anatomy.html">Appendix I: Word Anatomy</a>
-</li>
-<li><a href="_avoiding_stack_crashes.html">Appendix J: Avoiding Stack Crashes</a>
-</li>
-<li><a href="_internet_resources.html">Appendix K: Internet Resources</a>
-</li>
-<li><a href="_license.html">Appendix L: License</a>
-</li>
-</ul>
+<div class="paragraph">
+<p>Now try entering 1 bg! to change the border color to white.
+Then, try changing it back again with 0 bg!.</p>
 </div>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="_introduction.html">Introduction</a></p>
-</li>
-<li>
-<p><a href="_tutorial.html">Tutorial</a></p>
-</li>
-<li>
-<p><a href="_editor.html">Editor</a></p>
-</li>
-<li>
-<p><a href="_forth_words.html">Forth Words</a></p>
-</li>
-<li>
-<p><a href="_graphics_2.html">Graphics</a></p>
-</li>
-<li>
-<p><a href="_sid.html">SID</a></p>
-</li>
-<li>
-<p><a href="_music_2.html">Music</a></p>
-</li>
-<li>
-<p><a href="_assembler_2.html">Assembler</a></p>
-</li>
-<li>
-<p><a href="_configuring_durexforth.html">Configuring durexForth</a></p>
-</li>
-<li>
-<p><a href="_assembler_mnemonics.html">Appendix A: Assembler Mnemonics</a></p>
-</li>
-<li>
-<p><a href="_memory_map.html">Appendix B: Memory Map</a></p>
-</li>
-<li>
-<p><a href="_word_anatomy.html">Appendix C: Word Anatomy</a></p>
-</li>
-<li>
-<p><a href="_avoiding_stack_crashes.html">Appendix D: Avoiding Stack Crashes</a></p>
-</li>
-<li>
-<p><a href="_internet_resources.html">Appendix E: Internet Resources</a></p>
-</li>
-<li>
-<p><a href="_license.html">Appendix F: License</a></p>
-</li>
-</ul>
+<div class="sect2">
+<h3 id="_introducing_the_editor">Introducing the Editor</h3>
+<div class="paragraph">
+<p>The v editor is convenient for editing larger pieces of code. With it, you keep an entire source file loaded in RAM, and you can recompile and test it easily.</p>
+</div>
+<div class="paragraph">
+<p>Start the editor by typing v. You will enter the red editor screen. To enter text, first press i to enter insert mode. This mode allows you to insert text into the buffer. You can see that it&#8217;s active on the I that appears in the lower left corner. This is a good start for creating a program!</p>
+</div>
+<div class="paragraph">
+<p>Now, enter the following lines&#8230;&#8203;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: flash begin 1 $d020 +! again ; flash</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#8230;&#8203;and then press ← to leave insert mode.
+Press <em>F7</em> to compile and run. If everything is entered right, you will see a beautiful color cycle.</p>
+</div>
+<div class="paragraph">
+<p>When you finished watching, press <em>RESTORE</em> to quit your program, then enter v to reopen the editor.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_assembler">Assembler</h3>
+<div class="paragraph">
+<p>If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. code and ;code define a code word, just like : and ; define Forth words. Within a code word, you can use assembler mnemonics.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>code flash
+here ( push current addr )
+$d020 inc,
+jmp, ( jump to pushed addr )
+;code
+flash</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is also possible to use inline assembly within regular Forth words:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: flash begin [ $d020 inc, ] again ;
+flash</pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+As the x register contains the parameter stack depth, your assembly code must leave it unchanged.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_console_io_example">Console I/O Example</h3>
+<div class="paragraph">
+<p>This piece of code reads from keyboard and sends back the chars to screen:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: foo key emit recurse ;
+foo</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_printer_example">Printer Example</h3>
+<div class="paragraph">
+<p>This piece of code prints a message to a printer on device #4, and then prints a message to the screen:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>include io
+
+: print-hello
+4 device ( use device 4 )
+0 0 47 7 open ioabort ( open address 7 as file 47, abort on failure )
+47 chkout ioabort ( redirect output to file 47, abort on failure )
+." Hello, printer!" cr
+clrchn ( stop input and output redirection )
+." Hello, screen!" cr
+47 close ( close file 47 ) ;
+
+print-hello</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The device number and address may differ between printer models. Commodore MPS series printers use address 0 to print in their uppercase/graphics font, and address 7 to print in their lowercase/uppercase font.</p>
+</div>
+</div>
+</div>
 </div>
 <div class="paragraph nav-footer">
-<p>Next: <a href="_introduction.html">Introduction</a> →</p>
+<p>← Previous: <a href="_introduction.html">Introduction</a> | ↑ Up: <a href="index.html">durexForth: Operators Manual</a> | Next: <a href="_editor.html">Editor</a> →</p>
 </div>
 </div>
 <div id="footer">
