@@ -84,7 +84,7 @@ The following words use double-cell integers. On the stack, the cell containing 
 
 ((0=)) _( a -- flag)_ :: Is _a_ equal to zero?
 ((0<>)) _( a -- flag )_ :: Is _a_ not equal to 0?
-((\=)) _( a b -- flag )_ :: Is _a_ equal to _b_?
+((=)) _( a b -- flag )_ :: Is _a_ equal to _b_?
 ((<>)) _( a b -- flag )_ :: Does _a_ differ from _b_?
 ((and)) _( a b -- c )_ :: Binary and.
 ((or)) _( a b -- c )_ :: Binary or.
@@ -118,7 +118,7 @@ The following words use double-cell integers. On the stack, the cell containing 
 ((['])) name _( -- xt )_:: Place name's execution token xt on the stack.
 The execution token returned by the compiled phrase +[\'] x+ is the same value returned by +' x+ outside of compilation state.
 Typical use: +: x ... ['] name ... ;+
-((compile,)) ( xt -- ) :: Append \texttt{jsr xt} to the word being compiled. Typical use: +: recurse immed latest >xt compile, ;+
+((compile,)) ( xt -- ) :: Append `jsr xt` to the word being compiled. Typical use: +: recurse immed latest >xt compile, ;+
 ((postpone)) _xxx_ :: Compile the compilation semantics (instead of interpretation semantics) of xxx. Typical use:
 ----
 : endif postpone then ; immediate
