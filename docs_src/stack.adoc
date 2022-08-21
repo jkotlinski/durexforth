@@ -6,7 +6,7 @@ One helpful technique to avoid stack crashes is to add comments about stack usag
 In this example, we imagine a graphics word "drawbox" that draws a black box.
 +( color -- )+ indicates that it takes one argument on stack, and on exit it should
 leave nothing on the stack.
-The comments inside the word (starting with &pound;) indicate what the stack
+The comments inside the word (starting with £) indicate what the stack
 looks like after the line has executed.
 
 ----
@@ -23,7 +23,9 @@ blkcol £ color x y
 Once the word is working as supposed, it may be nice to again remove the comments, as
 they are no longer very interesting to read.
 
-NOTE: The Forth standard defines backslash (\) as the line comment character, but the C64 lacks a real backslash. Moreover, ASCII \ and PETSCII &pound; both map to $5c. Therefore, the &pound; character is used as a substitution on the C64.
+NOTE: The Forth standard defines backslash (\) as the line comment character, but the C64 lacks a real backslash.
+Moreover, ASCII \ and PETSCII £ both map to $5c.
+Therefore, the £ character is used as a substitution on the C64.
 
 Another useful technique during development is to check at the end of your main loop
 that the stack depth is what you expect it to. This will catch stack underflows

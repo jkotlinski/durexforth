@@ -8,8 +8,8 @@ TAG_DEPLOY_DOT := $(shell git describe --tags --long --dirty=_m | sed 's/-g[0-9a
 TAG_DEPLOY := $(shell git describe --tags --abbrev=0 --dirty=_M | tr _. -_)
 GIT_HASH := $(shell git rev-parse --short HEAD)
 
-DEPLOY_NAME = durexforth-$(TAG_DEPLOY)
-DISK_IMAGE = durexforth.$(DISK_SUF)
+DEPLOY_NAME = durexForth-$(TAG_DEPLOY)
+DISK_IMAGE = durexForth.$(DISK_SUF)
 
 X64_OPTS = -warp
 X64 = x64sc
@@ -38,6 +38,7 @@ deploy: $(DISK_IMAGE) cart.asm
 	mv durexforth build/durexforth
 	@$(AS) cart.asm
 	cartconv -t simon -i build/cart.bin -o deploy/$(DEPLOY_NAME).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
+	asciidoctor-pdf -o deploy/$(DEPLOY_NAME).pdf docs_src/index.adoc
 
 durexforth.prg: *.asm
 	@$(AS) durexforth.asm
@@ -63,14 +64,10 @@ $(DISK_IMAGE): durexforth.prg Makefile ext/petcom $(SRCS)
 docs: docs/index.html
 
 docs/index.html: docs_src/index.adoc docs_src/words.adoc docs_src/links.adoc docs_src/sid.adoc docs_src/asm.adoc \
-	docs_src/mnemonics.adoc docs_src/memmap.adoc docs_src/anatomy.adoc LICENSE.md docs_src/tutorial.adoc \
+	docs_src/mnemonics.adoc docs_src/memmap.adoc docs_src/anatomy.adoc LICENSE.txt docs_src/tutorial.adoc \
 	docs_src/intro.adoc
-	mkdir -p build
-	git describe --tags --dirty | tr '\n' , > build/revision.adoc
-	git log -1 --format=%as >> build/revision.adoc
 	rm -rf docs
-	a2x --icons -f chunked docs_src/index.adoc -D .
-	mv index.chunked docs
+	asciidoctor-multipage -a revnumber=$(shell git describe --tags --dirty) -a revdate=$(shell git log -1 --format=%as) -D docs docs_src/index.adoc
 
 clean:
 	rm -f *.lbl *.prg *.$(DISK_SUF)

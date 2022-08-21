@@ -12,7 +12,7 @@ To inspect the dictionary entry, type `latest dump`. You should see something li
 6228  02 42 47 fd 39 28 39 01 .bg.9(9.
 ...
 ----
-For this run, the name token of `bg` is placed at address $6228. The first byte, `02`, is the length of `bg` name string. After that, the string `bg` follows. ($42 = `b`, $47 = `g`). The final two bytes contain the execution token of `bg`, starting at $39fd.
+For this run, the name token of `bg` is placed at address $6228. The first byte, `02`, is the name length (`bg` has two characters). After that, the string `bg` follows. ($42 = `b`, $47 = `g`). The final two bytes contain the execution token of `bg`, starting at $39fd.
 
 The name length byte is also used to store special attributes of the word. Bit 7 is "immediate" flag, which means that the word should execute immediately instead of being compiled into word definitions. (`(` is such an example of an immediate word that does not get compiled.) Bit 6 is the "no-tail-call-elimination" flag, which makes sure that tail call elimination (the practice of replacing jsr/rts with jmp) is not performed if this word is the jsr target. Since `bg` does not have these flags set, bits 7 and 6 are both clear.
 
@@ -21,9 +21,9 @@ We saw that the `bg` execution token is $39fd. To inspect the code, type `$39fd 
 The code section contains pure 6502 machine code.
 
 ----
-39fd  <1>20 15 11 <2>20 d0 <3>4c 0e 09  .. Pl..
+39fd  20 15 11 20 d0 4c 0e 09  .. Pl..
 ...
 ----
-<1> 20 15 11 ( jsr $1115 ) $1115 is the address of the `lit` code. `lit` copies the two following bytes to parameter stack.
-<2> 20 d0 ( $d020 ) The parameter to the `lit` word. When executed, `lit` will add $d020 to the parameter stack.
-<3> 4c 0e 09 ( jmp $90e ) $90e is the address of the `c!` code.
+20 15 11 :: `jsr $1115`. $1115 is the address of the `lit` code. `lit` copies the two following bytes to parameter stack.
+20 d0 :: `$d020`. The parameter to the `lit` word. When executed, `lit` will add $d020 to the parameter stack.
+4c 0e 09 :: `jmp $90e`. $90e is the address of the `c!` code.

@@ -2,7 +2,7 @@ The editor is a vi clone. Launch it by entering +v foo+ in the interpreter (+foo
 
 === Inserting Text
 
-At startup, the editor is in command mode. These commands start insert mode, which allows you to enter text. Return to command mode with &larr;.
+At startup, the editor is in command mode. These commands start insert mode, which allows you to enter text. Return to command mode with ←.
 
 i:: Insert text.
 R:: Replace text.
@@ -17,7 +17,7 @@ cw:: Change word.
 
 === Navigation
 
-hjkl _or_ &lArr;&dArr;&uArr;&rArr;:: Move cursor left, down, up, right.
+hjkl _or_ ⇐⇑⇓⇒ :: Move cursor left, down, up, right.
 -:: Scroll 1 line up.
 +:: Scroll 1 line down.
 Ctrl+u:: Half page up.
