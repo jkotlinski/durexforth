@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>3. Editor</title><link rel="stylesheet" type="text/css" href="docbook-xsl.css" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot" /><link rel="home" href="index.html" title="durexForth: Operators Manual" /><link rel="up" href="index.html" title="durexForth: Operators Manual" /><link rel="prev" href="ar01s02.html" title="2. Tutorial" /><link rel="next" href="ar01s04.html" title="4. Forth Words" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><td width="20%" align="left"><a accesskey="p" href="ar01s02.html"><img src="images/icons/prev.png" alt="Prev" /></a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ar01s04.html"><img src="images/icons/next.png" alt="Next" /></a></td></tr></table><hr /></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="_editor"></a>3. Editor</h2></div></div></div><p>The editor is a vi clone. Launch it by entering <code class="literal">v foo</code> in the interpreter (<code class="literal">foo</code> being the file you want to edit). You can also enter <code class="literal">v</code> without argument to create an unnamed buffer. For more info about vi style editing, see <a class="ulink" href="https://www.vim.org" target="_top">the Vim web site</a>.</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_inserting_text"></a>3.1. Inserting Text</h3></div></div></div><p>At startup, the editor is in command mode. These commands start insert mode, which allows you to enter text. Return to command mode with ←.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+i
+</span></dt><dd>
+Insert text.
+</dd><dt><span class="term">
+R
+</span></dt><dd>
+Replace text.
+</dd><dt><span class="term">
+a
+</span></dt><dd>
+Append text.
+</dd><dt><span class="term">
+A
+</span></dt><dd>
+Append text at end of line.
+</dd><dt><span class="term">
+C
+</span></dt><dd>
+Change rest of line.
+</dd><dt><span class="term">
+S
+</span></dt><dd>
+Substitute line.
+</dd><dt><span class="term">
+s
+</span></dt><dd>
+Substitute character.
+</dd><dt><span class="term">
+o
+</span></dt><dd>
+Open new line after cursor line.
+</dd><dt><span class="term">
+O
+</span></dt><dd>
+Open new line on cursor line.
+</dd><dt><span class="term">
+cw
+</span></dt><dd>
+Change word.
+</dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_navigation"></a>3.2. Navigation</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+hjkl <span class="emphasis"><em>or</em></span> ⇐⇓⇑⇒
+</span></dt><dd>
+Move cursor left, down, up, right.
+</dd><dt><span class="term">
+-
+</span></dt><dd>
+Scroll 1 line up.
+</dd><dt><span class="term">
++
+</span></dt><dd>
+Scroll 1 line down.
+</dd><dt><span class="term">
+Ctrl+u
+</span></dt><dd>
+Half page up.
+</dd><dt><span class="term">
+Ctrl+d
+</span></dt><dd>
+Half page down.
+</dd><dt><span class="term">
+b
+</span></dt><dd>
+Go to previous word.
+</dd><dt><span class="term">
+w
+</span></dt><dd>
+Go to next word.
+</dd><dt><span class="term">
+e
+</span></dt><dd>
+Go to end of word.
+</dd><dt><span class="term">
+fx
+</span></dt><dd>
+Find char <code class="literal">x</code> forward.
+</dd><dt><span class="term">
+Fx
+</span></dt><dd>
+Find char <code class="literal">x</code> backward.
+</dd><dt><span class="term">
+0 <span class="emphasis"><em>or</em></span> Home
+</span></dt><dd>
+Go to line start.
+</dd><dt><span class="term">
+$
+</span></dt><dd>
+Go to line end.
+</dd><dt><span class="term">
+g
+</span></dt><dd>
+Go to start of file.
+</dd><dt><span class="term">
+G
+</span></dt><dd>
+Go to end of file.
+</dd><dt><span class="term">
+H
+</span></dt><dd>
+Go to home window line.
+</dd><dt><span class="term">
+L
+</span></dt><dd>
+Go to last window line.
+</dd><dt><span class="term">
+M
+</span></dt><dd>
+Go to middle window line.
+</dd><dt><span class="term">
+</span></dt><dd>
+Search forward for the next occurrence of the string.
+</dd><dt><span class="term">
+*
+</span></dt><dd>
+Search forward for the next occurrence of the word under the cursor.
+</dd><dt><span class="term">
+n
+</span></dt><dd>
+Repeat the latest search.
+</dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_saving_and_quitting"></a>3.3. Saving and Quitting</h3></div></div></div><p>After quitting, the editor can be re-opened by entering <code class="literal">v</code>, and it will resume operations with the edit buffer preserved.</p><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+ZZ
+</span></dt><dd>
+Save and exit.
+</dd></dl></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+F7
+</span></dt><dd>
+Compile and run editor contents. On completion, enter <code class="literal">v</code> to return to editor. To terminate a running program, press <span class="emphasis"><em>RESTORE</em></span>.
+</dd></dl></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="_text_manipulation"></a>3.4. Text Manipulation</h3></div></div></div><div class="variablelist"><dl class="variablelist"><dt><span class="term">
+r
+</span></dt><dd>
+Replace character under cursor.
+</dd><dt><span class="term">
+x
+</span></dt><dd>
+Delete character.
+</dd><dt><span class="term">
+X
+</span></dt><dd>
+Backspace-delete character.
+</dd><dt><span class="term">
+dw
+</span></dt><dd>
+Delete word.
+</dd><dt><span class="term">
+dd
+</span></dt><dd>
+Cut line.
+</dd><dt><span class="term">
+D
+</span></dt><dd>
+Delete rest of line.
+</dd><dt><span class="term">
+yy
+</span></dt><dd>
+Yank (copy) line.
+</dd><dt><span class="term">
+p
+</span></dt><dd>
+Paste line below cursor position.
+</dd><dt><span class="term">
+P
+</span></dt><dd>
+Paste line on cursor position.
+</dd><dt><span class="term">
+J
+</span></dt><dd>
+Join lines.
+</dd></dl></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ar01s02.html"><img src="images/icons/prev.png" alt="Prev" /></a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ar01s04.html"><img src="images/icons/next.png" alt="Next" /></a></td></tr><tr><td width="40%" align="left" valign="top"> </td><td width="20%" align="center"><a accesskey="h" href="index.html"><img src="images/icons/home.png" alt="Home" /></a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>
