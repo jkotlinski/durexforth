@@ -67,7 +67,7 @@ docs/index.html: docs_src/index.adoc docs_src/words.adoc docs_src/links.adoc doc
 	docs_src/mnemonics.adoc docs_src/memmap.adoc docs_src/anatomy.adoc LICENSE.txt docs_src/tutorial.adoc \
 	docs_src/intro.adoc
 	rm -rf docs
-	asciidoctor-multipage -a revnumber=$(shell git describe --tags --dirty) -a revdate=$(shell git log -1 --format=%as) -D docs docs_src/index.adoc
+	asciidoctor -a revnumber=$(shell git describe --tags --dirty) -a revdate=$(shell git log -1 --format=%as) -o docs/index.html docs_src/index.adoc
 
 clean:
 	rm -f *.lbl *.prg *.$(DISK_SUF)
