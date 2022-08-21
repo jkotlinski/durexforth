@@ -1,23 +1,32 @@
-=== Interpreter
+=== Meet the Interpreter
 
-Start up durexForth. When loaded, it will greet you with a blinking yellow cursor, waiting for your input. You have landed in the interpreter!
+Start up durexForth.
+The system will greet you with a blinking yellow cursor, waiting for your input.
+This is the interpreter, which allows you to enter Forth code interactively.
 
-Let's warm it up a little. Enter +1+ (followed by return). You have now put a digit on the stack. This can be verified by the command +.s+, which will print the stack contents without modifying it. Now enter +.+ to pop the digit and print it to screen, followed by +.s+ to verify that the stack is empty.
+Let us try the traditional first program: Type in `.( Hello, world! )` (and press Return).
+The system will reply `Hello, world! ok`.
+The `ok` means that the system is healthy and ready to accept more input.
 
-Let's define a word +bg!+ for setting the border color...
+Now, let us try some mathematics.
+`1 1 +` (followed by Return) will add 1 and 1, leaving 2 on the stack.
+This can be verified by entering `.s` to print the stack contents.
+Now enter `.` to pop the 2 and print it to screen, followed by another `.s` to verify that the stack is empty.
+
+Let us define a word `bg!` for setting the border color...
 
 ----
 : bg! $d020 c! ;
 ----
 
-Now try entering +1 bg!+ to change the border color to white.
-Then, try changing it back again with +0 bg!+.
+Now try entering `1 bg!` to change the border color to white.
+Then, try changing it back again with `0 bg!`.
 
 === Introducing the Editor
 
 The v editor is convenient for editing larger pieces of code. With it, you keep an entire source file loaded in RAM, and you can recompile and test it easily.
 
-Start the editor by typing +v+. You will enter the red editor screen. To enter text, first press +i+ to enter insert mode. This mode allows you to insert text into the buffer. You can see that it's active on the +I+ that appears in the lower left corner. This is a good start for creating a program!
+Start the editor by typing `v`. You will enter the red editor screen. To enter text, first press `i` to enter insert mode. This mode allows you to insert text into the buffer. You can see that it's active on the `I` that appears in the lower left corner. This is a good start for creating a program!
 
 Now, enter the following lines...
 
@@ -28,11 +37,11 @@ Now, enter the following lines...
 ...and then press ← to leave insert mode.
 Press _F7_ to compile and run. If everything is entered right, you will see a beautiful color cycle.
 
-When you finished watching, press _RESTORE_ to quit your program, then enter +v+ to reopen the editor.
+When you finished watching, press _RESTORE_ to quit your program, then enter `v` to reopen the editor.
 
 === Assembler
 
-If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. +code+ and +;code+ define a code word, just like +:+ and +;+ define Forth words. Within a code word, you can use assembler mnemonics.
+If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. `code` and `;code` define a code word, just like `:` and `;` define Forth words. Within a code word, you can use assembler mnemonics.
 
 ----
 code flash
