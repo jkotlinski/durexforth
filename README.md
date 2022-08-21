@@ -4,7 +4,7 @@ Modern C64 Forth. Includes a vi clone written in Forth, a high-resolution graphi
 
 ### Documentation
 
-[Browse the Operating Manual.](https://jkotlinski.github.io/durexforth/)
+[Browse the Operators Manual.](https://jkotlinski.github.io/durexforth/)
 
 ### Goals
 
