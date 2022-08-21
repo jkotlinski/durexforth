@@ -446,7 +446,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <span id="author2" class="author">Kevin Lee Reno</span><br>
 <span id="author3" class="author">Poindexter Frink</span><br>
 <span id="author4" class="author">Richard Halkyard</span><br>
-<span id="revnumber">version v4.0.0-56-g0010a9c,</span>
+<span id="revnumber">version v4.0.0-61-gf76e49d,</span>
 <span id="revdate">2022-08-21</span>
 </div>
 </div>
@@ -469,7 +469,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_tutorial">Tutorial</a>
 <ul class="sectlevel2">
-<li><a href="#_interpreter">Interpreter</a></li>
+<li><a href="#_meet_the_interpreter">Meet the Interpreter</a></li>
 <li><a href="#_introducing_the_editor">Introducing the Editor</a></li>
 <li><a href="#_assembler">Assembler</a></li>
 <li><a href="#_console_io_example">Console I/O Example</a></li>
@@ -657,15 +657,25 @@ Show the demos by entering:</p>
 <h2 id="_tutorial">Tutorial</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_interpreter">Interpreter</h3>
+<h3 id="_meet_the_interpreter">Meet the Interpreter</h3>
 <div class="paragraph">
-<p>Start up durexForth. When loaded, it will greet you with a blinking yellow cursor, waiting for your input. You have landed in the interpreter!</p>
+<p>Start up durexForth.
+The system will greet you with a blinking yellow cursor, waiting for your input.
+This is the interpreter, which allows you to enter Forth code interactively.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s warm it up a little. Enter 1 (followed by return). You have now put a digit on the stack. This can be verified by the command .s, which will print the stack contents without modifying it. Now enter . to pop the digit and print it to screen, followed by .s to verify that the stack is empty.</p>
+<p>Let us try the traditional first program: Type in <code>.( Hello, world! )</code> (and press Return).
+The system will reply <code>Hello, world! ok</code>.
+The <code>ok</code> means that the system is healthy and ready to accept more input.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s define a word bg! for setting the border color&#8230;&#8203;</p>
+<p>Now, let us try some mathematics.
+<code>1 1 +</code> (followed by Return) will add 1 and 1, leaving 2 on the stack.
+This can be verified by entering <code>.s</code> to print the stack contents.
+Now enter <code>.</code> to pop the 2 and print it to screen, followed by another <code>.s</code> to verify that the stack is empty.</p>
+</div>
+<div class="paragraph">
+<p>Let us define a word <code>bg!</code> for setting the border color&#8230;&#8203;</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -673,8 +683,8 @@ Show the demos by entering:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Now try entering 1 bg! to change the border color to white.
-Then, try changing it back again with 0 bg!.</p>
+<p>Now try entering <code>1 bg!</code> to change the border color to white.
+Then, try changing it back again with <code>0 bg!</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -683,7 +693,7 @@ Then, try changing it back again with 0 bg!.</p>
 <p>The v editor is convenient for editing larger pieces of code. With it, you keep an entire source file loaded in RAM, and you can recompile and test it easily.</p>
 </div>
 <div class="paragraph">
-<p>Start the editor by typing v. You will enter the red editor screen. To enter text, first press i to enter insert mode. This mode allows you to insert text into the buffer. You can see that it&#8217;s active on the I that appears in the lower left corner. This is a good start for creating a program!</p>
+<p>Start the editor by typing <code>v</code>. You will enter the red editor screen. To enter text, first press <code>i</code> to enter insert mode. This mode allows you to insert text into the buffer. You can see that it&#8217;s active on the <code>I</code> that appears in the lower left corner. This is a good start for creating a program!</p>
 </div>
 <div class="paragraph">
 <p>Now, enter the following lines&#8230;&#8203;</p>
@@ -698,13 +708,13 @@ Then, try changing it back again with 0 bg!.</p>
 Press <em>F7</em> to compile and run. If everything is entered right, you will see a beautiful color cycle.</p>
 </div>
 <div class="paragraph">
-<p>When you finished watching, press <em>RESTORE</em> to quit your program, then enter v to reopen the editor.</p>
+<p>When you finished watching, press <em>RESTORE</em> to quit your program, then enter <code>v</code> to reopen the editor.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_assembler">Assembler</h3>
 <div class="paragraph">
-<p>If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. code and ;code define a code word, just like : and ; define Forth words. Within a code word, you can use assembler mnemonics.</p>
+<p>If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. <code>code</code> and <code>;code</code> define a code word, just like <code>:</code> and <code>;</code> define Forth words. Within a code word, you can use assembler mnemonics.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3026,7 +3036,7 @@ Copyright (c) 1995 Craig Bruce. Public domain.</pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version v4.0.0-56-g0010a9c<br>
+Version v4.0.0-61-gf76e49d<br>
 Last updated 2022-08-21 22:10:07 +0200
 </div>
 </div>
