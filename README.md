@@ -2,9 +2,9 @@
 
 Modern C64 Forth. Includes a vi clone written in Forth, a high-resolution graphics library, plus MML music support.
 
-### Documentation
+### Download
 
-[Browse the Operators Manual.](https://jkotlinski.github.io/durexforth/)
+[Latest Release](https://github.com/jkotlinski/durexforth/releases) :: [Manual](https://jkotlinski.github.io/durexforth/)
 
 ### Goals
 
