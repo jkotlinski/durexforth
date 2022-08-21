@@ -26,7 +26,7 @@
 ((.s)) :: See stack contents.
 ((emit)) _( a -- )_ :: Print top value of stack as a PETSCII character. Example: `q emit`
 ((£)) :: Comment to end of line. (Used on C64/PETSCII.)
-((\\)) :: Comment to end of line. (Used when cross-compiling from PC/ASCII.)
+((\)) :: Comment to end of line. (Used when cross-compiling from PC/ASCII.)
 ((pass:[(])) :: Multiline comment. Ignores everything until a `)`.
 ((bl)) _( -- char )_ :: _char_ is the PETSCII character for a space.
 ((space)) :: Display one space.
@@ -107,7 +107,7 @@ The following words use double-cell integers. On the stack, the cell containing 
 ((;)) _( -- )_ :: End the current definition, allow it to be found in the dictionary and go back to interpretation state.
 ((code)) _( "name" -- )_ :: Start assembling a new word.
 ((;code))  :: End assembler.
-((\,)) _( n -- )_ :: Write word on stack to `here` position and increase `here` by 2.
+((,)) _( n -- )_ :: Write word on stack to `here` position and increase `here` by 2.
 ((c,)) _( n -- )_ :: Write byte on stack to `here` position and increase `here` by 1.
 ((allot)) _( n -- )_ :: Add _n_ bytes to the body of the most recently defined word.
 ((literal)) _( n -- )_ :: Compile a value from the stack as a literal value. Typical use: `: x ... [ a b * ] literal ... ;`
@@ -116,7 +116,7 @@ The following words use double-cell integers. On the stack, the cell containing 
 ((])) _( -- )_ :: Return to compile mode.
 ((immediate::)) Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
 ((['])) name _( -- xt )_:: Place name's execution token xt on the stack.
-The execution token returned by the compiled phrase +[\'] x+ is the same value returned by +' x+ outside of compilation state.
+The execution token returned by the compiled phrase +['] x+ is the same value returned by +' x+ outside of compilation state.
 Typical use: +: x ... ['] name ... ;+
 ((compile,)) ( xt -- ) :: Append `jsr xt` to the word being compiled. Typical use: +: recurse immed latest >xt compile, ;+
 ((postpone)) _xxx_ :: Compile the compilation semantics (instead of interpretation semantics) of xxx. Typical use:
