@@ -52,7 +52,7 @@ include::links.adoc[]
 
 [appendix]
 == License
-include::../LICENSE.md[]
+include::../LICENSE.txt[]
 
 [index]
 == Word Index

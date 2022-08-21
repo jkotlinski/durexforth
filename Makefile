@@ -63,7 +63,7 @@ $(DISK_IMAGE): durexforth.prg Makefile ext/petcom $(SRCS)
 docs: docs/index.html
 
 docs/index.html: docs_src/index.adoc docs_src/words.adoc docs_src/links.adoc docs_src/sid.adoc docs_src/asm.adoc \
-	docs_src/mnemonics.adoc docs_src/memmap.adoc docs_src/anatomy.adoc LICENSE.md docs_src/tutorial.adoc \
+	docs_src/mnemonics.adoc docs_src/memmap.adoc docs_src/anatomy.adoc LICENSE.txt docs_src/tutorial.adoc \
 	docs_src/intro.adoc
 	mkdir -p build
 	git describe --tags --dirty | tr '\n' , > build/revision.adoc
