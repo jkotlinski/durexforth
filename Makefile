@@ -8,8 +8,8 @@ TAG_DEPLOY_DOT := $(shell git describe --tags --long --dirty=_m | sed 's/-g[0-9a
 TAG_DEPLOY := $(shell git describe --tags --abbrev=0 --dirty=_M | tr _. -_)
 GIT_HASH := $(shell git rev-parse --short HEAD)
 
-DEPLOY_NAME = durexForth-$(TAG_DEPLOY)
-DISK_IMAGE = durexForth.$(DISK_SUF)
+DEPLOY_NAME = durexforth-$(TAG_DEPLOY)
+DISK_IMAGE = durexforth.$(DISK_SUF)
 
 X64_OPTS = -warp
 X64 = x64sc
