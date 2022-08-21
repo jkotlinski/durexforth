@@ -25,7 +25,7 @@
 ((u.)) _( u -- )_ :: Print top value of stack as unsigned number.
 ((.s)) :: See stack contents.
 ((emit)) _( a -- )_ :: Print top value of stack as a PETSCII character. Example: `q emit`
-((&pound;)) :: Comment to end of line. (Used on C64/PETSCII.)
+((£)) :: Comment to end of line. (Used on C64/PETSCII.)
 ((\\)) :: Comment to end of line. (Used when cross-compiling from PC/ASCII.)
 ((pass:[(])) :: Multiline comment. Ignores everything until a `)`.
 ((bl)) _( -- char )_ :: _char_ is the PETSCII character for a space.
@@ -56,7 +56,7 @@
 ((abs)) _( a -- b )_ :: Give absolute value of a.
 ((min)) _( a b -- c )_ :: Give the lesser of a and b.
 ((max)) _( a b -- c )_ :: Give the greater of a and b.
-((within)) _( n lo hi -- flag )_ :: Return true if lo &le; n < hi.
+((within)) _( n lo hi -- flag )_ :: Return true if lo ≤ n < hi.
 ((<)) _( n1 n2 -- flag )_ :: Is n1 less than n2? (Signed.)
 ((>)) _( n1 n2 -- flag )_ :: Is n1 greater than n2? (Signed.)
 ((u<)) _( u1 u2 -- flag )_ :: Is u1 less than u2? (Unsigned.)
