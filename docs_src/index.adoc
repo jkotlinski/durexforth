@@ -1,6 +1,6 @@
 = durexForth: Operators Manual
 Johan Kotlinski; Kevin Lee Reno; Poindexter Frink; Richard Halkyard
-:toc2:
+:toc: preamble
 
 This manual is for durexForth, a modern Forth system for the Commodore 64.
 
