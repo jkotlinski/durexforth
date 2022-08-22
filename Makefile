@@ -40,8 +40,8 @@ deploy: $(DISK_IMAGE) cart.asm
 	cartconv -t simon -i build/cart.bin -o deploy/$(DEPLOY_NAME).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
 	asciidoctor-pdf -o deploy/$(DEPLOY_NAME).pdf docs_src/index.adoc
 
-durexforth.prg: *.asm
-	@$(AS) durexforth.asm
+durexforth.prg: asm_src/*.asm
+	@$(AS) -I asm_src asm_src/durexforth.asm
 
 .ONESHELL:
 $(DISK_IMAGE): durexforth.prg Makefile ext/petcom $(SRCS)
