@@ -57,7 +57,22 @@ be misrepresented as being the original software.
 ----
 
 ----
+Forth Test Suite
+
+(C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY
+MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.
+VERSION 1.2
+
+This program was written by Gerry Jackson in 2007, with contributions from
+others where indicated, and is in the public domain - it can be distributed
+and/or modified in any way but please retain this notice.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+----
+
+----
 petcom.c
 Copyright (c) 1995 Craig Bruce. Public domain.
 ----
-
