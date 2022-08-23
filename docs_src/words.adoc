@@ -324,7 +324,7 @@ As per the underlying Kernal routines, `chrin` does not check for end-of-file or
 
 The _ioresult_ value returned by `open`, `chkin` and `chkout` is 0 on success, or a Kernal error number if an error occurred.
 
-[NOTE]
+[CAUTION]
 ====
 Low-level device I/O may interfere with disk accesses done by durexForth and the `v` editor. The following guidelines should be followed to avoid interference:
 
