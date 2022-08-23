@@ -52,10 +52,10 @@ CMOVE_BACK
     dec SRC + 1
     dec DST + 1
     dey
+.copybytes
     lda (SRC),y
     sta (DST),y
     dey
-.copybytes
     lda (SRC),y
     sta (DST),y
     dey
