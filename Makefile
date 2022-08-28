@@ -28,7 +28,7 @@ SEPARATOR_NAME3 = '=-=---=-=---=-=,s'
 
 all: $(DISK_IMAGE)
 
-deploy: $(DISK_IMAGE) cart.asm
+deploy: $(DISK_IMAGE) asm_src/cart.asm
 	rm -rf deploy
 	mkdir deploy
 	cp $(DISK_IMAGE) deploy/$(DEPLOY_NAME).$(DISK_SUF)
