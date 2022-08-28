@@ -1,34 +1,3 @@
-\ Additional tests on the the ANS Forth Core word set
-
-\ This program was written by Gerry Jackson in 2007, with contributions from
-\ others where indicated, and is in the public domain - it can be distributed
-\ and/or modified in any way but please retain this notice.
-
-\ This program is distributed in the hope that it will be useful,
-\ but WITHOUT ANY WARRANTY; without even the implied warranty of
-\ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-\ The tests are not claimed to be comprehensive or correct
-
-\ ------------------------------------------------------------------------------
-\ The tests are based on John Hayes test program for the core word set
-\
-\ This file provides some more tests on Core words where the original Hayes
-\ tests are thought to be incomplete
-\
-\ Words tested in this file are:
-\     DO I +LOOP RECURSE ELSE >IN IMMEDIATE FIND IF...BEGIN...REPEAT ALLOT DOES>
-\ and
-\     Parsing behaviour
-\     Number prefixes # $ % and 'A' character input
-\     Definition names
-\ ------------------------------------------------------------------------------
-\ Assumptions and dependencies:
-\     - tester.fr or ttester.fs has been loaded prior to this file
-\     - core.fr has been loaded so that constants <TRUE> MAX-INT, MIN-INT and
-\       MAX-UINT are defined
-\ ------------------------------------------------------------------------------
-
 DECIMAL
 
 TESTING DO +LOOP with run-time increment, negative increment, infinite loop

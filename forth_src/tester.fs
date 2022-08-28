@@ -1,17 +1,3 @@
-\ From: John Hayes S1I
-\ Subject: tester.fr
-\ Date: Mon, 27 Nov 95 13:10:09 PST  
-
-\ (C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY
-\ MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.
-\ VERSION 1.2
-
-\ 24/11/2015 Replaced Core Ext word <> with = 0=
-\ 31/3/2015 Variable #ERRORS added and incremented for each error reported.
-\ 22/1/09 The words { and } have been changed to T{ and }T respectively to
-\ agree with the Forth 200X file ttester.fs. This avoids clashes with
-\ locals using { ... } and the FSL use of } 
-
 HEX
 
 \ SET THE FOLLOWING FLAG TO TRUE FOR MORE VERBOSE OUTPUT; THIS MAY
