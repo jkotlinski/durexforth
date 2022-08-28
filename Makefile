@@ -36,7 +36,7 @@ deploy: $(DISK_IMAGE) asm_src/cart.asm
 	# make cartridge
 	c1541 -attach deploy/$(DEPLOY_NAME).$(DISK_SUF) -read durexforth
 	mv durexforth build/durexforth
-	@$(AS) cart.asm
+	@$(AS) asm_src/cart.asm
 	cartconv -t simon -i build/cart.bin -o deploy/$(DEPLOY_NAME).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
 	asciidoctor-pdf -o deploy/$(DEPLOY_NAME).pdf docs_src/index.adoc
 
