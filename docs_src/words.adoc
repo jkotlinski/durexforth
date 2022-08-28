@@ -69,7 +69,9 @@
 
 === Double
 
-The following words use double-cell integers. On the stack, the cell containing the most significant part of a double-cell integer is above the cell containing the least significant part.
+Double-cell (32-bit) number support is limited.
+Double literals (e.g. `123456.`) are not supported.
+This may change with public demand.
 
 ((dabs)) _( d -- ud )_ :: Produce the absolute value of _d_.
 ((dnegate)) _( d -- d )_ :: Negate the double-cell integer _d_.
