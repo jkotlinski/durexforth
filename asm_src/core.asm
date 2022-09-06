@@ -1,4 +1,4 @@
-; DROP SWAP DUP ?DUP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN TUCK
+; DROP SWAP DUP ?DUP NIP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN TUCK
 ; >R R> R@ BL PICK DEPTH WITHIN FILL BASE 2*
 
     +BACKLINK "drop", 4 | F_IMMEDIATE
@@ -40,6 +40,12 @@ QDUP
     lda MSB, x
     ora LSB, x
     bne DUP
+    rts
+
+    +BACKLINK "nip", 3
+NIP ; ( a b -- b )
+    jsr SWAP
+    inx
     rts
 
     +BACKLINK "over", 4

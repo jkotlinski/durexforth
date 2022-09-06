@@ -236,12 +236,6 @@ print_word_not_found_error ; ( caddr u -- )
     jsr PUTCHR
     jmp ABORT
 
-    +BACKLINK "nip", 3
-NIP ; ( a b -- b )
-    jsr SWAP
-    inx
-    rts
-
     +BACKLINK "'", 1
     jsr PARSE_NAME
     jsr TWODUP
