@@ -1,5 +1,4 @@
 : 2+ 1+ 1+ ;
-: nip swap drop ;
 : jmp, 4c c, ;
 : postpone bl word dup find ?dup 0= if
 count notfound then

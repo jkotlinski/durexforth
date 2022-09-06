@@ -236,23 +236,21 @@ print_word_not_found_error ; ( caddr u -- )
     jsr PUTCHR
     jmp ABORT
 
+    +BACKLINK "nip", 3
+NIP ; ( a b -- b )
+    jsr SWAP
+    inx
+    rts
+
     +BACKLINK "'", 1
     jsr PARSE_NAME
     jsr TWODUP
     jsr FIND_NAME
-    inx
-    lda MSB-1,x
+    lda MSB,x
     beq print_word_not_found_error
-+   ldy LSB-1, x
-    sty LSB, x
-    sta MSB, x
-    sty LSB+1, x
-    sta MSB+1, x
-    jsr TO_XT
-    jsr SWAP
-    jsr GET_IMMED
-    inx
-    rts
++   jsr TO_XT
+    jsr NIP
+    jmp NIP
 
     +BACKLINK "find", 4
 FIND ; ( xt -1 | xt 1 | caddr 0 )
