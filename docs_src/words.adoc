@@ -185,7 +185,7 @@ if ... ((else)) ... then :: condition IF true-part ELSE false-part THEN rest
 : print0to7 8 0 do i . loop ;
 ----
 
-((do)) .. ((+loop)) :: Start a loop with a custom increment. Example:
+do .. ((+loop)) :: Start a loop with a custom increment. Example:
 
 ----
 ( prints odd numbers from 1 to n )
@@ -204,9 +204,9 @@ if ... ((else)) ... then :: condition IF true-part ELSE false-part THEN rest
 
 ((begin)) .. ((again)) :: Infinite loop.
 
-((begin)) .. ((until)) :: BEGIN loop-part condition UNTIL. Loop until condition is true.
+begin .. ((until)) :: BEGIN loop-part condition UNTIL. Loop until condition is true.
 
-((begin)) .. ((while)) .. ((repeat)) :: BEGIN condition WHILE loop-part REPEAT. Repeat loop-part while condition is true.
+begin .. ((while)) .. ((repeat)) :: BEGIN condition WHILE loop-part REPEAT. Repeat loop-part while condition is true.
 
 [[exit]] ((exit)) :: Exit function. Typical use: `: X test IF EXIT THEN ... ;`
 
@@ -306,7 +306,7 @@ Words for sending DOS commands to drives and reading drive status are available 
 backup
 ----
 
-((dos)) ( "cmd" -- )] Send _cmd_ to the current device's command channel, and print the response. Note that the remainder of the line is treated as part of the command. This makes it possible to refer to file names that contain spaces, but means that `dos` and its command should be on their own line, or the last words on a line. Example: `dos scratch0:old file` will delete a file named _old file_.
+((dos)) _( "cmd" -- )_ :: Send _cmd_ to the current device's command channel, and print the response. Note that the remainder of the line is treated as part of the command. This makes it possible to refer to file names that contain spaces, but means that `dos` and its command should be on their own line, or the last words on a line. Example: `dos scratch0:old file` will delete a file named _old file_.
 
 ==== Low-Level Device I/O
 
