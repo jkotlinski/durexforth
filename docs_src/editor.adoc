@@ -2,7 +2,7 @@ The editor is a vi clone. Launch it by entering +v foo+ in the interpreter (+foo
 
 === Inserting Text
 
-At startup, the editor is in command mode. These commands start insert mode, which allows you to enter text. Return to command mode with ←.
+At startup, the editor is in command mode. These commands start insert mode, which allows you to enter text. Return to command mode with kbd:[←].
 
 i:: Insert text.
 R:: Replace text.
@@ -34,7 +34,7 @@ G:: Go to end of file.
 H:: Go to home window line.
 L:: Go to last window line.
 M:: Go to middle window line.
-/{string}:: Search forward for the next occurrence of the string.
+/__string__:: Search forward for the next occurrence of the string.
 *:: Search forward for the next occurrence of the word under the cursor.
 n:: Repeat the latest search.
 
@@ -46,7 +46,7 @@ ZZ:: Save and exit.
 :q:: Exit.
 :w:: Save. (Must be followed by return.)
 :w!filename:: Save as.
-F7:: Compile and run editor contents. On completion, enter +v+ to return to editor. To terminate a running program, press _RESTORE_.
+F7:: Compile and run editor contents. On completion, enter +v+ to return to editor. To terminate a running program, press kbd:[RESTORE].
 
 === Text Manipulation
 r:: Replace character under cursor.

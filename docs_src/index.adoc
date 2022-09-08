@@ -1,6 +1,9 @@
 = durexForth: Operators Manual
 Johan Kotlinski; Kevin Lee Reno; Poindexter Frink; Richard Halkyard
 :toc: preamble
+:doctype: book
+:experimental:
+// experimental enables the kbd: macro https://docs.asciidoctor.org/asciidoc/latest/macros/keyboard-macro/
 
 This manual is for durexForth, a modern Forth system for the Commodore 64.
 

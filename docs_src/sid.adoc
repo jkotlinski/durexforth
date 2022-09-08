@@ -1,10 +1,10 @@
 The `sid` module contains low-level words for controlling the SID chip. To load it, type `include sid`. To test that it works, run `sid-demo`.
 
 === Voice Control
-((voice! _( n -- )_ :: Select SID voice 0-2.
-((freq! _( n -- )_ :: Write 16-bit frequency.
-((pulse! _( n -- )_ :: Write 16-bit pulse value.
-((control! _( n -- )_ :: Write 8-bit control value.
+((voice!)) _( n -- )_ :: Select SID voice 0-2.
+((freq!)) _( n -- )_ :: Write 16-bit frequency.
+((pulse!)) _( n -- )_ :: Write 16-bit pulse value.
+((control!)) _( n -- )_ :: Write 8-bit control value.
 ((srad!)) _( srad -- )_ :: Write 16-bit ADSR value. (Bytes are swapped.)
 ((note!)) _( n -- )_ :: Play note in range [0, 94], where 0 equals C-0. The tuning is correct for PAL.
 
