@@ -354,6 +354,8 @@ The `compat` module contains various words that are not deemed necessary for enj
 ((>number)) _( ud addr u -- ud addr2 u2 )_ :: Convert the string in _addr u_ to digits, using `base`, and adds each digit into _ud_ after multiplying it with `base`. _addr2 u2_ contains the part of the string that was not converted.
 ((>body)) _( xt -- addr )_ :: Return the data field address that belongs to the execution token. Example use: `' foo >body`
 ((sm/rem)) _( d n -- r q )_ :: Divide double-cell number _d_ by _n_, giving the symmetric quotient _q_ and the remainder _r_. Values are signed.
+((true)) _( -- true )_ :: Return a _true_ flag, a single-cell value with all bits set.
+((false)) _( -- false )_ :: Return a _false_ flag.
 
 === Kernel Calls
 

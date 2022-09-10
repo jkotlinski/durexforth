@@ -22,8 +22,9 @@ SRC_NAMES = base debug v asm gfx gfxdemo rnd sin ls turtle fractals \
     wordlist io open dos see
 SRCS = $(addprefix $(SRC_DIR)/,$(addsuffix .fs,$(SRC_NAMES)))
 
-TEST_SRC_NAMES = test testcore testcoreplus tester testsee
+TEST_SRC_NAMES = test testcore testcoreplus testcoreext tester testsee
 TEST2_SRC_NAMES = see gfx gfxdemo fractals mmldemo mml sid spritedemo sprite compat rnd sin turtle
+TEST_SRCS = $(addprefix test/,$(addsuffix .fs,$(TEST_SRC_NAMES)))
 
 SEPARATOR_NAME1 = '=-=-=-=-=-=-=-=,s'
 SEPARATOR_NAME2 = '=-------------=,s'
@@ -31,7 +32,7 @@ SEPARATOR_NAME3 = '=-=---=-=---=-=,s'
 
 all: $(DISK_IMAGE)
 
-deploy: $(DISK_IMAGE) asm_src/cart.asm
+deploy: $(DISK_IMAGE) asm_src/cart.asm $(TEST_SRCS)
 	rm -rf deploy
 	mkdir deploy
 	cp $(DISK_IMAGE) deploy/$(DEPLOY_NAME).$(DISK_SUF)

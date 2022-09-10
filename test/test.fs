@@ -32,6 +32,7 @@ parse-name compat included
 parse-name tester included
 parse-name testcore included
 parse-name testcoreplus included
+parse-name testcoreext included
 
 : push ( ch -- )
 $c6 c@ $277 + c!

@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - V: visual bug when saving.
 ### Added
  - An improved SEE which should decode most colon words.
+ - TRUE FALSE to compat.
+ - Relevant CORE EXT tests.
 ### Changed
  - S" max string length is reduced to 255 characters.
  - Changed REFILL to Forth standard behavior: Fill the input buffer from the input source, returning true if successful.

@@ -1,5 +1,8 @@
 \ forth2012 compatibility stuff
 
+-1 constant true
+0 constant false
+
 code 2over ( a b c d -- a b c d a b )
 dex,
 msb 4 + lda,x msb sta,x
