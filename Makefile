@@ -17,10 +17,12 @@ X64_OPTS += +confirmonexit
 
 SRC_DIR = forth_src
 SRC_NAMES = base debug v asm gfx gfxdemo rnd sin ls turtle fractals \
-    sprite doloop sys labels mml mmldemo sid spritedemo test testcore \
-    testcoreplus tester format require compat timer float viceutil turnkey \
-    wordlist io open dos see testsee
+    sprite doloop sys labels mml mmldemo sid spritedemo \
+    format require compat timer float viceutil turnkey \
+    wordlist io open dos see
 SRCS = $(addprefix $(SRC_DIR)/,$(addsuffix .fs,$(SRC_NAMES)))
+
+TEST_SRC_NAMES = test testcore testcoreplus tester testsee see gfx gfxdemo fractals mmldemo mml sid spritedemo sprite compat rnd sin turtle
 
 SEPARATOR_NAME1 = '=-=-=-=-=-=-=-=,s'
 SEPARATOR_NAME2 = '=-------------=,s'
@@ -33,6 +35,18 @@ deploy: $(DISK_IMAGE) asm_src/cart.asm
 	mkdir deploy
 	cp $(DISK_IMAGE) deploy/$(DEPLOY_NAME).$(DISK_SUF)
 	$(X64) $(X64_OPTS) deploy/$(DEPLOY_NAME).$(DISK_SUF)
+	\
+	# make test disk
+	echo  >build/c1541.script attach deploy/$(DEPLOY_NAME).$(DISK_SUF)
+	echo >>build/c1541.script read durexforth
+	echo >>build/c1541.script format "test,00" $(DISK_SUF) deploy/tests.$(DISK_SUF)
+	echo >>build/c1541.script write durexforth
+	@for forth in $(TEST_SRC_NAMES); do\
+		cat build/header $(SRC_DIR)/$$forth.fs | ext/petcom - > build/$$forth.pet; \
+		echo >>build/c1541.script write build/$$forth.pet $$forth; \
+	done;
+	c1541 <build/c1541.script
+	\
 	# make cartridge
 	c1541 -attach deploy/$(DEPLOY_NAME).$(DISK_SUF) -read durexforth
 	mv durexforth build/durexforth

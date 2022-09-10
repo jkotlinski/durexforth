@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - #> (the pictured numeric output string buffer) now uses its own buffer, separate from HERE.
  - Do not print "ok" while compiling. Makes it easier to re-enter multi-line word definitions in interpreter.
  - Optimized MOVE.
+ - Moved tests to a separate disk (tests.d64).
 
 ## [4.0.0] - 2022-07-20
 ### Changed

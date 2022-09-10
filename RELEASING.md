@@ -5,6 +5,7 @@
 1. `git tag v#.#.#`
 1. `git push --tag`
 1. `make deploy`
+1. Run deploy/tests.d64, `include test`, verify that all tests pass (`OK` at end)
 1. Create new release in Github. Copy change list from CHANGELOG.md and add the binaries in deploy folder.
 1. `git checkout github-pages`
 1. `git merge master`
