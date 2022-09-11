@@ -132,6 +132,18 @@ ONE
 !src "lowercase.asm"
 !src "disk.asm"
 
+BOOT_STRING
+!src "../build/version.asm"
+PRINT_BOOT_MESSAGE
+    ldx #0
+-   lda BOOT_STRING,x
+    jsr PUTCHR
+    inx
+    cpx #(PRINT_BOOT_MESSAGE - BOOT_STRING)
+    bne -
+    jsr CR
+    jmp QUIT
+
 ; LATEST - points to the most recently defined dictionary word.
 
     +BACKLINK "latest", 6
@@ -142,9 +154,9 @@ LATEST_MSB = * + 3
 ; ALL CONTENTS BELOW LATEST WILL BE OVERWRITTEN!!!
 
 load_base
-    lda #<QUIT
+    lda #<PRINT_BOOT_MESSAGE
     sta _START
-    lda #>QUIT
+    lda #>PRINT_BOOT_MESSAGE
     sta _START+1
     dex
     dex
