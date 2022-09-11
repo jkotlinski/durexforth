@@ -14,6 +14,7 @@ DISK_IMAGE = durexforth.$(DISK_SUF)
 X64_OPTS = -warp
 X64 = x64sc
 X64_OPTS += +confirmonexit
+PETCAT = petcat # text conversion utility, included in VICE package
 
 SRC_DIR = forth_src
 SRC_NAMES = base debug v asm gfx gfxdemo rnd sin ls turtle fractals \
@@ -44,11 +45,11 @@ deploy: $(DISK_IMAGE) asm_src/cart.asm $(TEST_SRCS)
 	echo >>build/c1541.script format "test,DF" $(DISK_SUF) deploy/tests.$(DISK_SUF)
 	echo >>build/c1541.script write durexforth
 	@for forth in $(TEST_SRC_NAMES); do\
-		cat build/header test/$$forth.fs | ext/petcom - > build/$$forth.pet; \
+		cat build/header test/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
 		echo >>build/c1541.script write build/$$forth.pet $$forth; \
 	done;
 	@for forth in $(TEST2_SRC_NAMES); do\
-		cat build/header $(SRC_DIR)/$$forth.fs | ext/petcom - > build/$$forth.pet; \
+		cat build/header $(SRC_DIR)/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
 		echo >>build/c1541.script write build/$$forth.pet $$forth; \
 	done;
 	c1541 <build/c1541.script
@@ -64,7 +65,7 @@ durexforth.prg: asm_src/*.asm
 	@$(AS) -I asm_src asm_src/durexforth.asm
 
 .ONESHELL:
-$(DISK_IMAGE): durexforth.prg Makefile ext/petcom $(SRCS)
+$(DISK_IMAGE): durexforth.prg Makefile $(SRCS)
 	mkdir -p build
 	touch build/empty
 	echo  >build/c1541.script format "durexforth,DF" $(DISK_SUF) $@
@@ -75,7 +76,7 @@ $(DISK_IMAGE): durexforth.prg Makefile ext/petcom $(SRCS)
 	echo >>build/c1541.script write build/empty $(SEPARATOR_NAME2)
 	echo -n "aa" > build/header
 	@for forth in $(SRC_NAMES); do\
-		cat build/header $(SRC_DIR)/$$forth.fs | ext/petcom - > build/$$forth.pet; \
+		cat build/header $(SRC_DIR)/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
 		echo >>build/c1541.script write build/$$forth.pet $$forth; \
 	done;
 	echo >>build/c1541.script write build/empty $(SEPARATOR_NAME3)

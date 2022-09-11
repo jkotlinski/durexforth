@@ -72,8 +72,3 @@ This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ----
-
-----
-petcom.c
-Copyright (c) 1995 Craig Bruce. Public domain.
-----
