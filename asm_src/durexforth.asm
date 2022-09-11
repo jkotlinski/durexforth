@@ -142,6 +142,7 @@ PRINT_BOOT_MESSAGE
     cpx #(PRINT_BOOT_MESSAGE - BOOT_STRING)
     bne -
     jsr CR
+    ldx #X_INIT
     jmp QUIT
 
 ; LATEST - points to the most recently defined dictionary word.
