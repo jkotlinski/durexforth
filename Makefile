@@ -1,6 +1,5 @@
 C1541 = c1541
 AS = acme
-EMU = x64sc
 # deploy 1571 (d71) or 1581 (d81); e.g. make DISK_SUF=d81 deploy
 DISK_SUF = d64
 
@@ -94,7 +93,7 @@ docs/index.html: docs_src/index.adoc docs_src/words.adoc docs_src/links.adoc doc
 	asciidoctor -a revnumber=$(shell git describe --tags --dirty) -a revdate=$(shell git log -1 --format=%as) -o docs/index.html docs_src/index.adoc
 
 check: $(DISK_IMAGE)
-	$(EMU) $(DISK_IMAGE)
+	$(X64) $(DISK_IMAGE)
 
 clean:
 	rm -f *.lbl *.prg *.$(DISK_SUF)
