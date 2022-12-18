@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - POSTPONE error handling.
  - Documented DEFCODE, #S
  - V: visual bug when saving.
- - V: allow inserting home+cursor characters inside quotes.
+ - V: only allow inserting control characters inside quotes.
 ### Added
  - An improved SEE which should decode most colon words.
  - TRUE FALSE to compat.

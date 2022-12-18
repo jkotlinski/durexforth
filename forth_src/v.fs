@@ -283,10 +283,6 @@ $1d value right
 curx @ linelen 1- = if
 force-right else cur-right then ;
 
-: outside-quotes
-1 editpos curlinestart @ ?do
-i c@ '"' = if 0= then loop ;
-
 : do-insert
 [ \ nbsp => space
 lsb lda,x $a0 cmp,# +branch bne,
@@ -295,25 +291,23 @@ $20 lda,# lsb sta,x
 :+ $8d cmp,# +branch bne,
 $d lda,# lsb sta,x :+ ]
 
-outside-quotes if dup case
-$13 of drop exit endof \ clr/home
-left of cur-left drop exit endof
-down of cur-down drop exit endof
-up of cur-up drop exit endof
-right of ins-right drop exit endof
-endcase then
-
 dup case
-3 of drop endof \ run/stop
-$5f of ins-stop drop endof \ <-
-$14 of backspace drop endof \ inst
-$94 of del-char drop endof \ del
+$5f of ins-stop drop exit endof \ <-
+$14 of backspace drop exit endof \ inst
+$94 of del-char drop exit endof \ del
 lf of ins-char cur-down sol show-page
-endof
+exit endof endcase
+
+\ drop control chars outside quotes
+dup $7f and $20 < if
+1 editpos curlinestart @ ?do
+i c@ '"' = if 0= then loop
+if drop exit then then
+
 insert 2 = if at-eol if
 ins-start ins-char else repl-char
 1 curx +! then
-else ins-char then endcase ;
+else ins-char then ;
 
 : del-word
 line-dirty!
