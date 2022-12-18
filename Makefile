@@ -62,7 +62,8 @@ deploy: $(DISK_IMAGE) asm_src/cart.asm $(TEST_SRCS)
 	asciidoctor-pdf -o deploy/$(DEPLOY_NAME).pdf docs_src/index.adoc
 
 durexforth.prg: asm_src/*.asm
-	echo >build/version.asm !pet \"durexForth $(TAG)\"
+	mkdir -p build
+	echo >build/version.asm !pet \"durexForth $(TAG_DEPLOY_DOT)\"
 	@$(AS) -I asm_src asm_src/durexforth.asm
 
 .ONESHELL:
