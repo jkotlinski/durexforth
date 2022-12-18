@@ -606,12 +606,12 @@ depth \ stack check[
 insert 0= if curx @
 linelen dup if 1- then min
 curx c! then cursor-scr-pos
-dup @ $80 or swap c!
+dup @ $80 xor swap c!
 
 key
 
 \ hide cursor
-cursor-scr-pos dup @ $7f and
+cursor-scr-pos dup @ $80 xor
 swap c!
 
 \ f7
