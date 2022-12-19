@@ -300,8 +300,8 @@ exit endof endcase
 
 \ drop control chars outside quotes
 dup $7f and $20 < if
-1 editpos curlinestart @ ?do
-i c@ '"' = if 0= then loop
+-1 editpos curlinestart @ ?do
+i c@ '"' = xor loop
 if drop exit then then
 
 insert 2 = if at-eol if
