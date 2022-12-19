@@ -76,7 +76,7 @@ $(DISK_IMAGE): durexforth.prg Makefile $(SRCS)
 	echo >>build/c1541.script write build/empty $(TAG_DEPLOY_DOT),s
 	echo >>build/c1541.script write build/empty '  '$(GIT_HASH),s
 	echo >>build/c1541.script write build/empty $(SEPARATOR_NAME2)
-	echo -n "aa" > build/header
+	printf aa > build/header
 	@for forth in $(SRC_NAMES); do\
 		cat build/header $(SRC_DIR)/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
 		echo >>build/c1541.script write build/$$forth.pet $$forth; \
