@@ -45,11 +45,11 @@ deploy: $(DISK_IMAGE) asm_src/cart.asm $(TEST_SRCS)
 	echo >>build/c1541.script format "test,DF" $(DISK_SUF) deploy/tests.$(DISK_SUF)
 	echo >>build/c1541.script write durexforth
 	@for forth in $(TEST_SRC_NAMES); do\
-		cat build/header test/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
+		printf aa | cat - test/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
 		echo >>build/c1541.script write build/$$forth.pet $$forth; \
 	done;
 	@for forth in $(TEST2_SRC_NAMES); do\
-		cat build/header $(SRC_DIR)/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
+		printf aa | cat - $(SRC_DIR)/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
 		echo >>build/c1541.script write build/$$forth.pet $$forth; \
 	done;
 	c1541 <build/c1541.script
@@ -76,9 +76,8 @@ $(DISK_IMAGE): durexforth.prg Makefile $(SRCS)
 	echo >>build/c1541.script write build/empty $(TAG_DEPLOY_DOT),s
 	echo >>build/c1541.script write build/empty '  '$(GIT_HASH),s
 	echo >>build/c1541.script write build/empty $(SEPARATOR_NAME2)
-	printf aa > build/header
 	@for forth in $(SRC_NAMES); do\
-		cat build/header $(SRC_DIR)/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
+		printf aa | cat - $(SRC_DIR)/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
 		echo >>build/c1541.script write build/$$forth.pet $$forth; \
 	done;
 	echo >>build/c1541.script write build/empty $(SEPARATOR_NAME3)
