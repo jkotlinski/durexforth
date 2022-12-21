@@ -1,4 +1,4 @@
-C1541   = c1541
+C1541 = c1541
 AS = acme
 # deploy 1571 (d71) or 1581 (d81); e.g. make DISK_SUF=d81 deploy
 DISK_SUF = d64
@@ -52,10 +52,10 @@ deploy: $(DISK_IMAGE) asm_src/cart.asm $(TEST_SRCS)
 		printf aa | cat - $(SRC_DIR)/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
 		echo >>build/c1541.script write build/$$forth.pet $$forth; \
 	done;
-	c1541 <build/c1541.script
+	$(C1541) <build/c1541.script
 	\
 	# make cartridge
-	c1541 -attach deploy/$(DEPLOY_NAME).$(DISK_SUF) -read durexforth
+	$(C1541) -attach deploy/$(DEPLOY_NAME).$(DISK_SUF) -read durexforth
 	mv durexforth build/durexforth
 	@$(AS) asm_src/cart.asm
 	cartconv -t simon -i build/cart.bin -o deploy/$(DEPLOY_NAME).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
@@ -81,7 +81,7 @@ $(DISK_IMAGE): durexforth.prg Makefile $(SRCS)
 		echo >>build/c1541.script write build/$$forth.pet $$forth; \
 	done;
 	echo >>build/c1541.script write build/empty $(SEPARATOR_NAME3)
-	c1541 <build/c1541.script
+	$(C1541) <build/c1541.script
 
 docs: docs/index.html
 
@@ -90,6 +90,9 @@ docs/index.html: docs_src/index.adoc docs_src/words.adoc docs_src/links.adoc doc
 	docs_src/intro.adoc
 	rm -rf docs
 	asciidoctor -a revnumber=$(shell git describe --tags --dirty) -a revdate=$(shell git log -1 --format=%as) -o docs/index.html docs_src/index.adoc
+
+check: $(DISK_IMAGE)
+	$(X64) $(DISK_IMAGE)
 
 clean:
 	rm -f *.lbl *.prg *.$(DISK_SUF)
