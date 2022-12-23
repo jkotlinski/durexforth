@@ -1,4 +1,4 @@
-C1541   = c1541
+C1541 = c1541
 AS = acme
 # deploy 1571 (d71) or 1581 (d81); e.g. make DISK_SUF=d81 deploy
 DISK_SUF = d64
@@ -45,17 +45,17 @@ deploy: $(DISK_IMAGE) asm_src/cart.asm $(TEST_SRCS)
 	echo >>build/c1541.script format "test,DF" $(DISK_SUF) deploy/tests.$(DISK_SUF)
 	echo >>build/c1541.script write durexforth
 	@for forth in $(TEST_SRC_NAMES); do\
-		cat build/header test/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
+		printf aa | cat - test/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
 		echo >>build/c1541.script write build/$$forth.pet $$forth; \
 	done;
 	@for forth in $(TEST2_SRC_NAMES); do\
-		cat build/header $(SRC_DIR)/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
+		printf aa | cat - $(SRC_DIR)/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
 		echo >>build/c1541.script write build/$$forth.pet $$forth; \
 	done;
-	c1541 <build/c1541.script
+	$(C1541) <build/c1541.script
 	\
 	# make cartridge
-	c1541 -attach deploy/$(DEPLOY_NAME).$(DISK_SUF) -read durexforth
+	$(C1541) -attach deploy/$(DEPLOY_NAME).$(DISK_SUF) -read durexforth
 	mv durexforth build/durexforth
 	@$(AS) asm_src/cart.asm
 	cartconv -t simon -i build/cart.bin -o deploy/$(DEPLOY_NAME).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
@@ -76,13 +76,12 @@ $(DISK_IMAGE): durexforth.prg Makefile $(SRCS)
 	echo >>build/c1541.script write build/empty $(TAG_DEPLOY_DOT),s
 	echo >>build/c1541.script write build/empty '  '$(GIT_HASH),s
 	echo >>build/c1541.script write build/empty $(SEPARATOR_NAME2)
-	echo -n "aa" > build/header
 	@for forth in $(SRC_NAMES); do\
-		cat build/header $(SRC_DIR)/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
+		printf aa | cat - $(SRC_DIR)/$$forth.fs | $(PETCAT) -text -w2 -o build/$$forth.pet - ; \
 		echo >>build/c1541.script write build/$$forth.pet $$forth; \
 	done;
 	echo >>build/c1541.script write build/empty $(SEPARATOR_NAME3)
-	c1541 <build/c1541.script
+	$(C1541) <build/c1541.script
 
 docs: docs/index.html
 
@@ -91,6 +90,9 @@ docs/index.html: docs_src/index.adoc docs_src/words.adoc docs_src/links.adoc doc
 	docs_src/intro.adoc
 	rm -rf docs
 	asciidoctor -a revnumber=$(shell git describe --tags --dirty) -a revdate=$(shell git log -1 --format=%as) -o docs/index.html docs_src/index.adoc
+
+check: $(DISK_IMAGE)
+	$(X64) $(DISK_IMAGE)
 
 clean:
 	rm -f *.lbl *.prg *.$(DISK_SUF)
