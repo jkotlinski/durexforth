@@ -203,7 +203,11 @@ cury @ $28 * $400 + $28 bl fill
 0 cury @ setcur
 curlinestart @ print-line drop ;
 
+0 value !"mode \ not quote-mode
+
 : ins-start
+-1 editpos curlinestart @ ?do
+i c@ '"' = xor loop to !"mode
 1 to insert 'i' set-status ;
 
 : repl-start
@@ -292,17 +296,21 @@ $20 lda,# lsb sta,x
 $d lda,# lsb sta,x :+ ]
 
 dup case
+'"' of !"mode 0= to !"mode endof
 $5f of ins-stop drop exit endof \ <-
 $14 of backspace drop exit endof \ inst
 $94 of del-char drop exit endof \ del
 lf of ins-char cur-down sol show-page
 exit endof endcase
 
-\ drop control chars outside quotes
-dup $7f and $20 < if
--1 editpos curlinestart @ ?do
-i c@ '"' = xor loop
-if drop exit then then
+\ handles control chars outside quotes
+dup $7f and $20 < !"mode and if
+dup case
+left of cur-left drop exit endof
+right of cur-right drop exit endof
+up of cur-up drop exit endof
+down of cur-down drop exit endof
+endcase drop exit then
 
 insert 2 = if at-eol if
 ins-start ins-char else repl-char
