@@ -288,9 +288,9 @@ If the definition is immediate, also return 1, otherwise also return -1.
 ((included)) _( filenameptr filenamelen -- )_ :: Load and parse file.
 ((require)) _( "filename" -- )_ :: Like include, except that load is skipped if the file is already loaded.
 ((required)) _( filenameptr filenamelen -- )_ :: Like included, except that load is skipped if the file is already loaded.
-((loadb)) _( filenameptr filenamelen dst -- endaddr )_ :: Load binary data to _dst_.
-Returns 0 on failure, otherwise address after last written byte.
-((saveb)) _( start end filenameptr filenamelength -- )_ :: Save binary data.
+((loadb)) _( filenameptr filenamelen dst -- endaddr )_ :: Load file to _dst_.
+Returns the address after last written byte, or 0 on failure.
+((saveb)) _( start end+1 filenameptr filenamelength -- )_ :: Save file. _Start_ = start address of memory area. _End+1_ = end adress of memory area plus 1.
 ((device)) _( device# -- )_ :: Switch the active device.
 ((save-forth)) _( "filename" -- )_ :: Save the forth to the given filename.
 ((ls)) :: Load and print disk directory with optional drive # and wildcards. Example: `ls $1:*=p` Load directory for drive 1, only prg files.
