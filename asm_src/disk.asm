@@ -22,44 +22,37 @@ SAVE = $ffd8
     rts
 
 _errorchread
-        LDA #$00      ; no filename
-        tax
-        tay
-        JSR SETNAM
-        LDA #$0F      ; file number 15
-        LDX $BA       ; last used device number
-        BNE +
-        LDX #$08      ; default to device 8
-+	    LDY #$0F      ; secondary address 15 (error channel)
-        JSR SETLFS
+        ; from https://codebase64.org/doku.php?id=base:reading_the_error_channel_of_a_disk_drive
+        LDA #$00
+        STA $90       ; clear STATUS flags
 
-        JSR OPEN
-        BCS .error    ; if carry set, the file could not be opened
+        LDA $BA       ; device number
+        JSR $FFB1     ; call LISTEN
+        LDA #$6F      ; secondary address 15 (command channel)
+        JSR $FF93     ; call SECLSN (SECOND)
+        JSR $FFAE     ; call UNLSN
+        LDA $90       ; get STATUS flags
+        BNE .devnp    ; device not present
 
-        LDX #$0F      ; filenumber 15
-        JSR CHKIN     ; file 15 now used as input
+        LDA $BA       ; device number
+        JSR $FFB4     ; call TALK
+        LDA #$6F      ; secondary address 15 (error channel)
+        JSR $FF96     ; call SECTLK (TKSA)
 
-        LDY #$00
-.loop   JSR READST    ; read status byte
-        BNE geof      ; either EOF or read error
-        JSR CHRIN     ; get a byte from file
-        JSR CHROUT    ; print byte to screen
+.loop   LDA $90       ; get STATUS flags
+        BNE .eof      ; either EOF or error
+        JSR $FFA5     ; call IECIN (get byte from IEC bus)
+        JSR $FFD2     ; call CHROUT (print byte to screen)
         JMP .loop     ; next byte
+.eof    jmp $FFAB     ; call UNTLK
 
-geof
-.error
-        ; Accumulator contains BASIC error code
-
-        ; most likely error:
-        ; A = $05 (DEVICE NOT PRESENT)
-
-        ; ... error handling for open errors ...
-
-.glose
-        LDA #$0F      ; filenumber 15
-        JSR CLOSE
-        jmp CLRCHN
-
+.devnp  ; print "device not present" and abort
+        ldx #X_INIT-1
+        lda #5
+        sta LSB,x
+        lda #0
+        sta MSB,x
+        jmp IOABORT
 
 ; LOADB ( filenameptr filenamelen dst -- endaddress ) load binary file
 ;  - s" base" 7000 loadb #load file to 7000
@@ -143,10 +136,6 @@ SAVEB
     pha
     lda $af
     pha
-    lda $9d             ; enable kernal logging
-    pha
-    lda #$ff
-    sta $9d
 
     lda LSB+3, x		; range begin lo
     sta $c1
@@ -174,12 +163,8 @@ save_binary_srange_end_hi = *+1
     ldy #$ff	;load_address hi
     lda #$c1	;tell routine that start address is located in $c1/$c2
     jsr SAVE
-    lda #' '
-    jsr CHROUT
     jsr _errorchread
 
-    pla                 ; restore kernal logging
-    sta $9d
     pla
     sta $af
     pla
