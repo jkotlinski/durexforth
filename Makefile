@@ -16,7 +16,7 @@ X64 = x64sc
 X64_OPTS += +confirmonexit
 PETCAT = petcat # text conversion utility, included in VICE package
 
-SRC_DIR = forth_src
+SRC_DIR = forth
 SRC_NAMES = base debug v asm gfx gfxdemo rnd sin ls turtle fractals \
     sprite doloop sys labels mml mmldemo sid spritedemo \
     format require compat timer float viceutil turnkey \
@@ -33,7 +33,7 @@ SEPARATOR_NAME3 = '=-=---=-=---=-=,s'
 
 all: $(DISK_IMAGE)
 
-deploy: $(DISK_IMAGE) asm_src/cart.asm $(TEST_SRCS)
+deploy: $(DISK_IMAGE) asm/cart.asm $(TEST_SRCS)
 	rm -rf deploy
 	mkdir deploy
 	cp $(DISK_IMAGE) deploy/$(DEPLOY_NAME).$(DISK_SUF)
@@ -57,14 +57,14 @@ deploy: $(DISK_IMAGE) asm_src/cart.asm $(TEST_SRCS)
 	# make cartridge
 	$(C1541) -attach deploy/$(DEPLOY_NAME).$(DISK_SUF) -read durexforth
 	mv durexforth build/durexforth
-	@$(AS) asm_src/cart.asm
+	@$(AS) asm/cart.asm
 	cartconv -t simon -i build/cart.bin -o deploy/$(DEPLOY_NAME).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
 	asciidoctor-pdf -o deploy/$(DEPLOY_NAME).pdf docs_src/index.adoc
 
-durexforth.prg: asm_src/*.asm
+durexforth.prg: asm/*.asm
 	mkdir -p build
 	echo >build/version.asm !pet \"durexForth $(TAG_DEPLOY_DOT)\"
-	@$(AS) -I asm_src asm_src/durexforth.asm
+	@$(AS) -I asm asm/durexforth.asm
 
 .ONESHELL:
 $(DISK_IMAGE): durexforth.prg Makefile $(SRCS)
