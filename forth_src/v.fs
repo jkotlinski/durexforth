@@ -616,6 +616,14 @@ linelen dup if 1- then min
 curx c! then cursor-scr-pos
 dup @ $80 xor swap c!
 
+\ show position
+$7e8 >r
+eof @ bufstart - 1- 0 <# #s #>
+r> over - dup >r swap move
+r> 1- '/' over c! >r
+editpos bufstart - 0 <# #s #>
+r> over - swap move
+
 key
 
 \ hide cursor
@@ -627,7 +635,8 @@ dup $88 = if 2drop cleanup rom-kernal
 bufstart eof @ bufstart - 1-
 evaluate quit then
 
-insert if do-insert else do-main if
+insert if do-insert else
+$7dd 11 bl fill do-main if
 drop rom-kernal cleanup exit then then
 
 need-refresh if show-page else
