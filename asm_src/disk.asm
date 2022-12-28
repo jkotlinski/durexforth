@@ -21,7 +21,9 @@ SAVE = $ffd8
     inx
     rts
 
+    +BACKLINK "rderr", 5
 _errorchread
+        ; read and print error channel of the active device
         ; from https://codebase64.org/doku.php?id=base:reading_the_error_channel_of_a_disk_drive
         LDA #$00
         STA $90       ; clear STATUS flags
