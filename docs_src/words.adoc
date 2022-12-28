@@ -291,10 +291,11 @@ If the definition is immediate, also return 1, otherwise also return -1.
 ((loadb)) _( filenameptr filenamelen dst -- endaddr )_ :: Load file to _dst_.
 Returns the address after last written byte, or 0 on failure.
 ((saveb)) _( start end+1 filenameptr filenamelength -- )_ :: Save file. _Start_ = start address of memory area. _End+1_ = end adress of memory area plus 1.
-((device)) _( device# -- )_ :: Switch the active device.
+((device)) _( device# -- )_ :: Switch the current device.
 ((save-forth)) _( "filename" -- )_ :: Save the forth to the given filename.
 ((ls)) :: Load and print disk directory with optional drive # and wildcards. Example: `ls $1:*=p` Load directory for drive 1, only prg files.
 ((rdir)) _( addr -- )_ :: Display disk directory previously loaded to addr.
+((rderr)) _( -- )_ :: Read and print error channel of the current device.
 
 ==== DOS Commands
 

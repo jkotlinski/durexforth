@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - DOWORDS incorrectly quit for some non-false xt return values.
  - POSTPONE error handling.
  - Documented DEFCODE, #S
+ - LOADB/SAVEB/DOS hang on device not present.
  - V: visual bug when saving.
  - V: only allow inserting control characters inside quotes.
 ### Added
@@ -16,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - TRUE FALSE to compat.
  - Relevant CORE EXT tests.
  - "durexForth vx.x.x" boot message.
+ - RDERR: read and print error channel of current device.
 ### Changed
  - S" max string length is reduced to 255 characters.
  - Changed REFILL to Forth standard behavior: Fill the input buffer from the input source, returning true if successful.
