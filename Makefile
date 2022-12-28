@@ -59,7 +59,7 @@ deploy: $(DISK_IMAGE) asm/cart.asm $(TEST_SRCS)
 	mv durexforth build/durexforth
 	@$(AS) asm/cart.asm
 	cartconv -t simon -i build/cart.bin -o deploy/$(DEPLOY_NAME).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
-	asciidoctor-pdf -o deploy/$(DEPLOY_NAME).pdf docs_src/index.adoc
+	asciidoctor-pdf -o deploy/$(DEPLOY_NAME).pdf manual/index.adoc
 
 durexforth.prg: asm/*.asm
 	mkdir -p build
@@ -85,11 +85,11 @@ $(DISK_IMAGE): durexforth.prg Makefile $(SRCS)
 
 docs: docs/index.html
 
-docs/index.html: docs_src/index.adoc docs_src/words.adoc docs_src/links.adoc docs_src/sid.adoc docs_src/asm.adoc \
-	docs_src/mnemonics.adoc docs_src/memmap.adoc docs_src/anatomy.adoc LICENSE.txt docs_src/tutorial.adoc \
-	docs_src/intro.adoc
+docs/index.html: manual/index.adoc manual/words.adoc manual/links.adoc manual/sid.adoc manual/asm.adoc \
+	manual/mnemonics.adoc manual/memmap.adoc manual/anatomy.adoc LICENSE.txt manual/tutorial.adoc \
+	manual/intro.adoc
 	rm -rf docs
-	asciidoctor -a revnumber=$(shell git describe --tags --dirty) -a revdate=$(shell git log -1 --format=%as) -o docs/index.html docs_src/index.adoc
+	asciidoctor -a revnumber=$(shell git describe --tags --dirty) -a revdate=$(shell git log -1 --format=%as) -o docs/index.html manual/index.adoc
 
 check: $(DISK_IMAGE)
 	$(X64) $(DISK_IMAGE)
