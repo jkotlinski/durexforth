@@ -195,8 +195,8 @@ cr
 .( cart: )
 $4000 $6b - \ available ROM
 here $801 - \ code + data
-top latest - \ dictionary
-$21 + + - \ save-pack padding
+top 1+ latest - \ dictionary
+$20 + + - \ save-pack padding
 . .( bytes remain.) cr
 
 .( save new durexforth..)
