@@ -193,9 +193,10 @@ decimal
 include turnkey
 cr
 .( cart: )
-$4000 $6b -
-here $801 - top latest -
-$21 + + -
+$4000 $6b - \ available ROM
+here $801 - \ code + data
+top latest - \ dictionary
+$21 + + - \ save-pack padding
 . .( bytes remain.) cr
 
 .( save new durexforth..)
