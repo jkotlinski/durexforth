@@ -157,16 +157,15 @@ postpone cr
 postpone abort
 postpone then ; immediate
 
-\ hashes of INCLUDED file names
-\ see required.fs
-variable (includes) $1e allot
-(includes) $20 0 fill
+( linked list. each element contains
+  backlink + hashed file name )
+0 value (includes)
 
-: marker latest here create , ,
-(includes) begin dup @ while 2+ repeat ,
-does> dup @ to here
-2+ dup @ to latest
-2+ @ 0 swap ! ;
+: marker ( -- )
+create latest , here , (includes) ,
+does> dup @ to latest
+   2+ dup @ to here
+   2+     @ to (includes) ;
 
 : include parse-name included ;
 

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - POSTPONE error handling.
  - Documented DEFCODE, #S
  - LOADB/SAVEB/DOS hang on device not present.
+ - REQUIRE(D) stopped working after 16 INCLUDE(D) files.
  - V: visual bug when saving.
  - V: only allow inserting control characters inside quotes.
 ### Added
