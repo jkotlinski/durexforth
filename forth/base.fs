@@ -162,9 +162,9 @@ postpone then ; immediate
 0 value (includes)
 
 : marker ( -- )
-create latest , here , (includes) ,
-does> dup @ to latest
-   2+ dup @ to here
+(includes) latest here create , , ,
+does> dup @ to here
+   2+ dup @ to latest
    2+     @ to (includes) ;
 
 : include parse-name included ;
