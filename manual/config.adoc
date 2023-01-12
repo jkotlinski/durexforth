@@ -10,7 +10,7 @@ doloop:: Do-loop words.
 sys:: System calls.
 debug:: Words for debugging.
 ls:: List disk contents.
-require:: The words require and required.
+require:: The words `require` and `required`.
 v:: The text editor.
 
 To reduce RAM usage, you may make a stripped-down version of durexForth. Do this by following these steps:
