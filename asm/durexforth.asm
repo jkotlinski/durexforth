@@ -168,8 +168,11 @@ load_base
     sta MSB+1, x
     lda #(basename_end - basename)
     sta LSB,x
-    jsr INCLUDED
-    jmp interpret_loop
+    lda #>interpret_loop
+    pha
+    lda #<interpret_loop
+    pha
+    jmp INCLUDED
 
 basename
 !text	"base"
