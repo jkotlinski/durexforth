@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Documented DEFCODE, #S
  - LOADB/SAVEB/DOS hang on device not present.
  - REQUIRE(D) stopped working after 16 INCLUDE(D) files.
- - Undefined behaviour after loading base.fs.
+ - Undefined behaviour after loading base.fs. broke in 1.5.1.
  - V: visual bug when saving.
  - V: only allow inserting control characters inside quotes.
 ### Added
