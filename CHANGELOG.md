@@ -5,19 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Fixed
- - DOWORDS incorrectly quit for some non-false xt return values.
- - POSTPONE error handling.
- - Documented DEFCODE, #S
- - LOADB/SAVEB/DOS hang on device not present.
- - REQUIRE(D) stopped working after 16 INCLUDE(D) files.
- - Undefined behaviour after loading base.fs. broke in 1.5.1.
- - V: visual bug when saving.
- - V: only allow inserting control characters inside quotes.
 ### Added
  - An improved SEE which should decode most colon words.
  - TRUE FALSE to compat.
- - Relevant CORE EXT tests.
+ - Some CORE EXT tests.
  - "durexForth vx.x.x" boot message.
  - RDERR: read and print error channel of current device.
 ### Changed
@@ -27,6 +18,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Do not print "ok" while compiling. Makes it easier to re-enter multi-line word definitions in interpreter.
  - Optimized MOVE.
  - Moved tests to a separate disk (tests.d64).
+### Fixed
+ - DOWORDS incorrectly quit for some non-false xt return values.
+ - POSTPONE error handling.
+ - Documented DEFCODE, #S
+ - LOADB/SAVEB/DOS hang on device not present.
+ - REQUIRE(D) stopped working after 16 INCLUDE(D) files.
+ - Undefined behaviour after loading base.fs. broke in 1.5.1.
+ - V: visual bug when saving.
+ - V: only allow inserting control characters inside quotes.
 
 ## [4.0.0] - 2022-07-20
 ### Changed
@@ -38,6 +38,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Moved and shrunk PAD area.
  - Optimized * / EXIT C! C@ 0=
  - Data stack effects of :/;/:NONAME/DEFINE. Starting with 2.0.0, :/:NONAME/DEFINE would put a value on the data stack, to be later consumed by ;. This is no longer the case.
+### Removed
+ - BYE, SEE, XT>
+ - HIDDEN word header flag.
 ### Fixed
  - LOADB/SAVEB could change active device.
  - IOABORT did not print all error messages.
@@ -50,9 +53,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - sid-demo broke in 2.0.0.
  - :NONAME did not work with RECURSE.
  - Rewrote UD/MOD in assembly
-### Removed
- - BYE, SEE, XT>
- - HIDDEN word header flag.
 
 ## [3.0.0] - 2021-05-14
 
