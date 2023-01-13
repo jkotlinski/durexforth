@@ -273,7 +273,7 @@ LITERAL
 HERE
 HERE_LSB = * + 1
 HERE_MSB = * + 3
-    +VALUE  load_base
+    +VALUE  HERE_POSITION
 
     +BACKLINK "dodoes", 6
 

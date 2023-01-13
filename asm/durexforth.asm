@@ -152,7 +152,8 @@ LATEST
 LATEST_LSB = * + 1
 LATEST_MSB = * + 3
     +VALUE	__LATEST
-; ALL CONTENTS BELOW LATEST WILL BE OVERWRITTEN!!!
+
+HERE_POSITION ; everything below this will be overwritten!
 
 load_base
     lda #<PRINT_BOOT_MESSAGE
