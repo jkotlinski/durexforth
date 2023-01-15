@@ -530,9 +530,6 @@ EVALUATE
     sty SOURCE_ID_MSB
     jmp interpret_tib
 
-.bufend
-    !word 0
-
     +BACKLINK "abort", 5
 ABORT
     ldx #X_INIT ; reset stack
