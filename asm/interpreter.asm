@@ -79,8 +79,7 @@ quit_reset
     stx     SAVE_INPUT_STACK_DEPTH
 
     jsr     close_all_logical_files
-    jsr     CLRCHN
-
+    
     pla
     tax
     rts
