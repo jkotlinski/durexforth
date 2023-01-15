@@ -525,7 +525,7 @@ EVALUATE
     sty TO_IN_W
     sty TO_IN_W + 1
 
-    ldy #$ff
+    dey
     sty SOURCE_ID_LSB
     sty SOURCE_ID_MSB
     jmp interpret_tib
