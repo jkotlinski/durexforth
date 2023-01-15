@@ -111,7 +111,7 @@ load_binary_laddr_hi = *+1
     lda #0		;0 = load to memory (no verify)
     jsr LOAD
     bcs .disk_io_error
-    jmp CLRCHN
+    rts
 
 .disk_io_setnamsetlfs ;reused by both loadb and saveb
     jsr SETNAM
