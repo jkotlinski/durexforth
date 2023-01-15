@@ -75,12 +75,6 @@ CLOSE_INPUT_SOURCE
 ++  ldx W
     rts
 
-    +BACKLINK "refill", 6
-REFILL ; ( -- flag )
-
-READ_EOF = * + 1
-    lda #0
-    beq .not_eof
 .return_false
     dex
     lda #0
@@ -88,7 +82,9 @@ READ_EOF = * + 1
     sta LSB,x
     rts
 
-.not_eof
+    +BACKLINK "refill", 6
+REFILL ; ( -- flag )
+
     lda SOURCE_ID_MSB
     bne .return_false ; evaluate = fail
 
@@ -127,6 +123,9 @@ READ_EOF = * + 1
     rts
 
 .getLineFromDisk
+    jsr READST
+    bne .return_false ; eof/error
+
     lda TIB_PTR
     sta W
     lda TIB_PTR + 1
@@ -134,10 +133,6 @@ READ_EOF = * + 1
 -   stx W2
     jsr	CHRIN
     ldx W2
-    pha
-    jsr	READST
-    sta READ_EOF
-    pla
     ora #0
     beq .return_true
     cmp #K_RETURN
@@ -228,7 +223,7 @@ CHAR ; ( name -- char )
     jmp FETCHBYTE
 
 SAVE_INPUT_STACK
-    !fill 9*5
+    !fill 8*5
 SAVE_INPUT_STACK_DEPTH
     !byte 0
 
@@ -248,10 +243,6 @@ pop_input_stack
     rts
 
 SAVE_INPUT
-    lda READ_EOF
-    jsr push_input_stack
-    lda #0
-    sta READ_EOF
     lda TO_IN_W
     jsr push_input_stack
     lda TO_IN_W+1
@@ -286,8 +277,6 @@ RESTORE_INPUT
     sta TO_IN_W+1
     jsr pop_input_stack
     sta TO_IN_W
-    jsr pop_input_stack
-    sta READ_EOF
     rts
 
 ; handle errors returned by open,

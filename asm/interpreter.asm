@@ -77,7 +77,6 @@ quit_reset
     stx     SOURCE_ID_LSB
     stx     SOURCE_ID_MSB
     stx     SAVE_INPUT_STACK_DEPTH
-    stx     READ_EOF
 
     jsr     close_all_logical_files
     jsr     CLRCHN
