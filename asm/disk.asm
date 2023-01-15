@@ -275,6 +275,7 @@ INCLUDED
 
 ; Used registers: A, X, Y
 close_all_logical_files:
+    jsr CLRCHN
     ldx #0
 -   txa
     pha
