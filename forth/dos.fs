@@ -4,7 +4,7 @@ require io
 \ print response
 : send-cmd ( addr len -- )
 ?dup if $f $f open ioabort
-clrchn $f chkin ioabort
+$f chkin ioabort
 begin chrin emit readst until
 clrchn $f close cr
 else drop rderr then ;

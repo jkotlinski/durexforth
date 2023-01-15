@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Undefined behaviour after loading base.fs. broke in 1.5.1.
  - V: visual bug when saving.
  - V: only allow inserting control characters inside quotes.
+ - SEND-CMD: CLRCHN not required when current I/O channels are screen and keyboard.
 
 ## [4.0.0] - 2022-07-20
 ### Changed
