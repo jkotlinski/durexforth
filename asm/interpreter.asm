@@ -528,8 +528,7 @@ EVALUATE
     ldy #$ff
     sty SOURCE_ID_LSB
     sty SOURCE_ID_MSB
-    jsr interpret_tib
-    jmp RESTORE_INPUT
+    jmp interpret_tib
 
 .bufend
     !word 0

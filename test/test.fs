@@ -24,6 +24,11 @@ parse-name spritedemo included
 .( see )
 parse-name testsee included
 
+.( include )
+:noname s" include 1 2" evaluate
+2 <> abort" not 2"
+1 <> abort" not 1" ; execute
+
 ---test---
 
 : x depth abort" depth" ; x
