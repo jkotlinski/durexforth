@@ -59,8 +59,10 @@ REFILL_OR_CLOSE ; ( -- )
     jsr REFILL
     inx
     lda MSB-1,x
-    bne .ret
-    ; REFILL failed. Close the active input source.
+    beq CLOSE_INPUT_SOURCE
+    rts
+
+CLOSE_INPUT_SOURCE
     stx W
     lda	SOURCE_ID_LSB
     jsr	CLOSE
@@ -71,7 +73,6 @@ REFILL_OR_CLOSE ; ( -- )
     jmp ++
 +   jsr CLRCHN
 ++  ldx W
-.ret
     rts
 
     +BACKLINK "refill", 6

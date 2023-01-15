@@ -265,12 +265,13 @@ INCLUDED
     tax
 
     ; interpret until EOF
--   jsr REFILL_OR_CLOSE
-    lda READ_EOF
-    bne +
+-   jsr REFILL
+    inx
+    lda MSB-1,x
+    beq +
     jsr interpret_tib
     jmp -
-+   jmp interpret_tib
++   jmp CLOSE_INPUT_SOURCE
 
 ; Used registers: A, X, Y
 close_all_logical_files:
