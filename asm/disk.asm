@@ -134,6 +134,8 @@ load_binary_laddr_hi = *+1
 SAVEB
     stx W
 
+    lda $b8             ; current logical file
+    pha
     lda $ae
     pha
     lda $af
@@ -171,6 +173,9 @@ save_binary_srange_end_hi = *+1
     sta $af
     pla
     sta $ae
+    pla
+    tax
+    jsr CHKIN
 
     ldx W
     inx
