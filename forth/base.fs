@@ -202,3 +202,5 @@ $20 + + - \ save-pack padding
 .( save new durexforth..)
 save-pack @0:durexforth
 .( ok!) cr
+
+0 $d7ff c! \ for vice -debugcart

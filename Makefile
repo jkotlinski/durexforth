@@ -11,9 +11,8 @@ GIT_HASH := $(shell git rev-parse --short HEAD)
 DEPLOY_NAME = durexforth-$(TAG_DEPLOY)
 DISK_IMAGE = durexforth.$(DISK_SUF)
 
-X64_OPTS = -warp
+X64_DEPLOY_OPTS = -warp -debugcart +confirmonexit
 X64 = x64sc
-X64_OPTS += +confirmonexit
 PETCAT = petcat # text conversion utility, included in VICE package
 
 SRC_DIR = forth
@@ -37,7 +36,7 @@ deploy: $(DISK_IMAGE) asm/cart.asm $(TEST_SRCS)
 	rm -rf deploy
 	mkdir deploy
 	cp $(DISK_IMAGE) deploy/$(DEPLOY_NAME).$(DISK_SUF)
-	$(X64) $(X64_OPTS) deploy/$(DEPLOY_NAME).$(DISK_SUF)
+	$(X64) $(X64_DEPLOY_OPTS) deploy/$(DEPLOY_NAME).$(DISK_SUF)
 	\
 	# make test disk
 	echo  >build/c1541.script attach deploy/$(DEPLOY_NAME).$(DISK_SUF)
