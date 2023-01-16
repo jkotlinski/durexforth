@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - V: visual bug when saving.
  - V: only allow inserting control characters inside quotes.
  - SEND-CMD: CLRCHN not required when current I/O channels are screen and keyboard.
+ - QUIT: moved and inlined close_all_logical_files
+ - LOADB: Replace extraneous JMP CLRCHN with RTS 
 
 ## [4.0.0] - 2022-07-20
 ### Changed
