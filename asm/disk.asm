@@ -273,15 +273,3 @@ INCLUDED
     jmp -
 +   jmp CLOSE_INPUT_SOURCE
 
-; Used registers: A, X, Y
-close_all_logical_files:
-    jsr CLRCHN
-    ldx #0
--   txa
-    pha
-    jsr CLOSE
-    pla
-    tax
-    dex
-    bne -
-    rts
