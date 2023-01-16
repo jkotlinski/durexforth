@@ -78,9 +78,18 @@ quit_reset
     stx     SOURCE_ID_MSB
     stx     SAVE_INPUT_STACK_DEPTH
 
-    jsr     close_all_logical_files
-    jsr     CLRCHN
-
+; Used registers: A, X, Y
+close_all_logical_files:
+    jsr CLRCHN
+    ldx #0
+-   txa
+    pha
+    jsr CLOSE
+    pla
+    tax
+    dex
+    bne -
+    
     pla
     tax
     rts
