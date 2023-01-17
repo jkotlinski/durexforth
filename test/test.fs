@@ -43,12 +43,12 @@ parse-name testcoreext included
 $c6 c@ $277 + c!
 1 $c6 +! ;
 
+: x $d7ff c! ; \ exit vice
+
 .( v )
 \ The FIFO is only 10 bytes.
 \ Don't add more.
-'i' push $d push
-'.' push '(' push bl push
-'O' push 'K' push ')' push
+'i' push 'x' push
 $5f push \ leftarrow
 $88 push \ f7
 v
