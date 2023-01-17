@@ -8,7 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
  - An improved SEE which should decode most colon words.
  - TRUE FALSE to compat.
- - Some CORE EXT tests.
  - "durexForth vx.x.x" boot message.
  - RDERR: read and print error channel of current device.
 ### Changed
@@ -16,7 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Changed REFILL to Forth standard behavior: Fill the input buffer from the input source, returning true if successful.
  - #> (the pictured numeric output string buffer) now uses its own buffer, separate from HERE.
  - Do not print "ok" while compiling. Makes it easier to re-enter multi-line word definitions in interpreter.
- - Optimized MOVE.
  - Moved tests to a separate disk (tests.d64).
 ### Fixed
  - DOWORDS incorrectly quit for some non-false xt return values.
@@ -25,12 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - LOADB/SAVEB/DOS hang on device not present.
  - REQUIRE(D) stopped working after 16 INCLUDE(D) files.
  - Undefined behaviour after loading base.fs. broke in 1.5.1.
+ - V: allow entering control characters inside quotes only.
  - V: visual bug when saving.
- - V: only allow inserting control characters inside quotes.
- - SEND-CMD: CLRCHN not required when current I/O channels are screen and keyboard.
- - QUIT: moved and inlined close_all_logical_files
- - LOADB: Replace extraneous JMP CLRCHN with RTS
  - SAVEB did not restore input stream.
+ - Various maintenance patches.
 
 ## [4.0.0] - 2022-07-20
 ### Changed
