@@ -187,6 +187,7 @@ hide dodoes hide #>buf
 .( ls..) include ls
 .( require..) include require
 .( open..) include open
+.( accept..) include accept
 .( v..) include v
 
 decimal
