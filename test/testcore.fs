@@ -971,6 +971,12 @@ TESTING INPUT: ACCEPT
 
 CREATE ABUF 50 CHARS ALLOT
 
+\ durexforth: push "ok" to keyboard buffer
+\ to make the test suite hands-free
+: push ( ch -- )
+$c6 c@ $277 + c!  1 $c6 +! ;
+'o' push 'k' push $d push
+
 : ACCEPT-TEST
    CR ." PLEASE TYPE UP TO 80 CHARACTERS:" CR
    ABUF 50 ACCEPT
