@@ -11,7 +11,7 @@ GIT_HASH := $(shell git rev-parse --short HEAD)
 DEPLOY_NAME = durexforth-$(TAG_DEPLOY)
 DISK_IMAGE = durexforth.$(DISK_SUF)
 
-X64_DEPLOY_OPTS = -warp -debugcart +confirmonexit
+X64_DEPLOY_OPTS = -warp -debugcart
 X64 = x64sc
 PETCAT = petcat # text conversion utility, included in VICE package
 
