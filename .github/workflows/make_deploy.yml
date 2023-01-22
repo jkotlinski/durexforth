@@ -14,5 +14,14 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Install dependencies
+    - name: Install vice
+      run: wget https://github.com/VICE-Team/svn-mirror/releases/download/r42928/headlessvice_3.7.1+r42928.deb && sudo apt-get install ./headlessvice_3.7.1+r42928.deb
+
+    - name: Install acme
+      run: sudo apt install acme
+
+    - name: Install asciidoctor-pdf
+      run: sudo apt install ruby-asciidoctor-pdf
+
+    - name: make deploy
       run: make deploy
