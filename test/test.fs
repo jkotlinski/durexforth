@@ -41,17 +41,16 @@ parse-name testcoreext included
 
 \ -----
 
-( The final step: Write the "ok"
-dummy file to indicate that tests
-passed, and exit Vice using v F7
-compile & run. )
+( Finally: Using v F7 compile & run,
+write an "ok" dummy file to indicate
+that tests passed, then exit Vice. )
 
 : push ( ch -- )
 $c6 c@ $277 + c!
 1 $c6 +! ;
 
 : x
-\ 0 1 s" ok" saveb
+0 1 s" ok" saveb
 0 $d7ff c! ; \ exit vice
 
 .( v )
