@@ -54,6 +54,7 @@ deploy: $(DISK_IMAGE) asm/cart.asm $(TEST_SRCS)
 	$(C1541) <build/c1541.script
 	# run tests
 	$(X64) $(X64_DEPLOY_OPTS) -keybuf "include test\n" deploy/tests.$(DISK_SUF)
+	$(C1541) -attach deploy/tests.$(DISK_SUF) -read ok
 	\
 	# make cartridge
 	$(C1541) -attach deploy/$(DEPLOY_NAME).$(DISK_SUF) -read durexforth

@@ -39,11 +39,20 @@ parse-name testcore included
 parse-name testcoreplus included
 parse-name testcoreext included
 
+\ -----
+
+( The final step: Write the "ok"
+dummy file to indicate that tests
+passed, and exit Vice using v F7
+compile & run. )
+
 : push ( ch -- )
 $c6 c@ $277 + c!
 1 $c6 +! ;
 
-: x 0 $d7ff c! ; \ exit vice
+: x
+\ 0 1 s" ok" saveb
+0 $d7ff c! ; \ exit vice
 
 .( v )
 \ The FIFO is only 10 bytes.
