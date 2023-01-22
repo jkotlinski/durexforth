@@ -68,7 +68,6 @@ durexforth.prg: asm/*.asm
 	echo >build/version.asm !pet \"durexForth $(TAG_DEPLOY_DOT)\"
 	@$(AS) -I asm asm/durexforth.asm
 
-.ONESHELL:
 $(DISK_IMAGE): durexforth.prg Makefile $(SRCS)
 	mkdir -p build
 	touch build/empty
