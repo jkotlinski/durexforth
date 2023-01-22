@@ -4,6 +4,8 @@ Modern C64 Forth. Includes a vi clone written in Forth, a high-resolution graphi
 
 [Latest Release](https://github.com/jkotlinski/durexforth/releases) :: [Manual](https://jkotlinski.github.io/durexforth/)
 
+![build badge](https://github.com/jkotlinski/durexforth/actions/workflows/build.yml/badge.svg)
+
 ### Goals
 
 * Fun. The system should be nice to work with on the real machine.
