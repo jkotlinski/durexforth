@@ -24,10 +24,10 @@ jobs:
     - name: make deploy
       run: make deploy
 
-    - name: Archive VICE exit screenshots
+    - name: Archive screenshots
       uses: actions/upload-artifact@v3
       with:
-        name: vice-screenshots
+        name: screenshots
         path: build/*.png
 
     - name: Archive durexForth
