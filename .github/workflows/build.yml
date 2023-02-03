@@ -25,3 +25,15 @@ jobs:
 
     - name: make deploy
       run: make deploy
+
+    - name: archive screenshots
+      uses: actions/upload-artifact@v3
+      with:
+        name: screenshot-pngs
+        path: build/*.png
+
+    - name: archive production artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: deploy folder
+        path: deploy

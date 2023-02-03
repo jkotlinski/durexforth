@@ -36,7 +36,7 @@ deploy: $(DISK_IMAGE) asm/cart.asm $(TEST_SRCS)
 	rm -rf deploy
 	mkdir deploy
 	cp $(DISK_IMAGE) deploy/$(DEPLOY_NAME).$(DISK_SUF)
-	$(X64) $(X64_DEPLOY_OPTS) deploy/$(DEPLOY_NAME).$(DISK_SUF)
+	$(X64) $(X64_DEPLOY_OPTS) -exitscreenshot build/screenshot-build deploy/$(DEPLOY_NAME).$(DISK_SUF)
 	\
 	# make test disk
 	echo  >build/c1541.script attach deploy/$(DEPLOY_NAME).$(DISK_SUF)
@@ -53,7 +53,7 @@ deploy: $(DISK_IMAGE) asm/cart.asm $(TEST_SRCS)
 	done;
 	$(C1541) <build/c1541.script
 	# run tests
-	$(X64) $(X64_DEPLOY_OPTS) -keybuf "include test\n" deploy/tests.$(DISK_SUF)
+	$(X64) $(X64_DEPLOY_OPTS) -exitscreenshot build/screenshot-test -keybuf "include test\n" deploy/tests.$(DISK_SUF)
 	$(C1541) -attach deploy/tests.$(DISK_SUF) -read ok
 	\
 	# make cartridge
