@@ -1,4 +1,5 @@
-; included into durexforth.asm
+; QUIT EXECUTE INTERPRET NOTFOUND ' FIND FIND-NAME >XT
+; PARSE-NAME WORD EVALUATE ABORT /STRING DOWORDS
 
 restore_handler
     pha             ; save a
@@ -89,7 +90,7 @@ close_all_logical_files:
     tax
     dex
     bne -
-    
+
     pla
     tax
     rts

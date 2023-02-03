@@ -1,5 +1,3 @@
-\ included into base.fs
-
 ( asm local labels.
 
 n @: = label n

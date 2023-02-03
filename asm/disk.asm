@@ -1,4 +1,4 @@
-; included into durexforth.asm
+; DEVICE RDERR LOADB SAVEB INCLUDED
 
 READST = $ffb7
 SETLFS = $ffba

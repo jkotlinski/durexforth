@@ -1,5 +1,3 @@
-\ included into base.fs
-
 \ submitted by kevin reno
 
 : rdir ( addr -- )

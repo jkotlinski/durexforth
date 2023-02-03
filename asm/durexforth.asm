@@ -1,3 +1,5 @@
+; PUSHYA 0 1 START MSB LSB LATEST
+
 ; ACME assembler
 
 !cpu 6510
@@ -138,49 +140,15 @@ ONE
     +BACKLINK "lsb", 3
     +VALUE	LSB
 
-; Word Definitions
-; ----------------
-
-; nonword labels in (parens).
-
-;defined above and below in this file:
-; pushya 0 1 start msb lsb latest
-
 !src "core.asm"
-; drop swap dup ?dup nip over 2dup 1+ 1- + = 0= and
-; ! @ c! c@ count < > max min tuck >r r> r@ bl pick
-; depth within fill base 2* rot (compile_a)
-
 !src "math.asm"
-; u< - um* um/mod m+ invert negate abs * dnegate m*
-; 0< s>d fm/mod /mod ud/mod
-
 !src "move.asm"
-; move
-
 !src "interpreter.asm"
-; quit execute interpret notfound ' find find-name
-; >xt parse-name word evaluate abort /string dowords
-; (quit_reset interpret_loop INIT_S)
-
 !src "compiler.asm"
-; c, , [ ] ; immediate state latestxt : header lit
-; litc compile, literal here dodoes
-
 !src "control.asm"
-; if then begin while repeat branch 0branch unloop exit
-
 !src "io.asm"
-; emit page rvs cr type key? key refill source
-; source-id >in getc char ioabort
-
 !src "lowercase.asm"
-; (CHAR_TO_LOWERCASE)
-
 !src "disk.asm"
-; device rderr loadb saveb included (CHROUT)
-
-; refer to base.fs for the rest
 
 BOOT_STRING
 !src "../build/version.asm"

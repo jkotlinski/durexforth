@@ -1,4 +1,4 @@
-; included into durexforth.asm
+; EMIT PAGE RVS CR TYPE KEY? KEY REFILL SOURCE SOURCE-ID >IN GETC CHAR IOABORT
 
     +BACKLINK "emit", 4
 EMIT

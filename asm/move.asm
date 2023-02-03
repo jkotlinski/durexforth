@@ -1,4 +1,4 @@
-; included into durexforth.asm
+; MOVE
 
 ; routines adapted from cc65
 ; original by Ullrich von Bassewitz, Christian Krueger, Greg King

@@ -1,5 +1,3 @@
-\ included into base.fs
-
 :noname ( xt xt-1 nt -- xt xt-1 1 | xt xt-1 0 )
 >xt dup 3 pick
 > if ( xt xt-1 xt0 )
