@@ -4,14 +4,28 @@
 !to "durexforth.prg", cbm	; set output file and format
 !ct pet
 
-;; Word flags
-F_IMMEDIATE = $80
-; When set, calls to the word will not be subject to tail call elimination.
-; I.e., "jsr WORD + rts" will not be replaced by "jmp WORD".
-F_NO_TAIL_CALL_ELIMINATION = $40
-STRLEN_MASK = $1f
+; Opcodes.
+OP_JMP = $4c
+OP_JSR = $20
+OP_RTS = $60
+OP_INX = $e8
 
-TIB = $200
+; CHROUT keys.
+K_RETURN = $d
+K_CLRSCR = $93
+K_SPACE = ' '
+
+; Addresses.
+LSB = $3b ; low-byte stack placed in [3 .. $3a]
+MSB = $73 ; high-byte stack placed in [$3b .. $72]
+W = $8b ; rnd seed        \  Temporary work area
+W2 = $8d ; rnd seed        ) available for words.
+W3 = $9e ; tape error log /  Each two bytes.
+TIB = $200 ; text input buffer
+PROGRAM_BASE = $801
+;HERE_POSITION = $801 + assembled program (defined below)
+WORDLIST_BASE = $9fff
+PUTCHR = $ffd2 ; kernal CHROUT routine
 
 ; Zeropage
 
@@ -24,25 +38,13 @@ TIB = $200
 ; in separate ranges on the zeropage, so that popping and
 ; pushing gets faster (only one inx/dex operation).
 X_INIT = 0
-MSB = $73 ; high-byte stack placed in [$3b .. $72]
-LSB = $3b ; low-byte stack placed in [3 .. $3a]
 
-W = $8b ; rnd seed
-W2 = $8d ; rnd seed
-W3 = $9e ; tape error log
-
-OP_JMP = $4c
-OP_JSR = $20
-OP_RTS = $60
-OP_INX = $e8
-
-PUTCHR = $ffd2 ; put char
-
-K_RETURN = $d
-K_CLRSCR = $93
-K_SPACE = ' '
-
-WORDLIST_BASE = $9fff
+;; Word flags
+F_IMMEDIATE = $80
+; When set, calls to the word will not be subject to tail call elimination.
+; I.e., "jsr WORD + rts" will not be replaced by "jmp WORD".
+F_NO_TAIL_CALL_ELIMINATION = $40
+STRLEN_MASK = $1f
 
 * = WORDLIST_BASE
 !set __LATEST = WORDLIST_BASE
