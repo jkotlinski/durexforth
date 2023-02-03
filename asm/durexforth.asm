@@ -2,10 +2,7 @@
 
 !cpu 6510
 !to "durexforth.prg", cbm	; set output file and format
-
-* = $801
-
-!byte $b, $08, $a, 0, $9E, $32, $30, $36, $31, 0, 0, 0 ; basic header
+!ct pet
 
 ;; Word flags
 F_IMMEDIATE = $80
@@ -45,13 +42,32 @@ K_RETURN = $d
 K_CLRSCR = $93
 K_SPACE = ' '
 
+WORDLIST_BASE = $9fff
+
+* = WORDLIST_BASE
+!set __LATEST = WORDLIST_BASE
+
+!byte 0 ; zero name length signals end of dictionary.
+
+!macro BACKLINK .name , .namesize {
+    !set __LATEST = __LATEST - 3 - len(.name)
+    !set .xt = *
+    * = __LATEST
+    !byte .namesize
+    !text .name
+	!word .xt
+    * = .xt
+}
+
+; -------- program start
+
 ; PLACEHOLDER_ADDRESS instances are overwritten using self-modifying code.
 ; It must end in 00 for situations where the Y register is used as the LSB of the address.
 PLACEHOLDER_ADDRESS = $1200
 
-!ct pet
+* = $801
 
-; -------- program start
+!byte $b, $08, $a, 0, $9E, $32, $30, $36, $31, 0, 0, 0 ; basic header
 
     tsx
     stx INIT_S
@@ -67,33 +83,13 @@ PLACEHOLDER_ADDRESS = $1200
 _START = * + 1
     jsr load_base
 
-; ----------- macros
-
-!set WORDLIST_BASE = $9fff
-!set __LATEST = WORDLIST_BASE
-
-!set BACK = *
-* = __LATEST
-!byte 0
-* = BACK
-
-!macro BACKLINK .name , .namesize {
-    !set __LATEST = __LATEST - 3 - len(.name)
-    !set .xt = *
-    * = __LATEST
-    !byte .namesize
-    !text .name
-	!word .xt
-    * = .xt
-}
+; ---------- words
 
 !macro VALUE .word {
     lda	#<.word
     ldy	#>.word
     jmp pushya
 }
-
-; ---------- words
 
     +BACKLINK "pushya", 6
 pushya
