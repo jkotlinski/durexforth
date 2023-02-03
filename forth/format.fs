@@ -1,3 +1,5 @@
+\ included into base.fs
+
 variable end
 create #>buf #34 allot
 : <# #>buf end ! ;

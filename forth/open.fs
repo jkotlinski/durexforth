@@ -1,3 +1,5 @@
+\ included into base.fs
+
 \ Open a logical file
 \ ioresult is 0 on success, kernal
 \ error # on failure.

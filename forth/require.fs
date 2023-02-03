@@ -1,3 +1,5 @@
+\ included into base.fs
+
 : hash ( addr u -- hash )
 over + swap 0 -rot
 do $1f * i c@ + loop ;

@@ -1,4 +1,4 @@
-; QUIT INTERPRET FIND FIND-NAME >CFA PARSE-NAME WORD EXECUTE EVALUATE ' ABORT /STRING
+; included into durexforth.asm
 
 restore_handler
     pha             ; save a

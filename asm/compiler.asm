@@ -1,4 +1,4 @@
-; C, , ; IMMEDIATE [ ] STATE : HEADER LIT LITC COMPILE, LITERAL HERE DODOES
+; included into durexforth.asm
 
 curr_word_no_tail_call_elimination
     !byte 1

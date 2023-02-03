@@ -1,3 +1,5 @@
+\ included into base.fs
+
 : 1mi create c, does> c@ c, ;
 : 2mi create c, does> c@ c, c, ;
 : 3mi create c, does> c@ c, , ;

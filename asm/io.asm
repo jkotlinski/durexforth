@@ -1,4 +1,4 @@
-; TYPE EMIT PAGE KEY? KEY REFILL SOURCE SOURCE-ID >IN GETC CHAR
+; included into durexforth.asm
 
     +BACKLINK "emit", 4
 EMIT

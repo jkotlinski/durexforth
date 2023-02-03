@@ -1,3 +1,5 @@
+\ included into base.fs
+
 code (do) ( limit first -- )
 pla, w sta,
 pla, tay,

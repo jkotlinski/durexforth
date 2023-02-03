@@ -1,5 +1,4 @@
-; DROP SWAP DUP ?DUP NIP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT > < MAX MIN TUCK
-; >R R> R@ BL PICK DEPTH WITHIN FILL BASE 2*
+; included into durexforth.asm
 
     +BACKLINK "drop", 4 | F_IMMEDIATE
 DROP

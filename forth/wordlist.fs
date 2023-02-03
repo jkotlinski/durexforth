@@ -1,3 +1,5 @@
+\ included into base.fs
+
 : hide ( "name" -- )
 parse-name find-name ?dup if
 dup latest - ( nt size )

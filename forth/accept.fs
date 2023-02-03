@@ -1,3 +1,5 @@
+\ included into base.fs
+
 variable curr
 : accept ( addr u -- u )
 $cc >r 0 $cc c! \ enable cursor

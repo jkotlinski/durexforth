@@ -1,4 +1,4 @@
-; IF THEN BEGIN WHILE REPEAT BRANCH 0BRANCH UNLOOP EXIT
+; included into durexforth.asm
 
     +BACKLINK "if", 2 | F_IMMEDIATE
     jsr LIT

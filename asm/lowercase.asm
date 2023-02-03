@@ -1,3 +1,5 @@
+; included into durexforth.asm
+
 CHAR_TO_LOWERCASE ; ( a -- a )
     sta .save
     sec
