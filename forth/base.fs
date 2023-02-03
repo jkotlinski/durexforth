@@ -177,7 +177,7 @@ marker ---modules---
 
 \ hides private words
 hide 1mi hide 2mi hide 23mi hide 3mi
-hide curr hide end hide latestxt
+hide end hide latestxt
 hide dodoes hide #>buf
 
 .( labels..) include labels

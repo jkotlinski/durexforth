@@ -21,3 +21,4 @@ begin
   else drop then
  then then then
 again ;
+hide curr
