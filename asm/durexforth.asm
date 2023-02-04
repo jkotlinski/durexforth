@@ -1,4 +1,4 @@
-; ACME assembler
+; PUSHYA 0 1 START MSB LSB LATEST
 
 !cpu 6510
 !to "durexforth.prg", cbm	; set output file and format

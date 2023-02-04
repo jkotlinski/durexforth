@@ -63,8 +63,11 @@ deploy: $(DISK_IMAGE) asm/cart.asm $(TEST_SRCS)
 	cartconv -t simon -i build/cart.bin -o deploy/$(DEPLOY_NAME).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
 	asciidoctor-pdf -o deploy/$(DEPLOY_NAME).pdf manual/index.adoc
 
-durexforth.prg: asm/*.asm
+durexforth.prg: asm/*
 	mkdir -p build
+	@for asm_src in $(wildcard asm/*.asm); do\
+		python asm/header.py $$asm_src; \
+	done;
 	echo >build/version.asm !pet \"durexForth $(TAG_DEPLOY_DOT)\"
 	@$(AS) -I asm asm/durexforth.asm
 
