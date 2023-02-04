@@ -6,14 +6,28 @@
 !to "durexforth.prg", cbm	; set output file and format
 !ct pet
 
-;; Word flags
-F_IMMEDIATE = $80
-; When set, calls to the word will not be subject to tail call elimination.
-; I.e., "jsr WORD + rts" will not be replaced by "jmp WORD".
-F_NO_TAIL_CALL_ELIMINATION = $40
-STRLEN_MASK = $1f
+; Opcodes.
+OP_JMP = $4c
+OP_JSR = $20
+OP_RTS = $60
+OP_INX = $e8
 
-TIB = $200
+; CHROUT keys.
+K_RETURN = $d
+K_CLRSCR = $93
+K_SPACE = ' '
+
+; Addresses.
+LSB = $3b ; low-byte stack placed in [3 .. $3a]
+MSB = $73 ; high-byte stack placed in [$3b .. $72]
+W = $8b ; rnd seed        \  Temporary work area
+W2 = $8d ; rnd seed        ) available for words.
+W3 = $9e ; tape error log /  Each two bytes.
+TIB = $200 ; text input buffer
+PROGRAM_BASE = $801
+;HERE_POSITION = $801 + assembled program (defined below)
+WORDLIST_BASE = $9fff
+PUTCHR = $ffd2 ; kernal CHROUT routine
 
 ; Zeropage
 
@@ -26,30 +40,30 @@ TIB = $200
 ; in separate ranges on the zeropage, so that popping and
 ; pushing gets faster (only one inx/dex operation).
 X_INIT = 0
-MSB = $73 ; high-byte stack placed in [$3b .. $72]
-LSB = $3b ; low-byte stack placed in [3 .. $3a]
-
-W = $8b ; rnd seed
-W2 = $8d ; rnd seed
-W3 = $9e ; tape error log
-
-OP_JMP = $4c
-OP_JSR = $20
-OP_RTS = $60
-OP_INX = $e8
-
-PUTCHR = $ffd2 ; put char
-
-K_RETURN = $d
-K_CLRSCR = $93
-K_SPACE = ' '
 
 ; -------- dictionary
 
-WORDLIST_BASE = $9fff
+;; Word flags
+F_IMMEDIATE = $80
+; When set, calls to the word will not be subject to tail call elimination.
+; I.e., "jsr WORD + rts" will not be replaced by "jmp WORD".
+F_NO_TAIL_CALL_ELIMINATION = $40
+STRLEN_MASK = $1f
+
 * = WORDLIST_BASE
 
 !byte 0 ; zero name length = end of dictionary.
+
+!set __LATEST = WORDLIST_BASE
+!macro BACKLINK .name , .namesize {
+    !set .xt = *
+    * = __LATEST - len(.name) - 3
+    !set __LATEST = *
+    !byte .namesize
+    !text .name
+    !word .xt
+    * = .xt
+}
 
 ; -------- program start
 
@@ -57,7 +71,7 @@ WORDLIST_BASE = $9fff
 ; It must end in 00 for situations where the Y register is used as the LSB of the address.
 PLACEHOLDER_ADDRESS = $1200
 
-* = $801
+* = PROGRAM_BASE
 
 !byte $b, $08, $a, 0, $9E, $32, $30, $36, $31, 0, 0, 0 ; basic header
 
@@ -75,26 +89,13 @@ PLACEHOLDER_ADDRESS = $1200
 _START = * + 1
     jsr load_base
 
-; ----------- macros
-
-!set __LATEST = WORDLIST_BASE
-!macro BACKLINK .name , .namesize {
-    !set __LATEST = __LATEST - 3 - len(.name)
-    !set .xt = *
-    * = __LATEST
-    !byte .namesize
-    !text .name
-    !word .xt
-    * = .xt
-}
+; ---------- words
 
 !macro VALUE .word {
     lda	#<.word
     ldy	#>.word
     jmp pushya
 }
-
-; ---------- words
 
     +BACKLINK "pushya", 6
 pushya
