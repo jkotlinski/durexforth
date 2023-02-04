@@ -1,4 +1,5 @@
-# Verifies that .asm files list its Forth words in the header.
+# Verifies that .asm files list their Forth words in the header.
+# This is intended as a convenience for human readers.
 
 import sys
 
