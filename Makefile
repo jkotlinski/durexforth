@@ -64,7 +64,7 @@ deploy: $(DISK_IMAGE) asm/cart.asm $(TEST_SRCS)
 	cartconv -t simon -i build/cart.bin -o deploy/$(DEPLOY_NAME).crt -n "DUREXFORTH $(TAG_DEPLOY_DOT)"
 	asciidoctor-pdf -o deploy/$(DEPLOY_NAME).pdf manual/index.adoc
 
-durexforth.prg: asm/*
+durexforth.prg: asm/*.asm
 	mkdir -p build
 	echo >build/version.asm !pet \"durexForth $(TAG_DEPLOY_DOT)\"
 	@$(AS) -I asm asm/durexforth.asm
