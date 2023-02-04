@@ -35,7 +35,7 @@ def verify(path):
     if found_header == expected_header:
         return
 
-    sys.exit(path + " -- found outdated header! Change to:\n" + ''.join(expected_header))
+    sys.exit(path + " -- found outdated header! Change it to:\n" + ''.join(expected_header))
 
 for path in sys.argv[1:]:
     verify(path)
