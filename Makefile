@@ -65,9 +65,7 @@ deploy: $(DISK_IMAGE) asm/cart.asm $(TEST_SRCS)
 
 durexforth.prg: asm/*
 	mkdir -p build
-	@for asm_src in $(wildcard asm/*.asm); do\
-		python asm/header.py $$asm_src; \
-	done;
+	python asm/header.py $(wildcard asm/*.asm)
 	echo >build/version.asm !pet \"durexForth $(TAG_DEPLOY_DOT)\"
 	@$(AS) -I asm asm/durexforth.asm
 
