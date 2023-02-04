@@ -33,6 +33,7 @@ SEPARATOR_NAME3 = '=-=---=-=---=-=,s'
 all: $(DISK_IMAGE)
 
 deploy: $(DISK_IMAGE) asm/cart.asm $(TEST_SRCS)
+	python asm/header.py $(wildcard asm/*.asm) # verify .asm headers
 	rm -rf deploy
 	mkdir deploy
 	cp $(DISK_IMAGE) deploy/$(DEPLOY_NAME).$(DISK_SUF)
