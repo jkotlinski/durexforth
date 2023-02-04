@@ -33,6 +33,7 @@ SEPARATOR_NAME3 = '=-=---=-=---=-=,s'
 all: $(DISK_IMAGE)
 
 deploy: $(DISK_IMAGE) asm/cart.asm $(TEST_SRCS)
+	python asm/header.py $(wildcard asm/*.asm) # verify .asm headers
 	rm -rf deploy
 	mkdir deploy
 	cp $(DISK_IMAGE) deploy/$(DEPLOY_NAME).$(DISK_SUF)
@@ -65,7 +66,6 @@ deploy: $(DISK_IMAGE) asm/cart.asm $(TEST_SRCS)
 
 durexforth.prg: asm/*
 	mkdir -p build
-	python asm/header.py $(wildcard asm/*.asm)
 	echo >build/version.asm !pet \"durexForth $(TAG_DEPLOY_DOT)\"
 	@$(AS) -I asm asm/durexforth.asm
 
