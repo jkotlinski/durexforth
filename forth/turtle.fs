@@ -19,7 +19,13 @@ variable ta 0 value tp
 
 : s2/ ( signed 2/ )
 2/ dup $4000 and if $8000 or then ;
-: ls 2* 2* 2* 2* 2* 2* ;
+
+code ls \ << 6
+lsb asl,x msb rol,x lsb asl,x msb rol,x
+lsb asl,x msb rol,x lsb asl,x msb rol,x
+lsb asl,x msb rol,x lsb asl,x msb rol,x
+;code
+
 : rs s2/ s2/ s2/ s2/ s2/ s2/ ;
 define pendown
 1 to tp tx @ rs ty @ rs plot ;
