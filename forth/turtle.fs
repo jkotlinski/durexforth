@@ -40,14 +40,10 @@ define moveto
 ta ! ls ty ! ls tx !
 pendown ;
 define init hires 7 clrcol
-$a0 $64 $10e moveto ;
+$a0 $64 #270 moveto ;
 
-define right
-ta @ +
-dup $8000 and if $168 + then
-$168 mod ta ! ;
-define left
-negate right ;
+define right ta +! ;
+define left negate right ;
 define forward
 ls dup ta @ *cos tx +!
 ta @ *sin ty +!
