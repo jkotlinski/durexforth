@@ -17,16 +17,21 @@ latest
 variable tx variable ty \ 10.6 fixedpoint
 variable ta 0 value tp
 
-: s2/ ( signed 2/ )
-2/ dup $4000 and if $8000 or then ;
-
-code ls \ << 6
+code ls \ left shift x6
 lsb asl,x msb rol,x lsb asl,x msb rol,x
 lsb asl,x msb rol,x lsb asl,x msb rol,x
 lsb asl,x msb rol,x lsb asl,x msb rol,x
 ;code
 
-: rs s2/ s2/ s2/ s2/ s2/ s2/ ;
+code rs \ right shift x6 (sign extend)
+msb lda,x $80 cmp,# msb ror,x lsb ror,x
+msb lda,x $80 cmp,# msb ror,x lsb ror,x
+msb lda,x $80 cmp,# msb ror,x lsb ror,x
+msb lda,x $80 cmp,# msb ror,x lsb ror,x
+msb lda,x $80 cmp,# msb ror,x lsb ror,x
+msb lda,x $80 cmp,# msb ror,x lsb ror,x
+;code
+
 define pendown
 1 to tp tx @ rs ty @ rs plot ;
 define penup 0 to tp ;
