@@ -40,6 +40,7 @@ The fractals package demonstrates turtle graphics by generating fractal images. 
 
 ----
 include fractals
+demo
 ----
 
 When an image has finished drawing, press space to continue.

@@ -10,6 +10,7 @@ parse-name gfxdemo included
 .( fractals )
 4 fakekeys \ skips demos
 parse-name fractals included
+demo
 
 .( mmldemo )
 parse-name mmldemo included

@@ -17,10 +17,21 @@ latest
 variable tx variable ty \ 10.6 fixedpoint
 variable ta 0 value tp
 
-: s2/ ( signed 2/ )
-2/ dup $4000 and if $8000 or then ;
-: ls 2* 2* 2* 2* 2* 2* ;
-: rs s2/ s2/ s2/ s2/ s2/ s2/ ;
+code ls \ left shift x6
+lsb asl,x msb rol,x lsb asl,x msb rol,x
+lsb asl,x msb rol,x lsb asl,x msb rol,x
+lsb asl,x msb rol,x lsb asl,x msb rol,x
+;code
+
+code rs \ right shift x6 (sign extend)
+msb lda,x $80 cmp,# msb ror,x lsb ror,x
+msb lda,x $80 cmp,# msb ror,x lsb ror,x
+msb lda,x $80 cmp,# msb ror,x lsb ror,x
+msb lda,x $80 cmp,# msb ror,x lsb ror,x
+msb lda,x $80 cmp,# msb ror,x lsb ror,x
+msb lda,x $80 cmp,# msb ror,x lsb ror,x
+;code
+
 define pendown
 1 to tp tx @ rs ty @ rs plot ;
 define penup 0 to tp ;
@@ -29,17 +40,12 @@ define moveto
 ta ! ls ty ! ls tx !
 pendown ;
 define init hires 7 clrcol
-$a0 $64 $10e moveto ;
+$a0 $64 #270 moveto ;
 
-define right
-ta @ +
-dup $8000 and if $168 + then
-$168 mod ta ! ;
-define left
-negate right ;
+define right ta +! ;
+define left negate right ;
 define forward
-ls dup ta @ *cos tx +!
-ta @ *sin ty +!
+ls ta @ 2dup *cos tx +! *sin ty +!
 tp if tx @ rs ty @ rs line then ;
 define back
 #180 right forward #180 right ;

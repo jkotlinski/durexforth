@@ -93,11 +93,11 @@ cf4 , df3 , efb , 100c ,
 6e2f , 7066 , 729e , 74d7 ,
 7711 , 794c , 7b87 , 7dc3 ,
 
-: sin 168 mod 2* ['] sintab + @ ;
+: sin #360 mod 2* ['] sintab + @ ;
 : cos 5a + sin ;
 
 \ a = amplitude
-\ r = degree [0..ff]
+\ r = degree [0..359]
 \ todo: lerp?
 : *cos ( a r -- b )
 cos over 2* 1+ um* nip swap - ;
