@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - V: visual bug when saving.
  - SAVEB did not restore input stream.
  - Various maintenance patches.
+ - turtle: BACK did not go back.
 
 ## [4.0.0] - 2022-07-20
 ### Changed

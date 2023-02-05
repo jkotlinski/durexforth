@@ -4,23 +4,34 @@
 
 !cpu 6510
 !to "durexforth.prg", cbm	; set output file and format
+!ct pet
 
-* = $801
+; Opcodes.
+OP_JMP = $4c
+OP_JSR = $20
+OP_RTS = $60
+OP_INX = $e8
 
-!byte $b, $08, $a, 0, $9E, $32, $30, $36, $31, 0, 0, 0 ; basic header
+; CHROUT keys.
+K_RETURN = $d
+K_CLRSCR = $93
+K_SPACE = ' '
 
-;; Word flags
-F_IMMEDIATE = $80
-; When set, calls to the word will not be subject to tail call elimination.
-; I.e., "jsr WORD + rts" will not be replaced by "jmp WORD".
-F_NO_TAIL_CALL_ELIMINATION = $40
-STRLEN_MASK = $1f
+; Addresses.
+LSB = $3b ; low-byte stack placed in [3 .. $3a]
+MSB = $73 ; high-byte stack placed in [$3b .. $72]
+W = $8b ; rnd seed        \  Temporary work area
+W2 = $8d ; rnd seed        ) available for words.
+W3 = $9e ; tape error log /  Each two bytes.
+TIB = $200 ; text input buffer
+PROGRAM_BASE = $801
+;HERE_POSITION = $801 + assembled program (defined below)
+WORDLIST_BASE = $9fff
+PUTCHR = $ffd2 ; kernal CHROUT routine
 
-TIB = $200
+; Parameter Stack
+; ---------------
 
-; Zeropage
-
-; Parameter stack
 ; The x register contains the current stack depth.
 ; It is initially 0 and decrements when items are pushed.
 ; The parameter stack is placed in zeropage to save space.
@@ -28,32 +39,57 @@ TIB = $200
 ; We use a split stack that store low-byte and high-byte
 ; in separate ranges on the zeropage, so that popping and
 ; pushing gets faster (only one inx/dex operation).
+
 X_INIT = 0
-MSB = $73 ; high-byte stack placed in [$3b .. $72]
-LSB = $3b ; low-byte stack placed in [3 .. $3a]
 
-W = $8b ; rnd seed
-W2 = $8d ; rnd seed
-W3 = $9e ; tape error log
+; Dictionary
+; ----------
 
-OP_JMP = $4c
-OP_JSR = $20
-OP_RTS = $60
-OP_INX = $e8
+; Grows backwards from WORDLIST_BASE. Each entry has one
+; byte of flag bits + name length, followed by the bytes of
+; the word's name, and a two-byte "execution token," the
+; address of its code. The address of a dictionary entry is
+; called the word's "name token."
 
-PUTCHR = $ffd2 ; put char
+STRLEN_MASK = $1f
+F_IMMEDIATE = $80 ; interpret the word even in compiler STATE
+F_NO_TAIL_CALL_ELIMINATION = $40
+; Exempt this word from tail call elimination i.e.
+; "jsr WORD + rts" will not be replaced by "jmp WORD".
 
-K_RETURN = $d
-K_CLRSCR = $93
-K_SPACE = ' '
+* = WORDLIST_BASE
 
-; PLACEHOLDER_ADDRESS instances are overwritten using self-modifying code.
-; It must end in 00 for situations where the Y register is used as the LSB of the address.
+!byte 0 ; zero name length = end of dictionary.
+
+!set __LATEST = WORDLIST_BASE
+!macro BACKLINK .name , .namesize {
+    !set .xt = *
+    * = __LATEST - len(.name) - 3
+    !set __LATEST = *
+    !byte .namesize
+    !text .name
+    !word .xt
+    * = .xt
+}
+
+; Program Space
+; -------------
+
+; Main assembly starts at PROGRAM_BASE, then the assembled
+; compiler begins writing at HERE_POSITION, to which we
+; assemble a startup routine that we're okay with being
+; overwritten.
+
+; PLACEHOLDER_ADDRESSes are assembled into the instruction
+; stream then self-modified by the running program. Low
+; byte must be 0 for situations where the Y register is
+; used instead.
 PLACEHOLDER_ADDRESS = $1200
 
-!ct pet
+* = PROGRAM_BASE
 
-; -------- program start
+!byte $b, $08, $a, 0, $9E, $32, $30, $36, $31, 0, 0, 0
+; basic header, and program entry:
 
     tsx
     stx INIT_S
@@ -69,33 +105,14 @@ PLACEHOLDER_ADDRESS = $1200
 _START = * + 1
     jsr load_base
 
-; ----------- macros
-
-!set WORDLIST_BASE = $9fff
-!set __LATEST = WORDLIST_BASE
-
-!set BACK = *
-* = __LATEST
-!byte 0
-* = BACK
-
-!macro BACKLINK .name , .namesize {
-    !set __LATEST = __LATEST - 3 - len(.name)
-    !set .xt = *
-    * = __LATEST
-    !byte .namesize
-    !text .name
-	!word .xt
-    * = .xt
-}
+; Word Definitions
+; ----------------
 
 !macro VALUE .word {
     lda	#<.word
     ldy	#>.word
     jmp pushya
 }
-
-; ---------- words
 
     +BACKLINK "pushya", 6
 pushya
@@ -155,7 +172,7 @@ LATEST_LSB = * + 1
 LATEST_MSB = * + 3
     +VALUE	__LATEST
 
-HERE_POSITION ; everything below this will be overwritten!
+HERE_POSITION ; everything following this will be overwritten!
 
 load_base
     lda #<PRINT_BOOT_MESSAGE
