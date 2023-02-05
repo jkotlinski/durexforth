@@ -186,6 +186,7 @@ hide dodoes hide #>buf
 .( debug..) include debug
 .( ls..) include ls
 .( require..) include require
+include fractals
 .( open..) include open
 .( accept..) include accept
 .( v..) include v

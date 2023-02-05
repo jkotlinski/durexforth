@@ -62,4 +62,8 @@ s" f" 6 $80 $64 $14
 s" @[+f]@[-f]+f" fractal done ;
 
 : demo $d020 @
-koch weed1 bush1 bush2 $d020 ! ;
+$a1 c@ 256 * $a2 c@ +
+koch weed1 bush1 bush2
+$a1 c@ 256 * $a2 c@ + swap - .
+$d020 ! ;
+demo
