@@ -42,7 +42,7 @@ ls dup ta @ *cos tx +!
 ta @ *sin ty +!
 tp if tx @ rs ty @ rs line then ;
 define back
-$80 right forward $80 right ;
+#180 right forward #180 right ;
 
 define turtle@
 tx @ ty @ ta @ ;
