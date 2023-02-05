@@ -45,8 +45,7 @@ $a0 $64 #270 moveto ;
 define right ta +! ;
 define left negate right ;
 define forward
-ls dup ta @ *cos tx +!
-ta @ *sin ty +!
+ls ta @ 2dup *cos tx +! *sin ty +!
 tp if tx @ rs ty @ rs line then ;
 define back
 #180 right forward #180 right ;
