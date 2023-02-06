@@ -19,11 +19,11 @@ SRC_DIR = forth
 SRC_NAMES = base debug v asm gfx gfxdemo rnd sin ls turtle fractals \
     sprite doloop sys labels mml mmldemo sid spritedemo \
     format require compat timer float viceutil turnkey \
-    wordlist io open dos see accept
+    wordlist io open dos see accept compare
 SRCS = $(addprefix $(SRC_DIR)/,$(addsuffix .fs,$(SRC_NAMES)))
 
 TEST_SRC_NAMES = test testcore testcoreplus testcoreext tester testsee 1
-TEST2_SRC_NAMES = see gfx gfxdemo fractals mmldemo mml sid spritedemo sprite compat rnd sin turtle
+TEST2_SRC_NAMES = see gfx gfxdemo fractals mmldemo mml sid spritedemo sprite compat rnd sin turtle compare
 TEST_SRCS = $(addprefix test/,$(addsuffix .fs,$(TEST_SRC_NAMES)))
 
 SEPARATOR_NAME1 = '=-=-=-=-=-=-=-=,s'
