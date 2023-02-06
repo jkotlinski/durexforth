@@ -7,8 +7,6 @@ swap 1+ swap 1+ loop  2drop 0 ;
 rot swap 2dup - >r min memcmp r>
 over if drop else nip then ;
 
-: signum ( n1 -- -1/0/1 )
-dup 0 > if drop 1 exit then
-dup 0< if drop -1 then ;
-
-: compare strcmp signum ;
+: compare strcmp
+dup 0 > if drop 1 exit then 0< ;
+( todo extract signum word? )
