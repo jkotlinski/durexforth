@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+ - COMPARE and helper words STRCMP and MEMCMP.
  - An improved SEE which should decode most colon words.
  - TRUE FALSE to compat.
  - "durexForth vx.x.x" boot message.

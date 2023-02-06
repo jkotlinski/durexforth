@@ -252,6 +252,9 @@ No built-in words will modify this region.
 ((count)) _( str -- caddr u )_ :: Return data address and length of the counted string _str_.
 ((type)) _( caddr u -- )_ :: Print a string.
 ((/string)) _( caddr u n -- caddr+n u-n )_ :: Adjust the string by _n_ characters.
+((compare)) _( caddr1 u1 caddr2 u2 -- x )_ :: Compare the bytes of two strings, giving 0 if equal, 1 if the first is larger, -1 if the second. If they differ in length but are equal up to the shorter, then the longer string is considered larger. This word and the next two are optionally included with `include compare`.
+((strcmp)) _( caddr1 u1 caddr2 u2 -- x )_ :: Like `compare`, but gives a difference of bytes or lengths (doesn't convert to 1 or -1).
+((memcmp)) _( addr1 addr2 u -- x )_ :: Compare byte arrays of equal length.
 
 === Number Formatting
 
