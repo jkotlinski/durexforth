@@ -34,15 +34,18 @@ parse-name testsee included
 parse-name compare included
 : abc s" abc" drop ;
 : abd s" abd" drop ;
+:noname
 abc 0 abd 0 compare abort" zero"
 abc 3 abc 3 compare abort" same"
 abc 2 abd 2 compare abort" pref"
 abc 3 abd 2 compare 1 <> abort" len"
 abc 3 abd 3 compare -1 <> abort" char"
+; execute
 
 ---test---
 
-: x depth abort" depth" ; x
+: x depth if .s 1 abort" depth" then ;
+x
 
 parse-name compat included
 parse-name tester included
