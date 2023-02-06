@@ -30,6 +30,16 @@ parse-name testsee included
 2 <> abort" not 2"
 1 <> abort" not 1" ; execute
 
+.( compare )
+parse-name compare included
+: abc s" abc" drop ;
+: abd s" abd" drop ;
+abc 0 abd 0 compare abort" zero"
+abc 3 abc 3 compare abort" same"
+abc 2 abd 2 compare abort" pref"
+abc 3 abd 2 compare 1 <> abort" len"
+abc 3 abd 3 compare -1 <> abort" char"
+
 ---test---
 
 : x depth abort" depth" ; x
