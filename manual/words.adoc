@@ -352,9 +352,8 @@ These words allow access to serial devices without accessing the file system, an
 ((untalk)) _( -- )_ :: Send IEC untalk to all channels.
 ((acptr)) _( u -- )_ :: Get a byte of data from the serial bus using full handshaking.
 
-[WARNING]
+
 ====
-These commands should never be used by anyone. Ever.
 
 Commands for ``second and tksa`` include:
 
@@ -365,10 +364,10 @@ Commands for ``second and tksa`` include:
 
 ==== IEC examples
 
-((send-cmd)) _( c-addr u -- )_ :: Same as Dos command.
+((send-cmd)) _( c-addr u -- )_ :: Demonstrates reading the error channel.
 ((dos)) _( "cmd" -- )_ :: Same as Dos command.
-((bsave)) _( start end+1 filenameptr filenamelength -- )_ :: Same as saveb.
-((dir)) :: Same as ``ls``.
+((bsave)) _( start end+1 filenameptr filenamelength -- )_ :: Demonstrates sending a file to disk.
+((dir)) :: Same as ``ls``, demonstrates loading a file.
 
 === Compatibility
 
