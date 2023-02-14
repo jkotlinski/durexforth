@@ -337,6 +337,39 @@ Low-level device I/O may interfere with disk accesses done by durexForth and the
 - If multiple files are open, always call `clrchn` to end any serial bus transactions before calling `open` or switching between files with `chkin` or `chkout`.
 ====
 
+==== Protocol-Level IEC Device I/O
+
+For even more advanced uses, words corresponding to the standard Commodore IEC routines are available by including the `iec` module.
+These words allow access to serial devices without accessing the file system, and won't hang the computer on a "Device not present" error.
+
+
+((listen)) _( dv -- ioresult )_ :: Send IEC listen to dv.
+((second)) _( command+sa -- ioresult )_ :: Send IEC command and secondary address after listen.
+((unlisten)) _( -- )_ :: Send IEC unlisten to all channels.
+((ciout)) _( -- u )_ ::  Puts a data byte onto the serial bus using full handshaking.
+((talk)) _( dv -- ioresult )_ :: Send IEC talk to dv.
+((tksa)) _( command+sa -- ioresult )_ :: Send IEC command and secondary address after talk.
+((untalk)) _( -- )_ :: Send IEC untalk to all channels.
+((acptr)) _( u -- )_ :: Get a byte of data from the serial bus using full handshaking.
+
+[WARNING]
+====
+These commands should never be used by anyone. Ever.
+
+Commands for ``second and tksa`` include:
+
+- $60 OPEN CHANNEL / DATA + Secondary Address / channel (0-15)
+- $E0 CLOSE + Secondary Address / channel (0-15)
+- $F0 OPEN + Secondary Address / channel (0-15)
+====
+
+==== IEC examples
+
+((send-cmd)) _( c-addr u -- )_ :: Same as Dos command.
+((dos)) _( "cmd" -- )_ :: Same as Dos command.
+((bsave)) _( start end+1 filenameptr filenamelength -- )_ :: Same as saveb.
+((dir)) :: Same as ``ls``.
+
 === Compatibility
 
 The `compat` module contains various words that are not deemed necessary for enjoyable DurexForth operation, but still must be provided to comply with the Forth 2012 core standard.
