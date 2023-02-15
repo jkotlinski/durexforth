@@ -1,4 +1,5 @@
-; EMIT PAGE RVS CR TYPE KEY? KEY REFILL SOURCE SOURCE-ID >IN GETC CHAR IOABORT
+; EMIT PAGE RVS CR TYPE KEY? KEY REFILL SOURCE SOURCE-ID >IN GETC CHAR N>R NR>
+; IOABORT
 
     +BACKLINK "emit", 4
 EMIT
@@ -240,6 +241,64 @@ pop_input_stack
     dec SAVE_INPUT_STACK_DEPTH
     ldy SAVE_INPUT_STACK_DEPTH
     lda SAVE_INPUT_STACK, y
+    rts
+
+    +BACKLINK "n>r", 3 | F_NO_TAIL_CALL_ELIMINATION
+    ; W = return address
+    pla
+    sta W
+    pla
+    sta W+1
+    ; W2 = y = number of cells to move
+    lda LSB,X
+    inx
+    sta W2
+    tay
+    beq +
+-   lda LSB,x
+    pha
+    lda MSB,x
+    pha
+    inx
+    dey
+    bne -
++   ; push number of cells
+    lda W2
+    pha
+    ; restore return address
+    lda W+1
+    pha
+    lda W
+    pha
+    rts
+
+    +BACKLINK "nr>", 3 | F_NO_TAIL_CALL_ELIMINATION
+    ; W = return address
+    pla
+    sta W
+    pla
+    sta W + 1
+    ; W2 = y = number of cells to move
+    pla
+    sta W2
+    tay
+    beq +
+-   dex
+    pla
+    sta MSB,x
+    pla
+    sta LSB,x
+    dey
+    bne -
++   dex
+    lda W2
+    sta LSB,x
+    lda #0
+    sta MSB,x
+    lda W + 1
+    pha
+    lda W
+    pha
     rts
 
 SAVE_INPUT

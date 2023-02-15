@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - TRUE FALSE to compat.
  - "durexForth vx.x.x" boot message.
  - RDERR: read and print error channel of current device.
+ - NR>, N>R
 ### Changed
  - S" max string length is reduced to 255 characters.
  - Changed REFILL to Forth standard behavior: Fill the input buffer from the input source, returning true if successful.

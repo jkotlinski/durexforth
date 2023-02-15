@@ -39,6 +39,13 @@ parse-name tester included
 parse-name testcore included
 parse-name testcoreplus included
 parse-name testcoreext included
+TESTING TOOLS: N>R NR>
+T{ : NTR  N>R -1 NR> ; -> }T
+T{ 1 2 3 4 5 6 7 4 NTR -> 1 2 3 -1 4 5 6 7 4 }T
+T{ 1 0 NTR -> 1 -1 0 }T
+T{ : NTR2 N>R N>R -1 NR> -2 NR> ;
+T{ 1 2 2 3 4 5 3 NTR2 -> -1 1 2 2 -2 3 4 5 3 }T
+T{ 1 0 0 NTR2 -> 1 -1 0 -2 0 }T
 
 \ -----
 
