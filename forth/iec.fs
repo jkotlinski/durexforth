@@ -86,7 +86,7 @@ $6f tksa iqt      \ $6f data channel only
 acptr readst begin
 0= while emit
 acptr readst repeat
-emit untalk cr ;
+emit untalk cr ; \ no need to close error channel
 
 : dos source >in @ /string
 dup >in +! \ consume buffer
@@ -99,12 +99,13 @@ $f1 second iqt      \ $F0 + $01 write prg
 tfname unlisten     \ always all devices
 $ba c@ listen       \ if we get here,
 $61 second          \ the device exists
-over dup 100/ ciout $ff and ciout \ send load addr 
+over dup 100/ ciout 
+$ff and ciout \ send load addr 
 over dup
 0 do i + dup c@ ciout loop
-1+
-unlisten
-$ba c@ listen $e1 second
+1+ \ keep saveb compatability
+unlisten $ba c@ listen
+$e1 second \ $E0 + $01 close
 unlisten
 ;
 
@@ -119,5 +120,6 @@ $60 tksa              \ $60 open, opened channel
 acptr acptr 2drop     \ listener is now talker. drop load address
 here begin acptr over c! 1+ \ load HERE loop until EOF
 readst until drop untalk
-$ba c@ listen $e0 second unlisten
+$ba c@ listen $e0 second \ $E0 + $00 close
+unlisten
 page here rdir ;
