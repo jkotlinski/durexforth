@@ -355,7 +355,7 @@ These words allow access to serial devices without accessing the file system, an
 
 ====
 
-Commands for ``second and tksa`` include:
+Commands for ``second`` and ``tksa`` include:
 
 - $60 OPEN CHANNEL / DATA + Secondary Address / channel (0-15)
 - $E0 CLOSE + Secondary Address / channel (0-15)
