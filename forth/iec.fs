@@ -39,7 +39,7 @@ $00 ldx,# inx,
 code unlisten ( -- )
 here 1+
 $ffff stx,
-$ffae jsr, \unlisten
+$ffae jsr, \ unlisten
 here 1+ swap ! 
 $00 ldx,# 
 ;code
@@ -77,8 +77,8 @@ i c@ ciout loop ;
 0 $90 c!          \ always zero ST
 ?dup if
 $ba c@ listen iqt 
-$ff second iqt    \ don't require $ff open
-                  \ for read of error channel
+$6f second iqt    \ don't require $ff open
+                  \ for error channel
 tfname unlisten 
 then               \ turn around
                    \ listener is now talker
