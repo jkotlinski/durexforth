@@ -75,15 +75,14 @@ i c@ ciout loop ;
 
 : send-cmd ( addr len -- )
 0 $90 c!          \ always zero ST
-?dup if
-$ba c@ listen iqt 
-$6f second iqt    \ don't require $ff open
-                  \ for error channel
-tfname unlisten 
-then               \ turn around
-                   \ listener is now talker
-$ba c@ talk iqt
-$6f tksa iqt       \ $6f data channel only
+?dup if           \ command to be sent?
+$ba c@ listen iqt \ Yes
+$6f second iqt    \ don't require $ff open,
+                  \ error channel always open.
+tfname unlisten   \ turn around
+then              \ No
+$ba c@ talk iqt   \ listener is now talker
+$6f tksa iqt      \ $6f data channel only
 acptr readst begin
 0= while emit
 acptr readst repeat
@@ -97,11 +96,11 @@ send-cmd ;
 0 $90 c! parse-name \ always zero ST
 $ba c@ listen iqt
 $f1 second iqt      \ $F0 + $01 write prg
-tfname unlisten
+tfname unlisten     \ always all devices
 $ba c@ listen       \ if we get here,
 $61 second          \ the device exists
-over dup 100/ ciout $ff and ciout
-over dup -
+over dup 100/ ciout $ff and ciout \ send load addr 
+over dup
 0 do i + dup c@ ciout loop
 1+
 unlisten
@@ -113,12 +112,12 @@ unlisten
 else drop s" $0"
 then 0 $90 c! \ always zero ST
 $ba c@ listen iqt
-$f0 second iqt \ $F0 + $00 read as prg
+$f0 second iqt \ $F0 OPEN + $00 channel, read as prg
 over + swap do \ transmit filename
 i c@ ciout loop
-unlisten $ba c@ talk        \ turn around
-                            \ listener is now talker
-$60 tksa acptr acptr 2drop  \ drop load address
+unlisten $ba c@ talk  \ turn around
+$60 tksa              \ $60 open, opened channel
+acptr acptr 2drop     \ listener is now talker. drop load address
 here begin acptr over c! 1+ \ load HERE loop until EOF
 readst until drop untalk
 $ba c@ listen $e0 second unlisten
