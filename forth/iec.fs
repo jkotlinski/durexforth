@@ -113,8 +113,7 @@ else drop s" $0"
 then 0 $90 c! \ always zero ST
 $ba c@ listen iqt
 $f0 second iqt \ $F0 OPEN + $00 channel, read as prg
-over + swap do \ transmit filename
-i c@ ciout loop
+tfname
 unlisten $ba c@ talk  \ turn around
 $60 tksa              \ $60 open, opened channel
 acptr acptr 2drop     \ listener is now talker. drop load address
