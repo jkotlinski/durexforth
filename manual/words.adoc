@@ -361,13 +361,30 @@ Commands for ``second and tksa`` include:
 - $E0 CLOSE + Secondary Address / channel (0-15)
 - $F0 OPEN + Secondary Address / channel (0-15)
 ====
+To send a data byte to a drive, that device must first be "listened". If the Secondary address (from
+here referred to as: SA or channel) is 15, the drive will interpret the data as a DOS command. A
+DOS command is executed when the drive is UNLISTENed ($3F).
+If the channel is not 15, DOS will ignore it unless you first sent an OPEN.
+An OPEN is sent to tell DOS where you want your data to go.
+That is done by LISTENing the device. 
+====
+- channel = 0 is reserved for a reading a PRG file.
+- channel = 1 is reserved for a writing a PRG file.
+- channel = 2-14 need the filetype and the read/write flag in the filename as ",P,W" for example.
+- channel = 15 for DOS commands or device status info.
+====
+After the OPEN is sent, you can send a LISTEN using the channel used in the OPEN.
+DOS has a table of opened files, and will use the channel to write your data to the corresponding
+file.
+
+From: IEC disected by J. Derogee
 
 ==== IEC examples
 
-((send-cmd)) _( c-addr u -- )_ :: Demonstrates reading the error channel.
+((send-cmd)) _( c-addr u -- )_ :: Demonstrates and documents sending commands and/or reading the error channel.
 ((dos)) _( "cmd" -- )_ :: Same as Dos command.
-((bsave)) _( start end+1 filenameptr filenamelength -- )_ :: Demonstrates sending a file to disk.
-((dir)) :: Same as ``ls``, demonstrates loading a file.
+((bsave)) _( start end+1 filenameptr filenamelength -- )_ :: Demonstrates and documents sending a file to disk.
+((dir)) :: Same as ``ls``, demonstrates and documents loading a file.
 
 === Compatibility
 
