@@ -337,7 +337,7 @@ Low-level device I/O may interfere with disk accesses done by durexForth and the
 - If multiple files are open, always call `clrchn` to end any serial bus transactions before calling `open` or switching between files with `chkin` or `chkout`.
 ====
 
-==== Protocol-Level IEC Device I/O
+=== Protocol-Level IEC Device I/O
 
 For even more advanced uses, words corresponding to the standard Commodore IEC routines are available by including the `iec` module.
 These words allow access to serial devices without accessing the file system, and won't hang the computer on a "Device not present" error.
