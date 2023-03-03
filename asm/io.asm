@@ -66,7 +66,7 @@ CLOSE_INPUT_SOURCE
     stx W
     lda	SOURCE_ID_LSB
     jsr	CLOSE
-    jsr RESTORE_INPUT
+    jsr POP_INPUT_SOURCE
     ldx SOURCE_ID_LSB
     beq +
     jsr CHKIN
@@ -242,7 +242,7 @@ pop_input_stack
     lda SAVE_INPUT_STACK, y
     rts
 
-SAVE_INPUT
+PUSH_INPUT_SOURCE
     lda TO_IN_W
     jsr push_input_stack
     lda TO_IN_W+1
@@ -260,7 +260,7 @@ SAVE_INPUT
     lda TIB_SIZE+1
     jmp push_input_stack
 
-RESTORE_INPUT
+POP_INPUT_SOURCE
     jsr pop_input_stack
     sta TIB_SIZE+1
     jsr pop_input_stack

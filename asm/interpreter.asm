@@ -519,7 +519,7 @@ WORD
 
     +BACKLINK "evaluate", 8
 EVALUATE
-    jsr SAVE_INPUT
+    jsr PUSH_INPUT_SOURCE
     lda LSB + 1, x
     sta TIB_PTR
     lda MSB + 1, x

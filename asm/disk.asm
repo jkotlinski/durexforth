@@ -195,7 +195,7 @@ INCLUDED
     inx
     inx
 
-    jsr SAVE_INPUT
+    jsr PUSH_INPUT_SOURCE
 
     ; Is TIB_PTR pointing to TIB?
     lda	TIB_PTR+1
