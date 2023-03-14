@@ -16,8 +16,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        wget https://github.com/VICE-Team/svn-mirror/releases/download/r42928/headlessvice_3.7.1+r42928.deb
-        sudo apt-get install ./headlessvice_3.7.1+r42928.deb
+        wget https://github.com/VICE-Team/svn-mirror/releases/download/r43506/headlessvice_3.7.1+r43506.deb
+        sudo apt-get install ./headlessvice_3.7.1+r43506.deb
         sudo apt-get install acme
         sudo apt-get install ruby-asciidoctor-pdf
 
