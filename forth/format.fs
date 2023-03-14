@@ -1,11 +1,9 @@
-variable end
-create #>buf #34 allot
-: <# #>buf end ! ;
-: #> 2drop #>buf end @ over - ;
-: hold
-\ reserve space for char at start
-#>buf dup 1+ end @ #>buf - move
-1 end +! #>buf c! ;
+variable holdp
+#34 allot here dup
+: <# literal holdp ! ;
+: #> 2drop holdp @ literal over - ;
+: hold -1 holdp +! holdp @ c! ;
+
 : sign 0< if '-' hold then ;
 : # base @ ud/mod rot
 dup a < if 7 - then $37 + hold ;
