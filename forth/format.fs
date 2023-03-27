@@ -6,7 +6,7 @@ variable holdp
 
 : sign 0< if '-' hold then ;
 : # base @ ud/mod rot
-dup a < if 7 - then $37 + hold ;
+dup $a < if 7 - then $37 + hold ;
 : #s # begin 2dup or while # repeat ;
 
 : u. 0 <# #s #> type space ;
