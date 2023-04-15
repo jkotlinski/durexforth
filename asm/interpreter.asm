@@ -37,6 +37,9 @@ quit_reset
 
     cli ; still have to
 
+    lda #$36 ; ram + i/o + kernal
+    sta 1
+
     ; lores
     lda #$9b
     sta $d011
@@ -53,9 +56,6 @@ quit_reset
 
     lda #>TIB
     sta TIB_PTR + 1
-
-    lda #$36 ; ram + i/o + kernal
-    sta 1
 
     ; Yellow text.
     lda #7
