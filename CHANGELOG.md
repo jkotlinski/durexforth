@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - SAVEB did not restore input stream.
  - Various maintenance patches.
  - turtle: BACK did not go back.
+ - QUIT could fail to reinitialize graphics.
 
 ## [4.0.0] - 2022-07-20
 ### Changed
