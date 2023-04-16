@@ -23,6 +23,11 @@ latestxt compile, ; immediate
 : lits ( -- addr len )
 r> 1+ count 2dup + 1- >r ;
 
+: parse >r source >in @ /string
+over swap begin dup while over c@ r@ <>
+while 1 /string repeat then r> drop >r
+over - dup r> if 1+ then >in +! ;
+
 : s" ( -- addr len )
 postpone lits here 0 c, 0
 begin getc dup '"' <>
@@ -110,15 +115,6 @@ code xor
 msb lda,x msb 1+ eor,x msb 1+ sta,x
 lsb lda,x lsb 1+ eor,x lsb 1+ sta,x
 inx, ;code
-code +! ( num addr -- )
-lsb lda,x w sta,
-msb lda,x w 1+ sta,
-0 ldy,# clc,
-w lda,(y) lsb 1+ adc,x
-w sta,(y) iny,
-w lda,(y) msb 1+ adc,x
-w sta,(y)
-inx, inx, ;code
 
 :- dup inx, ;code
 code lshift ( x1 u -- x2 )
