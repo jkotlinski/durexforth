@@ -99,6 +99,7 @@ This may change with public demand.
 ((@)) _( address -- value )_ :: Fetch 16-bit value from address.
 ((c!)) _( value address -- )_ :: Store 8-bit value at address.
 ((c@)) _( address -- value )_ :: Fetch 8-bit value from address.
+((erase)) _( addr len -- )_ :: Fill range [addr, len + addr) with 0.
 ((fill)) _( addr len char -- )_ :: Fill range [addr, len + addr) with char.
 ((move)) _( src dst len -- )_ :: Copies a region of memory `len` bytes long, starting at `src`, to memory beginning at `dst`.
 
@@ -366,7 +367,7 @@ here referred to as: SA or channel) is 15, the drive will interpret the data as 
 DOS command is executed when the drive is UNLISTENed ($3F).
 If the channel is not 15, DOS will ignore it unless you first sent an OPEN.
 An OPEN is sent to tell DOS where you want your data to go.
-That is done by LISTENing the device. 
+That is done by LISTENing the device.
 ====
 - channel = 0 is reserved for a reading a PRG file.
 - channel = 1 is reserved for a writing a PRG file.
