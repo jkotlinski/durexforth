@@ -14,19 +14,24 @@ swap here swap ! ; immediate
 : again jmp, , ; immediate
 : recurse
 latestxt compile, ; immediate
-: ( begin getc ')' = until ; immediate
-: \ source >in ! drop ; immediate
-: <> ( a b -- c ) = 0= ;
-: u> ( n -- b ) swap u< ;
-: 0<> ( x -- flag ) 0= 0= ;
 
-: lits ( -- addr len )
-r> 1+ count 2dup + 1- >r ;
+: \ source >in ! drop ; immediate
+: <> = 0= ;
+: u> swap u< ;
+: 0<> 0= 0= ;
 
 : parse >r source >in @ /string
 over swap begin dup while over c@ r@ <>
 while 1 /string repeat then r> drop >r
 over - dup r> if 1+ then >in +! ;
+
+: ( source-id 1 < if ')' parse else
+begin >in @ ')' parse nip >in @ rot -
+= while refill drop repeat then ;
+immediate
+
+: lits ( -- addr len )
+r> 1+ count 2dup + 1- >r ;
 
 : s" ( -- addr len )
 postpone lits '"' parse dup c,
