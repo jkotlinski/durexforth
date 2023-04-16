@@ -332,7 +332,7 @@ WITHIN ; ( test low high -- flag )
 ; ERASE ( start len -- )
     +BACKLINK "erase", 5
     ldy #0
-    jmp ERASE_
+    jmp FILL_Y
 
 ; FILL ( start len char -- )
     +BACKLINK "fill", 4
@@ -340,7 +340,7 @@ FILL
     lda	LSB, x
     tay
     inx
-ERASE_
+FILL_Y
     lda	LSB + 1, x
     sta	.fdst
     lda	MSB + 1, x
