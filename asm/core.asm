@@ -1,5 +1,5 @@
 ; DROP SWAP DUP ?DUP NIP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT < > MAX MIN
-; TUCK >R R> R@ BL PICK DEPTH WITHIN FILL BASE 2* ROT
+; TUCK >R R> R@ BL PICK DEPTH WITHIN ERASE FILL BASE 2* ROT
 
     +BACKLINK "drop", 4 | F_IMMEDIATE
 DROP
@@ -329,22 +329,28 @@ WITHIN ; ( test low high -- flag )
     jsr R_TO
     jmp U_LESS
 
+; ERASE ( start len -- )
+    +BACKLINK "erase", 5
+    ldy #0
+    jmp ERASE_
+
 ; FILL ( start len char -- )
     +BACKLINK "fill", 4
 FILL
     lda	LSB, x
     tay
-    lda	LSB + 2, x
-    sta	.fdst
-    lda	MSB + 2, x
-    sta	.fdst + 1
+    inx
+ERASE_
     lda	LSB + 1, x
+    sta	.fdst
+    lda	MSB + 1, x
+    sta	.fdst + 1
+    lda	LSB, x
     eor	#$ff
     sta	W
-    lda	MSB + 1, x
+    lda	MSB, x
     eor	#$ff
     sta	W + 1
-    inx
     inx
     inx
 -

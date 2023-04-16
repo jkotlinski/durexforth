@@ -26,7 +26,7 @@ d018 sta,
 
 : clrcol ( fgbgcol -- )
 colbase 3e8 rot fill
-bmpbase 1f40 0 fill ;
+bmpbase 1f40 erase ;
 
 : blkcol ( col row c -- )
 -rot 28 * + colbase + c! ;
