@@ -1,14 +1,5 @@
 require mml
 
-:noname
-r> 1+ dup 2+ swap @ 2dup + 1- >r ;
-: mml" ( -- addr len )
-literal compile, here >r 0 ,
-begin >in @ '"' parse
-tuck here swap move dup allot
-dup r@ +! >in @ rot - = while
-refill drop repeat r> drop ; immediate
-
 cr .( Frere Jaques)
 : frere-jaques
 mml" o3l4fgaffgafab->c&c<ab->c&cl8cdc<b-
