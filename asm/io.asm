@@ -1,4 +1,4 @@
-; EMIT PAGE RVS CR TYPE KEY? KEY REFILL SOURCE SOURCE-ID >IN GETC CHAR IOABORT
+; EMIT PAGE RVS CR TYPE KEY? KEY REFILL SOURCE SOURCE-ID >IN CHAR IOABORT
 
     +BACKLINK "emit", 4
 EMIT
@@ -201,14 +201,6 @@ TO_IN
     +VALUE TO_IN_W
 TO_IN_W
     !word 0
-
-    +BACKLINK "getc", 4
-    jsr GET_CHAR_FROM_TIB
-    bne +
-    jsr REFILL_OR_CLOSE
-    lda #K_RETURN
-+   ldy #0
-    jmp pushya
 
     +BACKLINK "char", 4
 CHAR ; ( name -- char )

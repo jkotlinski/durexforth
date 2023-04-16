@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - #> (the pictured numeric output string buffer) now uses its own buffer, separate from HERE.
  - Do not print "ok" while compiling. Makes it easier to re-enter multi-line word definitions in interpreter.
  - Moved tests to a separate disk (tests.d64).
+### Removed
+ - GETC
 ### Fixed
  - DOWORDS incorrectly quit for some non-false xt return values.
  - POSTPONE error handling.
