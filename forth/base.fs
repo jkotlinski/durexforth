@@ -29,10 +29,9 @@ while 1 /string repeat then r> drop >r
 over - dup r> if 1+ then >in +! ;
 
 : s" ( -- addr len )
-postpone lits here 0 c, 0
-begin getc dup '"' <>
-while c, 1+ repeat
-drop swap c! ; immediate
+postpone lits '"' parse dup c,
+begin ?dup while over c@ c,
+1 /string repeat drop ; immediate
 
 : ." postpone s" postpone type
 ; immediate

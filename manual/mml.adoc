@@ -2,13 +2,13 @@
 
 Music Macro Language (MML) has been used since the 1970s to sequence music on computer and video game systems. The MML package is loaded with `include mml`. Two demonstration songs can be found in the `mmldemo` package.
 
-MML songs are played using the Forth word ((play-mml)) which takes three strings, one MML melody for each of the three SID voices. An example song is as follows:
+MML songs are played using the Forth word ((play-mml)) which takes three MML strings, one MML melody for each of the three SID voices. An example song is as follows:
 
 ----
 : frere-jaques
-s" o3l4fgaffgafab->c&c<ab->c&cl8cdc<b-l4af>l8cdc<b-l4affcf&ffcf&f"
-s" r1o3l4fgaffgafab->c&c<ab->c&cl8cdc<b-l4af>l8cdc<b-l4affcf&ffcf&f"
-s" " play-mml ;
+mml" o3l4fgaffgafab->c&c<ab->c&cl8cdc<b-l4af>l8cdc<b-l4affcf&ffcf&f"
+mml" r1o3l4fgaffgafab->c&c<ab->c&cl8cdc<b-l4af>l8cdc<b-l4affcf&ffcf&f"
+mml" " play-mml ;
 ----
 
 ==== Commands
