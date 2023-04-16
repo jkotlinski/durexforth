@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - S" max string length is reduced to 255 characters.
  - S" and .( no longer support multiple lines.
  - ( now only supports multiple lines when reading from text file.
- - MML string definitions are now done using the MML" word.
+ - Define MML strings using MML"
  - Changed REFILL to Forth standard behavior: Fill the input buffer from the input source, returning true if successful.
  - #> (the pictured numeric output string buffer) now uses its own buffer, separate from HERE.
  - Do not print "ok" while compiling. Makes it easier to re-enter multi-line word definitions in interpreter.
