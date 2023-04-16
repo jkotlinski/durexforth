@@ -412,7 +412,7 @@ BASE
     inx
     rts
 
-    +BACKLINK "100/", 4 ; ( num addr -- )
+    +BACKLINK "100/", 4
     lda MSB,x
     sta LSB,x
     lda #0
