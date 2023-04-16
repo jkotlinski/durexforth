@@ -14,30 +14,40 @@ swap here swap ! ; immediate
 : again jmp, , ; immediate
 : recurse
 latestxt compile, ; immediate
-: ( begin getc ')' = until ; immediate
-: \ source >in ! drop ; immediate
-: <> ( a b -- c ) = 0= ;
-: u> ( n -- b ) swap u< ;
-: 0<> ( x -- flag ) 0= 0= ;
 
-: lits ( -- addr len )
-r> 1+ count 2dup + 1- >r ;
+: \ source >in ! drop ; immediate
+: <> = 0= ;
+: u> swap u< ;
+: 0<> 0= 0= ;
 
 : parse >r source >in @ /string
 over swap begin dup while over c@ r@ <>
 while 1 /string repeat then r> drop >r
 over - dup r> if 1+ then >in +! ;
 
+: ( source-id 1 < if ')' parse else
+begin >in @ ')' parse nip >in @ rot -
+= while refill drop repeat then ;
+immediate
+
+: lits ( -- addr len )
+r> 1+ count 2dup + 1- >r ;
+
+( "0 to foo" sets value foo to 0 )
+: (to) over 100/ over 2+ c! c! ;
+: to ' 1+ state c@ if
+postpone literal postpone (to) exit
+then (to) ; immediate
+
+: allot ( n -- ) here + to here ;
+
 : s" ( -- addr len )
-postpone lits here 0 c, 0
-begin getc dup '"' <>
-while c, 1+ repeat
-drop swap c! ; immediate
+postpone lits '"' parse dup c, tuck
+here swap move allot ; immediate
 
 : ." postpone s" postpone type
 ; immediate
-: .( begin getc dup ')' <>
-while emit repeat drop ; immediate
+: .( ')' parse type ; immediate
 .( compile base..)
 
 : case 0 ; immediate
@@ -63,10 +73,6 @@ parse-name asm included
 
 : -rot rot rot ;
 
-code 100/
-msb lda,x lsb sta,x
-0 lda,#   msb sta,x ;code
-
 ( creates value that is fast to read
   but can only be rewritten by "to".
    0 value foo
@@ -87,12 +93,6 @@ begin ?dup while space 1- repeat ;
 8b value w
 8d value w2
 9e value w3
-
-( "0 to foo" sets value foo to 0 )
-: (to) over 100/ over 2+ c! c! ;
-: to ' 1+ state c@ if
-postpone literal postpone (to) exit
-then (to) ; immediate
 
 : hex 10 base ! ;
 : decimal a base ! ;
@@ -125,8 +125,6 @@ code rshift ( x1 u -- x2 )
 lsb dec,x -branch bmi,
 msb 1+ lsr,x lsb 1+ ror,x
 latest >xt jmp,
-
-: allot ( n -- ) here + to here ;
 
 : variable
 0 value

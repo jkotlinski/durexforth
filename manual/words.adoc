@@ -228,7 +228,6 @@ case
 
 ((key)) _( -- c )_ :: Get one character from the keyboard.
 ((key?)) _( -- flag )_ :: Return true if a character is available for `key`.
-((getc)) _( -- c )_ :: Consume the next character from the input buffer and increases `>in` by one. If no characters are available, the input buffer is refilled as needed.
 ((char)) _( -- c )_ :: Parse the next word, delimited by a space, and puts its first character on the stack.
 ((>in)) _( -- addr )_ :: Give the address of a cell containing the offset in characters from the start of the input buffer to the start of the parse area.
 ((refill)) _( -- flag )_ :: Attempt to fill the input buffer from the input source, returning true if successful.
