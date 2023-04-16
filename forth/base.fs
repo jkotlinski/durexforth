@@ -35,8 +35,7 @@ begin ?dup while over c@ c,
 
 : ." postpone s" postpone type
 ; immediate
-: .( begin getc dup ')' <>
-while emit repeat drop ; immediate
+: .( ')' parse type ; immediate
 .( compile base..)
 
 : case 0 ; immediate
