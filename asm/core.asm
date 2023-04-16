@@ -1,5 +1,5 @@
 ; DROP SWAP DUP ?DUP NIP OVER 2DUP 1+ 1- + = 0= AND ! @ C! C@ COUNT < > MAX MIN
-; TUCK >R R> R@ BL PICK DEPTH WITHIN ERASE FILL BASE 2* ROT +!
+; TUCK >R R> R@ BL PICK DEPTH WITHIN ERASE FILL BASE 2* ROT +! 100/
 
     +BACKLINK "drop", 4 | F_IMMEDIATE
 DROP
@@ -410,4 +410,11 @@ BASE
     sta (W),y
     inx
     inx
+    rts
+
+    +BACKLINK "100/", 4 ; ( num addr -- )
+    lda MSB,x
+    sta LSB,x
+    lda #0
+    sta MSB,x
     rts

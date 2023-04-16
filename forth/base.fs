@@ -33,10 +33,17 @@ immediate
 : lits ( -- addr len )
 r> 1+ count 2dup + 1- >r ;
 
+( "0 to foo" sets value foo to 0 )
+: (to) over 100/ over 2+ c! c! ;
+: to ' 1+ state c@ if
+postpone literal postpone (to) exit
+then (to) ; immediate
+
+: allot ( n -- ) here + to here ;
+
 : s" ( -- addr len )
-postpone lits '"' parse dup c,
-begin ?dup while over c@ c,
-1 /string repeat drop ; immediate
+postpone lits '"' parse dup c, tuck
+here swap move allot ; immediate
 
 : ." postpone s" postpone type
 ; immediate
@@ -66,10 +73,6 @@ parse-name asm included
 
 : -rot rot rot ;
 
-code 100/
-msb lda,x lsb sta,x
-0 lda,#   msb sta,x ;code
-
 ( creates value that is fast to read
   but can only be rewritten by "to".
    0 value foo
@@ -90,12 +93,6 @@ begin ?dup while space 1- repeat ;
 8b value w
 8d value w2
 9e value w3
-
-( "0 to foo" sets value foo to 0 )
-: (to) over 100/ over 2+ c! c! ;
-: to ' 1+ state c@ if
-postpone literal postpone (to) exit
-then (to) ; immediate
 
 : hex 10 base ! ;
 : decimal a base ! ;
@@ -128,8 +125,6 @@ code rshift ( x1 u -- x2 )
 lsb dec,x -branch bmi,
 msb 1+ lsr,x lsb 1+ ror,x
 latest >xt jmp,
-
-: allot ( n -- ) here + to here ;
 
 : variable
 0 value
