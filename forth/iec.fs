@@ -99,8 +99,8 @@ $f1 second iqt      \ $F0 + $01 write prg
 tfname unlisten     \ always all devices
 $ba c@ listen       \ if we get here,
 $61 second          \ the device exists
-over dup 100/ ciout 
-$ff and ciout \ send load addr 
+over split ciout 
+ciout               \ send load addr 
 over dup
 0 do i + dup c@ ciout loop
 1+ \ keep saveb compatability
