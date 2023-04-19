@@ -75,8 +75,7 @@ w 1+ lda, msb sta,x
 
 \ ...
 
-' mask split nip
-lda,# w 1+ sta,
+' mask split lda,# drop w 1+ sta,
 
 clc,
 lsb 1+ lda,x 7 and,# ' mask adc,#

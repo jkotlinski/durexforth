@@ -9,8 +9,8 @@ variable rule variable rulel variable scale
 
 : dofract ( depth -- depth )
 scale @ $100 <> if
-Dd dup >r scale @ * split nip
-to Dd then
+Dd dup >r scale @ * split
+to Dd drop then
 0 begin dup rulel < while
 dup rule + c@ case
 'f' of over if
