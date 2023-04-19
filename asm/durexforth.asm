@@ -109,8 +109,8 @@ _START = * + 1
 ; ----------------
 
 !macro VALUE .word {
-    lda	#<.word
     ldy	#>.word
+    lda	#<.word
     jmp pushya
 }
 
@@ -168,8 +168,8 @@ PRINT_BOOT_MESSAGE
 
     +BACKLINK "latest", 6
 LATEST
-LATEST_LSB = * + 1
-LATEST_MSB = * + 3
+LATEST_MSB = * + 1
+LATEST_LSB = * + 3
     +VALUE	__LATEST
 
 HERE_POSITION ; everything following this will be overwritten!
