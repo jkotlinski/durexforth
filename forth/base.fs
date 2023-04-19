@@ -34,7 +34,7 @@ immediate
 r> 1+ count 2dup + 1- >r ;
 
 ( "0 to foo" sets value foo to 0 )
-: (to) over 100/ over 2+ c! c! ;
+: (to) >r split r@ 2+ c! r> c! ;
 : to ' 1+ state c@ if
 postpone literal postpone (to) exit
 then (to) ; immediate
@@ -80,7 +80,7 @@ parse-name asm included
    1 to foo
    foo . \ prints 1 )
 : value ( n -- )
-dup code lda,# 100/ ldy,#
+code split swap lda,# ldy,#
 ['] pushya jmp, ;
 : constant value ;
 ( to free up space, pad could be

@@ -41,7 +41,6 @@
 ((2+)) _( a -- b )_ :: Increase top of stack value by 2.
 ((2*)) _( a -- b )_ :: Multiply top of stack value by 2.
 ((2/)) _( a -- b )_ :: Divide top of stack value by 2.
-((100/)) _( a -- b )_ :: Divides top of stack value by $100.
 ((+!)) _( n a -- )_ :: Add n to memory address a.
 ((+)) _( a b -- c )_ :: Add a and b.
 ((-)) _( a b -- c )_ :: Subtract b from a.
@@ -63,6 +62,7 @@
 ((u>)) _( u1 u2 -- flag )_ :: Is u1 greater than u2? (Unsigned.)
 ((lshift)) _( a b -- c )_ :: Binary shift a left by b.
 ((rshift)) _( a b -- c )_ :: Binary shift a right by b.
+((split)) _( n -- lsb msb )_ :: Byte split _n_. +$1234 split+ gives +$34 $12+.
 ((base)) _( -- addr )_ :: _addr_ is the address of a cell that holds the numerical base.
 ((decimal)) :: Set the numerical base to 10.
 ((hex)) :: Set the numerical base to 16.

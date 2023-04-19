@@ -11,53 +11,53 @@ $00 ldx,# inx,     \ dummy byte
 
 code second ( sa -- )
 here 1+
-$ffff stx, 
+$ffff stx,
 lsb lda,x
 $ff93 jsr, \ second
 here 1+ swap !
-$00 ldx,# inx, 
+$00 ldx,# inx,
 ;code
 
 code talk ( dv -- )
 here 1+
-$ffff stx, 
-lsb lda,x 
+$ffff stx,
+lsb lda,x
 $ffb4 jsr, \ talk
 here 1+ swap !
-$00 ldx,# inx, 
+$00 ldx,# inx,
 ;code
 
 code tksa ( sa -- )
 here 1+
-$ffff stx, 
-lsb lda,x 
+$ffff stx,
+lsb lda,x
 $ff96 jsr, \ tksa
 here 1+ swap !
-$00 ldx,# inx, 
+$00 ldx,# inx,
 ;code
 
 code unlisten ( -- )
 here 1+
 $ffff stx,
 $ffae jsr, \ unlisten
-here 1+ swap ! 
-$00 ldx,# 
+here 1+ swap !
+$00 ldx,#
 ;code
 
 code untalk ( -- )
 here 1+
 $ffff stx,
 $ffab jsr, \ untalk
-here 1+ swap ! 
-$00 ldx,# 
+here 1+ swap !
+$00 ldx,#
 ;code
 
 code ciout ( chr -- )
 here 1+
-$ffff stx, 
-lsb lda,x 
+$ffff stx,
+lsb lda,x
 $ffa8 jsr, \ ciout
-here 1+ swap ! 
+here 1+ swap !
 $00 ldx,# inx,
 ;code
 
@@ -99,8 +99,8 @@ $f1 second iqt      \ $F0 + $01 write prg
 tfname unlisten     \ always all devices
 $ba c@ listen       \ if we get here,
 $61 second          \ the device exists
-over dup 100/ ciout 
-$ff and ciout \ send load addr 
+over split ciout ciout
+                    \ send load addr
 over dup
 0 do i + dup c@ ciout loop
 1+ \ keep saveb compatability

@@ -75,7 +75,7 @@ w 1+ lda, msb sta,x
 
 \ ...
 
-' mask 100/
+' mask split nip
 lda,# w 1+ sta,
 
 clc,
@@ -120,8 +120,9 @@ variable mask variable addr
 create lineplot ( -- )
 
 \ penx @ 140 <
-penx lda,# w sta,
-penx 100/ lda,# w 1+ sta,
+penx split
+lda,# w 1+ sta,
+lda,# w sta,
 1 ldy,# w lda,(y)
 +branch beq,
 1 cmp,# 1 beq, rts,
@@ -131,8 +132,9 @@ sec, 40 sbc,#
 :+
 
 \ peny @ c8 <
-peny lda,# w sta,
-peny 100/ lda,# w 1+ sta,
+peny split
+lda,# w 1+ sta,
+lda,# w sta,
 1 ldy,# w lda,(y)
 1 beq, rts,
 dey, w lda,(y)
@@ -140,9 +142,9 @@ sec, c8 sbc,#
 1 bcc, rts,
 
 \ addr
-addr 100/
+addr split
 lda,# w 1+ sta,
-addr lda,# w sta,
+lda,# w sta,
 
 \ @
 0 ldy,#

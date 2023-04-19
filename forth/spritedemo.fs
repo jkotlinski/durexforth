@@ -24,7 +24,7 @@ FF...O..O.R.RR..TT..H..H
 FF....OO..R.RR..TT..H..H
 FF....OO..R.RR..TT..H..H
 
-: rnds rnd 100/ 7 and ;
+: rnds rnd #13 rshift ;
 : demo
 7 begin
 $340 $40 / over $7f8 + c!
