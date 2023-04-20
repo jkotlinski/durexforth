@@ -28,9 +28,9 @@ $57 here 5 move here 5 + to here ;
 ar ! $22 ! $b7b5 bsys create fac, ;
 \ 5-byte float word from signed int
 : intf ( s -- ) create
-dup 100/ ar ! yr ! $b391 bsys fac, ;
+split ar ! yr ! $b391 bsys fac, ;
 : fac! ( faddr -- )
-dup 100/ yr ! ar ! $bba2 bsys ;
+split yr ! ar ! $bba2 bsys ;
 : fac* ( faddr -- )
-dup 100/ yr ! ar ! $ba28 bsys ;
+split yr ! ar ! $ba28 bsys ;
 : fac. $bddd bsys $b487 bsys $ab21 bsys ;

@@ -26,7 +26,7 @@ clc, lsb adc,x lsb sta,x +branch bcc,
 msb inc,x :+ ;code
 
 create .ctl
-sid 4 + 100/ lda,# w 1+ sta,
+sid 4 + split lda,# drop w 1+ sta,
 .voice7* jsr,
 clc, sid 4 + ff and adc,# w sta,
 +branch bcc, w 1+ inc, :+ rts,
