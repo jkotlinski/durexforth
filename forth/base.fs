@@ -80,6 +80,7 @@ parse-name asm included
    1 to foo
    foo . \ prints 1 )
 : value ( n -- )
+( TO relies on this lda/ldy order )
 code split swap lda,# ldy,#
 ['] pushya jmp, ;
 : constant value ;
