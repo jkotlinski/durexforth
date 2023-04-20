@@ -189,8 +189,8 @@ TIB_SIZE
     !word 0
 
     +BACKLINK "source-id", 9
-SOURCE_ID_MSB = * + 1
-SOURCE_ID_LSB = * + 3
+SOURCE_ID_LSB = * + 1
+SOURCE_ID_MSB = * + 3
     ; -1 : string (via evaluate)
     ; 0 : keyboard
     ; 1+ : file id

@@ -103,8 +103,8 @@ STATE
     !word 0
 
     +BACKLINK "latestxt", 8
-LATEST_XT_MSB = * + 1
-LATEST_XT_LSB = * + 3
+LATEST_XT_LSB = * + 1
+LATEST_XT_MSB = * + 3
     +VALUE	0
 
     ; Exempt from TCE because `: x ;` does not compile a jsr.
@@ -272,8 +272,8 @@ LITERAL
 ; HERE - points to the next free byte of memory. When compiling, compiled words go here.
     +BACKLINK "here", 4
 HERE
-HERE_MSB = * + 1
-HERE_LSB = * + 3
+HERE_LSB = * + 1
+HERE_MSB = * + 3
     +VALUE  HERE_POSITION
 
     +BACKLINK "dodoes", 6
