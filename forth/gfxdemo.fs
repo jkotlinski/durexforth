@@ -101,14 +101,14 @@ dup 0 swap plot dup 13f swap line
 a0 64 plot
 dup 64 swap *cos a0 +
 over 64 swap *sin 64 + line
-1- repeat 1 erase loop
-0 erase ;
+1- repeat 1 pen loop
+0 pen ;
 hires erasecirc key drop lores
 
 .( rotsqr..)
 : rotsqr
 hires 16 clrcol
-8 d020 c! 1 erase
+8 d020 c! 1 pen
 2 0 do fa begin ?dup while
 dup dup *cos a0 +
 over dup *sin 64 + 2dup plot plot
@@ -120,7 +120,7 @@ dup dup *sin a0 +
 over dup *cos 64 swap - line
 dup dup *cos a0 +
 over dup *sin 64 + line
-5 - repeat loop 0 erase ;
+5 - repeat loop 0 pen ;
 hires rotsqr key drop lores
 
 .( seascape..)

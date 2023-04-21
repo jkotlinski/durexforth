@@ -286,7 +286,7 @@ over negate err +!
 then
 repeat 2drop kernal-in ;
 
-: erase if
+: pen if
 4d ['] xor else
 d ['] or then ['] blitop @ !
 ['] blitop 2+ @ c! ;
