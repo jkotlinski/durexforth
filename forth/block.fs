@@ -12,6 +12,7 @@ $400 * $c000 + ;
 4 1 do '0' + here i + c! loop ;
 
 : save-buf ( buf -- )
+\ TODO scratch before save
 dup dirty + c@ 0= if drop exit then
 0 over dirty + c!
 dup bbi + c@ >path >addr dup $400 +
