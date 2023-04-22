@@ -48,3 +48,7 @@ drop-lru load-to-unused ;
 already-loaded dup 0< if exit then
 pick-unused dup 0< if exit then
 drop-lru pick-unused ;
+
+: list ( blk -- )
+block dup $400 + swap do
+i c@ emit loop ;
