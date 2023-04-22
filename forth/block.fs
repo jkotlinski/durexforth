@@ -1,20 +1,12 @@
 ( three block buffers at $c000-$cbff )
 
-\ buffer block id's
-create bbi 0 , 0 c,
+create bbi 0 , 0 c, \ buffer block id's
 create dirty 0 , 0 c,
-
-\ last-used timestamps
-variable time
-create lu 0 , 0 , 0 ,
-
+create curr-buf 0 c,
 create path 'b' c, 0 ,
 
-\ updates last-used timestamp
-: touch ( buf -- buf )
-1 time +! time @ over 2* lu + ! ;
-
-: >addr $400 * $c000 + ;
+: >addr ( buf -- addr )
+$400 * $c000 + ;
 
 : >path ( blk -- ) #10 /mod
 '0' + path 1+ c! '0' + path 2+ c! ;
@@ -25,35 +17,30 @@ dup dirty + c@ 0= if drop exit then
 dup bbi + c@ >path >addr dup $400 +
 path 3 saveb ;
 
-: already-loaded ( blk -- addr|blk )
-3 0 do dup bbi i + c@ = if drop
-i touch >addr unloop exit then loop ;
+: >buf ( blk -- buf ) 3 mod ;
 
-: load-to-unused ( blk -- addr|blk )
-3 0 do bbi i + c@ 0= if i touch
-2dup bbi + c! >addr >r >path path 3
-r@ loadb 0= if r@ $400 erase then r>
-unloop exit then loop ;
+: load-blk ( blk -- )
+dup >path >buf >addr >r path 3
+r@ loadb 0= if r@ $400 erase then
+r> drop ;
 
-: pick-unused ( blk -- addr|blk )
-3 0 do bbi i + c@ 0= if bbi i + c!
-i touch >addr unloop exit then loop ;
+: set-blk ( blk -- addr )
+dup >buf curr-buf c!
+dup dup >buf bbi + c! >buf >addr ;
 
-: drop-lru ( -- )
-lu @ lu 2+ @ < lu @ lu 4 + @ < and
-if 0 else lu 2+ @ lu 4 + @ < if
-1 else 2 then then dup save-buf
-bbi + 0 swap c! ;
+: unassign ( blk -- blk )
+dup >buf dup save-buf bbi + 0 swap c! ;
+
+: loaded? ( blk -- blk flag )
+dup dup >buf bbi + c@ = ;
 
 : block ( blk -- addr )
-already-loaded dup 0< if exit then
-load-to-unused dup 0< if exit then
-drop-lru load-to-unused ;
+loaded? if >buf >addr else
+unassign dup load-blk set-blk then ;
 
 : buffer ( blk -- addr )
-already-loaded dup 0< if exit then
-pick-unused dup 0< if exit then
-drop-lru pick-unused ;
+loaded? if >buf >addr else
+unassign set-blk then ;
 
 : list ( blk -- )
 block dup $400 + swap do
@@ -62,8 +49,7 @@ i c@ emit loop ;
 : empty-buffers bbi 3 erase ;
 
 : update ( -- )
-3 0 do time @ lu i 2* + @ = if
-1 dirty i + c! then loop ;
+1 dirty curr-buf c@ + c! ;
 
 : save-buffers ( -- )
 0 save-buf 1 save-buf 2 save-buf ;
