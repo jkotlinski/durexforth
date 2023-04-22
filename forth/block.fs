@@ -19,9 +19,9 @@ $400 * $c000 + ;
 
 : doload ( n buf -- addr )
 2dup bbi + c! >addr >r 10 /mod
-'0' + path 1+ c!
-'0' + path 2+ c!
-path 3 r@ loadb drop r> ;
+'0' + path 1+ c! '0' + path 2+ c!
+path 3 r@ loadb 0= if r@ $400 erase
+then r> ;
 
 : already-loaded ( n -- addr|0 )
 3 0 do dup bbi i + c@ = if
