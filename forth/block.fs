@@ -3,25 +3,24 @@
 create bbi 0 , 0 c, \ buffer block id's
 create dirty 0 , 0 c,
 create curr-buf 0 c,
-create path 'b' c, 3 allot
 
 : >addr ( buf -- addr )
 $400 * $c000 + ;
 
 : >path ( blk -- )
-#10 /mod #10 /mod
-4 1 do '0' + path i + c! loop ;
+'b' here c! #10 /mod #10 /mod
+4 1 do '0' + here i + c! loop ;
 
 : save-buf ( buf -- )
 dup dirty + c@ 0= if drop exit then
 0 over dirty + c!
 dup bbi + c@ >path >addr dup $400 +
-path 4 saveb ;
+here 4 saveb ;
 
 : >buf ( blk -- buf ) 3 mod ;
 
 : load-blk ( blk -- )
-dup >path >buf >addr >r path 4
+dup >path >buf >addr >r here 4
 r@ loadb 0= if r@ $400 erase then
 r> drop ;
 
