@@ -35,12 +35,11 @@ dup >buf dup save-buf bbi + 0 swap c! ;
 dup dup >buf bbi + c@ = ;
 
 : block ( blk -- addr )
-loaded? if >buf >addr else
-unassign dup load-blk set-blk then ;
+loaded? 0= if unassign dup load-blk
+then set-blk ;
 
 : buffer ( blk -- addr )
-loaded? if >buf >addr else
-unassign set-blk then ;
+loaded? 0= if unassign then set-blk ;
 
 : list ( blk -- )
 block dup $400 + swap do
