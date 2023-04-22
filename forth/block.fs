@@ -7,21 +7,31 @@ create curr-buf 0 c,
 : >addr ( buf -- addr )
 $400 * $c000 + ;
 
-: >path ( blk -- )
-'b' here c! #10 /mod #10 /mod
-4 1 do '0' + here i + c! loop ;
+: >path ( blk dst -- )
+>r 'b' r@ c! #10 /mod #10 /mod
+'0' + r@ 1+ c!
+'0' + r@ 2+ c!
+'0' + r> 3 + c! ;
+
+: scratch ( blk -- )
+here
+'s' over c! 1+
+'0' over c! 1+
+':' over c! 1+
+>path here 7 $f $f open ioabort
+$f close ;
 
 : save-buf ( buf -- )
-\ TODO scratch before save
 dup dirty + c@ 0= if drop exit then
 0 over dirty + c!
-dup bbi + c@ >path >addr dup $400 +
-here 4 saveb ;
+dup bbi + c@ dup scratch
+here >path >addr dup
+$400 + here 4 saveb ;
 
 : >buf ( blk -- buf ) 3 mod ;
 
 : load-blk ( blk -- )
-dup >path >buf >addr >r here 4
+dup here >path >buf >addr >r here 4
 r@ loadb 0= if r@ $400 erase then
 r> drop ;
 
