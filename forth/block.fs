@@ -2,6 +2,7 @@
 
 \ buffer block id's
 create bbi 0 , 0 c,
+create updated 0 , 0 c,
 
 \ last-used timestamps
 variable time
@@ -11,7 +12,7 @@ create path 'b' c, 0 ,
 
 \ updates last-used timestamp
 : touch ( buf -- buf )
-time @ over 2* lu + ! 1 time +! ;
+1 time +! time @ over 2* lu + ! ;
 
 : >addr $400 * $c000 + ;
 
@@ -54,3 +55,7 @@ block dup $400 + swap do
 i c@ emit loop ;
 
 : empty-buffers bbi 3 erase ;
+
+: update ( -- )
+3 0 do time @ lu i 2* + @ = if
+1 updated i + c! then loop ;
