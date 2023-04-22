@@ -188,17 +188,17 @@ hide dodoes
 include block
 
 decimal
-include turnkey
-cr
+\ include turnkey
+\ cr
 .( cart: )
-$4000 $6b - \ available ROM
-here $801 - \ code + data
-top 1+ latest - \ dictionary
-$20 + + - \ save-pack padding
-. .( bytes remain.) cr
+\ $4000 $6b - \ available ROM
+\ here $801 - \ code + data
+\ top 1+ latest - \ dictionary
+\ $20 + + - \ save-pack padding
+\ . .( bytes remain.) cr
 
 .( save new durexforth..)
-save-pack @0:durexforth
+\ save-pack @0:durexforth
 .( ok!) cr
 
-0 $d7ff c! \ for vice -debugcart
+\ 0 $d7ff c! \ for vice -debugcart
