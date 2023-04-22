@@ -52,3 +52,5 @@ drop-lru pick-unused ;
 : list ( blk -- )
 block dup $400 + swap do
 i c@ emit loop ;
+
+: empty-buffers bbi 3 erase ;
