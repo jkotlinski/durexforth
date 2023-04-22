@@ -17,9 +17,11 @@ time @ over 2* lu + !
 : >addr ( buf -- addr )
 $400 * $c000 + ;
 
+: >path ( buf -- ) 10 /mod
+'0' + path 1+ c! '0' + path 2+ c! ;
+
 : doload ( n buf -- addr )
-2dup bbi + c! >addr >r 10 /mod
-'0' + path 1+ c! '0' + path 2+ c!
+2dup bbi + c! >addr >r >path
 path 3 r@ loadb 0= if r@ $400 erase
 then r> ;
 
