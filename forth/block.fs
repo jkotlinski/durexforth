@@ -2,7 +2,7 @@
 
 \ buffer block id's
 create bbi 0 , 0 c,
-create updated 0 , 0 c,
+create dirty 0 , 0 c,
 
 \ last-used timestamps
 variable time
@@ -16,8 +16,14 @@ create path 'b' c, 0 ,
 
 : >addr $400 * $c000 + ;
 
-: >path ( buf -- ) 10 /mod
+: >path ( blk -- ) #10 /mod
 '0' + path 1+ c! '0' + path 2+ c! ;
+
+: save-buf ( buf -- )
+dup dirty + c@ 0= if drop exit then
+0 over dirty + c!
+dup bbi + c@ >path >addr dup $400 +
+path 3 saveb ;
 
 : doload ( blk buf -- addr )
 2dup bbi + c! >addr >r >path path 3
@@ -36,9 +42,10 @@ i touch doload unloop exit then loop ;
 i touch >addr unloop exit then loop ;
 
 : drop-lru ( -- )
-0 lu @ lu 2+ @ < lu @ lu 4 + @ < and
+lu @ lu 2+ @ < lu @ lu 4 + @ < and
 if 0 else lu 2+ @ lu 4 + @ < if
-1 else 2 then then bbi + c! ;
+1 else 2 then then dup save-buf
+bbi + 0 swap c! ;
 
 : block ( blk -- addr )
 already-loaded dup 0< if exit then
@@ -58,4 +65,9 @@ i c@ emit loop ;
 
 : update ( -- )
 3 0 do time @ lu i 2* + @ = if
-1 updated i + c! then loop ;
+1 dirty i + c! then loop ;
+
+: save-buffers ( -- )
+0 save-buf 1 save-buf 2 save-buf ;
+
+: flush save-buffers empty-buffers ;
