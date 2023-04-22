@@ -25,17 +25,15 @@ dup dirty + c@ 0= if drop exit then
 dup bbi + c@ >path >addr dup $400 +
 path 3 saveb ;
 
-: doload ( blk buf -- addr )
-2dup bbi + c! >addr >r >path path 3
-r@ loadb 0= if r@ $400 erase then r> ;
-
 : already-loaded ( blk -- addr|blk )
 3 0 do dup bbi i + c@ = if drop
 i touch >addr unloop exit then loop ;
 
 : load-to-unused ( blk -- addr|blk )
-3 0 do bbi i + c@ 0= if
-i touch doload unloop exit then loop ;
+3 0 do bbi i + c@ 0= if i touch
+2dup bbi + c! >addr >r >path path 3
+r@ loadb 0= if r@ $400 erase then r>
+unloop exit then loop ;
 
 : pick-unused ( blk -- addr|blk )
 3 0 do bbi i + c@ 0= if bbi i + c!
