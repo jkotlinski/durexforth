@@ -242,7 +242,7 @@ case
 ((abort)) :: Clear the data stack and perform `quit`.
 ((abort")) _ccc" ( f -- )_  :: If _f_ is true, print _ccc_ and `abort`. Typical use: `: x ... test abort" error" ... ;`
 ((quit)) :: Enter an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting I/O.
-((pad)) _( -- addr )_ :: _addr_ is the address of the `pad`, a 161-byte memory region that can be used freely by user words.
+((pad)) _( -- addr )_ :: _addr_ is the address of the `pad`, a memory region after `here` that can be used freely by user words.
 No built-in words will modify this region.
 
 === Strings

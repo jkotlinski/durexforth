@@ -84,9 +84,6 @@ parse-name asm included
 code split swap lda,# ldy,#
 ['] pushya jmp, ;
 : constant value ;
-( to free up space, pad could be
-  e.g. HERE+34 instead )
-$35b constant pad
 : space bl emit ;
 : spaces ( n -- )
 begin ?dup while space 1- repeat ;
