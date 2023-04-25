@@ -28,9 +28,8 @@ over ,branch ,branch
 : type! ( u -- )
 branchptr @ 1 - c! ;
 
-: there here 34 + ;
 : reached-end ( addr -- addr flag )
-1 branchptr @ there ?do
+1 branchptr @ here ?do
 over i 2+ @ u< if drop 0 leave then
 5 +loop ;
 
@@ -51,7 +50,7 @@ u> 0= if \ back
 
 : scan-loop ( addr -- addr+5 )
 \ correct #else to #leave
-5+ branchptr @ there ?do
+5+ branchptr @ here ?do
 dup i 2+ @ = if #leave i 4+ c! then
 5 +loop ;
 
@@ -75,7 +74,7 @@ drop 3+ dup endcase ;
 \ backjump?
 dup dup 1+ @ u> 0= if 0 exit then
 \ 0branch fwd dst?
-0 branchptr @ there ?do
+0 branchptr @ here ?do
 over 3+ i 2+ @ = if \ dst?
 #while i 4+ c!
 drop 1 leave then 5 +loop ;
@@ -87,7 +86,7 @@ while? if #repeat else #again then
 then type! then ;
 
 : scan ( nt -- )
-there branchptr !
+here branchptr !
 >xt dup my-xt ! begin dup c@ case
 $20 of scan-jsr endof
 $4c of scan-jmp reached-end if
@@ -102,7 +101,7 @@ dup xt>nt ?dup if name>string type drop
 else u. ." execute" then space ;
 
 : print-0branch ( addr -- addr+5 )
-branchptr @ there do
+branchptr @ here do
 i @ over = if i 4+ c@ case
 #if of ." if " endof
 #while of ." while " endof
@@ -118,7 +117,7 @@ over c@ emit 1 /string repeat
 
 : print-unloop ( addr -- addr+3 )
 \ if followed by a leave, skip
-3+ branchptr @ there do
+3+ branchptr @ here do
 dup i @ = i 4+ c@ #leave = and if
 unloop exit then 5 +loop ." unloop " ;
 
@@ -141,13 +140,13 @@ print-xt 3+ dup
 endcase ;
 
 : remove-then ( addr -- )
-branchptr @ there do i 2+ @ over =
+branchptr @ here do i 2+ @ over =
 i 4+ c@ #if = and if
 0 i 2+ ! then 5 +loop drop ;
 
 : print-jmp ( addr -- addr )
 dup 1+ @ dup my-xt @ u< if print-xt
-else drop branchptr @ there ?do
+else drop branchptr @ here ?do
 i @ over = if i 4+ c@ case
 #else of ." else "
 dup 3+ remove-then endof
@@ -160,7 +159,7 @@ abort endcase then 5 +loop then ;
 : .begin ." begin " ;
 
 : print-to-branch ( addr -- addr )
-branchptr @ there ?do
+branchptr @ here ?do
 dup i 2+ @ = if
 i 4+ c@ case
 #if of .then endof

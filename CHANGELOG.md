@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Do not print "ok" while compiling. Makes it easier to re-enter multi-line word definitions in interpreter.
  - Moved tests to a separate disk (tests.d64).
  - gfx: Renamed ERASE to PEN.
- - #> (the pictured numeric output string buffer) now stores backwards, starting after HERE.
+ - #> (the pictured numeric output string buffer) now uses its own buffer chopped from the end of PAD.
 ### Removed
  - GETC, 100/
 ### Fixed
