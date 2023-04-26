@@ -307,7 +307,7 @@ exit endof endcase
 dup $7f and $20 < !"mode and if
 dup case
 left of cur-left drop exit endof
-right of cur-right drop exit endof
+right of ins-right drop exit endof
 up of cur-up drop exit endof
 down of cur-down drop exit endof
 endcase drop exit then
