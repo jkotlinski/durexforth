@@ -1,7 +1,6 @@
 variable holdp
-#34 allot here dup
-: <# literal holdp ! ;
-: #> 2drop holdp @ literal over - ;
+: <# $3fc holdp ! ;
+: #> 2drop holdp @ $3fc over - ;
 : hold -1 holdp +! holdp @ c! ;
 
 : sign 0< if '-' hold then ;
