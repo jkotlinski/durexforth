@@ -56,7 +56,8 @@ loaded? 0= if unassign then set-blk ;
 block dup $400 + swap do
 i c@ emit loop ;
 
-: empty-buffers bbi 3 erase ;
+: empty-buffers ( -- )
+bbi 3 erase dirty 3 erase ;
 
 : update ( -- )
 1 dirty curr-buf c@ + c! ;
