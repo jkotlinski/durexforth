@@ -6,6 +6,8 @@ create bbi 0 , 0 c, \ buffer block id's
 create dirty 0 , 0 c,
 create curr-buf 0 c,
 
+variable map 0 map !
+
 \ block-allocate.
 \ returns true on success.
 : b-a ( drive track sector -- flag )
@@ -20,51 +22,43 @@ chrin begin chrin drop readst until
 clrchn $f close '0' = ;
 
 \ Usage: "20 create-blocks" allocates
-\ 20 Forth blocks and writes a map
-\ file named "blocks".
+\ 20 Forth blocks = 80 sectors and
+\ writes a map file named "blocks".
 : create-blocks ( n -- )
-4 * \ # of sectors to allocate
-\ 735 = 35 tracks * 21 sectors
-here #735 -1 fill
+4 * here map !
 #36 1 do i #18 <> if #21 0 do
 $ba c@ j i b-a if
-\ write Forth block# to sector map
-1- dup 4 / here #21 j 1- * i + + c!
-dup 0= if \ all done!
-here dup #735 + s" blocks" saveb
+j c, i c, 1- ?dup 0= if
+map @ here s" blocks" saveb
 unloop unloop exit then then
-loop then loop abort" disk full" ;
+loop then loop 1 abort" disk full" ;
+
+: load-map map @ if exit then
+here map ! here s" blocks" loadb
+0= abort" no blocks" ;
 
 : >addr ( buf -- addr )
 $400 * $c000 + ;
 
-: >path ( blk dst -- )
->r 'b' r@ c! #10 /mod #10 /mod
-'0' + r@ 1+ c!
-'0' + r@ 2+ c!
-'0' + r> 3 + c! ;
-
-: scratch ( blk -- )
-here
-'s' over c! 1+
-'0' over c! 1+
-':' over c! 1+
->path here 7 $f $f open ioabort
-$f close ;
-
 : save-buf ( buf -- )
 dup dirty + c@ 0= if drop exit then
-0 over dirty + c!
-dup bbi + c@ dup scratch
-here >path >addr dup
-$400 + here 4 saveb ;
+load-map
+\ TODO
+\ 0 over dirty + c!
+\ dup bbi + c@ dup scratch
+\ here >path >addr dup
+\ $400 + here 4 saveb
+;
 
 : >buf ( blk -- buf ) 3 mod ;
 
 : load-blk ( blk -- )
-dup here >path >buf >addr >r here 4
-r@ loadb 0= if r@ $400 erase then
-r> drop ;
+load-map
+\ TODO
+\ dup here >path >buf >addr >r here 4
+\ r@ loadb 0= if r@ $400 erase then
+\ r> drop ;
+;
 
 : set-blk ( blk -- addr )
 dup >buf curr-buf c!
