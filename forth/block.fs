@@ -34,8 +34,8 @@ unloop unloop exit then then
 loop then loop 1 abort" disk full" ;
 
 : load-map map @ if exit then
-here map ! here s" blocks" loadb
-0= abort" no blocks" ;
+here dup s" blocks" loadb
+0= abort" no blocks" map ! ;
 
 : >addr ( buf -- addr )
 $400 * $c000 + ;
