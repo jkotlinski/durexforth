@@ -185,7 +185,7 @@ hide dodoes
 .( accept..) include accept
 \ .( v..) include v
 
-include block
+.( block..) include block
 
 decimal
 \ include turnkey

@@ -1,8 +1,22 @@
+require io
+
 ( three block buffers at $c000-$cbff )
 
 create bbi 0 , 0 c, \ buffer block id's
 create dirty 0 , 0 c,
 create curr-buf 0 c,
+
+\ block-allocate. returns -1 on success
+: b-a ( drive track sector -- flag )
+<# 0 #s bl hold 2drop
+   0 #s bl hold 2drop
+   0 #s bl hold
+       'a' hold
+       '-' hold
+       'b' hold #>
+$f $f open ioabort $f chkin ioabort
+chrin begin chrin drop readst until
+clrchn $f close '0' = ;
 
 : >addr ( buf -- addr )
 $400 * $c000 + ;
