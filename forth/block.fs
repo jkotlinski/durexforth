@@ -19,6 +19,22 @@ $f $f open ioabort $f chkin ioabort
 chrin begin chrin drop readst until
 clrchn $f close '0' = ;
 
+\ Usage: "20 create-blocks" allocates
+\ 20 Forth blocks and writes a map
+\ file named "blocks".
+: create-blocks ( n -- )
+4 * \ # of sectors to allocate
+\ 735 = 35 tracks * 21 sectors
+here #735 -1 fill
+#36 1 do i #18 <> if #21 0 do
+$ba c@ j i b-a if
+\ write Forth block# to sector map
+1- dup 4 / here #21 j 1- * i + + c!
+dup 0= if \ all done!
+here dup #735 + s" blocks" saveb
+unloop unloop exit then then
+loop then loop abort" disk full" ;
+
 : >addr ( buf -- addr )
 $400 * $c000 + ;
 
