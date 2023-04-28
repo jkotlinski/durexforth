@@ -2,7 +2,7 @@ require io
 
 ( three block buffers at $c000-$cbff )
 
-create bbi 0 , 0 c, \ buffer block id's
+create bbi -1 , -1 c, \ buf block id's
 create dirty 0 , 0 c,
 create curr-buf 0 c,
 
@@ -53,20 +53,31 @@ load-map
 
 : >buf ( blk -- buf ) 3 mod ;
 
-: load-blk ( blk -- )
-load-map
-\ TODO
-\ dup here >path >buf >addr >r here 4
-\ r@ loadb 0= if r@ $400 erase then
-\ r> drop ;
-;
+: load-sector ( dst src -- )
+dup c@ swap 1+ c@ \ dst track sector
+s" #" 5 5 open ioabort
+<#  0 #s  bl hold 2drop
+    0 #s  bl hold
+'0' hold  bl hold
+'2' hold  bl hold
+'1' hold 'U' hold #>
+$f $f open ioabort 5 chkin ioabort
+dup $100 + swap do chrin i c! loop
+$f close 5 close clrchn ;
+
+: load-blk ( blk -- ) load-map
+ dup >buf >addr  swap 4    * map @ +
+2dup load-sector swap $100 + swap 2+
+2dup load-sector swap $100 + swap 2+
+2dup load-sector swap $100 + swap 2+
+     load-sector ;
 
 : set-blk ( blk -- addr )
 dup >buf curr-buf c!
 dup dup >buf bbi + c! >buf >addr ;
 
 : unassign ( blk -- blk )
-dup >buf dup save-buf bbi + 0 swap c! ;
+dup >buf dup save-buf bbi + -1 swap c! ;
 
 : loaded? ( blk -- blk flag )
 dup dup >buf bbi + c@ = ;
@@ -83,7 +94,7 @@ block dup $400 + swap do
 i c@ emit loop ;
 
 : empty-buffers ( -- )
-bbi 3 erase dirty 3 erase ;
+bbi 3 -1 fill dirty 3 erase ;
 
 : update ( -- )
 1 dirty curr-buf c@ + c! ;
