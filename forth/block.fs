@@ -32,7 +32,7 @@ clrchn $f close '0' = ;
 j i b-a if j c, i c, 1- ?dup 0= if
 map @ here path saveb
 unloop unloop exit then then
-loop then loop 1 abort" disk full" ;
+loop then loop 1 abort" full" ;
 
 : load-map map @ if exit then
 here dup path loadb
