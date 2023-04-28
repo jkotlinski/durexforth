@@ -7,6 +7,7 @@ create dirty 0 , 0 c,
 create curr-buf 0 c,
 
 variable map 0 map !
+: path s" blocks" ;
 
 \ block-allocate.
 \ returns true on success.
@@ -29,12 +30,12 @@ clrchn $f close '0' = ;
 #36 1 do i #18 <> if #21 0 do
 $ba c@ j i b-a if
 j c, i c, 1- ?dup 0= if
-map @ here s" blocks" saveb
+map @ here path saveb
 unloop unloop exit then then
 loop then loop 1 abort" disk full" ;
 
 : load-map map @ if exit then
-here dup s" blocks" loadb
+here dup path loadb
 0= abort" no blocks" map ! ;
 
 : >addr ( buf -- addr )
