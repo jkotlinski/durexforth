@@ -16,10 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - ( now only supports multiple lines when reading from text file.
  - Define MML strings using MML"
  - Changed REFILL to Forth standard behavior: Fill the input buffer from the input source, returning true if successful.
- - #> (the pictured numeric output string buffer) now uses its own buffer, separate from HERE.
  - Do not print "ok" while compiling. Makes it easier to re-enter multi-line word definitions in interpreter.
  - Moved tests to a separate disk (tests.d64).
  - gfx: Renamed ERASE to PEN.
+ - #> (the pictured numeric output string buffer) now uses its own buffer chopped from the end of PAD.
 ### Removed
  - GETC, 100/
 ### Fixed
