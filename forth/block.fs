@@ -6,7 +6,8 @@ create bbi 0 , 0 c, \ buffer block id's
 create dirty 0 , 0 c,
 create curr-buf 0 c,
 
-\ block-allocate. returns -1 on success
+\ block-allocate.
+\ returns true on success.
 : b-a ( drive track sector -- flag )
 <# 0 #s bl hold 2drop
    0 #s bl hold 2drop
