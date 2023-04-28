@@ -11,10 +11,11 @@ variable map 0 map !
 
 \ block-allocate.
 \ returns true on success.
-: b-a ( drive track sector -- flag )
+: b-a ( track sector -- flag )
 <# 0 #s bl hold 2drop
-   0 #s bl hold 2drop
    0 #s bl hold
+       '0' hold
+        bl hold
        'a' hold
        '-' hold
        'b' hold #>
@@ -28,8 +29,7 @@ clrchn $f close '0' = ;
 : create-blocks ( n -- )
 4 * here map !
 #36 1 do i #18 <> if #21 0 do
-$ba c@ j i b-a if
-j c, i c, 1- ?dup 0= if
+j i b-a if j c, i c, 1- ?dup 0= if
 map @ here path saveb
 unloop unloop exit then then
 loop then loop 1 abort" disk full" ;
@@ -59,8 +59,8 @@ s" #" 5 5 open ioabort
 <#  0 #s  bl hold 2drop
     0 #s  bl hold
 '0' hold  bl hold
-'2' hold  bl hold
-'1' hold 'U' hold #>
+'5' hold ':' hold
+'1' hold 'u' hold #>
 $f $f open ioabort 5 chkin ioabort
 dup $100 + swap do chrin i c! loop
 $f close 5 close clrchn ;
