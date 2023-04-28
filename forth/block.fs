@@ -12,30 +12,24 @@ variable map 0 map !
 \ block-allocate.
 \ returns true on success.
 : b-a ( track sector -- flag )
-<# 0 #s bl hold 2drop
-   0 #s bl hold
-       '0' hold
-        bl hold
-       'a' hold
-       '-' hold
-       'b' hold #>
-$f $f open ioabort $f chkin ioabort
-chrin begin chrin drop readst until
-clrchn $f close '0' = ;
+<# 0 #s bl hold 2drop 0 #s bl hold
+'0' hold bl hold 'a' hold '-' hold
+'b' hold #> $f $f open ioabort
+$f chkin ioabort chrin begin chrin drop
+readst until clrchn $f close '0' = ;
 
 \ Usage: "20 create-blocks" allocates
 \ 20 Forth blocks = 80 sectors and
 \ writes a map file named "blocks".
 : create-blocks ( n -- )
-4 * here map !
-#36 1 do i #18 <> if #21 0 do
-j i b-a if j c, i c, 1- ?dup 0= if
-map @ here path saveb
+4 * here map ! #36 1 do i #18 <> if
+#21 0 do j i b-a if j c, i c, 1-
+?dup 0= if map @ here path saveb
 unloop unloop exit then then
 loop then loop 1 abort" full" ;
 
 : load-map map @ if exit then
-here dup path loadb
+here path here loadb
 0= abort" no blocks" map ! ;
 
 : >addr ( buf -- addr )
@@ -55,12 +49,9 @@ load-map
 
 : load-sector ( dst src -- )
 dup c@ swap 1+ c@ \ dst track sector
-s" #" 5 5 open ioabort
-<#  0 #s  bl hold 2drop
-    0 #s  bl hold
-'0' hold  bl hold
-'5' hold ':' hold
-'1' hold 'u' hold #>
+s" #" 5 5 open ioabort <# 0 #s bl hold
+2drop 0 #s bl hold '0' hold bl hold
+'5' hold ':' hold '1' hold 'u' hold #>
 $f $f open ioabort 5 chkin ioabort
 dup $100 + swap do chrin i c! loop
 $f close 5 close clrchn ;
