@@ -15,7 +15,7 @@ variable map 0 map !
 <# 0 #s bl hold 2drop 0 #s bl hold
 '0' hold bl hold 'a' hold '-' hold
 'b' hold #> $f $f open ioabort
-$f chkin ioabort chrin begin chrin drop
+$f chkin ioabort chrin begin chrin emit
 readst until clrchn $f close '0' = ;
 
 \ Usage: "20 create-blocks" allocates
