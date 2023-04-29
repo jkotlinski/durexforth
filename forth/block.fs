@@ -55,8 +55,7 @@ load-map
 
 : >buf ( blk -- buf ) 3 mod ;
 
-: load-sector ( dst src -- )
-decimal dup c@ swap 1+ c@ \ dst t s
+: read-sector ( dst t s -- ) decimal
 s" #" 5 5 open ioabort <# 0 #s bl hold
 2drop 0 #s bl hold '0' hold bl hold
 '5' hold ':' hold '1' hold 'u' hold #>
@@ -66,8 +65,8 @@ $f close 5 close clrchn ;
 
 : load-blk ( blk -- )
 load-map dup 8 * map @ + swap >buf
->addr dup $400 + swap do i over
-load-sector 2+ $100 +loop drop ;
+>addr dup $400 + swap do i over @
+split read-sector 2+ $100 +loop drop ;
 
 : set-blk ( blk -- addr )
 dup >buf curr-buf c!
