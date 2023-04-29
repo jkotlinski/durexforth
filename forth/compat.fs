@@ -47,12 +47,9 @@ rot base @ um* d+ r> ;
 $7f and dup \ lowercase
 ':' < if '0' else '7' then - ;
 
-: digit? ( char -- flag )
-pet# dup 0< 0= swap base @ < and ;
-
 : >number ( ud addr u -- ud addr u )
-begin over c@ digit? over and while
->r dup c@ pet# accumulate
+begin over c@ pet# base @ u< over and
+while >r dup c@ pet# accumulate
 1+ r> 1- repeat ;
 
 \ from FIG UK
