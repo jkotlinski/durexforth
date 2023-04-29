@@ -76,6 +76,7 @@ This may change with public demand.
 ((dabs)) _( d -- ud )_ :: Produce the absolute value of _d_.
 ((dnegate)) _( d -- d )_ :: Negate the double-cell integer _d_.
 ((s>d)) _( n -- d )_ :: Convert the number n to the double-cell number _d_.
+((d+)) _( d1 d2 -- d3 )_ :: Adds the double-cell numbers _d1_ and _d2_, giving the sum _d3_.
 ((m+)) _( d n -- d )_ :: Add _n_ to double-cell number _d_.
 ((m*)) _( a b -- d )_ :: Multiply _a_ with _b_, producing a double-cell value.
 ((um*)) _( a b -- ud )_ :: Multiply _a_ with _b_, giving the unsigned double-cell number _ud_.
@@ -253,6 +254,7 @@ No built-in words will modify this region.
 ((count)) _( str -- caddr u )_ :: Return data address and length of the counted string _str_.
 ((type)) _( caddr u -- )_ :: Print a string.
 ((/string)) _( caddr u n -- caddr+n u-n )_ :: Adjust the string by _n_ characters.
+((>number)) _( ud addr u -- ud addr2 u2 )_ :: Convert the string in _addr u_ to digits, using `base`, and adds each digit into _ud_ after multiplying it with `base`. _addr2 u2_ contains the part of the string that was not converted.
 
 === Number Formatting
 
@@ -402,7 +404,6 @@ The `compat` module contains various words that are not deemed necessary for enj
 ((2!)) _( x1 x2 addr -- )_ :: Store 32-bit value to _addr_. _x2_ is stored at _addr_, and _x1_ is stored at _addr_ + 2.
 ((2over)) _( a b c d -- a b c d a b )_ :: Copy cell pair _a_ _b_ to top of stack.
 ((2swap)) _( a b c d -- c d a b )_ :: Exchange the top two cell pairs.
-((>number)) _( ud addr u -- ud addr2 u2 )_ :: Convert the string in _addr u_ to digits, using `base`, and adds each digit into _ud_ after multiplying it with `base`. _addr2 u2_ contains the part of the string that was not converted.
 ((>body)) _( xt -- addr )_ :: Return the data field address that belongs to the execution token. Example use: `' foo >body`
 ((sm/rem)) _( d n -- r q )_ :: Divide double-cell number _d_ by _n_, giving the symmetric quotient _q_ and the remainder _r_. Values are signed.
 ((true)) _( -- true )_ :: Return a _true_ flag, a single-cell value with all bits set.

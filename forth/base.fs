@@ -139,6 +139,24 @@ here latest >xt 1+ (to)
 : */ */mod nip ;
 ( ...from FIG UK )
 
+code d+ ( d1 d2 -- d3 )
+clc,
+lsb 1+ lda,x lsb 3 + adc,x lsb 3 + sta,x
+msb 1+ lda,x msb 3 + adc,x msb 3 + sta,x
+lsb lda,x lsb 2+ adc,x lsb 2+ sta,x
+msb lda,x msb 2+ adc,x msb 2+ sta,x
+inx, inx, ;code
+
+: pet# ( char -- num )
+$7f and dup \ lowercase
+':' < if '0' else '7' then - ;
+
+: >number ( ud addr u -- ud addr u )
+begin over c@ pet# dup 0< 0= swap
+base @ < and over and while >r dup c@
+pet# swap >r swap base @ um* drop rot
+base @ um* d+ r> 1+ r> 1- repeat ;
+
 .( format..) parse-name format included
 
 : .s depth begin ?dup while
@@ -173,7 +191,7 @@ marker ---modules---
 \ hides private words
 hide 1mi hide 2mi hide 23mi hide 3mi
 hide holdp hide latestxt
-hide dodoes
+hide dodoes hide pet#
 
 .( labels..) include labels
 .( doloop..) include doloop
