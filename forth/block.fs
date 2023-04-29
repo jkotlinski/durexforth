@@ -65,7 +65,7 @@ dup $100 + swap do chrin i c! loop
 $f close 5 close clrchn ;
 
 : load-blk ( blk -- ) load-map
- dup >buf >addr  swap 4    * map @ +
+ dup >buf >addr  swap 8    * map @ +
 2dup load-sector swap $100 + swap 2+
 2dup load-sector swap $100 + swap 2+
 2dup load-sector swap $100 + swap 2+
