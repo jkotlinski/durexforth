@@ -15,8 +15,6 @@ chrin '0' - #10 * chrin '0' - + ;
 variable t variable s
 
 : b-a ( -- ) \ allocate sector
-t @ case #18 of #19 t ! 0 s ! endof
-#36 of 1 abort" full" endof endcase
 <# s @ 0 #s bl hold 2drop
    t @ 0 #s bl hold '0' hold bl hold
    'a' hold '-' hold 'b' hold #>
@@ -26,6 +24,7 @@ get## case #65 of \ no block
 get## t ! chrin drop get## s !
 clrchn $f close recurse endof
 #66 of \ illegal track/sector
+s @ 0= abort" full"
 0 s ! 1 t +! clrchn $f close recurse
 endof endcase clrchn $f close ;
 
