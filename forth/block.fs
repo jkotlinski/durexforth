@@ -43,15 +43,24 @@ here path here loadb
 : >addr ( buf -- addr )
 $400 * $c000 + ;
 
+: write-sector ( t s src -- ) decimal
+s" #" 5 5 open ioabort
+s" b-p 5 0" $f $f open ioabort
+5 chkout ioabort
+dup $100 + swap do i c@ emit loop
+$f chkout ioabort
+<# $d hold 0 #s 2drop bl hold 0 #s
+bl hold '0' hold bl hold '5' hold
+bl hold '2' hold 'u' hold #> type
+clrchn $f close 5 close ;
+
 : save-buf ( buf -- )
 dup dirty + c@ 0= if drop exit then
-load-map
-0 over dirty + c!
-\ TODO
-\ dup bbi + c@ dup scratch
-\ here >path >addr dup
-\ $400 + here 4 saveb
-;
+load-map 0 over dirty + c!
+dup bbi + c@ 8 * map @ +
+swap >addr dup $400 + swap do
+dup @ split i write-sector
+2+ $100 +loop drop ;
 
 : >buf ( blk -- buf ) 3 mod ;
 
