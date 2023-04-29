@@ -9,28 +9,34 @@ create curr-buf 0 c,
 variable map 0 map !
 : path s" blocks" ;
 
-\ block-allocate.
-\ returns true on success.
-: b-a ( track sector -- flag )
-<# 0 #s bl hold 2drop 0 #s bl hold
-'0' hold bl hold 'a' hold '-' hold
-'b' hold #> $f $f open ioabort
-$f chkin ioabort
-\ TODO: get next free track/sector
-\ from the error string. as is,
-\ it is way too slow.
-chrin begin chrin emit
-readst until clrchn $f close '0' = ;
+: get## ( -- n )
+chrin '0' - #10 * chrin '0' - + ;
+
+variable t variable s
+
+: b-a ( -- ) \ allocate sector
+t @ case #18 of #19 t ! 0 s ! endof
+#36 of 1 abort" full" endof endcase
+<# s @ 0 #s bl hold 2drop
+   t @ 0 #s bl hold '0' hold bl hold
+   'a' hold '-' hold 'b' hold #>
+$f $f open ioabort $f chkin ioabort
+get## case 0 of clrchn $f close endof
+#65 of \ retry w/ next free sector
+#10 0 do chrin drop loop
+get## t ! chrin drop get## s !
+clrchn $f close recurse endof
+#66 of \ retry w/ next track
+0 s ! 1 t +! clrchn $f close recurse
+endof endcase ;
 
 \ Usage: "20 create-blocks" allocates
 \ 20 Forth blocks = 80 sectors and
 \ writes a map file named "blocks".
 : create-blocks ( n -- )
-4 * here map ! #36 1 do i #18 <> if
-#21 0 do j i b-a if j c, i c, 1-
-?dup 0= if map @ here path saveb
-unloop unloop exit then then
-loop then loop 1 abort" full" ;
+1 t ! 0 s ! here map !
+4 * 0 do b-a t @ c, s @ c, 1 s +!
+loop map @ here path saveb ;
 
 : load-map map @ if exit then
 here path here loadb
