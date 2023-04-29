@@ -21,14 +21,13 @@ t @ case #18 of #19 t ! 0 s ! endof
    t @ 0 #s bl hold '0' hold bl hold
    'a' hold '-' hold 'b' hold #>
 $f $f open ioabort $f chkin ioabort
-get## case 0 of clrchn $f close endof
-#65 of \ retry w/ next free sector
+get## case #65 of \ no block
 #10 0 do chrin drop loop
 get## t ! chrin drop get## s !
 clrchn $f close recurse endof
-#66 of \ retry w/ next track
+#66 of \ illegal track/sector
 0 s ! 1 t +! clrchn $f close recurse
-endof endcase ;
+endof endcase clrchn $f close ;
 
 \ Usage: "20 create-blocks" allocates
 \ 20 Forth blocks = 80 sectors and
@@ -48,8 +47,8 @@ $400 * $c000 + ;
 : save-buf ( buf -- )
 dup dirty + c@ 0= if drop exit then
 load-map
+0 over dirty + c!
 \ TODO
-\ 0 over dirty + c!
 \ dup bbi + c@ dup scratch
 \ here >path >addr dup
 \ $400 + here 4 saveb
