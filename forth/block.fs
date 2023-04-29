@@ -15,9 +15,9 @@ chrin '0' - #10 * chrin '0' - + ;
 variable t variable s
 
 : b-a ( -- ) \ allocate sector
-<# s @ 0 #s bl hold 2drop
-   t @ 0 #s bl hold '0' hold bl hold
-   'a' hold '-' hold 'b' hold #>
+decimal <# s @ 0 #s bl hold 2drop
+t @ 0 #s bl hold '0' hold bl hold
+'a' hold '-' hold 'b' hold #>
 $f $f open ioabort $f chkin ioabort
 get## case #65 of \ no block
 #10 0 do chrin drop loop
@@ -56,7 +56,7 @@ load-map
 : >buf ( blk -- buf ) 3 mod ;
 
 : load-sector ( dst src -- )
-dup c@ swap 1+ c@ \ dst track sector
+decimal dup c@ swap 1+ c@ \ dst t s
 s" #" 5 5 open ioabort <# 0 #s bl hold
 2drop 0 #s bl hold '0' hold bl hold
 '5' hold ':' hold '1' hold 'u' hold #>
@@ -64,12 +64,10 @@ $f $f open ioabort 5 chkin ioabort
 dup $100 + swap do chrin i c! loop
 $f close 5 close clrchn ;
 
-: load-blk ( blk -- ) load-map
- dup >buf >addr  swap 8    * map @ +
-2dup load-sector swap $100 + swap 2+
-2dup load-sector swap $100 + swap 2+
-2dup load-sector swap $100 + swap 2+
-     load-sector ;
+: load-blk ( blk -- )
+load-map dup 8 * map @ + swap >buf
+>addr dup $400 + swap do i over
+load-sector 2+ $100 +loop drop ;
 
 : set-blk ( blk -- addr )
 dup >buf curr-buf c!
