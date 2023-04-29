@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
  - DOWORDS incorrectly quit for some non-false xt return values.
  - POSTPONE error handling.
- - Documented DEFCODE, #S
+ - Documented DEFCODE, #S, D+
  - LOADB/SAVEB/DOS hang on device not present.
  - REQUIRE(D) stopped working after 16 INCLUDE(D) files.
  - Undefined behaviour after loading base.fs. broke in 1.5.1.

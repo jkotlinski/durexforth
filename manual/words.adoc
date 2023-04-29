@@ -398,6 +398,7 @@ The `compat` module contains various words that are not deemed necessary for enj
 ((align)) _( -- )_ :: No-op
 ((aligned)) _( -- )_ :: No-op
 ((chars)) _( -- )_ :: No-op
+((d+)) _( d1 d2 -- d3 )_ :: Adds the double-cell numbers _d1_ and _d2_, giving the sum _d3_.
 ((2@)) _( addr -- x1 x2 )_ :: Fetch 32-bit value from _addr_. _x2_ is stored at _addr_, and _x1_ is stored at _addr_ + 2.
 ((2!)) _( x1 x2 addr -- )_ :: Store 32-bit value to _addr_. _x2_ is stored at _addr_, and _x1_ is stored at _addr_ + 2.
 ((2over)) _( a b c d -- a b c d a b )_ :: Copy cell pair _a_ _b_ to top of stack.
