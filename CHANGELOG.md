@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Changed REFILL to Forth standard behavior: Fill the input buffer from the input source, returning true if successful.
  - Do not print "ok" while compiling. Makes it easier to re-enter multi-line word definitions in interpreter.
  - Moved tests to a separate disk (tests.d64).
+ - Moved D+ and >NUMBER from compat to base.
  - gfx: Renamed ERASE to PEN.
  - #> (the pictured numeric output string buffer) now uses its own buffer chopped from the end of PAD.
 ### Removed
@@ -25,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
  - DOWORDS incorrectly quit for some non-false xt return values.
  - POSTPONE error handling.
- - Documented DEFCODE, #S
+ - Documented DEFCODE, #S, D+
  - LOADB/SAVEB/DOS hang on device not present.
  - REQUIRE(D) stopped working after 16 INCLUDE(D) files.
  - Undefined behaviour after loading base.fs. broke in 1.5.1.
