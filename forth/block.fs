@@ -67,7 +67,7 @@ dup @ split i write-sector
 : read-sector ( dst t s -- ) decimal
 s" #" 5 5 open ioabort <# 0 #s bl hold
 2drop 0 #s bl hold '0' hold bl hold
-'5' hold ':' hold '1' hold 'u' hold #>
+'5' hold bl hold '1' hold 'u' hold #>
 $f $f open ioabort 5 chkin ioabort
 dup $100 + swap do chrin i c! loop
 $f close 5 close clrchn ;
