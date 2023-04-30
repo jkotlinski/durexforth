@@ -215,7 +215,7 @@ CHAR ; ( name -- char )
     jmp FETCHBYTE
 
 SAVE_INPUT_STACK
-    !fill 8*5
+    !fill 9*5
 SAVE_INPUT_STACK_DEPTH
     !byte 0
 
@@ -235,6 +235,8 @@ pop_input_stack
     rts
 
 PUSH_INPUT_SOURCE
+    lda BLK_W
+    jsr push_input_stack
     lda TO_IN_W
     jsr push_input_stack
     lda TO_IN_W+1
@@ -269,6 +271,8 @@ POP_INPUT_SOURCE
     sta TO_IN_W+1
     jsr pop_input_stack
     sta TO_IN_W
+    jsr pop_input_stack
+    sta BLK_W
     rts
 
 ; handle errors returned by open,
