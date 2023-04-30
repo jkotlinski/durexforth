@@ -143,12 +143,8 @@ HEADER
 
     ; update dictionary
 
--   jsr PARSE_NAME
-    lda LSB,x
-    bne +
-    jsr REFILL_OR_CLOSE
-    jmp -
-+
+    jsr PARSE_NAME
+
     ; update dictionary pointer
     lda LSB, x
     sta .putlen+1
@@ -162,8 +158,7 @@ HEADER
     sta W
     bcs +
     dec LATEST_MSB
-+
-    lda LATEST_MSB
++   lda LATEST_MSB
     sta W + 1
     ldy #0
     ; Store length byte.
