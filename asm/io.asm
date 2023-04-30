@@ -210,14 +210,8 @@ BLK_W
 
     +BACKLINK "char", 4
 CHAR ; ( name -- char )
--   jsr PARSE_NAME
-    lda LSB,x
-    bne +
+    jsr PARSE_NAME
     inx
-    inx
-    jsr REFILL_OR_CLOSE
-    jmp -
-+   inx
     jmp FETCHBYTE
 
 SAVE_INPUT_STACK
