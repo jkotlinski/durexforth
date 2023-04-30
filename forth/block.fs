@@ -91,6 +91,8 @@ dup dup >buf bbi + c@ = ;
 loaded? 0= if unassign dup load-blk
 then set-blk ;
 
+' block block-xt !
+
 : buffer ( blk -- addr )
 loaded? 0= if unassign then set-blk ;
 

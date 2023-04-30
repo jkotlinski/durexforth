@@ -1,4 +1,5 @@
 ; EMIT PAGE RVS CR TYPE KEY? KEY REFILL SOURCE SOURCE-ID >IN BLK CHAR IOABORT
+; BLOCK-XT LOAD
 
     +BACKLINK "emit", 4
 EMIT
@@ -329,3 +330,27 @@ IOABORT ; ( ioresult -- )
 .cr_abort
     jsr CR
     jmp ABORT
+
+    +BACKLINK "block-xt", 8
+    +VALUE BLOCK_XT_ADDR
+
+    +BACKLINK "load", 4
+    jsr PUSH_INPUT_SOURCE
+    jsr DUP
+    jsr BLK
+    jsr STORE
+    jsr ZERO
+    jsr TO_IN
+    jsr STORE
+BLOCK_XT_ADDR = * + 1
+    jsr PLACEHOLDER_ADDRESS
+    lda LSB,x
+    sta TIB_PTR
+    lda MSB,x
+    sta TIB_PTR + 1
+    inx
+    lda #0
+    sta TIB_SIZE
+    lda #4
+    sta TIB_SIZE + 1
+    rts
