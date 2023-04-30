@@ -2,7 +2,7 @@ require io
 
 ( three block buffers at $c000-$cbff )
 
-create bbi -1 , -1 c, \ buf block id's
+create bbi 0 , 0 c, \ buf block id's
 create dirty 0 , 0 c,
 create curr-buf 0 c,
 
@@ -57,7 +57,7 @@ clrchn $f close 5 close ;
 : save-buf ( buf -- )
 dup dirty + c@ 0= if drop exit then
 load-map 0 over dirty + c!
-dup bbi + c@ 8 * map @ +
+dup bbi + c@ 1- 8 * map @ +
 swap >addr dup $400 + swap do
 dup @ split i write-sector
 2+ $100 +loop drop ;
@@ -73,7 +73,7 @@ dup $100 + swap do chrin i c! loop
 $f close 5 close clrchn ;
 
 : load-blk ( blk -- )
-load-map dup 8 * map @ + swap >buf
+load-map dup 1- 8 * map @ + swap >buf
 >addr dup $400 + swap do i over @
 split read-sector 2+ $100 +loop drop ;
 
@@ -82,7 +82,7 @@ dup >buf curr-buf c!
 dup dup >buf bbi + c! >buf >addr ;
 
 : unassign ( blk -- blk )
-dup >buf dup save-buf bbi + -1 swap c! ;
+dup >buf dup save-buf bbi + 0 swap c! ;
 
 : loaded? ( blk -- blk flag )
 dup dup >buf bbi + c@ = ;
@@ -99,7 +99,7 @@ block dup $400 + swap do
 i c@ emit loop ;
 
 : empty-buffers ( -- )
-bbi 3 -1 fill dirty 3 erase ;
+bbi 3 erase dirty 3 erase ;
 
 : update ( -- )
 1 dirty curr-buf c@ + c! ;
