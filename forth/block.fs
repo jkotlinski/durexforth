@@ -113,11 +113,18 @@ bbi 3 erase dirty 3 erase ;
 
 \ --- testing
 
-: b! ( addr u dst -- )
-tuck + swap do
-dup c@ i c! 1+ loop drop ;
-
-: test 3 create-blocks
-s" 'o' emit 2 load '!' emit cr"
-1 block b! s" 'k' emit"
-2 block b! 1 load ;
+: test-load
+4 create-blocks 0
+s" 1 2 load 7" 1 block swap move update
+s" 2 3 load 6" 2 block swap move update
+s" 3 4 load 5" 3 block swap move update
+s" 4" 4 block swap move update
+1 load
+7 <> abort" 7"
+6 <> abort" 6"
+5 <> abort" 5"
+4 <> abort" 4"
+3 <> abort" 3"
+2 <> abort" 2"
+1 <> abort" 1"
+0 <> abort" 0" ;

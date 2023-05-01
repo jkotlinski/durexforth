@@ -65,29 +65,26 @@ REFILL_OR_CLOSE ; ( -- )
 
 CLOSE_INPUT_SOURCE
     stx W
-    lda BLK_W
-    bne .pop_source
     lda	SOURCE_ID_LSB
     jsr	CLOSE
-.pop_source
     jsr POP_INPUT_SOURCE
     lda BLK_W
-    bne .select_block
+    bne .restore_block
     ldx SOURCE_ID_LSB
-    beq .select_keyboard
+    beq .restore_keyboard
     jsr CHKIN
-    jmp .return
-.select_block
-    dex
-    sta LSB,x
-    lda #0
-    sta MSB,x
-    jsr BLOCK
-    jmp .return
-.select_keyboard
+    jmp .ret
+.restore_keyboard
     jsr CLRCHN
-.return
+.ret
     ldx W
+    rts
+.restore_block
+    ldx W
+    jsr BLK
+    jsr FETCH
+    jsr BLOCK
+    inx ; assume block buffer address is unchanged
     rts
 
 .return_false
@@ -369,4 +366,4 @@ BLOCK
     lda #4
     sta TIB_SIZE + 1
     jsr interpret_tib
-    jmp POP_INPUT_SOURCE
+    jmp CLOSE_INPUT_SOURCE
