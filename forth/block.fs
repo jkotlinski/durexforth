@@ -4,6 +4,7 @@ marker ---block---
 
 header block
 header buffer
+header create-blocks
 header empty-buffers
 header flush
 header list
@@ -47,7 +48,8 @@ endof endcase clrchn $f close ;
 \ Usage: "20 create-blocks" allocates
 \ 20 Forth blocks = 80 sectors and
 \ writes a map file named "blocks".
-: create-blocks ( n -- )
+define create-blocks ( n -- )
+path here loadb abort" exist"
 1 t ! 0 s ! here map !
 4 * 0 do b-a t @ c, s @ c, 1 s +!
 loop map @ here path saveb ;
