@@ -65,15 +65,29 @@ REFILL_OR_CLOSE ; ( -- )
 
 CLOSE_INPUT_SOURCE
     stx W
+    lda BLK_W
+    bne .pop_source
     lda	SOURCE_ID_LSB
     jsr	CLOSE
+.pop_source
     jsr POP_INPUT_SOURCE
+    lda BLK_W
+    bne .select_block
     ldx SOURCE_ID_LSB
-    beq +
+    beq .select_keyboard
     jsr CHKIN
-    jmp ++
-+   jsr CLRCHN
-++  ldx W
+    jmp .return
+.select_block
+    dex
+    sta LSB,x
+    lda #0
+    sta MSB,x
+    jsr BLOCK
+    jmp .return
+.select_keyboard
+    jsr CLRCHN
+.return
+    ldx W
     rts
 
 .return_false
@@ -332,7 +346,9 @@ IOABORT ; ( ioresult -- )
     jmp ABORT
 
     +BACKLINK "block-xt", 8
-    +VALUE BLOCK_XT_ADDR
+    +VALUE BLOCK + 1
+BLOCK
+    jmp PLACEHOLDER_ADDRESS
 
     +BACKLINK "load", 4
     jsr PUSH_INPUT_SOURCE
@@ -342,8 +358,7 @@ IOABORT ; ( ioresult -- )
     jsr ZERO
     jsr TO_IN
     jsr STORE
-BLOCK_XT_ADDR = * + 1
-    jsr PLACEHOLDER_ADDRESS
+    jsr BLOCK
     lda LSB,x
     sta TIB_PTR
     lda MSB,x

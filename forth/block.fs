@@ -110,3 +110,24 @@ bbi 3 erase dirty 3 erase ;
 0 save-buf 1 save-buf 2 save-buf ;
 
 : flush save-buffers empty-buffers ;
+
+\ --- testing
+
+: b" ( dst -- )
+>r '"' parse
+begin ?dup while
+over r@ swap c!
+/string r> 1+ >r
+repeat r> 2drop ;
+
+.( 20 create-blocks)
+20 create-blocks
+.( 1 block) cr
+1 block
+b" '1' emit 2 block load '1' emit"
+.( 2 block) cr
+2 block
+b" '2' emit"
+.( 1 load) cr
+1 load
+.( done) cr
