@@ -1,5 +1,17 @@
 require io
 
+marker ---block---
+
+header block
+header buffer
+header empty-buffers
+header flush
+header list
+header save-buffers
+header update
+
+latest \ hide words
+
 ( 11 block buffers at $a000-$cbff.
   this may be excessive, let's
   shrink it once v is replaced with
@@ -91,29 +103,31 @@ dup >buf dup save-buf bbi + 0 swap c! ;
 : loaded? ( blk -- blk flag )
 dup dup >buf bbi + c@ = ;
 
-: block ( blk -- addr )
+define block ( blk -- addr )
 loaded? 0= if unassign dup load-blk
 then set-blk ;
 
 ' block block-xt !
 
-: buffer ( blk -- addr )
+define buffer ( blk -- addr )
 loaded? 0= if unassign then set-blk ;
 
-: list ( blk -- )
+define list ( blk -- )
 block dup $400 + swap do
 i c@ emit loop ;
 
-: empty-buffers ( -- )
+define empty-buffers ( -- )
 bbi #11 erase dirty #11 erase ;
 
-: update ( -- )
+define update ( -- )
 1 dirty curr-buf c@ + c! ;
 
-: save-buffers ( -- )
+define save-buffers ( -- )
 11 0 do i save-buf loop ;
 
-: flush save-buffers empty-buffers ;
+define flush save-buffers empty-buffers ;
+
+to latest \ end hiding words
 
 ( --- testing
 
