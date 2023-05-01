@@ -63,6 +63,8 @@ _errorchread
 LOADB
     txa
     pha
+    lda $b8             ; current logical file
+    pha
 
     lda MSB, x		; >destination
     sta load_binary_laddr_hi
@@ -77,6 +79,9 @@ LOADB
     pla
     jsr	load_binary
 
+    pla
+    tax
+    jsr CHKIN           ; restore logical file
     pla
     tax
 
