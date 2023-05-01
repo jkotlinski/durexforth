@@ -113,21 +113,11 @@ bbi 3 erase dirty 3 erase ;
 
 \ --- testing
 
-: b" ( dst -- )
->r '"' parse
-begin ?dup while
-over r@ swap c!
-/string r> 1+ >r
-repeat r> 2drop ;
+: b! ( addr u dst -- )
+tuck + swap do
+dup c@ i c! 1+ loop drop ;
 
-.( 20 create-blocks)
-20 create-blocks
-.( 1 block) cr
-1 block
-b" '1' emit 2 block load '1' emit"
-.( 2 block) cr
-2 block
-b" '2' emit"
-.( 1 load) cr
-1 load
-.( done) cr
+: test 3 create-blocks
+s" 'o' emit 2 load '!' emit cr"
+1 block b! s" 'k' emit"
+2 block b! 1 load ;
