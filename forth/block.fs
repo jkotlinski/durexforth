@@ -55,8 +55,8 @@ path here loadb abort" exist"
 loop map @ here path saveb ;
 
 : load-map map @ if exit then
-here path here loadb
-0= abort" no blocks" map ! ;
+here path here loadb dup 0=
+abort" no blocks" to here map ! ;
 
 : >addr ( buf -- addr )
 $400 * $a000 + ;
