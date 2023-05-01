@@ -1,9 +1,13 @@
 require io
 
-( three block buffers at $c000-$cbff )
+( 11 block buffers at $a000-$cbff.
+  this may be excessive, let's
+  shrink it once v is replaced with
+  a block-based editor. )
 
-create bbi 0 , 0 c, \ buf block id's
-create dirty 0 , 0 c,
+\ buf block id's
+create bbi   0 , 0 , 0 , 0 , 0 , 0 c,
+create dirty 0 , 0 , 0 , 0 , 0 , 0 c,
 create curr-buf 0 c,
 
 variable map 0 map !
@@ -41,7 +45,7 @@ here path here loadb
 0= abort" no blocks" map ! ;
 
 : >addr ( buf -- addr )
-$400 * $c000 + ;
+$400 * $a000 + ;
 
 : write-sector ( t s src -- ) decimal
 s" #" 5 5 open ioabort
@@ -62,7 +66,7 @@ swap >addr dup $400 + swap do
 dup @ split i write-sector
 2+ $100 +loop drop ;
 
-: >buf ( blk -- buf ) 3 mod ;
+: >buf ( blk -- buf ) #11 mod ;
 
 : read-sector ( dst t s -- ) decimal
 s" #" 5 5 open ioabort <# 0 #s bl hold
@@ -101,17 +105,17 @@ block dup $400 + swap do
 i c@ emit loop ;
 
 : empty-buffers ( -- )
-bbi 3 erase dirty 3 erase ;
+bbi #11 erase dirty #11 erase ;
 
 : update ( -- )
 1 dirty curr-buf c@ + c! ;
 
 : save-buffers ( -- )
-0 save-buf 1 save-buf 2 save-buf ;
+11 0 do i save-buf loop ;
 
 : flush save-buffers empty-buffers ;
 
-\ --- testing
+( --- testing
 
 : test-load
 4 create-blocks 0
@@ -127,4 +131,4 @@ s" 4" 4 block swap move update
 3 <> abort" 3"
 2 <> abort" 2"
 1 <> abort" 1"
-0 <> abort" 0" ;
+0 <> abort" 0" ; )

@@ -10,7 +10,7 @@ $35b - $3d9 :: `pad` Scratch pad memory, Cassette Buffer, untouched by DurexFort
 $3da - $3fb :: `#>` buffer.
 $801 - here :: Forth Kernel followed by code and data space.
 latest - $9fff :: Dictionary. Grows downwards as needed.
-$a000 - $cbff :: Editor text buffer.
+$a000 - $cbff :: Editor text buffer / Block buffers.
 $cc00 - $cfff :: Hi-res graphics colors.
 $d000 - $dfff :: I/O area.
 $e000 - $ffff :: Kernal / hi-res graphics bitmap.
