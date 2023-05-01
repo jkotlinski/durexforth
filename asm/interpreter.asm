@@ -123,17 +123,15 @@ interpret_tib
     cmp TIB_SIZE + 1
     bne interpret_tib
 
-    ; 0 - keyboard, -1 evaluate, else file
-    lda SOURCE_ID_LSB
-    beq +
-    rts
-+   lda LATEST_LSB
+    lda LATEST_LSB
     sec
     sbc HERE_LSB
     lda LATEST_MSB
     sbc HERE_MSB
     beq .on_data_underflow
     lda STATE
+    ora SOURCE_ID_LSB
+    ora BLK_W
     bne +
     lda #'o'
     jsr PUTCHR

@@ -368,4 +368,5 @@ BLOCK
     sta TIB_SIZE
     lda #4
     sta TIB_SIZE + 1
-    rts
+    jsr interpret_tib
+    jmp POP_INPUT_SOURCE
