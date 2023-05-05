@@ -15,6 +15,7 @@ swap here swap ! ; immediate
 : recurse
 latestxt compile, ; immediate
 
+: \ source >in ! drop ; immediate
 : <> = 0= ;
 : u> swap u< ;
 : 0<> 0= 0= ;
@@ -23,8 +24,6 @@ latestxt compile, ; immediate
 over swap begin dup while over c@ r@ <>
 while 1 /string repeat then r> drop >r
 over - dup r> if 1+ then >in +! ;
-
-: \ $d parse drop drop ; immediate
 
 : ( source-id 1 < if ')' parse drop drop
 else begin >in @ ')' parse nip >in @ rot
@@ -101,6 +100,7 @@ begin ?dup while space 1- repeat ;
 
 : 2drop ( a b -- )
 postpone drop postpone drop ; immediate
+
 
 : save-forth ( strptr strlen -- )
 801 $a000 d word count saveb ;
