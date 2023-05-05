@@ -593,8 +593,7 @@ endcase 0 ;
 
 : evaluate-buffer
 bufstart dup begin 1+ dup c@ case
-lf of dup >r over - evaluate r> dup
-endof
+lf of swap 2dup - evaluate dup endof
  0 of 2drop exit endof endcase again ;
 
 : main-loop
