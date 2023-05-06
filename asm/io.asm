@@ -209,14 +209,17 @@ CHAR ; ( name -- char )
     jmp FETCHBYTE
 
 SAVE_INPUT_STACK
-    !fill 8*5
+    ; Forth standard 11.3.3 "Input Source":
+    ; "Input [...] shall be nestable in any order to at least eight levels."
+    ; Eight levels is overkill for INCLUDED, since opening more than four DOS
+    ; channels gives a "no channel" error message on C64.
+    ; It is anyway nice to keep some extra levels for EVALUATE and LOAD.
+    !fill 8*8
 SAVE_INPUT_STACK_DEPTH
     !byte 0
 
 push_input_stack
-    ; ! there is no check for stack overflow!
-    ; 5 is however enough for one EVALUATE and four DOS channels.
-    ; opening more than four channels gives "no channel" error on C64.
+    ; Stack overflow check could be added, but does not seem needed in practice.
     ldy SAVE_INPUT_STACK_DEPTH
     sta SAVE_INPUT_STACK, y
     inc SAVE_INPUT_STACK_DEPTH
