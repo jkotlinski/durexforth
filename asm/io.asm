@@ -149,8 +149,8 @@ REFILL ; ( -- flag )
     jmp -
 
 .getLineFromIncludeRam
-    lda INCLUDE_RAM_SIZE
-    ora INCLUDE_RAM_SIZE + 1
+    lda INCLUDE_RAM_SIZE_LSB
+    ora INCLUDE_RAM_SIZE_MSB
     bne +
     ; return false
     dex
@@ -160,9 +160,11 @@ REFILL ; ( -- flag )
     rts
 +
 
-    lda INCLUDE_RAM_PTR
+INCLUDE_RAM_PTR_LSB = * + 1
+    lda #0
     sta TIB_PTR
-    lda INCLUDE_RAM_PTR + 1
+INCLUDE_RAM_PTR_MSB = * + 1
+    lda #0
     sta TIB_PTR + 1
 
     ldy #0
@@ -170,19 +172,19 @@ REFILL ; ( -- flag )
     sty TIB_SIZE + 1
 
 .include_ram_loop
-    lda INCLUDE_RAM_SIZE
+    lda INCLUDE_RAM_SIZE_LSB
     bne +
-    dec INCLUDE_RAM_SIZE + 1
-+   dec INCLUDE_RAM_SIZE
+    dec INCLUDE_RAM_SIZE_MSB
++   dec INCLUDE_RAM_SIZE_LSB
 
-    inc INCLUDE_RAM_PTR
+    inc INCLUDE_RAM_PTR_LSB
     bne +
-    inc INCLUDE_RAM_PTR + 1
+    inc INCLUDE_RAM_PTR_MSB
 +
 
-    lda INCLUDE_RAM_PTR
+    lda INCLUDE_RAM_PTR_LSB
     sta W
-    lda INCLUDE_RAM_PTR + 1
+    lda INCLUDE_RAM_PTR_MSB
     sta W + 1
     lda (W),y
     cmp #$d
@@ -190,8 +192,10 @@ REFILL ; ( -- flag )
 
     inc TIB_SIZE ; max line length = 256
 
-    lda INCLUDE_RAM_SIZE
-    ora INCLUDE_RAM_SIZE + 1
+INCLUDE_RAM_SIZE_LSB = * + 1
+    lda #0
+INCLUDE_RAM_SIZE_MSB = * + 1
+    ora #0
     bne .include_ram_loop
     jmp .return_true
 
@@ -222,11 +226,6 @@ SOURCE_ID_MSB = * + 3
     ; 0 : keyboard
     ; 1+ : file id
     +VALUE	0
-
-INCLUDE_RAM_PTR
-    !word 0
-INCLUDE_RAM_SIZE
-    !word 0
 
     +BACKLINK ">in", 3
 TO_IN
@@ -358,15 +357,15 @@ IOABORT ; ( ioresult -- )
     +BACKLINK "include-ram", 11
     jsr PUSH_INPUT_SOURCE
     lda LSB + 1, x
-    sta INCLUDE_RAM_PTR
+    sta INCLUDE_RAM_PTR_LSB
     sta TIB_PTR
     lda MSB + 1, x
-    sta INCLUDE_RAM_PTR + 1
+    sta INCLUDE_RAM_PTR_MSB
     sta TIB_PTR + 1
     lda LSB, x
-    sta INCLUDE_RAM_SIZE
+    sta INCLUDE_RAM_SIZE_LSB
     lda MSB, x
-    sta INCLUDE_RAM_SIZE + 1
+    sta INCLUDE_RAM_SIZE_MSB
     inx
     inx
 
