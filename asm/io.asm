@@ -354,4 +354,4 @@ IOABORT ; ( ioresult -- )
     dey
     sty SOURCE_ID_LSB
 
-    jmp interpret_until_eof
+    jmp interpret_and_close
