@@ -286,7 +286,7 @@ If the definition is immediate, also return 1, otherwise also return -1.
 === Disk I/O
 
 ((include)) _( "filename" -- )_ :: Open and interpret a text file. Example: `include test`
-((include-ram)) _( caddr u )_ :: Interpret text from a memory area.
+((include-ram)) _( caddr u )_ :: Interpret a memory area as a virtual text file.
 ((included)) _( filenameptr filenamelen -- )_ :: Open and interpret a text file.
 ((require)) _( "filename" -- )_ :: Like include, except that load is skipped if the file is already loaded.
 ((required)) _( filenameptr filenamelen -- )_ :: Like included, except that load is skipped if the file is already loaded.
