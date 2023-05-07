@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - #> (the pictured numeric output string buffer) now uses its own buffer chopped from the end of PAD.
  - CHAR, HEADER and other parsing words no longer do REFILL on missing text.
 ### Removed
- - GETC, 100/
+ - GETC, 100/, INTERPRET
 ### Fixed
  - DOWORDS incorrectly quit for some non-false xt return values.
  - POSTPONE error handling.
