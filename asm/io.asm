@@ -157,10 +157,6 @@ INCLUDE_RAM_PTR_MSB = * + 1
     lda #0
     sta TIB_PTR + 1
 
-    ldy #0
-    sty TIB_SIZE
-    sty TIB_SIZE + 1
-
 .include_ram_loop
     lda INCLUDE_RAM_SIZE_LSB
     bne +
