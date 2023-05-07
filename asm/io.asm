@@ -56,13 +56,6 @@ TYPE ; ( caddr u -- )
     ldy #0
     jmp pushya
 
-REFILL_OR_CLOSE ; ( -- )
-    jsr REFILL
-    inx
-    lda MSB-1,x
-    beq CLOSE_INPUT_SOURCE
-    rts
-
 CLOSE_INPUT_SOURCE
     stx W
     lda	SOURCE_ID_LSB

@@ -236,7 +236,6 @@ case
 ((word)) _( char -- addr )_ :: Read a word from input, using delimiter _char_, and put the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.
 ((parse)) _( char -- addr u )_ :: Parse a string, using delimiter _char_. _addr_ is the address within the input buffer, _u_ is the length of the parsed string. If the parse area was empty, the resulting string has a zero length.
 ((parse-name)) _( name -- caddr u )_ :: Read a word from input, delimited by whitespace. Skips leading spaces.
-((interpret)) _( -- value )_ :: Interpret a word from input and puts it on the stack.
 ((accept)) _( addr u -- u )_ :: Receive a string of at most u characters into the buffer that starts at addr. Return how many characters were received.
 ((evaluate)) _( addr len -- )_ :: Evaluate the given string.
 ((abort)) :: Clear the data stack and perform `quit`.

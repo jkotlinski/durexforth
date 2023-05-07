@@ -274,12 +274,4 @@ INCLUDED
     pla
     tax
 
-interpret_until_eof
-    jsr REFILL
-    inx
-    lda MSB-1,x
-    beq +
-    jsr interpret_tib
-    jmp interpret_until_eof
-+   jmp CLOSE_INPUT_SOURCE
-
+    jmp interpret_and_close

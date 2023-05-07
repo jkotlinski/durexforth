@@ -1,5 +1,5 @@
-; QUIT EXECUTE INTERPRET NOTFOUND ' FIND FIND-NAME >XT PARSE-NAME WORD EVALUATE
-; ABORT /STRING DOWORDS
+; QUIT EXECUTE NOTFOUND ' FIND FIND-NAME >XT PARSE-NAME WORD EVALUATE ABORT
+; /STRING DOWORDS
 
 restore_handler
     pha             ; save a
@@ -106,11 +106,14 @@ INIT_S = * + 1
     txs
     tax
 
-interpret_loop
-    jsr REFILL_OR_CLOSE
-
-    jsr interpret_tib
-    jmp interpret_loop
+interpret_and_close
+    jsr REFILL
+    inx
+    lda MSB-1,x
+    bne +
+    jmp CLOSE_INPUT_SOURCE
++   jsr interpret_tib
+    jmp interpret_and_close
 
 interpret_tib
     jsr INTERPRET
@@ -173,7 +176,6 @@ EXECUTE
     inx
     jmp (W)
 
-    +BACKLINK "interpret", 9
 INTERPRET
     jsr PARSE_NAME
 
