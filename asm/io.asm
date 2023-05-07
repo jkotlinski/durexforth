@@ -86,7 +86,9 @@ CLOSE_INPUT_SOURCE
 REFILL ; ( -- flag )
 
     lda SOURCE_ID_MSB
-    bne .return_false ; evaluate = fail
+    and SOURCE_ID_LSB
+    cmp #-1
+    beq .return_false           ; -1
 
     ldy #0
     sty TO_IN_W
@@ -95,9 +97,10 @@ REFILL ; ( -- flag )
     sty TIB_SIZE + 1
 
     lda SOURCE_ID_LSB
-    beq .getLineFromConsole
+    beq .getLineFromConsole     ; 0
     lda SOURCE_ID_MSB
-    beq	.getLineFromDisk
+    beq .getLineFromDisk        ; >0
+    jmp .getLineFromIncludeRam  ; -2
 
 .getLineFromConsole
     stx W
@@ -144,6 +147,53 @@ REFILL ; ( -- flag )
     dec $d020
     jmp -
 
+.getLineFromIncludeRam
+    lda INCLUDE_RAM_SIZE
+    ora INCLUDE_RAM_SIZE + 1
+    bne +
+    ; return false
+    dex
+    lda #0
+    sta LSB,x
+    sta MSB,x
+    rts
++
+
+    lda INCLUDE_RAM_PTR
+    sta TIB_PTR
+    lda INCLUDE_RAM_PTR + 1
+    sta TIB_PTR + 1
+
+    ldy #0
+    sty TIB_SIZE
+    sty TIB_SIZE + 1
+
+.include_ram_loop
+    lda INCLUDE_RAM_SIZE
+    bne +
+    dec INCLUDE_RAM_SIZE + 1
++   dec INCLUDE_RAM_SIZE
+
+    inc INCLUDE_RAM_PTR
+    bne +
+    inc INCLUDE_RAM_PTR + 1
++
+
+    lda INCLUDE_RAM_PTR
+    sta W
+    lda INCLUDE_RAM_PTR + 1
+    sta W + 1
+    lda (W),y
+    cmp #$d
+    beq .return_true
+
+    inc TIB_SIZE ; max line length = 256
+
+    lda INCLUDE_RAM_SIZE
+    ora INCLUDE_RAM_SIZE + 1
+    bne .include_ram_loop
+    jmp .return_true
+
     +BACKLINK "source", 6
 SOURCE
     dex
@@ -166,10 +216,16 @@ TIB_SIZE
     +BACKLINK "source-id", 9
 SOURCE_ID_LSB = * + 1
 SOURCE_ID_MSB = * + 3
-    ; -1 : string (via evaluate)
+    ; -2 : INCLUDE-RAM
+    ; -1 : EVALUATE
     ; 0 : keyboard
     ; 1+ : file id
     +VALUE	0
+
+INCLUDE_RAM_PTR
+    !word 0
+INCLUDE_RAM_SIZE
+    !word 0
 
     +BACKLINK ">in", 3
 TO_IN
@@ -297,3 +353,25 @@ IOABORT ; ( ioresult -- )
 .cr_abort
     jsr CR
     jmp ABORT
+
+    +BACKLINK "include-ram", 11
+    jsr PUSH_INPUT_SOURCE
+    lda LSB + 1, x
+    sta INCLUDE_RAM_PTR
+    sta TIB_PTR
+    lda MSB + 1, x
+    sta INCLUDE_RAM_PTR + 1
+    sta TIB_PTR + 1
+    lda LSB, x
+    sta INCLUDE_RAM_SIZE
+    lda MSB, x
+    sta INCLUDE_RAM_SIZE + 1
+    inx
+    inx
+
+    ldy #-1
+    sty SOURCE_ID_MSB
+    dey
+    sty SOURCE_ID_LSB
+
+    jmp interpret_until_eof

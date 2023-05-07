@@ -285,8 +285,9 @@ If the definition is immediate, also return 1, otherwise also return -1.
 
 === Disk I/O
 
-((include)) _( "filename" -- )_ :: Load and parse file. Example: `include test`
-((included)) _( filenameptr filenamelen -- )_ :: Load and parse file.
+((include)) _( "filename" -- )_ :: Open and interpret a text file. Example: `include test`
+((include-ram)) _( caddr u )_ :: Interpret text from a memory area.
+((included)) _( filenameptr filenamelen -- )_ :: Open and interpret a text file.
 ((require)) _( "filename" -- )_ :: Like include, except that load is skipped if the file is already loaded.
 ((required)) _( filenameptr filenamelen -- )_ :: Like included, except that load is skipped if the file is already loaded.
 ((loadb)) _( filenameptr filenamelen dst -- endaddr )_ :: Load file to _dst_.
