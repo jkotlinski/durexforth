@@ -567,7 +567,8 @@ EVALUATE
     dey
     sty SOURCE_ID_LSB
     sty SOURCE_ID_MSB
-    jmp interpret_tib
+    jsr interpret_tib
+    jmp CLOSE_INPUT_SOURCE
 
     +BACKLINK "abort", 5
 ABORT
