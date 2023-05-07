@@ -76,13 +76,6 @@ CLOSE_INPUT_SOURCE
 ++  ldx W
     rts
 
-.return_false
-    dex
-    lda #0
-    sta MSB,x
-    sta LSB,x
-    rts
-
     +BACKLINK "refill", 6
 REFILL ; ( -- flag )
 
@@ -97,8 +90,15 @@ REFILL ; ( -- flag )
     lda SOURCE_ID_MSB
     beq .getLineFromDisk
     cmp #-1
-    beq .return_false ; evaluate = fail
-    jmp .getLineFromIncludeRam
+    bne .getLineFromIncludeRam
+    ; evaluate = fail
+
+.return_false
+    dex
+    lda #0
+    sta MSB,x
+    sta LSB,x
+    rts
 
 .getLineFromConsole
     stx W
@@ -148,14 +148,7 @@ REFILL ; ( -- flag )
 .getLineFromIncludeRam
     lda INCLUDE_RAM_SIZE_LSB
     ora INCLUDE_RAM_SIZE_MSB
-    bne +
-    ; return false
-    dex
-    lda #0
-    sta LSB,x
-    sta MSB,x
-    rts
-+
+    beq .return_false
 
 INCLUDE_RAM_PTR_LSB = * + 1
     lda #0
