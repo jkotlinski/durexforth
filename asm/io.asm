@@ -87,10 +87,10 @@ REFILL ; ( -- flag )
 
     lda SOURCE_ID_LSB
     beq .getLineFromConsole
-    lda SOURCE_ID_MSB
-    beq .getLineFromDisk
+    cmp #-2
+    beq .getLineFromIncludeRam
     cmp #-1
-    bne .getLineFromIncludeRam
+    bne .getLineFromDisk
 
     ; evaluate = fail
 
