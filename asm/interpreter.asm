@@ -467,39 +467,41 @@ PARSE_NAME ; ( name -- addr u )
 ; WORD ( delim -- strptr )
     +BACKLINK "word", 4
 WORD
+    ; reset transient string length
     jsr ZERO
     jsr HERE
     jsr STOREBYTE
 
-    ; skips initial delimiters.
--   jsr GET_CHAR_FROM_TIB
-    beq .word_end
+.skip_delimiters
+    jsr .get_char_from_tib
+    beq .reached_word_end
     jsr .is_delim
-    beq -
-    jmp .append
+    beq .skip_delimiters
 
--   jsr GET_CHAR_FROM_TIB
-    beq .word_end
-    jsr .is_delim
-    beq .word_end
-
-.append
+.append_char
     jsr pushya
 
+    ; increment string length counter
     jsr HERE
     jsr FETCHBYTE
     jsr ONEPLUS
     jsr HERE
     jsr STOREBYTE
 
+    ; write character to string
     jsr HERE
     jsr HERE
     jsr FETCHBYTE
     jsr PLUS
     jsr STOREBYTE
-    jmp -
 
-.word_end
+    ; get next character from TIB
+    jsr .get_char_from_tib
+    beq .reached_word_end
+    jsr .is_delim
+    bne .append_char
+
+.reached_word_end
     inx
     jmp HERE
 
@@ -515,6 +517,31 @@ WORD
 
     ; compare with nonbreaking space, too
     cmp #K_SPACE | $80
++   rts
+
+.get_char_from_tib
+    lda TO_IN_W
+    cmp TIB_SIZE
+    bne +
+    lda TO_IN_W + 1
+    cmp TIB_SIZE + 1
+    bne +
+    lda #0
+    rts
++
+    clc
+    lda TIB_PTR
+    adc TO_IN_W
+    sta W
+    lda TIB_PTR + 1
+    adc TO_IN_W + 1
+    sta W + 1
+    ldy #0
+    lda (W),y
+
+    inc TO_IN_W
+    bne +
+    inc TO_IN_W + 1
 +   rts
 
     +BACKLINK "evaluate", 8

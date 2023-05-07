@@ -144,31 +144,6 @@ REFILL ; ( -- flag )
     dec $d020
     jmp -
 
-GET_CHAR_FROM_TIB
-    lda TO_IN_W
-    cmp TIB_SIZE
-    bne +
-    lda TO_IN_W + 1
-    cmp TIB_SIZE + 1
-    bne +
-    lda #0
-    rts
-+
-    clc
-    lda TIB_PTR
-    adc TO_IN_W
-    sta W
-    lda TIB_PTR + 1
-    adc TO_IN_W + 1
-    sta W + 1
-    ldy #0
-    lda (W),y
-
-    inc TO_IN_W
-    bne +
-    inc TO_IN_W + 1
-+   rts
-
     +BACKLINK "source", 6
 SOURCE
     dex
