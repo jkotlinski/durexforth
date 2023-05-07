@@ -159,20 +159,23 @@ INCLUDE_RAM_PTR_MSB = * + 1
     sta TIB_PTR + 1
 
 .include_ram_loop
-    lda INCLUDE_RAM_SIZE_LSB
-    bne +
-    dec INCLUDE_RAM_SIZE_MSB
-+   dec INCLUDE_RAM_SIZE_LSB
+    lda INCLUDE_RAM_PTR_LSB
+    sta + + 1
+    lda INCLUDE_RAM_PTR_MSB
+    sta + + 2
++   lda PLACEHOLDER_ADDRESS
+    tay
 
     inc INCLUDE_RAM_PTR_LSB
     bne +
     inc INCLUDE_RAM_PTR_MSB
 +
-    lda INCLUDE_RAM_PTR_LSB
-    sta W
-    lda INCLUDE_RAM_PTR_MSB
-    sta W + 1
-    lda (W),y
+    lda INCLUDE_RAM_SIZE_LSB
+    bne +
+    dec INCLUDE_RAM_SIZE_MSB
++   dec INCLUDE_RAM_SIZE_LSB
+
+    tya
     cmp #$d
     beq .return_true
 
