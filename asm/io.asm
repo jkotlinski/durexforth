@@ -91,6 +91,7 @@ REFILL ; ( -- flag )
     beq .getLineFromDisk
     cmp #-1
     bne .getLineFromIncludeRam
+
     ; evaluate = fail
 
 .return_false
@@ -167,7 +168,6 @@ INCLUDE_RAM_PTR_MSB = * + 1
     bne +
     inc INCLUDE_RAM_PTR_MSB
 +
-
     lda INCLUDE_RAM_PTR_LSB
     sta W
     lda INCLUDE_RAM_PTR_MSB
