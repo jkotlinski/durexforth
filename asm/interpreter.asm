@@ -106,11 +106,14 @@ INIT_S = * + 1
     txs
     tax
 
-interpret_loop
+interpret_and_close
     jsr REFILL
-    inx ; refill from keyboard always succeeds
-    jsr interpret_tib
-    jmp interpret_loop
+    inx
+    lda MSB-1,x
+    bne +
+    jmp CLOSE_INPUT_SOURCE
++   jsr interpret_tib
+    jmp interpret_and_close
 
 interpret_tib
     jsr INTERPRET
