@@ -34,9 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - V: allow entering control characters inside quotes only.
  - V: visual bug when saving.
  - SAVEB did not restore input stream.
- - Various maintenance patches.
  - turtle: BACK did not go back.
  - QUIT could fail to reinitialize graphics.
+ - Various maintenance patches.
 
 ## [4.0.0] - 2022-07-20
 ### Changed
