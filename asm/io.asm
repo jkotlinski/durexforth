@@ -86,11 +86,6 @@ CLOSE_INPUT_SOURCE
     +BACKLINK "refill", 6
 REFILL ; ( -- flag )
 
-    lda SOURCE_ID_MSB
-    and SOURCE_ID_LSB
-    cmp #-1
-    beq .return_false           ; -1
-
     ldy #0
     sty TO_IN_W
     sty TO_IN_W + 1
@@ -98,10 +93,12 @@ REFILL ; ( -- flag )
     sty TIB_SIZE + 1
 
     lda SOURCE_ID_LSB
-    beq .getLineFromConsole     ; 0
+    beq .getLineFromConsole
     lda SOURCE_ID_MSB
-    beq .getLineFromDisk        ; >0
-    jmp .getLineFromIncludeRam  ; -2
+    beq .getLineFromDisk
+    cmp #-1
+    beq .return_false ; evaluate = fail
+    jmp .getLineFromIncludeRam
 
 .getLineFromConsole
     stx W
@@ -223,8 +220,8 @@ SOURCE_ID_LSB = * + 1
 SOURCE_ID_MSB = * + 3
     ; -2 : INCLUDE-RAM
     ; -1 : EVALUATE
-    ; 0 : keyboard
-    ; 1+ : file id
+    ;  0 : keyboard
+    ; >0 : file id
     +VALUE	0
 
     +BACKLINK ">in", 3
