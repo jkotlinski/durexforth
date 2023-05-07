@@ -344,10 +344,8 @@ IOABORT ; ( ioresult -- )
     jsr PUSH_INPUT_SOURCE
     lda LSB + 1, x
     sta INCLUDE_RAM_PTR_LSB
-    sta TIB_PTR
     lda MSB + 1, x
     sta INCLUDE_RAM_PTR_MSB
-    sta TIB_PTR + 1
     lda LSB, x
     sta INCLUDE_RAM_SIZE_LSB
     lda MSB, x
