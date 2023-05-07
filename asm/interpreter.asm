@@ -107,8 +107,8 @@ INIT_S = * + 1
     tax
 
 interpret_loop
-    jsr REFILL_OR_CLOSE
-
+    jsr REFILL
+    inx ; refill from keyboard always succeeds
     jsr interpret_tib
     jmp interpret_loop
 
