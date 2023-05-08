@@ -1,5 +1,4 @@
 ; EMIT PAGE RVS CR TYPE KEY? KEY REFILL SOURCE SOURCE-ID >IN CHAR IOABORT
-; EVALUATE
 
     +BACKLINK "emit", 4
 EMIT
@@ -330,22 +329,3 @@ IOABORT ; ( ioresult -- )
 .cr_abort
     jsr CR
     jmp ABORT
-
-    +BACKLINK "evaluate", 8
-    jsr PUSH_INPUT_SOURCE
-    lda LSB + 1, x
-    sta EVALUATE_STRING_PTR_LSB
-    lda MSB + 1, x
-    sta EVALUATE_STRING_PTR_MSB
-    lda LSB, x
-    sta EVALUATE_STRING_SIZE_LSB
-    lda MSB, x
-    sta EVALUATE_STRING_SIZE_MSB
-    inx
-    inx
-
-    ldy #-1
-    sty SOURCE_ID_MSB
-    sty SOURCE_ID_LSB
-
-    jmp interpret_and_close
