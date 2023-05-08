@@ -203,7 +203,7 @@ TIB_SIZE
     +BACKLINK "source-id", 9
 SOURCE_ID_LSB = * + 1
 SOURCE_ID_MSB = * + 3
-    ; -2 : INCLUDE-RAM
+    ; -2 : INCLUDE-STRING
     ; -1 : EVALUATE
     ;  0 : keyboard
     ; >0 : file id
