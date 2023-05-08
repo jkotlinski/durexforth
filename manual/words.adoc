@@ -27,7 +27,7 @@
 ((emit)) _( a -- )_ :: Print top value of stack as a PETSCII character. Example: `q emit`
 ((£)) :: Comment to end of line. (Used on C64/PETSCII.)
 ((\)) :: Comment to end of line. (Used when cross-compiling from PC/ASCII.)
-((pass:[(])) :: Multiline comment. Ignores everything until a `)`.
+((pass:[(])) :: Multiline comment. Ignores everything until a `)`. '(' is non-standard: when parsing from an `evaluate` string, it refills to accept multi-line comments.
 ((bl)) _( -- char )_ :: _char_ is the PETSCII character for a space.
 ((space)) :: Display one space.
 ((spaces)) _( n -- )_ :: Display _n_ spaces.
