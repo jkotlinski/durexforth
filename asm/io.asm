@@ -221,7 +221,7 @@ SAVE_INPUT_STACK
     ; Eight levels is overkill for INCLUDED, since opening more than four DOS
     ; channels gives a "no channel" error message on C64.
     ; It is anyway nice to keep some extra levels for EVALUATE and LOAD.
-    !fill 8*8
+    !fill 8*12
 SAVE_INPUT_STACK_DEPTH
     !byte 0
 
@@ -255,8 +255,24 @@ PUSH_INPUT_SOURCE
     jsr push_input_stack
     lda TIB_SIZE+1
     jmp push_input_stack
+    lda EVALUATE_STRING_PTR_LSB
+    jsr push_input_stack
+    lda EVALUATE_STRING_PTR_MSB
+    jsr push_input_stack
+    lda EVALUATE_STRING_SIZE_LSB
+    jsr push_input_stack
+    lda EVALUATE_STRING_SIZE_MSB
+    jmp push_input_stack
 
 POP_INPUT_SOURCE
+    jsr pop_input_stack
+    sta EVALUATE_STRING_SIZE_MSB
+    jsr pop_input_stack
+    sta EVALUATE_STRING_SIZE_LSB
+    jsr pop_input_stack
+    sta EVALUATE_STRING_PTR_MSB
+    jsr pop_input_stack
+    sta EVALUATE_STRING_PTR_LSB
     jsr pop_input_stack
     sta TIB_SIZE+1
     jsr pop_input_stack
