@@ -625,7 +625,7 @@ swap c!
 \ f7
 dup $88 = if 2drop cleanup rom-kernal
 bufstart eof @ bufstart - 1-
-include-ram quit then
+include-string quit then
 
 insert if do-insert else do-main if
 drop rom-kernal cleanup exit then then

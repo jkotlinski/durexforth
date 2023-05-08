@@ -1,5 +1,5 @@
 ; EMIT PAGE RVS CR TYPE KEY? KEY REFILL SOURCE SOURCE-ID >IN CHAR IOABORT
-; INCLUDE-RAM
+; INCLUDE-STRING
 
     +BACKLINK "emit", 4
 EMIT
@@ -140,33 +140,33 @@ REFILL ; ( -- flag )
     jmp -
 
 .getLineFromIncludeRam
-    lda INCLUDE_RAM_SIZE_LSB
-    ora INCLUDE_RAM_SIZE_MSB
+    lda INCLUDE_STRING_SIZE_LSB
+    ora INCLUDE_STRING_SIZE_MSB
     beq .return_false
 
-INCLUDE_RAM_PTR_LSB = * + 1
+INCLUDE_STRING_PTR_LSB = * + 1
     lda #0
     sta TIB_PTR
-INCLUDE_RAM_PTR_MSB = * + 1
+INCLUDE_STRING_PTR_MSB = * + 1
     lda #0
     sta TIB_PTR + 1
 
 .include_ram_loop
-    lda INCLUDE_RAM_PTR_LSB
+    lda INCLUDE_STRING_PTR_LSB
     sta + + 1
-    lda INCLUDE_RAM_PTR_MSB
+    lda INCLUDE_STRING_PTR_MSB
     sta + + 2
 +   lda PLACEHOLDER_ADDRESS
     tay
 
-    inc INCLUDE_RAM_PTR_LSB
+    inc INCLUDE_STRING_PTR_LSB
     bne +
-    inc INCLUDE_RAM_PTR_MSB
+    inc INCLUDE_STRING_PTR_MSB
 +
-    lda INCLUDE_RAM_SIZE_LSB
+    lda INCLUDE_STRING_SIZE_LSB
     bne +
-    dec INCLUDE_RAM_SIZE_MSB
-+   dec INCLUDE_RAM_SIZE_LSB
+    dec INCLUDE_STRING_SIZE_MSB
++   dec INCLUDE_STRING_SIZE_LSB
 
     tya
     cmp #$d
@@ -174,9 +174,9 @@ INCLUDE_RAM_PTR_MSB = * + 1
 
     inc TIB_SIZE ; max line length = 256
 
-INCLUDE_RAM_SIZE_LSB = * + 1
+INCLUDE_STRING_SIZE_LSB = * + 1
     lda #0
-INCLUDE_RAM_SIZE_MSB = * + 1
+INCLUDE_STRING_SIZE_MSB = * + 1
     ora #0
     bne .include_ram_loop
     jmp .return_true
@@ -336,16 +336,16 @@ IOABORT ; ( ioresult -- )
     jsr CR
     jmp ABORT
 
-    +BACKLINK "include-ram", 11
+    +BACKLINK "include-string", 14
     jsr PUSH_INPUT_SOURCE
     lda LSB + 1, x
-    sta INCLUDE_RAM_PTR_LSB
+    sta INCLUDE_STRING_PTR_LSB
     lda MSB + 1, x
-    sta INCLUDE_RAM_PTR_MSB
+    sta INCLUDE_STRING_PTR_MSB
     lda LSB, x
-    sta INCLUDE_RAM_SIZE_LSB
+    sta INCLUDE_STRING_SIZE_LSB
     lda MSB, x
-    sta INCLUDE_RAM_SIZE_MSB
+    sta INCLUDE_STRING_SIZE_MSB
     inx
     inx
 
