@@ -172,7 +172,7 @@ INCLUDE_STRING_PTR_MSB = * + 1
     cmp #$d
     beq .return_true
 
-    inc TIB_SIZE ; max line length = 256
+    inc TIB_SIZE ; assumes max line length = 255
 
 INCLUDE_STRING_SIZE_LSB = * + 1
     lda #0
