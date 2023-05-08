@@ -151,7 +151,7 @@ INCLUDE_STRING_PTR_MSB = * + 1
     lda #0
     sta TIB_PTR + 1
 
-.include_ram_loop
+.loop
     lda INCLUDE_STRING_PTR_LSB
     sta + + 1
     lda INCLUDE_STRING_PTR_MSB
@@ -178,7 +178,7 @@ INCLUDE_STRING_SIZE_LSB = * + 1
     lda #0
 INCLUDE_STRING_SIZE_MSB = * + 1
     ora #0
-    bne .include_ram_loop
+    bne .loop
     jmp .return_true
 
     +BACKLINK "source", 6
