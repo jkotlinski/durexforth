@@ -81,7 +81,7 @@ REFILL ; ( -- flag )
     lda SOURCE_ID_LSB
     beq .getLineFromConsole
     cmp #-2
-    beq .getLineFromIncludeRam
+    beq .getLineFromIncludeString
     cmp #-1
     bne .getLineFromDisk
 
@@ -139,7 +139,7 @@ REFILL ; ( -- flag )
     dec $d020
     jmp -
 
-.getLineFromIncludeRam
+.getLineFromIncludeString
     lda INCLUDE_STRING_SIZE_LSB
     ora INCLUDE_STRING_SIZE_MSB
     beq .return_false
