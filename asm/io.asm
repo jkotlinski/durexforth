@@ -254,7 +254,7 @@ PUSH_INPUT_SOURCE
     lda TIB_SIZE
     jsr push_input_stack
     lda TIB_SIZE+1
-    jmp push_input_stack
+    jsr push_input_stack
     lda EVALUATE_STRING_PTR_LSB
     jsr push_input_stack
     lda EVALUATE_STRING_PTR_MSB
