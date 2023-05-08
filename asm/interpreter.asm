@@ -1,5 +1,5 @@
-; QUIT EXECUTE NOTFOUND ' FIND FIND-NAME >XT PARSE-NAME WORD EVALUATE ABORT
-; /STRING DOWORDS
+; QUIT EXECUTE NOTFOUND ' FIND FIND-NAME >XT PARSE-NAME WORD ABORT /STRING
+; DOWORDS
 
 restore_handler
     pha             ; save a
@@ -545,30 +545,6 @@ WORD
     bne +
     inc TO_IN_W + 1
 +   rts
-
-    +BACKLINK "evaluate", 8
-EVALUATE
-    jsr PUSH_INPUT_SOURCE
-    lda LSB + 1, x
-    sta TIB_PTR
-    lda MSB + 1, x
-    sta TIB_PTR + 1
-    lda LSB, x
-    sta TIB_SIZE
-    lda MSB, x
-    sta TIB_SIZE + 1
-    inx
-    inx
-
-    ldy #0
-    sty TO_IN_W
-    sty TO_IN_W + 1
-
-    dey
-    sty SOURCE_ID_LSB
-    sty SOURCE_ID_MSB
-    jsr interpret_tib
-    jmp CLOSE_INPUT_SOURCE
 
     +BACKLINK "abort", 5
 ABORT

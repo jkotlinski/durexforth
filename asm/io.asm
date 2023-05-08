@@ -1,5 +1,5 @@
 ; EMIT PAGE RVS CR TYPE KEY? KEY REFILL SOURCE SOURCE-ID >IN CHAR IOABORT
-; INCLUDE-STRING
+; EVALUATE
 
     +BACKLINK "emit", 4
 EMIT
@@ -79,22 +79,11 @@ REFILL ; ( -- flag )
     sty TIB_SIZE + 1
 
     lda SOURCE_ID_LSB
-    beq .getLineFromConsole
-    cmp #-2
-    beq .getLineFromIncludeString
-    cmp #-1
+    bmi .getLineFromEvaluateString
     bne .getLineFromDisk
 
-    ; evaluate = fail
+    ; getLineFromConsole
 
-.return_false
-    dex
-    lda #0
-    sta MSB,x
-    sta LSB,x
-    rts
-
-.getLineFromConsole
     stx W
     ldx #0
 -   jsr $e112 ; Input Character
@@ -139,34 +128,41 @@ REFILL ; ( -- flag )
     dec $d020
     jmp -
 
-.getLineFromIncludeString
-    lda INCLUDE_STRING_SIZE_LSB
-    ora INCLUDE_STRING_SIZE_MSB
+.return_false
+    dex
+    lda #0
+    sta MSB,x
+    sta LSB,x
+    rts
+
+.getLineFromEvaluateString
+    lda EVALUATE_STRING_SIZE_LSB
+    ora EVALUATE_STRING_SIZE_MSB
     beq .return_false
 
-INCLUDE_STRING_PTR_LSB = * + 1
+EVALUATE_STRING_PTR_LSB = * + 1
     lda #0
     sta TIB_PTR
-INCLUDE_STRING_PTR_MSB = * + 1
+EVALUATE_STRING_PTR_MSB = * + 1
     lda #0
     sta TIB_PTR + 1
 
 .grow_tib_to_end_of_line
-    lda INCLUDE_STRING_PTR_LSB
+    lda EVALUATE_STRING_PTR_LSB
     sta + + 1
-    lda INCLUDE_STRING_PTR_MSB
+    lda EVALUATE_STRING_PTR_MSB
     sta + + 2
 +   lda PLACEHOLDER_ADDRESS
     tay
 
-    inc INCLUDE_STRING_PTR_LSB
+    inc EVALUATE_STRING_PTR_LSB
     bne +
-    inc INCLUDE_STRING_PTR_MSB
+    inc EVALUATE_STRING_PTR_MSB
 +
-    lda INCLUDE_STRING_SIZE_LSB
+    lda EVALUATE_STRING_SIZE_LSB
     bne +
-    dec INCLUDE_STRING_SIZE_MSB
-+   dec INCLUDE_STRING_SIZE_LSB
+    dec EVALUATE_STRING_SIZE_MSB
++   dec EVALUATE_STRING_SIZE_LSB
 
     tya
     cmp #$d
@@ -174,9 +170,9 @@ INCLUDE_STRING_PTR_MSB = * + 1
 
     inc TIB_SIZE ; assumes max line length = 255
 
-INCLUDE_STRING_SIZE_LSB = * + 1
+EVALUATE_STRING_SIZE_LSB = * + 1
     lda #0
-INCLUDE_STRING_SIZE_MSB = * + 1
+EVALUATE_STRING_SIZE_MSB = * + 1
     ora #0
     bne .grow_tib_to_end_of_line
     jmp .return_true
@@ -203,8 +199,7 @@ TIB_SIZE
     +BACKLINK "source-id", 9
 SOURCE_ID_LSB = * + 1
 SOURCE_ID_MSB = * + 3
-    ; -2 : INCLUDE-STRING
-    ; -1 : EVALUATE
+    ; -1 : evaluate
     ;  0 : keyboard
     ; >0 : file id
     +VALUE	0
@@ -336,22 +331,21 @@ IOABORT ; ( ioresult -- )
     jsr CR
     jmp ABORT
 
-    +BACKLINK "include-string", 14
+    +BACKLINK "evaluate", 8
     jsr PUSH_INPUT_SOURCE
     lda LSB + 1, x
-    sta INCLUDE_STRING_PTR_LSB
+    sta EVALUATE_STRING_PTR_LSB
     lda MSB + 1, x
-    sta INCLUDE_STRING_PTR_MSB
+    sta EVALUATE_STRING_PTR_MSB
     lda LSB, x
-    sta INCLUDE_STRING_SIZE_LSB
+    sta EVALUATE_STRING_SIZE_LSB
     lda MSB, x
-    sta INCLUDE_STRING_SIZE_MSB
+    sta EVALUATE_STRING_SIZE_MSB
     inx
     inx
 
     ldy #-1
     sty SOURCE_ID_MSB
-    dey
     sty SOURCE_ID_LSB
 
     jmp interpret_and_close
