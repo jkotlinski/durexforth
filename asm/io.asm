@@ -167,8 +167,10 @@ EVALUATE_STRING_PTR_MSB = * + 1
     cmp #$d
     beq .return_true
 
-    inc TIB_SIZE ; assumes max line length = 255
-
+    inc TIB_SIZE
+    bne +
+    inc TIB_SIZE + 1
++
 EVALUATE_STRING_SIZE_LSB = * + 1
     lda #0
 EVALUATE_STRING_SIZE_MSB = * + 1
