@@ -8,7 +8,7 @@ $d of \ cr
 $14 of \ del
  dup if 1- $14 emit then endof
 ( avail len char ) \ add to buffer?
->r 2dup > r@ bl $7f within and if
+>r 2dup > r@ $7f and $1f > and if
  r@ over addr + c! 1+ r@ emit then r>
 endcase again ;
 hide addr
