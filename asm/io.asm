@@ -68,18 +68,8 @@ CLOSE_INPUT_SOURCE
 ++  ldx W
     rts
 
-.return_false
-    dex
-    lda #0
-    sta MSB,x
-    sta LSB,x
-    rts
-
     +BACKLINK "refill", 6
 REFILL ; ( -- flag )
-
-    lda SOURCE_ID_MSB
-    bne .return_false ; evaluate = fail
 
     ldy #0
     sty TO_IN_W
@@ -88,11 +78,11 @@ REFILL ; ( -- flag )
     sty TIB_SIZE + 1
 
     lda SOURCE_ID_LSB
-    beq .getLineFromConsole
-    lda SOURCE_ID_MSB
-    beq	.getLineFromDisk
+    bmi .getLineFromEvaluateString
+    bne .getLineFromDisk
 
-.getLineFromConsole
+    ; getLineFromConsole
+
     stx W
     ldx #0
 -   jsr $e112 ; Input Character
@@ -136,6 +126,57 @@ REFILL ; ( -- flag )
     inc TIB_SIZE
     dec $d020
     jmp -
+
+.return_false
+    dex
+    lda #0
+    sta MSB,x
+    sta LSB,x
+    rts
+
+.getLineFromEvaluateString
+    lda EVALUATE_STRING_SIZE_LSB
+    ora EVALUATE_STRING_SIZE_MSB
+    beq .return_false
+
+EVALUATE_STRING_PTR_LSB = * + 1
+    lda #0
+    sta TIB_PTR
+EVALUATE_STRING_PTR_MSB = * + 1
+    lda #0
+    sta TIB_PTR + 1
+
+.grow_tib_to_end_of_line
+    lda EVALUATE_STRING_PTR_LSB
+    sta + + 1
+    lda EVALUATE_STRING_PTR_MSB
+    sta + + 2
++   lda PLACEHOLDER_ADDRESS
+    tay
+
+    inc EVALUATE_STRING_PTR_LSB
+    bne +
+    inc EVALUATE_STRING_PTR_MSB
++
+    lda EVALUATE_STRING_SIZE_LSB
+    bne +
+    dec EVALUATE_STRING_SIZE_MSB
++   dec EVALUATE_STRING_SIZE_LSB
+
+    tya
+    cmp #$d
+    beq .return_true
+
+    inc TIB_SIZE
+    bne +
+    inc TIB_SIZE + 1
++
+EVALUATE_STRING_SIZE_LSB = * + 1
+    lda #0
+EVALUATE_STRING_SIZE_MSB = * + 1
+    ora #0
+    bne .grow_tib_to_end_of_line
+    jmp .return_true
 
     +BACKLINK "source", 6
 SOURCE
@@ -182,7 +223,7 @@ SAVE_INPUT_STACK
     ; Eight levels is overkill for INCLUDED, since opening more than four DOS
     ; channels gives a "no channel" error message on C64.
     ; It is anyway nice to keep some extra levels for EVALUATE and LOAD.
-    !fill 8*8
+    !fill 8*12
 SAVE_INPUT_STACK_DEPTH
     !byte 0
 
@@ -215,9 +256,25 @@ PUSH_INPUT_SOURCE
     lda TIB_SIZE
     jsr push_input_stack
     lda TIB_SIZE+1
+    jsr push_input_stack
+    lda EVALUATE_STRING_PTR_LSB
+    jsr push_input_stack
+    lda EVALUATE_STRING_PTR_MSB
+    jsr push_input_stack
+    lda EVALUATE_STRING_SIZE_LSB
+    jsr push_input_stack
+    lda EVALUATE_STRING_SIZE_MSB
     jmp push_input_stack
 
 POP_INPUT_SOURCE
+    jsr pop_input_stack
+    sta EVALUATE_STRING_SIZE_MSB
+    jsr pop_input_stack
+    sta EVALUATE_STRING_SIZE_LSB
+    jsr pop_input_stack
+    sta EVALUATE_STRING_PTR_MSB
+    jsr pop_input_stack
+    sta EVALUATE_STRING_PTR_LSB
     jsr pop_input_stack
     sta TIB_SIZE+1
     jsr pop_input_stack
