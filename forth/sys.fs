@@ -6,4 +6,4 @@ code sys ( addr -- )
 lsb lda,x $14 sta, msb lda,x $15 sta,
 txa, pha,
 $e130 jsr, \ perform [sys]
-pla, tax, inx, end-code
+pla, tax, inx, ;code

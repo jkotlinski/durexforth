@@ -41,14 +41,14 @@ When you finished watching, press kbd:[RESTORE] to quit your program, then enter
 
 === Assembler
 
-If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. `code` and `end-code` define a code word, just like `:` and `;` define Forth words. Within a code word, you can use assembler mnemonics.
+If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. `code` and `;code` define a code word, just like `:` and `;` define Forth words. Within a code word, you can use assembler mnemonics.
 
 ----
 code flash
 here ( push current addr )
 $d020 inc,
 jmp, ( jump to pushed addr )
-end-code
+;code
 flash
 ----
 

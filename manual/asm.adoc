@@ -5,7 +5,7 @@ code flash
 here        ( push current addr )
 $d020 inc,  ( inc $d020 )
 jmp,        ( jump to pushed addr )
-end-code
+;code
 ----
 
 It is also possible to inline assembly code into a regular Forth word, as seen in the tutorial:
@@ -36,7 +36,7 @@ msb 1+ lda,x   ( load n1 msb )
 msb adc,x      ( add n2 msb )
 msb 1+ sta,x   ( store to n2 msb )
 inx,           ( drop n2; n1 = sum )
-end-code
+;code
 ----
 
 === Branches
@@ -65,7 +65,7 @@ Example of a backward branch:
 
 === Labels
 
-The `labels` module adds support for more complicated flows where branches can overlap freely. These branches are resolved by the `end-code` word, so it is not possible to branch past it.
+The `labels` module adds support for more complicated flows where branches can overlap freely. These branches are resolved by the `;code` word, so it is not possible to branch past it.
 
 ((@:)) _( n -- )_ :: Create the assembly label _n_, where _n_ is a number in range [0, 255].
 ((@@)) _( n -- )_ :: Compile a branch to the label _n_.
@@ -77,5 +77,5 @@ code checkers
 $7f lda,# 0 ldy,# 'l' @:
 $400 sta,y $500 sta,y
 $600 sta,y $700 sta,y
-dey, 'l' @@ bne, end-code
+dey, 'l' @@ bne, ;code
 ----

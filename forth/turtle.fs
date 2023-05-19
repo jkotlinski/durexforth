@@ -21,7 +21,7 @@ code ls \ left shift x6
 lsb asl,x msb rol,x lsb asl,x msb rol,x
 lsb asl,x msb rol,x lsb asl,x msb rol,x
 lsb asl,x msb rol,x lsb asl,x msb rol,x
-end-code
+;code
 
 code rs \ right shift x6 (sign extend)
 msb lda,x $80 cmp,# msb ror,x lsb ror,x
@@ -30,7 +30,7 @@ msb lda,x $80 cmp,# msb ror,x lsb ror,x
 msb lda,x $80 cmp,# msb ror,x lsb ror,x
 msb lda,x $80 cmp,# msb ror,x lsb ror,x
 msb lda,x $80 cmp,# msb ror,x lsb ror,x
-end-code
+;code
 
 define pendown
 1 to tp tx @ rs ty @ rs plot ;

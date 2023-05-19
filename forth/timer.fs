@@ -3,7 +3,7 @@
 code start ( -- clk )
 dex, sei,
 $a1 lda, msb sta,x
-$a2 lda, cli, lsb sta,x end-code
+$a2 lda, cli, lsb sta,x ;code
 
 \ stop & print elapsed time
 : stop ( clk -- )

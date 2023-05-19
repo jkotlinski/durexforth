@@ -32,7 +32,7 @@ variable filename $f allot
 
 create foundeol
 clc, tya, w adc, lsb sta,x
-2 bcc, msb inc,x end-code
+2 bcc, msb inc,x ;code
 
 code print-line ( addr -- addr )
 lsb ldy,x w sty,
@@ -76,10 +76,10 @@ $400 + ( addr ) ;
 
 \ ram + io + kernal rom
 code rom-kernal
-$36 lda,# 1 sta, end-code
+$36 lda,# 1 sta, ;code
 \ ram + io + ram
 code ram-kernal
-$35 lda,# 1 sta, end-code
+$35 lda,# 1 sta, ;code
 
 : reset-buffer
 0 bufstart 1- c!

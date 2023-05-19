@@ -7,7 +7,7 @@ lsb lda,x  \ one byte more but faster
 $ffb1 jsr, \ listen
 here 1+ swap !  \ actual address
 $00 ldx,# inx,     \ dummy byte
-end-code
+;code
 
 code second ( sa -- )
 here 1+
@@ -16,7 +16,7 @@ lsb lda,x
 $ff93 jsr, \ second
 here 1+ swap !
 $00 ldx,# inx,
-end-code
+;code
 
 code talk ( dv -- )
 here 1+
@@ -25,7 +25,7 @@ lsb lda,x
 $ffb4 jsr, \ talk
 here 1+ swap !
 $00 ldx,# inx,
-end-code
+;code
 
 code tksa ( sa -- )
 here 1+
@@ -34,7 +34,7 @@ lsb lda,x
 $ff96 jsr, \ tksa
 here 1+ swap !
 $00 ldx,# inx,
-end-code
+;code
 
 code unlisten ( -- )
 here 1+
@@ -42,7 +42,7 @@ $ffff stx,
 $ffae jsr, \ unlisten
 here 1+ swap !
 $00 ldx,#
-end-code
+;code
 
 code untalk ( -- )
 here 1+
@@ -50,7 +50,7 @@ $ffff stx,
 $ffab jsr, \ untalk
 here 1+ swap !
 $00 ldx,#
-end-code
+;code
 
 code ciout ( chr -- )
 here 1+
@@ -59,13 +59,13 @@ lsb lda,x
 $ffa8 jsr, \ ciout
 here 1+ swap !
 $00 ldx,# inx,
-end-code
+;code
 
 code acptr ( -- chr )
 dex, w stx, 0 lda,# msb sta,x
 $ffa5 jsr, \ acptr
 w ldx, lsb sta,x
-end-code
+;code
 
 : iqt readst ioabort ; \ legacy of if quit then
 
