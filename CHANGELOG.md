@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - An improved SEE which should decode most colon words.
  - "durexForth vx.x.x" boot message.
  - RDERR: read and print error channel of current device.
- - ERASE, PARSE, TRUE, FALSE, SPLIT
+ - ERASE, PARSE, TRUE, FALSE, SPLIT, END-CODE
 ### Changed
  - S" max string length is reduced to 255 characters.
  - S" and .( no longer support multiple lines.
@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - EVALUATE now accepts multi-line strings.
  - ( refills to accept multi-line comments when parsing EVALUATE strings.
 ### Removed
- - GETC, 100/, INTERPRET
+ - GETC, 100/, INTERPRET, ;CODE (replace with: RTS, END-CODE)
 ### Fixed
  - DOWORDS incorrectly quit for some non-false xt return values.
  - POSTPONE error handling.
