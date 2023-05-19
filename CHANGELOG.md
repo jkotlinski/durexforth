@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - gfx: Renamed ERASE to PEN.
  - #> (the pictured numeric output string buffer) now uses its own buffer chopped from the end of PAD.
  - CHAR, HEADER and other parsing words no longer do REFILL on missing text.
+ - renamed ;CODE => END-CODE
 ### Removed
  - GETC, 100/, INTERPRET
 ### Fixed

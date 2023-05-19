@@ -8,7 +8,7 @@ inx, inx,
 
 tya, pha,
 w lda, pha,
-;code
+end-code
 
 \ leave stack
 variable lstk $14 allot
@@ -72,7 +72,7 @@ postpone (+loop) dup , resolve-leaves ; immediate
 code j txa, tsx,
 $107 ldy,x w sty, $108 ldy,x
 tax, dex,
-msb sty,x w lda, lsb sta,x ;code
+msb sty,x w lda, lsb sta,x end-code
 
 hide lstk
 hide lsp

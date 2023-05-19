@@ -3,9 +3,9 @@ e000 value bmpbase
 cc00 value colbase
 
 code kernal-in
-36 lda,# 1 sta, cli, ;code
+36 lda,# 1 sta, cli, end-code
 code kernal-out
-sei, 35 lda,# 1 sta, ;code
+sei, 35 lda,# 1 sta, end-code
 
 code hires
 bb lda,# d011 sta, \ enable bitmap mode
@@ -13,7 +13,7 @@ dd00 lda,
 %11111100 and,# \ vic bank 2
 dd00 sta,
 38 lda,# d018 sta,
-;code
+end-code
 
 code lores
 9b lda,# d011 sta,
@@ -22,7 +22,7 @@ dd00 lda,
 dd00 sta,
 17 lda,#
 d018 sta,
-;code
+end-code
 
 : clrcol ( fgbgcol -- )
 colbase 3e8 rot fill
@@ -230,7 +230,7 @@ peny lda, lsb cmp,x 1 @@ bne,
 penx lda, lsb 1+ cmp,x 1 @@ bne,
 peny 1+ lda, msb cmp,x 1 @@ bne,
 penx 1+ lda, msb 1+ cmp,x 1 @@ bne,
-inx, inx, ;code
+inx, inx, end-code
 
 : line ( x y -- )
 kernal-out
@@ -320,7 +320,7 @@ clc, lsb lda,x lsb 3 + adc,x tay,
 msb lda,x msb 3 + adc,x +branch bne,
 tya, sec, c8 cmp,# 3 bcs, dopush jsr,
 :+
-inx, inx, inx, inx, ;code
+inx, inx, inx, inx, end-code
 
 variable x1 variable x2
 
@@ -342,7 +342,7 @@ iny, w lda,(y) x2 1+ sta,
 iny, w lda,(y) x1 sta,
 iny, w lda,(y) x1 1+ sta,
 iny, w lda,(y) lsb sta,x
-;code
+end-code
 
 variable l
 
@@ -426,14 +426,14 @@ msb 3 + lda,x msb 1+ sta,x
 :-
 lsb 1+ lda,x +branch bne,
 \ continue bytewise
-bytewise jsr, leavel jsr, ;code
+bytewise jsr, leavel jsr, end-code
 :+
 lsb lda,x w sta,
 msb lda,x w 1+ sta,
 0 ldy,# w lda,(y)
 lsb 1+ and,x +branch beq,
 \ done
-leavel jsr, ;code
+leavel jsr, end-code
 :+
 .bitblt jsr, jmp, \ recurse
 
@@ -464,7 +464,7 @@ create .scanr
 \ over l ! \ l=x
 lsb 1+ lda,x l sta,
 msb 1+ lda,x l 1+ sta,
-;code
+end-code
 
 code scanr ( x y mask addr -- newx y )
 lsb lda,x addr sta,

@@ -109,7 +109,7 @@ This may change with public demand.
 ((:noname)) _( -- xt )_ :: Create an execution token and enter compilation state.
 ((;)) _( -- )_ :: End the current definition, allow it to be found in the dictionary and go back to interpretation state.
 ((code)) _( "name" -- )_ :: Start assembling a new word.
-((;code))  :: End assembler.
+((end-code))  :: Exit assembler.
 ((,)) _( n -- )_ :: Write word on stack to `here` position and increase `here` by 2.
 ((c,)) _( n -- )_ :: Write byte on stack to `here` position and increase `here` by 1.
 ((allot)) _( n -- )_ :: Add _n_ bytes to the body of the most recently defined word.

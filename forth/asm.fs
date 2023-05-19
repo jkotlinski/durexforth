@@ -155,7 +155,7 @@ $98 1mi tya,
 $cb 2mi sbx,#
 
 : code header ;
-: ;code rts, ;
+: end-code rts, ;
 
 ( usage:
 foo lda,

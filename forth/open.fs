@@ -24,7 +24,7 @@ w ldx,
 inx, inx, inx,
 lsb sta,x
 0 lda,# msb sta,x
-;code
+end-code
 
 \ Close a logical file
 code close ( file# -- )
@@ -32,4 +32,4 @@ txa, pha,
 lsb lda,x \ x = file#
 $ffc3 jsr, \ CLOSE
 pla, tax, inx,
-;code
+end-code
