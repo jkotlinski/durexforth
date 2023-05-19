@@ -547,28 +547,23 @@ WORD
 +   rts
 
     +BACKLINK "evaluate", 8
-EVALUATE
     jsr PUSH_INPUT_SOURCE
     lda LSB + 1, x
-    sta TIB_PTR
+    sta EVALUATE_STRING_PTR_LSB
     lda MSB + 1, x
-    sta TIB_PTR + 1
+    sta EVALUATE_STRING_PTR_MSB
     lda LSB, x
-    sta TIB_SIZE
+    sta EVALUATE_STRING_SIZE_LSB
     lda MSB, x
-    sta TIB_SIZE + 1
+    sta EVALUATE_STRING_SIZE_MSB
     inx
     inx
 
-    ldy #0
-    sty TO_IN_W
-    sty TO_IN_W + 1
-
-    dey
-    sty SOURCE_ID_LSB
+    ldy #-1
     sty SOURCE_ID_MSB
-    jsr interpret_tib
-    jmp CLOSE_INPUT_SOURCE
+    sty SOURCE_ID_LSB
+
+    jmp interpret_and_close
 
     +BACKLINK "abort", 5
 ABORT

@@ -25,7 +25,7 @@ over swap begin dup while over c@ r@ <>
 while 1 /string repeat then r> drop >r
 over - dup r> if 1+ then >in +! ;
 
-: ( source-id 1 < if ')' parse drop drop
+: ( source-id 0= if ')' parse drop drop
 else begin >in @ ')' parse nip >in @ rot
 - = while refill drop repeat then ;
 immediate

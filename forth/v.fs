@@ -591,12 +591,6 @@ case \ keys that can quit
   endof
 endcase 0 ;
 
-: evaluate-buffer
-bufstart dup begin 1+ dup c@ case
-lf of dup >r over - evaluate r> dup
-endof
- 0 of 2drop exit endof endcase again ;
-
 : main-loop
 \ init colors -- border bgcol curscol
 [ dex, $d020 lda, lsb sta,x
@@ -630,7 +624,8 @@ swap c!
 
 \ f7
 dup $88 = if 2drop cleanup rom-kernal
-evaluate-buffer quit then
+bufstart eof @ bufstart - 1-
+evaluate quit then
 
 insert if do-insert else do-main if
 drop rom-kernal cleanup exit then then
