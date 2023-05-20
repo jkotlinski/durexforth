@@ -1,8 +1,8 @@
 CHAR_TO_LOWERCASE ; ( a -- a )
-    cmp #'Z' + 1
-    bcs +
     cmp #'A'
     bcc +
+    cmp #'Z' + 1
+    bcs +
     sec
-    sbc #'A' - #'a'
+    sbc #'A' - 'a'
 +   rts
