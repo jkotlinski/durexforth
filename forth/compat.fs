@@ -9,7 +9,7 @@ msb 4 + lda,x msb sta,x
 lsb 4 + lda,x lsb sta,x
 dex,
 msb 4 + lda,x msb sta,x
-lsb 4 + lda,x lsb sta,x ;code
+lsb 4 + lda,x lsb sta,x rts, end-code
 code 2swap ( a b c d -- c d a b )
 lsb lda,x lsb 2+ ldy,x
 lsb sty,x lsb 2+ sta,x
@@ -18,7 +18,7 @@ msb sty,x msb 2+ sta,x
 lsb 1+ lda,x lsb 3 + ldy,x
 lsb 1+ sty,x lsb 3 + sta,x
 msb 1+ lda,x msb 3 + ldy,x
-msb 1+ sty,x msb 3 + sta,x ;code
+msb 1+ sty,x msb 3 + sta,x rts, end-code
 
 : environment? 2drop 0 ;
 : cells 2* ;
@@ -37,7 +37,7 @@ lsb 1+ lda,x lsb 3 + adc,x lsb 3 + sta,x
 msb 1+ lda,x msb 3 + adc,x msb 3 + sta,x
 lsb lda,x lsb 2+ adc,x lsb 2+ sta,x
 msb lda,x msb 2+ adc,x msb 2+ sta,x
-inx, inx, ;code
+inx, inx, rts, end-code
 
 : accumulate ( +d0 addr digit - +d1 addr )
 swap >r swap base @ um* drop
