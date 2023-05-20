@@ -131,6 +131,9 @@ define flush save-buffers empty-buffers ;
 
 to latest \ end hiding words
 
+: \ blk @ if >in @ dup #40 mod - #40 +
+>in ! else postpone \ then ; immediate
+
 ( --- testing
 
 : test-load
