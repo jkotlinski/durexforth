@@ -56,13 +56,6 @@ TYPE ; ( caddr u -- )
     ldy #0
     jmp pushya
 
-REFILL_OR_CLOSE ; ( -- )
-    jsr REFILL
-    inx
-    lda MSB-1,x
-    beq CLOSE_INPUT_SOURCE
-    rts
-
 CLOSE_INPUT_SOURCE
     stx W
     lda	SOURCE_ID_LSB
@@ -87,18 +80,8 @@ CLOSE_INPUT_SOURCE
     inx ; assume block buffer address is unchanged
     rts
 
-.return_false
-    dex
-    lda #0
-    sta MSB,x
-    sta LSB,x
-    rts
-
     +BACKLINK "refill", 6
 REFILL ; ( -- flag )
-
-    lda SOURCE_ID_MSB
-    bne .return_false ; evaluate = fail
 
     ldy #0
     sty TO_IN_W
@@ -107,11 +90,11 @@ REFILL ; ( -- flag )
     sty TIB_SIZE + 1
 
     lda SOURCE_ID_LSB
-    beq .getLineFromConsole
-    lda SOURCE_ID_MSB
-    beq	.getLineFromDisk
+    bmi .getLineFromEvaluateString
+    bne .getLineFromDisk
 
-.getLineFromConsole
+    ; getLineFromConsole
+
     stx W
     ldx #0
 -   jsr $e112 ; Input Character
@@ -156,30 +139,56 @@ REFILL ; ( -- flag )
     dec $d020
     jmp -
 
-GET_CHAR_FROM_TIB
-    lda TO_IN_W
-    cmp TIB_SIZE
-    bne +
-    lda TO_IN_W + 1
-    cmp TIB_SIZE + 1
-    bne +
+.return_false
+    dex
     lda #0
+    sta MSB,x
+    sta LSB,x
     rts
-+
-    clc
-    lda TIB_PTR
-    adc TO_IN_W
-    sta W
-    lda TIB_PTR + 1
-    adc TO_IN_W + 1
-    sta W + 1
-    ldy #0
-    lda (W),y
 
-    inc TO_IN_W
+.getLineFromEvaluateString
+    lda EVALUATE_STRING_SIZE_LSB
+    ora EVALUATE_STRING_SIZE_MSB
+    beq .return_false
+
+EVALUATE_STRING_PTR_LSB = * + 1
+    lda #0
+    sta TIB_PTR
+EVALUATE_STRING_PTR_MSB = * + 1
+    lda #0
+    sta TIB_PTR + 1
+
+.grow_tib_to_end_of_line
+    lda EVALUATE_STRING_PTR_LSB
+    sta + + 1
+    lda EVALUATE_STRING_PTR_MSB
+    sta + + 2
++   lda PLACEHOLDER_ADDRESS
+    tay
+
+    inc EVALUATE_STRING_PTR_LSB
     bne +
-    inc TO_IN_W + 1
-+   rts
+    inc EVALUATE_STRING_PTR_MSB
++
+    lda EVALUATE_STRING_SIZE_LSB
+    bne +
+    dec EVALUATE_STRING_SIZE_MSB
++   dec EVALUATE_STRING_SIZE_LSB
+
+    tya
+    cmp #$d
+    beq .return_true
+
+    inc TIB_SIZE
+    bne +
+    inc TIB_SIZE + 1
++
+EVALUATE_STRING_SIZE_LSB = * + 1
+    lda #0
+EVALUATE_STRING_SIZE_MSB = * + 1
+    ora #0
+    bne .grow_tib_to_end_of_line
+    jmp .return_true
 
     +BACKLINK "source", 6
 SOURCE
@@ -227,14 +236,17 @@ CHAR ; ( name -- char )
     jmp FETCHBYTE
 
 SAVE_INPUT_STACK
-    !fill 9*5
+    ; Forth standard 11.3.3 "Input Source":
+    ; "Input [...] shall be nestable in any order to at least eight levels."
+    ; Eight levels is overkill for INCLUDED, since opening more than four DOS
+    ; channels gives a "no channel" error message on C64.
+    ; It is anyway nice to keep some extra levels for EVALUATE and LOAD.
+    !fill 8*13
 SAVE_INPUT_STACK_DEPTH
     !byte 0
 
 push_input_stack
-    ; ! there is no check for stack overflow!
-    ; 5 is however enough for one EVALUATE and four DOS channels.
-    ; opening more than four channels gives "no channel" error on C64.
+    ; Stack overflow check could be added, but does not seem needed in practice.
     ldy SAVE_INPUT_STACK_DEPTH
     sta SAVE_INPUT_STACK, y
     inc SAVE_INPUT_STACK_DEPTH
@@ -264,9 +276,25 @@ PUSH_INPUT_SOURCE
     lda TIB_SIZE
     jsr push_input_stack
     lda TIB_SIZE+1
+    jsr push_input_stack
+    lda EVALUATE_STRING_PTR_LSB
+    jsr push_input_stack
+    lda EVALUATE_STRING_PTR_MSB
+    jsr push_input_stack
+    lda EVALUATE_STRING_SIZE_LSB
+    jsr push_input_stack
+    lda EVALUATE_STRING_SIZE_MSB
     jmp push_input_stack
 
 POP_INPUT_SOURCE
+    jsr pop_input_stack
+    sta EVALUATE_STRING_SIZE_MSB
+    jsr pop_input_stack
+    sta EVALUATE_STRING_SIZE_LSB
+    jsr pop_input_stack
+    sta EVALUATE_STRING_PTR_MSB
+    jsr pop_input_stack
+    sta EVALUATE_STRING_PTR_LSB
     jsr pop_input_stack
     sta TIB_SIZE+1
     jsr pop_input_stack

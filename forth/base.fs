@@ -25,7 +25,7 @@ over swap begin dup while over c@ r@ <>
 while 1 /string repeat then r> drop >r
 over - dup r> if 1+ then >in +! ;
 
-: ( source-id 1 < if ')' parse drop drop
+: ( source-id 0= if ')' parse drop drop
 else begin >in @ ')' parse nip >in @ rot
 - = while refill drop repeat then ;
 immediate
@@ -107,17 +107,17 @@ postpone drop postpone drop ; immediate
 
 code 2/
 msb lda,x 80 cmp,# msb ror,x lsb ror,x
-;code
+rts, end-code
 code or
 msb lda,x msb 1+ ora,x msb 1+ sta,x
 lsb lda,x lsb 1+ ora,x lsb 1+ sta,x
-inx, ;code
+inx, rts, end-code
 code xor
 msb lda,x msb 1+ eor,x msb 1+ sta,x
 lsb lda,x lsb 1+ eor,x lsb 1+ sta,x
-inx, ;code
+inx, rts, end-code
 
-:- dup inx, ;code
+:- dup inx, rts, end-code
 code lshift ( x1 u -- x2 )
 lsb dec,x -branch bmi,
 lsb 1+ asl,x msb 1+ rol,x

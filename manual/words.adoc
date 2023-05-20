@@ -27,7 +27,7 @@
 ((emit)) _( a -- )_ :: Print top value of stack as a PETSCII character. Example: `q emit`
 ((£)) :: Comment to end of line. (Used on C64/PETSCII.)
 ((\)) :: Comment to end of line. (Used when cross-compiling from PC/ASCII.)
-((pass:[(])) :: Multiline comment. Ignores everything until a `)`.
+((pass:[(])) :: Multiline comment. Ignores everything until a `)`. `(` is non-standard: when parsing from an `evaluate` string, it refills to accept multi-line comments.
 ((bl)) _( -- char )_ :: _char_ is the PETSCII character for a space.
 ((space)) :: Display one space.
 ((spaces)) _( n -- )_ :: Display _n_ spaces.
@@ -109,7 +109,7 @@ This may change with public demand.
 ((:noname)) _( -- xt )_ :: Create an execution token and enter compilation state.
 ((;)) _( -- )_ :: End the current definition, allow it to be found in the dictionary and go back to interpretation state.
 ((code)) _( "name" -- )_ :: Start assembling a new word.
-((;code))  :: End assembler.
+((end-code))  :: End assembly.
 ((,)) _( n -- )_ :: Write word on stack to `here` position and increase `here` by 2.
 ((c,)) _( n -- )_ :: Write byte on stack to `here` position and increase `here` by 1.
 ((allot)) _( n -- )_ :: Add _n_ bytes to the body of the most recently defined word.
@@ -236,9 +236,8 @@ case
 ((word)) _( char -- addr )_ :: Read a word from input, using delimiter _char_, and put the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.
 ((parse)) _( char -- addr u )_ :: Parse a string, using delimiter _char_. _addr_ is the address within the input buffer, _u_ is the length of the parsed string. If the parse area was empty, the resulting string has a zero length.
 ((parse-name)) _( name -- caddr u )_ :: Read a word from input, delimited by whitespace. Skips leading spaces.
-((interpret)) _( -- value )_ :: Interpret a word from input and puts it on the stack.
 ((accept)) _( addr u -- u )_ :: Receive a string of at most u characters into the buffer that starts at addr. Return how many characters were received.
-((evaluate)) _( addr len -- )_ :: Evaluate the given string.
+((evaluate)) _( addr len -- )_ :: Evaluate the given string. Evaluate is non-standard: it interprets multi-line strings line-by-line.
 ((abort)) :: Clear the data stack and perform `quit`.
 ((abort")) _ccc" ( f -- )_  :: If _f_ is true, print _ccc_ and `abort`. Typical use: `: x ... test abort" error" ... ;`
 ((quit)) :: Enter an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting I/O.
@@ -285,8 +284,8 @@ If the definition is immediate, also return 1, otherwise also return -1.
 
 === Disk I/O
 
-((include)) _( "filename" -- )_ :: Load and parse file. Example: `include test`
-((included)) _( filenameptr filenamelen -- )_ :: Load and parse file.
+((include)) _( "filename" -- )_ :: Open and interpret a text file. Example: `include test`
+((included)) _( filenameptr filenamelen -- )_ :: Open and interpret a text file.
 ((require)) _( "filename" -- )_ :: Like include, except that load is skipped if the file is already loaded.
 ((required)) _( filenameptr filenamelen -- )_ :: Like included, except that load is skipped if the file is already loaded.
 ((loadb)) _( filenameptr filenamelen dst -- endaddr )_ :: Load file to _dst_.

@@ -20,6 +20,8 @@ Modern C64 Forth. Includes a vi clone written in Forth, a high-resolution graphi
 
 [C64 Programming Into the Forth Dimension Pt 2 - YouTube](https://www.youtube.com/watch?v=1oZztCmC8kc)
 
+[A Brief Introduction to DurexForth for the Commodore 64](https://dev.to/ianwitham/a-brief-introduction-to-durexforth-for-the-commodore-64-1c99)
+
 "Just fooling around but Durexforth is fast and fun!" -Kevin Reno
 
 "Ich finde das Forth klein und effektiv, wunderbar." -Peter Bierbach

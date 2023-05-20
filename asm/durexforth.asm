@@ -187,9 +187,9 @@ load_base
     sta MSB+1, x
     lda #(basename_end - basename)
     sta LSB,x
-    lda #>(interpret_loop-1)
+    lda #>(QUIT-1)
     pha
-    lda #<(interpret_loop-1)
+    lda #<(QUIT-1)
     pha
     jmp INCLUDED
 

@@ -32,7 +32,7 @@ variable filename $f allot
 
 create foundeol
 clc, tya, w adc, lsb sta,x
-2 bcc, msb inc,x ;code
+2 bcc, msb inc,x rts, end-code
 
 code print-line ( addr -- addr )
 lsb ldy,x w sty,
@@ -76,10 +76,10 @@ $400 + ( addr ) ;
 
 \ ram + io + kernal rom
 code rom-kernal
-$36 lda,# 1 sta, ;code
+$36 lda,# 1 sta, rts, end-code
 \ ram + io + ram
 code ram-kernal
-$35 lda,# 1 sta, ;code
+$35 lda,# 1 sta, rts, end-code
 
 : reset-buffer
 0 bufstart 1- c!
@@ -591,12 +591,6 @@ case \ keys that can quit
   endof
 endcase 0 ;
 
-: evaluate-buffer
-bufstart dup begin 1+ dup c@ case
-lf of dup >r over - evaluate r> dup
-endof
- 0 of 2drop exit endof endcase again ;
-
 : main-loop
 \ init colors -- border bgcol curscol
 [ dex, $d020 lda, lsb sta,x
@@ -630,7 +624,8 @@ swap c!
 
 \ f7
 dup $88 = if 2drop cleanup rom-kernal
-evaluate-buffer quit then
+bufstart eof @ bufstart - 1-
+evaluate quit then
 
 insert if do-insert else do-main if
 drop rom-kernal cleanup exit then then

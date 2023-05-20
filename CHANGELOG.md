@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - An improved SEE which should decode most colon words.
  - "durexForth vx.x.x" boot message.
  - RDERR: read and print error channel of current device.
- - ERASE, PARSE, TRUE, FALSE, SPLIT
+ - ERASE, PARSE, TRUE, FALSE, SPLIT, END-CODE
 ### Changed
  - S" max string length is reduced to 255 characters.
  - S" and .( no longer support multiple lines.
@@ -21,8 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - gfx: Renamed ERASE to PEN.
  - #> (the pictured numeric output string buffer) now uses its own buffer chopped from the end of PAD.
  - CHAR, HEADER and other parsing words no longer do REFILL on missing text.
+ - EVALUATE now accepts multi-line strings.
+ - ( refills to accept multi-line comments when parsing EVALUATE strings.
 ### Removed
- - GETC, 100/
+ - GETC, 100/, INTERPRET, ;CODE (replace with: RTS, END-CODE)
 ### Fixed
  - DOWORDS incorrectly quit for some non-false xt return values.
  - POSTPONE error handling.
@@ -34,9 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - V: allow entering control characters inside quotes only.
  - V: visual bug when saving.
  - SAVEB did not restore input stream.
- - Various maintenance patches.
  - turtle: BACK did not go back.
  - QUIT could fail to reinitialize graphics.
+ - Various maintenance patches.
 
 ## [4.0.0] - 2022-07-20
 ### Changed

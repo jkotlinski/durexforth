@@ -23,7 +23,7 @@ voice lda,
 code voice7+ \ voice c@ 7 * +
 .voice7* jsr,
 clc, lsb adc,x lsb sta,x +branch bcc,
-msb inc,x :+ ;code
+msb inc,x :+ rts, end-code
 
 create .ctl
 sid 4 + split lda,# drop w 1+ sta,
@@ -35,7 +35,7 @@ dex,
 .ctl jsr,
 w lda, lsb sta,x
 w 1+ lda, msb sta,x
-;code
+rts, end-code
 
 : sid-cutoff d415 ! ;
 : sid-flt d417 c! ;
@@ -70,11 +70,11 @@ ea24 , f810 ,
 code gate-on
 .ctl jsr, 0 ldy,#
 w lda,(y) 1 eor,#
-w sta,(y) ;code
+w sta,(y) rts, end-code
 code gate-off
 .ctl jsr, 0 ldy,#
 w lda,(y) fe and,#
-w sta,(y) ;code
+w sta,(y) rts, end-code
 
 2b value .str
 create .str-pop
@@ -83,14 +83,14 @@ voice lda, asl,a tax,
 .str inc,x +branch bne,
 .str 1+ inc,x :+
 tya, tax, rts,
-code str-pop .str-pop jsr, ;code
+code str-pop .str-pop jmp, end-code
 
 create .strget
 w stx, voice lda, asl,a tax,
 .str lda,(x) w ldx, rts,
 code strget
 dex, 0 lda,# msb sta,x
-.strget jsr, lsb sta,x ;code
+.strget jsr, lsb sta,x rts, end-code
 
 create notetab ( char -- notediff )
 lsb lda,x
@@ -112,8 +112,9 @@ b lda,# lsb sta,x rts,
 
 create notrest
 lsb lda,x 7f cmp,# +branch beq,
-dex, 1 lda,# lsb sta,x ;code
-:+ 0 lda,# lsb sta,x msb sta,x ;code
+dex, 1 lda,# lsb sta,x rts, end-code
+:+ 0 lda,# lsb sta,x msb sta,x
+rts, end-code
 
 code str2note
 notetab jsr,
@@ -168,12 +169,12 @@ default-pause lda, lsb sta,x
 lsb lda,x lsr,a clc,
 lsb adc,x lsb sta,x
 :+
-lsb dec,x ;code
+lsb dec,x rts, end-code
 
 code read-default-pause
 .read-pause jsr,
 lsb lda,x default-pause sta,
-inx, ;code
+inx, rts, end-code
 
 : play-note ( -- )
 strget ?dup if
@@ -189,7 +190,7 @@ sec, '0' sbc,#
 asl,a asl,a w sta,
 asl,a clc, w adc,
 octave sta,
-.str-pop jsr, ;code
+.str-pop jmp, end-code
 
 : do-commands ( -- done )
 strget case
@@ -208,19 +209,19 @@ endcase ;
 
 code stop-note
 tie lda, +branch beq,
-0 lda,# tie sta, ;code
+0 lda,# tie sta, rts, end-code
 :+ ' gate-off jmp,
 
 code pause>0
 dex,
 pause lda,
-lsb sta,x msb sta,x ;code
+lsb sta,x msb sta,x rts, end-code
 
 code decpause1=
 dex, 0 ldy,#
 pause dec, +branch beq,
-lsb sty,x msb sty,x ;code
-:+ iny, lsb sty,x ;code
+lsb sty,x msb sty,x rts, end-code
+:+ iny, lsb sty,x rts, end-code
 
 : voicetick
 pause>0 if decpause1= if
@@ -234,7 +235,7 @@ tie 1+ lda, tie sta,
 pause 1+ lda, pause sta,
 default-pause 1+ lda,
 default-pause sta,
-;code
+rts, end-code
 
 code voice1
 octave lda, octave 1+ sta,
@@ -248,7 +249,7 @@ tie 2+ lda, tie sta,
 pause 2+ lda, pause sta,
 default-pause 2+ lda,
 default-pause sta,
-;code
+rts, end-code
 
 code voice2
 octave lda, octave 2+ sta,
@@ -262,7 +263,7 @@ tie 3 + lda, tie sta,
 pause 3 + lda, pause sta,
 default-pause 3 + lda,
 default-pause sta,
-;code
+rts, end-code
 
 code voicedone
 octave lda, octave 3 + sta,
@@ -270,19 +271,19 @@ tie lda, tie 3 + sta,
 pause lda, pause 3 + sta,
 default-pause lda,
 default-pause 3 + sta,
-;code
+rts, end-code
 
 code wait
 \ visualize lag
 \ a2 lda, sec, lsb sbc,x d020 sta,
 lsb lda,x
 :- a2 cmp, -branch beq,
-lsb inc,x ;code
+lsb inc,x rts, end-code
 
 code apply-sid
 14 ldy,#
 :- sid lda,y d400 sta,y
-dey, -branch bpl, ;code
+dey, -branch bpl, rts, end-code
 
 code notdone
 dex,
@@ -292,9 +293,10 @@ voice inc,
 .strget jsr, pause 2+ ora, +branch bne,
 voice inc,
 .strget jsr, pause 3 + ora, +branch bne,
-0 lda,# lsb sta,x msb sta,x ;code
+0 lda,# lsb sta,x msb sta,x
+rts, end-code
 :+ :+ :+
-lsb sta,x ;code
+lsb sta,x rts, end-code
 
 : play
 voice0 do-commands

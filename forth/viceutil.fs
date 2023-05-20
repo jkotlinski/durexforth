@@ -1,15 +1,14 @@
 require io
 
 $12 emit .( dump-labels) $92 emit
-.(  writes VICE emulator
-labels to the PRG file 'words'
-
-When written, extract the file from
-.d64 using c1541 command 
-'read words'.
-Then, load the file from VICE 
-monitor using 'll "words"'
-)
+.(  writes VICE emulator) cr
+.( labels to the PRG file 'words') cr cr
+.( When written, extract the file from)
+cr
+.( .d64 using c1541 command) cr
+.( 'read words'.) cr
+.( Then, load the file from VICE) cr
+.( monitor using 'll "words"') cr
 
 \ print a VICE label definition for a
 \ given nametoken. returns 1, for use
@@ -17,7 +16,7 @@ monitor using 'll "words"'
 : (label) ( nametoken -- 1 )
 ." al " dup >xt u. '.' emit
 name>string
-over + swap do i c@ 
+over + swap do i c@
 dup 'a' < over 'z' > or if case
 \ escape forbidden chars
 '0' of ." :zero:" endof

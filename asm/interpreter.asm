@@ -1,5 +1,5 @@
-; QUIT EXECUTE INTERPRET NOTFOUND ' FIND FIND-NAME >XT PARSE-NAME WORD EVALUATE
-; ABORT /STRING DOWORDS
+; QUIT EXECUTE NOTFOUND ' FIND FIND-NAME >XT PARSE-NAME WORD EVALUATE ABORT
+; /STRING DOWORDS
 
 restore_handler
     pha             ; save a
@@ -106,11 +106,14 @@ INIT_S = * + 1
     txs
     tax
 
-interpret_loop
-    jsr REFILL_OR_CLOSE
-
-    jsr interpret_tib
-    jmp interpret_loop
+interpret_and_close
+    jsr REFILL
+    inx
+    lda MSB-1,x
+    bne +
+    jmp CLOSE_INPUT_SOURCE
++   jsr interpret_tib
+    jmp interpret_and_close
 
 interpret_tib
     jsr INTERPRET
@@ -171,7 +174,6 @@ EXECUTE
     inx
     jmp (W)
 
-    +BACKLINK "interpret", 9
 INTERPRET
     jsr PARSE_NAME
 
@@ -465,39 +467,41 @@ PARSE_NAME ; ( name -- addr u )
 ; WORD ( delim -- strptr )
     +BACKLINK "word", 4
 WORD
+    ; reset transient string length
     jsr ZERO
     jsr HERE
     jsr STOREBYTE
 
-    ; skips initial delimiters.
--   jsr GET_CHAR_FROM_TIB
-    beq .word_end
+.skip_delimiters
+    jsr .get_char_from_tib
+    beq .reached_word_end
     jsr .is_delim
-    beq -
-    jmp .append
+    beq .skip_delimiters
 
--   jsr GET_CHAR_FROM_TIB
-    beq .word_end
-    jsr .is_delim
-    beq .word_end
-
-.append
+.append_char
     jsr pushya
 
+    ; increment string length counter
     jsr HERE
     jsr FETCHBYTE
     jsr ONEPLUS
     jsr HERE
     jsr STOREBYTE
 
+    ; write character to string
     jsr HERE
     jsr HERE
     jsr FETCHBYTE
     jsr PLUS
     jsr STOREBYTE
-    jmp -
 
-.word_end
+    ; get next character from TIB
+    jsr .get_char_from_tib
+    beq .reached_word_end
+    jsr .is_delim
+    bne .append_char
+
+.reached_word_end
     inx
     jmp HERE
 
@@ -515,28 +519,49 @@ WORD
     cmp #K_SPACE | $80
 +   rts
 
+.get_char_from_tib
+    lda TO_IN_W
+    cmp TIB_SIZE
+    bne +
+    lda TO_IN_W + 1
+    cmp TIB_SIZE + 1
+    bne +
+    lda #0
+    rts
++
+    clc
+    lda TIB_PTR
+    adc TO_IN_W
+    sta W
+    lda TIB_PTR + 1
+    adc TO_IN_W + 1
+    sta W + 1
+    ldy #0
+    lda (W),y
+
+    inc TO_IN_W
+    bne +
+    inc TO_IN_W + 1
++   rts
+
     +BACKLINK "evaluate", 8
-EVALUATE
     jsr PUSH_INPUT_SOURCE
     lda LSB + 1, x
-    sta TIB_PTR
+    sta EVALUATE_STRING_PTR_LSB
     lda MSB + 1, x
-    sta TIB_PTR + 1
+    sta EVALUATE_STRING_PTR_MSB
     lda LSB, x
-    sta TIB_SIZE
+    sta EVALUATE_STRING_SIZE_LSB
     lda MSB, x
-    sta TIB_SIZE + 1
+    sta EVALUATE_STRING_SIZE_MSB
     inx
     inx
 
-    ldy #0
-    sty TO_IN_W
-    sty TO_IN_W + 1
-
-    dey
-    sty SOURCE_ID_LSB
+    ldy #-1
     sty SOURCE_ID_MSB
-    jmp interpret_tib
+    sty SOURCE_ID_LSB
+
+    jmp interpret_and_close
 
     +BACKLINK "abort", 5
 ABORT
