@@ -255,7 +255,7 @@ print_word_not_found_error ; ( caddr u -- )
     lda MSB-1,x
     beq print_word_not_found_error
     inx
-    sta MSB,X
+    sta MSB,x
     lda LSB-2,x
     sta LSB,x
     jmp TO_XT
