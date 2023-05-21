@@ -250,12 +250,15 @@ print_word_not_found_error ; ( caddr u -- )
     +BACKLINK "'", 1
     jsr PARSE_NAME
     jsr TWODUP
-    jsr FIND_NAME
-    lda MSB,x
+    jsr FIND_NAME ; ( addr u nt|0 )
+    inx
+    lda MSB-1,x
     beq print_word_not_found_error
-+   jsr TO_XT
-    jsr NIP
-    jmp NIP
+    inx
+    sta MSB,x
+    lda LSB-2,x
+    sta LSB,x
+    jmp TO_XT
 
     +BACKLINK "find", 4
 FIND ; ( xt -1 | xt 1 | caddr 0 )
