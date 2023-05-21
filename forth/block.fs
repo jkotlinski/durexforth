@@ -134,6 +134,13 @@ to latest \ end hiding words
 : \ blk @ if >in @ dup #40 mod - #40 +
 >in ! else postpone \ then ; immediate
 
+: refill blk @ ?dup if
+1+ block if 1 blk +! -1 else 0 then
+else refill then ;
+
+: evaluate blk @ >r 0 blk !
+evaluate r> blk ! ;
+
 ( --- testing
 
 : test-load
