@@ -136,17 +136,20 @@ COLON
     jmp RBRAC ; enter compile mode
 
 
-; --- HEADER ( name -- )
+.empty_parse
+    jmp print_word_not_found_error
+
     +BACKLINK "header", 6
-HEADER
+HEADER ; ( "name" -- )
     inc last_word_no_tail_call_elimination
 
     ; update dictionary
 
     jsr PARSE_NAME
+    lda LSB, x
+    beq .empty_parse
 
     ; update dictionary pointer
-    lda LSB, x
     sta .putlen+1
     clc
     adc #3
