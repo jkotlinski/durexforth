@@ -135,22 +135,26 @@ COLON
 
     jmp RBRAC ; enter compile mode
 
-
-.empty_parse
-    jmp print_word_not_found_error
-
     +BACKLINK "header", 6
 HEADER ; ( "name" -- )
     inc last_word_no_tail_call_elimination
 
-    ; update dictionary
-
+    ; Parse, get [W2]name-addr and [LSB-2]length.
     jsr PARSE_NAME
+    inx
     lda LSB, x
-    beq .empty_parse
+    sta W2
+    lda MSB, x
+    sta W2 + 1
+    inx
 
-    ; update dictionary pointer
-    sta .putlen+1
+    ; Abort if empty string.
+    lda LSB - 2, x
+    bne +
+    jmp .on_stack_underflow ; "err"
++   sta .putlen+1
+
+    ; Move back [W]LATEST.
     clc
     adc #3
     sta W
@@ -163,16 +167,13 @@ HEADER ; ( "name" -- )
     dec LATEST_MSB
 +   lda LATEST_MSB
     sta W + 1
+
+    ; Store name length.
     ldy #0
-    ; Store length byte.
-    lda LSB, x
+    lda LSB - 2, x
     sta (W), y
-    inx
-    lda LSB, x
-    sta W2
-    lda MSB, x
-    sta W2 + 1
-    ; copy string
+
+    ; Copy name.
 -   lda (W2), y
     jsr CHAR_TO_LOWERCASE
     iny
@@ -180,14 +181,14 @@ HEADER ; ( "name" -- )
 .putlen
     cpy #0
     bne -
-    ; store here
+
+    ; Store xt.
     iny
     lda HERE_LSB
     sta (W), y
     iny
     lda HERE_MSB
     sta (W), y
-    inx
     rts
 
     +BACKLINK "lit", 3
@@ -251,7 +252,7 @@ COMPILE_COMMA
     +BACKLINK "literal", 7 | F_IMMEDIATE
 LITERAL
     dex
-    lda MSB+1,x
+    lda MSB + 1,x
     bne +
     lda #<LITC
     sta LSB,x
