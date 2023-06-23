@@ -368,8 +368,8 @@ If the channel is not 15, DOS will ignore it unless you first sent an OPEN.
 An OPEN is sent to tell DOS where you want your data to go.
 That is done by LISTENing the device.
 ====
-- channel = 0 is reserved for a reading a PRG file.
-- channel = 1 is reserved for a writing a PRG file.
+- channel = 0 is reserved for reading a PRG file.
+- channel = 1 is reserved for writing a PRG file.
 - channel = 2-14 need the filetype and the read/write flag in the filename as ",P,W" for example.
 - channel = 15 for DOS commands or device status info.
 ====
