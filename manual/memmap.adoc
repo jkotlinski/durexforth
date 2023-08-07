@@ -6,7 +6,7 @@ $9e - $9f :: `w3` (work area for code words).
 $100 - $1ff :: Return stack.
 $200 - $258 :: Text input buffer.
 $33c - $35a :: `find` buffer.
-$35b - $3d9 :: `pad` Scratch pad memory, Cassette Buffer, untouched by DurexForth.
+$35b - $3d9 :: `pad` Scratch pad memory, Cassette Buffer, untouched by durexForth.
 $3da - $3fb :: `#>` buffer.
 $801 - here :: Forth Kernel followed by code and data space.
 latest - $9fff :: Dictionary. Grows downwards as needed.
