@@ -20,9 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Moved tests to a separate disk (tests.d64).
  - gfx: Renamed ERASE to PEN.
  - #> (the pictured numeric output string buffer) now uses its own buffer chopped from the end of PAD.
- - CHAR, HEADER and other parsing words no longer do REFILL on missing text.
+ - CHAR no longer does REFILL on missing text.
  - EVALUATE now accepts multi-line strings.
  - ( refills to accept multi-line comments when parsing EVALUATE strings.
+ - Defining words based on HEADER now abort with an error on missing text.
 ### Removed
  - GETC, 100/, INTERPRET, ;CODE (replace with: RTS, END-CODE)
 ### Fixed
