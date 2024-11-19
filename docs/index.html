@@ -438,7 +438,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 </head>
-<body class="article">
+<body class="book">
 <div id="header">
 <h1>durexForth: Operators Manual</h1>
 <div class="details">
@@ -446,8 +446,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <span id="author2" class="author">Kevin Lee Reno</span><br>
 <span id="author3" class="author">Poindexter Frink</span><br>
 <span id="author4" class="author">Richard Halkyard</span><br>
-<span id="revnumber">version v4.0.0-64-gfa3e4a5,</span>
-<span id="revdate">2022-08-21</span>
+<span id="revnumber">version v5.0.0-16-g4beef17,</span>
+<span id="revdate">2024-11-19</span>
 </div>
 </div>
 <div id="content">
@@ -502,6 +502,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_vectored_execution">Vectored Execution</a></li>
 <li><a href="#_debugging">Debugging</a></li>
 <li><a href="#_disk_io">Disk I/O</a></li>
+<li><a href="#_protocol_level_iec_device_io">Protocol-Level IEC Device I/O</a></li>
 <li><a href="#_compatibility">Compatibility</a></li>
 <li><a href="#_kernel_calls">Kernel Calls</a></li>
 <li><a href="#_turn_key_utilities">Turn-key Utilities</a></li>
@@ -621,7 +622,8 @@ Show the demos by entering:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>include fractals</pre>
+<pre>include fractals
+demo</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -664,13 +666,13 @@ The system will greet you with a blinking yellow cursor, waiting for your input.
 This is the interpreter, which allows you to enter Forth code interactively.</p>
 </div>
 <div class="paragraph">
-<p>Let us try the traditional first program: Type in <code>.( Hello, world! )</code> (and press Return).
+<p>Let us try the traditional first program: Type in <code>.( Hello, world! )</code> (and press <kbd>Return</kbd>).
 The system will reply <code>Hello, world! ok</code>.
 The <code>ok</code> means that the system is healthy and ready to accept more input.</p>
 </div>
 <div class="paragraph">
 <p>Now, let us try some mathematics.
-<code>1 1 +</code> (followed by Return) will add 1 and 1, leaving 2 on the stack.
+<code>1 1 +</code> (followed by <kbd>Return</kbd>) will add 1 and 1, leaving 2 on the stack.
 This can be verified by entering <code>.s</code> to print the stack contents.
 Now enter <code>.</code> to pop the 2 and print it to screen, followed by another <code>.s</code> to verify that the stack is empty.</p>
 </div>
@@ -693,7 +695,7 @@ Then, try changing it back again with <code>0 bg!</code>.</p>
 <p>The v editor is convenient for editing larger pieces of code. With it, you keep an entire source file loaded in RAM, and you can recompile and test it easily.</p>
 </div>
 <div class="paragraph">
-<p>Start the editor by typing <code>v</code>. You will enter the red editor screen. To enter text, first press <code>i</code> to enter insert mode. This mode allows you to insert text into the buffer. You can see that it&#8217;s active on the <code>I</code> that appears in the lower left corner. This is a good start for creating a program!</p>
+<p>Start the editor by typing <code>v</code>. You will enter the red editor screen. To enter text, first press <kbd>i</kbd> to enter insert mode. This mode allows you to insert text into the buffer. You can see that it&#8217;s active on the <code>I</code> that appears in the lower left corner. This is a good start for creating a program!</p>
 </div>
 <div class="paragraph">
 <p>Now, enter the following lines&#8230;&#8203;</p>
@@ -705,16 +707,16 @@ Then, try changing it back again with <code>0 bg!</code>.</p>
 </div>
 <div class="paragraph">
 <p>&#8230;&#8203;and then press ← to leave insert mode.
-Press <em>F7</em> to compile and run. If everything is entered right, you will see a beautiful color cycle.</p>
+Press <kbd>F7</kbd> to compile and run. If everything is entered right, you will see a beautiful color cycle.</p>
 </div>
 <div class="paragraph">
-<p>When you finished watching, press <em>RESTORE</em> to quit your program, then enter <code>v</code> to reopen the editor.</p>
+<p>When you finished watching, press <kbd>RESTORE</kbd> to quit your program, then enter <code>v</code> to reopen the editor.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_assembler">Assembler</h3>
 <div class="paragraph">
-<p>If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. <code>code</code> and <code>;code</code> define a code word, just like <code>:</code> and <code>;</code> define Forth words. Within a code word, you can use assembler mnemonics.</p>
+<p>If you want to color cycle as fast as possible, it is possible to use the durexForth assembler to generate machine code. <code>code</code> and <code>end-code</code> define a code word, just like <code>:</code> and <code>;</code> define Forth words. Within a code word, you can use assembler mnemonics.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -722,7 +724,7 @@ Press <em>F7</em> to compile and run. If everything is entered right, you will s
 here ( push current addr )
 $d020 inc,
 jmp, ( jump to pushed addr )
-;code
+end-code
 flash</pre>
 </div>
 </div>
@@ -796,7 +798,7 @@ print-hello</pre>
 <div class="sect2">
 <h3 id="_inserting_text">Inserting Text</h3>
 <div class="paragraph">
-<p>At startup, the editor is in command mode. These commands start insert mode, which allows you to enter text. Return to command mode with ←.</p>
+<p>At startup, the editor is in command mode. These commands start insert mode, which allows you to enter text. Return to command mode with <kbd>←</kbd>.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -915,7 +917,7 @@ print-hello</pre>
 <dd>
 <p>Go to middle window line.</p>
 </dd>
-<dt class="hdlist1">/{string}</dt>
+<dt class="hdlist1">/<em>string</em></dt>
 <dd>
 <p>Search forward for the next occurrence of the string.</p>
 </dd>
@@ -955,7 +957,7 @@ print-hello</pre>
 </dd>
 <dt class="hdlist1">F7</dt>
 <dd>
-<p>Compile and run editor contents. On completion, enter v to return to editor. To terminate a running program, press <em>RESTORE</em>.</p>
+<p>Compile and run editor contents. On completion, enter v to return to editor. To terminate a running program, press <kbd>RESTORE</kbd>.</p>
 </dd>
 </dl>
 </div>
@@ -1121,7 +1123,7 @@ print-hello</pre>
 </dd>
 <dt class="hdlist1">( </dt>
 <dd>
-<p>Multiline comment. Ignores everything until a <code>)</code>.</p>
+<p>Multiline comment. Ignores everything until a <code>)</code>. <code>(</code> is non-standard: when parsing from an <code>evaluate</code> string, it refills to accept multi-line comments.</p>
 </dd>
 <dt class="hdlist1">bl <em>(&#8201;&#8212;&#8201;char )</em> </dt>
 <dd>
@@ -1169,10 +1171,6 @@ print-hello</pre>
 <dt class="hdlist1">2/ <em>( a&#8201;&#8212;&#8201;b )</em> </dt>
 <dd>
 <p>Divide top of stack value by 2.</p>
-</dd>
-<dt class="hdlist1">100/ <em>( a&#8201;&#8212;&#8201;b )</em> </dt>
-<dd>
-<p>Divides top of stack value by $100.</p>
 </dd>
 <dt class="hdlist1">+! <em>( n a&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
@@ -1258,6 +1256,10 @@ print-hello</pre>
 <dd>
 <p>Binary shift a right by b.</p>
 </dd>
+<dt class="hdlist1">split <em>( n&#8201;&#8212;&#8201;lsb msb )</em> </dt>
+<dd>
+<p>Byte split <em>n</em>. $1234 split gives $34 $12.</p>
+</dd>
 <dt class="hdlist1">base <em>(&#8201;&#8212;&#8201;addr )</em> </dt>
 <dd>
 <p><em>addr</em> is the address of a cell that holds the numerical base.</p>
@@ -1276,7 +1278,9 @@ print-hello</pre>
 <div class="sect2">
 <h3 id="_double">Double</h3>
 <div class="paragraph">
-<p>The following words use double-cell integers. On the stack, the cell containing the most significant part of a double-cell integer is above the cell containing the least significant part.</p>
+<p>Double-cell (32-bit) number support is limited.
+Double literals (e.g. <code>123456.</code>) are not supported.
+This may change with public demand.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -1374,6 +1378,10 @@ print-hello</pre>
 <dd>
 <p>Fetch 8-bit value from address.</p>
 </dd>
+<dt class="hdlist1">erase <em>( addr len&#8201;&#8212;&#8201;)</em> </dt>
+<dd>
+<p>Fill range [addr, len + addr) with 0.</p>
+</dd>
 <dt class="hdlist1">fill <em>( addr len char&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
 <p>Fill range [addr, len + addr) with char.</p>
@@ -1405,9 +1413,9 @@ print-hello</pre>
 <dd>
 <p>Start assembling a new word.</p>
 </dd>
-<dt class="hdlist1">;code  </dt>
+<dt class="hdlist1">end-code  </dt>
 <dd>
-<p>End assembler.</p>
+<p>End assembly.</p>
 </dd>
 <dt class="hdlist1">, <em>( n&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
@@ -1690,10 +1698,6 @@ case
 <dd>
 <p>Return true if a character is available for <code>key</code>.</p>
 </dd>
-<dt class="hdlist1">getc <em>(&#8201;&#8212;&#8201;c )</em> </dt>
-<dd>
-<p>Consume the next character from the input buffer and increases <code>&gt;in</code> by one. If no characters are available, the input buffer is refilled as needed.</p>
-</dd>
 <dt class="hdlist1">char <em>(&#8201;&#8212;&#8201;c )</em> </dt>
 <dd>
 <p>Parse the next word, delimited by a space, and puts its first character on the stack.</p>
@@ -1714,17 +1718,17 @@ case
 <dd>
 <p>Return 0 if current input is keyboard, -1 if it is a string from <code>evaluate</code>, or the current file id.</p>
 </dd>
-<dt class="hdlist1">word <em>( delim&#8201;&#8212;&#8201;addr )</em> </dt>
+<dt class="hdlist1">word <em>( char&#8201;&#8212;&#8201;addr )</em> </dt>
 <dd>
-<p>Read a word from input, using delimiter <em>delim</em>, and puts the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.</p>
+<p>Read a word from input, using delimiter <em>char</em>, and put the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.</p>
+</dd>
+<dt class="hdlist1">parse <em>( char&#8201;&#8212;&#8201;addr u )</em> </dt>
+<dd>
+<p>Parse a string, using delimiter <em>char</em>. <em>addr</em> is the address within the input buffer, <em>u</em> is the length of the parsed string. If the parse area was empty, the resulting string has a zero length.</p>
 </dd>
 <dt class="hdlist1">parse-name <em>( name&#8201;&#8212;&#8201;caddr u )</em> </dt>
 <dd>
 <p>Read a word from input, delimited by whitespace. Skips leading spaces.</p>
-</dd>
-<dt class="hdlist1">interpret <em>(&#8201;&#8212;&#8201;value )</em> </dt>
-<dd>
-<p>Interpret a word from input and puts it on the stack.</p>
 </dd>
 <dt class="hdlist1">accept <em>( addr u&#8201;&#8212;&#8201;u )</em> </dt>
 <dd>
@@ -1732,7 +1736,7 @@ case
 </dd>
 <dt class="hdlist1">evaluate <em>( addr len&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
-<p>Evaluate the given string.</p>
+<p>Evaluate the given string. Evaluate is non-standard: it interprets multi-line strings line-by-line.</p>
 </dd>
 <dt class="hdlist1">abort </dt>
 <dd>
@@ -1748,7 +1752,7 @@ case
 </dd>
 <dt class="hdlist1">pad <em>(&#8201;&#8212;&#8201;addr )</em> </dt>
 <dd>
-<p><em>addr</em> is the address of the <code>pad</code>, a 161-byte memory region that can be used freely by user words.
+<p><em>addr</em> is the address of the <code>pad</code>, a 127-byte memory region that can be used freely by user words.
 No built-in words will modify this region.</p>
 </dd>
 </dl>
@@ -1881,11 +1885,11 @@ If the definition is immediate, also return 1, otherwise also return -1.</p>
 <dl>
 <dt class="hdlist1">include <em>( "filename"&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
-<p>Load and parse file. Example: <code>include test</code></p>
+<p>Open and interpret a text file. Example: <code>include test</code></p>
 </dd>
 <dt class="hdlist1">included <em>( filenameptr filenamelen&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
-<p>Load and parse file.</p>
+<p>Open and interpret a text file.</p>
 </dd>
 <dt class="hdlist1">require <em>( "filename"&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
@@ -1897,16 +1901,16 @@ If the definition is immediate, also return 1, otherwise also return -1.</p>
 </dd>
 <dt class="hdlist1">loadb <em>( filenameptr filenamelen dst&#8201;&#8212;&#8201;endaddr )</em> </dt>
 <dd>
-<p>Load binary data to <em>dst</em>.
-Returns 0 on failure, otherwise address after last written byte.</p>
+<p>Load file to <em>dst</em>.
+Returns the address after last written byte, or 0 on failure.</p>
 </dd>
-<dt class="hdlist1">saveb <em>( start end filenameptr filenamelength&#8201;&#8212;&#8201;)</em> </dt>
+<dt class="hdlist1">saveb <em>( start end+1 filenameptr filenamelength&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
-<p>Save binary data.</p>
+<p>Save file. <em>Start</em> = start address of memory area. <em>End+1</em> = end adress of memory area plus 1.</p>
 </dd>
 <dt class="hdlist1">device <em>( device#&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
-<p>Switch the active device.</p>
+<p>Switch the current device.</p>
 </dd>
 <dt class="hdlist1">save-forth <em>( "filename"&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
@@ -1919,6 +1923,10 @@ Returns 0 on failure, otherwise address after last written byte.</p>
 <dt class="hdlist1">rdir <em>( addr&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
 <p>Display disk directory previously loaded to addr.</p>
+</dd>
+<dt class="hdlist1">rderr <em>(&#8201;&#8212;&#8201;)</em> </dt>
+<dd>
+<p>Read and print error channel of the current device.</p>
 </dd>
 </dl>
 </div>
@@ -1941,8 +1949,13 @@ Returns 0 on failure, otherwise address after last written byte.</p>
 backup</pre>
 </div>
 </div>
-<div class="paragraph">
-<p>dos ( "cmd"&#8201;&#8212;&#8201;)] Send <em>cmd</em> to the current device&#8217;s command channel, and print the response. Note that the remainder of the line is treated as part of the command. This makes it possible to refer to file names that contain spaces, but means that <code>dos</code> and its command should be on their own line, or the last words on a line. Example: <code>dos scratch0:old file</code> will delete a file named <em>old file</em>.</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">dos <em>( "cmd"&#8201;&#8212;&#8201;)</em> </dt>
+<dd>
+<p>Send <em>cmd</em> to the current device&#8217;s command channel, and print the response. Note that the remainder of the line is treated as part of the command. This makes it possible to refer to file names that contain spaces, but means that <code>dos</code> and its command should be on their own line, or the last words on a line. Example: <code>dos scratch0:old file</code> will delete a file named <em>old file</em>.</p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect3">
@@ -1990,11 +2003,11 @@ ioabort <em>( ioresult&#8201;&#8212;&#8201;)</em> Handle error conditions for <c
 <div class="paragraph">
 <p>The <em>ioresult</em> value returned by <code>open</code>, <code>chkin</code> and <code>chkout</code> is 0 on success, or a Kernal error number if an error occurred.</p>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock caution">
 <table>
 <tr>
 <td class="icon">
-<div class="title">Note</div>
+<div class="title">Caution</div>
 </td>
 <td class="content">
 <div class="paragraph">
@@ -2019,6 +2032,128 @@ ioabort <em>( ioresult&#8201;&#8212;&#8201;)</em> Handle error conditions for <c
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_protocol_level_iec_device_io">Protocol-Level IEC Device I/O</h3>
+<div class="paragraph">
+<p>For even more advanced uses, words corresponding to the standard Commodore IEC routines are available by including the <code>iec</code> module.
+These words allow access to serial devices without accessing the file system, and won&#8217;t hang the computer on a "Device not present" error.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">listen <em>( dv&#8201;&#8212;&#8201;ioresult )</em> </dt>
+<dd>
+<p>Send IEC listen to dv.</p>
+</dd>
+<dt class="hdlist1">second <em>( command+sa&#8201;&#8212;&#8201;ioresult )</em> </dt>
+<dd>
+<p>Send IEC command and secondary address after listen.</p>
+</dd>
+<dt class="hdlist1">unlisten <em>(&#8201;&#8212;&#8201;)</em> </dt>
+<dd>
+<p>Send IEC unlisten to all channels.</p>
+</dd>
+<dt class="hdlist1">ciout <em>(&#8201;&#8212;&#8201;u )</em> </dt>
+<dd>
+<p>Puts a data byte onto the serial bus using full handshaking.</p>
+</dd>
+<dt class="hdlist1">talk <em>( dv&#8201;&#8212;&#8201;ioresult )</em> </dt>
+<dd>
+<p>Send IEC talk to dv.</p>
+</dd>
+<dt class="hdlist1">tksa <em>( command+sa&#8201;&#8212;&#8201;ioresult )</em> </dt>
+<dd>
+<p>Send IEC command and secondary address after talk.</p>
+</dd>
+<dt class="hdlist1">untalk <em>(&#8201;&#8212;&#8201;)</em> </dt>
+<dd>
+<p>Send IEC untalk to all channels.</p>
+</dd>
+<dt class="hdlist1">acptr <em>( u&#8201;&#8212;&#8201;)</em> </dt>
+<dd>
+<p>Get a byte of data from the serial bus using full handshaking.</p>
+</dd>
+</dl>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>Commands for <code>second</code> and <code>tksa</code> include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>$60 OPEN CHANNEL / DATA + Secondary Address / channel (0-15)</p>
+</li>
+<li>
+<p>$E0 CLOSE + Secondary Address / channel (0-15)</p>
+</li>
+<li>
+<p>$F0 OPEN + Secondary Address / channel (0-15)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>To send a data byte to a drive, that device must first be "listened". If the Secondary address (from
+here referred to as: SA or channel) is 15, the drive will interpret the data as a DOS command. A
+DOS command is executed when the drive is UNLISTENed ($3F).
+If the channel is not 15, DOS will ignore it unless you first sent an OPEN.
+An OPEN is sent to tell DOS where you want your data to go.
+That is done by LISTENing the device.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>channel = 0 is reserved for reading a PRG file.</p>
+</li>
+<li>
+<p>channel = 1 is reserved for writing a PRG file.</p>
+</li>
+<li>
+<p>channel = 2-14 need the filetype and the read/write flag in the filename as ",P,W" for example.</p>
+</li>
+<li>
+<p>channel = 15 for DOS commands or device status info.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>After the OPEN is sent, you can send a LISTEN using the channel used in the OPEN.
+DOS has a table of opened files, and will use the channel to write your data to the corresponding
+file.</p>
+</div>
+<div class="paragraph">
+<p>From: IEC disected by J. Derogee</p>
+</div>
+<div class="sect3">
+<h4 id="_iec_examples">IEC examples</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">send-cmd <em>( c-addr u&#8201;&#8212;&#8201;)</em> </dt>
+<dd>
+<p>Demonstrates and documents sending commands and/or reading the error channel.</p>
+</dd>
+<dt class="hdlist1">dos <em>( "cmd"&#8201;&#8212;&#8201;)</em> </dt>
+<dd>
+<p>Same as Dos command.</p>
+</dd>
+<dt class="hdlist1">bsave <em>( start end+1 filenameptr filenamelength&#8201;&#8212;&#8201;)</em> </dt>
+<dd>
+<p>Demonstrates and documents sending a file to disk.</p>
+</dd>
+<dt class="hdlist1">dir </dt>
+<dd>
+<p>Same as <code>ls</code>, demonstrates and documents loading a file.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -2057,6 +2192,10 @@ ioabort <em>( ioresult&#8201;&#8212;&#8201;)</em> Handle error conditions for <c
 <dd>
 <p>No-op</p>
 </dd>
+<dt class="hdlist1">d+ <em>( d1 d2&#8201;&#8212;&#8201;d3 )</em> </dt>
+<dd>
+<p>Adds the double-cell numbers <em>d1</em> and <em>d2</em>, giving the sum <em>d3</em>.</p>
+</dd>
 <dt class="hdlist1">2@ <em>( addr&#8201;&#8212;&#8201;x1 x2 )</em> </dt>
 <dd>
 <p>Fetch 32-bit value from <em>addr</em>. <em>x2</em> is stored at <em>addr</em>, and <em>x1</em> is stored at <em>addr</em> + 2.</p>
@@ -2084,6 +2223,14 @@ ioabort <em>( ioresult&#8201;&#8212;&#8201;)</em> Handle error conditions for <c
 <dt class="hdlist1">sm/rem <em>( d n&#8201;&#8212;&#8201;r q )</em> </dt>
 <dd>
 <p>Divide double-cell number <em>d</em> by <em>n</em>, giving the symmetric quotient <em>q</em> and the remainder <em>r</em>. Values are signed.</p>
+</dd>
+<dt class="hdlist1">true <em>(&#8201;&#8212;&#8201;true )</em> </dt>
+<dd>
+<p>Return a <em>true</em> flag, a single-cell value with all bits set.</p>
+</dd>
+<dt class="hdlist1">false <em>(&#8201;&#8212;&#8201;false )</em> </dt>
+<dd>
+<p>Return a <em>false</em> flag.</p>
 </dd>
 </dl>
 </div>
@@ -2236,10 +2383,10 @@ E.g. <code>15 clrcol</code> clears the screen with green background, white foreg
 <dd>
 <p>Draw a circle with radius <em>r</em> around <em>x</em>, <em>y</em>.</p>
 </dd>
-<dt class="hdlist1">erase <em>( mode&#8201;&#8212;&#8201;)</em> </dt>
+<dt class="hdlist1">pen <em>( mode&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
-<p>Change blit method for line drawing.
-<code>1 erase</code> uses <code>xor</code> for line drawing, <code>0 erase</code> switches back to <code>or</code>.</p>
+<p>Change line drawing method.
+<code>1 pen</code> inverts color, <code>0 pen</code> switches back to normal mode.</p>
 </dd>
 <dt class="hdlist1">paint <em>( x y&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
@@ -2269,19 +2416,19 @@ E.g. <code>10 8 parse-name hallo text</code> draws the message <code>hallo</code
 <h3 id="_voice_control">Voice Control</h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">((voice! <em>( n&#8201;&#8212;&#8201;)</em> </dt>
+<dt class="hdlist1">voice! <em>( n&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
 <p>Select SID voice 0-2.</p>
 </dd>
-<dt class="hdlist1">((freq! <em>( n&#8201;&#8212;&#8201;)</em> </dt>
+<dt class="hdlist1">freq! <em>( n&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
 <p>Write 16-bit frequency.</p>
 </dd>
-<dt class="hdlist1">((pulse! <em>( n&#8201;&#8212;&#8201;)</em> </dt>
+<dt class="hdlist1">pulse! <em>( n&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
 <p>Write 16-bit pulse value.</p>
 </dd>
-<dt class="hdlist1">((control! <em>( n&#8201;&#8212;&#8201;)</em> </dt>
+<dt class="hdlist1">control! <em>( n&#8201;&#8212;&#8201;)</em> </dt>
 <dd>
 <p>Write 8-bit control value.</p>
 </dd>
@@ -2326,14 +2473,14 @@ E.g. <code>10 8 parse-name hallo text</code> draws the message <code>hallo</code
 <p>Music Macro Language (MML) has been used since the 1970s to sequence music on computer and video game systems. The MML package is loaded with <code>include mml</code>. Two demonstration songs can be found in the <code>mmldemo</code> package.</p>
 </div>
 <div class="paragraph">
-<p>MML songs are played using the Forth word play-mml which takes three strings, one MML melody for each of the three SID voices. An example song is as follows:</p>
+<p>MML songs are played using the Forth word play-mml which takes three MML strings, one MML melody for each of the three SID voices. An example song is as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre>: frere-jaques
-s" o3l4fgaffgafab-&gt;c&amp;c&lt;ab-&gt;c&amp;cl8cdc&lt;b-l4af&gt;l8cdc&lt;b-l4affcf&amp;ffcf&amp;f"
-s" r1o3l4fgaffgafab-&gt;c&amp;c&lt;ab-&gt;c&amp;cl8cdc&lt;b-l4af&gt;l8cdc&lt;b-l4affcf&amp;ffcf&amp;f"
-s" " play-mml ;</pre>
+mml" o3l4fgaffgafab-&gt;c&amp;c&lt;ab-&gt;c&amp;cl8cdc&lt;b-l4af&gt;l8cdc&lt;b-l4affcf&amp;ffcf&amp;f"
+mml" r1o3l4fgaffgafab-&gt;c&amp;c&lt;ab-&gt;c&amp;cl8cdc&lt;b-l4af&gt;l8cdc&lt;b-l4affcf&amp;ffcf&amp;f"
+mml" " play-mml ;</pre>
 </div>
 </div>
 <div class="sect3">
@@ -2387,7 +2534,7 @@ Appending a <code>.</code> increases the duration of the note by half of its val
 here        ( push current addr )
 $d020 inc,  ( inc $d020 )
 jmp,        ( jump to pushed addr )
-;code</pre>
+end-code</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2441,7 +2588,8 @@ msb 1+ lda,x   ( load n1 msb )
 msb adc,x      ( add n2 msb )
 msb 1+ sta,x   ( store to n2 msb )
 inx,           ( drop n2; n1 = sum )
-;code</pre>
+rts,           ( return )
+end-code</pre>
 </div>
 </div>
 </div>
@@ -2493,7 +2641,7 @@ bar inc, :+</pre>
 <div class="sect2">
 <h3 id="_labels">Labels</h3>
 <div class="paragraph">
-<p>The <code>labels</code> module adds support for more complicated flows where branches can overlap freely. These branches are resolved by the <code>;code</code> word, so it is not possible to branch past it.</p>
+<p>The <code>labels</code> module adds support for more complicated flows where branches can overlap freely. These branches are resolved by the <code>end-code</code> word, so it is not possible to branch past it.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -2516,7 +2664,8 @@ bar inc, :+</pre>
 $7f lda,# 0 ldy,# 'l' @:
 $400 sta,y $500 sta,y
 $600 sta,y $700 sta,y
-dey, 'l' @@ bne, ;code</pre>
+dey, 'l' @@ bne, rts,
+end-code</pre>
 </div>
 </div>
 </div>
@@ -2566,7 +2715,7 @@ dey, 'l' @@ bne, ;code</pre>
 </dd>
 <dt class="hdlist1">require</dt>
 <dd>
-<p>The words require and required.</p>
+<p>The words <code>require</code> and <code>required</code>.</p>
 </dd>
 <dt class="hdlist1">v</dt>
 <dd>
@@ -2580,13 +2729,13 @@ dey, 'l' @@ bne, ;code</pre>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Issue ---modules--- to unload all modules, or ---editor--- to unload the editor only.</p>
+<p>Issue <code>---modules---</code> to unload all modules, or <code>---editor---</code> to unload the editor only.</p>
 </li>
 <li>
-<p>One by one, load the modules you want included with your new Forth. (E.g. include labels)</p>
+<p>One by one, load the modules you want included with your new Forth. (E.g. <code>include labels</code>)</p>
 </li>
 <li>
-<p>Save the new system with e.g. save-forth acmeforth.</p>
+<p>Save the new system with e.g. <code>save-forth acmeforth</code>.</p>
 </li>
 </ol>
 </div>
@@ -2594,7 +2743,7 @@ dey, 'l' @@ bne, ;code</pre>
 <div class="sect2">
 <h3 id="_custom_start_up">Custom Start-Up</h3>
 <div class="paragraph">
-<p>You may launch a word automatically at start-up by setting the variable start to the execution token of the word.  Example: ' megademo start ! To save the new configuration to disk, type e.g. save-forth megademo.</p>
+<p>You may launch a word automatically at start-up by setting the variable <code>start</code> to the execution token of the word.  Example: <code>' megademo start !</code> To save the new configuration to disk, type e.g. <code>save-forth megademo</code>.</p>
 </div>
 <div class="paragraph">
 <p>When writing a new program using a PC text editor, it is practical to configure durexForth to compile and execute the program at startup. That can be set up using the following snippet:</p>
@@ -2612,16 +2761,16 @@ save-forth @0:durexforth</pre>
 <div class="sect2">
 <h3 id="_turn_key_operation">Turn-key Operation</h3>
 <div class="paragraph">
-<p>Durexforth offers utilities to save your program in a turn-key fashion by including the turnkey module once the program is ready to be saved.</p>
+<p>Durexforth offers utilities to save your program in a turn-key fashion by including the <code>turnkey</code> module once the program is ready to be saved.</p>
 </div>
 <div class="paragraph">
-<p>Programs can be saved in a compacted state using save-pack. These programs are stored with 32 bytes between here and latest. When they are first loaded, they will restore the header space to its original top.</p>
+<p>Programs can be saved in a compacted state using <code>save-pack</code>. These programs are stored with 32 bytes between <code>here</code> and <code>latest</code>. When they are first loaded, they will restore the header space to its original <code>top</code>.</p>
 </div>
 <div class="paragraph">
-<p>If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary headers entirely when saving with save-prg. This allows your program to use memory down to here plus 32 bytes for safety.</p>
+<p>If you have developed a program that has no further need of the interpreter, you can eliminate the dictionary headers entirely when saving with <code>save-prg</code>. This allows your program to use memory down to <code>here</code> plus 32 bytes for safety.</p>
 </div>
 <div class="paragraph">
-<p>After either of these words have saved the file to disk, they will restore forth to the unpacked state, and strip the turnkey module from the dictionary. This allows you to continue to use forth interactively in the case of save-pack. As save-prg has stripped the dictionary headers from the system, it will no longer be usable. If you wish to test your program after saving, you can compile a call to save-prg instead:</p>
+<p>After either of these words have saved the file to disk, they will restore forth to the unpacked state, and strip the <code>turnkey</code> module from the dictionary. This allows you to continue to use forth interactively in the case of <code>save-pack</code>. As <code>save-prg</code> has stripped the dictionary headers from the system, it will no longer be usable. If you wish to test your program after saving, you can compile a call to <code>save-prg</code> instead:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2638,64 +2787,234 @@ build</pre>
 <div class="sect1">
 <h2 id="_assembler_mnemonics">Appendix A: Assembler Mnemonics</h2>
 <div class="sectionbody">
-<div class="verseblock">
-<pre class="content">adc,# adc, adc,x adc,y adc,(x) adc,(y)
-and,# and, and,x and,y and,(x) and,(y)
-asl,a asl, asl,x
-bcc,
-bcs,
-beq,
-bmi,
-bne,
-bpl,
-bvc,
-bvs,
-bit,
-brk,
-clc,
-cld,
-cli,
-clv,
-cmp,# cmp, cmp,x cmp,y cmp,(x) cmp,(y)
-cpx,# cpx,
-cpy,# cpy,
-dec, dec,x
-dex,
-dey,
-eor,# eor, eor,x eor,y eor,(x) eor,(y)
-inc, inc,x
-inx,
-iny,
-jmp, (jmp),
-jsr,
-lda,# lda, lda,x lda,y lda,(x) lda,(y)
-ldx,# ldx, ldx,y
-ldy ldy,# ldy, ldy,x
-lsr,a lsr, lsr,x
-nop,
-ora,# ora, ora,x ora,y ora,(x) ora,(y)
-pha,
-php,
-pla,
-plp,
-rol,a rol, rol,x
-ror,a ror, ror,x
-rti,
-rts,
-sbc,# sbc, sbc,x sbc,y sbc,(x) sbc,(y)
-sec,
-sed,
-sei,
-sta, sta,x sta,y sta,(x) sta,(y)
-stx, stx,y
-sty, sty,x
-tax,
-tay,
-tsx,
-txa,
-txs,
-tya,</pre>
-</div>
+<table class="tableblock frame-none grid-none stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">adc,#</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">adc,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">adc,x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">adc,y</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">adc,(x)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">adc,(y)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">and,#</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">and,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">and,x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">and,y</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">and,(x)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">and,(y)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">asl,a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">asl,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">asl,x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bcc,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bcs,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">beq,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bmi,</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bne,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bpl,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bvc,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bvs,</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bit,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">brk,</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">clc,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cld,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cli,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">clv,</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cmp,#</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cmp,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cmp,x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cmp,y</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cmp,(x)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cmp,(y)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cpx,#</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cpx,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cpy,#</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cpy,</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dec,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dec,x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dex,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dey,</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">eor,#</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">eor,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">eor,x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">eor,y</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">eor,(x)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">eor,(y)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">inc,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">inc,x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">inx,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iny,</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jmp,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(jmp),</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jsr,</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lda,#</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lda,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lda,x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lda,y</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lda,(x)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lda,(y)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ldx,#</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ldx,</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ldx,y</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ldy,#</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ldy,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ldy,x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lsr,a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lsr,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lsr,x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nop,</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ora,#</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ora,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ora,x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ora,y</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ora,(x)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ora,(y)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pha,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">php,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pla,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">plp,</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rol,a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rol,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rol,x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ror,a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ror,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ror,x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rti,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rts,</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sbc,#</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sbc,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sbc,x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sbc,y</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sbc,(x)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sbc,(y)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sec,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sed,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sei,</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sta,</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sta,x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sta,y</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sta,(x)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sta,(y)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stx,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stx,y</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sty,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sty,x</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tax,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tay,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tsx,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">txa,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">txs,</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tya,</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
@@ -2731,13 +3050,17 @@ tya,</pre>
 <dd>
 <p>Text input buffer.</p>
 </dd>
-<dt class="hdlist1">$33C - $35A </dt>
+<dt class="hdlist1">$33c - $35a </dt>
 <dd>
 <p><code>find</code> buffer.</p>
 </dd>
-<dt class="hdlist1">$35B - $3FB </dt>
+<dt class="hdlist1">$35b - $3d9 </dt>
 <dd>
-<p><code>pad</code> Scratch pad memory, Cassette Buffer, untouched by DurexForth.</p>
+<p><code>pad</code> Scratch pad memory, Cassette Buffer, untouched by durexForth.</p>
+</dd>
+<dt class="hdlist1">$3da - $3fb </dt>
+<dd>
+<p><code>#&gt;</code> buffer.</p>
 </dd>
 <dt class="hdlist1">$801 - here </dt>
 <dd>
@@ -2989,7 +3312,8 @@ again ;</pre>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre>Copyright (c) 2008 Johan Kotlinski, Mats Andrén
+<pre>durexForth
+Copyright (c) 2008 Johan Kotlinski, Mats Andrén
 Copyright (c) 2012 Kevin Lee Reno
 Copyright (c) 2017 Corey Minter
 Copyright (c) 2020 Poindexter Frink, Richard Halkyard
@@ -3027,8 +3351,43 @@ Copyright (c) 2002 Garth Wilson. Public domain.</pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>petcom.c
-Copyright (c) 1995 Craig Bruce. Public domain.</pre>
+<pre>MOVE
+Based on cc65 memmove.s
+
+This software is provided 'as-is', without any express or implied warranty.
+In no event will the authors be held liable for any damages arising from
+the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not
+claim that you wrote the original software. If you use this software in
+a product, an acknowledgment in the product documentation would be
+appreciated but is not required.
+
+2. Altered source versions must be plainly marked as such, and must not
+be misrepresented as being the original software.
+
+3. This notice may not be removed or altered from any source distribution.</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Forth Test Suite
+
+(C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY
+MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.
+VERSION 1.2
+
+This program was written by Gerry Jackson in 2007, with contributions from
+others where indicated, and is in the public domain - it can be distributed
+and/or modified in any way but please retain this notice.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</pre>
 </div>
 </div>
 </div>
@@ -3036,8 +3395,8 @@ Copyright (c) 1995 Craig Bruce. Public domain.</pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version v4.0.0-64-gfa3e4a5<br>
-Last updated 2022-08-21 22:10:07 +0200
+Version v5.0.0-16-g4beef17<br>
+Last updated 2024-11-19 23:00:25 +0100
 </div>
 </div>
 </body>
