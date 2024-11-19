@@ -1,0 +1,433 @@
+=== Stack Manipulation
+
+((drop)) _( a -- )_ :: Drop top of stack.
+((dup)) _( a -- a a )_ :: Duplicate top of stack.
+((swap)) _( a b -- b a )_ :: Swap top stack elements.
+((over)) _( a b -- a b a )_ :: Make a copy of the second item and push it on top.
+((rot)) _( a b c -- b c a )_ :: Rotate the third item to the top.
+((-rot)) _( a b c -- c a b )_ :: rot rot
+((2drop)) _( a b -- )_ :: Drop two topmost stack elements.
+((2dup)) _( a b -- a b a b )_ :: Duplicate two topmost stack elements.
+((?dup)) _( a -- a a? )_ :: Dup a if a differs from 0.
+((nip))	_( a b -- b )_ :: swap drop
+((tuck)) _( a b -- b a b )_ :: dup -rot
+((pick)) _( x~u~ ... x~1~ x~0~ u -- x~u~ ... x~1~ x~0~ x~u~ )_ :: Pick from stack element with depth u to top of stack.
+((>r)) _( a -- )_ :: Move value from top of parameter stack to top of return stack.
+((r>)) _( -- a )_ :: Move value from top of return stack to top of parameter stack.
+((r@)) _( -- a )_ :: Copy value from top of return stack to top of parameter stack.
+((depth)) _( -- n)_ :: +n+ is the number of single-cell values contained in the data stack before +n+ was placed on the stack.
+((lsb)) _( -- addr)_ :: The top address of the LSB parameter stack.
+((msb)) _( -- addr)_ :: The top address of the MSB parameter stack.
+
+=== Utility
+
+((.)) _( n -- )_ :: Print top value of stack as signed number.
+((u.)) _( u -- )_ :: Print top value of stack as unsigned number.
+((.s)) :: See stack contents.
+((emit)) _( a -- )_ :: Print top value of stack as a PETSCII character. Example: `q emit`
+((£)) :: Comment to end of line. (Used on C64/PETSCII.)
+((\)) :: Comment to end of line. (Used when cross-compiling from PC/ASCII.)
+((pass:[(])) :: Multiline comment. Ignores everything until a `)`. `(` is non-standard: when parsing from an `evaluate` string, it refills to accept multi-line comments.
+((bl)) _( -- char )_ :: _char_ is the PETSCII character for a space.
+((space)) :: Display one space.
+((spaces)) _( n -- )_ :: Display _n_ spaces.
+((page)) :: Clears the screen.
+((rvs)) :: Reverse screen output.
+
+=== Mathematics
+
+((1+)) _( a -- b )_ :: Increase top of stack value by 1.
+((1-)) _( a -- b )_ :: Decrease top of stack value by 1.
+((2+)) _( a -- b )_ :: Increase top of stack value by 2.
+((2*)) _( a -- b )_ :: Multiply top of stack value by 2.
+((2/)) _( a -- b )_ :: Divide top of stack value by 2.
+((+!)) _( n a -- )_ :: Add n to memory address a.
+((+)) _( a b -- c )_ :: Add a and b.
+((-)) _( a b -- c )_ :: Subtract b from a.
+((*)) _( a b -- c )_ :: Multiply a with b.
+((/)) _( a b -- q )_ :: Divide a with b using floored division.
+((/mod)) _( a b -- r q )_ :: Divide a with b, giving remainder r and quotient q.
+((mod)) _( a b -- r )_ :: Remainder of a divided by b.
+((*/)) _( a b c -- q )_ :: Multiply a with b, then divide by c, using a 32-bit intermediary.
+((*/mod)) _( a b c -- r q )_ :: Like */, but also keeping remainder r.
+((0<)) _( a -- b )_ :: Is a negative?
+((negate)) _( a -- b )_ :: Negate a.
+((abs)) _( a -- b )_ :: Give absolute value of a.
+((min)) _( a b -- c )_ :: Give the lesser of a and b.
+((max)) _( a b -- c )_ :: Give the greater of a and b.
+((within)) _( n lo hi -- flag )_ :: Return true if lo ≤ n < hi.
+((<)) _( n1 n2 -- flag )_ :: Is n1 less than n2? (Signed.)
+((>)) _( n1 n2 -- flag )_ :: Is n1 greater than n2? (Signed.)
+((u<)) _( u1 u2 -- flag )_ :: Is u1 less than u2? (Unsigned.)
+((u>)) _( u1 u2 -- flag )_ :: Is u1 greater than u2? (Unsigned.)
+((lshift)) _( a b -- c )_ :: Binary shift a left by b.
+((rshift)) _( a b -- c )_ :: Binary shift a right by b.
+((split)) _( n -- lsb msb )_ :: Byte split _n_. +$1234 split+ gives +$34 $12+.
+((base)) _( -- addr )_ :: _addr_ is the address of a cell that holds the numerical base.
+((decimal)) :: Set the numerical base to 10.
+((hex)) :: Set the numerical base to 16.
+
+=== Double
+
+Double-cell (32-bit) number support is limited.
+Double literals (e.g. `123456.`) are not supported.
+This may change with public demand.
+
+((dabs)) _( d -- ud )_ :: Produce the absolute value of _d_.
+((dnegate)) _( d -- d )_ :: Negate the double-cell integer _d_.
+((s>d)) _( n -- d )_ :: Convert the number n to the double-cell number _d_.
+((m+)) _( d n -- d )_ :: Add _n_ to double-cell number _d_.
+((m*)) _( a b -- d )_ :: Multiply _a_ with _b_, producing a double-cell value.
+((um*)) _( a b -- ud )_ :: Multiply _a_ with _b_, giving the unsigned double-cell number _ud_.
+((um/mod)) _( ud n -- r q )_ :: Divide double-cell number ud by n, giving remainder r and quotient q. Values are unsigned.
+((fm/mod)) _( d n -- r q )_ :: Divide double-cell number d by n, giving the floored quotient q and the remainder r. Values are signed.
+
+=== Logic
+
+((0=)) _( a -- flag)_ :: Is _a_ equal to zero?
+((0<>)) _( a -- flag )_ :: Is _a_ not equal to 0?
+((=)) _( a b -- flag )_ :: Is _a_ equal to _b_?
+((<>)) _( a b -- flag )_ :: Does _a_ differ from _b_?
+((and)) _( a b -- c )_ :: Binary and.
+((or)) _( a b -- c )_ :: Binary or.
+((xor)) _( a b -- c )_ :: Binary exclusive or.
+((invert)) _( a -- b )_ :: Flip all bits of _a_.
+
+=== Memory
+
+((!)) _( value address -- )_ :: Store 16-bit value at address.
+((@)) _( address -- value )_ :: Fetch 16-bit value from address.
+((c!)) _( value address -- )_ :: Store 8-bit value at address.
+((c@)) _( address -- value )_ :: Fetch 8-bit value from address.
+((erase)) _( addr len -- )_ :: Fill range [addr, len + addr) with 0.
+((fill)) _( addr len char -- )_ :: Fill range [addr, len + addr) with char.
+((move)) _( src dst len -- )_ :: Copies a region of memory `len` bytes long, starting at `src`, to memory beginning at `dst`.
+
+=== Compiling
+
+((:)) _( "name" -- )_ :: Define the word with the given name and enter compilation state.
+((:noname)) _( -- xt )_ :: Create an execution token and enter compilation state.
+((;)) _( -- )_ :: End the current definition, allow it to be found in the dictionary and go back to interpretation state.
+((code)) _( "name" -- )_ :: Start assembling a new word.
+((end-code))  :: End assembly.
+((,)) _( n -- )_ :: Write word on stack to `here` position and increase `here` by 2.
+((c,)) _( n -- )_ :: Write byte on stack to `here` position and increase `here` by 1.
+((allot)) _( n -- )_ :: Add _n_ bytes to the body of the most recently defined word.
+((literal)) _( n -- )_ :: Compile a value from the stack as a literal value. Typical use: `: x ... [ a b * ] literal ... ;`
+(([char])) _( "c" -- )_ :: Compile character _c_ as a literal value.
+(([)) _( -- )_ :: Leave compile mode. Execute the following words immediately instead of compiling them.
+((])) _( -- )_ :: Return to compile mode.
+((immediate::)) Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
+((['])) name _( -- xt )_:: Place name's execution token xt on the stack.
+The execution token returned by the compiled phrase +['] x+ is the same value returned by +' x+ outside of compilation state.
+Typical use: +: x ... ['] name ... ;+
+((compile,)) ( xt -- ) :: Append `jsr xt` to the word being compiled. Typical use: +: recurse immed latest >xt compile, ;+
+((postpone)) _xxx_ :: Compile the compilation semantics (instead of interpretation semantics) of xxx. Typical use:
+----
+: endif postpone then ; immediate
+: x ... if ... endif ... ;
+----
+((header)) _( "name" -- )_ :: Create a dictionary header named _name_.
+((create)) _( "name" -- )_ ... does> :: Create a word-creating word named _name_ with custom behavior specified after `does>`.  For further description, see "Starting Forth."
+((state)) _( -- addr)_ :: _addr_ is the address of a cell containing the compilation-state flag. It is 1 when compiling, otherwise 0.
+((latest)) _( -- value )_ :: Address of the latest defined header.
+((here)) _( -- value )_ :: Write position of the Forth compiler (usually first unused byte of code space).
+Many C64 assemblers refer to this as program counter or '*'.
+((marker)) _( "name" -- )_ :: Create a word that when called, forgets itself and all words that were defined after it. Example:
+----
+marker forget
+: x ; forget
+----
+
+=== Word List
+
+((hide)) _( "name" -- )_:: Remove _name_ from the word list, while leaving its definition in place.
+((define)) _( "name" -- )_:: Assign `here` as the execution token of word _name_ and enter the compilation state.
+((defcode)) _( "name" -- )_:: Like `define`, but starts a `code` segment instead.
+((dowords)) _( xt -- )_ :: Execute _xt_ once for every word in the word list, passing the name token of the word to _xt_, until the word list is exhausted or _xt_ returns false. The invoked _xt_ has the stack effect _( k * x nt -- l * x flag )_. If _flag_ is true, `dowords` will continue on to the next name, otherwise it will return.
+
+----
+\ from debug.fs
+: (words) more name>string space 1 ;
+: words ['] (words) dowords ;
+----
+
+=== Variables
+
+==== Values
+
+Values are fast to read, slow to write.
+Use values for variables that are rarely changed.
+
+_1_ ((value)) _foo_:: Create value _foo_ and set it to _1_.
+_2_ ((constant)) _bar_:: Create constant value _bar_ and set it to _2_.
+_foo_:: Fetch value of _foo_.
+_0_ ((to)) _foo_:: Set _foo_ to _0_.
+
+==== Variables
+
+Variables are faster to write to than values.
+
+((variable)) _bar_:: Define variable _bar_.
+_bar_ ((@)):: Fetch value of variable _bar_.
+_1 bar_ ((!)):: Set variable _bar_ to _1_.
+
+=== Control Flow
+
+Control functions only work in compile mode, not in interpreter.
+
+((if)) ... ((then)) :: condition IF true-part THEN rest
+
+if ... ((else)) ... then :: condition IF true-part ELSE false-part THEN rest
+
+((do)) .. ((loop)) :: Start a loop with index and limit. Example:
+
+----
+: print0to7 8 0 do i . loop ;
+----
+
+do .. ((+loop)) :: Start a loop with a custom increment. Example:
+
+----
+( prints odd numbers from 1 to n )
+: printoddnumbers (n -- ) 1 do i . 2 +loop ;
+----
+
+((i)), ((j)) :: Variables to be used inside `do` .. `loop` constructs. `i` gives inner loop index, `j` gives outer loop index.
+
+((leave)) :: Leave the innermost loop.
+
+((unloop)) :: Discard the loop-control parameters. Allows clean <<exit>> from within a loop.
+
+----
+: x 0 0 do unloop exit loop ;
+----
+
+((begin)) .. ((again)) :: Infinite loop.
+
+begin .. ((until)) :: BEGIN loop-part condition UNTIL. Loop until condition is true.
+
+begin .. ((while)) .. ((repeat)) :: BEGIN condition WHILE loop-part REPEAT. Repeat loop-part while condition is true.
+
+[[exit]] ((exit)) :: Exit function. Typical use: `: X test IF EXIT THEN ... ;`
+
+((recurse)) :: Jump to the start of the word being compiled.
+
+((case)) .. ((endcase)), ((of)) .. ((endof)) :: Switch statements.
+
+----
+: tellno ( n -- )
+case
+1 of ." one" endof
+2 of ." two" endof
+3 of ." three" endof
+     ." other" endcase ;
+----
+
+=== Input
+
+((key)) _( -- c )_ :: Get one character from the keyboard.
+((key?)) _( -- flag )_ :: Return true if a character is available for `key`.
+((char)) _( -- c )_ :: Parse the next word, delimited by a space, and puts its first character on the stack.
+((>in)) _( -- addr )_ :: Give the address of a cell containing the offset in characters from the start of the input buffer to the start of the parse area.
+((refill)) _( -- flag )_ :: Attempt to fill the input buffer from the input source, returning true if successful.
+((source)) _( -- caddr u )_ :: Give the address of, and number of characters in, the input buffer.
+((source-id)) _( -- n )_ :: Return 0 if current input is keyboard, -1 if it is a string from `evaluate`, or the current file id.
+((word)) _( char -- addr )_ :: Read a word from input, using delimiter _char_, and put the string address on the stack. If the delimiter is the space character, non-breaking space (hex a0) will also be treated as a delimiter.
+((parse)) _( char -- addr u )_ :: Parse a string, using delimiter _char_. _addr_ is the address within the input buffer, _u_ is the length of the parsed string. If the parse area was empty, the resulting string has a zero length.
+((parse-name)) _( name -- caddr u )_ :: Read a word from input, delimited by whitespace. Skips leading spaces.
+((accept)) _( addr u -- u )_ :: Receive a string of at most u characters into the buffer that starts at addr. Return how many characters were received.
+((evaluate)) _( addr len -- )_ :: Evaluate the given string. Evaluate is non-standard: it interprets multi-line strings line-by-line.
+((abort)) :: Clear the data stack and perform `quit`.
+((abort")) _ccc" ( f -- )_  :: If _f_ is true, print _ccc_ and `abort`. Typical use: `: x ... test abort" error" ... ;`
+((quit)) :: Enter an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting I/O.
+((pad)) _( -- addr )_ :: _addr_ is the address of the `pad`, a 127-byte memory region that can be used freely by user words.
+No built-in words will modify this region.
+
+=== Strings
+
+((.()) :: Print a string. Example: `.( foo)`
+((.")) :: Compile-time version of `.(`. Example: `: foo ." bar" ;`
+((s")) _( -- caddr u )_ :: Define a string. Compile-time only! Example: `s" foo"`.
+((count)) _( str -- caddr u )_ :: Return data address and length of the counted string _str_.
+((type)) _( caddr u -- )_ :: Print a string.
+((/string)) _( caddr u n -- caddr+n u-n )_ :: Adjust the string by _n_ characters.
+
+=== Number Formatting
+
+For more info about number formatting, read Starting Forth.
+
+((<#)) :: Begin the number conversion process.
+((#)) _( ud -- ud )_ :: Convert one digit and puts it in the start of the output string.
+((#s)) _( ud -- ud )_ :: Call `#` and repeats until _ud_ is zero.
+((hold)) _( ch -- )_ :: Insert the character `ch` at the start of the output string.
+((sign)) _( a -- )_ :: If _a_ is negative, insert a minus sign at the start of the output string.
+((#>)) _( xd -- addr u )_ :: Drop _xd_ and returns the output string.
+
+=== Vectored Execution
+
+((')) _( "name" -- addr )_ :: Find execution token of the word named _name_.
+((find)) _( cstr -- cstr 0 | xt -1 | xt 1 )_ :: Find the definition named in the counted string _cstr_.
+If the definition is not found, return _cstr_ and 0, otherwise return the execution token.
+If the definition is immediate, also return 1, otherwise also return -1.
+((find-name)) _( caddr u -- 0 | nt )_ :: Get the name token (dictionary pointer) of the word named by _caddr u_, or 0 if the word is not found.
+((execute)) _( xt -- )_ :: Execute the execution token _xt_.
+((>xt)) _( addr -- xt )_ :: Get execution token of word at adress _addr_.
+
+=== Debugging
+
+((words)) :: List all defined words.
+((size)) _( "name" -- )_ :: Print the size of the definition of the word named _name_.
+((dump)) _( n -- )_ :: Memory dump starting at address _n_.
+((n)) :: Continue memory dump where last one stopped.
+((see)) _( "name" -- )_ :: Print the definition of the word named _name_. Works on colon definitions only. Optionally included with `include see`.
+
+=== Disk I/O
+
+((include)) _( "filename" -- )_ :: Open and interpret a text file. Example: `include test`
+((included)) _( filenameptr filenamelen -- )_ :: Open and interpret a text file.
+((require)) _( "filename" -- )_ :: Like include, except that load is skipped if the file is already loaded.
+((required)) _( filenameptr filenamelen -- )_ :: Like included, except that load is skipped if the file is already loaded.
+((loadb)) _( filenameptr filenamelen dst -- endaddr )_ :: Load file to _dst_.
+Returns the address after last written byte, or 0 on failure.
+((saveb)) _( start end+1 filenameptr filenamelength -- )_ :: Save file. _Start_ = start address of memory area. _End+1_ = end adress of memory area plus 1.
+((device)) _( device# -- )_ :: Switch the current device.
+((save-forth)) _( "filename" -- )_ :: Save the forth to the given filename.
+((ls)) :: Load and print disk directory with optional drive # and wildcards. Example: `ls $1:*=p` Load directory for drive 1, only prg files.
+((rdir)) _( addr -- )_ :: Display disk directory previously loaded to addr.
+((rderr)) _( -- )_ :: Read and print error channel of the current device.
+
+==== DOS Commands
+
+Words for sending DOS commands to drives and reading drive status are available by including the `dos` module.
+
+((send-cmd)) _( c-addr u -- )_ :: Write the given string to secondary address 15 on the current device, and print the drive's response. The following example defines a word, `backup` that creates a copy of `durexforth` called `backup`:
+----
+: backup s" copy0:backup=durexforth" send-cmd ;
+backup
+----
+
+((dos)) _( "cmd" -- )_ :: Send _cmd_ to the current device's command channel, and print the response. Note that the remainder of the line is treated as part of the command. This makes it possible to refer to file names that contain spaces, but means that `dos` and its command should be on their own line, or the last words on a line. Example: `dos scratch0:old file` will delete a file named _old file_.
+
+==== Low-Level Device I/O
+
+For more advanced uses, words corresponding to the standard Commodore Kernal IO routines are available by including the `io` module.
+
+((open)) _( filenameptr filenamelength file# secondary-addr -- ioresult )_ :: Open a logical file.
+((chkin)) _( file# -- ioresult )_ :: Use a logical file as input device.
+((chkout)) _( file# -- ioresult )_ :: Use a logical file as output device.
+((clrchn)) _( -- )_ :: Reset input and output to the keyboard and screen.
+((close)) _( file# -- )_ :: Close a logical file.
+((readst)) _( -- status )_ :: Return the status of the last IO operation.
+For serial-bus devices, `$01` = write timeout, `$02` = read timeout, `$40` = end of file (EOI), `$80` = device not present.
+((chrin)) _( -- char)_ :: Read a character from the current input device.
+((ioabort)) _( ioresult -- )_ Handle error conditions for `open`, `chkin` and `chkout`. On failure, print error message and abort.
+
+As per the underlying Kernal routines, `chrin` does not check for end-of-file or any other error condition. `readst` should be called to ensure that the returned character is valid.
+
+The _ioresult_ value returned by `open`, `chkin` and `chkout` is 0 on success, or a Kernal error number if an error occurred.
+
+[CAUTION]
+====
+Low-level device I/O may interfere with disk accesses done by durexForth and the `v` editor. The following guidelines should be followed to avoid interference:
+
+- Avoid using file numbers 15 and below (remember, any number up to 127 can be used as a file number).
+- Only use input/output redirection (`chkin` and `chkout`) within word definitions, and ensure that `clrchn` is called before exit.
+- Close files as soon as they are no longer needed.
+- If multiple files are open, always call `clrchn` to end any serial bus transactions before calling `open` or switching between files with `chkin` or `chkout`.
+====
+
+=== Protocol-Level IEC Device I/O
+
+For even more advanced uses, words corresponding to the standard Commodore IEC routines are available by including the `iec` module.
+These words allow access to serial devices without accessing the file system, and won't hang the computer on a "Device not present" error.
+
+
+((listen)) _( dv -- ioresult )_ :: Send IEC listen to dv.
+((second)) _( command+sa -- ioresult )_ :: Send IEC command and secondary address after listen.
+((unlisten)) _( -- )_ :: Send IEC unlisten to all channels.
+((ciout)) _( -- u )_ ::  Puts a data byte onto the serial bus using full handshaking.
+((talk)) _( dv -- ioresult )_ :: Send IEC talk to dv.
+((tksa)) _( command+sa -- ioresult )_ :: Send IEC command and secondary address after talk.
+((untalk)) _( -- )_ :: Send IEC untalk to all channels.
+((acptr)) _( u -- )_ :: Get a byte of data from the serial bus using full handshaking.
+
+
+====
+
+Commands for ``second`` and ``tksa`` include:
+
+- $60 OPEN CHANNEL / DATA + Secondary Address / channel (0-15)
+- $E0 CLOSE + Secondary Address / channel (0-15)
+- $F0 OPEN + Secondary Address / channel (0-15)
+====
+To send a data byte to a drive, that device must first be "listened". If the Secondary address (from
+here referred to as: SA or channel) is 15, the drive will interpret the data as a DOS command. A
+DOS command is executed when the drive is UNLISTENed ($3F).
+If the channel is not 15, DOS will ignore it unless you first sent an OPEN.
+An OPEN is sent to tell DOS where you want your data to go.
+That is done by LISTENing the device.
+====
+- channel = 0 is reserved for reading a PRG file.
+- channel = 1 is reserved for writing a PRG file.
+- channel = 2-14 need the filetype and the read/write flag in the filename as ",P,W" for example.
+- channel = 15 for DOS commands or device status info.
+====
+After the OPEN is sent, you can send a LISTEN using the channel used in the OPEN.
+DOS has a table of opened files, and will use the channel to write your data to the corresponding
+file.
+
+From: IEC disected by J. Derogee
+
+==== IEC examples
+
+((send-cmd)) _( c-addr u -- )_ :: Demonstrates and documents sending commands and/or reading the error channel.
+((dos)) _( "cmd" -- )_ :: Same as Dos command.
+((bsave)) _( start end+1 filenameptr filenamelength -- )_ :: Demonstrates and documents sending a file to disk.
+((dir)) :: Same as ``ls``, demonstrates and documents loading a file.
+
+=== Compatibility
+
+The `compat` module contains various words that are not deemed necessary for enjoyable DurexForth operation, but still must be provided to comply with the Forth 2012 core standard.
+
+((environment?)) _( addr u -- 0 )_ :: Environmental query.
+((cell+)) _( n -- n+2 )_ :: 2+
+((cells)) _( n -- n*2 )_ :: 2*
+((char+)) _( n -- n+1 )_ :: 1+
+((align)) _( -- )_ :: No-op
+((aligned)) _( -- )_ :: No-op
+((chars)) _( -- )_ :: No-op
+((d+)) _( d1 d2 -- d3 )_ :: Adds the double-cell numbers _d1_ and _d2_, giving the sum _d3_.
+((2@)) _( addr -- x1 x2 )_ :: Fetch 32-bit value from _addr_. _x2_ is stored at _addr_, and _x1_ is stored at _addr_ + 2.
+((2!)) _( x1 x2 addr -- )_ :: Store 32-bit value to _addr_. _x2_ is stored at _addr_, and _x1_ is stored at _addr_ + 2.
+((2over)) _( a b c d -- a b c d a b )_ :: Copy cell pair _a_ _b_ to top of stack.
+((2swap)) _( a b c d -- c d a b )_ :: Exchange the top two cell pairs.
+((>number)) _( ud addr u -- ud addr2 u2 )_ :: Convert the string in _addr u_ to digits, using `base`, and adds each digit into _ud_ after multiplying it with `base`. _addr2 u2_ contains the part of the string that was not converted.
+((>body)) _( xt -- addr )_ :: Return the data field address that belongs to the execution token. Example use: `' foo >body`
+((sm/rem)) _( d n -- r q )_ :: Divide double-cell number _d_ by _n_, giving the symmetric quotient _q_ and the remainder _r_. Values are signed.
+((true)) _( -- true )_ :: Return a _true_ flag, a single-cell value with all bits set.
+((false)) _( -- false )_ :: Return a _false_ flag.
+
+=== Kernel Calls
+
+Safe kernel calls may be done from Forth words using ((sys)) _( addr -- )_. The helper variables ((ar)), ((xr)), ((yr)) and ((sr)) can be used to set arguments and get results through the a, x, y and status registers.
+
+Example: `'0' ar c! $ffd2 sys` calls the CHROUT routine, which prints `0` on screen.
+
+=== Turn-key Utilities
+
+These words are available by including `turnkey`.
+
+((top)) _( -- addr )_ :: Address of the top of the dictionary, default: $9fff.
+
+((top!)) _( addr -- )_ :: Relocate the dictionary to _addr_. Example:
+
+----
+\ not using $a000 block, give all memory to dictionary
+$cbff top!
+----
+
+((save-pack)) _( "filename" -- )_ :: Save a compact version of forth to the given _filename_.
+((save-prg)) _( "filename" -- )_ :: Save a forth program with no dictionary to _filename_.
+
+Further details on the use of these words are outlined in <<_turn_key_operation>>.

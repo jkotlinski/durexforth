@@ -1,0 +1,16 @@
+3 - $3a :: Parameter stack, `lsb` section.
+$3b - $72 :: Parameter stack, `msb` section.
+$8b - $8c :: `w` (work area for code words).
+$8d - $8e :: `w2` (work area for code words).
+$9e - $9f :: `w3` (work area for code words).
+$100 - $1ff :: Return stack.
+$200 - $258 :: Text input buffer.
+$33c - $35a :: `find` buffer.
+$35b - $3d9 :: `pad` Scratch pad memory, Cassette Buffer, untouched by durexForth.
+$3da - $3fb :: `#>` buffer.
+$801 - here :: Forth Kernel followed by code and data space.
+latest - $9fff :: Dictionary. Grows downwards as needed.
+$a000 - $cbff :: Editor text buffer.
+$cc00 - $cfff :: Hi-res graphics colors.
+$d000 - $dfff :: I/O area.
+$e000 - $ffff :: Kernal / hi-res graphics bitmap.

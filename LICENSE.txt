@@ -1,4 +1,5 @@
 ----
+durexForth
 Copyright (c) 2008 Johan Kotlinski, Mats Andrén
 Copyright (c) 2012 Kevin Lee Reno
 Copyright (c) 2017 Corey Minter
@@ -34,6 +35,40 @@ Copyright (c) 2002 Garth Wilson. Public domain.
 ----
 
 ----
-petcom.c
-Copyright (c) 1995 Craig Bruce. Public domain.
+MOVE
+Based on cc65 memmove.s
+
+This software is provided 'as-is', without any express or implied warranty.
+In no event will the authors be held liable for any damages arising from
+the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not
+claim that you wrote the original software. If you use this software in
+a product, an acknowledgment in the product documentation would be
+appreciated but is not required.
+
+2. Altered source versions must be plainly marked as such, and must not
+be misrepresented as being the original software.
+
+3. This notice may not be removed or altered from any source distribution.
+----
+
+----
+Forth Test Suite
+
+(C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY
+MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.
+VERSION 1.2
+
+This program was written by Gerry Jackson in 2007, with contributions from
+others where indicated, and is in the public domain - it can be distributed
+and/or modified in any way but please retain this notice.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ----

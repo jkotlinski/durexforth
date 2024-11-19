@@ -1,0 +1,65 @@
+= durexForth: Operators Manual
+Johan Kotlinski; Kevin Lee Reno; Poindexter Frink; Richard Halkyard
+:toc: preamble
+:doctype: book
+:experimental:
+// experimental enables the kbd: macro https://docs.asciidoctor.org/asciidoc/latest/macros/keyboard-macro/
+
+This manual is for durexForth, a modern Forth system for the Commodore 64.
+
+== Introduction
+include::intro.adoc[]
+
+== Tutorial
+include::tutorial.adoc[]
+
+== Editor
+include::editor.adoc[]
+
+== Forth Words
+include::words.adoc[]
+
+== Graphics
+include::gfx.adoc[]
+
+== SID
+include::sid.adoc[]
+
+== Music
+include::mml.adoc[]
+
+== Assembler
+include::asm.adoc[]
+
+== Configuring durexForth
+include::config.adoc[]
+
+[appendix]
+== Assembler Mnemonics
+include::mnemonics.adoc[]
+
+[appendix]
+== Memory Map
+include::memmap.adoc[]
+
+[appendix]
+== Word Anatomy
+include::anatomy.adoc[]
+
+[appendix]
+== Avoiding Stack Crashes
+include::stack.adoc[]
+
+[appendix]
+== Internet Resources
+include::links.adoc[]
+
+[appendix]
+== License
+include::../LICENSE.txt[]
+
+// asciidoctor 2.0.16 HTML backend lacks index support.
+ifeval::["{backend}" == "pdf"]
+[index]
+== Word Index
+endif::

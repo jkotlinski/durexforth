@@ -1,0 +1,63 @@
+// TODO can this list be put in (say 5) columns?
+
+[cols="1,1,1,1,1,1"]
+[frame=none]
+[grid=none]
+|===
+
+|adc,# | adc, | adc,x | adc,y | adc,(x) | adc,(y)
+
+|and,# | and, | and,x | and,y | and,(x) | and,(y)
+
+|asl,a | asl, | asl,x |||
+
+|bcc, |bcs, |beq, |bmi,||
+|bne, |bpl, |bvc, |bvs,||
+
+|bit,
+|brk,
+||||
+
+|clc, |cld, |cli, |clv,||
+
+|cmp,# | cmp, | cmp,x | cmp,y | cmp,(x) | cmp,(y)
+
+|cpx,# | cpx, |cpy,# | cpy,||
+
+|dec, | dec,x |dex, |dey,||
+
+|eor,# | eor, | eor,x | eor,y | eor,(x) | eor,(y)
+
+|inc, | inc,x |inx, |iny,||
+
+|jmp, | (jmp), |jsr,|||
+
+|lda,# | lda, | lda,x | lda,y | lda,(x) | lda,(y)
+
+|ldx,# | ldx, || ldx,y||
+
+|ldy,# | ldy, | ldy,x|||
+
+|lsr,a | lsr, | lsr,x||
+
+|nop,
+
+|ora,# | ora, | ora,x | ora,y | ora,(x) | ora,(y)
+
+|pha, |php, |pla, |plp,||
+
+|rol,a | rol, | rol,x|||
+|ror,a | ror, | ror,x|||
+
+|rti, |rts,||||
+
+|sbc,# | sbc, | sbc,x | sbc,y | sbc,(x) | sbc,(y)
+
+|sec, |sed, |sei,|||
+
+|sta, || sta,x | sta,y | sta,(x) | sta,(y)
+
+|stx, | stx,y |sty, | sty,x||
+
+|tax, |tay, |tsx, |txa, |txs, |tya,
+|===

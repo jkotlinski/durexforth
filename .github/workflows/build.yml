@@ -1,0 +1,38 @@
+name: build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        wget https://github.com/jkotlinski/svn-mirror/releases/download/r43829/headlessvice_3.7.1+r43829.deb
+        sudo apt-get install ./headlessvice_3.7.1+r43829.deb
+        sudo apt-get install acme
+        sudo apt-get install ruby-asciidoctor-pdf
+
+    - name: make deploy
+      run: make deploy
+
+    - name: Archive screenshots on failure
+      uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: screenshots
+        path: build/*.png
+
+    - name: Archive durexForth
+      uses: actions/upload-artifact@v3
+      with:
+        name: durexForth
+        path: deploy

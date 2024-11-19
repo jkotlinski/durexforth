@@ -5,18 +5,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [5.0.0] - 2024-11-19
+### Added
+ - An improved SEE which should decode most colon words.
+ - "durexForth vx.x.x" boot message.
+ - RDERR: read and print error channel of current device.
+ - ERASE, PARSE, TRUE, FALSE, SPLIT, END-CODE
+### Changed
+ - S" max string length is reduced to 255 characters.
+ - S" and .( no longer support multiple lines.
+ - ( now only supports multiple lines when reading from text file.
+ - Define MML strings using MML"
+ - Changed REFILL to Forth standard behavior: Fill the input buffer from the input source, returning true if successful.
+ - Do not print "ok" while compiling. Makes it easier to re-enter multi-line word definitions in interpreter.
+ - Moved tests to a separate disk (tests.d64).
+ - gfx: Renamed ERASE to PEN.
+ - #> (the pictured numeric output string buffer) now uses its own buffer chopped from the end of PAD.
+ - CHAR no longer does REFILL on missing text.
+ - EVALUATE now accepts multi-line strings.
+ - ( refills to accept multi-line comments when parsing EVALUATE strings.
+ - Defining words based on HEADER now abort with an error on missing text.
+### Removed
+ - GETC, 100/, INTERPRET, ;CODE (replace with: RTS, END-CODE)
 ### Fixed
  - DOWORDS incorrectly quit for some non-false xt return values.
  - POSTPONE error handling.
- - Documented DEFCODE, #S
+ - Documented DEFCODE, #S, D+
+ - LOADB/SAVEB/DOS hang on device not present.
+ - LOADB changed current file.
+ - REQUIRE(D) stopped working after 16 INCLUDE(D) files.
+ - Undefined behaviour after loading base.fs. broke in 1.5.1.
+ - V: allow entering control characters inside quotes only.
  - V: visual bug when saving.
-### Added
- - An improved SEE which should decode most colon words.
-### Changed
- - S" max string length is reduced to 255 characters.
- - Changed REFILL to Forth standard behavior: Fill the input buffer from the input source, returning true if successful.
- - #> (the pictured numeric output string buffer) now uses its own buffer, separate from HERE.
- - Do not print "ok" while compiling. Makes it easier to re-enter multi-line word definitions in interpreter.
+ - SAVEB did not restore input stream.
+ - turtle: BACK did not go back.
+ - QUIT could fail to reinitialize graphics.
+ - Various maintenance patches.
 
 ## [4.0.0] - 2022-07-20
 ### Changed
@@ -28,6 +53,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Moved and shrunk PAD area.
  - Optimized * / EXIT C! C@ 0=
  - Data stack effects of :/;/:NONAME/DEFINE. Starting with 2.0.0, :/:NONAME/DEFINE would put a value on the data stack, to be later consumed by ;. This is no longer the case.
+### Removed
+ - BYE, SEE, XT>
+ - HIDDEN word header flag.
 ### Fixed
  - LOADB/SAVEB could change active device.
  - IOABORT did not print all error messages.
@@ -40,9 +68,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - sid-demo broke in 2.0.0.
  - :NONAME did not work with RECURSE.
  - Rewrote UD/MOD in assembly
-### Removed
- - BYE, SEE, XT>
- - HIDDEN word header flag.
 
 ## [3.0.0] - 2021-05-14
 

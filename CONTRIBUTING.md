@@ -29,51 +29,38 @@ We welcome new features and bug fixes!  To keep things sane, we suggest:
 
 ### Building durexForth
 
-Compiling the Durexforth source requires the following software:
+Building Durexforth requires the following software:
 
 * acme - the cross-assembler (v0.97 or greater)
 * vice - the c64 emulator
-* pdflatex - provided by a TeX installation
+* c1541 - comes with Vice
 * make - the build system
+* asciidoctor and asciidoctor-pdf - text publishing
 
-Obtaining and installing this software is beyond the scope of this document.
+Obtaining and installing above software is beyond the scope of this document.
 
-Building the durexForth disk and cart can be achieved by executing
+Build the durexForth disk and cartridge by executing:
 ```
 # make clean && make deploy
 ```
-The base system and documentation will be produced, then the remainder of the
-system will be compiled in the Vice emulator.
+The base system and documentation is produced, after which the Forth code is compiled in Vice.
+Once completed, a new Vice instance will execute the test suite.
+You may want to disable warp mode to hear the music test.
+After the tests, the cartridge image is built.
+If the program is too large, the cartridge conversion will fail.
 
-Once the system is saved to disk and the prompt is visible, the program has
-been successfully built.  At this point you may test the system by typing
-at the prompt.  You should disable Vice Warp Mode before doing so by
-pressing MOD-W or clicking on the green light next to 'Warp' on the status
-bar.  To completely test the system, you may use the command
-```
-include test
-```
-You may wish to re-enable warp mode, as the test is quite long.  Be sure,
-however, to disable warp when the music test begins loading.  Two songs will
-play, followed by a SID test.  It is important to make sure sound works, then
-you may re-enable Warp mode.
-
-When you are finished testing, close the emulator. Then, the compiled software
-is built into the cart image. If the program is too large, the cartridge
-conversion will fail.
-
-The outputs of the build process are placed in the `deploy/` directory.
-You can test the cartridge image with
+Once make completes, the generated files can be found in the `deploy/` directory.
+You can test the cartridge image with e.g.
 ```
 # x64sc deploy/durexforth-3.0.0-M.crt
 ```
 
 ### Submitting a Pull Request
 
-If you plan to submit changes to durexForth, you should:
+When submitting changes to durexForth, you should:
 
-* Always `include test` before committing code to the branch
-* Update `CHANGELOG.md` to reflect the changes
+* `make deploy` to run the test suite. If existing tests do not cover your changes, consider adding new ones.
+* If the change is significant to end users, describe it in `CHANGELOG.md`
 * Give the pull request a descriptive name
   - e.g.: "Changed FOO to BAR"
   - not e.g.: "Updated file.ext"
