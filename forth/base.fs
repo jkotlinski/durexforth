@@ -183,7 +183,9 @@ hide dodoes
 .( require..) include require
 .( open..) include open
 .( accept..) include accept
-.( v..) include v
+\ .( v..) include v
+
+.( block..) include block
 
 decimal
 include turnkey
@@ -199,4 +201,4 @@ $20 + + - \ save-pack padding
 save-pack @0:durexforth
 .( ok!) cr
 
-0 $d7ff c! \ for vice -debugcart
+\ 0 $d7ff c! \ for vice -debugcart

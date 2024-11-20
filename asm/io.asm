@@ -1,4 +1,5 @@
-; EMIT PAGE RVS CR TYPE KEY? KEY REFILL SOURCE SOURCE-ID >IN CHAR IOABORT
+; EMIT PAGE RVS CR TYPE KEY? KEY REFILL SOURCE SOURCE-ID >IN BLK CHAR IOABORT
+; BLOCK-XT LOAD
 
     +BACKLINK "emit", 4
 EMIT
@@ -60,12 +61,23 @@ CLOSE_INPUT_SOURCE
     lda	SOURCE_ID_LSB
     jsr	CLOSE
     jsr POP_INPUT_SOURCE
+    lda BLK_W
+    bne .restore_block
     ldx SOURCE_ID_LSB
-    beq +
+    beq .restore_keyboard
     jsr CHKIN
-    jmp ++
-+   jsr CLRCHN
-++  ldx W
+    jmp .ret
+.restore_keyboard
+    jsr CLRCHN
+.ret
+    ldx W
+    rts
+.restore_block
+    ldx W
+    jsr BLK
+    jsr FETCH
+    jsr BLOCK
+    inx ; assume block buffer address is unchanged
     rts
 
     +BACKLINK "refill", 6
@@ -211,6 +223,12 @@ TO_IN
 TO_IN_W
     !word 0
 
+    +BACKLINK "blk", 3
+BLK
+    +VALUE BLK_W
+BLK_W
+    !word 0
+
     +BACKLINK "char", 4
 CHAR ; ( name -- char )
     jsr PARSE_NAME
@@ -223,7 +241,7 @@ SAVE_INPUT_STACK
     ; Eight levels is overkill for INCLUDED, since opening more than four DOS
     ; channels gives a "no channel" error message on C64.
     ; It is anyway nice to keep some extra levels for EVALUATE and LOAD.
-    !fill 8*12
+    !fill 8*13
 SAVE_INPUT_STACK_DEPTH
     !byte 0
 
@@ -241,6 +259,8 @@ pop_input_stack
     rts
 
 PUSH_INPUT_SOURCE
+    lda BLK_W
+    jsr push_input_stack
     lda TO_IN_W
     jsr push_input_stack
     lda TO_IN_W+1
@@ -291,6 +311,8 @@ POP_INPUT_SOURCE
     sta TO_IN_W+1
     jsr pop_input_stack
     sta TO_IN_W
+    jsr pop_input_stack
+    sta BLK_W
     rts
 
 ; handle errors returned by open,
@@ -347,3 +369,29 @@ IOABORT ; ( ioresult -- )
 .cr_abort
     jsr CR
     jmp ABORT
+
+    +BACKLINK "block-xt", 8
+    +VALUE BLOCK + 1
+BLOCK
+    jmp PLACEHOLDER_ADDRESS
+
+    +BACKLINK "load", 4
+    jsr PUSH_INPUT_SOURCE
+    jsr DUP
+    jsr BLK
+    jsr STORE
+    jsr ZERO
+    jsr TO_IN
+    jsr STORE
+    jsr BLOCK
+    lda LSB,x
+    sta TIB_PTR
+    lda MSB,x
+    sta TIB_PTR + 1
+    inx
+    lda #0
+    sta TIB_SIZE
+    lda #4
+    sta TIB_SIZE + 1
+    jsr interpret_tib
+    jmp CLOSE_INPUT_SOURCE
