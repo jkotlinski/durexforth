@@ -144,12 +144,9 @@ here latest >xt 1+ (to)
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
-: abort"
-postpone if
-postpone rvs
-postpone ."
-postpone cr
-postpone abort
+: aborts rvs type cr abort ;
+: abort" postpone if
+postpone s" postpone aborts
 postpone then ; immediate
 
 ( linked list. each element contains
@@ -173,7 +170,7 @@ marker ---modules---
 \ hides private words
 hide 1mi hide 2mi hide 23mi hide 3mi
 hide holdp hide latestxt
-hide dodoes
+hide dodoes hide aborts
 
 .( labels..) include labels
 .( doloop..) include doloop
