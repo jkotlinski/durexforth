@@ -9,7 +9,9 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    # libflac8 (required by VICE) does not exist on 24.04.
+    # change back to ubuntu-latest once this is resolved.
+    runs-on: ubuntu-22.04
 
     steps:
     - uses: actions/checkout@v3
