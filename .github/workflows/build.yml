@@ -17,6 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         wget https://github.com/VICE-Team/svn-mirror/releases/download/3.8.0/headlessvice_3.8.deb
+        sudo apt-get install libportaudio
         sudo apt-get install ./headlessvice_3.8.deb
         sudo apt-get install acme
         sudo apt-get install ruby-asciidoctor-pdf
