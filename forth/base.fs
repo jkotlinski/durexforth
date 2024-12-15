@@ -174,6 +174,7 @@ hide dodoes hide (abort")
 
 .( labels..) include labels
 .( doloop..) include doloop
+.( exception..) include exception
 .( sys..) include sys
 .( debug..) include debug
 .( ls..) include ls
