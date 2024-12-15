@@ -272,7 +272,7 @@ If the definition is not found, return _cstr_ and 0, otherwise return the execut
 If the definition is immediate, also return 1, otherwise also return -1.
 ((find-name)) _( caddr u -- 0 | nt )_ :: Get the name token (dictionary pointer) of the word named by _caddr u_, or 0 if the word is not found.
 ((execute)) _( xt -- )_ :: Execute the execution token _xt_.
-((>xt)) _( addr -- xt )_ :: Get execution token of word at adress _addr_.
+((>xt)) _( addr -- xt )_ :: Get execution token of word at address _addr_.
 
 === Debugging
 
@@ -290,7 +290,7 @@ If the definition is immediate, also return 1, otherwise also return -1.
 ((required)) _( filenameptr filenamelen -- )_ :: Like included, except that load is skipped if the file is already loaded.
 ((loadb)) _( filenameptr filenamelen dst -- endaddr )_ :: Load file to _dst_.
 Returns the address after last written byte, or 0 on failure.
-((saveb)) _( start end+1 filenameptr filenamelength -- )_ :: Save file. _Start_ = start address of memory area. _End+1_ = end adress of memory area plus 1.
+((saveb)) _( start end+1 filenameptr filenamelength -- )_ :: Save file. _Start_ = start address of memory area. _End+1_ = end address of memory area plus 1.
 ((device)) _( device# -- )_ :: Switch the current device.
 ((save-forth)) _( "filename" -- )_ :: Save the forth to the given filename.
 ((ls)) :: Load and print disk directory with optional drive # and wildcards. Example: `ls $1:*=p` Load directory for drive 1, only prg files.

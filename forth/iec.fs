@@ -103,7 +103,7 @@ over split ciout ciout
                     \ send load addr
 over dup
 0 do i + dup c@ ciout loop
-1+ \ keep saveb compatability
+1+ \ keep saveb compatibility
 unlisten $ba c@ listen
 $e1 second \ $E0 + $01 close
 unlisten
