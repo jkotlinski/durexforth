@@ -52,7 +52,7 @@ T{ C2 -> 1 2 8 0 }T            \ 0 THROW does nothing
 : C3 1 2 ['] T3 CATCH ;
 T{ C3 -> 1 2 99 }T            \ Restores stack to CATCH depth
 
-: T4 1- DUP 0> IF RECURSE ELSE 999 THROW -222 THEN ;
+: T4 1- DUP 0 > IF RECURSE ELSE 999 THROW -222 THEN ;
 : C4 3 4 5 10 ['] T4 CATCH -111 ;
 T{ C4 -> 3 4 5 0 999 -111 }T   \ Test return stack unwinding
 
