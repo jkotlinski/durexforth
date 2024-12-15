@@ -118,7 +118,7 @@ interpret_and_close
 interpret_tib
     jsr INTERPRET
     cpx #X_INIT+1
-    bpl .on_stack_underflow
+    bpl .throw_stack_underflow
     lda TO_IN_W
     cmp TIB_SIZE
     bne interpret_tib
@@ -135,7 +135,7 @@ interpret_tib
     sbc HERE_LSB
     lda LATEST_MSB
     sbc HERE_MSB
-    beq .on_data_underflow
+    beq .throw_dictionary_overflow
     lda STATE
     bne +
     lda #'o'
@@ -146,26 +146,16 @@ interpret_tib
     jmp PUTCHR
 +   rts
 
-.on_stack_underflow
-    lda #$12 ; reverse on
-    jsr PUTCHR
-    lda #'e'
-    jsr PUTCHR
-    lda #'r'
-    jsr PUTCHR
-    jmp .stop_error_print
-
-.on_data_underflow
-    lda #$12 ; reverse on
-    jsr PUTCHR
-    lda #'f'
-    jsr PUTCHR
-    lda #'u'
-    jsr PUTCHR
-    lda #'l'
-    jsr PUTCHR
-    lda #$d
-    jmp PUTCHR
+.throw_stack_underflow
+    ldy #-4
+    jmp .throw_exception
+.throw_dictionary_overflow
+    ldy #-8
+    ; fall through
+.throw_exception
+    lda #$ff
+    jsr pushya
+    jmp THROW
 
     +BACKLINK "execute", 7
 EXECUTE
@@ -236,16 +226,8 @@ FOUND_WORD_WITH_NO_TCE = * + 1
 
     +BACKLINK "notfound",8
 print_word_not_found_error ; ( caddr u -- )
-    lda #$12 ; reverse on
-    jsr PUTCHR
-    jsr TYPE
-    lda #'?'
-.stop_error_print
-    jsr PUTCHR
-
-    lda #$d ; cr
-    jsr PUTCHR
-    jmp ABORT
+    ldy #-2 ; abort"
+    jmp throw_exception
 
     +BACKLINK "'", 1
     jsr PARSE_NAME
