@@ -15,3 +15,9 @@ w ldx, inx, ] \ rp!
 r> handler ! r> swap >r
 [ lsb lda,x tax, ] \ sp!
 drop r> then ;
+
+: abort -1 throw ;
+: (abort") -2 throw ;
+: abort" postpone if
+postpone s" postpone (abort")
+postpone then ; immediate
