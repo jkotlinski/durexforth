@@ -269,7 +269,8 @@ INCLUDED
     jsr READST
     beq +
     jsr _errorchread
-    jmp ABORT
+    ldy #-1 ; TODO do something better here?
+    jmp throw_y
 +
     pla
     tax

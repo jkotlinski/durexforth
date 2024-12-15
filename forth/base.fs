@@ -144,7 +144,8 @@ here latest >xt 1+ (to)
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
-: (abort") rvs type cr abort ;
+: abort -1 throw ;
+: (abort") -2 throw ;
 : abort" postpone if
 postpone s" postpone (abort")
 postpone then ; immediate
@@ -174,7 +175,6 @@ hide dodoes hide (abort")
 
 .( labels..) include labels
 .( doloop..) include doloop
-.( exception..) include exception
 .( sys..) include sys
 .( debug..) include debug
 .( ls..) include ls

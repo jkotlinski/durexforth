@@ -152,7 +152,7 @@ HEADER ; ( "name" -- )
     lda LSB - 2, x
     bne +
     ldy #-16 ; attempt to use zero-length string as a name
-    jmp .throw_exception
+    jmp throw_y
 +   sta .putlen+1
 
     ; Move back [W]LATEST.

@@ -1,5 +1,5 @@
-; QUIT EXECUTE NOTFOUND ' FIND FIND-NAME >XT PARSE-NAME WORD EVALUATE ABORT
-; /STRING DOWORDS
+; QUIT EXECUTE NOTFOUND ' FIND FIND-NAME >XT PARSE-NAME WORD EVALUATE /STRING
+; DOWORDS
 
 restore_handler
     pha             ; save a
@@ -148,11 +148,11 @@ interpret_tib
 
 .throw_stack_underflow
     ldy #-4
-    jmp .throw_exception
+    jmp throw_y
 .throw_dictionary_overflow
     ldy #-8
     ; fall through
-.throw_exception
+throw_y
     lda #$ff
     jsr pushya
     jmp THROW
@@ -184,7 +184,8 @@ INTERPRET
     jsr READ_NUMBER
     beq .was_number
 
-    jmp print_word_not_found_error
+    ldy #-13 ; undefined word
+    jmp throw_y
 
     ; yep, it's a number...
 .was_number
@@ -227,7 +228,7 @@ FOUND_WORD_WITH_NO_TCE = * + 1
     +BACKLINK "notfound",8
 print_word_not_found_error ; ( caddr u -- )
     ldy #-2 ; abort"
-    jmp throw_exception
+    jmp throw_y
 
     +BACKLINK "'", 1
     jsr PARSE_NAME
@@ -549,11 +550,6 @@ WORD
     sty SOURCE_ID_LSB
 
     jmp interpret_and_close
-
-    +BACKLINK "abort", 5
-ABORT
-    ldx #X_INIT ; reset stack
-    jmp QUIT
 
     +BACKLINK "/string", 7
 SLASH_STRING ; ( addr u n -- addr u )
