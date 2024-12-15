@@ -22,7 +22,7 @@ SRC_NAMES = base debug v asm gfx gfxdemo rnd sin ls turtle fractals \
     wordlist io open dos see accept
 SRCS = $(addprefix $(SRC_DIR)/,$(addsuffix .fs,$(SRC_NAMES)))
 
-TEST_SRC_NAMES = test testcore testcoreplus testcoreext tester testsee 1
+TEST_SRC_NAMES = test testcore testcoreplus testcoreext testexception tester testsee 1
 TEST2_SRC_NAMES = see gfx gfxdemo fractals mmldemo mml sid spritedemo sprite compat rnd sin turtle
 TEST_SRCS = $(addprefix test/,$(addsuffix .fs,$(TEST_SRC_NAMES)))
 
