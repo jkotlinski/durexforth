@@ -147,13 +147,13 @@ interpret_tib
 +   rts
 
 .throw_stack_underflow
-    ldy #-4
-    jmp throw_y
+    lda #-4
+    jmp throw_a
 .throw_dictionary_overflow
-    ldy #-8
+    lda #-8
     ; fall through
-throw_y
-    lda #$ff
+throw_a
+    ldy #$ff
     jsr pushya
     jmp THROW
 
@@ -184,8 +184,8 @@ INTERPRET
     jsr READ_NUMBER
     beq .was_number
 
-    ldy #-13 ; undefined word
-    jmp throw_y
+    lda #-13 ; undefined word
+    jmp throw_a
 
     ; yep, it's a number...
 .was_number
@@ -227,8 +227,8 @@ FOUND_WORD_WITH_NO_TCE = * + 1
 
     +BACKLINK "notfound",8
 print_word_not_found_error ; ( caddr u -- )
-    ldy #-2 ; abort"
-    jmp throw_y
+    lda #-2 ; abort"
+    jmp throw_a
 
     +BACKLINK "'", 1
     jsr PARSE_NAME

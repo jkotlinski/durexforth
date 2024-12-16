@@ -151,8 +151,8 @@ HEADER ; ( "name" -- )
     ; Abort if empty string.
     lda LSB - 2, x
     bne +
-    ldy #-16 ; attempt to use zero-length string as a name
-    jmp throw_y
+    lda #-16 ; attempt to use zero-length string as a name
+    jmp throw_a
 +   sta .putlen+1
 
     ; Move back [W]LATEST.
