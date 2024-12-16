@@ -96,7 +96,7 @@ T{ 6 7 ' T9 C6 3 -> 6 7 13 3 }T         \ Test unlinking of sources
 
 \ ------------------------------------------------------------------------------
 
-EXCEPTION-ERRORS SET-ERROR-COUNT
+\ EXCEPTION-ERRORS SET-ERROR-COUNT
 
 CR .( End of Exception word tests) CR
 
