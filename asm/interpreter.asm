@@ -107,13 +107,22 @@ INIT_S = * + 1
     tax
 
 interpret_and_close
+    ldy #>interpret_loop
+    lda #<interpret_loop
+    jsr pushya
+    jsr CATCH
+    jsr CLOSE_INPUT_SOURCE
+    jmp THROW
+
+interpret_loop
     jsr REFILL
     inx
     lda MSB-1,x
-    bne +
-    jmp CLOSE_INPUT_SOURCE
-+   jsr interpret_tib
-    jmp interpret_and_close
+    beq .refill_failed
+    jsr interpret_tib
+    jmp interpret_loop
+.refill_failed
+    rts
 
 interpret_tib
     jsr INTERPRET
@@ -582,7 +591,7 @@ READ_NUMBER
     sta W3
 
     lda BASE
-    sta OLD_BASE
+    pha
 
     ldy #0
     sty .negate
@@ -660,8 +669,7 @@ READ_NUMBER
     bne .next_digit
 
 .parse_done
-OLD_BASE = * + 1
-    lda #0
+    pla
     sta BASE
 
     lda LSB+1,x
@@ -694,6 +702,8 @@ OLD_BASE = * + 1
     jmp .parse_done
 
 .parse_failed
+    pla
+    sta BASE
     inx
     inx ; Z flag set
     rts

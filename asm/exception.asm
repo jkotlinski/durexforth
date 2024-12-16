@@ -6,6 +6,7 @@ _HANDLER
     !word 0
 
 +BACKLINK "catch", 5
+CATCH
     ; save data stack pointer
     txa
     jsr pushya
