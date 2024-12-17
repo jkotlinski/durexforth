@@ -31,7 +31,7 @@ CATCH
     jsr STORE
     ; discard saved stack pointer
     jsr R_TO
-    jsr DROP
+    inx ; drop
     ; normal completion
     jmp ZERO
 
