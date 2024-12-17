@@ -144,7 +144,8 @@ here latest >xt 1+ (to)
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
-: (abort") rvs type cr abort ;
+: abort -1 throw ;
+: (abort") -2 throw ;
 : abort" postpone if
 postpone s" postpone (abort")
 postpone then ; immediate

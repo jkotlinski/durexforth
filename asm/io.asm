@@ -346,4 +346,5 @@ IOABORT ; ( ioresult -- )
 
 .cr_abort
     jsr CR
-    jmp ABORT
+    lda #-1 ; TODO do something better here?
+    jmp throw_a
