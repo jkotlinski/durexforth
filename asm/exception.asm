@@ -157,7 +157,7 @@ THROW
     !text "?"
 .no_word
     !byte 7
-    !text "no word"
+    !text "no name"
 .io_error
     !byte 3
     !text "i/o"
