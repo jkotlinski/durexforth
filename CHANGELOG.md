@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+ - Exception support with CATCH and THROW.
  - S" now works in interpretation mode. It returns a transient buffer.
  - STRING, stores a counted string.
 
