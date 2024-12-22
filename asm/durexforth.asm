@@ -133,7 +133,9 @@ ONE
 
     +BACKLINK "-1", 2
 MINUS_ONE
-    +VALUE -1
+    lda	#-1
+    tay
+    jmp pushya
 
 ; START - points to the code of the startup word.
     +BACKLINK "start", 5
