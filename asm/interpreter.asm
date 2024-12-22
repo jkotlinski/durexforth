@@ -195,8 +195,7 @@ INTERPRET
     jsr READ_NUMBER
     beq .was_number
 
-    lda #-13 ; undefined word
-    jmp throw_a
+    jmp print_word_not_found_error
 
     ; yep, it's a number...
 .was_number
@@ -238,7 +237,15 @@ FOUND_WORD_WITH_NO_TCE = * + 1
 
     +BACKLINK "notfound",8
 print_word_not_found_error ; ( caddr u -- )
-    lda #-2 ; abort"
+    lda LSB,x
+    sta _ERROR_STRING
+    inx
+    lda LSB,x
+    sta _ERROR_STRING+1
+    lda MSB,x
+    sta _ERROR_STRING+2
+    inx
+    lda #-13 ; undefined word
     jmp throw_a
 
     +BACKLINK "'", 1

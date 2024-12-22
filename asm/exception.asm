@@ -7,8 +7,9 @@ _EXCEPTION_HANDLER
 
 +BACKLINK "\"err", 4
 ERROR_STRING
-    +VALUE +
-+   !byte 0
+    +VALUE _ERROR_STRING
+_ERROR_STRING
+    !byte 0
     !word 0
 
 +BACKLINK "catch", 5
@@ -91,11 +92,7 @@ THROW
     lda LSB-1,x
     cmp #-2
     bne +
-    jsr ERROR_STRING
-    jsr ONEPLUS
-    jsr FETCH
-    jsr ERROR_STRING
-    jsr FETCHBYTE
+    jsr .get_custom_error_string
     jmp .print_error_string
 +   jsr .get_error_string_from_code
     jsr COUNT
@@ -119,6 +116,8 @@ THROW
     +VALUE .mem_full
 +   cmp #-13
     bne +
+    jsr .get_custom_error_string
+    jsr TYPE
     +VALUE .not_found
 +   cmp #-16
     bne +
@@ -128,6 +127,13 @@ THROW
     +VALUE .io_error
 .get_generic_error_string
     +VALUE .generic_error
+
+.get_custom_error_string
+    jsr ERROR_STRING
+    jsr ONEPLUS
+    jsr FETCH
+    jsr ERROR_STRING
+    jmp FETCHBYTE
 
 .abort
     !byte 5
@@ -139,8 +145,8 @@ THROW
     !byte 4
     !text "full"
 .not_found
-    !byte 9
-    !text "not found"
+    !byte 1
+    !text "?"
 .no_word
     !byte 7
     !text "no word"
