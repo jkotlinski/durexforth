@@ -248,7 +248,8 @@ No built-in words will modify this region.
 
 ((.()) :: Print a string. Example: `.( foo)`
 ((.")) :: Compile-time version of `.(`. Example: `: foo ." bar" ;`
-((s")) _( -- caddr u )_ :: Define a string. Compile-time only! Example: `s" foo"`.
+((s")) _( -- caddr u )_ :: Compilation: Define a string. Interpretation: Parse a string to a transient buffer. Example: `s" foo"`.
+((string,)) _( caddr u -- )_ :: Compile a string.
 ((count)) _( str -- caddr u )_ :: Return data address and length of the counted string _str_.
 ((type)) _( caddr u -- )_ :: Print a string.
 ((/string)) _( caddr u n -- caddr+n u-n )_ :: Adjust the string by _n_ characters.
