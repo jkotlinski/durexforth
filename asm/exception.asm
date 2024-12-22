@@ -118,6 +118,9 @@ THROW
 +   cmp #-8
     bne +
     +VALUE .mem_full
++   cmp #-10
+    bne +
+    +VALUE .div_error
 +   cmp #-13
     bne +
     jsr .get_custom_error_string
@@ -158,6 +161,9 @@ THROW
 .no_word
     !byte 7
     !text "no name"
+.div_error
+    !byte 2
+    !text "/0" ; division by zero
 .io_error
     !byte 3
     !text "i/o"
