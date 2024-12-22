@@ -131,6 +131,10 @@ ZERO
 ONE
     +VALUE 1
 
+    +BACKLINK "-1", 2
+MINUS_ONE
+    +VALUE -1
+
 ; START - points to the code of the startup word.
     +BACKLINK "start", 5
     +VALUE	_START
