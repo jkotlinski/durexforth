@@ -6,6 +6,7 @@ DISK_SUF = d64
 TAG := $(shell git describe --tags --abbrev=0 || svnversion --no-newline)
 TAG_DEPLOY_DOT := $(shell git describe --tags --long --dirty=_m | sed 's/-g[0-9a-f]\+//' | tr _- -.)
 TAG_DEPLOY := $(shell git describe --tags --abbrev=0 --dirty=_M | tr _. -_)
+VERSION_STRING := $(shell git describe --tags --abbrev=0)
 GIT_HASH := $(shell git rev-parse --short HEAD)
 
 DEPLOY_NAME = durexforth-$(TAG_DEPLOY)
@@ -66,7 +67,7 @@ deploy: $(DISK_IMAGE) asm/cart.asm $(TEST_SRCS)
 
 durexforth.prg: asm/*.asm
 	mkdir -p build
-	echo >build/version.asm !pet \"durexForth $(TAG_DEPLOY_DOT)\"
+	echo >build/version.asm !pet \"durexForth $(VERSION_STRING)\"
 	@$(AS) -I asm asm/durexforth.asm
 
 $(DISK_IMAGE): durexforth.prg Makefile $(SRCS)
