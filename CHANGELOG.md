@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
  - STRING, compiles a string.
 ### Changed
- - S" in interpretation mode now returns a transient string.
+ - S" in interpretation mode now returns a transient buffer.
 
 ## [5.0.0] - 2024-11-19
 ### Added
