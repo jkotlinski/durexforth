@@ -1,4 +1,4 @@
-; PUSHYA 0 1 START MSB LSB LATEST
+; PUSHYA 0 1 -1 START MSB LSB LATEST
 
 ; ACME assembler
 
@@ -130,6 +130,12 @@ ZERO
     +BACKLINK "1", 1
 ONE
     +VALUE 1
+
+    +BACKLINK "-1", 2
+MINUS_ONE
+    lda	#-1
+    tay
+    jmp pushya
 
 ; START - points to the code of the startup word.
     +BACKLINK "start", 5

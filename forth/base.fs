@@ -41,9 +41,12 @@ then (to) ; immediate
 
 : allot ( n -- ) here + to here ;
 
+: string, ( addr len -- )
+dup c, tuck here swap move allot ;
+
 : s" ( -- addr len )
-postpone lits '"' parse dup c, tuck
-here swap move allot ; immediate
+'"' parse state @ if postpone lits
+string, then ; immediate
 
 : ." postpone s" postpone type
 ; immediate

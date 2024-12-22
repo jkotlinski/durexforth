@@ -210,14 +210,13 @@ LIT
     lda	(W), y
     sta	MSB, x
 
-    lda W
     clc
+    lda W
     adc #3
-    sta + + 1
-    lda W + 1
-    adc #0
-    sta + + 2
-+   jmp PLACEHOLDER_ADDRESS ; replaced with instruction pointer
+    sta W
+    bcc +
+    inc W+1
++   jmp (W)
 
     +BACKLINK "litc", 4
 LITC
