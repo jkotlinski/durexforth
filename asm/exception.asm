@@ -5,6 +5,12 @@ EXCEPTION_HANDLER
 _EXCEPTION_HANDLER
     !word 0
 
++BACKLINK "\"err", 4
+ERROR_STRING
+    +VALUE +
++   !byte 0
+    !word 0
+
 +BACKLINK "catch", 5
 CATCH
     ; save data stack pointer
@@ -83,9 +89,15 @@ THROW
     jmp .print_error_string
 .print_system_error
     lda LSB-1,x
-    cmp #-2 ; ABORT"
-    beq .print_error_string
-    jsr .get_error_string_from_code
+    cmp #-2
+    bne +
+    jsr ERROR_STRING
+    jsr ONEPLUS
+    jsr FETCH
+    jsr ERROR_STRING
+    jsr FETCHBYTE
+    jmp .print_error_string
++   jsr .get_error_string_from_code
     jsr COUNT
 .print_error_string
     jsr TYPE

@@ -148,7 +148,7 @@ here latest >xt 1+ (to)
 dup pick . 1- repeat ;
 
 : abort -1 throw ;
-: (abort") -2 throw ;
+: (abort") "err c! "err 1+ ! -2 throw ;
 : abort" postpone if
 postpone s" postpone (abort")
 postpone then ; immediate
