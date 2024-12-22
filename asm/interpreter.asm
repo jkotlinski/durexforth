@@ -237,14 +237,7 @@ FOUND_WORD_WITH_NO_TCE = * + 1
 
     +BACKLINK "notfound",8
 print_word_not_found_error ; ( caddr u -- )
-    lda LSB,x
-    sta _ERROR_STRING
-    inx
-    lda LSB,x
-    sta _ERROR_STRING+1
-    lda MSB,x
-    sta _ERROR_STRING+2
-    inx
+    jsr TO_ERR
     lda #-13 ; undefined word
     jmp throw_a
 

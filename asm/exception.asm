@@ -1,16 +1,20 @@
-; "ERR CATCH THROW
+; CATCH THROW
 
 EXCEPTION_HANDLER
     +VALUE _EXCEPTION_HANDLER
 _EXCEPTION_HANDLER
     !word 0
 
-+BACKLINK "\"err", 4
-ERROR_STRING
-    +VALUE _ERROR_STRING
-_ERROR_STRING
-    !byte 0
-    !word 0
+TO_ERR ; ( addr u -- )
+    lda LSB,x
+    sta .msg_len
+    inx
+    lda LSB,x
+    sta .msg_lsb
+    lda MSB,x
+    sta .msg_msb
+    inx
+    rts
 
 +BACKLINK "catch", 5
 CATCH
@@ -129,11 +133,15 @@ THROW
     +VALUE .generic_error
 
 .get_custom_error_string
-    jsr ERROR_STRING
-    jsr ONEPLUS
-    jsr FETCH
-    jsr ERROR_STRING
-    jmp FETCHBYTE
+.msg_lsb = * + 1
+    lda #0
+.msg_msb = * + 1
+    ldy #0
+    jsr pushya
+.msg_len = * + 1
+    lda #0
+    ldy #0
+    jmp pushya
 
 .abort
     !byte 5
@@ -156,3 +164,8 @@ THROW
 .generic_error
     !byte 3
     !text "err"
+
++BACKLINK "(abort\")", 8
+    jsr TO_ERR
+    lda #-2
+    jmp throw_a
