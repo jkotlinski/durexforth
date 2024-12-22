@@ -346,5 +346,5 @@ IOABORT ; ( ioresult -- )
 
 .cr_abort
     jsr CR
-    lda #-1 ; TODO do something better here?
+    lda #-37 ; file i/o exception
     jmp throw_a

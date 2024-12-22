@@ -45,6 +45,7 @@ THROW
     rts
 +   lda _EXCEPTION_HANDLER + 1
     beq .print_error_and_abort
+
     ; restore previous return stack
     jsr EXCEPTION_HANDLER
     jsr FETCH
@@ -54,14 +55,17 @@ THROW
     txs
     ldx W
     inx
+
     ; restore previous handler
     jsr R_TO
     jsr EXCEPTION_HANDLER
     jsr STORE
+
     ; exc# on return stack
     jsr R_TO
     jsr SWAP
     jsr TO_R
+
     ; restore stack
     lda LSB,x
     tax
@@ -71,19 +75,66 @@ THROW
 
 .print_error_and_abort
     jsr RVS
-    lda LSB,x
-    cmp #-2 ; ABORT"
-    bne +
     inx
+    lda MSB-1,x
+    cmp #-1
+    beq .print_system_error
+    jsr .get_generic_error_string
+    jmp .print_error_string
+.print_system_error
+    lda LSB-1,x
+    cmp #-2 ; ABORT"
+    beq .print_error_string
+    jsr .get_error_string_from_code
+    jsr COUNT
+.print_error_string
     jsr TYPE
-    jmp .print_cr_and_abort
-+   ; TODO print error number
-    lda #'e'
-    jsr PUTCHR
-    lda #'r'
-    jsr PUTCHR
-    jsr PUTCHR
-.print_cr_and_abort
     jsr CR
     ldx #X_INIT
     jmp QUIT
+
+; It is a bit cheesy to use a hardcoded list, but it works.
+; A linked list would be more flexible.
+.get_error_string_from_code
+    cmp #-1
+    bne +
+    +VALUE .abort
++   cmp #-4
+    bne +
+    +VALUE .stack_underflow
++   cmp #-8
+    bne +
+    +VALUE .mem_full
++   cmp #-13
+    bne +
+    +VALUE .not_found
++   cmp #-16
+    bne +
+    +VALUE .no_word
++   cmp #-37
+    bne .get_generic_error_string
+    +VALUE .io_error
+.get_generic_error_string
+    +VALUE .generic_error
+
+.abort
+    !byte 5
+    !text "abort"
+.stack_underflow
+    !byte 5
+    !text "stack"
+.mem_full
+    !byte 4
+    !text "full"
+.not_found
+    !byte 9
+    !text "not found"
+.no_word
+    !byte 7
+    !text "no word"
+.io_error
+    !byte 3
+    !text "i/o"
+.generic_error
+    !byte 3
+    !text "err"

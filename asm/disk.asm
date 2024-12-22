@@ -269,7 +269,7 @@ INCLUDED
     jsr READST
     beq +
     jsr _errorchread
-    lda #-1 ; TODO do something better here?
+    lda #-37 ; file i/o exception
     jmp throw_a
 +
     pla
