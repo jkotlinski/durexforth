@@ -53,6 +53,8 @@ quit_reset
     ldx #0
     stx $d020
     stx $d021
+    stx _HANDLER
+    stx _HANDLER+1
 
     lda #>TIB
     sta TIB_PTR + 1
