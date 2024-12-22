@@ -6,9 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
- - STRING, compiles a string.
-### Changed
- - S" in interpretation mode now returns a transient buffer.
+ - S" now works in interpretation mode. It returns a transient buffer.
+ - STRING,
 
 ## [5.0.0] - 2024-11-19
 ### Added
