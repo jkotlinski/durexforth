@@ -165,7 +165,7 @@ THROW
     !byte 3
     !text "err"
 
-+BACKLINK "(abort\")", 8
++BACKLINK "(abort\")", 8 ; ( addr u -- )
     jsr TO_ERR
     lda #-2
     jmp throw_a
