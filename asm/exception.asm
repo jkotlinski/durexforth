@@ -1,8 +1,8 @@
 ; CATCH THROW
 
-HANDLER
-    +VALUE _HANDLER
-_HANDLER
+EXCEPTION_HANDLER
+    +VALUE _EXCEPTION_HANDLER
+_EXCEPTION_HANDLER
     !word 0
 
 +BACKLINK "catch", 5
@@ -12,7 +12,7 @@ CATCH
     jsr pushya
     jsr TO_R
     ; save previous handler
-    jsr HANDLER
+    jsr EXCEPTION_HANDLER
     jsr FETCH
     jsr TO_R
     ; set current handler
@@ -21,13 +21,13 @@ CATCH
     txa
     ldx W
     jsr pushya
-    jsr HANDLER
+    jsr EXCEPTION_HANDLER
     jsr STORE
     ; execute returns if no THROW
     jsr EXECUTE
     ; restore previous handler
     jsr R_TO
-    jsr HANDLER
+    jsr EXCEPTION_HANDLER
     jsr STORE
     ; discard saved stack pointer
     jsr R_TO
@@ -43,10 +43,10 @@ THROW
     ; 0 throw is no-op
     inx
     rts
-+   lda _HANDLER + 1
++   lda _EXCEPTION_HANDLER + 1
     beq .print_error_and_abort
     ; restore previous return stack
-    jsr HANDLER
+    jsr EXCEPTION_HANDLER
     jsr FETCH
     stx W
     lda LSB,x
@@ -56,7 +56,7 @@ THROW
     inx
     ; restore previous handler
     jsr R_TO
-    jsr HANDLER
+    jsr EXCEPTION_HANDLER
     jsr STORE
     ; exc# on return stack
     jsr R_TO
