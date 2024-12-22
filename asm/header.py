@@ -19,7 +19,12 @@ def verify(path):
     for line in lines:
         if "+BACKLINK" not in line:
             continue
-        words += [line.split('"')[1].rsplit('"')[0].upper()]
+        start = line.find('"') + 1
+        end = line.rfind('"')
+        word = line[start:end]
+        word = word.replace('\\"', '"')
+        word = word.upper()
+        words += [word]
 
     if not words:
         return
