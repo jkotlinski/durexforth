@@ -16,11 +16,10 @@ kernal_nmi
     jmp $fe72       ; all CIA 2 NMI's fall through to the Kernals' RS-232 routines
 
 
-brk_handler         ; all non-CIA NMI (RESTORE key) and brk instructions- via IRQ vector end up here.
-    pla             ; drop y -the return stack will be reset by QUIT anyway
-    pla             ; pull x
-    tax             ; restore parameter stack pointer for QUIT
-    jmp QUIT        ; already under sei from NMI stub in Kernal or from IRQ to brk_handler
+brk_handler
+     ; all non-CIA NMI (RESTORE key) and brk instructions- via IRQ vector end up here.
+    lda #-28 ; user interrupt
+    jsr throw_a
 
 quit_reset
     sei             ; goes here from QUIT and program start

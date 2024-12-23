@@ -129,6 +129,9 @@ THROW
 +   cmp #-16
     bne +
     +VALUE .no_word
++   cmp #-28
+    bne +
+    +VALUE .user_interrupt
 +   cmp #-37
     bne .get_generic_error_string
     +VALUE .io_error
@@ -167,6 +170,9 @@ THROW
 .io_error
     !byte 3
     !text "i/o"
+.user_interrupt
+    !byte 3
+    !text "brk"
 .generic_error
     !byte 3
     !text "err"
