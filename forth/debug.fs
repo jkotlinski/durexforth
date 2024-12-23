@@ -24,7 +24,8 @@ hide last-dump
 
 : more
 $d6 c@ $18 = if $12 emit
-." more" $92 emit key drop page then ;
+." more" $92 emit key $03 = if quit then
+page then ;
 
 : name>string ( nametoken -- caddr u )
 count $1f and ;
