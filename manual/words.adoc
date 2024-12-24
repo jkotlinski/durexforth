@@ -434,13 +434,13 @@ Further details on the use of these words are outlined in <<_turn_key_operation>
 === Exceptions
 
 ((throw)) _( n -- )_ :: Throw exception _n_, unless _n_ is 0.
-((catch)) _( xt -- n )_ :: Execute _xt_, catching any exception. _n_ is the throw code, or 0 if nothing was thrown.
+((catch)) _( xt -- n )_ :: Execute _xt_, catching any exception. _n_ is the exception number, or 0 if nothing was thrown.
 ((abort)) :: Throw exception -1. If -1 is not caught, empty the data stack and `quit`.
 ((abort")) _ccc" ( f -- )_  :: If _f_ is true, throw exception -2. If -2 is not caught, print _ccc_, empty the data stack and `quit`. Typical use: `: x ... test abort" error" ... ;`
 
-==== Throw Codes
+==== System Exceptions
 
-The following throw codes are used by durexForth:
+The following exception numbers are used by durexForth:
 
 -1 :: _abort_
 -2 :: _abort"_
