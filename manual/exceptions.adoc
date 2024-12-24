@@ -1,4 +1,4 @@
-The following exception numbers are in use by durexforth.
+The following exception numbers are used by durexForth.
 
 -1 :: ((abort))
 -2 :: ((abort"))
