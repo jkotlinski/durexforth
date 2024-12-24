@@ -344,7 +344,6 @@ IOABORT ; ( ioresult -- )
     pla
     bpl -
 
-.cr_abort
     jsr CR
     lda #-37 ; file i/o exception
     jmp throw_a

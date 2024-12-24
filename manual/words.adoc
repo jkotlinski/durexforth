@@ -238,8 +238,6 @@ case
 ((parse-name)) _( name -- caddr u )_ :: Read a word from input, delimited by whitespace. Skips leading spaces.
 ((accept)) _( addr u -- u )_ :: Receive a string of at most u characters into the buffer that starts at addr. Return how many characters were received.
 ((evaluate)) _( addr len -- )_ :: Evaluate the given string. Evaluate is non-standard: it interprets multi-line strings line-by-line.
-((abort)) :: Clear the data stack and perform `quit`.
-((abort")) _ccc" ( f -- )_  :: If _f_ is true, print _ccc_ and `abort`. Typical use: `: x ... test abort" error" ... ;`
 ((quit)) :: Enter an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting I/O.
 ((pad)) _( -- addr )_ :: _addr_ is the address of the `pad`, a 127-byte memory region that can be used freely by user words.
 No built-in words will modify this region.
@@ -432,3 +430,24 @@ $cbff top!
 ((save-prg)) _( "filename" -- )_ :: Save a forth program with no dictionary to _filename_.
 
 Further details on the use of these words are outlined in <<_turn_key_operation>>.
+
+=== Exceptions
+
+((throw)) _( n -- )_ :: Throw exception _n_, unless _n_ is 0.
+((catch)) _( xt -- n )_ :: Execute _xt_, catching any exception. _n_ is the throw code, or 0 if nothing was thrown.
+((abort)) :: Throw exception -1. If -1 is not caught, empty the data stack and `quit`.
+((abort")) _ccc" ( f -- )_  :: If _f_ is true, throw exception -2. If -2 is not caught, print _ccc_, empty the data stack and `quit`. Typical use: `: x ... test abort" error" ... ;`
+
+==== Throw Codes
+
+The following throw codes are used by durexForth:
+
+-1 :: _abort_
+-2 :: _abort"_
+-4 :: stack underflow
+-8 :: dictionary overflow (out of memory)
+-10 :: division by zero
+-13 :: undefined word
+-16 :: attempt to use an empty string as a name
+-28 :: user interrupt (triggered by kbd:[RESTORE] or _brk_ instruction)
+-37 :: file I/O exception
