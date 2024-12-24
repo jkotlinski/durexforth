@@ -296,7 +296,7 @@ POP_INPUT_SOURCE
 ; handle errors returned by open,
 ; close, and chkin. If ioresult is
 ; nonzero, print error message and
-; abort.
+; throw -37.
     +BACKLINK "ioabort", 7
 IOABORT ; ( ioresult -- )
     inx
