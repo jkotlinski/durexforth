@@ -273,6 +273,13 @@ If the definition is immediate, also return 1, otherwise also return -1.
 ((execute)) _( xt -- )_ :: Execute the execution token _xt_.
 ((>xt)) _( addr -- xt )_ :: Get execution token of word at address _addr_.
 
+=== Exceptions
+
+((throw)) _( n -- )_ :: Throw exception _n_, unless _n_ is 0.
+((catch)) _( xt -- n )_ :: Execute _xt_, catching any exception. _n_ is the exception number, or 0 if nothing was thrown.
+((abort)) :: Throw exception -1. If -1 is not caught, empty the data stack and `quit`.
+((abort")) _ccc" ( f -- )_  :: If _f_ is true, throw exception -2. If -2 is not caught, print _ccc_, empty the data stack and `quit`. Typical use: `: x ... test abort" error" ... ;`
+
 === Debugging
 
 ((words)) :: List all defined words.
@@ -430,24 +437,3 @@ $cbff top!
 ((save-prg)) _( "filename" -- )_ :: Save a forth program with no dictionary to _filename_.
 
 Further details on the use of these words are outlined in <<_turn_key_operation>>.
-
-=== Exceptions
-
-((throw)) _( n -- )_ :: Throw exception _n_, unless _n_ is 0.
-((catch)) _( xt -- n )_ :: Execute _xt_, catching any exception. _n_ is the exception number, or 0 if nothing was thrown.
-((abort)) :: Throw exception -1. If -1 is not caught, empty the data stack and `quit`.
-((abort")) _ccc" ( f -- )_  :: If _f_ is true, throw exception -2. If -2 is not caught, print _ccc_, empty the data stack and `quit`. Typical use: `: x ... test abort" error" ... ;`
-
-==== System Exceptions
-
-The following exception numbers are used by durexForth:
-
--1 :: _abort_
--2 :: _abort"_
--4 :: stack underflow
--8 :: dictionary overflow (out of memory)
--10 :: division by zero
--13 :: undefined word
--16 :: attempt to use an empty string as a name
--28 :: user interrupt (triggered by kbd:[RESTORE] or _brk_ instruction)
--37 :: file I/O exception

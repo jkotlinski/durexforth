@@ -90,7 +90,7 @@ docs: docs/index.html
 
 docs/index.html: manual/index.adoc manual/words.adoc manual/links.adoc manual/sid.adoc manual/asm.adoc \
 	manual/mnemonics.adoc manual/memmap.adoc manual/anatomy.adoc LICENSE.txt manual/tutorial.adoc \
-	manual/intro.adoc
+	manual/intro.adoc manual/exceptions.adoc
 	rm -rf docs
 	asciidoctor -a revnumber=$(shell git describe --tags --dirty) -a revdate=$(shell git log -1 --format=%as) -o docs/index.html manual/index.adoc
 

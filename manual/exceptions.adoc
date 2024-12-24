@@ -1,0 +1,11 @@
+The following exception numbers are in use by durexforth.
+
+-1 :: ((abort))
+-2 :: ((abort"))
+-4 :: stack underflow
+-8 :: dictionary overflow (out of memory)
+-10 :: division by zero
+-13 :: undefined word
+-16 :: attempt to use an empty string as a name
+-28 :: user interrupt (triggered by kbd:[RESTORE] or _brk_ instruction)
+-37 :: file I/O exception
