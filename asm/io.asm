@@ -320,6 +320,7 @@ IOABORT ; ( ioresult -- )
     !byte 'r'|$80
 
 .print_basic_error
+    ; switch in BASIC ROM
     lda #$37
     sta 1
 
