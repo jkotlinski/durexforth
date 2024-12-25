@@ -579,7 +579,8 @@ case \ keys that can quit
       '!' of
         need-refresh!
         '!' emit here $f accept
-        ?dup 0= if exit then
+        dup 0= if clear-status exit
+               then
         filename c! here
         filename count move
         write-file

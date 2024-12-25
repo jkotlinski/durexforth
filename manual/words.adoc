@@ -352,11 +352,11 @@ These words allow access to serial devices without accessing the file system, an
 ((listen)) _( dv -- ioresult )_ :: Send IEC listen to dv.
 ((second)) _( command+sa -- ioresult )_ :: Send IEC command and secondary address after listen.
 ((unlisten)) _( -- )_ :: Send IEC unlisten to all channels.
-((ciout)) _( -- u )_ ::  Puts a data byte onto the serial bus using full handshaking.
+((ciout)) _( u -- )_ ::  Puts a data byte onto the serial bus using full handshaking.
 ((talk)) _( dv -- ioresult )_ :: Send IEC talk to dv.
 ((tksa)) _( command+sa -- ioresult )_ :: Send IEC command and secondary address after talk.
 ((untalk)) _( -- )_ :: Send IEC untalk to all channels.
-((acptr)) _( u -- )_ :: Get a byte of data from the serial bus using full handshaking.
+((acptr)) _( -- u )_ :: Get a byte of data from the serial bus using full handshaking.
 
 
 ====

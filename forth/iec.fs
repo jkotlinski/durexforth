@@ -1,4 +1,3 @@
-require io
 
 code listen ( dv -- )
 here 1+
@@ -66,6 +65,8 @@ dex, w stx, 0 lda,# msb sta,x
 $ffa5 jsr, \ acptr
 w ldx, lsb sta,x
 rts, end-code
+
+require io
 
 : iqt readst ioabort ; \ legacy of if quit then
 
