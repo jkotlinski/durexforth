@@ -117,7 +117,7 @@ This may change with public demand.
 (([char])) _( "c" -- )_ :: Compile character _c_ as a literal value.
 (([)) _( -- )_ :: Leave compile mode. Execute the following words immediately instead of compiling them.
 ((])) _( -- )_ :: Return to compile mode.
-((immediate::)) Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
+((immediate)) :: Mark the most recently defined word as immediate (i.e. inside colon definitions, it will be executed immediately instead of compiled).
 ((['])) name _( -- xt )_:: Place name's execution token xt on the stack.
 The execution token returned by the compiled phrase +['] x+ is the same value returned by +' x+ outside of compilation state.
 Typical use: +: x ... ['] name ... ;+
