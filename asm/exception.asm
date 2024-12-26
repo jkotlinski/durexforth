@@ -5,17 +5,6 @@ EXCEPTION_HANDLER
 _EXCEPTION_HANDLER
     !word 0
 
-TO_ERR ; ( addr u -- )
-    lda LSB,x
-    sta .msg_len
-    inx
-    lda LSB,x
-    sta .msg_lsb
-    lda MSB,x
-    sta .msg_msb
-    inx
-    rts
-
 +BACKLINK "catch", 5
 CATCH
     ; save data stack pointer
@@ -85,33 +74,38 @@ THROW
     rts
 
 .print_error_and_abort
-    jsr RVS
     inx
     lda MSB-1,x
     cmp #-1
     beq .print_system_error
-    jsr .get_generic_error_string
-    jmp .print_error_string
+    jsr .get_unknown_exception_string
+    jmp .type_and_abort
 .print_system_error
     lda LSB-1,x
-    cmp #-2
+    cmp #-13 ; Undefined word is printed before THROW.
+    beq .abort
+    cmp #-37 ; File I/O error is printed before THROW.
+    beq .abort
+    cmp #-2 ; abort"
     bne +
-    jsr .get_custom_error_string
-    jmp .print_error_string
-+   jsr .get_error_string_from_code
+    jsr .get_abort_string
+    jmp .type_and_abort
++   jsr .get_system_exception_string
     jsr COUNT
-.print_error_string
+.type_and_abort
+    jsr RVS
     jsr TYPE
     jsr CR
+.abort
     ldx #X_INIT
     jmp QUIT
 
 ; It is a bit cheesy to use a hardcoded list, but it works.
 ; A linked list would be more flexible.
-.get_error_string_from_code
+.get_system_exception_string
     cmp #-1
     bne +
-    +VALUE .abort
+    +VALUE .abort_string
 +   cmp #-4
     bne +
     +VALUE .stack_underflow
@@ -121,24 +115,17 @@ THROW
 +   cmp #-10
     bne +
     +VALUE .div_error
-+   cmp #-13
-    bne +
-    jsr .get_custom_error_string
-    jsr TYPE
-    +VALUE .not_found
 +   cmp #-16
     bne +
     +VALUE .no_word
 +   cmp #-28
-    bne +
+    bne .get_unknown_exception_string
     +VALUE .user_interrupt
-+   cmp #-37
-    bne .get_generic_error_string
-    +VALUE .io_error
-.get_generic_error_string
-    +VALUE .generic_error
+.get_unknown_exception_string
+    ; TODO: print exception number
+    +VALUE .unknown_exception
 
-.get_custom_error_string
+.get_abort_string
 .msg_lsb = * + 1
     lda #0
 .msg_msb = * + 1
@@ -149,7 +136,7 @@ THROW
     ldy #0
     jmp pushya
 
-.abort
+.abort_string
     !byte 5
     !text "abort"
 .stack_underflow
@@ -158,26 +145,27 @@ THROW
 .mem_full
     !byte 4
     !text "full"
-.not_found
-    !byte 1
-    !text "?"
 .no_word
     !byte 7
     !text "no name"
 .div_error
     !byte 2
     !text "/0" ; division by zero
-.io_error
-    !byte 3
-    !text "i/o"
 .user_interrupt
     !byte 3
     !text "brk"
-.generic_error
+.unknown_exception
     !byte 3
     !text "err"
 
 +BACKLINK "(abort\")", 8 ; ( addr u -- )
-    jsr TO_ERR
+    lda LSB,x
+    sta .msg_len
+    inx
+    lda LSB,x
+    sta .msg_lsb
+    lda MSB,x
+    sta .msg_msb
+    inx
     lda #-2
     jmp throw_a
