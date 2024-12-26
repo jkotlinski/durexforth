@@ -277,6 +277,16 @@ If the definition is immediate, also return 1, otherwise also return -1.
 
 ((throw)) _( n -- )_ :: Throw exception _n_, unless _n_ is 0.
 ((catch)) _( xt -- n )_ :: Execute _xt_, catching any exception. _n_ is the exception number, or 0 if nothing was thrown.
+
+Pressing kbd:[RESTORE] throws exception -28, "user interrupt". This example shows how to catch it:
+
+----
+: idle begin again ;
+: demo ." press RESTORE" cr
+['] idle catch
+." caught " . ;
+----
+
 ((abort)) :: Throw exception -1. If -1 is not caught, empty the data stack and `quit`.
 ((abort")) _ccc" ( f -- )_  :: If _f_ is true, throw exception -2. If -2 is not caught, print _ccc_, empty the data stack and `quit`. Typical use: `: x ... test abort" error" ... ;`
 

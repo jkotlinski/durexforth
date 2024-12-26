@@ -7,5 +7,5 @@ The following exception numbers are used by durexForth.
 -10 :: division by zero
 -13 :: undefined word
 -16 :: attempt to use an empty string as a name
--28 :: user interrupt (triggered by kbd:[RESTORE] or _brk_ instruction)
+-28 :: user interrupt (triggered by kbd:[RESTORE] or `brk` instruction)
 -37 :: file I/O exception
