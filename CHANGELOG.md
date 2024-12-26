@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - Exception support with CATCH and THROW.
  - S" now works in interpretation mode. It returns a transient buffer.
  - STRING, stores a counted string.
+ - 0> to compat.
 ### Fixed
  - V: crash when entering ":w!"
 

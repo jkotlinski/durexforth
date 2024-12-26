@@ -404,7 +404,7 @@ From: IEC disected by J. Derogee
 
 === Compatibility
 
-The `compat` module contains various words that are not deemed necessary for enjoyable DurexForth operation, but still must be provided to comply with the Forth 2012 core standard.
+The `compat` module contains various words that are not deemed necessary for enjoyable DurexForth operation, but still must be provided to comply with the Forth 2012 core standard. It also contains some extension words in use by the test suite.
 
 ((environment?)) _( addr u -- 0 )_ :: Environmental query.
 ((cell+)) _( n -- n+2 )_ :: 2+
@@ -423,6 +423,7 @@ The `compat` module contains various words that are not deemed necessary for enj
 ((sm/rem)) _( d n -- r q )_ :: Divide double-cell number _d_ by _n_, giving the symmetric quotient _q_ and the remainder _r_. Values are signed.
 ((true)) _( -- true )_ :: Return a _true_ flag, a single-cell value with all bits set.
 ((false)) _( -- false )_ :: Return a _false_ flag.
+((0>)) _( -- n )_ :: Equivalent to `0 >`.
 
 === Kernel Calls
 
