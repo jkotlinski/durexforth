@@ -269,7 +269,8 @@ INCLUDED
     jsr READST
     beq +
     jsr _errorchread
-    jmp ABORT
+    lda #-37 ; file i/o exception
+    jmp throw_a
 +
     pla
     tax

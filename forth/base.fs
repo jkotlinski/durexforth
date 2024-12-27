@@ -41,12 +41,10 @@ then (to) ; immediate
 
 : allot ( n -- ) here + to here ;
 
-: string, ( addr len -- )
-dup c, tuck here swap move allot ;
-
 : s" ( -- addr len )
 '"' parse state @ if postpone lits
-string, then ; immediate
+dup c, tuck here swap move allot
+then ; immediate
 
 : ." postpone s" postpone type
 ; immediate
@@ -144,7 +142,7 @@ here latest >xt 1+ (to)
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
 
-: (abort") rvs type cr abort ;
+: abort -1 throw ;
 : abort" postpone if
 postpone s" postpone (abort")
 postpone then ; immediate

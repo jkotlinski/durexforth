@@ -238,8 +238,6 @@ case
 ((parse-name)) _( name -- caddr u )_ :: Read a word from input, delimited by whitespace. Skips leading spaces.
 ((accept)) _( addr u -- u )_ :: Receive a string of at most u characters into the buffer that starts at addr. Return how many characters were received.
 ((evaluate)) _( addr len -- )_ :: Evaluate the given string. Evaluate is non-standard: it interprets multi-line strings line-by-line.
-((abort)) :: Clear the data stack and perform `quit`.
-((abort")) _ccc" ( f -- )_  :: If _f_ is true, print _ccc_ and `abort`. Typical use: `: x ... test abort" error" ... ;`
 ((quit)) :: Enter an endless loop where DurexForth interprets Forth commands from the keyboard. The word is named "quit" since it can be used to quit a program. It also does cleanup tasks like resetting I/O.
 ((pad)) _( -- addr )_ :: _addr_ is the address of the `pad`, a 127-byte memory region that can be used freely by user words.
 No built-in words will modify this region.
@@ -249,7 +247,6 @@ No built-in words will modify this region.
 ((.()) :: Print a string. Example: `.( foo)`
 ((.")) :: Compile-time version of `.(`. Example: `: foo ." bar" ;`
 ((s")) _( -- caddr u )_ :: Compilation: Define a string. Interpretation: Parse a string to a transient buffer. Example: `s" foo"`.
-((string,)) _( caddr u -- )_ :: Compile a string.
 ((count)) _( str -- caddr u )_ :: Return data address and length of the counted string _str_.
 ((type)) _( caddr u -- )_ :: Print a string.
 ((/string)) _( caddr u n -- caddr+n u-n )_ :: Adjust the string by _n_ characters.
@@ -274,6 +271,23 @@ If the definition is immediate, also return 1, otherwise also return -1.
 ((find-name)) _( caddr u -- 0 | nt )_ :: Get the name token (dictionary pointer) of the word named by _caddr u_, or 0 if the word is not found.
 ((execute)) _( xt -- )_ :: Execute the execution token _xt_.
 ((>xt)) _( addr -- xt )_ :: Get execution token of word at address _addr_.
+
+=== Exceptions
+
+((throw)) _( n -- )_ :: Throw exception _n_, unless _n_ is 0. If the exception is not caught, print `_n_ err`, empty the data stack and `quit`.
+((catch)) _( xt -- n )_ :: Execute _xt_, catching any exception. _n_ is the exception number, or 0 if nothing was thrown.
+
+Pressing kbd:[RESTORE] throws exception -28, "user interrupt". This example shows how to catch it:
+
+----
+: idle begin again ;
+: demo ." press RESTORE" cr
+['] idle catch
+." caught " . ;
+----
+
+((abort)) :: Throw exception -1. If -1 is not caught, empty the data stack and `quit`.
+((abort")) _ccc" ( f -- )_  :: If _f_ is true, throw exception -2. If -2 is not caught, print _ccc_, empty the data stack and `quit`. Typical use: `: x ... test abort" error" ... ;`
 
 === Debugging
 
@@ -322,7 +336,7 @@ For more advanced uses, words corresponding to the standard Commodore Kernal IO 
 ((readst)) _( -- status )_ :: Return the status of the last IO operation.
 For serial-bus devices, `$01` = write timeout, `$02` = read timeout, `$40` = end of file (EOI), `$80` = device not present.
 ((chrin)) _( -- char)_ :: Read a character from the current input device.
-((ioabort)) _( ioresult -- )_ Handle error conditions for `open`, `chkin` and `chkout`. On failure, print error message and abort.
+((ioabort)) _( ioresult -- )_ Handle error conditions for `open`, `chkin` and `chkout`. On failure, print error message and throw exception -37.
 
 As per the underlying Kernal routines, `chrin` does not check for end-of-file or any other error condition. `readst` should be called to ensure that the returned character is valid.
 
@@ -389,7 +403,7 @@ From: IEC disected by J. Derogee
 
 === Compatibility
 
-The `compat` module contains various words that are not deemed necessary for enjoyable DurexForth operation, but still must be provided to comply with the Forth 2012 core standard.
+The `compat` module contains various words that are not deemed necessary for enjoyable DurexForth operation, but still must be provided to comply with the Forth 2012 core standard. It also contains some extension words in use by the test suite.
 
 ((environment?)) _( addr u -- 0 )_ :: Environmental query.
 ((cell+)) _( n -- n+2 )_ :: 2+
@@ -408,6 +422,7 @@ The `compat` module contains various words that are not deemed necessary for enj
 ((sm/rem)) _( d n -- r q )_ :: Divide double-cell number _d_ by _n_, giving the symmetric quotient _q_ and the remainder _r_. Values are signed.
 ((true)) _( -- true )_ :: Return a _true_ flag, a single-cell value with all bits set.
 ((false)) _( -- false )_ :: Return a _false_ flag.
+((0>)) _( -- n )_ :: Equivalent to `0 >`.
 
 === Kernel Calls
 

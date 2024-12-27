@@ -39,6 +39,7 @@ parse-name tester included
 parse-name testcore included
 parse-name testcoreplus included
 parse-name testcoreext included
+parse-name testexception included
 
 \ -----
 

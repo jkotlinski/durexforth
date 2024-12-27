@@ -296,7 +296,7 @@ POP_INPUT_SOURCE
 ; handle errors returned by open,
 ; close, and chkin. If ioresult is
 ; nonzero, print error message and
-; abort.
+; throw -37.
     +BACKLINK "ioabort", 7
 IOABORT ; ( ioresult -- )
     inx
@@ -320,6 +320,7 @@ IOABORT ; ( ioresult -- )
     !byte 'r'|$80
 
 .print_basic_error
+    ; switch in BASIC ROM
     lda #$37
     sta 1
 
@@ -344,6 +345,5 @@ IOABORT ; ( ioresult -- )
     pla
     bpl -
 
-.cr_abort
-    jsr CR
-    jmp ABORT
+    lda #-37 ; file i/o exception
+    jmp throw_a

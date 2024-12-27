@@ -114,11 +114,9 @@ loop:   ROL     LSB+2,X     ; Rotate dividend lo cell left one bit.
         STY     MSB+1,X     ; be the new dividend hi cell
         bcs     loop    ; and then branch up.
 
-oflo:   LDA     #$FF    ; If overflow or /0 condition found,
-        STA     LSB+1,X     ; just put FFFF in both the remainder
-        STA     MSB+1,X
-        STA     LSB+2,X     ; and the quotient.
-        STA     MSB+2,X
+oflo:   ; if overflow or /0 condition found, throw division by zero error.
+        lda     #-10
+        jmp     throw_a
 
 end:    INX
         jmp SWAP
