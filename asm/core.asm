@@ -370,8 +370,9 @@ FILL_Y
     jmp	-
 
     +BACKLINK "base", 4
-    +VALUE	BASE
 BASE
+    +VALUE	_BASE
+_BASE
     !word 16
 
     +BACKLINK "2*", 2
@@ -380,6 +381,7 @@ BASE
     rts
 
     +BACKLINK "rot", 3 ; ( a b c -- b c a )
+ROT
     ldy MSB+2, x
     lda MSB+1, x
     sta MSB+2, x
@@ -395,6 +397,7 @@ BASE
     rts
 
     +BACKLINK "+!", 2 ; ( num addr -- )
+PLUS_STORE
     lda LSB,x
     sta W
     lda MSB,x

@@ -584,7 +584,7 @@ SLASH_STRING ; ( addr u n -- addr u )
     jmp SWAP
 
 apply_base
-    sta BASE
+    sta _BASE
     dec .chars_to_process
     inc W3
     bne +
@@ -603,7 +603,7 @@ READ_NUMBER
     lda LSB+1,x
     sta W3
 
-    lda BASE
+    lda _BASE
     sta OLD_BASE
 
     ldy #0
@@ -642,8 +642,8 @@ READ_NUMBER
     jmp .prepare_next_char
 
 .next_digit
-    ; number *= BASE
-    lda BASE
+    ; number *= _BASE
+    lda _BASE
     sta LSB,x
     jsr U_M_STAR
     lda LSB,x
@@ -669,7 +669,7 @@ READ_NUMBER
     cmp #10
     bcc .parse_failed
 
-+   cmp BASE
++   cmp _BASE
     bcs .parse_failed
 
     adc LSB+1,x
@@ -684,7 +684,7 @@ READ_NUMBER
 .parse_done
 OLD_BASE = * + 1
     lda #0
-    sta BASE
+    sta _BASE
 
     lda LSB+1,x
     sta LSB+3,x
