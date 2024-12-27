@@ -74,18 +74,14 @@ THROW
     rts
 
 .print_error_and_abort
-    inx
-    lda MSB-1,x
+    lda MSB,x
     cmp #-1
-    beq .print_system_error
-    jsr .get_unknown_exception_string
-    jmp .type_and_abort
-.print_system_error
-    lda LSB-1,x
+    bne .unknown_exception
+    lda LSB,x
     cmp #-13 ; Undefined word is printed before THROW.
-    beq .abort
-    cmp #-37 ; File I/O error is printed before THROW.
-    beq .abort
+    beq .cr_and_abort
+    cmp #-37 ; File I/O errors are printed before THROW.
+    beq .cr_and_abort
     cmp #-2 ; abort"
     bne +
     jsr .get_abort_string
@@ -95,8 +91,8 @@ THROW
 .type_and_abort
     jsr RVS
     jsr TYPE
+.cr_and_abort
     jsr CR
-.abort
     ldx #X_INIT
     jmp QUIT
 
@@ -119,11 +115,18 @@ THROW
     bne +
     +VALUE .no_word
 +   cmp #-28
-    bne .get_unknown_exception_string
+    bne .unknown_exception
     +VALUE .user_interrupt
-.get_unknown_exception_string
-    ; TODO: print exception number
-    +VALUE .unknown_exception
+
+.unknown_exception
+    jsr RVS
+    jsr DOT
+    lda #'e'
+    jsr PUTCHR
+    lda #'r'
+    jsr PUTCHR
+    jsr PUTCHR
+    jmp .cr_and_abort
 
 .get_abort_string
 .msg_lsb = * + 1
@@ -154,9 +157,6 @@ THROW
 .user_interrupt
     !byte 3
     !text "brk"
-.unknown_exception
-    !byte 3
-    !text "err"
 
 +BACKLINK "(abort\")", 8 ; ( addr u -- )
     lda LSB,x

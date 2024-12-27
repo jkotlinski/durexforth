@@ -240,7 +240,6 @@ print_word_not_found_error ; ( caddr u -- )
     jsr TYPE
     lda #'?'
     jsr PUTCHR
-    jsr CR
     lda #-13 ; undefined word
     jmp throw_a
 
