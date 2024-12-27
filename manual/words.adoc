@@ -275,7 +275,7 @@ If the definition is immediate, also return 1, otherwise also return -1.
 
 === Exceptions
 
-((throw)) _( n -- )_ :: Throw exception _n_, unless _n_ is 0.
+((throw)) _( n -- )_ :: Throw exception _n_, unless _n_ is 0. If the exception is not caught, print `_n_ err`, empty the data stack and `quit`.
 ((catch)) _( xt -- n )_ :: Execute _xt_, catching any exception. _n_ is the exception number, or 0 if nothing was thrown.
 
 Pressing kbd:[RESTORE] throws exception -28, "user interrupt". This example shows how to catch it:
