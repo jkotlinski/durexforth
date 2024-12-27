@@ -255,6 +255,7 @@ DIVISOR_SIGN = * + 1
 
     ; (ud1 u2 -- urem udquot)
     +BACKLINK "ud/mod", 6
+UD_MOD
     lda LSB,x
     sta LSB - 1,x
     sta W3

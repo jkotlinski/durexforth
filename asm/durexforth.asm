@@ -156,6 +156,7 @@ MINUS_ONE
 !src "io.asm"
 !src "lowercase.asm"
 !src "disk.asm"
+!src "format.asm"
 
 BOOT_STRING
 !src "../build/version.asm"

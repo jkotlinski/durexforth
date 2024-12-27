@@ -90,7 +90,6 @@ code split swap lda,# ldy,#
 ( to free up space, pad could be
   e.g. HERE+34 instead )
 $35b constant pad
-: space bl emit ;
 : spaces ( n -- )
 begin ?dup while space 1- repeat ;
 
@@ -141,8 +140,6 @@ here latest >xt 1+ (to)
 : */mod >r m* r> fm/mod ;
 : */ */mod nip ;
 ( ...from FIG UK )
-
-.( format..) parse-name format included
 
 : .s depth begin ?dup while
 dup pick . 1- repeat ;
