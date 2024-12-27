@@ -1,8 +1,6 @@
 ; <# #> HOLD SIGN # #S U. . SPACE
 
 .hold_start = $3fc
-.holdp
-    !byte 0
 
 ; : <# $3fc holdp ! ;
 +BACKLINK "<#", 2
@@ -30,11 +28,10 @@ NUMBER_SIGN_GREATER
 +BACKLINK "hold", 4
 HOLD
     dec .holdp
-    lda .holdp
-    sta + + 1
     inx
     lda LSB-1,x
-+   sta .hold_start
+.holdp = * + 1
+    sta .hold_start
     rts
 
 ; : sign 0< if '-' hold then ;
