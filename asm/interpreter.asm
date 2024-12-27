@@ -707,7 +707,7 @@ READ_NUMBER
 
 .parse_failed
     pla
-    sta BASE
+    sta _BASE
     inx
     inx ; Z flag set
     rts
