@@ -1,4 +1,4 @@
-; <# #> HOLD SIGN # #S U. .
+; <# #> HOLD SIGN # #S U. . SPACE
 
 .hold_start = $3fc
 .holdp
