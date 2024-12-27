@@ -37,9 +37,9 @@ HOLD
 ; : sign 0< if '-' hold then ;
 +BACKLINK "sign", 4
 SIGN
-    jsr ZERO_LESS
     inx
-    lda LSB-1,x
+    lda MSB-1,x
+    and #$80
     bne +
     rts
 +   jsr LITC
