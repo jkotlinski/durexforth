@@ -169,7 +169,7 @@ marker ---modules---
 
 \ hides private words
 hide 1mi hide 2mi hide 23mi hide 3mi
-hide holdp hide latestxt
+hide latestxt
 hide dodoes hide (abort")
 
 .( labels..) include labels
