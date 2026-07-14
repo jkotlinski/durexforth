@@ -8,6 +8,19 @@ $d value lf
 
 $a001 value bufstart \ use $a000-$cbff
 
+\ Last usable buffer address (the 0 sentinel may sit here). Two limits
+\ apply and the SMALLER wins:
+\   * physical: content must stay below $cc00 (gfx colors / $d000 I/O) or
+\     typing/pasting silently corrupts memory and crashes forth later.
+\   * reloadable: the load path (below) rejects files over 44 disk blocks
+\     (44*254=$2ba8 bytes incl. the 2-byte load address). A file saved
+\     from bufstart..eof is (eof-bufstart)+2 bytes, so to stay <= 44
+\     blocks we need eof-bufstart <= 11174, i.e. eof <= $cba7. Without
+\     this the editor would let you fill+save a buffer it then refuses to
+\     re-open with "too big".
+\ $cba7 satisfies both (and is below $cc00).
+$cba7 value bufend
+
 \ eof points to 0 sentinel
 variable eof ( ram eof )
 0 eof !
@@ -264,9 +277,18 @@ force-right backspace ;
 : repl-char
 editpos c! line-dirty! ;
 
+\ true if the buffer can grow by n bytes with the new eof (sentinel)
+\ still <= bufend ($cbff). guards ins-char / paste-line from running
+\ eof into $cc00+ (gfx colors, then $d000 I/O) and corrupting memory.
+: room? ( n -- f ) eof @ + bufend 1+ u< ;
+
 : ins-char
 dup lf <> linelen $26 > and if
 drop exit then
+
+\ buffer full? refuse rather than run eof past $cbff into the gfx
+\ color / $d000 I/O area (silent corruption -> forth crash later)
+1 room? 0= if drop 'F' set-status exit then
 
 editpos
 editpos 1+
@@ -393,6 +415,9 @@ ins-start
 need-refresh! ;
 
 : paste-line
+\ refuse if the clip + its opening newline won't fit (else the
+\ clip-count eof +! below would run eof past bufend)
+clip-count @ 1+ room? 0= if 'F' set-status exit then
 open-line ins-stop
 ( make room for clip contents )
 curlinestart @
@@ -671,7 +696,10 @@ rom-kernal
 filename 1+ here 2+ $f move
 here filename c@ 2+ here loadb drop
 here $22 + @ $2020 = \ found?
-here $20 + @ #44 > and \ 44=$2c00/254
+\ >44 blocks can't fit: 44*254=$2ba8 bytes; a 44-block file holds at most
+\ 11174 data bytes, loading bufstart..$cba7 (= bufend). bufend is capped
+\ to keep every buffer this editor SAVES within this same 44-block limit.
+here $20 + @ #44 > and
 abort" too big"
 
 filename count bufstart loadb
